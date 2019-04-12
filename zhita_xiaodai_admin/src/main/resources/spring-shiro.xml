@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    
+    
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="realmDemo" />
+	</bean>
+	<!-- Realm -->
+	<bean id="realmDemo" class="com.zhita.controller.shiro.RealmShiro">
+		<!-- <property name="credentialsMatcher" ref="credentialsMatcher"/> -->
+	</bean>
+	
+	<!-- 加密 -->
+	<!-- <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher"> 
+		加密方式 <property name="hashAlgorithmName" value="MD5"/> 加密次数 <property name="hashIterations" 
+		value="1024"/> </bean> -->
+
+	<!-- Shiro的Web过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		
+		<!-- 在此处配置未登录跳转页面-->
+		<property name="loginUrl" value="/login.jsp" />
+
+		<!--在此处配置无权限的跳转路径 -->
+		<property name="unauthorizedUrl" value="/error.jsp" />
+
+		<!-- 配置哪些页面需要受保护. 以及访问这些页面需要的权限. 
+		1). anon 可以被匿名访问 
+		2). authc 必须认证(即登录)后才可能访问的页面. 
+		3). logout 登出. 
+		4). roles 角色过滤器 -->
+		<property name="filterChainDefinitions">
+			<value>
+				<!-- 说明访问该接口不需要任何权限 -->
+				/admin_login/sendSMS = anon
+				<!-- 说明访问该接口不需要任何权限 -->
+				/admin_login/logintest = anon
+				<!-- 首页权限拦截 -->
+				/home/gethome = perms["首页-查询"]
+				<!-- 贷款商家权限拦截 -->
+				/registe/queryAllAdmin = perms["贷款商家-查询所有"]
+				/registe/queryByNameLike = perms["贷款商家-模糊查询"]
+				/registe/selAllName = perms["贷款商家-添加"]
+				/registe/insertAllAdmin = perms["贷款商家-添加"]
+				/registe/falsedeleteByPrimaryKey = perms["贷款商家-删除"]
+				/registe/selectByPrimaryKey = perms["贷款商家-编辑"]
+				/registe/upaBaocunByPrimaryKey = perms["贷款商家-更新保存"]
+				/registe/upaState = perms["贷款商家-更新状态"]
+				/registe/queryTime = perms["贷款商家-申请统计"]
+				<!-- 贷款分类权限拦截 -->
+				/type/queryAllPage = perms["贷款分类-查询所有"]
+				/type/queryByLike = perms["贷款分类-模糊查询"]
+				/type/insertAllfind = perms["贷款分类-添加"]
+				/type/selectByPrimaryKey = perms["贷款分类-编辑"]
+				/type/updateByPrimaryKey = perms["贷款分类-更新保存"]
+				<!-- 信用卡权限拦截 -->
+				/card/queryAllCard = perms["信用卡-查询所有"]
+				/card/queryByLike = perms["信用卡-模糊查询"]
+				/card/addAll = perms["信用卡-新增"]
+				/card/selectByPrimaryKey = perms["信用卡-编辑"]
+				/card/updateCreditCard = perms["信用卡-更新保存"]
+				/card/upaFalseDel = perms["信用卡-删除"]
+				/card/upaState = perms["信用卡-状态修改"]
+				<!-- 攻略权限拦截 -->
+				/news/queryAllNews = perms["攻略-查询所有"]
+				/news/queryNewsByLike = perms["攻略-模糊查询"]
+				/news/AddALL = perms["攻略-添加"]
+				/news/selectByPrimaryKey = perms["攻略-编辑"]
+				/news/updateStrategy = perms["攻略-更新保存"]
+				/news/upaFalseDelById = perms["攻略-删除"]
+				/news/upaState = perms["攻略-更新状态"]
+				<!--轮播图权限拦截 -->
+				/banner/queryAll = perms["轮播图-查询所有"]
+				/banner/queryAllByLike = perms["轮播图-模糊查询"]
+				/banner/AddAll = perms["轮播图-新增"]
+				/banner/selectByPrimaryKey = perms["轮播图-编辑"]
+				/banner/updateShufflingFigure = perms["轮播图-更新保存"]
+				/banner/upaFalseDel = perms["轮播图-删除"]
+				/banner/upaState = perms["轮播图-状态修改"]
+				<!-- 广告权限拦截 -->
+				/adv/queryAll = perms["广告-查询所有"]
+				/adv/queryAllByLike = perms["广告-模糊查询"]
+				/adv/AddAll = perms["广告-新增"]
+				/adv/selectByPrimaryKey = perms["广告-编辑"]
+				/adv/updateAdvertising = perms["广告-更新保存"]
+				/adv/upaFalseDel = perms["广告-删除"]
+				/adv/upaState = perms["广告-状态修改"]
+				<!-- 用户权限拦截 -->
+				/user/queryAllUser = perms["用户-查询所有"]
+				/user/queryByLike = perms["用户-模糊查询"]
+				/user/queryAllButton = perms["用户-申请记录"]
+				/user/queryDayFenByTime = perms["用户-日分布系数"]
+				<!-- 渠道权限拦截 -->
+				/merchant/queryAllSource = perms["渠道-查询所有"]
+				/merchant/querySourceByLike = perms["渠道-模糊查询"]
+				/merchant/AddAll = perms["渠道-新增"]
+				/merchant/selectByPrimaryKey = perms["渠道-编辑"]
+				/merchant/updateSource= perms["渠道-更新保存"]
+				/merchant/upaFalseDelById = perms["渠道-删除"]
+				/merchant/upaState = perms["渠道-状态修改"]
+				/merchant/queryAllUserBySourceId = perms["渠道-注册信息"]
+				/merchant/queryAllUserByLikeAll = perms["渠道-注册信息模糊查询"]
+				<!-- 渠道方统计权限拦截 -->
+				<!-- /tongji/queryAllTongji = perms[统计-渠道方查询] -->
+				<!-- 统计权限拦截 -->
+				/tongji/queryAllPage = perms["统计-查询所有me"]
+				/tongji/queryAllPageBySourceName = perms["统计-模糊查询me"]
+				<!-- 后台管理用户权限拦截-->
+				/admin_login/queryAllManageLogin = perms["后台管理-查询所有"]
+				/admin_login/queryManageloginByLike = perms["后台管理-模糊查询"]
+				/admin_login/queryAllRole = perms["后台管理-添加"]
+				/admin_login/addManageLogin = perms["后台管理-添加"]
+				/admin_login/selectByPrimaryKey = perms["后台管理-编辑"]
+				/admin_login/upaManageLogin = perms["后台管理-更新保存"]
+				<!-- 角色 权限拦截-->
+				/role/queryAllRolePage = perms["角色-查询所有"]
+				/role/queryAllRolePageLike = perms["角色-模糊查询"]
+				/role/queryFunctions = perms["角色-添加"]
+				/role/addRole = perms["角色-添加"]
+				/role/selectByPrimaryKey = perms["角色-编辑"]
+				/role/upaBaocun = perms["角色-更新保存"]
+				/role/queryFunctionByRoleid = perms["角色-查看权限"]
+				<!--文章权限控制  -->
+				/news/getAllnews = perms["文章-查询"]
+				/news/setnews = perms["文章-添加"]
+				/news/getnewstype = perms["文章-添加"]
+				/news/getnewsbyid = perms["文章-编辑"]
+				/news/updatenews = perms["文章-更新保存"]
+				/news/deletenews = perms["文章-删除"]
+				/news/getcontent = perms["文章-内容"]
+				<!-- 商家    轮播图审核权限控制 -->
+				/registeCopy/queryAllAdminCopy = perms["商家轮播图-审核"]
+				/registeCopy/selAllNameCopy = perms["商家轮播图-审核"]
+				/registeCopy/insertAllAdminCopy = perms["商家轮播图-审核"]
+				/registeCopy/queryByNameLikeCopy = perms["商家轮播图-审核"]
+				/registeCopy/falsedeleteByPrimaryKeyCopy = perms["商家轮播图-审核"]
+				/registeCopy/selectByPrimaryKeyCopy = perms["商家轮播图-审核"]
+				/registeCopy/upaBaocunByPrimaryKeyCopy = perms["商家轮播图-审核"]
+				/registeCopy/upaStateCopy = perms["商家轮播图-审核"]
+				/registeCopy/upaSortByLoanIdCopy = perms["商家轮播图-审核"]
+				/bannerCopy/queryAllCopy = perms["商家轮播图-审核"]
+				/bannerCopy/queryAllByLikeCopy = perms["商家轮播图-审核"]
+				/bannerCopy/AddAllCopy = perms["商家轮播图-审核"]
+				/bannerCopy/selectByPrimaryKeyCopy = perms["商家轮播图-审核"]
+				/bannerCopy/updateShufflingFigureCopy = perms["商家轮播图-审核"]
+				/bannerCopy/upaFalseDelCopy = perms["商家轮播图-审核"]
+				/bannerCopy/upaStateCopy = perms["商家轮播图-审核"]
+				/soucedadson/queryAll = perms["商家轮播图-审核"]
+				/soucedadson/upatableType = perms["商家轮播图-审核"]
+			</value>
+		</property>
+	</bean>
+</beans>
