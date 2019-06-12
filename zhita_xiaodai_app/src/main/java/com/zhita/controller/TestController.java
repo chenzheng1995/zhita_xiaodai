@@ -34,6 +34,7 @@ public class TestController {
 			map.put("msg", "添加失败");
 			map.put("SCode", "405");
 		}
+		System.out.println("test");
 		return map;
 	
 	}
