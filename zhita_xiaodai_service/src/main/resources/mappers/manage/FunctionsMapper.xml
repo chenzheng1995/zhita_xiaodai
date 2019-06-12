@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.FunctionsMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Functions" >
+    <id column="functionId" property="functionid" jdbcType="INTEGER" />
+    <result column="firstLevelMenu" property="firstlevelmenu" jdbcType="VARCHAR" />
+    <result column="secondLevelMenu" property="secondlevelmenu" jdbcType="VARCHAR" />
+    <result column="thirdLevelMenu" property="thirdlevelmenu" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    functionId, firstLevelMenu, secondLevelMenu, thirdLevelMenu, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from functions
+    where functionId = #{functionid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from functions
+    where functionId = #{functionid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Functions" >
+    insert into functions (functionId, firstLevelMenu, secondLevelMenu, 
+      thirdLevelMenu, status)
+    values (#{functionid,jdbcType=INTEGER}, #{firstlevelmenu,jdbcType=VARCHAR}, #{secondlevelmenu,jdbcType=VARCHAR}, 
+      #{thirdlevelmenu,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Functions" >
+    insert into functions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="functionid != null" >
+        functionId,
+      </if>
+      <if test="firstlevelmenu != null" >
+        firstLevelMenu,
+      </if>
+      <if test="secondlevelmenu != null" >
+        secondLevelMenu,
+      </if>
+      <if test="thirdlevelmenu != null" >
+        thirdLevelMenu,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="functionid != null" >
+        #{functionid,jdbcType=INTEGER},
+      </if>
+      <if test="firstlevelmenu != null" >
+        #{firstlevelmenu,jdbcType=VARCHAR},
+      </if>
+      <if test="secondlevelmenu != null" >
+        #{secondlevelmenu,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdlevelmenu != null" >
+        #{thirdlevelmenu,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Functions" >
+    update functions
+    <set >
+      <if test="firstlevelmenu != null" >
+        firstLevelMenu = #{firstlevelmenu,jdbcType=VARCHAR},
+      </if>
+      <if test="secondlevelmenu != null" >
+        secondLevelMenu = #{secondlevelmenu,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdlevelmenu != null" >
+        thirdLevelMenu = #{thirdlevelmenu,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where functionId = #{functionid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Functions" >
+    update functions
+    set firstLevelMenu = #{firstlevelmenu,jdbcType=VARCHAR},
+      secondLevelMenu = #{secondlevelmenu,jdbcType=VARCHAR},
+      thirdLevelMenu = #{thirdlevelmenu,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where functionId = #{functionid,jdbcType=INTEGER}
+  </update>
+</mapper>

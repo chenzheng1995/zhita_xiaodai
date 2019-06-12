@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Role" >
+    <id column="roleId" property="roleid" jdbcType="INTEGER" />
+    <result column="roleName" property="rolename" jdbcType="VARCHAR" />
+    <result column="roleDescribe" property="roledescribe" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    roleId, roleName, roleDescribe, status
+  </sql>
+  <!-- admin   角色    编辑功能（通过角色id查询角色对象） -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from role
+    where roleId = #{roleid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from role
+    where roleId = #{roleid,jdbcType=INTEGER}
+  </delete>
+  <!-- admin   角色     添加功能（通过权限id查询出对应权限表的三级菜单） -->
+  <select id="queryThirdmenuByFunctionId" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select thirdLevelmenu from functions where status=1 and functionid=#{arg0}
+  </select>
+  <!-- admin   角色      添加功能（通过一级菜单查询二级菜单和三级菜单） -->
+  <select id="queryFunctionByFirstmenu" parameterType="java.lang.String" resultType="com.zhita.model.manage.SecondFunction">
+  	select GROUP_CONCAT(functionId) functionid,secondLevelmenu,GROUP_CONCAT(thirdLevelMenu) thirdLevelmenu from functions where status=1 and firstLevelMenu=#{arg0}
+	group by secondLevelmenu
+  </select>
+  <!-- admin    角色      添加功能（通过一级菜单进行分组  查询出functions表一共有几个模块的一级菜单） -->
+  <select id="queryAllFunctions" resultType="com.zhita.model.manage.Functions">
+  	select firstLevelmenu,status from functions where status=1
+	group by firstLevelMenu
+  </select>
+  <!-- admin    角色     添加功能 -->
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="roleid" parameterType="com.zhita.model.manage.Role" >
+    insert into role (roleName, roleDescribe)
+    values (#{rolename,jdbcType=VARCHAR}, #{roledescribe,jdbcType=VARCHAR})
+  </insert>
+  <!-- admin    角色    用户选择了权限 需要向中间表插入数据 -->
+  <insert id="insertFunction" parameterType="java.lang.Integer">
+  	insert into role_function(roleId,functionId) values(#{arg0},#{arg1})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Role" >
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        roleId,
+      </if>
+      <if test="rolename != null" >
+        roleName,
+      </if>
+      <if test="roledescribe != null" >
+        roleDescribe,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        #{roleid,jdbcType=INTEGER},
+      </if>
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="roledescribe != null" >
+        #{roledescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Role" >
+    update role
+    <set >
+      <if test="rolename != null" >
+        roleName = #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="roledescribe != null" >
+        roleDescribe = #{roledescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where roleId = #{roleid,jdbcType=INTEGER}
+  </update>
+  <!-- admin    角色     更新保存功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Role" >
+    update role
+    set roleName = #{rolename,jdbcType=VARCHAR},
+      roleDescribe = #{roledescribe,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where roleId = #{roleid,jdbcType=INTEGER}
+  </update>
+  <!-- admin   角色    更新保存功能（查询出当前角色在中间表的id集合） -->
+  <select id="queryMiddleId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select id from role_function where roleid=#{arg0}
+  </select>
+  <!-- admin    角色     更新保存功能(删除当前角色在中间表的数据)-->
+  <delete id="delMiddleId" parameterType="java.lang.Integer">
+  	delete from role_function where id=#{arg0}
+  </delete>
+  <!-- admin   角色     列表展示 -->
+  <select id="queryAll" resultType="com.zhita.model.manage.Role">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from role 
+  </select>
+  <!-- admin   角色     模糊查询（角色状态） -->
+  <select id="queryAllByLike" parameterType="java.lang.String" resultType="com.zhita.model.manage.Role">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from role where status=#{arg0}
+  </select>
+   <!-- admin   角色      查看权限功能（通过一级菜单查询二级菜单和三级菜单） -->
+  <select id="queryFunctionByFirstmenuAndRoleid" resultType="com.zhita.model.manage.SecondFunction">
+  	select GROUP_CONCAT(functionId) functionid,secondLevelmenu,GROUP_CONCAT(thirdLevelMenu) thirdLevelmenu from functions where status=1 and firstLevelMenu=#{arg0}  and functionId in(select functionId from role_function where roleId=#{arg1})
+	group by secondLevelmenu
+  </select>
+  <!-- admin    角色      查看权限功能（通过一级菜单进行分组  查询出functions表一共有几个模块的一级菜单） -->
+  <select id="queryFunctionByRoleid" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Functions">
+  	select firstLevelmenu,status from functions where status=1 and functionId in(select functionId from role_function where roleId=#{arg0})
+	group by firstLevelMenu
+  </select>
+</mapper>

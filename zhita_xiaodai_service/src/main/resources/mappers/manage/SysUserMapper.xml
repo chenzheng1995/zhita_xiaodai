@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.SysUser" >
+    <id column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="loginState" property="loginstate" jdbcType="VARCHAR" />
+    <result column="loginTime" property="logintime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="manageloginMap" type="com.zhita.model.manage.SysUser">
+	<id property="userid" column="userId" />
+    <result property="companyid" column="companyId" />
+    <result property="account" column="account" />
+    <result property="pwd" column="pwd" />
+    <result property="phone" column="phone" />
+    <result property="loginstate" column="loginState" />
+    <result property="logintime" column="loginTime" />
+    <result property="status" column="status" />
+	    <collection  property="listrole"  ofType="com.zhita.model.manage.Role">
+            <id property="roleid" column="roleId" />
+            <result property="rolename" column="roleName" />    
+            <result property="roledescribe" column="roleDescribe" />   
+        </collection>
+	</resultMap>
+  <sql id="Base_Column_List" >
+    s.userId, s.companyId, s.account, s.pwd, s.phone, s.loginState, s.loginTime, s.status,
+    GROUP_CONCAT(r.roleId) roleid, 
+    GROUP_CONCAT(r.roleName) rolename,
+    GROUP_CONCAT(r.roleDescribe) roledescribe
+  </sql>
+  <!-- admin   系统用户     修改功能(通过主键id查询对象) -->
+  <select id="selectByPrimaryKey" resultMap="manageloginMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId
+    where s.userId = #{userid,jdbcType=INTEGER}
+  	group by s.userId
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where userId = #{userid,jdbcType=INTEGER}
+  </delete>
+  <!-- admin   系统用户——添加功能（先查询出所有角色） -->
+  <select id="queryAllRole" resultType="com.zhita.model.manage.Role">
+  	select roleid,rolename from role where status=1
+  </select>
+  <!-- admin   系统用户   添加功能（先查询出所有公司） -->
+  <select id="queryAllCompany" resultType="com.zhita.model.manage.Company">
+  	select companyId, company from company where deleted=0
+  </select>
+  <!-- admin    系统用户    添加功能 -->
+  <insert id="insert" useGeneratedKeys="true" keyProperty="userid" parameterType="com.zhita.model.manage.SysUser" >
+    insert into sys_user (companyId, account,pwd, phone)
+    values (#{companyid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR})
+  </insert>
+  <!-- admin    系统用户    添加功能（用户选择了角色，需要向中间表插入数据）-->
+  <insert id="insertRole" parameterType="java.lang.Integer">
+  	insert into sysuser_role(userId,roleId) values(#{arg0},#{arg1})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="loginstate != null" >
+        loginState,
+      </if>
+      <if test="logintime != null" >
+        loginTime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginstate != null" >
+        #{loginstate,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        #{logintime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.SysUser" >
+    update sys_user
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginstate != null" >
+        loginState = #{loginstate,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        loginTime = #{logintime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+  <!-- admin    系统用户     修改功能(修改保存) -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.SysUser">
+    update sys_user
+    set companyId = #{companyid,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR}
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+  <!-- admin  系统用户      列表展示 -->
+  <select id="queryAll" resultMap="manageloginMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId
+  	group by s.userId
+  	order by loginTime desc
+  </select>
+  <!-- admin  系统用户    模糊查询（账号和账号状态） -->
+  <select id="queryAllByLike" parameterType="java.lang.String" resultMap="manageloginMap">
+	select 
+  	<include refid="Base_Column_List" />
+  	from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId
+  	<where>
+        <if test="account != null">
+           s.account like "%"#{account}"%"
+        </if>
+         
+        <if test="status != null">
+           and s.status=#{status}
+        </if>
+    </where>
+    group by s.userId
+    order by loginTime desc
+    </select>
+    <!-- admin   系统用户   设置账号状态为开启 -->
+    <update id="upaStatusOpen">
+    	update sys_user set status=1 where userid=#{arg0}
+    </update>
+     <!-- admin   系统用户   设置账号状态为关闭 -->
+    <update id="upaStatusClose">
+    	update sys_user set status=2 where userid=#{arg0}
+    </update>
+    <!-- admin    系统用户     修改功能(查询出当前用户在中间表的id集合) -->
+    <select id="queryMiddleId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    	select id from sysuser_role where userid=#{arg0}
+    </select>
+    <!--admin   系统用户      修改功能(删除当前用户在中间表的数据)  -->
+    <delete id="delMiddleId" parameterType="java.lang.Integer">
+    	delete from sysuser_role where id=#{arg0}
+    </delete>
+    <!-- admin    登录      查询该用户   账号是否存在 -->
+  <!--   <select id="queryByAccount" parameterType="java.lang.String" resultType="com.zhita.model.manage.SysUser">
+    	select userId,companyId,account,pwd,phone,loginState,loginTime,status from sys_user where account=#{arg0}
+    </select> -->
+    <!-- admin   登录      查询该用户   账号密码是否正确 --> 
+    <select id="queryByAccountAndPwd" parameterType="java.lang.String" resultType="com.zhita.model.manage.SysUser">
+    	select userId,companyId,account,pwd,phone,loginState,loginTime,status from sys_user where account=#{arg0} and pwd=#{arg1} and status=1
+    </select>
+    <!-- admin   登录   修改该用户的登录状态  登录时间(通过账号和密码) -->
+    <update id="updateByAccountAndPwd" parameterType="java.lang.String">
+    	update sys_user set loginState=#{arg0},loginTime=#{arg1} where account=#{arg2} and pwd=#{arg3}
+    </update>
+    <!-- admin     登录      通过手机号查询是否存在该用户 -->
+    <select id="queryByPhone" parameterType="java.lang.String" resultType="com.zhita.model.manage.SysUser">
+    	select userId,companyId,account,pwd,phone,loginState,loginTime,status from sys_user where phone=#{arg0} and status=1
+    </select>
+    <!-- admin   登录    修改该用户的登录状态  登录时间（通过手机号） -->
+    <update id="updateByPhone" parameterType="java.lang.String">
+    	update sys_user set loginState=#{arg0},loginTime=#{arg1} where phone=#{arg2}
+    </update>
+    <!-- admin    登录    查询当前用户角色（通过账号和密码） -->
+    <select id="queryRoleByAccountAndPwd" parameterType="java.lang.String" resultType="java.lang.String">
+    	select roleName from sys_user s INNER JOIN sysuser_role sr on s.userid=sr.userid inner join role r on r.roleid=sr.roleid where s.account=#{arg0} and s.pwd=#{arg1}
+    </select>
+    <!-- admin    登录       查询当前用户权限id（通过账号和密码） -->
+    <select id="queryFunctionsByAccountAndPwd" parameterType="java.lang.String" resultType="java.lang.Integer">
+    	select f.functionid from sys_user s INNER JOIN sysuser_role sr on s.userid=sr.userid inner join role r on r.roleid=sr.roleid 
+		inner join role_function rf on r.roleid=rf.roleid inner join functions f on f.functionid =rf.functionid
+		where s.account=#{arg0} and s.pwd=#{arg1}
+    </select>
+      <!-- admin    登录    查询当前用户角色（通过手机号） -->
+    <select id="queryRoleByPhone" parameterType="java.lang.String" resultType="java.lang.String">
+    	select roleName from sys_user s INNER JOIN sysuser_role sr on s.userid=sr.userid inner join role r on r.roleid=sr.roleid where s.phone=#{arg0}
+    </select>
+    <!-- admin    登录       查询当前用户权限id（通过手机号） -->
+    <select id="queryFunctionsByPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+    	select f.functionid from sys_user s INNER JOIN sysuser_role sr on s.userid=sr.userid inner join role r on r.roleid=sr.roleid 
+		inner join role_function rf on r.roleid=rf.roleid inner join functions f on f.functionid =rf.functionid
+		where s.phone=#{arg0}
+    </select>
+</mapper>
