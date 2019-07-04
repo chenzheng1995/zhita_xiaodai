@@ -3,6 +3,7 @@ package com.zhita.service.manage.login;
 import java.util.List;
 
 import com.zhita.model.manage.SysUser;
+import com.zhita.model.manage.User;
 
 public interface IntLoginService {
 	
@@ -32,5 +33,7 @@ public interface IntLoginService {
    
    //admin---登录——查询当前用户权限id（通过手机号）
    public List<Integer> queryFunctionsByPhone(String phone);
+
+public User findphone(String newPhone, String companyId);
    
 }

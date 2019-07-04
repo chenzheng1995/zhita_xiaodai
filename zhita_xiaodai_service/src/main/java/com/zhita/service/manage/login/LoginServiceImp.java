@@ -6,12 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.SysUserMapper;
+import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.SysUser;
+import com.zhita.model.manage.User;
 
 @Service
 public class LoginServiceImp implements IntLoginService{
 	@Autowired
 	private SysUserMapper sysUserMapper;
+	
+	@Autowired
+	UserMapper userMapper;
 	
 	
 	//admin-----登录——查询该用户   账号是否存在
@@ -74,5 +79,11 @@ public class LoginServiceImp implements IntLoginService{
 	public List<Integer> queryFunctionsByPhone(String phone){
 		List<Integer> list=sysUserMapper.queryFunctionsByPhone(phone);
 		return list;
+	}
+
+	@Override
+	public User findphone(String newPhone, String companyId) {
+		User user = userMapper.findphone(newPhone, companyId); // 判断该用户是否存在
+		return user;
 	}
 }
