@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.DeferredSettingsMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.DeferredSettings" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="maximumCanDeferredTime" property="maximumcandeferredtime" jdbcType="INTEGER" />
+    <result column="onceDeferredDay" property="oncedeferredday" jdbcType="INTEGER" />
+    <result column="onceDeferredMoney" property="oncedeferredmoney" jdbcType="INTEGER" />
+    <result column="overdueHowdayCanDeferred" property="overduehowdaycandeferred" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, maximumCanDeferredTime, onceDeferredDay, onceDeferredMoney, overdueHowdayCanDeferred, 
+    operator, operationTime
+  </sql>
+  <!-- 后台管理        根据当前id查询出当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from deferred_settings
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from deferred_settings
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理       添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.DeferredSettings" >
+    insert into deferred_settings (companyId, productid,maximumCanDeferredTime, 
+      onceDeferredDay, onceDeferredMoney, overdueHowdayCanDeferred, 
+      operator, operationTime)
+    values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER},  #{maximumcandeferredtime,jdbcType=INTEGER}, 
+      #{oncedeferredday,jdbcType=INTEGER}, #{oncedeferredmoney,jdbcType=INTEGER}, #{overduehowdaycandeferred,jdbcType=INTEGER}, 
+      #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.DeferredSettings" >
+    insert into deferred_settings
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="maximumcandeferredtime != null" >
+        maximumCanDeferredTime,
+      </if>
+      <if test="oncedeferredday != null" >
+        onceDeferredDay,
+      </if>
+      <if test="oncedeferredmoney != null" >
+        onceDeferredMoney,
+      </if>
+      <if test="overduehowdaycandeferred != null" >
+        overdueHowdayCanDeferred,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operationtime != null" >
+        operationTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="maximumcandeferredtime != null" >
+        #{maximumcandeferredtime,jdbcType=INTEGER},
+      </if>
+      <if test="oncedeferredday != null" >
+        #{oncedeferredday,jdbcType=INTEGER},
+      </if>
+      <if test="oncedeferredmoney != null" >
+        #{oncedeferredmoney,jdbcType=INTEGER},
+      </if>
+      <if test="overduehowdaycandeferred != null" >
+        #{overduehowdaycandeferred,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        #{operationtime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.DeferredSettings" >
+    update deferred_settings
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="maximumcandeferredtime != null" >
+        maximumCanDeferredTime = #{maximumcandeferredtime,jdbcType=INTEGER},
+      </if>
+      <if test="oncedeferredday != null" >
+        onceDeferredDay = #{oncedeferredday,jdbcType=INTEGER},
+      </if>
+      <if test="oncedeferredmoney != null" >
+        onceDeferredMoney = #{oncedeferredmoney,jdbcType=INTEGER},
+      </if>
+      <if test="overduehowdaycandeferred != null" >
+        overdueHowdayCanDeferred = #{overduehowdaycandeferred,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        operationTime = #{operationtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理        修改保存功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.DeferredSettings" >
+    update deferred_settings
+    set companyId = #{companyid,jdbcType=INTEGER},
+      maximumCanDeferredTime = #{maximumcandeferredtime,jdbcType=INTEGER},
+      onceDeferredDay = #{oncedeferredday,jdbcType=INTEGER},
+      onceDeferredMoney = #{oncedeferredmoney,jdbcType=INTEGER},
+      overdueHowdayCanDeferred = #{overduehowdaycandeferred,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      operationTime = #{operationtime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理        查询延期设置表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.DeferredSettings">
+  	select 
+    <include refid="Base_Column_List" />
+    from deferred_settings
+    where companyId=#{arg0}
+  </select>
+  <!-- 后台管理        查询借款信息表的产品id和产品名称 -->
+  <select id="queryAllBorrow" parameterType="java.lang.Integer" parameterMap="com.zhita.model.manage.BorrowMoneyMessage">
+  	select productid,loantype from borrow_money_message where companyId=#{arg0}
+  </select>
+</mapper>

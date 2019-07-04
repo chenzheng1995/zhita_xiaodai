@@ -3,12 +3,10 @@ package com.zhita.controller.role;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.zhita.model.manage.Functions;
 import com.zhita.model.manage.Role;
@@ -18,7 +16,7 @@ import com.zhita.service.manage.role.IntRoleService;
  * @author lhq
  * @{date} 2019年4月19日
  */
-@RestController
+@Controller
 @RequestMapping("/role")
 public class RoleController {
 	@Autowired
@@ -27,7 +25,7 @@ public class RoleController {
 	//admin------角色——列表展示
 	@ResponseBody
 	@RequestMapping("/queryAll")
-	@RequiresPermissions(value={"1"})
+	/*@RequiresPermissions(value={"1"})*/
 	public Map<String,Object> queryAll(Integer page) {
 		Map<String,Object> map=intRoleService.queryAll(page);
 		return map;

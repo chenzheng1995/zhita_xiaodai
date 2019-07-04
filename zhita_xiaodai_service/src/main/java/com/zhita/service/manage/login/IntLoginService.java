@@ -33,4 +33,7 @@ public interface IntLoginService {
    //admin---登录——查询当前用户权限id（通过手机号）
    public List<Integer> queryFunctionsByPhone(String phone);
    
+   //admin---登录——退出登录
+   public int updateLoginStatus(Integer userId);
+   
 }

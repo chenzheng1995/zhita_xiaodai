@@ -121,32 +121,6 @@
     
     <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
     
-		<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->  
-		<bean id="lifecycleBeanPostProcessor"  class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/> 
-	    
-	    <!--开启Shiro的注解，实现对Controller的方法级权限检查(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证-->   
-	    <!--配置以下两个bean即可实现此功能 -->   
-	    <!--Enable Shiro Annotations for Spring-configured beans. Only run after thelifecycleBeanProcessor has run -->   
-		<bean  class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"  
-		depends-on="lifecycleBeanPostProcessor" >  
-			<property name="proxyTargetClass" value="true"/>  
-		</bean>  
-		<bean  class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
-			<property name="securityManager" ref="securityManager" />  
-		</bean>
-		<!-- 配置SpringMVC的异常解析器 -->  
-		<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
-			<property name="exceptionMappings">  
-				<props>  
-					<!-- 发生授权异常时，跳到指定页 -->  
-					<prop  key="org.apache.shiro.authz.UnauthorizedException">/error</prop>  
-					   
-					 <!--SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException-->   
-					 <!--遇到MaxUploadSizeExceededException异常时，自动跳转到/WEB-INF/error_fileupload.jsp页面-->   
-					               <!-- <propkey="org.springframework.web.multipart.MaxUploadSizeExceededException">WEB-INF/error_fileupload</prop>-->   
-				</props>  
-			</property>  
-		</bean>
 <!--     <import resource="spring-mybatis.xml"/>
     <import resource="spring-shiro.xml"/> -->
 </beans>  

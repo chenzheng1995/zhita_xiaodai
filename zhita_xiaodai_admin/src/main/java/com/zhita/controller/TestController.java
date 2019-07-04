@@ -1,14 +1,21 @@
 package com.zhita.controller;
 
+import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.model.manage.SysUser;
+import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 
 
@@ -19,6 +26,8 @@ import com.zhita.service.test.TestService;
 public class TestController {
 	@Autowired
 	TestService testService;
+	@Autowired
+	private IntLoginService intLoginService;
 
 	
 	@RequestMapping("/settest")
@@ -38,7 +47,6 @@ public class TestController {
 	
 	}
 	
-	
 	@RequestMapping("/gettest")
 	@ResponseBody
 	@Transactional
@@ -47,7 +55,35 @@ public class TestController {
 		String name = testService.gettest(id);
 		map.put("name",name);
 		return map;
+	}
 	
+	@ResponseBody
+	@RequestMapping("/test")
+	public void test(HttpServletRequest request) {
+		String account=(String) request.getSession().getAttribute("account");
+		String pwd=(String) request.getSession().getAttribute("pwd");
+		// 获取账号的角色和权限信息
+		List<String> list=intLoginService.queryRoleByAccountAndPwd(account, pwd);//查询当前用户所拥有的角色
+		boolean ishas=false;
+		for (int i = 0; i < list.size(); i++) {
+			if(list.get(i).equals("经理")){
+				ishas=true;
+			}else{
+				ishas=false;
+			}
+		}
+		if(ishas){
+			System.out.println("看到的数据不脱敏");
+		}else{
+			System.out.println("看到的数据脱敏");
+		}
+	}
+	
+	
+	public static void main(String[] args) throws ParseException {
+		 String str="600-800"; 
+		 String[] strarray=str.split("-"); 
+		 System.out.println(strarray[0]+"----"+strarray[1]);
 	}
 	public static void main(String[] args) {
 		System.out.println("00000");

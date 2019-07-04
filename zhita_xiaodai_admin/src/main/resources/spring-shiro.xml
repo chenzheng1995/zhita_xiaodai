@@ -7,30 +7,34 @@
      http://www.springframework.org/schema/util
     http://www.springframework.org/schema/util/spring-util.xsd">
     
-    
-    
-
 	<!-- 安全管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 	    <!-- 验证 -->        
      <!--    <property name="authenticator" ref="myModularRealmAuthenticator"/> -->
-        	<property name="realm" ref="realmUser" />
+        	<!-- <property name="realm" ref="realmPhone" /> -->
 		   <!-- 多个验证策略 realmes -->
-		  <!--  <property name="realms">
-            <list>
-                <ref bean="realmUser"/>
-                <ref bean="realmPhone"/>
-            </list>
-        </property> -->
+		   <property name="realms">
+	           <list>
+	               <ref bean="realmUser"/>
+	               <ref bean="realmPhone"/>
+	           </list>
+          </property>
 	</bean>
 	
+	<!-- 授权策略 -->
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy" >
+            <bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"/>
+        </property>
+    </bean>
+    
 	<!-- Realm -->
 	<bean id="realmUser" class="com.zhita.controller.shiro.UserRealm">
 		<!-- <property name="credentialsMatcher" ref="credentialsMatcher"/> -->
 	</bean>
-	<!-- <bean id="realmPhone" class="com.zhita.controller.shiro.PhoneRealm">
-		<property name="credentialsMatcher" ref="credentialsMatcher"/>
-	</bean> -->
+	<bean id="realmPhone" class="com.zhita.controller.shiro.PhoneRealm">
+		<!-- <property name="credentialsMatcher" ref="credentialsMatcher"/> -->
+	</bean>
 	
 	<!-- 加密 -->
 	<!-- <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher"> 
@@ -43,6 +47,8 @@
 		
 		<!-- 在此处配置未登录跳转页面 -->
 		<property name="loginUrl" value="/login.jsp" />
+		<!--在此处配置无权限的跳转路径 -->
+		<property name="unauthorizedUrl" value="/error.jsp" />
 
 		<!-- 在此处配置无权限的跳转路径 -->
 	<!-- 	<property name="unauthorizedUrl" value="/error.jsp" /> -->
@@ -52,17 +58,18 @@
 		2). authc 必须认证(即登录)后才可能访问的页面. 
 		3). logout 登出. 
 		4). roles 角色过滤器 -->
-<!-- 		<property name="filterChainDefinitions">
+		<property name="filterChainDefinitions">
 			<value>
-				说明访问该接口不需要任何权限
+				<!-- 说明访问该接口不需要任何权限 -->
 				/login/sendSMS = anon
 				/login/loginap = anon
 				/login/loginpc = anon
-				贷款分类权限拦截
+				<!-- 贷款分类权限拦截 -->
 				/role/queryAll = perms["1"]
 				/role/queryAllByLike = perms["1"]
+				/test/test = perms["10"]
 			</value>
-		</property> -->
+		</property>
 	</bean>
 	
 </beans>

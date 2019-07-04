@@ -75,4 +75,10 @@ public class LoginServiceImp implements IntLoginService{
 		List<Integer> list=sysUserMapper.queryFunctionsByPhone(phone);
 		return list;
 	}
+	
+	//admin---登录——退出登录
+	public int updateLoginStatus(Integer userId){
+		int num=sysUserMapper.updateLoginStatus(userId);
+		return num;
+	}
 }

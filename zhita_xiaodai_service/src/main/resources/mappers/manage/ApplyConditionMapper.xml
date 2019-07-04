@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.ApplyConditionMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.ApplyCondition" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="minimumage" property="minimumage" jdbcType="INTEGER" />
+    <result column="maximumage" property="maximumage" jdbcType="INTEGER" />
+    <result column="refuseApplyProvince" property="refuseapplyprovince" jdbcType="VARCHAR" />
+    <result column="allowSigningIdcard" property="allowsigningidcard" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, minimumage, maximumage, refuseApplyProvince, allowSigningIdcard
+  </sql>
+  <!-- 后台管理        根据id查询出当前对象 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from apply_condition
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from apply_condition
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理     添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.ApplyCondition" >
+    insert into apply_condition (companyId, minimumage, 
+      maximumage, refuseApplyProvince, allowSigningIdcard
+      )
+    values (#{companyid,jdbcType=INTEGER}, #{minimumage,jdbcType=INTEGER}, 
+      #{maximumage,jdbcType=INTEGER}, #{refuseapplyprovince,jdbcType=VARCHAR}, #{allowsigningidcard,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.ApplyCondition" >
+    insert into apply_condition
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="minimumage != null" >
+        minimumage,
+      </if>
+      <if test="maximumage != null" >
+        maximumage,
+      </if>
+      <if test="refuseapplyprovince != null" >
+        refuseApplyProvince,
+      </if>
+      <if test="allowsigningidcard != null" >
+        allowSigningIdcard,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="minimumage != null" >
+        #{minimumage,jdbcType=INTEGER},
+      </if>
+      <if test="maximumage != null" >
+        #{maximumage,jdbcType=INTEGER},
+      </if>
+      <if test="refuseapplyprovince != null" >
+        #{refuseapplyprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="allowsigningidcard != null" >
+        #{allowsigningidcard,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.ApplyCondition" >
+    update apply_condition
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="minimumage != null" >
+        minimumage = #{minimumage,jdbcType=INTEGER},
+      </if>
+      <if test="maximumage != null" >
+        maximumage = #{maximumage,jdbcType=INTEGER},
+      </if>
+      <if test="refuseapplyprovince != null" >
+        refuseApplyProvince = #{refuseapplyprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="allowsigningidcard != null" >
+        allowSigningIdcard = #{allowsigningidcard,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理   编辑功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.ApplyCondition" >
+    update apply_condition
+    set companyId = #{companyid,jdbcType=INTEGER},
+      minimumage = #{minimumage,jdbcType=INTEGER},
+      maximumage = #{maximumage,jdbcType=INTEGER},
+      refuseApplyProvince = #{refuseapplyprovince,jdbcType=VARCHAR},
+      allowSigningIdcard = #{allowsigningidcard,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理         查询申请条件配置表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.ApplyCondition">
+  	select 
+    <include refid="Base_Column_List" />
+    from apply_condition
+    where companyId=#{arg0} 
+  </select>
+</mapper>
