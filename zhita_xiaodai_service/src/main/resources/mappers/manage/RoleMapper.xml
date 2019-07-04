@@ -94,8 +94,7 @@
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Role" >
     update role
     set roleName = #{rolename,jdbcType=VARCHAR},
-      roleDescribe = #{roledescribe,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR}
+      roleDescribe = #{roledescribe,jdbcType=VARCHAR}
     where roleId = #{roleid,jdbcType=INTEGER}
   </update>
   <!-- admin   角色    更新保存功能（查询出当前角色在中间表的id集合） -->

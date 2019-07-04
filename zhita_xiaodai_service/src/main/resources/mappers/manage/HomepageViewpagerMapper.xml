@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.HomepageViewpagerMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.HomepageViewpager" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="viewpagerPicture" property="viewpagerpicture" jdbcType="VARCHAR" />
+    <result column="isStick" property="isstick" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, viewpagerPicture, isStick,sort, updateTime, deleted
+  </sql>
+  <!-- 后台管理       编辑功能（根据id查询当前对象信息） -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from homepage_viewpager
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from homepage_viewpager
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理    添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.HomepageViewpager" >
+    insert into homepage_viewpager (companyId, viewpagerPicture,sort)
+    values (#{companyid,jdbcType=INTEGER}, #{viewpagerpicture,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.HomepageViewpager" >
+    insert into homepage_viewpager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="viewpagerpicture != null" >
+        viewpagerPicture,
+      </if>
+      <if test="isstick != null" >
+        isStick,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="viewpagerpicture != null" >
+        #{viewpagerpicture,jdbcType=VARCHAR},
+      </if>
+      <if test="isstick != null" >
+        #{isstick,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.HomepageViewpager" >
+    update homepage_viewpager
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="viewpagerpicture != null" >
+        viewpagerPicture = #{viewpagerpicture,jdbcType=VARCHAR},
+      </if>
+      <if test="isstick != null" >
+        isStick = #{isstick,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理       编辑功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.HomepageViewpager" >
+    update homepage_viewpager
+    set companyId = #{companyid,jdbcType=INTEGER},
+      viewpagerPicture = #{viewpagerpicture,jdbcType=VARCHAR},
+      isStick = #{isstick,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理      查询首页轮播图所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.HomepageViewpager">
+  	 select 
+    <include refid="Base_Column_List" />
+    from homepage_viewpager where companyId=#{arg0} and deleted=0
+  </select>
+  <!-- 后台管理       修改当前对象假删除状态 -->
+  <update id="updateFalDel" parameterType="java.lang.Integer">
+  	update homepage_viewpager set deleted=1 where id=#{arg0}
+  </update>
+  <!-- 后台管理          通过id  查询当前对象的首页轮播图图片 -->
+  <select id="queryViewpagerpicture" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select viewpagerpicture from homepage_viewpager where id=#{arg0}
+  </select>
+</mapper>

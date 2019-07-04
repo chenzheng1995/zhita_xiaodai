@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.ContactCustomerServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.ContactCustomerService" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="advertisingmap" property="advertisingmap" jdbcType="VARCHAR" />
+    <result column="contactInformation" property="contactinformation" jdbcType="VARCHAR" />
+    <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, advertisingmap, contactInformation, qrcode, remarks
+  </sql>
+  <!-- 后台管理       根据id查询出当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from contact_customer_service
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from contact_customer_service
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理        添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.ContactCustomerService" >
+    insert into contact_customer_service (companyId, advertisingmap,contactInformation, qrcode, remarks)
+    values (#{companyid,jdbcType=INTEGER}, #{advertisingmap,jdbcType=VARCHAR}, 
+      #{contactinformation,jdbcType=VARCHAR}, #{qrcode,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.ContactCustomerService" >
+    insert into contact_customer_service
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="advertisingmap != null" >
+        advertisingmap,
+      </if>
+      <if test="contactinformation != null" >
+        contactInformation,
+      </if>
+      <if test="qrcode != null" >
+        qrcode,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="advertisingmap != null" >
+        #{advertisingmap,jdbcType=VARCHAR},
+      </if>
+      <if test="contactinformation != null" >
+        #{contactinformation,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcode != null" >
+        #{qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.ContactCustomerService" >
+    update contact_customer_service
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="advertisingmap != null" >
+        advertisingmap = #{advertisingmap,jdbcType=VARCHAR},
+      </if>
+      <if test="contactinformation != null" >
+        contactInformation = #{contactinformation,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcode != null" >
+        qrcode = #{qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理       修改功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.ContactCustomerService" >
+    update contact_customer_service
+    set companyId = #{companyid,jdbcType=INTEGER},
+      advertisingmap = #{advertisingmap,jdbcType=VARCHAR},
+      contactInformation = #{contactinformation,jdbcType=VARCHAR},
+      qrcode = #{qrcode,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理         查询联系客服表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.ContactCustomerService">
+  	 select 
+    <include refid="Base_Column_List" />
+    from contact_customer_service
+    where companyId=#{arg0}
+  </select>
+  <!-- 后台管理      根据id查询出当前对象的宣传图字段 -->
+  <select id="queryAdvertisingmap" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select advertisingmap from contact_customer_service where id=#{arg0}
+  </select>
+  <!-- 后台管理      根据id查询出当前对象的二维码字段 -->
+    <select id="queryQrcode" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select qrcode from contact_customer_service where id=#{arg0}
+  </select>
+</mapper>

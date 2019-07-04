@@ -12,7 +12,7 @@ import com.zhita.service.manage.sysuser.IntSysuserService;
 /**
  * 
  * @author lhq
- * @{date} 2019年4月17日
+ * @{date} 2019年6月21日
  */
 @Controller
 @RequestMapping("/sysuser")
@@ -23,16 +23,16 @@ public class SysuserController {
 	//admin------系统用户——列表展示
 	@ResponseBody
 	@RequestMapping("/queryAll")
-	public Map<String, Object> queryAll(Integer page){
-		Map<String, Object> map=intSysuserService.queryAll(page);
+	public Map<String, Object> queryAll(Integer companyId,Integer page){
+		Map<String, Object> map=intSysuserService.queryAll(companyId,page);
 		return map;
 	}
 	
 	//admin------系统用户——模糊查询（账号和账号状态）
 	@ResponseBody
 	@RequestMapping("/queryAllByLike")
-	public Map<String, Object> queryAllByLike(String account,String status,Integer page){
-		Map<String, Object> map=intSysuserService.queryAllByLike(account,status,page);
+	public Map<String, Object> queryAllByLike(Integer companyId,String account,String status,Integer page){
+		Map<String, Object> map=intSysuserService.queryAllByLike(companyId,account,status,page);
 		return map;
 	}
 	//admin-----系统用户——添加功能（先查询出所有公司和所有角色）
@@ -58,6 +58,7 @@ public class SysuserController {
 		int num=intSysuserService.updateStatus(id, status);
 		return num;
 	}
+	
 	//admin----系统用户——编辑功能（通过主键id查询对象）
 	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
@@ -65,6 +66,7 @@ public class SysuserController {
 		Map<String, Object> map=intSysuserService.selectByPrimaryKey(userid);
 		return map;
 	}
+	
 	//admin----系统用户——编辑功能（修改保存）
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")

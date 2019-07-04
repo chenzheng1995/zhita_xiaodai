@@ -40,10 +40,10 @@ public interface SysUserMapper {
     int delMiddleId(Integer userid);
     
     //admin------系统用户——列表展示
-    List<SysUser> queryAll();
+    List<SysUser> queryAll(Integer companyId);
     
     //admin------系统用户——模糊查询（账号和账号状态）
-    List<SysUser> queryAllByLike(@Param("account") String account,@Param("status") String status);
+    List<SysUser> queryAllByLike(@Param("companyId") Integer companyid,@Param("account") String account,@Param("status") String status);
     
     //admin-----系统用户——设置账号状态为开启
     int upaStatusOpen(Integer id);
@@ -77,4 +77,7 @@ public interface SysUserMapper {
     
     //admin---登录——查询当前用户权限id（通过手机号）
     List<Integer> queryFunctionsByPhone(String phone);
+    
+    //admin---登录——退出登录
+    int updateLoginStatus(Integer userId);
 }

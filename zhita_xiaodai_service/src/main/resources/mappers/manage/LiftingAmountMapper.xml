@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.LiftingAmountMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.LiftingAmount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="userHowManyConsecutivePayments" property="userhowmanyconsecutivepayments" jdbcType="INTEGER" />
+    <result column="increaseThequota" property="increasethequota" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, userHowManyConsecutivePayments, increaseThequota, operator, operationTime, 
+    deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from lifting_amount
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from lifting_amount
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.LiftingAmount" >
+    insert into lifting_amount (id, companyId, userHowManyConsecutivePayments, 
+      increaseThequota, operator, operationTime, 
+      deleted)
+    values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{userhowmanyconsecutivepayments,jdbcType=INTEGER}, 
+      #{increasethequota,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}, 
+      #{deleted,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.LiftingAmount" >
+    insert into lifting_amount
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="userhowmanyconsecutivepayments != null" >
+        userHowManyConsecutivePayments,
+      </if>
+      <if test="increasethequota != null" >
+        increaseThequota,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operationtime != null" >
+        operationTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="userhowmanyconsecutivepayments != null" >
+        #{userhowmanyconsecutivepayments,jdbcType=INTEGER},
+      </if>
+      <if test="increasethequota != null" >
+        #{increasethequota,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        #{operationtime,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.LiftingAmount" >
+    update lifting_amount
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="userhowmanyconsecutivepayments != null" >
+        userHowManyConsecutivePayments = #{userhowmanyconsecutivepayments,jdbcType=INTEGER},
+      </if>
+      <if test="increasethequota != null" >
+        increaseThequota = #{increasethequota,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        operationTime = #{operationtime,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.LiftingAmount" >
+    update lifting_amount
+    set companyId = #{companyid,jdbcType=INTEGER},
+      userHowManyConsecutivePayments = #{userhowmanyconsecutivepayments,jdbcType=INTEGER},
+      increaseThequota = #{increasethequota,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      operationTime = #{operationtime,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

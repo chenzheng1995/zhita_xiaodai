@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.AboutusMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Aboutus" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="productName" property="productname" jdbcType="VARCHAR" />
+    <result column="appVersion" property="appversion" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, logo, productName, appVersion
+  </sql>
+  <!-- 后台管理     根据id查询当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from aboutus
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from aboutus
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理   添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.Aboutus" >
+    insert into aboutus (companyId, logo, 
+      productName, appVersion)
+    values (#{companyid,jdbcType=INTEGER}, #{logo,jdbcType=VARCHAR}, 
+      #{productname,jdbcType=VARCHAR}, #{appversion,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Aboutus" >
+    insert into aboutus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="productname != null" >
+        productName,
+      </if>
+      <if test="appversion != null" >
+        appVersion,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="appversion != null" >
+        #{appversion,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Aboutus" >
+    update aboutus
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null" >
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="appversion != null" >
+        appVersion = #{appversion,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理    更新功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Aboutus" >
+    update aboutus
+    set companyId = #{companyid,jdbcType=INTEGER},
+      logo = #{logo,jdbcType=VARCHAR},
+      productName = #{productname,jdbcType=VARCHAR},
+      appVersion = #{appversion,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理       查询所有 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Aboutus">
+  	select 
+  	 <include refid="Base_Column_List" />
+    from aboutus
+    where companyId=#{arg0}
+  </select>
+  <!-- 后台管理       根据id查询当前对象的logo字段 -->
+  <select id="queryAppLogo" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select logo from aboutus where id=#{arg0}
+  </select>
+</mapper>

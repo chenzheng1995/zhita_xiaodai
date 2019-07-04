@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.SourceMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Source" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="sourceName" property="sourcename" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="link" property="link" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="discount" property="discount" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, sourceName, account, pwd, link, status, discount, remarks, deleted
+  </sql>
+  <!-- 后台管理            根据id查询当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from source
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from source
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理    添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.Source" >
+    insert into source (companyId, sourceName,account, pwd, 
+    link,status, discount, remarks)
+    values (#{companyid,jdbcType=INTEGER}, #{sourcename,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{discount,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Source" >
+    insert into source
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="sourcename != null" >
+        sourceName,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="link != null" >
+        link,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="sourcename != null" >
+        #{sourcename,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Source" >
+    update source
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="sourcename != null" >
+        sourceName = #{sourcename,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="link != null" >
+        link = #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理      编辑功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Source" >
+    update source
+    set companyId = #{companyid,jdbcType=INTEGER},
+      sourceName = #{sourcename,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      link = #{link,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      discount = #{discount,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 后台管理      查询渠道表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Source">
+  	select 
+    <include refid="Base_Column_List" />
+    from source
+    where companyId=#{arg0} and deleted=0
+  </select>
+  
+  <!-- 后台管理        根据id  对当前对象的假删除状态进行修改 -->
+  <update id="updateFalDel" parameterType="java.lang.Integer">
+  	update source set deleted=1 where id=#{arg0}
+  </update>
+  <!-- 后台管理        添加功能（判断该渠道名是否在渠道表存在    其假删除状态是1） -->
+  <select id="ifSourceNameIfExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(sourceName) from source where sourceName=#{arg0}
+  </select>
+  <!-- 后台管理        添加功能（该渠道在渠道表已经存在   只需做修改） -->
+  <update id="updateSource" parameterType="com.zhita.model.manage.Source">
+  	update source
+    set companyId = #{companyid,jdbcType=INTEGER},
+      sourceName = #{sourcename,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      link = #{link,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      discount = #{discount,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      deleted = 0
+    where sourcename = #{sourcename,jdbcType=VARCHAR}
+  </update>
+  <!--后台管理       查询当天各个渠道在用户表的注册数量  -->
+  <select id="queryAllSourceByUser" resultType="com.zhita.model.manage.TongjiSorce">
+	select t.sourcename,count(*) registernum,t.companyid from 
+   	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
+   	and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t 
+   	group by t.sourcename 
+   </select>
+   <!-- 后台管理        通过渠道名称查询出当前渠道的折扣率 -->
+   <select id="queryDiscount" resultType="java.lang.String">
+   	select discount from source where sourceName=#{arg0} and companyId=#{arg1}
+   </select>
+   <!--后台管理             查询某一天某个渠道的注册数量  -->
+   <select id="queryAllSourceByUserDetail" resultType="com.zhita.model.manage.TongjiSorce">
+	select t.sourcename,count(*) registernum,t.companyid from 
+	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
+	 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t where t.sourcename=#{arg3}
+	 group by t.sourcename 
+   </select>
+</mapper>
