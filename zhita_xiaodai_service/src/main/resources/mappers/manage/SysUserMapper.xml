@@ -157,7 +157,7 @@
   <select id="queryAll" resultMap="manageloginMap">
   	select 
   	<include refid="Base_Column_List" />
-  	from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId
+  	from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId where s.companyId=#{arg0}
   	group by s.userId
   	order by loginTime desc
   </select>
@@ -170,10 +170,10 @@
         <if test="account != null">
            s.account like "%"#{account}"%"
         </if>
-         
         <if test="status != null">
            and s.status=#{status}
         </if>
+        and companyId=#{companyId}
     </where>
     group by s.userId
     order by loginTime desc
@@ -234,4 +234,8 @@
 		inner join role_function rf on r.roleid=rf.roleid inner join functions f on f.functionid =rf.functionid
 		where s.phone=#{arg0}
     </select>
+    <!--  admin    登录     退出登录  -->
+    <update id="updateLoginStatus" parameterType="java.lang.Integer">
+    	update sys_user set loginState=0 where userId=#{arg0}
+    </update>
 </mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.ThirdpartyInterfaceMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.ThirdpartyInterface" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="idcardFaceAuthentication" property="idcardfaceauthentication" jdbcType="VARCHAR" />
+    <result column="operatorsAuthentication" property="operatorsauthentication" jdbcType="VARCHAR" />
+    <result column="AirborneWindControl" property="airbornewindcontrol" jdbcType="VARCHAR" />
+    <result column="thirdpartyPayment" property="thirdpartypayment" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, idcardFaceAuthentication, operatorsAuthentication, loansource, 
+    repaymentsource
+  </sql>
+  <!-- 后台管理       根据id查询当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from thirdparty_interface
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from thirdparty_interface
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理    添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.ThirdpartyInterface" >
+    insert into thirdparty_interface (companyId, idcardFaceAuthentication, 
+      operatorsAuthentication, loansource, 
+      repaymentsource)
+    values (#{companyid,jdbcType=INTEGER}, #{idcardfaceauthentication,jdbcType=VARCHAR}, 
+      #{operatorsauthentication,jdbcType=VARCHAR}, #{loansource,jdbcType=VARCHAR}, 
+      #{repaymentsource,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.ThirdpartyInterface" >
+    insert into thirdparty_interface
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="idcardfaceauthentication != null" >
+        idcardFaceAuthentication,
+      </if>
+      <if test="operatorsauthentication != null" >
+        operatorsAuthentication,
+      </if>
+      <if test="airbornewindcontrol != null" >
+        AirborneWindControl,
+      </if>
+      <if test="thirdpartypayment != null" >
+        thirdpartyPayment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="idcardfaceauthentication != null" >
+        #{idcardfaceauthentication,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorsauthentication != null" >
+        #{operatorsauthentication,jdbcType=VARCHAR},
+      </if>
+      <if test="airbornewindcontrol != null" >
+        #{airbornewindcontrol,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdpartypayment != null" >
+        #{thirdpartypayment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.ThirdpartyInterface" >
+    update thirdparty_interface
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="idcardfaceauthentication != null" >
+        idcardFaceAuthentication = #{idcardfaceauthentication,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorsauthentication != null" >
+        operatorsAuthentication = #{operatorsauthentication,jdbcType=VARCHAR},
+      </if>
+      <if test="airbornewindcontrol != null" >
+        AirborneWindControl = #{airbornewindcontrol,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdpartypayment != null" >
+        thirdpartyPayment = #{thirdpartypayment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理   编辑保存功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.ThirdpartyInterface" >
+    update thirdparty_interface
+    set companyId = #{companyid,jdbcType=INTEGER},
+      idcardFaceAuthentication = #{idcardfaceauthentication,jdbcType=VARCHAR},
+      operatorsAuthentication = #{operatorsauthentication,jdbcType=VARCHAR},
+      loansource = #{loansource,jdbcType=VARCHAR},
+      repaymentsource = #{repaymentsource,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理         查询出第三方接口配置表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.ThirdpartyInterface">
+  	select 
+    <include refid="Base_Column_List" />
+    from thirdparty_interface
+    where companyId=#{arg0}
+  </select>
+</mapper>

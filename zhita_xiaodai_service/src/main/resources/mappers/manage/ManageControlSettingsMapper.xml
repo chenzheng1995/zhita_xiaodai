@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.ManageControlSettingsMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.ManageControlSettings" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="rmModleName" property="rmmodlename" jdbcType="VARCHAR" />
+    <result column="totalScore" property="totalscore" jdbcType="VARCHAR" />
+    <result column="atrntlFractionalSegment" property="atrntlfractionalsegment" jdbcType="VARCHAR" />
+    <result column="roatnptFractionalSegment" property="roatnptfractionalsegment" jdbcType="VARCHAR" />
+    <result column="airappFractionalSegment" property="airappfractionalsegment" jdbcType="VARCHAR" />
+    <result column="referenceDocuments" property="referencedocuments" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, rmModleName, totalScore, atrntlFractionalSegment, roatnptFractionalSegment, 
+    airappFractionalSegment, whetheruse, deleted
+  </sql>
+  <!-- 后台管理       根据主键id查询当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manage_control_settings
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manage_control_settings
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理    添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.ManageControlSettings" >
+    insert into manage_control_settings (companyId, rmModleName, 
+      totalScore, atrntlFractionalSegment, roatnptFractionalSegment, 
+      airappFractionalSegment)
+    values (#{companyid,jdbcType=INTEGER}, #{rmmodlename,jdbcType=VARCHAR}, 
+      #{totalscore,jdbcType=VARCHAR}, #{atrntlfractionalsegment,jdbcType=VARCHAR}, #{roatnptfractionalsegment,jdbcType=VARCHAR}, 
+      #{airappfractionalsegment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.ManageControlSettings" >
+    insert into manage_control_settings
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="rmmodlename != null" >
+        rmModleName,
+      </if>
+      <if test="totalscore != null" >
+        totalScore,
+      </if>
+      <if test="atrntlfractionalsegment != null" >
+        atrntlFractionalSegment,
+      </if>
+      <if test="roatnptfractionalsegment != null" >
+        roatnptFractionalSegment,
+      </if>
+      <if test="airappfractionalsegment != null" >
+        airappFractionalSegment,
+      </if>
+      <if test="referencedocuments != null" >
+        referenceDocuments,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="rmmodlename != null" >
+        #{rmmodlename,jdbcType=VARCHAR},
+      </if>
+      <if test="totalscore != null" >
+        #{totalscore,jdbcType=VARCHAR},
+      </if>
+      <if test="atrntlfractionalsegment != null" >
+        #{atrntlfractionalsegment,jdbcType=VARCHAR},
+      </if>
+      <if test="roatnptfractionalsegment != null" >
+        #{roatnptfractionalsegment,jdbcType=VARCHAR},
+      </if>
+      <if test="airappfractionalsegment != null" >
+        #{airappfractionalsegment,jdbcType=VARCHAR},
+      </if>
+      <if test="referencedocuments != null" >
+        #{referencedocuments,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.ManageControlSettings" >
+    update manage_control_settings
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="rmmodlename != null" >
+        rmModleName = #{rmmodlename,jdbcType=VARCHAR},
+      </if>
+      <if test="totalscore != null" >
+        totalScore = #{totalscore,jdbcType=VARCHAR},
+      </if>
+      <if test="atrntlfractionalsegment != null" >
+        atrntlFractionalSegment = #{atrntlfractionalsegment,jdbcType=VARCHAR},
+      </if>
+      <if test="roatnptfractionalsegment != null" >
+        roatnptFractionalSegment = #{roatnptfractionalsegment,jdbcType=VARCHAR},
+      </if>
+      <if test="airappfractionalsegment != null" >
+        airappFractionalSegment = #{airappfractionalsegment,jdbcType=VARCHAR},
+      </if>
+      <if test="referencedocuments != null" >
+        referenceDocuments = #{referencedocuments,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理    编辑保存功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.ManageControlSettings" >
+    update manage_control_settings
+    set companyId = #{companyid,jdbcType=INTEGER},
+      rmModleName = #{rmmodlename,jdbcType=VARCHAR},
+      totalScore = #{totalscore,jdbcType=VARCHAR},
+      atrntlFractionalSegment = #{atrntlfractionalsegment,jdbcType=VARCHAR},
+      roatnptFractionalSegment = #{roatnptfractionalsegment,jdbcType=VARCHAR},
+      airappFractionalSegment = #{airappfractionalsegment,jdbcType=VARCHAR},
+      whetheruse = #{whetheruse,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--后台管理             查询风控设置管理表所有信息  -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.ManageControlSettings">
+  	  select 
+    <include refid="Base_Column_List" />
+    from manage_control_settings
+    where companyId=#{arg0}
+  </select>
+</mapper>

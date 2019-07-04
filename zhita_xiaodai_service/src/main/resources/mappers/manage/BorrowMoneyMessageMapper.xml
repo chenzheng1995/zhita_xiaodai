@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.BorrowMoneyMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.BorrowMoneyMessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="loanType" property="loantype" jdbcType="VARCHAR" />
+    <result column="canBorrowlines" property="canborrowlines" jdbcType="INTEGER" />
+    <result column="lifeOfLoan" property="lifeofloan" jdbcType="INTEGER" />
+    <result column="averageDailyInterest" property="averagedailyinterest" jdbcType="DOUBLE" />
+    <result column="platformfeeRatio" property="platformfeeratio" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,productid, companyId, loanType, canBorrowlines, lifeOfLoan, averageDailyInterest, platformfeeRatio, 
+    operator, operationTime
+  </sql>
+  <!-- 后台管理         根据id查询当前对象信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_money_message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from borrow_money_message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理    添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.BorrowMoneyMessage" >
+    insert into borrow_money_message (companyId,productid,loanType, 
+      canBorrowlines, lifeOfLoan, averageDailyInterest, 
+      platformfeeRatio, operator, operationTime
+      )
+    values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER}, #{loantype,jdbcType=VARCHAR}, 
+      #{canborrowlines,jdbcType=INTEGER}, #{lifeofloan,jdbcType=INTEGER}, #{averagedailyinterest,jdbcType=DOUBLE}, 
+      #{platformfeeratio,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.BorrowMoneyMessage" >
+    insert into borrow_money_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="loantype != null" >
+        loanType,
+      </if>
+      <if test="canborrowlines != null" >
+        canBorrowlines,
+      </if>
+      <if test="lifeofloan != null" >
+        lifeOfLoan,
+      </if>
+      <if test="averagedailyinterest != null" >
+        averageDailyInterest,
+      </if>
+      <if test="platformfeeratio != null" >
+        platformfeeRatio,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operationtime != null" >
+        operationTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="loantype != null" >
+        #{loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="canborrowlines != null" >
+        #{canborrowlines,jdbcType=INTEGER},
+      </if>
+      <if test="lifeofloan != null" >
+        #{lifeofloan,jdbcType=INTEGER},
+      </if>
+      <if test="averagedailyinterest != null" >
+        #{averagedailyinterest,jdbcType=DOUBLE},
+      </if>
+      <if test="platformfeeratio != null" >
+        #{platformfeeratio,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        #{operationtime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.BorrowMoneyMessage" >
+    update borrow_money_message
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="loantype != null" >
+        loanType = #{loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="canborrowlines != null" >
+        canBorrowlines = #{canborrowlines,jdbcType=INTEGER},
+      </if>
+      <if test="lifeofloan != null" >
+        lifeOfLoan = #{lifeofloan,jdbcType=INTEGER},
+      </if>
+      <if test="averagedailyinterest != null" >
+        averageDailyInterest = #{averagedailyinterest,jdbcType=DOUBLE},
+      </if>
+      <if test="platformfeeratio != null" >
+        platformfeeRatio = #{platformfeeratio,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        operationTime = #{operationtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理             修改保存功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.BorrowMoneyMessage" >
+    update borrow_money_message
+    set companyId = #{companyid,jdbcType=INTEGER},
+      loanType = #{loantype,jdbcType=VARCHAR},
+      canBorrowlines = #{canborrowlines,jdbcType=INTEGER},
+      lifeOfLoan = #{lifeofloan,jdbcType=INTEGER},
+      averageDailyInterest = #{averagedailyinterest,jdbcType=DOUBLE},
+      platformfeeRatio = #{platformfeeratio,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      operationTime = #{operationtime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理          查询借款信息表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BorrowMoneyMessage">
+  	 select 
+    <include refid="Base_Column_List" />
+    from borrow_money_message
+    where companyId=#{arg0}
+  </select>
+</mapper>

@@ -6,10 +6,10 @@ import com.zhita.model.manage.SysUser;
 
 public interface IntSysuserService {
 	//admin------系统用户——列表展示
-    public Map<String, Object> queryAll(Integer page);
+    public Map<String, Object> queryAll(Integer companyId,Integer page);
     
     //admin------系统用户——模糊查询（账号和账号状态）
-    public Map<String, Object> queryAllByLike(String account,String status,Integer page);
+    public Map<String, Object> queryAllByLike(Integer companyId,String account,String status,Integer page);
     
     //admin-----系统用户——添加功能（先查询出所有公司和角色）
     public Map<String, Object> queryAllCompany();

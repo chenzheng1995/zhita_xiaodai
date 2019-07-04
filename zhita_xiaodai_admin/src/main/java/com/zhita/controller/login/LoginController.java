@@ -3,6 +3,7 @@ package com.zhita.controller.login;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
@@ -21,7 +22,11 @@ import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.SMSUtil;
-
+/**
+ * 
+ * @author lhq
+ * @{date} 2019年6月21日
+ */
 @Controller
 @RequestMapping("/login")
 public class LoginController {
@@ -33,7 +38,7 @@ public class LoginController {
 	//后台管理----登录验证  以及授权(用户名和密码)
 	@ResponseBody
 	@RequestMapping(value="/loginap")
-	public Map<String, Object> loginap(String account,String pwd,HttpSession session){
+	public Map<String, Object> loginap(String account,String pwd,HttpSession session,HttpServletRequest request){
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if (StringUtils.isEmpty(account) || StringUtils.isEmpty(pwd)) {
@@ -55,7 +60,11 @@ public class LoginController {
 				int num=intLoginService.updateByAccountAndPwd(loginstatus, logintime, account, pwd);
 				if(num==1){
 					map.put("msg", "用户登录成功,登录状态修改成功");
+					request.getSession().setAttribute("account", account);
+					request.getSession().setAttribute("pwd", pwd);
+					subject.getSession().setTimeout(3600000);//以毫秒为单位    设置一小时之内没访问接口就要重新登录
 					map.put("loginStatus", loginstatus);
+					
 				}else{
 					map.put("msg", "用户登录失败，登录状态修改失败");
 				}
@@ -72,7 +81,7 @@ public class LoginController {
 		int a=0;
 		
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
-		String key = phone+"Key";
+		String key = phone+"xiaodaiKey";
 		String redisCode = redisClientUtil.get(key);
 		
 		if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(code)) {
@@ -121,5 +130,24 @@ public class LoginController {
 		String state = smsUtil.sendSMS(phone, "json",companyName);
 	    map.put("msg",state);		
 		return map;	
+	}
+	
+	// 退出登录
+	@ResponseBody
+	@RequestMapping("/logOut")
+	public Map<String, String> logOut(int userId) {
+		Map<String, String>  map = new HashMap<>();
+		if (StringUtils.isEmpty(userId)) {
+			map.put("msg", "userId不能为空");
+			return map;
+		}else {
+			int num=intLoginService.updateLoginStatus(userId);
+			if (num == 1) {														
+				map.put("msg", "用户退出成功，登录状态修改成功");
+			} else {
+				map.put("msg", "用户退出失败，登录状态修改失败");
+			}
+		}
+		return map;
 	}
 }

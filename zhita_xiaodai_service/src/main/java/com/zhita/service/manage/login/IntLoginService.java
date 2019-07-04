@@ -36,4 +36,7 @@ public interface IntLoginService {
 
 public User findphone(String newPhone, String companyId);
    
+   //admin---登录——退出登录
+   public int updateLoginStatus(Integer userId);
+   
 }

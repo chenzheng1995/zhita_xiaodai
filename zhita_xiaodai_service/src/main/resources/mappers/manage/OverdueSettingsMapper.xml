@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.OverdueSettingsMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.OverdueSettings" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="overdueHowmanydaysage" property="overduehowmanydaysage" jdbcType="INTEGER" />
+    <result column="penaltyInterestRates" property="penaltyinterestrates" jdbcType="DOUBLE" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, overdueHowmanydaysage, penaltyInterestRates, operator, operationTime, 
+    deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from overdue_settings
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from overdue_settings
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.OverdueSettings" >
+    insert into overdue_settings (id, companyId, overdueHowmanydaysage, 
+      penaltyInterestRates, operator, operationTime, 
+      deleted)
+    values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{overduehowmanydaysage,jdbcType=INTEGER}, 
+      #{penaltyinterestrates,jdbcType=DOUBLE}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}, 
+      #{deleted,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.OverdueSettings" >
+    insert into overdue_settings
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="overduehowmanydaysage != null" >
+        overdueHowmanydaysage,
+      </if>
+      <if test="penaltyinterestrates != null" >
+        penaltyInterestRates,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operationtime != null" >
+        operationTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="overduehowmanydaysage != null" >
+        #{overduehowmanydaysage,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyinterestrates != null" >
+        #{penaltyinterestrates,jdbcType=DOUBLE},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        #{operationtime,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.OverdueSettings" >
+    update overdue_settings
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="overduehowmanydaysage != null" >
+        overdueHowmanydaysage = #{overduehowmanydaysage,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyinterestrates != null" >
+        penaltyInterestRates = #{penaltyinterestrates,jdbcType=DOUBLE},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operationtime != null" >
+        operationTime = #{operationtime,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.OverdueSettings" >
+    update overdue_settings
+    set companyId = #{companyid,jdbcType=INTEGER},
+      overdueHowmanydaysage = #{overduehowmanydaysage,jdbcType=INTEGER},
+      penaltyInterestRates = #{penaltyinterestrates,jdbcType=DOUBLE},
+      operator = #{operator,jdbcType=VARCHAR},
+      operationTime = #{operationtime,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -24,12 +24,12 @@ public class SysuserServiceImp implements IntSysuserService{
 	
 	//admin------系统用户——列表展示
 	@Override
-    public Map<String, Object> queryAll(Integer page){
+    public Map<String, Object> queryAll(Integer companyId,Integer page){
 		List<SysUser> list=new ArrayList<>();
 		List<SysUser> listto=new ArrayList<>();
 		PageUtil pageUtil=null;
     
-    	list=sysUserMapper.queryAll();
+    	list=sysUserMapper.queryAll(companyId);
     	
     	for (int i = 0; i < list.size(); i++) {
 			list.get(i).setLogintime(Timestamps.stampToDate(list.get(i).getLogintime()));
@@ -50,12 +50,12 @@ public class SysuserServiceImp implements IntSysuserService{
 	
 	//admin------系统用户——模糊查询（账号和账号状态）
 	@Override
-	public Map<String, Object> queryAllByLike(String account, String status, Integer page) {
+	public Map<String, Object> queryAllByLike(Integer companyId,String account, String status, Integer page) {
 		List<SysUser> list=new ArrayList<>();
 		List<SysUser> listto=new ArrayList<>();
 		PageUtil pageUtil=null;
 		
-		list=sysUserMapper.queryAllByLike(account, status);
+		list=sysUserMapper.queryAllByLike(companyId,account, status);
 		
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setLogintime(Timestamps.stampToDate(list.get(i).getLogintime()));
