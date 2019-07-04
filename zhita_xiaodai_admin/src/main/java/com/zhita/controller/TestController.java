@@ -7,14 +7,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 
@@ -84,8 +82,5 @@ public class TestController {
 		 String str="600-800"; 
 		 String[] strarray=str.split("-"); 
 		 System.out.println(strarray[0]+"----"+strarray[1]);
-	}
-	public static void main(String[] args) {
-		System.out.println("00000");
 	}
 }

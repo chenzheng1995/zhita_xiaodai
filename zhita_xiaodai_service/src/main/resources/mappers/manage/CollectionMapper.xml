@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.CollectionMapper">
+	
+		<select id="OrderId" resultType="java.lang.Integer" parameterType="java.util.List">
+			select orderId from collection where collectionMemberId in
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</select> 
+		
+		
+		<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(*) from orders where orderId not in
+			<foreach collection="ids" item="nos" index="no" open="(" separator="," close=")">
+		 		  #{nos}
+		 	</foreach>
+		 	AND companyId = #{companyId}
+		</select>
+		
+		
+		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
+			select orde.*,u.name,u.phone,o.orderNumber,o.id from orderdetails orde,user u,orders o,
+			<where>
+				AND orde.orderId not in
+				<foreach collection="ids" item="nos" index="no" open="(" separator="," close=")">
+		 		 	 #{nos}
+		 		</foreach>
+			    AND orde.returntime <![CDATA[ >= ]]> #{returntime}
+				AND o.userId = u.id 
+				AND orde.orderId = o.id
+				AND o.companyId = #{companyId}
+				<if test="name != '' and name != null">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+				<if test="id != null and id != ''">
+					AND o.id = #{id}
+				</if>
+			</where>
+			order by orde.orderDeatilId desc
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		<select id="CollectionAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Collection_member">
+			select * from collection_member where companyId = #{companyId}
+		</select>
+		
+		
+		
+		<insert id="addCollection" parameterType="java.util.List">
+			insert into `collection` (collectionMemberId,orderId,collectionStatus,collectionTime,deleted) values  
+	        <foreach collection="list" item="item" index="index" separator=",">  
+	            (#{item.collectionMemberId},#{item.orderId},#{item.collectionStatus},#{item.collectionTime},#{item.deleted})  
+	        </foreach>
+		</insert>
+		
+		
+		
+		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,c.collectionTime,o.orderNumber,o.id from collection 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			<where>
+				AND u.id = o.userId
+				AND o.id = orders.orderId
+				AND u.companyId = overdue.overdue
+				AND collection.collectionMemberId = cmem.collectionMemberId
+				AND cmem.companyId = u.companyId
+				AND o.companyId = #{companyId}
+				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
+					AND orders.realityBorrowMoney = #{realityBorrowMoney}
+				</if>
+				<if test="makeLoans != null and makeLoans != ''">
+					AND orders.makeLoans = #{makeLoans}
+				</if>
+				<if test="shouldAlsoInterest != null and shouldAlsoInterest != ''">
+					AND orders.shouldAlsoInterest = #{shouldAlsoInterest}
+				</if>
+				<if test="shouldReapyMoney != null and shouldReapyMoney != ''">
+					AND orders.shouldReapyMoney = #{shouldReapyMoney}
+				</if>
+				<if test="orderId != null and orderId != ''">
+					AND o.id = #{orderId}
+				</if>
+				<if test="name != '' and name != null">
+					AND u.name LIKE concat('%',#{name},'%')
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone LIKE concat('%',#{phone},'%')
+				</if>
+				<if test="grade != null and grade != ''">
+					AND overdue.grade = #{grade}
+				</if>
+				<if test="collectionStatus != null and collectionStatus != ''">
+					AND c.collectionStatus = #{collectionStatus}
+				</if>
+				<if test="collectionMemberId != null and collectionMemberId != ''">
+					AND cmem.collectionMemberId = #{collectionMemberId}
+				</if>
+				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND c.collectionTime between #{start_time} and #{end_time}
+				</if>
+			</where>
+			order by orders.orderDeatilId desc
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		<select id="OneOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,
+			c.collectionTime,o.orderNumber,o.id,o.borrowMoneyWay,o.deferBeforeReturntime,o.deferAfterReturntime from collection 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			<where>
+				AND u.id = o.userId
+				AND o.id = orders.orderId
+				AND u.companyId = overdue.overdue
+				AND collection.collectionMemberId = cmem.collectionMemberId
+				AND cmem.companyId = u.companyId
+				AND o.orderNumber = #{orderNumber}
+				AND o.companyId = #{companyId}
+			</where>	
+				order by order.orderDeatilId desc
+				limit #{page},#{pagesize}	
+		</select>
+		
+		
+		
+		<select id="SelectSumOrderNum" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
+			select  DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as operator_time from orders o
+				<where>
+					AND o.companyId = #{companyId} 
+					<if test="borrowMoneyType != null and borrowMoneyType != ''">
+						AND o.borrowMoneyType = #{borrowMoneyType}
+					</if>
+					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND o.orderCreateTime between #{start_time} and#{end_time}
+					</if>
+				</where>
+				GROUP BY DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d')
+		</select>
+		
+		
+ 	
+		<select id="SelectSumOrder" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
+			select  DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as operator_time,count(o.orderCreateTime) as collection_count from orders o
+				<where>
+					AND o.companyId = #{companyId} 
+					<if test="borrowMoneyType != null and borrowMoneyType != ''">
+						AND o.borrowMoneyType = #{borrowMoneyType}
+					</if>
+					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND o.orderCreateTime between #{start_time} and #{end_time}
+					</if>
+				</where>
+				GROUP BY DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d')
+				order by collectionId desc
+				limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		
+		<select id="SelectReallyName" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
+			select colme.reallyName,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime,count(c.collectionTime) as collection_count from 
+			collection c,collection_member colme
+			<where>
+				AND c.collectionMemberId = colme.collectionMemberId 
+				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
+					AND collectionTime between #{statu_time} and#{end_time}
+				</if>
+			</where>
+			GROUP BY c.collectionMemberId
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		<select id="OrderOknum" parameterType="java.lang.String" resultType="java.lang.Integer">
+			select count(*) from collection where collectionTime = #{collectionTime}
+		</select>
+		
+		
+		<select id="OrderChengnuo" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(*) from collection where collectionTime = #{collectionTime} and collectionStatus = #{collectionStatus}
+		</select>
+		
+		
+		
+		<select id="SelectUserNum" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
+			SELECT DATE_FORMAT(collectionTime,'%Y-%m-%d') as collectionTime from collection
+				<where>
+					<if test="collectionMemberId != null and collectionMemberId != ''">
+						AND collectionMemberId = #{collectionMemberId}
+					</if>
+					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND collectionTime between #{start_time} and #{end_time}
+					</if>
+				</where>
+		</select>
+		
+		
+		<select id="Collectionmemberdetilas" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
+			SELECT cmember.reallyName,count(c.collectionTime) as collection_count,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime FROM 
+			collection c,collection_member cmember
+		 	<where>
+		 		AND c.collectionMemberId=cmember.collectionMemberId
+				<if test="collectionMemberId != null and collectionMemberId != ''">
+					AND c.collectionMemberId = #{collectionMemberId}
+				</if>
+				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND c.collectionTime between #{start_time} and #{end_time}
+				</if>
+			</where>
+		 	GROUP BY DATE_FORMAT(c.collectionTime,'%Y-%m-%d')
+		 	limit #{page},#{pagesize}
+		</select>
+		
+		
+		<select id="CollectionNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(*) from collection where collectionMemberId = #{collectionMemberId} and collectionStatus = #{collectionStatus}
+		</select>
+		
+		
+		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
+			select o.id,o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,
+			c.collectionTime,o.orderNumber,o.borrowMoneyWay,orders.deferBeforeReturntime,orders.deferAfterReturntime from collection 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			<where>
+				AND o.id = orders.orderId
+				AND u.id = o.userId
+				AND c.orderId = o.id
+				AND c.collectionMemberId = cmem.collectionMemberId
+				<if test="name != null and name != ''">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber = #{orderNumber}
+				</if>
+				AND o.companyId = #{companyId} 
+				AND o.orderId in 
+				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
+					#{orderid}
+				</foreach>
+			</where>
+				order by collectionId desc
+				limit #{page},#{pagesize}
+		</select>
+		
+		
+		<select id="CollectionTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(o.*) from collection 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			<where>
+				AND o.id = orders.orderId
+				AND u.id = o.userId
+				AND c.orderId = o.id
+				AND c.collectionMemberId = cmem.collectionMemberId
+				<if test="name != null and name != ''">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber = #{orderNumber}
+				</if>
+				AND o.companyId = #{companyId} 
+				AND o.orderId in 
+				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
+					#{orderid}
+				</foreach>
+			</where>
+		</select>
+		
+		
+		<select id="CollectionWeiTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(o.*) from collection 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			<where>
+				AND o.id = orders.orderId
+				AND u.id = o.userId
+				AND c.orderId = o.id
+				AND c.collectionMemberId = cmem.collectionMemberId
+				AND o.companyId = #{companyId} 
+				<if test="name != null and name != ''">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber = #{orderNumber}
+				</if>
+				AND o.orderId not in 
+				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
+					#{orderid}
+				</foreach>
+			</where>
+		</select>
+		
+		
+		
+		<select id="SelectCollectionId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select collectionMemberId from collection_member where companyId = #{companyId}
+		</select>
+		
+		
+		<select id="SelectCollectionMemberIds" parameterType="java.util.List" resultType="java.lang.Integer">
+			select orderId from collection where collectionMemberId in 
+			<foreach collection="ids" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			group by orderId
+		</select>
+		
+		
+		<select id="SelectId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select collection_id from collectiondetails where orderId = #{id}
+		</select>
+				
+				
+		<select id="WeiControllerOrdetialis" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select o.id,o.orderNumber,u.name,u.phone,orde.*,coldet.collectionmoney,ut.user_neir,o.borrowMoneyState,orde.borrowTimeLimit,
+			orde.borrowMoneyWay,orde.shouldReturnTime,orde.realtime from orders o,orderdetails orde,userType ut,user u,collectiondetails coldet
+			<where>
+				AND o.id = orde.orderId
+				AND u.id = o.userId
+				AND o.id = coldet.orderId
+				AND coldet.user_type = ut.ut_id
+				<if test="name != null and name != ''">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber = #{orderNumber}
+				</if>
+				<if test="orderCreateTime != null and orderCreateTime != ''">
+					AND o.orderCreateTime = #{orderCreateTime}
+				</if>
+				<if test="realtime != null and realtime != ''">
+					AND orde.realtime = #{realtime}
+				</if>
+				<if test="describe != null and describe != ''">
+					AND orde.overdueNumberOfDays = #{describe}
+				</if>
+				AND o.companyId = #{companyId} 
+				AND o.orderId not in 
+				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
+					#{orderid}
+				</foreach>
+			</where>
+			order by o.id desc
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		<insert id="AddCollectiondetails" parameterType="com.zhita.model.manage.Collectiondetails">
+			INSERT INTO `Collectiondetails` (
+				collection_time,
+				user_type,
+				collectionmoney,
+				orderId,
+				collectionMemberId
+			)VALUES
+			(#{collection_time},#{user_type},#{collectionmoney},#{orderId},#{collectionMemberId})
+		</insert>
+		
+		
+		
+		<select id="SelectCollectiondetails" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Collectiondetails">
+			select c.*,ut.user_neir,cme.reallyName from collectiondetails c,collection_member cme,UserType ut where cme.collectionMemberId = collectionMemberId 
+			and c.user_type = ut.ut_id and c.orderId = #{orderId}
+		</select>
+		
+		
+		
+		<select id="SelectUserCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
+			cmember.reallyName,count(c.collectionTime) as collection_count,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime
+		</select>
+		
+		
+		
+</mapper>

@@ -1,0 +1,291 @@
+package com.zhita.model.manage;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+
+//订单表
+public class Orders {
+	
+	private Integer orderId;//订单ID
+	
+	private Integer companyId;//公司ID
+	
+	private Integer userId;//用户ID
+	
+	private String orderNumber;//订单号（不是自增，有固定的生成格式）
+	
+	private String borrowMoneyUse;//借钱用途
+	
+	private String borrowRepayBankcard;//借还银行
+	
+	private String bankPhone;//银行手机号
+	
+	private String orderCreateTime;//订单生成时间(实借时间)
+	
+	private String riskManagemenType;//风控类型（通过已借款 成功 拒绝四种方式）
+	
+	private String borrowMoneyState;//还款状态（已还和未还）
+	
+	private String borrowMoneyType;//借款类型（首借和续借）
+	
+	private String borrowMoneyWay;//贷款方式（立即贷和分期贷）
+	
+	private String deleted;//假删除
+	
+	private Integer adoptcount;//放款通过数
+	
+	private Integer Loancount;//实际借款数
+	
+	private Integer Passrate;//放款通过率
+	
+	private Integer Beoverdue;//逾期笔数
+	
+	private Integer pressformoney;//催款笔数
+	
+	private Integer Baddebt;//坏账笔数
+	
+	private BigDecimal Realborrowing;//实借金额
+	
+	private BigDecimal Realreturn;//实还金额
+	
+	private BigDecimal Delay;//延期金额
+	
+	private BigDecimal Overdueamount;//逾期金额
+	
+	private BigDecimal Amountofbaddebts;//坏账金额
+	
+	private List<Integer> memberid;//催收员ID
+	
+	private BigDecimal makeLoans;//实际放款金额
+	
+	private BigDecimal realityAccount;//实际到账金额
+	
+	private BigDecimal Actualrevenue;//实际营收
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	public String getBorrowMoneyUse() {
+		return borrowMoneyUse;
+	}
+
+	public void setBorrowMoneyUse(String borrowMoneyUse) {
+		this.borrowMoneyUse = borrowMoneyUse;
+	}
+
+	public String getBorrowRepayBankcard() {
+		return borrowRepayBankcard;
+	}
+
+	public void setBorrowRepayBankcard(String borrowRepayBankcard) {
+		this.borrowRepayBankcard = borrowRepayBankcard;
+	}
+
+	public String getBankPhone() {
+		return bankPhone;
+	}
+
+	public void setBankPhone(String bankPhone) {
+		this.bankPhone = bankPhone;
+	}
+
+	public String getOrderCreateTime() {
+		return orderCreateTime;
+	}
+
+	public void setOrderCreateTime(String orderCreateTime) {
+		this.orderCreateTime = orderCreateTime;
+	}
+
+	public String getRiskManagemenType() {
+		return riskManagemenType;
+	}
+
+	public void setRiskManagemenType(String riskManagemenType) {
+		this.riskManagemenType = riskManagemenType;
+	}
+
+	public String getBorrowMoneyState() {
+		return borrowMoneyState;
+	}
+
+	public void setBorrowMoneyState(String borrowMoneyState) {
+		this.borrowMoneyState = borrowMoneyState;
+	}
+
+	public String getBorrowMoneyType() {
+		return borrowMoneyType;
+	}
+
+	public void setBorrowMoneyType(String borrowMoneyType) {
+		this.borrowMoneyType = borrowMoneyType;
+	}
+
+	public String getBorrowMoneyWay() {
+		return borrowMoneyWay;
+	}
+
+	public void setBorrowMoneyWay(String borrowMoneyWay) {
+		this.borrowMoneyWay = borrowMoneyWay;
+	}
+
+	public String getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
+	}
+
+	public Integer getAdoptcount() {
+		return adoptcount;
+	}
+
+	public void setAdoptcount(Integer adoptcount) {
+		this.adoptcount = adoptcount;
+	}
+
+	public Integer getLoancount() {
+		return Loancount;
+	}
+
+	public void setLoancount(Integer loancount) {
+		Loancount = loancount;
+	}
+
+	public Integer getPassrate() {
+		return Passrate;
+	}
+
+	public void setPassrate(Integer passrate) {
+		Passrate = passrate;
+	}
+
+	public Integer getBeoverdue() {
+		return Beoverdue;
+	}
+
+	public void setBeoverdue(Integer beoverdue) {
+		Beoverdue = beoverdue;
+	}
+
+	public Integer getPressformoney() {
+		return pressformoney;
+	}
+
+	public void setPressformoney(Integer pressformoney) {
+		this.pressformoney = pressformoney;
+	}
+
+	public Integer getBaddebt() {
+		return Baddebt;
+	}
+
+	public void setBaddebt(Integer baddebt) {
+		Baddebt = baddebt;
+	}
+
+	public BigDecimal getRealborrowing() {
+		return Realborrowing;
+	}
+
+	public void setRealborrowing(BigDecimal realborrowing) {
+		Realborrowing = realborrowing;
+	}
+
+	public BigDecimal getRealreturn() {
+		return Realreturn;
+	}
+
+	public void setRealreturn(BigDecimal realreturn) {
+		Realreturn = realreturn;
+	}
+
+	public BigDecimal getDelay() {
+		return Delay;
+	}
+
+	public void setDelay(BigDecimal delay) {
+		Delay = delay;
+	}
+
+	public BigDecimal getOverdueamount() {
+		return Overdueamount;
+	}
+
+	public void setOverdueamount(BigDecimal overdueamount) {
+		Overdueamount = overdueamount;
+	}
+
+	public BigDecimal getAmountofbaddebts() {
+		return Amountofbaddebts;
+	}
+
+	public void setAmountofbaddebts(BigDecimal amountofbaddebts) {
+		Amountofbaddebts = amountofbaddebts;
+	}
+
+	public List<Integer> getMemberid() {
+		return memberid;
+	}
+
+	public void setMemberid(List<Integer> memberid) {
+		this.memberid = memberid;
+	}
+
+	public BigDecimal getMakeLoans() {
+		return makeLoans;
+	}
+
+	public void setMakeLoans(BigDecimal makeLoans) {
+		this.makeLoans = makeLoans;
+	}
+
+	public BigDecimal getRealityAccount() {
+		return realityAccount;
+	}
+
+	public void setRealityAccount(BigDecimal realityAccount) {
+		this.realityAccount = realityAccount;
+	}
+
+	public BigDecimal getActualrevenue() {
+		return Actualrevenue;
+	}
+
+	public void setActualrevenue(BigDecimal actualrevenue) {
+		Actualrevenue = actualrevenue;
+	}
+	
+	
+}
