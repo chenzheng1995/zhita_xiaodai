@@ -41,5 +41,7 @@ public interface SourceMapper {
     
     //后台管理---通过渠道名称查询出当前渠道的折扣率
     String queryDiscount(String sourceName,Integer companyId);
+
+	int getsourceId(String sourceId);
     
 }

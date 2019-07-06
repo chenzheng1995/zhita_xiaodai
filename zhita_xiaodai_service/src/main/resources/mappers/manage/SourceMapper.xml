@@ -197,4 +197,11 @@
 	 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t where t.sourcename=#{arg3}
 	 group by t.sourcename 
    </select>
+   
+   <!-- ====================================================================================== -->
+   
+       <!-- 通过渠道名字获取它的id -->
+    <select id="getsourceId" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select id from source where sourcename = #{sourceId}
+  </select>
 </mapper>

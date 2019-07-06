@@ -98,6 +98,12 @@ public class SourceServiceImp implements IntSourceService{
     	String discount=sourceMapper.queryDiscount(sourceName, companyId);
     	return discount;
     }
+
+	@Override
+	public int getsourceId(String sourceName) {
+		int merchantId = sourceMapper.getsourceId(sourceName);
+		return merchantId;
+	}
     
     
 }

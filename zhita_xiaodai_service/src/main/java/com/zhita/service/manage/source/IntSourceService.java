@@ -35,4 +35,6 @@ public interface IntSourceService {
     
     //后台管理---通过渠道名称查询出当前渠道的折扣率
     public String queryDiscount(String sourceName,Integer companyId);
+
+	public int getsourceId(String sourceName);
 }

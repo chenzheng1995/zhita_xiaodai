@@ -136,7 +136,7 @@ public class SMSUtil {
 		cmap.put("4086", "手机操作过过于频繁");
 		String state = "未知问题";
 		PostAndGet postAndGet = new PostAndGet();
-		String code =((int)((Math.random()*9+1)*1000))+"";
+		String code =((int)((Math.random()*9+1)*100000))+"";
 		String content = "您的验证码是："+code+"。请不要把验证码泄露给其他人。";
 		Map<String, Object> map = JSON.parseObject(postAndGet.sendGet("http://106.ihuyi.com/webservice/sms.php?method=Submit&account="+APIID+"&password="+APIKEY+"&mobile="+mobile+"&content="+content+"&format="+format));
 		String mapCode = map.get("code")+"";

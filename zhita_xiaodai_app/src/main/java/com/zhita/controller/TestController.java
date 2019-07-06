@@ -1,5 +1,8 @@
 package com.zhita.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,4 +53,9 @@ public class TestController {
 		return map;
 	
 	}
+	public static void main(String[] args) {
+		DateFormat format = new SimpleDateFormat("yyyy/M/d");
+		System.out.println(format.format(new Date()));
+	}
+
 }

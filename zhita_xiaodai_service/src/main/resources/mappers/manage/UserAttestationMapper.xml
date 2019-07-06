@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhita.dao.manage.UserAttestationMapper">
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.UserAttestation">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="trueName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="idcard_number" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="birthday" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="householdRegister" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="homeAddressLongitude" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="homeAddressLatitude" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="detailAddress" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="headUrl" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="nationalEmblemUrl" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="linkmanOneRelation" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="linkmanOneName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="linkmanOnePhone" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="linkmanTwoRelation" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="linkmanTwoName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="linkmanTwoPhone" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="faceBizToken" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="idCardBizToken" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sign" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="gender" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="nationality" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="birth_year" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="birth_month" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="birth_day" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="address" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="issued_by" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="valid_date_start" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="valid_date_end" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, trueName, idcard_number, birthday, householdRegister, homeAddressLongitude, 
+    homeAddressLatitude, detailAddress, headUrl, nationalEmblemUrl, linkmanOneRelation, 
+    linkmanOneName, linkmanOnePhone, linkmanTwoRelation, linkmanTwoName, linkmanTwoPhone, 
+    faceBizToken, idCardBizToken, sign, gender, nationality, birth_year, birth_month, 
+    birth_day, address, issued_by, valid_date_start, valid_date_end
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_attestation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_attestation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.UserAttestation">
+    insert into user_attestation (id, userId, trueName, 
+      idcard_number, birthday, householdRegister, 
+      homeAddressLongitude, homeAddressLatitude, 
+      detailAddress, headUrl, nationalEmblemUrl, 
+      linkmanOneRelation, linkmanOneName, linkmanOnePhone, 
+      linkmanTwoRelation, linkmanTwoName, linkmanTwoPhone, 
+      faceBizToken, idCardBizToken, sign, 
+      gender, nationality, birth_year, 
+      birth_month, birth_day, address, 
+      issued_by, valid_date_start, valid_date_end
+      )
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{truename,jdbcType=VARCHAR}, 
+      #{idcardNumber,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{householdregister,jdbcType=VARCHAR}, 
+      #{homeaddresslongitude,jdbcType=VARCHAR}, #{homeaddresslatitude,jdbcType=VARCHAR}, 
+      #{detailaddress,jdbcType=VARCHAR}, #{headurl,jdbcType=VARCHAR}, #{nationalemblemurl,jdbcType=VARCHAR}, 
+      #{linkmanonerelation,jdbcType=VARCHAR}, #{linkmanonename,jdbcType=VARCHAR}, #{linkmanonephone,jdbcType=VARCHAR}, 
+      #{linkmantworelation,jdbcType=VARCHAR}, #{linkmantwoname,jdbcType=VARCHAR}, #{linkmantwophone,jdbcType=VARCHAR}, 
+      #{facebiztoken,jdbcType=VARCHAR}, #{idcardbiztoken,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, #{birthYear,jdbcType=VARCHAR}, 
+      #{birthMonth,jdbcType=VARCHAR}, #{birthDay,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{issuedBy,jdbcType=VARCHAR}, #{validDateStart,jdbcType=VARCHAR}, #{validDateEnd,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.UserAttestation">
+    insert into user_attestation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="truename != null">
+        trueName,
+      </if>
+      <if test="idcardNumber != null">
+        idcard_number,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="householdregister != null">
+        householdRegister,
+      </if>
+      <if test="homeaddresslongitude != null">
+        homeAddressLongitude,
+      </if>
+      <if test="homeaddresslatitude != null">
+        homeAddressLatitude,
+      </if>
+      <if test="detailaddress != null">
+        detailAddress,
+      </if>
+      <if test="headurl != null">
+        headUrl,
+      </if>
+      <if test="nationalemblemurl != null">
+        nationalEmblemUrl,
+      </if>
+      <if test="linkmanonerelation != null">
+        linkmanOneRelation,
+      </if>
+      <if test="linkmanonename != null">
+        linkmanOneName,
+      </if>
+      <if test="linkmanonephone != null">
+        linkmanOnePhone,
+      </if>
+      <if test="linkmantworelation != null">
+        linkmanTwoRelation,
+      </if>
+      <if test="linkmantwoname != null">
+        linkmanTwoName,
+      </if>
+      <if test="linkmantwophone != null">
+        linkmanTwoPhone,
+      </if>
+      <if test="facebiztoken != null">
+        faceBizToken,
+      </if>
+      <if test="idcardbiztoken != null">
+        idCardBizToken,
+      </if>
+      <if test="sign != null">
+        sign,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="nationality != null">
+        nationality,
+      </if>
+      <if test="birthYear != null">
+        birth_year,
+      </if>
+      <if test="birthMonth != null">
+        birth_month,
+      </if>
+      <if test="birthDay != null">
+        birth_day,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="issuedBy != null">
+        issued_by,
+      </if>
+      <if test="validDateStart != null">
+        valid_date_start,
+      </if>
+      <if test="validDateEnd != null">
+        valid_date_end,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="truename != null">
+        #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardNumber != null">
+        #{idcardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="householdregister != null">
+        #{householdregister,jdbcType=VARCHAR},
+      </if>
+      <if test="homeaddresslongitude != null">
+        #{homeaddresslongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="homeaddresslatitude != null">
+        #{homeaddresslatitude,jdbcType=VARCHAR},
+      </if>
+      <if test="detailaddress != null">
+        #{detailaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="headurl != null">
+        #{headurl,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalemblemurl != null">
+        #{nationalemblemurl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmanonerelation != null">
+        #{linkmanonerelation,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmanonename != null">
+        #{linkmanonename,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmanonephone != null">
+        #{linkmanonephone,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmantworelation != null">
+        #{linkmantworelation,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmantwoname != null">
+        #{linkmantwoname,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmantwophone != null">
+        #{linkmantwophone,jdbcType=VARCHAR},
+      </if>
+      <if test="facebiztoken != null">
+        #{facebiztoken,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardbiztoken != null">
+        #{idcardbiztoken,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null">
+        #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="birthYear != null">
+        #{birthYear,jdbcType=VARCHAR},
+      </if>
+      <if test="birthMonth != null">
+        #{birthMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDay != null">
+        #{birthDay,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="issuedBy != null">
+        #{issuedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="validDateStart != null">
+        #{validDateStart,jdbcType=VARCHAR},
+      </if>
+      <if test="validDateEnd != null">
+        #{validDateEnd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.UserAttestation">
+    update user_attestation
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="truename != null">
+        trueName = #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardNumber != null">
+        idcard_number = #{idcardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="householdregister != null">
+        householdRegister = #{householdregister,jdbcType=VARCHAR},
+      </if>
+      <if test="homeaddresslongitude != null">
+        homeAddressLongitude = #{homeaddresslongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="homeaddresslatitude != null">
+        homeAddressLatitude = #{homeaddresslatitude,jdbcType=VARCHAR},
+      </if>
+      <if test="detailaddress != null">
+        detailAddress = #{detailaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="headurl != null">
+        headUrl = #{headurl,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalemblemurl != null">
+        nationalEmblemUrl = #{nationalemblemurl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmanonerelation != null">
+        linkmanOneRelation = #{linkmanonerelation,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmanonename != null">
+        linkmanOneName = #{linkmanonename,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmanonephone != null">
+        linkmanOnePhone = #{linkmanonephone,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmantworelation != null">
+        linkmanTwoRelation = #{linkmantworelation,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmantwoname != null">
+        linkmanTwoName = #{linkmantwoname,jdbcType=VARCHAR},
+      </if>
+      <if test="linkmantwophone != null">
+        linkmanTwoPhone = #{linkmantwophone,jdbcType=VARCHAR},
+      </if>
+      <if test="facebiztoken != null">
+        faceBizToken = #{facebiztoken,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardbiztoken != null">
+        idCardBizToken = #{idcardbiztoken,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null">
+        nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="birthYear != null">
+        birth_year = #{birthYear,jdbcType=VARCHAR},
+      </if>
+      <if test="birthMonth != null">
+        birth_month = #{birthMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDay != null">
+        birth_day = #{birthDay,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="issuedBy != null">
+        issued_by = #{issuedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="validDateStart != null">
+        valid_date_start = #{validDateStart,jdbcType=VARCHAR},
+      </if>
+      <if test="validDateEnd != null">
+        valid_date_end = #{validDateEnd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.UserAttestation">
+    update user_attestation
+    set userId = #{userid,jdbcType=INTEGER},
+      trueName = #{truename,jdbcType=VARCHAR},
+      idcard_number = #{idcardNumber,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      householdRegister = #{householdregister,jdbcType=VARCHAR},
+      homeAddressLongitude = #{homeaddresslongitude,jdbcType=VARCHAR},
+      homeAddressLatitude = #{homeaddresslatitude,jdbcType=VARCHAR},
+      detailAddress = #{detailaddress,jdbcType=VARCHAR},
+      headUrl = #{headurl,jdbcType=VARCHAR},
+      nationalEmblemUrl = #{nationalemblemurl,jdbcType=VARCHAR},
+      linkmanOneRelation = #{linkmanonerelation,jdbcType=VARCHAR},
+      linkmanOneName = #{linkmanonename,jdbcType=VARCHAR},
+      linkmanOnePhone = #{linkmanonephone,jdbcType=VARCHAR},
+      linkmanTwoRelation = #{linkmantworelation,jdbcType=VARCHAR},
+      linkmanTwoName = #{linkmantwoname,jdbcType=VARCHAR},
+      linkmanTwoPhone = #{linkmantwophone,jdbcType=VARCHAR},
+      faceBizToken = #{facebiztoken,jdbcType=VARCHAR},
+      idCardBizToken = #{idcardbiztoken,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      nationality = #{nationality,jdbcType=VARCHAR},
+      birth_year = #{birthYear,jdbcType=VARCHAR},
+      birth_month = #{birthMonth,jdbcType=VARCHAR},
+      birth_day = #{birthDay,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      issued_by = #{issuedBy,jdbcType=VARCHAR},
+      valid_date_start = #{validDateStart,jdbcType=VARCHAR},
+      valid_date_end = #{validDateEnd,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+ <!-- ================================================================  -->
+  				  	<!--APP 插入用户信息 -->
+	<insert id="insertSign" parameterType="java.util.Map">
+		insert into user_attestation (sign,userId)
+		values (#{sign},
+		#{userId})
+	</insert>
+	
+				<!-- 根据userid查询sign -->
+	<select id="selectSign" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select sign from user_attestation where userId = #{userId}
+	</select>
+	
+				<!--APP 插入密码-->
+		<update id="updateSign" parameterType="java.util.Map">
+		update user_attestation
+		set sign = #{sign}
+		where userId = #{userId}
+	</update>
+</mapper>

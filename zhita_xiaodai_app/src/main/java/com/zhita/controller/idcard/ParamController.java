@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
+
 @Controller
 @RequestMapping(value="/idcardParam")
 public class ParamController {
@@ -18,8 +20,15 @@ public class ParamController {
 
     public String toNotify(HttpServletRequest request){
         //获取notify过来的json
+    	JSONObject jsonObject =null;
         String data = request.getParameter("data");
-        System.out.println(String.format("%s",data));
+//        System.out.println(String.format("%s",data));
+        String result = String.format("%s",data);
+        jsonObject = JSONObject.parseObject(result);
+        int result_code =Integer.parseInt(jsonObject.get("result_code").toString());
+        if(result_code==1001) {
+
+        }
         return String.format("%s",data);
     }
 }
