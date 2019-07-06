@@ -18,7 +18,9 @@ public class Source {
 
     private String discount;//折扣率
 
-    private String remarks;//备注
+    private Integer templateid;//模板id
+    
+    private Integer managecontrolid;//风控id
 
     private String deleted;//假删除（删除：1，没删除：0）
 
@@ -86,15 +88,23 @@ public class Source {
         this.discount = discount == null ? null : discount.trim();
     }
 
-    public String getRemarks() {
-        return remarks;
-    }
+    public Integer getTemplateid() {
+		return templateid;
+	}
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
-    }
+	public void setTemplateid(Integer templateid) {
+		this.templateid = templateid;
+	}
 
-    public String getDeleted() {
+	public Integer getManagecontrolid() {
+		return managecontrolid;
+	}
+
+	public void setManagecontrolid(Integer managecontrolid) {
+		this.managecontrolid = managecontrolid;
+	}
+
+	public String getDeleted() {
         return deleted;
     }
 

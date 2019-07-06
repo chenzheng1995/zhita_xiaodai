@@ -1,0 +1,154 @@
+package com.zhita.controller.source;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhita.model.manage.TongjiSorce;
+import com.zhita.service.manage.source.IntSourceService;
+import com.zhita.util.DateListUtil;
+import com.zhita.util.ListPageUtil;
+import com.zhita.util.PageUtil;
+import com.zhita.util.RedisClientUtil;
+import com.zhita.util.Timestamps;
+/**
+ * 渠道方看的统计数据
+ * @author lhq
+ * @{date} 2019年7月5日
+ */
+@Controller
+@RequestMapping("/sourceside")
+public class SourcesideTongjiController {
+	@Autowired
+	private IntSourceService intSourceService;
+	
+	@ResponseBody
+	@RequestMapping("/queryAllTongji")
+	public void queryAllTongji(Integer page,Integer companyId,String sourceName) throws ParseException{
+		HashMap<String, Object> map = new HashMap<>();
+		
+		RedisClientUtil redisClientUtil=new RedisClientUtil();
+		List<TongjiSorce> listsource = new ArrayList<>();
+		List<TongjiSorce> listsourceto = new ArrayList<>(); 
+		
+		List<TongjiSorce> listHistory=intSourceService.queryAllBySourceName(sourceName);
+		for (int i = 0; i < listHistory.size(); i++) {
+			listHistory.get(i).setDate(Timestamps.stampToDate1(listHistory.get(i).getDate()));//将历史表数据的日期都变为年月日格式
+		}
+		listsource.addAll(listHistory);
+		
+		Date d=new Date();
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		String startTime = date;
+		String startTimestamps = Timestamps.dateToStamp(startTime);
+		String endTime = date;
+		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		float appnum = intSourceService.queryApplicationNumber(companyId, sourceName, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+		String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+		int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
+		int uv = 0;
+		String cvr = null;
+		float disAppnum=0;//折扣申请数
+			
+		if (redisClientUtil.getSourceClick(companyId + sourceName + date + "Key") == null) {
+			uv = 0;
+		} else {
+			uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName + date + "Key"));
+		}
+		
+		if (appnum >= 30) {
+			int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+			disAppnum=(int)Math.ceil((overtop * discount1 *1.0/ 100+30));// 申请数
+
+		} else {
+			disAppnum=appnum;// 申请数
+		}
+		
+		if ((appnum < 0.000001) || (uv == 0)) {
+			cvr = 0 + "%";// 得到转化率
+		} else {
+			cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+		}
+		
+		TongjiSorce tongjiSorce = new TongjiSorce();
+		tongjiSorce.setDate(date);// 日期
+		tongjiSorce.setSourcename(sourceName);// 渠道名称
+		tongjiSorce.setUv(uv);// uv
+		tongjiSorce.setCvr(cvr);// 转化率
+		tongjiSorce.setRegisternumdis(disAppnum);
+		listsource.add(tongjiSorce);
+		
+		DateListUtil.ListSort1(listsource);//将集合按照日期进行倒排序
+		
+		ListPageUtil listPageUtil = new ListPageUtil(listsource, page, 10);
+		listsourceto.addAll(listPageUtil.getData());
+		
+		PageUtil pageUtil = new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),
+				listPageUtil.getTotalCount());
+		map.put("listsourceto", listsourceto);
+		map.put("pageutil", pageUtil);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/queryAllTongjiByDate")
+	public TongjiSorce queryAllTongjiByDate(Integer companyId,String sourceName,String date) throws ParseException{
+		RedisClientUtil redisClientUtil=new RedisClientUtil();
+		TongjiSorce tongjiSorce = new TongjiSorce();
+		
+		String startTime = date;
+		String startTimestamps = Timestamps.dateToStamp(startTime);
+		String endTime = date;
+		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceName, startTimestamps,endTimestamps);
+		
+		if(tongjiSorcelist!=null){
+			tongjiSorce=tongjiSorcelist;
+			tongjiSorce.setDate(Timestamps.stampToDate1(tongjiSorce.getDate()));
+		}else{
+			float appnum = intSourceService.queryApplicationNumber(companyId, sourceName,startTimestamps,endTimestamps);// 得到申请数
+			String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率
+			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
+			int uv = 0;
+			String cvr = null;
+			float disAppnum=0;//折扣申请数
+				
+			if (redisClientUtil.getSourceClick(companyId + sourceName + date + "Key") == null) {
+				uv = 0;
+			} else {
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName+ date + "Key"));
+			}
+			
+			if (appnum >= 30) {
+				int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+				disAppnum=((int)Math.ceil((overtop * discount1 *1.0/ 100+30)));// 申请数
+			} else {
+				disAppnum=appnum;// 申请数
+			}
+				
+			if ((appnum < 0.000001) || (uv == 0)) {
+				cvr = 0 + "%";// 得到转化率
+			} else {
+				cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+			}
+				
+			tongjiSorce.setDate(date);// 日期
+			tongjiSorce.setSourcename(sourceName);// 渠道名称
+			tongjiSorce.setUv(uv);// uv
+			tongjiSorce.setRegisternumdis(disAppnum);
+			tongjiSorce.setCvr(cvr);// 转化率
+		}
+		return tongjiSorce;
+	}
+}

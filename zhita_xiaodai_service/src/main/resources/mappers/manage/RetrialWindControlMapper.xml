@@ -9,12 +9,13 @@
     <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, howmanyDaysApart, operator, operationTime
+    id, companyId,productid, howmanyDaysApart, operator, operationTime
   </sql>
+  <!-- 后台管理      添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.RetrialWindControl" >
-    insert into retrial_wind_control (id, companyId, howmanyDaysApart, 
+    insert into retrial_wind_control (companyId,productid, howmanyDaysApart, 
       operator, operationTime)
-    values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{howmanydaysapart,jdbcType=INTEGER}, 
+    values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER}, #{howmanydaysapart,jdbcType=INTEGER}, 
       #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.RetrialWindControl" >
@@ -54,4 +55,26 @@
       </if>
     </trim>
   </insert>
+  <!-- 后台管理      查询再审风控表所有信息 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.RetrialWindControl">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from retrial_wind_control where companyId=#{arg0}
+  </select>
+  <!-- 后台管理       根据当前id查询当前对象现在 -->
+   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.RetrialWindControl">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from retrial_wind_control where id=#{arg0}
+  </select>
+  <!-- 后台管理       更新功能 -->
+   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.RetrialWindControl" >
+    update retrial_wind_control
+    set companyId = #{companyid,jdbcType=INTEGER},
+   		 productid = #{productid,jdbcType=INTEGER},
+      	 howmanyDaysApart = #{howmanydaysapart},
+      	 operator = #{operator},
+      	 operationTime = #{operationtime}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

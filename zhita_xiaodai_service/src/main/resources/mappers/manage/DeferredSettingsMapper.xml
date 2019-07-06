@@ -137,7 +137,7 @@
     where companyId=#{arg0}
   </select>
   <!-- 后台管理        查询借款信息表的产品id和产品名称 -->
-  <select id="queryAllBorrow" parameterType="java.lang.Integer" parameterMap="com.zhita.model.manage.BorrowMoneyMessage">
+  <select id="queryAllBorrow" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BorrowMoneyMessage">
   	select productid,loantype from borrow_money_message where companyId=#{arg0}
   </select>
 </mapper>

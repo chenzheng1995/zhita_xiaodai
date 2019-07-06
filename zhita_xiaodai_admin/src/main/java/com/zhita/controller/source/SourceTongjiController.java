@@ -17,7 +17,11 @@ import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
-
+/**
+ * 我们自己看的渠道统计
+ * @author lhq
+ * @{date} 2019年7月5日
+ */
 @Controller
 @RequestMapping("/sourcetongji")
 public class SourceTongjiController {
@@ -43,14 +47,14 @@ public class SourceTongjiController {
 		listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
 		for (int i = 0; i < listsource.size(); i++) {
 			String sourcename=listsource.get(i).getSourcename();//渠道名
-			Integer registernum=listsource.get(i).getRegisternum();//真实的注册数
+			float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
 			int uv=0;
 			String cvr=null;
-			if (redisClientUtil.getSourceClick(companyid + sourcename + today + "Key") == null) {
+			if (redisClientUtil.getSourceClick(companyid + sourcename + today + "daichaoKey") == null) {
 				uv = 0;
 			} else {
-				uv = Integer.parseInt(companyid + sourcename + today + "Key");
+				uv = Integer.parseInt(companyid + sourcename + today + "daichaoKey");
 			}
 			listsource.get(i).setUv(uv);//uv
 			if ((registernum < 0.000001) || (uv == 0)) {
@@ -80,16 +84,16 @@ public class SourceTongjiController {
 		listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
 		for (int i = 0; i < listsource.size(); i++) {
 			String sourcename=listsource.get(i).getSourcename();//渠道名
-			Integer registernum=listsource.get(i).getRegisternum();//真实的注册数
+			float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
 			int uv=0;
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {
 				int uvi=0;
-				if (redisClientUtil.getSourceClick(companyid + sourcename + listdate.get(j) + "Key") == null) {
+				if (redisClientUtil.getSourceClick(companyid + sourcename + listdate.get(j) + "daichaoKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(companyid + sourcename + listdate.get(j) + "Key");
+					uv = Integer.parseInt(companyid + sourcename + listdate.get(j) + "daichaoKey");
 				}
 				uv=uv+uvi;
 			}
@@ -124,14 +128,14 @@ public class SourceTongjiController {
 			
 			TongjiSorce tongjiSorce=new TongjiSorce();
 			tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourcename);
-			Integer registernum=tongjiSorce.getRegisternum();//真实的注册数
+			float registernum=tongjiSorce.getRegisternum();//真实的注册数
 			
 			int uv=0;
 			String cvr=null;
-			if (redisClientUtil.getSourceClick(companyId + sourcename + listdate.get(i) + "Key") == null) {
+			if (redisClientUtil.getSourceClick(companyId + sourcename + listdate.get(i) + "daichaoKey") == null) {
 				uv = 0;
 			} else {
-				uv = Integer.parseInt(companyId + sourcename + listdate.get(i) + "Key");
+				uv = Integer.parseInt(companyId + sourcename + listdate.get(i) + "daichaoKey");
 			}
 			tongjiSorce.setUv(uv);
 			if ((registernum < 0.000001) || (uv == 0)) {
@@ -140,7 +144,7 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			tongjiSorce.setCvr(cvr);//uv到注册的转化率
-			listsource.add(tongjiSorce);//list里面将每一天的数据都存进去
+			listsource.add(tongjiSorce);//listsoruce里面将每一天的数据都存进去
 			
 		}
 	}

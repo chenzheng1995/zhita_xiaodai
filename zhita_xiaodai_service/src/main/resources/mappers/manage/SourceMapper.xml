@@ -14,7 +14,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, sourceName, account, pwd, link, status, discount, remarks, deleted
+    id, companyId, sourceName, account, pwd, link, status, discount, templateId,manageControlId, deleted
   </sql>
   <!-- 后台管理            根据id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -30,10 +30,10 @@
   <!-- 后台管理    添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.Source" >
     insert into source (companyId, sourceName,account, pwd, 
-    link,status, discount, remarks)
+    link,status, discount, templateid,managecontrolid)
     values (#{companyid,jdbcType=INTEGER}, #{sourcename,jdbcType=VARCHAR}, 
       #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{discount,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+      #{status,jdbcType=VARCHAR}, #{discount,jdbcType=VARCHAR}, #{templateid,jdbcType=INTEGER},#{managecontrolid,jdbcType=INTEGER},)
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.Source" >
     insert into source
@@ -145,7 +145,8 @@
       link = #{link,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       discount = #{discount,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR}
+      templateid = #{templateid,jdbcType=VARCHAR},
+      managecontrolid = #{managecontrolid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -175,7 +176,8 @@
       link = #{link,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       discount = #{discount,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
+      templateid = #{templateid,jdbcType=VARCHAR},
+      managecontrolid = #{managecontrolid,jdbcType=VARCHAR}
       deleted = 0
     where sourcename = #{sourcename,jdbcType=VARCHAR}
   </update>
@@ -196,5 +198,13 @@
 	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
 	 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t where t.sourcename=#{arg3}
 	 group by t.sourcename 
+   </select>
+   <!-- 后台管理     查询当前渠道在user表的所有注册时间 -->
+   <select id="queryTime" resultType="java.lang.String">
+   		select registrationTime from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} 
+   </select>
+    <!--后台管理    查询统计申请数 -->
+   <select id="queryApplicationNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(u.id) from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} and u.registrationTime>=#{arg2} and u.registrationTime &lt;#{arg3}
    </select>
 </mapper>
