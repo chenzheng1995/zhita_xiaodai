@@ -1,6 +1,5 @@
 package com.zhita.controller.source;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.Company;
 import com.zhita.model.manage.Source;
 import com.zhita.service.manage.source.IntSourceService;
-
+/**
+ * 渠道模块管理
+ * @author lhq
+ * @{date} 2019年7月5日
+ */
 @Controller
 @RequestMapping("/source")
 public class SourceController {
@@ -26,19 +28,19 @@ public class SourceController {
     	return map;
     }
 	
-	//后台管理---添加功能（查询出所有公司）
+	//后台管理---添加功能（查询出所有公司和风控）
 	@ResponseBody
 	@RequestMapping("/queryAllCompany")
-    public List<Company> queryAllCompany(){
-    	List<Company> list=intSourceService.queryAllCompany();
-    	return list;
+    public Map<String,Object> queryAllCompany(Integer companyId){
+		Map<String,Object> map=intSourceService.queryAllCompany(companyId);
+    	return map;
     }
     
     //后台管理---添加功能
 	@ResponseBody
 	@RequestMapping("/insert")
-    public int insert(Source record){
-    	int num=intSourceService.insert(record);
+    public int insert(Source record,String templateName){
+    	int num=intSourceService.insert(record,templateName);
     	return num;
     }
 	
@@ -53,8 +55,8 @@ public class SourceController {
 	//后台管理---编辑功能
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
-    public int updateByPrimaryKey(Source record){
-    	int num=intSourceService.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(Source record,String templateName){
+    	int num=intSourceService.updateByPrimaryKey(record,templateName);
     	return num;
     }
 	

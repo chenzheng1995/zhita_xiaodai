@@ -6,14 +6,15 @@ public class TongjiSorce {
 	private String date;//日期
 	private String sourcename;//渠道名称
 	private Integer uv;//uv
-	private Integer registernum;//真实的注册人数
-	private Integer registernumdis;//折扣后的注册人数
+	private float registernum;//真实的注册人数
+	private float registernumdis;//折扣后的注册人数
 	private String cvr;//uv到注册人数转化率
 	private Integer applynum;//申请人数
 	private String cvr1;//注册到申请转化率
 	private Integer machineauditpass;//机审通过人数
 	private String cvr2;//注册到借款转化率
 	private Integer companyid;//公司名id
+	
 	public Integer getId() {
 		return id;
 	}
@@ -38,16 +39,16 @@ public class TongjiSorce {
 	public void setUv(Integer uv) {
 		this.uv = uv;
 	}
-	public Integer getRegisternum() {
+	public float getRegisternum() {
 		return registernum;
 	}
-	public void setRegisternum(Integer registernum) {
+	public void setRegisternum(float registernum) {
 		this.registernum = registernum;
 	}
-	public Integer getRegisternumdis() {
+	public float getRegisternumdis() {
 		return registernumdis;
 	}
-	public void setRegisternumdis(Integer registernumdis) {
+	public void setRegisternumdis(float registernumdis) {
 		this.registernumdis = registernumdis;
 	}
 	public String getCvr() {
@@ -86,12 +87,6 @@ public class TongjiSorce {
 	public void setCompanyid(Integer companyid) {
 		this.companyid = companyid;
 	}
-	@Override
-	public String toString() {
-		return "TongjiSorce [id=" + id + ", date=" + date + ", sourcename=" + sourcename + ", uv=" + uv
-				+ ", registernum=" + registernum + ", registernumdis=" + registernumdis + ", cvr=" + cvr + ", applynum="
-				+ applynum + ", cvr1=" + cvr1 + ", machineauditpass=" + machineauditpass + ", cvr2=" + cvr2
-				+ ", companyid=" + companyid + "]";
-	}
+	
 	
 }

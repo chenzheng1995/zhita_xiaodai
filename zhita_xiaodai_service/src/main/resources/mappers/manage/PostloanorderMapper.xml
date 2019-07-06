@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.PostloanorderMapper">
+
+		<resultMap id="OrderMap" type="com.zhita.model.manage.Orderdetails" >
+		  <id column="orderDeatilId" property="orderDeatilId" jdbcType="INTEGER" />
+		  <result column="name" property="name" jdbcType="VARCHAR"/>
+		  <result column="phone" property="phone" jdbcType="VARCHAR"/>
+		  <result column="orderId" property="orderId" jdbcType="INTEGER" />
+		  <result column="realityBorrowMoney" property="realityBorrowMoney" jdbcType="DECIMAL" />
+		  <result column="makeLoans" property="makeLoans" jdbcType="DECIMAL" />
+		  <result column="borrowTimeLimit" property="borrowTimeLimit" jdbcType="VARCHAR" />
+		  <result column="interestDay" property="interestDay" jdbcType="DECIMAL" />
+		  <result column="interestSum" property="interestSum" jdbcType="DECIMAL" />
+		  <result column="overdueNumberOfDays" property="overdueNumberOfDays" jdbcType="VARCHAR" />
+		  <result column="interestPenaltyDay" property="interestPenaltyDay" jdbcType="DECIMAL" />
+		  <result column="interestPenaltySum" property="interestPenaltySum" jdbcType="DECIMAL" />
+		  <result column="interestInAll" property="interestInAll" jdbcType="DECIMAL" />
+		  <result column="shouldReapyMoney" property="shouldReapyMoney" jdbcType="DECIMAL" />
+		  <result column="repaymentPeriods" property="repaymentPeriods" jdbcType="VARCHAR" />
+		  <result column="alreadyRepaymentPeriods" property="alreadyRepaymentPeriods" jdbcType="VARCHAR" />
+		  <result column="shouldAlsoInterest" property="shouldAlsoInterest" jdbcType="DECIMAL"/>
+		  <result column="rejectMonadCause" property="rejectMonadCause" jdbcType="VARCHAR" />
+		  <result column="DrainageOfPlatform" property="DrainageOfPlatform" jdbcType="VARCHAR" />
+		  <result column="registerClient" property="registerClient" jdbcType="VARCHAR" />
+		  <result column="useBazaar" property="useBazaar" jdbcType="VARCHAR" />
+		  <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+		  <result column="realtime" property="realtime" jdbcType="VARCHAR" />
+		  <result column="borrowingtime" property="borrowingtime" jdbcType="VARCHAR" />
+		  <result column="returntime" property="returntime" jdbcType="VARCHAR" />
+		</resultMap>
+		
+		
+		<select id="allOrderdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select orde.*,u.name,u.phone,o.orderNumber,o.id from orderdetails orde,user u,orders o 
+			<where>
+			    AND orde.returntime <![CDATA[ >= ]]> #{returntime}
+				AND o.userId = u.id 
+				AND orde.orderId = o.id
+				AND o.companyId = #{companyId}
+				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
+					AND orde.realityBorrowMoney = #{realityBorrowMoney}
+				</if>
+				<if test="makeLoans != null and makeLoans != ''">
+					AND orde.makeLoans = #{makeLoans}
+				</if>
+				<if test="shouldAlsoInterest != null and shouldAlsoInterest != ''">
+					AND orde.shouldAlsoInterest = #{shouldAlsoInterest}
+				</if>
+				<if test="shouldReapyMoney != null and shouldReapyMoney != ''">
+					AND orde.shouldReapyMoney = #{shouldReapyMoney}
+				</if>
+				<if test="borrowingtime != null and borrowingtime != ''">
+					AND orde.borrowingtime = #{borrowingtime}
+				</if>
+				<if test="realtime != null and realtime != ''">
+					AND orde.realtime = #{realtime}
+				</if>
+				<if test="borrowMoneyType != null and borrowMoneyType != ''">
+					AND o.borrowMoneyType = #{borrowMoneyType}
+				</if>
+				<if test="orderId != null and orderId != ''">
+					AND o.id = #{orderId}
+				</if>
+				<if test="name != '' and name != null">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+			</where>
+			 order by orde.orderDeatilId desc
+			limit #{page},#{pagesize}
+		</select>
+
+
+
+		
+		<select id="totalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(*) from orderdetails or,orders o
+			<where>
+				AND o.companyId = #{companyId}
+			    AND or.returntime <![CDATA[ >= ]]> #{returntime}
+				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
+					AND or.realityBorrowMoney = #{realityBorrowMoney}
+				</if>
+				<if test="makeLoans != null and makeLoans != ''">
+					AND or.makeLoans = #{makeLoans}
+				</if>
+				<if test="shouldAlsoInterest != null and shouldAlsoInterest != ''">
+					AND or.shouldAlsoInterest = #{shouldAlsoInterest}
+				</if>
+				<if test="shouldReapyMoney != null and shouldReapyMoney != ''">
+					AND or.shouldReapyMoney = #{shouldReapyMoney}
+				</if>
+				<if test="borrowingtime != null and borrowingtime != ''">
+					AND or.borrowingtime = #{borrowingtime}
+				</if>
+				<if test="realtime != null and realtime != ''">
+					AND or.realtime = #{realtime}
+				</if>
+			</where>
+		</select>
+
+
+
+
+		<select id="allBeoverdueOrderdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select orde.*,u.name,u.phone,o.orderNumber,o.id from orderdetails orde,user u,orders o 
+			<where>
+			    AND orde.returntime <![CDATA[ <= ]]> #{returntime}
+				AND o.userId = u.id 
+				AND orde.orderId = o.id
+				AND o.companyId = #{companyId}
+				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
+					AND orde.realityBorrowMoney = #{realityBorrowMoney}
+				</if>
+				<if test="makeLoans != null and makeLoans != ''">
+					AND orde.makeLoans = #{makeLoans}
+				</if>
+				<if test="shouldAlsoInterest != null and shouldAlsoInterest != ''">
+					AND orde.shouldAlsoInterest = #{shouldAlsoInterest}
+				</if>
+				<if test="shouldReapyMoney != null and shouldReapyMoney != ''">
+					AND orde.shouldReapyMoney = #{shouldReapyMoney}
+				</if>
+				<if test="borrowingtime != null and borrowingtime != ''">
+					AND orde.borrowingtime = #{borrowingtime}
+				</if>
+				<if test="realtime != null and realtime != ''">
+					AND orde.realtime = #{realtime}
+				</if>
+				<if test="borrowMoneyType != null and borrowMoneyType != ''">
+					AND o.borrowMoneyType = #{borrowMoneyType}
+				</if>
+				<if test="orderId != null and orderId != ''">
+					AND o.id = #{orderId}
+				</if>
+				<if test="name != '' and name != null">
+					AND u.name = #{name}
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone = #{phone}
+				</if>
+				<if test="borrowMoneyType != null and borrowMoneyType != ''">
+					AND o.borrowMoneyType = #{borrowMoneyType}
+				</if>
+			</where>
+			 order by orde.orderDeatilId desc
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		
+		<select id="BeoverduetotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(*) from orderdetails or,orders o
+			<where>
+				AND o.companyId = #{companyId}
+			    AND or.returntime <![CDATA[ <= ]]> #{returntime}
+				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
+					AND or.realityBorrowMoney = #{realityBorrowMoney}
+				</if>
+				<if test="makeLoans != null and makeLoans != ''">
+					AND or.makeLoans = #{makeLoans}
+				</if>
+				<if test="shouldAlsoInterest != null and shouldAlsoInterest != ''">
+					AND or.shouldAlsoInterest = #{shouldAlsoInterest}
+				</if>
+				<if test="shouldReapyMoney != null and shouldReapyMoney != ''">
+					AND or.shouldReapyMoney = #{shouldReapyMoney}
+				</if>
+				<if test="borrowingtime != null and borrowingtime != ''">
+					AND or.borrowingtime = #{borrowingtime}
+				</if>
+				<if test="realtime != null and realtime != ''">
+					AND or.realtime = #{realtime}
+				</if>
+			</where>
+		</select>
+		
+		
+		
+		<select id="SelectOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select orde.*,u.name,o.orderNumber,o.id from orders o,orderdetails orde,user u where o.id not in 
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			and u.id = o.userId 
+			AND o.companyId = #{companyId}
+			and orde.orderId = o.id
+			and o.shouldReturnTime <![CDATA[ >= ]]> #{shouldReturnTime}
+			order by o.id desc
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		<select id="CollMemberId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select collectionMemberId from collection_member where companyId = #{companyId}
+		</select>
+		
+		
+		<select id="SelectNodetId" parameterType="java.util.List" resultType="java.lang.Integer">
+			select orderId from collection where collectionMemberId in 
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			 GROUP BY orderId
+		</select>
+		
+		
+		<select id="WeiNum" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orderdetails">
+			select count(order.*) from orders o,orderdetails order,user u where u.id = o.userId and order.orderId = o.id
+			and o.shouldReturnTime <![CDATA[ >= ]]> #{shouldReturnTime} and o.companyId = #{companyId}
+		</select>
+		
+		
+		
+		<select id="OrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select orde.*,u.name,o.orderNumber,o.id from orders o,orderdetails orde,user u,collection col
+			<where>
+			AND o.companyId = #{companyId}
+			AND o.id in 
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			and u.id = o.userId 
+			and orde.orderId = o.id
+			and o.id = col.orderId
+			and o.shouldReturnTime <![CDATA[ >= ]]> #{shouldReturnTime}
+			<if test="orderId != null and orderId != ''">
+				AND o.id = #{orderId}
+			</if>
+			<if test="name != null and name != ''">
+				AND u.name = #{name}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND u.phone = #{phone}
+			</if>
+			<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND col.collectionMemberId = #{collectionMemberId}
+			</if>
+			</where>
+			order by o.id desc
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		<select id="DateNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select DATE_FORMAT(collectionTime,'%Y-%m-%d') as collectionTime,count(collectionTime) as collection_count from collection
+			<where>
+				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
+					AND collectionTime between #{statu_time} and#{end_time}
+				</if>
+			</where>
+		</select>
+		
+		
+		<select id="CollDateNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select DATE_FORMAT(collectionTime,'%Y-%m-%d') as collectionTime,count(collectionTime) as collection_count from collection
+			<where>
+				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
+					AND collectionTime between #{statu_time} and#{end_time}
+				</if>
+			</where>
+			GROUP BY DATE_FORMAT(operator_time,'%Y-%m-%d')
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		
+		<select id="MemberName" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select colme.reallyName,DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.collectiondate) as collection_count 
+			from overdue ov,collection_member colme
+			<where>
+				AND ov.collectionMemberId = colme.collectionMemberId 
+				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
+					AND collectionTime between #{statu_time} and#{end_time}
+				</if>
+			</where>
+			GROUP BY ov.collectionMemberId
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		<select id="MemberNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select colme.reallyName,DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.collectiondate) as collection_count from 
+			overdue ov,collection_member colme
+			<where>
+				AND ov.collectionMemberId = colme.collectionMemberId 
+				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
+					AND collectionTime between #{statu_time} and#{end_time}
+				</if>
+			</where>
+		</select>
+		
+		
+		
+		<select id="MyOrderdue" resultType="com.zhita.model.manage.Orderdetails" parameterType="com.zhita.model.manage.Orderdetails">
+			select o.orderNumber,o.id,orde.*,u.name,odue.collectiondate,odue.overdue_phonestaus from 
+			orders o,orderdetails orde,user u,overdue odue where o.id = orde.orderId 
+			and odue.orderId = o.id
+			and o.companyId = #{companyId}
+			and u.id = o.userId 
+			and odue.collectionMemberId = #{collectionMemberId}
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		<select id="MyOrderNum" resultType="com.zhita.model.manage.Orderdetails" parameterType="java.lang.Integer">
+			select count(*) from overdue where collectionMemberId = #{collectionMemberId}
+		</select>
+
+
+		<update id="OverdueStatu" parameterType="com.zhita.model.manage.Orderdetails">
+			update overdue set overdue_phonestaus=#{overdue_phonestaus} where overdue_id = #{overdue_id}
+		</update>
+		
+		
+		<insert id="AddOverdue" parameterType="com.zhita.model.manage.Overdue">
+			INSERT INTO `Overdue`(
+			overdue_phonestaus,
+			collectionMemberId,
+			collectiondate,
+			orderId
+			)
+			VALUES
+			(#{overdue_phonestaus},#{collectionMemberId},#{collectiondate},#{orderId})
+		</insert>
+</mapper>

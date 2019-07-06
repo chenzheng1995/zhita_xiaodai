@@ -44,4 +44,11 @@ public interface SourceMapper {
 
 	int getsourceId(String sourceId);
     
+    //后台管理  -----查询当前渠道在user表的所有注册时间
+    List<String> queryTime(Integer companyId,String sourceName);
+    
+    //后台管理 ------查询统计申请数 
+    int queryApplicationNumber(Integer companyId,String sourceName,String startTime,String endTime);
+    
+    
 }

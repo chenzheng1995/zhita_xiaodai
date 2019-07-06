@@ -7,16 +7,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
+import com.zhita.util.Timestamps;
 
 
 
@@ -81,8 +80,14 @@ public class TestController {
 	
 	
 	public static void main(String[] args) throws ParseException {
-		 String str="600-800"; 
+		/* String str="600-800"; 
 		 String[] strarray=str.split("-"); 
-		 System.out.println(strarray[0]+"----"+strarray[1]);
+		 System.out.println(strarray[0]+"----"+strarray[1]);*/
+		 
+		 String startTime = "2019-07-01";
+		 String startTimestamps = Timestamps.dateToStamp(startTime);
+		 String endTime = "2019-07-06";
+		 String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		 System.out.println(startTimestamps+"----"+endTimestamps);
 	}
 }
