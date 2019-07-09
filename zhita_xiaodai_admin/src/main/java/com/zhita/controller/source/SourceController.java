@@ -1,5 +1,6 @@
 package com.zhita.controller.source;
 
+import java.text.ParseException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ public class SourceController {
 	//后台管理---查询渠道表所有信息
 	@ResponseBody
 	@RequestMapping("/queryAll")
-    public Map<String,Object> queryAll(Integer comapnyId,Integer page){
-    	Map<String,Object> map=intSourceService.queryAll(comapnyId, page);
+    public Map<String,Object> queryAll(Integer companyId,Integer page){
+    	Map<String,Object> map=intSourceService.queryAll(companyId, page);
     	return map;
     }
 	
-	//后台管理---添加功能（查询出所有公司和风控）
+	//后台管理---添加功能（查询出所有公司   模板和风控）
 	@ResponseBody
 	@RequestMapping("/queryAllCompany")
     public Map<String,Object> queryAllCompany(Integer companyId){
@@ -39,8 +40,8 @@ public class SourceController {
     //后台管理---添加功能
 	@ResponseBody
 	@RequestMapping("/insert")
-    public int insert(Source record,String templateName){
-    	int num=intSourceService.insert(record,templateName);
+    public int insert(Source record){
+    	int num=intSourceService.insert(record);
     	return num;
     }
 	
@@ -55,8 +56,8 @@ public class SourceController {
 	//后台管理---编辑功能
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
-    public int updateByPrimaryKey(Source record,String templateName){
-    	int num=intSourceService.updateByPrimaryKey(record,templateName);
+    public int updateByPrimaryKey(Source record) throws ParseException{
+    	int num=intSourceService.updateByPrimaryKey(record);
     	return num;
     }
 	

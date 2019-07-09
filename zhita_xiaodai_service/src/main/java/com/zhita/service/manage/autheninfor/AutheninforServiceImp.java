@@ -13,7 +13,7 @@ import com.zhita.dao.manage.AuthenticationInformationMapper;
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
-import com.zhita.util.FolderUtil;
+import com.zhita.util.OssUtil;
 
 @Service
 public class AutheninforServiceImp implements IntAutheninforService{
@@ -50,22 +50,22 @@ public class AutheninforServiceImp implements IntAutheninforService{
 					// 自定义的文件名称
 					String trueFileName = String.valueOf(System.currentTimeMillis()) + fileName;
 					// 设置存放图片文件的路径
-					path = "D://image" +trueFileName;
-					//path = "D://nginx-1.14.2/html/dist/image/shuffling_figure/" + /* System.getProperty("file.separator")+ */trueFileName;
-//					OssUtil ossUtil = new OssUtil();
-//					String ossPath = ossUtil.uploadFile(iStream, path);
-//					if(ossPath.substring(0, 5).equals("https")) {
-//						System.out.println("路径为："+ossPath);
-//						shufflingFigure.setCover(ossPath);
-//						map.put("msg", "图片上传成功");
-//					}
-					InputStream inStream = file.getInputStream();
+					//path = "D://image" +trueFileName;
+					path = "D://nginx-1.14.2/html/dist/image/autheninfor/" + /* System.getProperty("file.separator")+ */trueFileName;
+					OssUtil ossUtil = new OssUtil();
+					String ossPath = ossUtil.uploadFile(iStream, path);
+					if(ossPath.substring(0, 5).equals("https")) {
+						System.out.println("路径为："+ossPath);
+						record.setIcon(ossPath);
+						map.put("msg", "图片上传成功");
+					}
+					/*InputStream inStream = file.getInputStream();
 					FolderUtil folderUtil = new FolderUtil();
 					String code = folderUtil.uploadImage(inStream, path);
 					if(code.equals("200")) {
 						record.setIcon("http://tg.mis8888.com/image/autheninfor/"+trueFileName);
 						map.put("msg", "图片上传成功");
-					}else {
+					}*/else {
 						map.put("msg", "图片上传失败");
 					}
 				} else {
@@ -106,22 +106,22 @@ public class AutheninforServiceImp implements IntAutheninforService{
 					// 自定义的文件名称
 					String trueFileName = String.valueOf(System.currentTimeMillis()) + fileName;
 					// 设置存放图片文件的路径
-					path = "D://image" +trueFileName;
-					//path = "D://nginx-1.14.2/html/dist/image/shuffling_figure/" + /* System.getProperty("file.separator")+ */trueFileName;
-//					OssUtil ossUtil = new OssUtil();
-//					String ossPath = ossUtil.uploadFile(iStream, path);
-//					if(ossPath.substring(0, 5).equals("https")) {
-//						System.out.println("路径为："+ossPath);
-//						shufflingFigure.setCover(ossPath);
-//						map.put("msg", "图片上传成功");
-//					}
-					InputStream inStream = file.getInputStream();
+					//path = "D://image" +trueFileName;
+					path = "D://nginx-1.14.2/html/dist/image/autheninfor/" + /* System.getProperty("file.separator")+ */trueFileName;
+					OssUtil ossUtil = new OssUtil();
+					String ossPath = ossUtil.uploadFile(iStream, path);
+					if(ossPath.substring(0, 5).equals("https")) {
+						System.out.println("路径为："+ossPath);
+						record.setIcon(ossPath);
+						map.put("msg", "图片上传成功");
+					}
+					/*InputStream inStream = file.getInputStream();
 					FolderUtil folderUtil = new FolderUtil();
 					String code = folderUtil.uploadImage(inStream, path);
 					if(code.equals("200")) {
 						record.setIcon("http://tg.mis8888.com/image/autheninfor/"+trueFileName);
 						map.put("msg", "图片上传成功");
-					}else {
+					}*/else {
 						map.put("msg", "图片上传失败");
 					}
 

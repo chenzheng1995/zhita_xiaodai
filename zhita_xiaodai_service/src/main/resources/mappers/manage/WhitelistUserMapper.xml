@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.WhitelistUserMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.WhitelistUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, name, phone, idcard, operator,operationtime,deleted
+  </sql>
+  <!-- 后台管理        根据id查询当前用户的信息 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from whitelist_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from whitelist_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理           添加操作 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.WhitelistUser" >
+    insert into whitelist_user (companyId, name, phone, idcard, operator,operationtime)
+    values (#{companyid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.WhitelistUser" >
+    insert into whitelist_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.WhitelistUser" >
+    update whitelist_user
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理      更新保存功能 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.WhitelistUser" >
+    update whitelist_user
+    set companyId = #{companyid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      operationtime = #{operationtime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理        查询列表 -->
+  <select id="queryAll" resultType="com.zhita.model.manage.WhitelistUser">
+  	select 
+    <include refid="Base_Column_List" />
+    from whitelist_user
+    <where>
+    	<if test="name != null">
+           name like "%"#{arg1}"%"
+        </if>
+        <if test="phone != null">
+           and phone="%"#{arg2}"%"
+        </if>
+        <if test="idcard != null">
+           and idcard="%"#{arg3}"%"
+        </if>
+    </where>
+    and companyId=#{arg0} and deleted=0
+  </select>
+  <!-- 后台管理        更新假删除状态 -->
+  <update id="upaFalseDel" parameterType="java.lang.Integer">
+  	update whitelist_user set deleted=1 where id=#{arg0}
+  </update>
+</mapper>

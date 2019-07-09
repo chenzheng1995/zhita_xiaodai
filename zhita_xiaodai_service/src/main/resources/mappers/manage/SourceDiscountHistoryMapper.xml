@@ -103,15 +103,14 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.SourceDiscountHistory" >
+  <!-- 修改保存 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.TongjiSorce" >
     update source_discount_history
-    set sourceName = #{sourcename,jdbcType=VARCHAR},
-      date = #{date,jdbcType=VARCHAR},
+    set date = #{date,jdbcType=VARCHAR},
       uv = #{uv,jdbcType=INTEGER},
-      appnum = #{appnum,jdbcType=REAL},
-      cvr = #{cvr,jdbcType=VARCHAR},
-      deleted = #{deleted,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+      appnum = #{registernumdis,jdbcType=REAL},
+      cvr = #{cvr,jdbcType=VARCHAR}
+     where sourcename = #{sourcename,jdbcType=VARCHAR} and date=#{date1,jdbcType=VARCHAR}
   </update>
   <!-- 后台管理            查询当前渠道在历史表的时间 -->
   <select id="queryDate" parameterType="java.lang.String" resultType="java.lang.String">

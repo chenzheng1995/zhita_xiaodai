@@ -1,6 +1,10 @@
 package com.zhita.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,14 +84,17 @@ public class TestController {
 	
 	
 	public static void main(String[] args) throws ParseException {
-		/* String str="600-800"; 
+		 String str="600-800"; 
 		 String[] strarray=str.split("-"); 
-		 System.out.println(strarray[0]+"----"+strarray[1]);*/
+		 System.out.println(strarray[0]+"----"+strarray[1]);
 		 
-		 String startTime = "2019-07-01";
-		 String startTimestamps = Timestamps.dateToStamp(startTime);
-		 String endTime = "2019-07-06";
-		 String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
-		 System.out.println(startTimestamps+"----"+endTimestamps);
+		/*//获取前一天的日期
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		String dateyes = df.format(calendar.getTime());
+		System.out.println("今天日期的前一天："+dateyes);*/
+		
+		
 	}
 }

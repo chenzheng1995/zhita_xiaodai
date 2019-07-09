@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Orders" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="orderNumber" property="ordernumber" jdbcType="VARCHAR" />
+    <result column="borrowMoneyUse" property="borrowmoneyuse" jdbcType="VARCHAR" />
+    <result column="borrowRepayBankcard" property="borrowrepaybankcard" jdbcType="VARCHAR" />
+    <result column="bankPhone" property="bankphone" jdbcType="VARCHAR" />
+    <result column="orderCreateTime" property="ordercreatetime" jdbcType="VARCHAR" />
+    <result column="riskManagemenType" property="riskmanagementype" jdbcType="VARCHAR" />
+    <result column="borrowTimeLimit" property="borrowtimelimit" jdbcType="INTEGER" />
+    <result column="borrowMoneyWay" property="borrowmoneyway" jdbcType="VARCHAR" />
+    <result column="howManyTimesBorMoney" property="howmanytimesbormoney" jdbcType="INTEGER" />
+    <result column="borrowMoneyState" property="borrowmoneystate" jdbcType="VARCHAR" />
+    <result column="shouldReturnTime" property="shouldreturntime" jdbcType="VARCHAR" />
+    <result column="realtime" property="realtime" jdbcType="VARCHAR" />
+    <result column="ifcandefer" property="ifcandefer" jdbcType="VARCHAR" />
+    <result column="canDeferNumberoftime" property="candefernumberoftime" jdbcType="INTEGER" />
+    <result column="riskmanagementFraction" property="riskmanagementfraction" jdbcType="VARCHAR" />
+    <result column="ifoverdue" property="ifoverdue" jdbcType="VARCHAR" />
+    <result column="overdueGrade" property="overduegrade" jdbcType="VARCHAR" />
+    <result column="overdue_phonestatu" property="overduePhonestatu" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
+    o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.howManyTimesBorMoney, 
+    o.borrowMoneyState, o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
+    o.ifoverdue, o.overdueGrade, o.overdue_phonestatu,
+    od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
+    od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
+    od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
+    u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId
+    
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Orders" >
+    insert into orders (id, companyId, userId, 
+      orderNumber, borrowMoneyUse, borrowRepayBankcard, 
+      bankPhone, orderCreateTime, riskManagemenType, 
+      borrowTimeLimit, borrowMoneyWay, howManyTimesBorMoney, 
+      borrowMoneyState, shouldReturnTime, realtime, 
+      ifcandefer, canDeferNumberoftime, riskmanagementFraction, 
+      ifoverdue, overdueGrade, overdue_phonestatu
+      )
+    values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
+      #{ordernumber,jdbcType=VARCHAR}, #{borrowmoneyuse,jdbcType=VARCHAR}, #{borrowrepaybankcard,jdbcType=VARCHAR}, 
+      #{bankphone,jdbcType=VARCHAR}, #{ordercreatetime,jdbcType=VARCHAR}, #{riskmanagementype,jdbcType=VARCHAR}, 
+      #{borrowtimelimit,jdbcType=INTEGER}, #{borrowmoneyway,jdbcType=VARCHAR}, #{howmanytimesbormoney,jdbcType=INTEGER}, 
+      #{borrowmoneystate,jdbcType=VARCHAR}, #{shouldreturntime,jdbcType=VARCHAR}, #{realtime,jdbcType=VARCHAR}, 
+      #{ifcandefer,jdbcType=VARCHAR}, #{candefernumberoftime,jdbcType=INTEGER}, #{riskmanagementfraction,jdbcType=VARCHAR}, 
+      #{ifoverdue,jdbcType=VARCHAR}, #{overduegrade,jdbcType=VARCHAR}, #{overduePhonestatu,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Orders" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber,
+      </if>
+      <if test="borrowmoneyuse != null" >
+        borrowMoneyUse,
+      </if>
+      <if test="borrowrepaybankcard != null" >
+        borrowRepayBankcard,
+      </if>
+      <if test="bankphone != null" >
+        bankPhone,
+      </if>
+      <if test="ordercreatetime != null" >
+        orderCreateTime,
+      </if>
+      <if test="riskmanagementype != null" >
+        riskManagemenType,
+      </if>
+      <if test="borrowtimelimit != null" >
+        borrowTimeLimit,
+      </if>
+      <if test="borrowmoneyway != null" >
+        borrowMoneyWay,
+      </if>
+      <if test="howmanytimesbormoney != null" >
+        howManyTimesBorMoney,
+      </if>
+      <if test="borrowmoneystate != null" >
+        borrowMoneyState,
+      </if>
+      <if test="shouldreturntime != null" >
+        shouldReturnTime,
+      </if>
+      <if test="realtime != null" >
+        realtime,
+      </if>
+      <if test="ifcandefer != null" >
+        ifcandefer,
+      </if>
+      <if test="candefernumberoftime != null" >
+        canDeferNumberoftime,
+      </if>
+      <if test="riskmanagementfraction != null" >
+        riskmanagementFraction,
+      </if>
+      <if test="ifoverdue != null" >
+        ifoverdue,
+      </if>
+      <if test="overduegrade != null" >
+        overdueGrade,
+      </if>
+      <if test="overduePhonestatu != null" >
+        overdue_phonestatu,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="ordernumber != null" >
+        #{ordernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowmoneyuse != null" >
+        #{borrowmoneyuse,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowrepaybankcard != null" >
+        #{borrowrepaybankcard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankphone != null" >
+        #{bankphone,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercreatetime != null" >
+        #{ordercreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="riskmanagementype != null" >
+        #{riskmanagementype,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowtimelimit != null" >
+        #{borrowtimelimit,jdbcType=INTEGER},
+      </if>
+      <if test="borrowmoneyway != null" >
+        #{borrowmoneyway,jdbcType=VARCHAR},
+      </if>
+      <if test="howmanytimesbormoney != null" >
+        #{howmanytimesbormoney,jdbcType=INTEGER},
+      </if>
+      <if test="borrowmoneystate != null" >
+        #{borrowmoneystate,jdbcType=VARCHAR},
+      </if>
+      <if test="shouldreturntime != null" >
+        #{shouldreturntime,jdbcType=VARCHAR},
+      </if>
+      <if test="realtime != null" >
+        #{realtime,jdbcType=VARCHAR},
+      </if>
+      <if test="ifcandefer != null" >
+        #{ifcandefer,jdbcType=VARCHAR},
+      </if>
+      <if test="candefernumberoftime != null" >
+        #{candefernumberoftime,jdbcType=INTEGER},
+      </if>
+      <if test="riskmanagementfraction != null" >
+        #{riskmanagementfraction,jdbcType=VARCHAR},
+      </if>
+      <if test="ifoverdue != null" >
+        #{ifoverdue,jdbcType=VARCHAR},
+      </if>
+      <if test="overduegrade != null" >
+        #{overduegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="overduePhonestatu != null" >
+        #{overduePhonestatu,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Orders" >
+    update orders
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber = #{ordernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowmoneyuse != null" >
+        borrowMoneyUse = #{borrowmoneyuse,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowrepaybankcard != null" >
+        borrowRepayBankcard = #{borrowrepaybankcard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankphone != null" >
+        bankPhone = #{bankphone,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercreatetime != null" >
+        orderCreateTime = #{ordercreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="riskmanagementype != null" >
+        riskManagemenType = #{riskmanagementype,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowtimelimit != null" >
+        borrowTimeLimit = #{borrowtimelimit,jdbcType=INTEGER},
+      </if>
+      <if test="borrowmoneyway != null" >
+        borrowMoneyWay = #{borrowmoneyway,jdbcType=VARCHAR},
+      </if>
+      <if test="howmanytimesbormoney != null" >
+        howManyTimesBorMoney = #{howmanytimesbormoney,jdbcType=INTEGER},
+      </if>
+      <if test="borrowmoneystate != null" >
+        borrowMoneyState = #{borrowmoneystate,jdbcType=VARCHAR},
+      </if>
+      <if test="shouldreturntime != null" >
+        shouldReturnTime = #{shouldreturntime,jdbcType=VARCHAR},
+      </if>
+      <if test="realtime != null" >
+        realtime = #{realtime,jdbcType=VARCHAR},
+      </if>
+      <if test="ifcandefer != null" >
+        ifcandefer = #{ifcandefer,jdbcType=VARCHAR},
+      </if>
+      <if test="candefernumberoftime != null" >
+        canDeferNumberoftime = #{candefernumberoftime,jdbcType=INTEGER},
+      </if>
+      <if test="riskmanagementfraction != null" >
+        riskmanagementFraction = #{riskmanagementfraction,jdbcType=VARCHAR},
+      </if>
+      <if test="ifoverdue != null" >
+        ifoverdue = #{ifoverdue,jdbcType=VARCHAR},
+      </if>
+      <if test="overduegrade != null" >
+        overdueGrade = #{overduegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="overduePhonestatu != null" >
+        overdue_phonestatu = #{overduePhonestatu,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Orders" >
+    update orders
+    set companyId = #{companyid,jdbcType=INTEGER},
+      userId = #{userid,jdbcType=INTEGER},
+      orderNumber = #{ordernumber,jdbcType=VARCHAR},
+      borrowMoneyUse = #{borrowmoneyuse,jdbcType=VARCHAR},
+      borrowRepayBankcard = #{borrowrepaybankcard,jdbcType=VARCHAR},
+      bankPhone = #{bankphone,jdbcType=VARCHAR},
+      orderCreateTime = #{ordercreatetime,jdbcType=VARCHAR},
+      riskManagemenType = #{riskmanagementype,jdbcType=VARCHAR},
+      borrowTimeLimit = #{borrowtimelimit,jdbcType=INTEGER},
+      borrowMoneyWay = #{borrowmoneyway,jdbcType=VARCHAR},
+      howManyTimesBorMoney = #{howmanytimesbormoney,jdbcType=INTEGER},
+      borrowMoneyState = #{borrowmoneystate,jdbcType=VARCHAR},
+      shouldReturnTime = #{shouldreturntime,jdbcType=VARCHAR},
+      realtime = #{realtime,jdbcType=VARCHAR},
+      ifcandefer = #{ifcandefer,jdbcType=VARCHAR},
+      canDeferNumberoftime = #{candefernumberoftime,jdbcType=INTEGER},
+      riskmanagementFraction = #{riskmanagementfraction,jdbcType=VARCHAR},
+      ifoverdue = #{ifoverdue,jdbcType=VARCHAR},
+      overdueGrade = #{overduegrade,jdbcType=VARCHAR},
+      overdue_phonestatu = #{overduePhonestatu,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理          查询风控设置管理表正在使用的风控设置 -->
+  <select id="querymancon" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.ManageControlSettings">
+  	select  
+  	id, companyId, rmModleName, totalScore, atrntlFractionalSegment, roatnptFractionalSegment,airappFractionalSegment, whetheruse, deleted
+  	from manage_control_settings where companyId=#{arg0} and deleted=0 and whetherUse=1
+  </select>
+  
+  <!-- 后台管理             机审订单     (公司id，page，订单号，订单开始时间，订单结束时间，风控反馈，风控分数开始，风控分数结束) -->
+  <select id="queryatrOrders" resultType="com.zhita.model.manage.Orders">
+  	select 
+    <include refid="Base_Column_List" />
+    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
+    	<where>
+        <if test="orderNumber != null">
+           o.orderNumber like "%"#{arg1}"%"
+        </if>
+        <if test="orderStartTime != null and orderEndTime!=null">
+           and o.orderCreateTime between #{arg2} and #{arg3}
+        </if>
+        <if test="riskManagemenType != null">
+           and o.riskManagemenType =#{arg4}
+        </if>
+        and o.companyId=#{arg0} and o.riskmanagementFraction between #{arg5} and #{arg6}
+        order by o.orderCreateTime desc
+    </where>
+  </select>
+</mapper>

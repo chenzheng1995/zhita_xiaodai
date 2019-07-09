@@ -14,7 +14,8 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, sourceName, account, pwd, link, status, discount, templateId,manageControlId, deleted
+    s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId, s.deleted,
+    st.name,mcs.rmModleName
   </sql>
   <!-- 后台管理            根据id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -30,10 +31,10 @@
   <!-- 后台管理    添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.Source" >
     insert into source (companyId, sourceName,account, pwd, 
-    link,status, discount, templateid,managecontrolid)
+    link, discount, templateid,managecontrolid)
     values (#{companyid,jdbcType=INTEGER}, #{sourcename,jdbcType=VARCHAR}, 
       #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{discount,jdbcType=VARCHAR}, #{templateid,jdbcType=INTEGER},#{managecontrolid,jdbcType=INTEGER},)
+      #{discount,jdbcType=VARCHAR}, #{templateid,jdbcType=INTEGER},#{managecontrolid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.Source" >
     insert into source
@@ -154,8 +155,8 @@
   <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Source">
   	select 
     <include refid="Base_Column_List" />
-    from source
-    where companyId=#{arg0} and deleted=0
+    from source s left join source_template st on s.templateId=st.id left join manage_control_settings mcs on s.manageControlId=mcs.id
+    where s.companyId=#{arg0} and s.deleted=0
   </select>
   
   <!-- 后台管理        根据id  对当前对象的假删除状态进行修改 -->
@@ -210,11 +211,14 @@
 
    <!-- 后台管理     查询当前渠道在user表的所有注册时间 -->
    <select id="queryTime" resultType="java.lang.String">
-   		select registrationTime from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} 
+   		select registeTime from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} 
    </select>
     <!--后台管理    查询统计申请数 -->
-   <select id="queryApplicationNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
-		select count(u.id) from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} and u.registrationTime>=#{arg2} and u.registrationTime &lt;#{arg3}
+   <select id="queryApplicationNumber"  resultType="java.lang.Integer">
+		select count(u.id) from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} and u.registeTime>=#{arg2} and u.registeTime &lt;#{arg3}
    </select>
-
+    <!-- 后台管理      根据渠道id查询渠道的折扣率 -->
+   <select id="queryDiscountById" parameterType="java.lang.Integer" resultType="java.lang.String">
+	select discount from source where id=#{arg0}
+  </select>
 </mapper>

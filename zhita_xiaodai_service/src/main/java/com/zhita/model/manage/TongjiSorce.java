@@ -4,6 +4,7 @@ package com.zhita.model.manage;
 public class TongjiSorce {
 	private Integer id;//将查询出来的渠道id  当做主键id
 	private String date;//日期
+	private String date1;
 	private String sourcename;//渠道名称
 	private Integer uv;//uv
 	private float registernum;//真实的注册人数
@@ -26,6 +27,13 @@ public class TongjiSorce {
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+	
+	public String getDate1() {
+		return date1;
+	}
+	public void setDate1(String date1) {
+		this.date1 = date1;
 	}
 	public String getSourcename() {
 		return sourcename;

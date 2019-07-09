@@ -12,17 +12,17 @@ public interface IntSourceService {
 	//后台管理---查询渠道表所有信息
     public Map<String,Object> queryAll(Integer comapnyId,Integer page);
     
-    //后台管理---添加功能（查询出所有公司和风控）
+    //后台管理---添加功能（查询出所有公司   模板和风控）
     public Map<String, Object> queryAllCompany(Integer companyId);
     
     //后台管理---添加功能
-    public int insert(Source record,String templateName);
+    public int insert(Source record);
     
     //后台管理---根据id查询当前对象信息
     public Source selectByPrimaryKey(Integer id);
     
     //后台管理---编辑功能
-    public int updateByPrimaryKey(Source record,String templateName);
+    public int updateByPrimaryKey(Source record)throws ParseException;
     
     //后台管理---根据id  对当前对象的假删除状态进行修改
     public int updateFalDel(Integer id);

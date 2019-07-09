@@ -22,6 +22,8 @@ public class SysUser {
     
     private List<Role> listrole;//一个用户有多个角色
     
+    private String rolestr;//一个用户有多个角色    所有角色拼成字符串传给前端显示
+    
     private String listRoleIdString;//做添加操作时  存角色id的字符串
 
     public Integer getUserid() {
@@ -94,6 +96,14 @@ public class SysUser {
 
 	public void setListrole(List<Role> listrole) {
 		this.listrole = listrole;
+	}
+	
+	public String getRolestr() {
+		return rolestr;
+	}
+
+	public void setRolestr(String rolestr) {
+		this.rolestr = rolestr;
 	}
 
 	public String getListRoleIdString() {

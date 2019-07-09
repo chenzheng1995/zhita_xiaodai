@@ -31,6 +31,16 @@ public class SourcesideTongjiController {
 	@Autowired
 	private IntSourceService intSourceService;
 	
+	/**
+	 * 思路   渠道方看的统计     
+	 * 1.只有在更改渠道折扣率的时候才进行添加或修改操作   
+	 * 2.定时器方法里面也是进行添加修改操作（得到的时间差集   不是昨天就进行添加操作    是昨天就进行修改操作）
+	 * 3.访问查询接口时不进行添加修改操作
+	 * @param page
+	 * @param companyId
+	 * @param sourceName
+	 * @throws ParseException
+	 */
 	@ResponseBody
 	@RequestMapping("/queryAllTongji")
 	public void queryAllTongji(Integer page,Integer companyId,String sourceName) throws ParseException{
@@ -54,31 +64,62 @@ public class SourcesideTongjiController {
 		String startTimestamps = Timestamps.dateToStamp(startTime);
 		String endTime = date;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
-		float appnum = intSourceService.queryApplicationNumber(companyId, sourceName, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
-		String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
-		int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
+		
+		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceName, startTimestamps,endTimestamps);//判断当前渠道今天在历史表是否存在数据
+		
 		int uv = 0;
 		String cvr = null;
 		float disAppnum=0;//折扣申请数
+		if(tongjiSorcelist==null){
+			float appnum = intSourceService.queryApplicationNumber(companyId, sourceName, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+			String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
+				
+			if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
+				uv = 0;
+			} else {
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey"));
+			}
 			
-		if (redisClientUtil.getSourceClick(companyId + sourceName + date + "Key") == null) {
-			uv = 0;
-		} else {
-			uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName + date + "Key"));
-		}
-		
-		if (appnum >= 30) {
-			int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
-			disAppnum=(int)Math.ceil((overtop * discount1 *1.0/ 100+30));// 申请数
+			if (appnum >= 30) {
+				int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+				disAppnum=(int)Math.ceil((overtop * discount1 *1.0/ 100+30));// 申请数
 
-		} else {
-			disAppnum=appnum;// 申请数
-		}
-		
-		if ((appnum < 0.000001) || (uv == 0)) {
-			cvr = 0 + "%";// 得到转化率
-		} else {
-			cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+			} else {
+				disAppnum=appnum;// 申请数
+			}
+			
+			if ((appnum < 0.000001) || (uv == 0)) {
+				cvr = 0 + "%";// 得到转化率
+			} else {
+				cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+			}
+		}else{
+			float appnumHistory=tongjiSorcelist.getRegisternumdis();//历史表折扣后的注册人数
+			String startTimestamps1=tongjiSorcelist.getDate();
+			float appnum = intSourceService.queryApplicationNumber(companyId, sourceName, startTimestamps1, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+			String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
+				
+			if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
+				uv = 0;
+			} else {
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey"));
+			}
+			
+			if (appnum >= 30) {
+				int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+				disAppnum=(int)Math.ceil((overtop * discount1 *1.0/ 100+30))+appnumHistory;// 申请数
+
+			} else {
+				disAppnum=appnum+appnumHistory;// 申请数
+			}
+			
+			if ((appnum < 0.000001) || (uv == 0)) {
+				cvr = 0 + "%";// 得到转化率
+			} else {
+				cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+			}
 		}
 		
 		TongjiSorce tongjiSorce = new TongjiSorce();
@@ -111,38 +152,72 @@ public class SourcesideTongjiController {
 		String startTimestamps = Timestamps.dateToStamp(startTime);
 		String endTime = date;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		
 		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceName, startTimestamps,endTimestamps);
 		
-		if(tongjiSorcelist!=null){
-			tongjiSorce=tongjiSorcelist;
-			tongjiSorce.setDate(Timestamps.stampToDate1(tongjiSorce.getDate()));
-		}else{
-			float appnum = intSourceService.queryApplicationNumber(companyId, sourceName,startTimestamps,endTimestamps);// 得到申请数
-			String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率
-			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
-			int uv = 0;
-			String cvr = null;
-			float disAppnum=0;//折扣申请数
-				
-			if (redisClientUtil.getSourceClick(companyId + sourceName + date + "Key") == null) {
-				uv = 0;
-			} else {
-				uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName+ date + "Key"));
+		Date d=new Date();
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		String datetoday=sf.format(d);//date为当天时间(格式为年月日)
+		
+		int uv = 0;
+		String cvr = null;
+		float disAppnum=0;//折扣申请数
+		if(!date.equals(datetoday)){//证明穿进来的日期不是今天
+			if(tongjiSorcelist!=null){
+				tongjiSorce=tongjiSorcelist;
+				tongjiSorce.setDate(Timestamps.stampToDate1(tongjiSorce.getDate()));
 			}
-			
-			if (appnum >= 30) {
-				int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
-				disAppnum=((int)Math.ceil((overtop * discount1 *1.0/ 100+30)));// 申请数
-			} else {
-				disAppnum=appnum;// 申请数
-			}
+		}else{//证明传进来的日期是今天
+			if(tongjiSorcelist!=null){//证明当天历史表有数据
+				float appnumHistory=tongjiSorcelist.getRegisternumdis();//历史表折扣后的注册人数
+				String startTimestamps1=tongjiSorcelist.getDate();
+				float appnum = intSourceService.queryApplicationNumber(companyId, sourceName,startTimestamps1,endTimestamps);// 得到申请数
+				String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率
+				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
+					
+				if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
+					uv = 0;
+				} else {
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName+ date + "daichaoKey"));
+				}
 				
-			if ((appnum < 0.000001) || (uv == 0)) {
-				cvr = 0 + "%";// 得到转化率
-			} else {
-				cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
-			}
+				if (appnum >= 30) {
+					int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+					disAppnum=((int)Math.ceil((overtop * discount1 *1.0/ 100+30)))+appnumHistory;// 申请数
+				} else {
+					disAppnum=appnum+appnumHistory;// 申请数
+				}
+					
+				if ((appnum < 0.000001) || (uv == 0)) {
+					cvr = 0 + "%";// 得到转化率
+				} else {
+					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+				}
+			}else{//证明当天历史表没数据
+				float appnum = intSourceService.queryApplicationNumber(companyId, sourceName,startTimestamps,endTimestamps);// 得到申请数
+				String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率
+				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
+					
+				if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
+					uv = 0;
+				} else {
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName+ date + "daichaoKey"));
+				}
 				
+				if (appnum >= 30) {
+					int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+					disAppnum=((int)Math.ceil((overtop * discount1 *1.0/ 100+30)));// 申请数
+				} else {
+					disAppnum=appnum;// 申请数
+				}
+					
+				if ((appnum < 0.000001) || (uv == 0)) {
+					cvr = 0 + "%";// 得到转化率
+				} else {
+					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+				}
+			}
+		
 			tongjiSorce.setDate(date);// 日期
 			tongjiSorce.setSourcename(sourceName);// 渠道名称
 			tongjiSorce.setUv(uv);// uv

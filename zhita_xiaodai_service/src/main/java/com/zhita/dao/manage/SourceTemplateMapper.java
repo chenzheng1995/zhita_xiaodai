@@ -1,5 +1,7 @@
 package com.zhita.dao.manage;
 
+import java.util.List;
+
 import com.zhita.model.manage.SourceTemplate;
 
 public interface SourceTemplateMapper {
@@ -17,4 +19,7 @@ public interface SourceTemplateMapper {
     
     //后台管理---根据模板名字得到模板id
     Integer getid(String templateName);
+    
+    //后台管理---查询所有模板信息
+    List<SourceTemplate> queryAllTemp();
 }

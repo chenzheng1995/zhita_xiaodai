@@ -18,7 +18,7 @@ public class TimerTask {
      * @throws ParseException 
      */
     //                   秒分时日 月周
-      @Scheduled(cron = "0 0 0 * * ?")
+      @Scheduled(cron = "0 48 13 * * ?")
       public void test1() throws ParseException
       {
           System.out.println("开始做定时任务");

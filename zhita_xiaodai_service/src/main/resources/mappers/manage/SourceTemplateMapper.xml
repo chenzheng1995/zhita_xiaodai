@@ -72,4 +72,10 @@
     <select id="getid" parameterType="java.lang.String" resultType="java.lang.Integer">
     	select id from source_template where name = #{templateName}
     </select>
+    <!-- 后台管理       查询所有模板信息 -->
+    <select id="queryAllTemp" resultType="com.zhita.model.manage.SourceTemplate">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from source_template
+    </select>
 </mapper>

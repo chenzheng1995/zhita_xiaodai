@@ -20,80 +20,92 @@ public class Source {
 
     private Integer templateid;//模板id
     
+    private String name;//模板名字
+    
     private Integer managecontrolid;//风控id
+    
+    private String rmmodlename;//风控名字
 
     private String deleted;//假删除（删除：1，没删除：0）
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getCompanyid() {
-        return companyid;
-    }
+	public Integer getCompanyid() {
+		return companyid;
+	}
 
-    public void setCompanyid(Integer companyid) {
-        this.companyid = companyid;
-    }
+	public void setCompanyid(Integer companyid) {
+		this.companyid = companyid;
+	}
 
-    public String getSourcename() {
-        return sourcename;
-    }
+	public String getSourcename() {
+		return sourcename;
+	}
 
-    public void setSourcename(String sourcename) {
-        this.sourcename = sourcename == null ? null : sourcename.trim();
-    }
+	public void setSourcename(String sourcename) {
+		this.sourcename = sourcename;
+	}
 
-    public String getAccount() {
-        return account;
-    }
+	public String getAccount() {
+		return account;
+	}
 
-    public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
-    }
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
-    public String getPwd() {
-        return pwd;
-    }
+	public String getPwd() {
+		return pwd;
+	}
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd == null ? null : pwd.trim();
-    }
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
 
-    public String getLink() {
-        return link;
-    }
+	public String getLink() {
+		return link;
+	}
 
-    public void setLink(String link) {
-        this.link = link == null ? null : link.trim();
-    }
+	public void setLink(String link) {
+		this.link = link;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public String getDiscount() {
-        return discount;
-    }
+	public String getDiscount() {
+		return discount;
+	}
 
-    public void setDiscount(String discount) {
-        this.discount = discount == null ? null : discount.trim();
-    }
+	public void setDiscount(String discount) {
+		this.discount = discount;
+	}
 
-    public Integer getTemplateid() {
+	public Integer getTemplateid() {
 		return templateid;
 	}
 
 	public void setTemplateid(Integer templateid) {
 		this.templateid = templateid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Integer getManagecontrolid() {
@@ -104,11 +116,20 @@ public class Source {
 		this.managecontrolid = managecontrolid;
 	}
 
-	public String getDeleted() {
-        return deleted;
-    }
+	public String getRmmodlename() {
+		return rmmodlename;
+	}
 
-    public void setDeleted(String deleted) {
-        this.deleted = deleted == null ? null : deleted.trim();
-    }
+	public void setRmmodlename(String rmmodlename) {
+		this.rmmodlename = rmmodlename;
+	}
+
+	public String getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
+	}
+
 }

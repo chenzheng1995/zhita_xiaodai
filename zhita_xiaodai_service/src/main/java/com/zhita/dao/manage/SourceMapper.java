@@ -50,5 +50,8 @@ public interface SourceMapper {
     //后台管理 ------查询统计申请数 
     int queryApplicationNumber(Integer companyId,String sourceName,String startTime,String endTime);
     
+    //后台管理---根据渠道id查询渠道的折扣率
+    String queryDiscountById(Integer sourceId);
+    
     
 }

@@ -3,11 +3,9 @@ package com.zhita.model.manage;
 import java.math.BigDecimal;
 import java.util.List;
 
-
 //订单表
 public class Orders {
-	
-	private Integer orderId;//订单ID
+	private Integer id;
 	
 	private Integer companyId;//公司ID
 	
@@ -23,15 +21,28 @@ public class Orders {
 	
 	private String orderCreateTime;//订单生成时间(实借时间)
 	
-	private String riskManagemenType;//风控类型（通过已借款 成功 拒绝四种方式）
+	private String riskManagemenType;//风控类型（通过已借款    通过未借款    拒绝   待审核四种方式）
 	
-	private String borrowMoneyState;//还款状态（已还和未还）
-	
-	private String borrowMoneyType;//借款类型（首借和续借）
+	private String borrowTimeLimit;//借款期限
 	
 	private String borrowMoneyWay;//贷款方式（立即贷和分期贷）
 	
-	private String deleted;//假删除
+	private String borrowMoneyState;//还款状态（已还和未还）(1:已还；0：未还)
+	
+	private String shouldReturnTime;//应还时间
+	
+	private String realtime;//还款时间（实还时间）
+	
+	private String ifcandefer;//是否可以延期（1：可以；2：不可以）
+	
+	private Integer canDeferNumberoftime;//可以延期的次数
+	
+	private String riskmanagementFraction;//风控分数
+	
+	private String ifoverdue;//是否逾期
+	
+	private String overdueGrade;//逾期等级
+	
 	
 	private Integer adoptcount;//放款通过数
 	
@@ -63,12 +74,12 @@ public class Orders {
 	
 	private BigDecimal Actualrevenue;//实际营收
 
-	public Integer getOrderId() {
-		return orderId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getCompanyId() {
@@ -135,20 +146,12 @@ public class Orders {
 		this.riskManagemenType = riskManagemenType;
 	}
 
-	public String getBorrowMoneyState() {
-		return borrowMoneyState;
+	public String getBorrowTimeLimit() {
+		return borrowTimeLimit;
 	}
 
-	public void setBorrowMoneyState(String borrowMoneyState) {
-		this.borrowMoneyState = borrowMoneyState;
-	}
-
-	public String getBorrowMoneyType() {
-		return borrowMoneyType;
-	}
-
-	public void setBorrowMoneyType(String borrowMoneyType) {
-		this.borrowMoneyType = borrowMoneyType;
+	public void setBorrowTimeLimit(String borrowTimeLimit) {
+		this.borrowTimeLimit = borrowTimeLimit;
 	}
 
 	public String getBorrowMoneyWay() {
@@ -159,12 +162,68 @@ public class Orders {
 		this.borrowMoneyWay = borrowMoneyWay;
 	}
 
-	public String getDeleted() {
-		return deleted;
+	public String getBorrowMoneyState() {
+		return borrowMoneyState;
 	}
 
-	public void setDeleted(String deleted) {
-		this.deleted = deleted;
+	public void setBorrowMoneyState(String borrowMoneyState) {
+		this.borrowMoneyState = borrowMoneyState;
+	}
+
+	public String getShouldReturnTime() {
+		return shouldReturnTime;
+	}
+
+	public void setShouldReturnTime(String shouldReturnTime) {
+		this.shouldReturnTime = shouldReturnTime;
+	}
+
+	public String getRealtime() {
+		return realtime;
+	}
+
+	public void setRealtime(String realtime) {
+		this.realtime = realtime;
+	}
+
+	public String getIfcandefer() {
+		return ifcandefer;
+	}
+
+	public void setIfcandefer(String ifcandefer) {
+		this.ifcandefer = ifcandefer;
+	}
+
+	public Integer getCanDeferNumberoftime() {
+		return canDeferNumberoftime;
+	}
+
+	public void setCanDeferNumberoftime(Integer canDeferNumberoftime) {
+		this.canDeferNumberoftime = canDeferNumberoftime;
+	}
+
+	public String getRiskmanagementFraction() {
+		return riskmanagementFraction;
+	}
+
+	public void setRiskmanagementFraction(String riskmanagementFraction) {
+		this.riskmanagementFraction = riskmanagementFraction;
+	}
+
+	public String getIfoverdue() {
+		return ifoverdue;
+	}
+
+	public void setIfoverdue(String ifoverdue) {
+		this.ifoverdue = ifoverdue;
+	}
+
+	public String getOverdueGrade() {
+		return overdueGrade;
+	}
+
+	public void setOverdueGrade(String overdueGrade) {
+		this.overdueGrade = overdueGrade;
 	}
 
 	public Integer getAdoptcount() {
@@ -286,6 +345,5 @@ public class Orders {
 	public void setActualrevenue(BigDecimal actualrevenue) {
 		Actualrevenue = actualrevenue;
 	}
-	
-	
+
 }

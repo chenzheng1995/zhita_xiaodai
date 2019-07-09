@@ -16,12 +16,12 @@ public interface SourceDiscountHistoryMapper {
     SourceDiscountHistory selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(SourceDiscountHistory record);
-
-    int updateByPrimaryKey(SourceDiscountHistory record);
+    
+    //后台管理---修改保存
+    int updateByPrimaryKey(TongjiSorce record);
     
     //后台管理  ----- 查询当前渠道在历史表的时间
     List<String> queryDate(String sourceName);
-    
     
     //后台管理----通过渠道名字查询当前渠道在历史表的信息
     List<TongjiSorce> queryAllBySourceName(String sourceName);
