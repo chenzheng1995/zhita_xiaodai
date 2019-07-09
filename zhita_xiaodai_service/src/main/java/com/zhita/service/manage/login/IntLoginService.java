@@ -34,9 +34,27 @@ public interface IntLoginService {
    //admin---登录——查询当前用户权限id（通过手机号）
    public List<Integer> queryFunctionsByPhone(String phone);
 
-public User findphone(String newPhone, String companyId);
+public User findphone(String newPhone, int companyId);
    
    //admin---登录——退出登录
    public int updateLoginStatus(Integer userId);
+
+public int insertUser1(String newPhone, String loginStatus, int companyId, String registeClient,
+		String registrationTime, int merchantId, String useMarket);
+
+public int getId(String newPhone, int companyId);
+
+public int updateStatus(String loginStatus, String newPhone, int companyId, String loginTime);
+
+public String getPwd(int id);
+
+public int updatelogOutStatus(String loginStatus, int userId, String companyId);
+
+public int updatePwd(String newPhone, String md5Pwd, int companyId);
+
+public String getMd5pwd(String newPhone, int companyId);
+
+public int setPwd(int userId, String md5Pwd);
+
    
 }

@@ -7,7 +7,7 @@ import java.util.List;
 //订单明细表
 public class Orderdetails {
 	
-	private Integer orderDeatilId;//明细ID
+	private Integer id;//明细ID
 	
 	private Integer orderId;//订单表ID
 	
@@ -27,13 +27,11 @@ public class Orderdetails {
 	
 	private BigDecimal interestInAll;//总利息（元）
 	
-	private BigDecimal shouldReapyMoney;//应还金额（元）
+	private BigDecimal shouldReapyMoney;//期限内应还金额（元）
 	
-	private String repaymentPeriods;//还款期数（期）
+	private BigDecimal technicalServiceMoney;//技术服务费
 	
-	private String alreadyRepaymentPeriods;//已还款期数（期）
-	
-	private BigDecimal shouldAlsoInterest;//本期应还利息（元）
+	private BigDecimal realityAccount;//实际到账
 	
 	private String rejectMonadCause;//拒单原因
 	
@@ -41,11 +39,8 @@ public class Orderdetails {
 	
 	private String registerClient;//注册客户端
 	
-	private String useBazaar;//应用市场
 	
-	private String deleted;//假删除
 	
-	private BigDecimal realityAccount;//实际到账
 	
 	private String borrowMoneyState;//还款状态（已还和未还）
 	
@@ -149,12 +144,12 @@ public class Orderdetails {
     
     private Integer blaid;//黑名单标识
     
-	public Integer getOrderDeatilId() {
-		return orderDeatilId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setOrderDeatilId(Integer orderDeatilId) {
-		this.orderDeatilId = orderDeatilId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getOrderId() {
@@ -179,14 +174,6 @@ public class Orderdetails {
 
 	public void setMakeLoans(BigDecimal makeLoans) {
 		this.makeLoans = makeLoans;
-	}
-
-	public Integer getBorrowTimeLimit() {
-		return borrowTimeLimit;
-	}
-
-	public void setBorrowTimeLimit(Integer borrowTimeLimit) {
-		this.borrowTimeLimit = borrowTimeLimit;
 	}
 
 	public BigDecimal getInterestDay() {
@@ -245,28 +232,12 @@ public class Orderdetails {
 		this.shouldReapyMoney = shouldReapyMoney;
 	}
 
-	public String getRepaymentPeriods() {
-		return repaymentPeriods;
+	public BigDecimal getTechnicalServiceMoney() {
+		return technicalServiceMoney;
 	}
 
-	public void setRepaymentPeriods(String repaymentPeriods) {
-		this.repaymentPeriods = repaymentPeriods;
-	}
-
-	public String getAlreadyRepaymentPeriods() {
-		return alreadyRepaymentPeriods;
-	}
-
-	public void setAlreadyRepaymentPeriods(String alreadyRepaymentPeriods) {
-		this.alreadyRepaymentPeriods = alreadyRepaymentPeriods;
-	}
-
-	public BigDecimal getShouldAlsoInterest() {
-		return shouldAlsoInterest;
-	}
-
-	public void setShouldAlsoInterest(BigDecimal shouldAlsoInterest) {
-		this.shouldAlsoInterest = shouldAlsoInterest;
+	public void setTechnicalServiceMoney(BigDecimal technicalServiceMoney) {
+		this.technicalServiceMoney = technicalServiceMoney;
 	}
 
 	public String getRejectMonadCause() {
@@ -291,30 +262,6 @@ public class Orderdetails {
 
 	public void setRegisterClient(String registerClient) {
 		this.registerClient = registerClient;
-	}
-
-	public String getUseBazaar() {
-		return useBazaar;
-	}
-
-	public void setUseBazaar(String useBazaar) {
-		this.useBazaar = useBazaar;
-	}
-
-	public String getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(String deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getBorrowMoneyState() {
-		return borrowMoneyState;
-	}
-
-	public void setBorrowMoneyState(String borrowMoneyState) {
-		this.borrowMoneyState = borrowMoneyState;
 	}
 
 	public String getName() {
@@ -459,6 +406,14 @@ public class Orderdetails {
 
 	public void setCollectionTime(String collectionTime) {
 		this.collectionTime = collectionTime;
+	}
+
+	public Integer getBorrowTimeLimit() {
+		return borrowTimeLimit;
+	}
+
+	public void setBorrowTimeLimit(Integer borrowTimeLimit) {
+		this.borrowTimeLimit = borrowTimeLimit;
 	}
 
 	public String getBorrowMoneyWay() {

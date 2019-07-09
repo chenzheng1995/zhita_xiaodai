@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
+import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
     @Autowired
     IntLoginService loginService;
+    
+    @Autowired
+    IntSourceService intSourceService;
 
 
     private String getIpAddress(HttpServletRequest request) {
@@ -45,31 +49,35 @@ public class LoginController {
         return ip;
     }
 
-    // 发送验证码
-    @RequestMapping("/sendSMS")
-    @ResponseBody
-    public Map<String, String> sendSMS(String phone, String company, HttpServletRequest request) {
-        String currentIp = getIpAddress(request);
-        RedisClientUtil redis = new RedisClientUtil();
-        Map<String, String> map = new HashMap<>();
-        if (null == redis.getSourceClick(currentIp)) {
-            SMSUtil smsUtil = new SMSUtil();
-            String state = smsUtil.sendSMS(phone, "json", company);
-            if (state.equals("提交成功")) {
-                redis.set(currentIp, "1", 3600);
-            }
-            map.put("msg", state);
-            return map;
-        } else {
-            map.put("msg", "发送失败");
-            return map;
-        }
-
-    }
+//    // 发送验证码
+//    @RequestMapping("/sendSMS")
+//    @ResponseBody
+//    public Map<String, String> sendSMS(String phone, String company, HttpServletRequest request) {
+//        String currentIp = getIpAddress(request);
+//        RedisClientUtil redis = new RedisClientUtil();
+//        Map<String, String> map = new HashMap<>();
+//        if (null == redis.getSourceClick(currentIp)) {
+//            SMSUtil smsUtil = new SMSUtil();
+//            String state = smsUtil.sendSMS(phone, "json", company);
+//            if (state.equals("提交成功")) {
+//                redis.set(currentIp, "1", 3600);
+//            }
+//            map.put("msg", state);
+//            return map;
+//        } else {
+//            map.put("msg", "发送失败");
+//            return map;
+//        }
+//
+//    }
 
     @RequestMapping("/sendShortMessage")
     @ResponseBody
-    public Map<String, String> sendShortMessage(String phone, String company, String appNumber, String code) {
+    public Map<String, String> sendShortMessage(String phone, int companyId, String appNumber, String code) {
+    	String company ="";
+    	if (companyId==1) {
+    	 company = "借吧";
+    	}
         Map<String, String> map = new HashMap<>();
         DateFormat format = new SimpleDateFormat("yyyy/M/d");
         String result = MD5Utils.getMD5(phone + appNumber + format.format(new Date()) + "@xiaodai");
@@ -88,124 +96,278 @@ public class LoginController {
 
     }
 
-  
-//
-//    // 验证码登陆
-//
-//    /**
-//     * @param phone            手机号
-//     * @param code             验证码
-//     * @param company          公司名
-//     * @param registrationType 软件类型
-//     * @return
-//     */
-//    @RequestMapping("/codelogin")
-//    @ResponseBody
-//    @Transactional
-//    public Map<String, Object> codeLogin(String phone, String code, String companyId, String registrationType, String sourceId, String useMarket) {
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        String loginStatus = "1";
-//        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(code)|| StringUtils.isEmpty(companyId)|| StringUtils.isEmpty(registrationType)|| StringUtils.isEmpty(sourceId)|| StringUtils.isEmpty(useMarket)) {
-//            map.put("msg", "phone,code,companyId,registrationType,sourceId和useMarket不能为空");
-//            return map;
-//        } else {
-////			int num1 = sourceDadSonService.getSourceDadSon(sourceId,sonSourceName,company);
-////			if (num1 == 0) {
-////			sourceDadSonService.setSourceDadSon(sourceId,sonSourceName,company);
-////			}
-//            PhoneDeal phoneDeal = new PhoneDeal();
-//            String newPhone = phoneDeal.encryption(phone);
-//            RedisClientUtil redisClientUtil = new RedisClientUtil();
-//            String key = phone + "xiaodaiKey";
-//            String redisCode = redisClientUtil.get(key);
-//            if (redisCode == null) {
-//                map.put("msg", "验证码已过期，请重新发送");
-//                map.put("SCode", "402");
-//                return map;
-//            }
-//            if (redisCode.equals(code)) {
-//                redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
-//                String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
-//                User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
-//                if (user == null) {
-//                    int merchantId = intMerchantService.getsourceId(sourceId);
-//                    int number = loginService.insertUser1(newPhone, loginStatus, company, registrationType, registrationTime, merchantId, sonSourceName);
-//                    if (number == 1) {
-//                        int id = loginService.getId(newPhone, company); //获取该用户的id
-//                        map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
-//                        map.put("SCode", "201");
-//                        map.put("loginStatus", loginStatus);
-//                        map.put("userId", id);
-//                        map.put("phone", phone);
-//                    } else {
-//                        map.put("msg", "用户登录失败，用户数据插入失败");
-//                        map.put("SCode", "405");
-//                    }
-//                } else {
-//                    String loginTime = System.currentTimeMillis() + "";
-//                    int num = loginService.updateStatus(loginStatus, newPhone, company, loginTime);
-//                    if (num == 1) {
-//                        int id = loginService.getId(newPhone, company); // 获取该用户的id
-//                        String pwd = loginService.getPwd(id);
-//                        if (pwd == null) {
-//                            map.put("msg", "用户登录成功，登录状态修改成功，让用户添加密码");
-//                            map.put("SCode", "201");
-//                            map.put("loginStatus", loginStatus);
-//                            map.put("userId", id);
-//                            map.put("phone", phone);
-//                        } else {
-//                            map.put("msg", "用户登录成功，登录状态修改成功");
-//                            map.put("SCode", "200");
-//                            map.put("loginStatus", loginStatus);
-//                            map.put("userId", id);
-//                            map.put("phone", phone);
-//                        }
-//                    } else {
-//                        map.put("msg", "用户登录失败，登录状态修改失败");
-//                        map.put("SCode", "406");
-//                    }
-//                }
-//            } else {
-//                map.put("msg", "验证码错误");
-//                map.put("SCode", "403");
-//                return map;
-//            }
-//
-//            return map;
-//        }
-//
-//    }
-//
-//   
-//
-//    // 退出登录
-//
-//    /**
-//     * @return
-//     */
-//    @RequestMapping("/logOut")
-//    @ResponseBody
-//    @Transactional
-//    public Map<String, String> appLogOut(int userId, String company, String oneSourceName, String twoSourceName) {
-//        Map<String, String> map = new HashMap<>();
-//        if (StringUtils.isEmpty(userId)) {
-//            map.put("msg", "userId不能为空");
-//            return map;
-//        } else {
-//            String loginStatus = "0";
-//            int number = loginService.updatelogOutStatus(loginStatus, userId, company);
-//            if (number == 1) {
-//                map.put("msg", "用户退出成功，登录状态修改成功");
-//                map.put("SCode", "200");
-//                map.put("loginStatus", loginStatus);
-//            } else {
-//                map.put("msg", "用户退出失败，登录状态修改失败");
-//                map.put("SCode", "400");
-//            }
-//        }
-//
-//        return map;
-//
-//    }
+
+    // 验证码登陆
+
+    /**
+     * @param phone            手机号
+     * @param code             验证码
+     * @param company          公司名
+     * @param registeClient 软件类型
+     * @return
+     */
+    @RequestMapping("/codelogin")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient, String sourceName, String useMarket) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String loginStatus = "1";
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(code)|| StringUtils.isEmpty(companyId)|| StringUtils.isEmpty(registeClient)|| StringUtils.isEmpty(sourceName)|| StringUtils.isEmpty(useMarket)) {
+            map.put("msg", "phone,code,companyId,registrationType,sourceName和useMarket不能为空");
+            return map;
+        } else {
+//			int num1 = sourceDadSonService.getSourceDadSon(sourceId,sonSourceName,company);
+//			if (num1 == 0) {
+//			sourceDadSonService.setSourceDadSon(sourceId,sonSourceName,company);
+//			}
+            PhoneDeal phoneDeal = new PhoneDeal();
+            String newPhone = phoneDeal.encryption(phone);
+            RedisClientUtil redisClientUtil = new RedisClientUtil();
+            String key = phone + "xiaodaiKey";
+            String redisCode = redisClientUtil.get(key);
+            if (redisCode == null) {
+                map.put("msg", "验证码已过期，请重新发送");
+                map.put("SCode", "402");
+                return map;
+            }
+            if (redisCode.equals(code)) {
+                redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
+                String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
+                User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+                if (user == null) {
+                    int merchantId = intSourceService.getsourceId(sourceName);
+                    int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
+                    if (number == 1) {
+                        int id = loginService.getId(newPhone, companyId); //获取该用户的id
+                        map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
+                        map.put("SCode", "201");
+                        map.put("loginStatus", loginStatus);
+                        map.put("userId", id);
+                        map.put("phone", phone);
+                    } else {
+                        map.put("msg", "用户登录失败，用户数据插入失败");
+                        map.put("SCode", "405");
+                    }
+                } else {
+                    String loginTime = System.currentTimeMillis() + "";
+                    int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);
+                    if (num == 1) {
+                        int id = loginService.getId(newPhone, companyId); // 获取该用户的id
+                        String pwd = loginService.getPwd(id);
+                        if (pwd == null) {
+                            map.put("msg", "用户登录成功，登录状态修改成功，让用户添加密码");
+                            map.put("SCode", "201");
+                            map.put("loginStatus", loginStatus);
+                            map.put("userId", id);
+                            map.put("phone", phone);
+                        } else {
+                            map.put("msg", "用户登录成功，登录状态修改成功");
+                            map.put("SCode", "200");
+                            map.put("loginStatus", loginStatus);
+                            map.put("userId", id);
+                            map.put("phone", phone);
+                        }
+                    } else {
+                        map.put("msg", "用户登录失败，登录状态修改失败");
+                        map.put("SCode", "406");
+                    }
+                }
+            } else {
+                map.put("msg", "验证码错误");
+                map.put("SCode", "403");
+                return map;
+            }
+
+            return map;
+        }
+
+    }
+    
+    
+    
+    // 忘记密码
+
+    /**
+     * @param phone 手机号
+     * @param pwd   密码
+     * @param code  验证码
+     * @return
+     */
+    @RequestMapping("/forgotpwd")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> forgotpwd(String phone, String pwd, String code, int companyId, String sourceName, String useMarket) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(pwd) || StringUtils.isEmpty(code)) {
+            map.put("msg", "phone,pwd或code不能为空");
+            map.put("SCode", "401");
+            return map;
+        } else {
+            PhoneDeal phoneDeal = new PhoneDeal();
+            String newPhone = phoneDeal.encryption(phone);
+            RedisClientUtil redisClientUtil = new RedisClientUtil();
+            String key = phone + "Key";
+            String redisCode = redisClientUtil.get(key);
+            if (redisCode == null) {
+                map.put("msg", "验证码已过期，请重新发送");
+                map.put("SCode", "402");
+                return map;
+            }
+            if (redisCode.equals(code)) {
+                redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
+                MD5Util md5Util = new MD5Util();
+                String md5Pwd = md5Util.EncoderByMd5(pwd);
+                int number = loginService.updatePwd(newPhone, md5Pwd, companyId);
+                if (number == 1) {
+                    int id = loginService.getId(newPhone, companyId); // 获取该用户的id
+                    map.put("msg", "密码修改成功");
+                    map.put("userId", id);
+                    map.put("phone", phone);
+                    map.put("SCode", "200");
+                } else {
+                    map.put("msg", "密码修改失败");
+                    map.put("SCode", "405");
+                }
+            } else {
+                map.put("msg", "验证码输入错误");
+                map.put("SCode", "403");
+            }
+        }
+
+        return map;
+
+    }
+
+    /**
+     * @param phone 手机号
+     * @param pwd   密码
+     * @return
+     */
+    @RequestMapping("/pwdlogin")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> pwdLogin(String phone, String pwd, int companyId, String sourceName, String useMarket) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String loginStatus = "1";
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(pwd)) {
+            map.put("msg", "phone或pwd不能为空");
+            return map;
+        } else {
+            PhoneDeal phoneDeal = new PhoneDeal();
+            String newPhone = phoneDeal.encryption(phone);
+            User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+            if (user == null) {
+                map.put("msg", "用户名不存在,请先注册");
+                map.put("SCode", "405");
+                return map;
+            } else {
+                MD5Util md5Util = new MD5Util();
+                String dataMd5Pwd = loginService.getMd5pwd(newPhone, companyId);
+                String Md5Pwd = md5Util.EncoderByMd5(pwd); // md5加密
+                if (Md5Pwd.equals(dataMd5Pwd)) {
+                    String loginTime = System.currentTimeMillis() + "";
+                    int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);
+                    if (num == 1) {
+                        int id = loginService.getId(newPhone, companyId); // 获取该用户的id
+                        map.put("msg", "用户登录成功，登录状态修改成功");
+                        map.put("SCode", "200");
+                        map.put("loginStatus", loginStatus);
+                        map.put("userId", id);
+                        map.put("phone", phone);
+                    } else {
+                        map.put("msg", "用户登录失败，登录状态修改失败");
+                        map.put("SCode", "406");
+                    }
+                } else {
+                    map.put("msg", "密码错误");
+                    map.put("SCode", "403");
+                    return map;
+                }
+            }
+
+        }
+
+        return map;
+
+    }
+    
+    //用户登录之后，发现该账号没密码，让他添加密码
+    @RequestMapping("/setpwd")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> setPwd(String pwd, int userId,String sourceName, String useMarket) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isEmpty(pwd) || StringUtils.isEmpty(userId)) {
+            map.put("msg", "pwd或userId不能为空");
+            return map;
+        } else {
+            MD5Util md5Util = new MD5Util();
+            String md5Pwd = md5Util.EncoderByMd5(pwd);
+            int number = loginService.setPwd(userId, md5Pwd);
+            if (number == 1) {
+                map.put("msg", "密码添加成功");
+                map.put("SCode", "200");
+            } else {
+                map.put("msg", "密码添加失败");
+                map.put("SCode", "400");
+            }
+
+        }
+
+        return map;
+
+    }
+
+    //用户找回密码的时候，判断是否存在该用户
+    @RequestMapping("/getuser")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> getuser(String phone, int companyId, String sourceName, String useMarket) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        PhoneDeal phoneDeal = new PhoneDeal();
+        String newPhone = phoneDeal.encryption(phone);
+        User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+        if (user == null) {
+            map.put("msg", "用户名不存在,请先注册");
+            map.put("SCode", "405");
+        } else {
+            map.put("msg", "用户存在");
+            map.put("SCode", "201");
+        }
+        return map;
+
+    }
+
+   
+
+    // 退出登录
+
+    /**
+     * @return
+     */
+    @RequestMapping("/logOut")
+    @ResponseBody
+    @Transactional
+    public Map<String, String> appLogOut(int userId, String companyId) {
+        Map<String, String> map = new HashMap<>();
+        if (StringUtils.isEmpty(userId)) {
+            map.put("msg", "userId不能为空");
+            return map;
+        } else {
+            String loginStatus = "0";
+            int number = loginService.updatelogOutStatus(loginStatus, userId, companyId);
+            if (number == 1) {
+                map.put("msg", "用户退出成功，登录状态修改成功");
+                map.put("SCode", "200");
+                map.put("loginStatus", loginStatus);
+            } else {
+                map.put("msg", "用户退出失败，登录状态修改失败");
+                map.put("SCode", "400");
+            }
+        }
+
+        return map;
+
+    }
 
 }

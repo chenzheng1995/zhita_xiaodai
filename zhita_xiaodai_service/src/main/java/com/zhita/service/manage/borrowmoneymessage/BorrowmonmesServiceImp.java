@@ -6,6 +6,7 @@ import com.zhita.model.manage.BorrowMoneyMessage;
 import com.zhita.model.manage.Company;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,4 +50,10 @@ public class BorrowmonmesServiceImp implements IntBorrowmonmesService{
     	int num=borrowMoneyMessageMapper.updateByPrimaryKey(record);
     	return num;
     }
+
+	@Override
+	public Map<String, Object> getborrowMoneyMessage(int companyId) {
+		Map<String, Object> map = borrowMoneyMessageMapper.getborrowMoneyMessage(companyId); 
+		return map;
+	}
 }

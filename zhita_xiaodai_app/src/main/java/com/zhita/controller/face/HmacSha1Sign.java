@@ -2,6 +2,8 @@ package com.zhita.controller.face;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Random;
 
@@ -73,7 +75,10 @@ public class HmacSha1Sign {
     	String secretKey = "4thZ2ai7nd1SGaHUZTSudmTsxmtIS2By";
     	long expired = 0;   	
      	String sign = hmacSha1Sign.genSign(apiKey, secretKey, expired);
+     	
      	System.out.println(sign);
+
+
      	
 	}
 }

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.OrderdetailsMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Orderdetails" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="orderId" property="orderid" jdbcType="INTEGER" />
+    <result column="realityBorrowMoney" property="realityborrowmoney" jdbcType="DECIMAL" />
+    <result column="makeLoans" property="makeloans" jdbcType="DECIMAL" />
+    <result column="interestDay" property="interestday" jdbcType="VARCHAR" />
+    <result column="interestSum" property="interestsum" jdbcType="DECIMAL" />
+    <result column="overdueNumberOfDays" property="overduenumberofdays" jdbcType="VARCHAR" />
+    <result column="interestPenaltyDay" property="interestpenaltyday" jdbcType="VARCHAR" />
+    <result column="interestPenaltySum" property="interestpenaltysum" jdbcType="DECIMAL" />
+    <result column="interestInAll" property="interestinall" jdbcType="DECIMAL" />
+    <result column="shouldReapyMoney" property="shouldreapymoney" jdbcType="DECIMAL" />
+    <result column="technicalServiceMoney" property="technicalservicemoney" jdbcType="DECIMAL" />
+    <result column="realityAccount" property="realityaccount" jdbcType="DECIMAL" />
+    <result column="rejectMonadCause" property="rejectmonadcause" jdbcType="VARCHAR" />
+    <result column="DrainageOfPlatform" property="drainageofplatform" jdbcType="VARCHAR" />
+    <result column="registerClient" property="registerclient" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, orderId, realityBorrowMoney, makeLoans, interestDay, interestSum, overdueNumberOfDays, 
+    interestPenaltyDay, interestPenaltySum, interestInAll, shouldReapyMoney, technicalServiceMoney, 
+    realityAccount, rejectMonadCause, DrainageOfPlatform, registerClient
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderdetails
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderdetails
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Orderdetails" >
+    insert into orderdetails (id, orderId, realityBorrowMoney, 
+      makeLoans, interestDay, interestSum, 
+      overdueNumberOfDays, interestPenaltyDay, 
+      interestPenaltySum, interestInAll, shouldReapyMoney, 
+      technicalServiceMoney, realityAccount, 
+      rejectMonadCause, DrainageOfPlatform, registerClient
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{realityborrowmoney,jdbcType=DECIMAL}, 
+      #{makeloans,jdbcType=DECIMAL}, #{interestday,jdbcType=VARCHAR}, #{interestsum,jdbcType=DECIMAL}, 
+      #{overduenumberofdays,jdbcType=VARCHAR}, #{interestpenaltyday,jdbcType=VARCHAR}, 
+      #{interestpenaltysum,jdbcType=DECIMAL}, #{interestinall,jdbcType=DECIMAL}, #{shouldreapymoney,jdbcType=DECIMAL}, 
+      #{technicalservicemoney,jdbcType=DECIMAL}, #{realityaccount,jdbcType=DECIMAL}, 
+      #{rejectmonadcause,jdbcType=VARCHAR}, #{drainageofplatform,jdbcType=VARCHAR}, #{registerclient,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Orderdetails" >
+    insert into orderdetails
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="realityborrowmoney != null" >
+        realityBorrowMoney,
+      </if>
+      <if test="makeloans != null" >
+        makeLoans,
+      </if>
+      <if test="interestday != null" >
+        interestDay,
+      </if>
+      <if test="interestsum != null" >
+        interestSum,
+      </if>
+      <if test="overduenumberofdays != null" >
+        overdueNumberOfDays,
+      </if>
+      <if test="interestpenaltyday != null" >
+        interestPenaltyDay,
+      </if>
+      <if test="interestpenaltysum != null" >
+        interestPenaltySum,
+      </if>
+      <if test="interestinall != null" >
+        interestInAll,
+      </if>
+      <if test="shouldreapymoney != null" >
+        shouldReapyMoney,
+      </if>
+      <if test="technicalservicemoney != null" >
+        technicalServiceMoney,
+      </if>
+      <if test="realityaccount != null" >
+        realityAccount,
+      </if>
+      <if test="rejectmonadcause != null" >
+        rejectMonadCause,
+      </if>
+      <if test="drainageofplatform != null" >
+        DrainageOfPlatform,
+      </if>
+      <if test="registerclient != null" >
+        registerClient,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="realityborrowmoney != null" >
+        #{realityborrowmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="makeloans != null" >
+        #{makeloans,jdbcType=DECIMAL},
+      </if>
+      <if test="interestday != null" >
+        #{interestday,jdbcType=VARCHAR},
+      </if>
+      <if test="interestsum != null" >
+        #{interestsum,jdbcType=DECIMAL},
+      </if>
+      <if test="overduenumberofdays != null" >
+        #{overduenumberofdays,jdbcType=VARCHAR},
+      </if>
+      <if test="interestpenaltyday != null" >
+        #{interestpenaltyday,jdbcType=VARCHAR},
+      </if>
+      <if test="interestpenaltysum != null" >
+        #{interestpenaltysum,jdbcType=DECIMAL},
+      </if>
+      <if test="interestinall != null" >
+        #{interestinall,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldreapymoney != null" >
+        #{shouldreapymoney,jdbcType=DECIMAL},
+      </if>
+      <if test="technicalservicemoney != null" >
+        #{technicalservicemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="realityaccount != null" >
+        #{realityaccount,jdbcType=DECIMAL},
+      </if>
+      <if test="rejectmonadcause != null" >
+        #{rejectmonadcause,jdbcType=VARCHAR},
+      </if>
+      <if test="drainageofplatform != null" >
+        #{drainageofplatform,jdbcType=VARCHAR},
+      </if>
+      <if test="registerclient != null" >
+        #{registerclient,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Orderdetails" >
+    update orderdetails
+    <set >
+      <if test="orderid != null" >
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="realityborrowmoney != null" >
+        realityBorrowMoney = #{realityborrowmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="makeloans != null" >
+        makeLoans = #{makeloans,jdbcType=DECIMAL},
+      </if>
+      <if test="interestday != null" >
+        interestDay = #{interestday,jdbcType=VARCHAR},
+      </if>
+      <if test="interestsum != null" >
+        interestSum = #{interestsum,jdbcType=DECIMAL},
+      </if>
+      <if test="overduenumberofdays != null" >
+        overdueNumberOfDays = #{overduenumberofdays,jdbcType=VARCHAR},
+      </if>
+      <if test="interestpenaltyday != null" >
+        interestPenaltyDay = #{interestpenaltyday,jdbcType=VARCHAR},
+      </if>
+      <if test="interestpenaltysum != null" >
+        interestPenaltySum = #{interestpenaltysum,jdbcType=DECIMAL},
+      </if>
+      <if test="interestinall != null" >
+        interestInAll = #{interestinall,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldreapymoney != null" >
+        shouldReapyMoney = #{shouldreapymoney,jdbcType=DECIMAL},
+      </if>
+      <if test="technicalservicemoney != null" >
+        technicalServiceMoney = #{technicalservicemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="realityaccount != null" >
+        realityAccount = #{realityaccount,jdbcType=DECIMAL},
+      </if>
+      <if test="rejectmonadcause != null" >
+        rejectMonadCause = #{rejectmonadcause,jdbcType=VARCHAR},
+      </if>
+      <if test="drainageofplatform != null" >
+        DrainageOfPlatform = #{drainageofplatform,jdbcType=VARCHAR},
+      </if>
+      <if test="registerclient != null" >
+        registerClient = #{registerclient,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Orderdetails" >
+    update orderdetails
+    set orderId = #{orderid,jdbcType=INTEGER},
+      realityBorrowMoney = #{realityborrowmoney,jdbcType=DECIMAL},
+      makeLoans = #{makeloans,jdbcType=DECIMAL},
+      interestDay = #{interestday,jdbcType=VARCHAR},
+      interestSum = #{interestsum,jdbcType=DECIMAL},
+      overdueNumberOfDays = #{overduenumberofdays,jdbcType=VARCHAR},
+      interestPenaltyDay = #{interestpenaltyday,jdbcType=VARCHAR},
+      interestPenaltySum = #{interestpenaltysum,jdbcType=DECIMAL},
+      interestInAll = #{interestinall,jdbcType=DECIMAL},
+      shouldReapyMoney = #{shouldreapymoney,jdbcType=DECIMAL},
+      technicalServiceMoney = #{technicalservicemoney,jdbcType=DECIMAL},
+      realityAccount = #{realityaccount,jdbcType=DECIMAL},
+      rejectMonadCause = #{rejectmonadcause,jdbcType=VARCHAR},
+      DrainageOfPlatform = #{drainageofplatform,jdbcType=VARCHAR},
+      registerClient = #{registerclient,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

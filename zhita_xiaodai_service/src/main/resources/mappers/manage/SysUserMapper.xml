@@ -20,11 +20,12 @@
     <result property="loginstate" column="loginState" />
     <result property="logintime" column="loginTime" />
     <result property="status" column="status" />
-	    <collection  property="listrole"  ofType="com.zhita.model.manage.Role">
+    <result property="rolestr" column="rolename"/>
+	   <!--  <collection  property="listrole"  ofType="com.zhita.model.manage.Role">
             <id property="roleid" column="roleId" />
             <result property="rolename" column="roleName" />    
             <result property="roledescribe" column="roleDescribe" />   
-        </collection>
+        </collection> -->
 	</resultMap>
   <sql id="Base_Column_List" >
     s.userId, s.companyId, s.account, s.pwd, s.phone, s.loginState, s.loginTime, s.status,

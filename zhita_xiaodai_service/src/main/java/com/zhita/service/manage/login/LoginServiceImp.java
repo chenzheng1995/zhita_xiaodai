@@ -2,6 +2,7 @@ package com.zhita.service.manage.login;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +84,7 @@ public class LoginServiceImp implements IntLoginService{
 
 
 	@Override
-	public User findphone(String newPhone, String companyId) {
+	public User findphone(String newPhone, int companyId) {
 		User user = userMapper.findphone(newPhone, companyId); // 判断该用户是否存在
 		return user;
 	}
@@ -94,4 +95,58 @@ public class LoginServiceImp implements IntLoginService{
 		return num;
 
 	}
+
+	@Override
+	public int insertUser1(String newPhone, String loginStatus, int companyId, String registeClient,
+			String registrationTime, int merchantId, String useMarket) {
+		 int number = userMapper.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
+		return number;
+	}
+
+	@Override
+	public int getId(String newPhone, int companyId) {
+		int id = userMapper.getId(newPhone, companyId); //获取该用户的id
+		return id;
+	}
+
+	@Override
+	public int updateStatus(String loginStatus, String newPhone, int companyId, String loginTime) {
+		 int num = userMapper.updateStatus(loginStatus, newPhone, companyId, loginTime);
+		return num;
+	}
+
+	@Override
+	public String getPwd(int id) {
+		String pwd = userMapper.getPwd(id);
+		return pwd;
+	}
+
+	@Override
+	public int updatelogOutStatus(String loginStatus, int userId, String companyId) {
+		int number = userMapper.updatelogOutStatus(loginStatus, userId, companyId);
+		return number;
+	}
+
+	@Override
+	public int updatePwd(String newPhone, String md5Pwd, int companyId) {
+		int number = userMapper.updatePwd(newPhone, md5Pwd, companyId);
+		return number;
+	}
+
+	@Override
+	public String getMd5pwd(String newPhone, int companyId) {
+		String dataMd5Pwd = userMapper.getMd5pwd(newPhone, companyId);
+		return dataMd5Pwd;
+	}
+
+	@Override
+	public int setPwd(int userId, String md5Pwd) {
+		 int number = userMapper.setPwd(userId, md5Pwd);
+		return number;
+	}
+
+
+	
+
+
 }

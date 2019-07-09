@@ -11,9 +11,10 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, overdueHowmanydaysage, penaltyInterestRates, operator, operationTime, 
+    id, companyId,productid, overdueHowmanydaysage, penaltyInterestRates, operator, operationTime, 
     deleted
   </sql>
+  <!-- 后台管理      根据当前id查询出当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -24,13 +25,12 @@
     delete from overdue_settings
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <!-- 后台管理        添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.OverdueSettings" >
-    insert into overdue_settings (id, companyId, overdueHowmanydaysage, 
-      penaltyInterestRates, operator, operationTime, 
-      deleted)
-    values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{overduehowmanydaysage,jdbcType=INTEGER}, 
-      #{penaltyinterestrates,jdbcType=DOUBLE}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}, 
-      #{deleted,jdbcType=VARCHAR})
+    insert into overdue_settings (companyId,productid, overdueHowmanydaysage, 
+      penaltyInterestRates, operator, operationTime)
+    values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER},  #{overduehowmanydaysage,jdbcType=INTEGER}, 
+      #{penaltyinterestrates,jdbcType=DOUBLE}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.OverdueSettings" >
     insert into overdue_settings
@@ -105,14 +105,25 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 后台管理        修改保存 -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.OverdueSettings" >
     update overdue_settings
     set companyId = #{companyid,jdbcType=INTEGER},
       overdueHowmanydaysage = #{overduehowmanydaysage,jdbcType=INTEGER},
       penaltyInterestRates = #{penaltyinterestrates,jdbcType=DOUBLE},
       operator = #{operator,jdbcType=VARCHAR},
-      operationTime = #{operationtime,jdbcType=VARCHAR},
-      deleted = #{deleted,jdbcType=VARCHAR}
+      operationTime = #{operationtime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理        查询逾期信息表 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueSettings">
+  	select 
+    <include refid="Base_Column_List" />
+    from overdue_settings
+    where companyId=#{arg0}
+  </select>
+  <!-- 后台管理       修改当前对象的假删除状态 -->
+  <update id="upaFalseDel">
+  	update overdue_settings set deleted=1,operator=#{arg0}, operationTime=#{arg1} where id=#{arg2}
   </update>
 </mapper>

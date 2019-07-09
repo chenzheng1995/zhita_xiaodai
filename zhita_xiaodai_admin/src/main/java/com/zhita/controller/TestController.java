@@ -1,6 +1,10 @@
 package com.zhita.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
+import com.zhita.util.Timestamps;
 
 
 
@@ -82,5 +87,14 @@ public class TestController {
 		 String str="600-800"; 
 		 String[] strarray=str.split("-"); 
 		 System.out.println(strarray[0]+"----"+strarray[1]);
+		 
+		/*//获取前一天的日期
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		String dateyes = df.format(calendar.getTime());
+		System.out.println("今天日期的前一天："+dateyes);*/
+		
+		
 	}
 }

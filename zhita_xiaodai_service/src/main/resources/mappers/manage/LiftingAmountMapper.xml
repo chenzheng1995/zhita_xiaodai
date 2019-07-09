@@ -11,9 +11,10 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, userHowManyConsecutivePayments, increaseThequota, operator, operationTime, 
+    id, companyId,productid, userHowManyConsecutivePayments, increaseThequota, operator, operationTime, 
     deleted
   </sql>
+  <!-- 后台管理       根据当前id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -24,13 +25,12 @@
     delete from lifting_amount
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <!-- 后台管理       添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.LiftingAmount" >
-    insert into lifting_amount (id, companyId, userHowManyConsecutivePayments, 
-      increaseThequota, operator, operationTime, 
-      deleted)
-    values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{userhowmanyconsecutivepayments,jdbcType=INTEGER}, 
-      #{increasethequota,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}, 
-      #{deleted,jdbcType=VARCHAR})
+    insert into lifting_amount (companyId, productid,userHowManyConsecutivePayments, 
+      increaseThequota, operator, operationTime)
+    values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER}, #{userhowmanyconsecutivepayments,jdbcType=INTEGER}, 
+      #{increasethequota,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.LiftingAmount" >
     insert into lifting_amount
@@ -105,14 +105,26 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 后台管理       更新保存 -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.LiftingAmount" >
     update lifting_amount
     set companyId = #{companyid,jdbcType=INTEGER},
+    	productid = #{productid,jdbcType=INTEGER},
       userHowManyConsecutivePayments = #{userhowmanyconsecutivepayments,jdbcType=INTEGER},
       increaseThequota = #{increasethequota,jdbcType=INTEGER},
       operator = #{operator,jdbcType=VARCHAR},
-      operationTime = #{operationtime,jdbcType=VARCHAR},
-      deleted = #{deleted,jdbcType=VARCHAR}
+      operationTime = #{operationtime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理      查询续借提额表所有信息 -->
+  <select id="queryAll" parameterType="com.zhita.model.manage.LiftingAmount">
+  	 select 
+    <include refid="Base_Column_List" />
+    from lifting_amount
+    where companyId=#{arg0}
+  </select>
+  <!-- 后台管理       修改当前对象的假删除状态 -->
+  <update id="upaFalseDel">
+  	update lifting_amount set deleted=1,operator=#{arg0}, operationTime=#{arg1} where id=#{arg2}
   </update>
 </mapper>

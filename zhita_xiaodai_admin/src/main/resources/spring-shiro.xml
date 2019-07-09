@@ -11,14 +11,14 @@
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 	    <!-- 验证 -->        
      <!--    <property name="authenticator" ref="myModularRealmAuthenticator"/> -->
-        	<!-- <property name="realm" ref="realmPhone" /> -->
+        	<property name="realm" ref="realmUser" />
 		   <!-- 多个验证策略 realmes -->
-		   <property name="realms">
+		<!--    <property name="realms">
 	           <list>
 	               <ref bean="realmUser"/>
 	               <ref bean="realmPhone"/>
 	           </list>
-          </property>
+          </property> -->
 	</bean>
 	
 	<!-- 授权策略 -->
@@ -65,9 +65,9 @@
 				/login/loginap = anon
 				/login/loginpc = anon
 				<!-- 贷款分类权限拦截 -->
-				/role/queryAll = perms["1"]
+				<!-- /role/queryAll = perms["1"]
 				/role/queryAllByLike = perms["1"]
-				/test/test = perms["10"]
+				/test/test = perms["10"] -->
 			</value>
 		</property>
 	</bean>

@@ -1,6 +1,6 @@
 package com.zhita.controller.source;
 
-import java.util.List;
+import java.text.ParseException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.Company;
 import com.zhita.model.manage.Source;
 import com.zhita.service.manage.source.IntSourceService;
-
+/**
+ * 渠道模块管理
+ * @author lhq
+ * @{date} 2019年7月5日
+ */
 @Controller
 @RequestMapping("/source")
 public class SourceController {
@@ -21,17 +24,17 @@ public class SourceController {
 	//后台管理---查询渠道表所有信息
 	@ResponseBody
 	@RequestMapping("/queryAll")
-    public Map<String,Object> queryAll(Integer comapnyId,Integer page){
-    	Map<String,Object> map=intSourceService.queryAll(comapnyId, page);
+    public Map<String,Object> queryAll(Integer companyId,Integer page){
+    	Map<String,Object> map=intSourceService.queryAll(companyId, page);
     	return map;
     }
 	
-	//后台管理---添加功能（查询出所有公司）
+	//后台管理---添加功能（查询出所有公司   模板和风控）
 	@ResponseBody
 	@RequestMapping("/queryAllCompany")
-    public List<Company> queryAllCompany(){
-    	List<Company> list=intSourceService.queryAllCompany();
-    	return list;
+    public Map<String,Object> queryAllCompany(Integer companyId){
+		Map<String,Object> map=intSourceService.queryAllCompany(companyId);
+    	return map;
     }
     
     //后台管理---添加功能
@@ -53,7 +56,7 @@ public class SourceController {
 	//后台管理---编辑功能
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
-    public int updateByPrimaryKey(Source record){
+    public int updateByPrimaryKey(Source record) throws ParseException{
     	int num=intSourceService.updateByPrimaryKey(record);
     	return num;
     }

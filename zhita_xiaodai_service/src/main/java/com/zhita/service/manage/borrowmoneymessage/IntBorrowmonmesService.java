@@ -1,6 +1,7 @@
 package com.zhita.service.manage.borrowmoneymessage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.BorrowMoneyMessage;
 import com.zhita.model.manage.Company;
@@ -21,4 +22,6 @@ public interface IntBorrowmonmesService {
     
     //后台管理----修改保存功能
     public int updateByPrimaryKey(BorrowMoneyMessage record);
+
+	public Map<String, Object> getborrowMoneyMessage(int companyId);
 }

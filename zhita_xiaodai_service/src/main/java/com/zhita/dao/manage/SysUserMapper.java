@@ -80,4 +80,5 @@ public interface SysUserMapper {
     
     //admin---登录——退出登录
     int updateLoginStatus(Integer userId);
+
 }
