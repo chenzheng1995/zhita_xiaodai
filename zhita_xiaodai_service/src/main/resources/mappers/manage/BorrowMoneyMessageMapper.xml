@@ -149,4 +149,9 @@
     from borrow_money_message
     where companyId=#{arg0}
   </select>
+  
+  	<select id="getborrowMoneyMessage" parameterType="java.lang.Integer" resultType="java.util.Map">
+       select canBorrowlines,lifeOfLoan,averageDailyInterest,platformfeeRatio from borrow_money_message where companyId =#{companyId}
+	</select>
+	
 </mapper>

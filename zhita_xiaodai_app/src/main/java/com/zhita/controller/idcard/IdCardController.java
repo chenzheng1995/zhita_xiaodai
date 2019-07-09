@@ -58,7 +58,7 @@ public class IdCardController {
 	        }
 	    	String sign_version = "hmac_sha1";
 	    	String capture_image = "0";
-	    	String return_url = "https://www.taobao.com";
+	    	String return_url = "http://xcx.rong51dai.com/idcard/renzhengchenggong/index.html?userId="+userId;
 	    	String notify_url = "http://39.98.83.65:8080/zhita_xiaodai_app/idcardParam/notify";
 	    	String idcard_threshold = "0.8";
 	    	String limit_completeness = "2";
@@ -68,9 +68,11 @@ public class IdCardController {
 	        result = idcard_biz_token.getBizToken(sign, sign_version, capture_image, return_url, notify_url, idcard_threshold, limit_completeness, limit_quality, limit_logic);
 	        jsonObject = JSONObject.parseObject(result);
 	        try {
-		      biz_token = jsonObject.get("biz_token").toString();
+	          biz_token = jsonObject.get("biz_token").toString();
+	          String biz_token_url = "https://openapi.faceid.com/lite_ocr/v1/do/"+jsonObject.get("biz_token").toString();
+		      UserAttestationService.updateBizToken(biz_token, userId);
 		      map.put("Code", "200");
-		      map.put("biz_token", biz_token);	      
+		      map.put("biz_token", biz_token_url);	      
 			} catch (Exception e) {
 			    error = jsonObject.get("error").toString();
 		        if(error.equals("AUTHORIZATION_ERROR:EXPIRED_SIGN")) {
@@ -83,13 +85,55 @@ public class IdCardController {
 		        	UserAttestationService.updateSign(sign,userId);
 			        result = idcard_biz_token.getBizToken(sign, sign_version, capture_image, return_url, notify_url, idcard_threshold, limit_completeness, limit_quality, limit_logic);
 			        jsonObject = JSONObject.parseObject(result);
-				    biz_token = jsonObject.get("biz_token").toString();
+			         biz_token = jsonObject.get("biz_token").toString();
+			         String  biz_token_url = "https://openapi.faceid.com/lite_ocr/v1/do/"+jsonObject.get("biz_token").toString();
+				    UserAttestationService.updateBizToken(biz_token, userId);
 				    map.put("Code", "200");
-				    map.put("biz_token", biz_token);	  
+				    map.put("biz_token", biz_token_url);	  
 		        }
 			}
 	        
 			return map;
 
 	}
+    
+    
+    @RequestMapping("/setAddress")
+    @ResponseBody
+    @Transactional
+	public Map<String, Object> setAddress(String homeAddressLongitude,String homeAddressLatitude,String detailAddress,int userId){
+    	 Map<String, Object> map = new HashMap<String, Object>();
+    	 int number = UserAttestationService.setAddress(homeAddressLongitude,homeAddressLatitude,detailAddress,userId);
+         if (number == 1) {                  	
+             map.put("msg", "数据插入成功");
+             map.put("Code", "200");
+         } else {
+             map.put("msg", "数据插入失败");
+             map.put("Code", "405");
+         }
+	
+		return map;
+    	
+    }
+        
+    
+    @RequestMapping("/setlinkman")
+    @ResponseBody
+    @Transactional
+	public Map<String, Object> setlinkman(String linkmanOneRelation,String linkmanOneName,String linkmanOnePhone,String linkmanTwoRelation,String linkmanTwoName,String linkmanTwoPhone,int userId){
+    	 Map<String, Object> map = new HashMap<String, Object>();
+    	 int number = UserAttestationService.setlinkman(linkmanOneRelation,linkmanOneName,linkmanOnePhone,linkmanTwoRelation,linkmanTwoName,linkmanTwoPhone,userId);
+         if (number == 1) {                  	
+             String attestationStatus = "1";
+             UserAttestationService.updateAttestationStatus(attestationStatus,userId);
+             map.put("msg", "认证成功");
+             map.put("Code", "200");
+         } else {
+             map.put("msg", "认证失败");
+             map.put("Code", "405");
+         }
+	
+		return map;
+    	
+    }
 }

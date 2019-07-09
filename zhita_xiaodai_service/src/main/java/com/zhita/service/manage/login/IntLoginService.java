@@ -50,5 +50,11 @@ public String getPwd(int id);
 
 public int updatelogOutStatus(String loginStatus, int userId, String companyId);
 
+public int updatePwd(String newPhone, String md5Pwd, int companyId);
+
+public String getMd5pwd(String newPhone, int companyId);
+
+public int setPwd(int userId, String md5Pwd);
+
    
 }

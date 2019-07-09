@@ -1,8 +1,14 @@
 package com.zhita.controller.operator.demo;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.zhita.service.manage.operator.OperatorService;
 
 public class notifyUrlDemo {
     /**
@@ -11,6 +17,10 @@ public class notifyUrlDemo {
      * @param request request
      * @return 回调成功信息，默认返回success
      */
+	
+	@Autowired 
+	OperatorService operatorService;
+	
     @RequestMapping(value = "/callback", consumes = "multipart/form-data", method = RequestMethod.POST)
     public String callback(MultipartHttpServletRequest request) {
 	 String search_id = request.getParameter("search_id");
@@ -23,6 +33,17 @@ public class notifyUrlDemo {
              + search_id + "\noutUniqueId为：" + outUniqueId
              + "\nuserId为：" + userId + "\nstate为：" + state
              + "\naccount为：" + account + "\naccountType为：" + accountType);
+     
+  	 Map<String, Object> map = new HashMap<String, Object>();
+	 int number = operatorService.updateSearch_id(search_id,userId);
+     if (number == 1) {                  	
+         map.put("msg", "数据插入成功");
+         map.put("Code", "200");
+     } else {
+         map.put("msg", "数据插入失败");
+         map.put("Code", "405");
+     }
+     
      return "success";
 }
 }

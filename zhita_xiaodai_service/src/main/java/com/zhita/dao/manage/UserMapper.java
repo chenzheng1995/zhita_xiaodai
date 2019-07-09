@@ -40,4 +40,10 @@ public interface UserMapper {
 	
 	//后台管理---添加黑名单（将当前用户存进黑名单里）
 	int addBlacklist(Integer companyId,Integer userId,String operator,String operationTime);
+
+	int updatePwd(@Param("newPhone")String newPhone,@Param("md5Pwd") String md5Pwd,@Param("companyId") int companyId);
+
+	String getMd5pwd(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
+
+	int setPwd(@Param("userId")int userId,@Param("md5Pwd") String md5Pwd);
 }

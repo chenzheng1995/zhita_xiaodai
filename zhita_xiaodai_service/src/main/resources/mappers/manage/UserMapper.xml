@@ -188,7 +188,6 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <!-- ================================================================================= -->
   	  	<!--判断用户名是否存在 -->
 	<select id="findphone" resultMap="BaseResultMap" parameterType="java.util.Map">
     	<![CDATA[
@@ -219,12 +218,11 @@
 	
 	
 				<!--登录时，修改登录状态，用于用户扫二维码登录时-->
-	<update id="updateStatus1" parameterType="java.util.Map" >
+	<update id="updateStatus" parameterType="java.util.Map" >
 		update user
 		set loginStatus = #{loginStatus},
-		loginTime = #{loginTime},
-		fatherId = #{fatherId}	
-		where phone = #{phone} and companyId = #{companyId}
+		loginTime = #{loginTime}
+		where phone = #{newPhone} and companyId = #{companyId}
 	</update>
 	
 			<!-- 小程序 通过id获取密码  -->
@@ -271,4 +269,26 @@
 	<insert id="addBlacklist">
 		insert into blacklist_user(companyId,userId,operator,operationTime) values{#{arg0},#{arg1},#{arg2},#{arg3}}
 	</insert>
+	
+	
+			<!--APP 修改密码-->
+	<update id="updatePwd" parameterType="java.util.Map" >
+		update user
+		set pwd = #{md5Pwd}
+		where phone = #{phone} and companyId = #{companyId}
+	</update>
+	
+	
+					<!--APP 查询密码-->
+	<select id="getMd5pwd" parameterType="java.util.Map" resultType="java.lang.String">
+      select pwd from user where phone = #{phone} and companyId = #{companyId}
+	</select>
+	
+	
+			<!--APP 插入密码-->
+		<update id="setPwd" parameterType="map" >
+		update user
+		set pwd = #{md5Pwd}
+		where id = #{userId}
+	</update>	
 </mapper>

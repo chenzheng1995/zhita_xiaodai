@@ -127,6 +127,24 @@ public class LoginServiceImp implements IntLoginService{
 		return number;
 	}
 
+	@Override
+	public int updatePwd(String newPhone, String md5Pwd, int companyId) {
+		int number = userMapper.updatePwd(newPhone, md5Pwd, companyId);
+		return number;
+	}
+
+	@Override
+	public String getMd5pwd(String newPhone, int companyId) {
+		String dataMd5Pwd = userMapper.getMd5pwd(newPhone, companyId);
+		return dataMd5Pwd;
+	}
+
+	@Override
+	public int setPwd(int userId, String md5Pwd) {
+		 int number = userMapper.setPwd(userId, md5Pwd);
+		return number;
+	}
+
 
 	
 
