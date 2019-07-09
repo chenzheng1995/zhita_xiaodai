@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
+import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collection_member;
 import com.zhita.model.manage.Collectiondetails;
@@ -24,6 +25,10 @@ public class Collectionserviceimp implements Collectionservice{
 	@Autowired
 	private CollectionMapper collmapp;
 
+	
+	
+	@Autowired
+	private PostloanorderMapper podao;
 	
 	
 	@Override
@@ -49,9 +54,14 @@ public class Collectionserviceimp implements Collectionservice{
 	
 	@Override
 	public Map<String, Object> Collectionmember(Integer companyId) {
-		List<Collection_member> col = collmapp.CollectionAll(companyId);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("collection_member", col);
+		if(companyId != null){
+			List<Collection_member> col = collmapp.CollectionAll(companyId);
+			map.put("collection_member", col);
+		}else{
+			map.put("code", 0);
+			map.put("desc", "公司ID为空");
+		}
 		return map;
 	}
 	
@@ -129,6 +139,21 @@ public class Collectionserviceimp implements Collectionservice{
 		PageUtil pages = new PageUtil(coll.getPage(), asa);
 		coll.setPage(pages.getPage());
 		List<Collection> colles = collmapp.SelectSumOrder(coll);
+		for(int i=0;i<colles.size();i++){
+			colles.get(i).setCompanyId(coll.getCompanyId());
+			colles.get(i).setOrderNum(collmapp.SelectOrderNum(colles.get(i)));//累计订单总数  参数  时间   公司ID
+			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
+			colles.get(i).setCollSum(collmapp.SelectCollectionNum(colles.get(i)));
+			colles.get(i).setCollectionStatus("承诺还款");
+			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计成功
+			colles.get(i).setCollectionStatus("承诺还清一部分");
+			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//承诺还款
+			colles.get(i).setCollectionStatus("电话无人接听");
+			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//未还清
+			colles.get(i).setCollectionStatus("态度恶劣");
+			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计坏账数
+			colles.get(i).setCollNumdata(colles.get(i).getOrderNum()/colles.get(i).getConnected());
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", colles);
 		map.put("Pageutil", pages);
@@ -184,7 +209,9 @@ public class Collectionserviceimp implements Collectionservice{
 		PageUtil pages = new PageUtil(col.getPage(), totalCount);
 		col.setPage(pages.getPage());
 		List<Orderdetails> orders = collmapp.WeiControllerOrdetialis(col);
-		
+		for(int i=0;i<orders.size();i++){
+			orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
+		}
 		map.put("Orderdetails", orders);
 		map.put("PageUtil", pages);
 		}else{
@@ -221,28 +248,41 @@ public class Collectionserviceimp implements Collectionservice{
 
 
 	@Override
-	public Map<String, Object> AllCollectiondetail(Integer orderId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collectiondetails> coldetails = collmapp.SelectCollectiondetails(orderId);
-		map.put("collectiondetails", coldetails);
-		return map;
+	public List<Collectiondetails> AllCollectiondetail(Integer orderId) {
+		Collectiondetails col = new Collectiondetails();
+		col.setOrderId(orderId);
+		List<Collectiondetails> coldetails = collmapp.Coldetails(col);
+		return coldetails;
 	}
 
 
 
 	@Override
-	public Map<String, Object> CollectionmemberUser(Collection collectio) {
+	public Map<String, Object> CollectionmemberUser(Collection coll) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collection> colleas = collmapp.SelectUserNum(collectio);
+		List<Collection> colleas = collmapp.SelectUserNum(coll);
 		Integer totalCount = null ;		
 		if(colleas.size() != 0){
 			totalCount = colleas.size();
 		}else{
 			totalCount = 0;
 		}
-		PageUtil pages = new PageUtil(collectio.getPage(), totalCount);
-		collectio.setPage(pages.getPage());
-		List<Collection> colles = collmapp.Collectionmemberdetilas(collectio);
+		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
+		coll.setPage(pages.getPage());
+		List<Collection> colles = collmapp.Collectionmemberdetilas(coll);
+		for(int i=0;i<colles.size();i++){
+			colles.get(i).setCompanyId(coll.getCompanyId());
+			colles.get(i).setOrderNum(collmapp.SelectUserCollectionNum(colles.get(i)));
+			colles.get(i).setCollectionStatus("承诺还款");
+			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计成功
+			colles.get(i).setCollectionStatus("承诺还清一部分");
+			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//承诺还款
+			colles.get(i).setCollectionStatus("电话无人接听");
+			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//未还清
+			colles.get(i).setCollectionStatus("态度恶劣");
+			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计坏账数
+			colles.get(i).setCollNumdata(colles.get(i).getOrderNum()/colles.get(i).getConnected());
+		}
 		map.put("Collections", colles);
 		map.put("PageUtil", pages);
 		return map;

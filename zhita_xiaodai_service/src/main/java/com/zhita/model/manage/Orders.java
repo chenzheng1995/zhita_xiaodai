@@ -62,6 +62,8 @@ public class Orders {
 	private BigDecimal realityAccount;//实际到账金额
 	
 	private BigDecimal Actualrevenue;//实际营收
+	
+	private Integer daysofrepayment;//还款天数
 
 	public Integer getOrderId() {
 		return orderId;
@@ -285,6 +287,14 @@ public class Orders {
 
 	public void setActualrevenue(BigDecimal actualrevenue) {
 		Actualrevenue = actualrevenue;
+	}
+
+	public Integer getDaysofrepayment() {
+		return daysofrepayment;
+	}
+
+	public void setDaysofrepayment(Integer daysofrepayment) {
+		this.daysofrepayment = daysofrepayment;
 	}
 	
 	

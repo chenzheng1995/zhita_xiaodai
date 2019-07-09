@@ -1,5 +1,6 @@
 package com.zhita.service.manage.collection;
 
+import java.util.List;
 import java.util.Map;
 
 import com.zhita.model.manage.Collection;
@@ -35,7 +36,7 @@ public interface Collectionservice {
 	Map<String, Object> AddColloetails(Collectiondetails col);
 	
 	
-	Map<String, Object> AllCollectiondetail(Integer orderId);
+	List<Collectiondetails> AllCollectiondetail(Integer orderId);
 	
 	
 	Map<String, Object> CollectionmemberUser(Collection collectio);

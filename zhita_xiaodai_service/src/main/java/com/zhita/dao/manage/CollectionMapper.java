@@ -66,9 +66,6 @@ public interface CollectionMapper {
 	Integer AddCollectiondetails(Collectiondetails col);
 	
 	
-	List<Collectiondetails> SelectCollectiondetails(Integer orderId);
-	
-	
 	List<Collection> SelectSumOrderNum(Collection coll);
 	
 	
@@ -76,5 +73,23 @@ public interface CollectionMapper {
 	
 	
 	List<Collection> SelectUserNum(Collection col);
+	
+	
+	List<Collectiondetails> Coldetails(Collectiondetails orderId);
+	
+	
+	Integer SelectOrderNum(Collection coll);
+	
+	
+	Integer SelectCollectionNum(Collection col);
+	
+	
+	Integer SelectcollectionStatus(Collection col);
+	
+	
+	Integer SelectUserCollectionNum(Collection col);
+	
+	
+	Integer SelectUsercollectionStatus(Collection col);
 
 }

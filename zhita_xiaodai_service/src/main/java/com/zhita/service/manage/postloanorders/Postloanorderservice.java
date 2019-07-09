@@ -1,5 +1,7 @@
 package com.zhita.service.manage.postloanorders;
 
+import io.protostuff.StringSerializer.STRING;
+
 import java.util.Map;
 
 import com.zhita.model.manage.Orderdetails;
@@ -31,4 +33,13 @@ public interface Postloanorderservice {
 	
 	
 	Map<String, Object> UpdateOrder(Orderdetails order);
+	
+	
+	Map<String, Object> YiHuanOrders(Orderdetails order);
+	
+	
+	Map<String, Object> HuaiZhangOrders(Orderdetails order);
+	
+	
+	Map<String, Object> CollecOrders(Orderdetails order);
 }

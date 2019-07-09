@@ -20,15 +20,22 @@
 		
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
-			select orde.*,u.name,u.phone,o.orderNumber,o.id from orderdetails orde,user u,orders o,
+			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.daysofrepayment,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
+			defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,deset.onceDeferredDay,defe.deferAfterReturntime,colme.reallyName,
+			col.collectionTime,col.collectionStatus,o.borrowMoneyState from orders o,orderdetails ord,collection col,collection_member colme,
+			deferred defe,deferred_settings deset,user u
 			<where>
 				AND orde.orderId not in
 				<foreach collection="ids" item="nos" index="no" open="(" separator="," close=")">
 		 		 	 #{nos}
 		 		</foreach>
 			    AND orde.returntime <![CDATA[ >= ]]> #{returntime}
-				AND o.userId = u.id 
-				AND orde.orderId = o.id
+				AND o.id = ord.orderId
+				AND u.id = o.userId
+				AND colme.collectionMemberId = col.collectionMemberId
+				AND o.id = col.orderId
+				AND o.id = defe.orderid
+				AND o.companyId = deset.companyId 
 				AND o.companyId = #{companyId}
 				<if test="name != '' and name != null">
 					AND u.name = #{name}
@@ -62,14 +69,17 @@
 		
 		
 		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,c.collectionTime,o.orderNumber,o.id from collection 
-			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.daysofrepayment,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
+			defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,deset.onceDeferredDay,defe.deferAfterReturntime,colme.reallyName,
+			col.collectionTime,col.collectionStatus,o.borrowMoneyState from orders o,orderdetails ord,collection col,collection_member colme,
+			deferred defe,deferred_settings deset,user u
 			<where>
+				AND o.id = ord.orderId
 				AND u.id = o.userId
-				AND o.id = orders.orderId
-				AND u.companyId = overdue.overdue
-				AND collection.collectionMemberId = cmem.collectionMemberId
-				AND cmem.companyId = u.companyId
+				AND colme.collectionMemberId = col.collectionMemberId
+				AND o.id = col.orderId
+				AND o.id = defe.orderid
+				AND o.companyId = deset.companyId 
 				AND o.companyId = #{companyId}
 				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
 					AND orders.realityBorrowMoney = #{realityBorrowMoney}
@@ -113,12 +123,13 @@
 		
 		<select id="OneOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,
-			c.collectionTime,o.orderNumber,o.id,o.borrowMoneyWay,o.deferBeforeReturntime,o.deferAfterReturntime from collection 
-			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			c.collectionTime,o.orderNumber,o.id,o.borrowMoneyWay,defe.deferBeforeReturntime,defe.deferAfterReturntime from collection 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u,deferred defe
 			<where>
 				AND u.id = o.userId
 				AND o.id = orders.orderId
 				AND u.companyId = overdue.overdue
+				AND o.id = defe.orderId
 				AND collection.collectionMemberId = cmem.collectionMemberId
 				AND cmem.companyId = u.companyId
 				AND o.orderNumber = #{orderNumber}
@@ -227,10 +238,11 @@
 		
 		
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,
-			c.collectionTime,o.orderNumber,o.borrowMoneyWay,orders.deferBeforeReturntime,orders.deferAfterReturntime from collection 
-			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u
+			select o.id,o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,o.borrowMoneyWay,o.orderNumber,
+			c.collectionTime,o.orderNumber,o.borrowMoneyWay,defe.deferBeforeReturntime,defe.deferAfterReturntime from collection, 
+			c,collection_member cmem,orderdetails orders,OverdueClass overdue,orders o,user u,deferred defe
 			<where>
+				AND defe.orderId = o.id
 				AND o.id = orders.orderId
 				AND u.id = o.userId
 				AND c.orderId = o.id
@@ -328,9 +340,11 @@
 				
 				
 		<select id="WeiControllerOrdetialis" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,o.orderNumber,u.name,u.phone,orde.*,coldet.collectionmoney,ut.user_neir,o.borrowMoneyState,orde.borrowTimeLimit,
-			orde.borrowMoneyWay,orde.shouldReturnTime,orde.realtime from orders o,orderdetails orde,userType ut,user u,collectiondetails coldet
+			select o.id,o.orderNumber,u.name,u.phone,orde.*,coldet.collectionmoney,ut.user_neir,o.borrowMoneyState,o.borrowTimeLimit,defeset.onceDeferredDay,
+			o.daysofrepayment,o.realtime,o.shouldReturnTime,defe.deferBeforeReturntime,defe.deferAfterReturntime,defe.interestOnArrears,defe.postponeDate,o.borrowMoneyState,
+			o.borrowMoneyWay,c.promise_money,c.collectionTime from orders o,orderdetails orde,userType ut,user u,collectiondetails coldet,deferred defe,deferred_settings defeset,collection c
 			<where>
+				AND c.collectionMemberId = coldet.collectionMemberId
 				AND o.id = orde.orderId
 				AND u.id = o.userId
 				AND o.id = coldet.orderId
@@ -378,16 +392,67 @@
 		
 		
 		
-		<select id="SelectCollectiondetails" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Collectiondetails">
-			select c.*,ut.user_neir,cme.reallyName from collectiondetails c,collection_member cme,UserType ut where cme.collectionMemberId = collectionMemberId 
-			and c.user_type = ut.ut_id and c.orderId = #{orderId}
-		</select>
-		
-		
 		
 		<select id="SelectUserCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
 			cmember.reallyName,count(c.collectionTime) as collection_count,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime
 		</select>
+		
+		
+		
+		<select id="Coldetails" parameterType="com.zhita.model.manage.Collectiondetails" resultType="com.zhita.model.manage.Collectiondetails">
+			select o.borrowMoneyState,co.* from orders o,collectiondetails co
+			where o.id = co.orderId and o.id = #{orderId}
+		</select>
+		
+		
+		
+		<select id="SelectOrderNum" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(*) from orders where orderNumber = #{collection_time} and companyId = #{companyId}
+		</select>
+		
+		
+		
+		<select id="SelectCollectionNum" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(*) from collection where collectionMemberId in
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			AND collectionTime = #{collectionTime}
+		</select>
+		
+		
+		<select id="SelectcollectionStatus" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(*) from collection where collectionMemberId in
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			AND collectionTime = #{collectionTime}
+			AND collectionStatus = #{collectionStatus}
+		</select>
+		
+		
+		
+			<select id="SelectUserCollectionNum" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(orderId) from collection where collectionMemberId = #{collectionMemberId}
+			AND collectionTime = #{collectionTime} group by orderId
+		</select>
+		
+		
+		<select id="SelectUsercollectionStatus" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(*) from collection where  collectionMemberId = #{collectionMemberId}
+			AND collectionTime = #{collectionTime}
+			AND collectionStatus = #{collectionStatus}
+		</select>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		

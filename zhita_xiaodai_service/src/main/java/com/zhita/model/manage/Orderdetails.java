@@ -45,6 +45,8 @@ public class Orderdetails {
 	
 	private String deleted;//假删除
 	
+	private BigDecimal realityAccount;//实际到账
+	
 	private String borrowMoneyState;//还款状态（已还和未还）
 	
 	private String name;//姓名
@@ -99,7 +101,11 @@ public class Orderdetails {
     
     private String shouldReturnTime;//应还时间
     
+    private String pipelinenumber;//流水号
+    
     private List<Integer> ids;
+    
+    private String collectiondate;
     
     private Integer overdue_id;
     
@@ -118,7 +124,30 @@ public class Orderdetails {
     private Integer Baddebt;//坏账数
     
     private Integer CollectionSuccessdata;//催收成功率
+    
+    private String accounttime;//调账时间
 
+    private String repaymentSource;//还款渠道
+    
+    private String statu;//状态
+    
+    private BigDecimal surplus_money;//剩余金额
+    
+    private Integer onceDeferredDay;//每次延期天数
+    
+    private String canDeferNumberoftime;//延期天数
+    
+    private BigDecimal interestOnArrears;//延期利息
+    
+    private BigDecimal interMoney;//延期金额
+    
+    private BigDecimal OrderSum_money;//实还金额
+    
+    private Integer phone_num;//电话催收次数
+    
+    private Integer whid;//白名单标识
+    
+    private Integer blaid;//黑名单标识
     
 	public Integer getOrderDeatilId() {
 		return orderDeatilId;
@@ -567,7 +596,126 @@ public class Orderdetails {
 	public void setCollectionSuccessdata(Integer collectionSuccessdata) {
 		CollectionSuccessdata = collectionSuccessdata;
 	}
+
+	public String getPipelinenumber() {
+		return pipelinenumber;
+	}
+
+	public void setPipelinenumber(String pipelinenumber) {
+		this.pipelinenumber = pipelinenumber;
+	}
+
+	public String getAccounttime() {
+		return accounttime;
+	}
+
+	public void setAccounttime(String accounttime) {
+		this.accounttime = accounttime;
+	}
+
+	public String getRepaymentSource() {
+		return repaymentSource;
+	}
+
+	public void setRepaymentSource(String repaymentSource) {
+		this.repaymentSource = repaymentSource;
+	}
+
+	public String getStatu() {
+		return statu;
+	}
+
+	public void setStatu(String statu) {
+		this.statu = statu;
+	}
+
+	public String getCollectiondate() {
+		return collectiondate;
+	}
+
+	public void setCollectiondate(String collectiondate) {
+		this.collectiondate = collectiondate;
+	}
 	
+	public BigDecimal getSurplus_money() {
+		return surplus_money;
+	}
+
+	public void setSurplus_money(BigDecimal surplus_money) {
+		this.surplus_money = surplus_money;
+	}
+
+	public BigDecimal getRealityAccount() {
+		return realityAccount;
+	}
+
+	public void setRealityAccount(BigDecimal realityAccount) {
+		this.realityAccount = realityAccount;
+	}
+
+	public Integer getOnceDeferredDay() {
+		return onceDeferredDay;
+	}
+
+	public void setOnceDeferredDay(Integer onceDeferredDay) {
+		this.onceDeferredDay = onceDeferredDay;
+	}
+
+	public String getCanDeferNumberoftime() {
+		return canDeferNumberoftime;
+	}
+
+	public void setCanDeferNumberoftime(String canDeferNumberoftime) {
+		this.canDeferNumberoftime = canDeferNumberoftime;
+	}
+
+	public BigDecimal getInterestOnArrears() {
+		return interestOnArrears;
+	}
+
+	public void setInterestOnArrears(BigDecimal interestOnArrears) {
+		this.interestOnArrears = interestOnArrears;
+	}
+
+	public BigDecimal getInterMoney() {
+		return interMoney;
+	}
+
+	public void setInterMoney(BigDecimal interMoney) {
+		this.interMoney = interMoney;
+	}
+
+	public BigDecimal getOrderSum_money() {
+		return OrderSum_money;
+	}
+
+	public void setOrderSum_money(BigDecimal orderSum_money) {
+		OrderSum_money = orderSum_money;
+	}
+
+	public Integer getPhone_num() {
+		return phone_num;
+	}
+
+	public void setPhone_num(Integer phone_num) {
+		this.phone_num = phone_num;
+	}
+
+	public Integer getWhid() {
+		return whid;
+	}
+
+	public void setWhid(Integer whid) {
+		this.whid = whid;
+	}
+
+	public Integer getBlaid() {
+		return blaid;
+	}
+
+	public void setBlaid(Integer blaid) {
+		this.blaid = blaid;
+	}
 	
 	
 	

@@ -38,7 +38,8 @@
 		
 		
 		<select id="Datacollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(or.id) from orderdetails or,orders o where trim(or.overdueNumberOfDays)!='' and
+			select count(ord.id) from orderdetails ord,orders o where o.id = ord.orderId
+			 and trim(ord.overdueNumberOfDays)!='' and
 			o.companyId = #{companyId}
 		</select>
 		

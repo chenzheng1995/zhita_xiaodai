@@ -36,7 +36,7 @@ public interface PostloanorderMapper {
 	List<Integer> SelectNodetId(@Param("ids")List<Integer> ids);
 	
 	
-	List<Orderdetails> OrderDetails(Orderdetails order);
+	List<Orderdetails> AOrderDetails(Orderdetails order);
 	
 	
 	List<Collection> DateNum(Orderdetails order);
@@ -61,4 +61,49 @@ public interface PostloanorderMapper {
 	
 	
 	Integer AddOverdue(Overdue ov);
+	
+	
+	Integer connectedNum(Orderdetails order);
+	
+	
+	Integer OrderIdNum(Orderdetails order);
+
+
+	Integer OverIdNum(Orderdetails order);
+	
+	
+	Integer StatusOrders(Orderdetails order);
+	
+	
+	Integer UserDianlNum(Orderdetails order);
+	
+	
+	Integer Userphonestaus(Orderdetails order);
+
+	
+	Integer UserOrderStatu(Orderdetails order);
+	
+	
+	Integer UserNumOrder(Orderdetails order);
+	
+	
+	Integer YiHuanOrdersTotalCount(Orderdetails order);
+	
+	
+	List<Orderdetails> YiHuanOrders(Orderdetails order);
+	
+	
+	Integer CollecOrdersTotalCount(Orderdetails order);
+	
+	
+	List<Orderdetails> CollecOrders(Orderdetails orders);
+	
+	
+	Integer Phone_num(Orderdetails order);
+	
+	
+	Integer HuaiZhangOrdersTotalCount(Orderdetails order);
+	
+	
+	List<Orderdetails> HuaiZhangOrders(Orderdetails order);
 }

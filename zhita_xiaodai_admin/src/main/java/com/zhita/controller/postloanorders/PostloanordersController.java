@@ -36,6 +36,53 @@ public class PostloanordersController {
 	
 	
 	
+	/**
+	 * 已还订单
+	 * @param detils
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("YihuanOrders")
+	public Map<String, Object> SelectYihuanOrders(Orderdetails detils){
+		return postloanor.YiHuanOrders(detils);
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * 坏账订单
+	 * @param detils
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("HuaiZhangOrders")
+	public Map<String, Object> SelectHuaiZhangOrders(Orderdetails detils){
+		return postloanor.HuaiZhangOrders(detils);
+	}
+	
+	
+	
+	
+	
+
+	/**
+	 * 已逾期订单
+	 * @param detils
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("CollectionOrders")
+	public Map<String, Object> CollectionOrders(Orderdetails detils){
+		return postloanor.CollecOrders(detils);
+	}
+	
+	
+	
+	
+	
 	
 	
 	/**

@@ -1,5 +1,6 @@
 package com.zhita.model.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -21,6 +22,8 @@ public class Collection {
 	private String name;//姓名
 	
 	private String phone;//手机号
+	
+	private BigDecimal promise_money;//承诺金额
 	
 	private Integer page=0;
 
@@ -44,7 +47,25 @@ public class Collection {
 	
 	private Integer id;//订单ID
 	
+	private Integer orderNum;//订单总数
 	
+	private Integer dialNum;//未拨打数
+	    
+	private Integer Notconnected;//未接通数
+
+	private Integer connected;//接通数
+	    
+	private Integer Sameday;//当天未还款
+	    
+	private Integer Paymentmade;//当天已还款
+	
+	private Integer PaymentmadeData;//当天还款率
+	
+	private Integer CollSum;//分配数
+	
+	private Integer Chenggnum;//承诺还款
+	
+	private Integer collNumdata;//催回率
 	
 	public Integer getCollectionId() {
 		return collectionId;
@@ -197,6 +218,96 @@ public class Collection {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	public Integer getDialNum() {
+		return dialNum;
+	}
+
+	public void setDialNum(Integer dialNum) {
+		this.dialNum = dialNum;
+	}
+
+	public Integer getNotconnected() {
+		return Notconnected;
+	}
+
+	public void setNotconnected(Integer notconnected) {
+		Notconnected = notconnected;
+	}
+
+	public Integer getConnected() {
+		return connected;
+	}
+
+	public void setConnected(Integer connected) {
+		this.connected = connected;
+	}
+
+	public Integer getSameday() {
+		return Sameday;
+	}
+
+	public void setSameday(Integer sameday) {
+		Sameday = sameday;
+	}
+
+	public Integer getPaymentmade() {
+		return Paymentmade;
+	}
+
+	public void setPaymentmade(Integer paymentmade) {
+		Paymentmade = paymentmade;
+	}
+
+	public Integer getPaymentmadeData() {
+		return PaymentmadeData;
+	}
+
+	public void setPaymentmadeData(Integer paymentmadeData) {
+		PaymentmadeData = paymentmadeData;
+	}
+
+	public BigDecimal getPromise_money() {
+		return promise_money;
+	}
+
+	public void setPromise_money(BigDecimal promise_money) {
+		this.promise_money = promise_money;
+	}
+
+	public Integer getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(Integer orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public Integer getCollSum() {
+		return CollSum;
+	}
+
+	public void setCollSum(Integer collSum) {
+		CollSum = collSum;
+	}
+
+	public Integer getChenggnum() {
+		return Chenggnum;
+	}
+
+	public void setChenggnum(Integer chenggnum) {
+		Chenggnum = chenggnum;
+	}
+
+	public Integer getCollNumdata() {
+		return collNumdata;
+	}
+
+	public void setCollNumdata(Integer collNumdata) {
+		this.collNumdata = collNumdata;
+	}
+
+
 	
 	
 }

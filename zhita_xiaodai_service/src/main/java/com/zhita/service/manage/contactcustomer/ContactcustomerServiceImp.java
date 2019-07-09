@@ -17,8 +17,12 @@ import com.zhita.util.FolderUtil;
 
 @Service
 public class ContactcustomerServiceImp implements IntContactcustomerService{
+	
+	
 	@Autowired
 	private ContactCustomerServiceMapper contactCustomerServiceMapper;
+	
+	
 	@Autowired
 	private SysUserMapper sysUserMapper;
 	

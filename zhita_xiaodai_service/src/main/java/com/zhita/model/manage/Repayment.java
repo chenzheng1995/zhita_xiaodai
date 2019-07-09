@@ -17,6 +17,10 @@ public class Repayment {
 	
 	private Integer repayment_Count;//还款订单数
 	
+	private String pipelinenumber;//流水号
+	
+	private String repaymentSource;//还款渠道 (支付方式 微信  支付宝  银行卡)
+	
 	private List<Integer> ids;
 	
 	private Integer repaymeny_collectiondata;//逾期还款率
@@ -116,6 +120,22 @@ public class Repayment {
 
 	public void setCollection_money(BigDecimal collection_money) {
 		Collection_money = collection_money;
+	}
+
+	public String getPipelinenumber() {
+		return pipelinenumber;
+	}
+
+	public void setPipelinenumber(String pipelinenumber) {
+		this.pipelinenumber = pipelinenumber;
+	}
+
+	public String getRepaymentSource() {
+		return repaymentSource;
+	}
+
+	public void setRepaymentSource(String repaymentSource) {
+		this.repaymentSource = repaymentSource;
 	}
 	
 	

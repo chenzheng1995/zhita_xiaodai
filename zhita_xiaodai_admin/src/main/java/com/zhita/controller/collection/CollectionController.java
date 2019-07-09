@@ -1,11 +1,14 @@
 package com.zhita.controller.collection;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Orderdetails;
@@ -215,7 +218,10 @@ public class CollectionController {
 	@ResponseBody
 	@RequestMapping("Alldetails")
 	public Map<String, Object> AllDetails(Integer orderId){
-		return collservice.AllCollectiondetail(orderId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Collectiondetails> cols = collservice.AllCollectiondetail(orderId);
+		map.put("Collectiondetils", cols);
+		return map;
 	}
 	
 	

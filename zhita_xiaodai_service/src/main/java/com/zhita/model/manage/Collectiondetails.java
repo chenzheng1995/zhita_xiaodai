@@ -1,6 +1,7 @@
 package com.zhita.model.manage;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 //催收详情表
@@ -19,6 +20,10 @@ public class Collectiondetails {
 	private Integer orderId;//订单ID
 	
 	private String user_neir;//用户名称
+	
+	private String reallyName;
+	
+	private List<Integer> ids;//催收员ID
 
 	public Integer getCollection_id() {
 		return collection_id;
@@ -74,6 +79,22 @@ public class Collectiondetails {
 
 	public void setUser_neir(String user_neir) {
 		this.user_neir = user_neir;
+	}
+
+	public String getReallyName() {
+		return reallyName;
+	}
+
+	public void setReallyName(String reallyName) {
+		this.reallyName = reallyName;
+	}
+
+	public List<Integer> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
 	}
 	
 	
