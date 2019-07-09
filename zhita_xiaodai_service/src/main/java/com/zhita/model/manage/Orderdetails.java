@@ -39,9 +39,6 @@ public class Orderdetails {
 	
 	private String registerClient;//注册客户端
 	
-	
-	
-	
 	private String borrowMoneyState;//还款状态（已还和未还）
 	
 	private String name;//姓名
@@ -670,6 +667,14 @@ public class Orderdetails {
 
 	public void setBlaid(Integer blaid) {
 		this.blaid = blaid;
+	}
+
+	public String getBorrowMoneyState() {
+		return borrowMoneyState;
+	}
+
+	public void setBorrowMoneyState(String borrowMoneyState) {
+		this.borrowMoneyState = borrowMoneyState;
 	}
 	
 	
