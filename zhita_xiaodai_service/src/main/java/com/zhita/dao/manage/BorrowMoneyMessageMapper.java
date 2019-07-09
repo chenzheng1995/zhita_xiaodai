@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.BorrowMoneyMessage;
 
@@ -22,4 +23,6 @@ public interface BorrowMoneyMessageMapper {
     
     //后台管理----查询借款信息表所有信息
     List<BorrowMoneyMessage> queryAll(Integer companyId);
+
+	Map<String, Object> getborrowMoneyMessage(int companyId);
 }

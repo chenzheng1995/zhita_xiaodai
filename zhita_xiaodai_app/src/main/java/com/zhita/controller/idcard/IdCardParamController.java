@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 
 @Controller
 @RequestMapping(value="/idcardParam")
-public class ParamController {
+public class IdCardParamController {
     /**
     * notify_url 使用 JavaSpring MVC 框架接受post过来的表单参数
     */

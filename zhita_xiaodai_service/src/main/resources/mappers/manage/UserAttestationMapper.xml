@@ -32,6 +32,7 @@
       <arg column="issued_by" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="valid_date_start" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="valid_date_end" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="attestationStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -392,10 +393,86 @@
 		select sign from user_attestation where userId = #{userId}
 	</select>
 	
-				<!--APP 插入密码-->
+				<!--APP 更新sign-->
 		<update id="updateSign" parameterType="java.util.Map">
 		update user_attestation
 		set sign = #{sign}
+		where userId = #{userId}
+	</update>
+	
+	
+					<!--APP 更新biztoken-->
+		<update id="updateBizToken" parameterType="java.util.Map">
+		update user_attestation
+		set idCardBizToken = #{biz_token}
+		where userId = #{userId}
+	</update>
+	
+					<!-- 根据userid查询sign -->
+	<select id="getuserAttestation" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select sign,faceBizToken,trueName,idCardBizToken,idcard_number from user_attestation where userId = #{userId}
+	</select>
+
+	
+					<!--APP 更新用户信息-->
+		<update id="updateUserAttestation" parameterType="java.util.Map">
+		update user_attestation
+		set trueName = #{name},
+		    gender = #{gender},
+		    nationality = #{nationality},
+		    birth_year = #{birth_year},
+		    birth_month = #{birth_month},
+		    birth_day = #{birth_day},
+		    address = #{address},
+		    issued_by = #{issued_by},
+		    valid_date_start = #{valid_date_start},
+		    valid_date_end = #{valid_date_end},
+		    headUrl = #{frontsidePath},
+		    nationalEmblemUrl = #{backsidePath},
+		    idcard_number = #{idcard_number}
+		where userId = #{userId}
+	</update>
+	
+	
+
+	<select id="selectUserAttestationService" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select * from user_attestation where userId = #{userId}
+	</select>
+	
+						<!--APP 更新faceBizToken-->
+		<update id="updateFaceBizToken" parameterType="java.util.Map">
+		update user_attestation
+		set faceBizToken = #{biz_token}
+		where userId = #{userId}
+	</update>
+	
+	
+							<!--APP 更新Address-->
+		<update id="setAddress" parameterType="java.util.Map">
+		update user_attestation
+		set homeAddressLongitude = #{homeAddressLongitude},
+		    homeAddressLatitude = #{homeAddressLatitude},
+		    detailAddress = #{detailAddress}
+		where userId = #{userId}
+	</update>
+	
+								<!--APP 更新紧急联系人-->
+		<update id="setlinkman" parameterType="java.util.Map">
+		update user_attestation
+		set linkmanOneRelation = #{linkmanOneRelation},
+		    linkmanOneName = #{linkmanOneName},
+		    linkmanOnePhone = #{linkmanOnePhone},
+		    linkmanTwoRelation = #{linkmanTwoRelation},
+		    linkmanTwoName = #{linkmanTwoName},
+		    linkmanTwoPhone = #{linkmanTwoPhone}
+		where userId = #{userId}
+	</update>
+	
+	
+									<!--APP 更新认证状态-->
+		<update id="updateAttestationStatus" parameterType="java.util.Map">
+		update user_attestation
+		set attestationStatus = #{attestationStatus}
 		where userId = #{userId}
 	</update>
 </mapper>

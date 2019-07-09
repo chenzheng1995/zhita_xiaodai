@@ -29,4 +29,10 @@ public interface UserMapper {
 	String getPwd(int id);
 
 	int updatelogOutStatus(@Param("loginStatus")String loginStatus,@Param("userId") int userId,@Param("companyId") String companyId);
+
+	int updatePwd(@Param("newPhone")String newPhone,@Param("md5Pwd") String md5Pwd,@Param("companyId") int companyId);
+
+	String getMd5pwd(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
+
+	int setPwd(@Param("userId")int userId,@Param("md5Pwd") String md5Pwd);
 }

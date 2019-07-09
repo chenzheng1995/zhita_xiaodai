@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhita.dao.manage.OperatorMapper">
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Operator">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="attestationStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="reqId" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="search_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="operatorJson" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+<!--   <resultMap id="ResultMapWithBLOBs" type="com.zhita.model.manage.Operator">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="attestationStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="reqId" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="search_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="operatorJson" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap> -->
+  <sql id="Base_Column_List">
+    id, userId, phone, attestationStatus, reqId, search_id
+  </sql>
+  <sql id="Blob_Column_List">
+    operatorJson
+  </sql>
+<!--   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from operator
+    where id = #{id,jdbcType=INTEGER}
+  </select> -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from operator
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Operator">
+    insert into operator (id, userId, phone, 
+      attestationStatus, reqId, search_id, 
+      operatorJson)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{attestationstatus,jdbcType=VARCHAR}, #{reqid,jdbcType=VARCHAR}, #{searchId,jdbcType=VARCHAR}, 
+      #{operatorjson,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Operator">
+    insert into operator
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="attestationstatus != null">
+        attestationStatus,
+      </if>
+      <if test="reqid != null">
+        reqId,
+      </if>
+      <if test="searchId != null">
+        search_id,
+      </if>
+      <if test="operatorjson != null">
+        operatorJson,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="attestationstatus != null">
+        #{attestationstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="reqid != null">
+        #{reqid,jdbcType=VARCHAR},
+      </if>
+      <if test="searchId != null">
+        #{searchId,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorjson != null">
+        #{operatorjson,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Operator">
+    update operator
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="attestationstatus != null">
+        attestationStatus = #{attestationstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="reqid != null">
+        reqId = #{reqid,jdbcType=VARCHAR},
+      </if>
+      <if test="searchId != null">
+        search_id = #{searchId,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorjson != null">
+        operatorJson = #{operatorjson,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zhita.model.manage.Operator">
+    update operator
+    set userId = #{userid,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      attestationStatus = #{attestationstatus,jdbcType=VARCHAR},
+      reqId = #{reqid,jdbcType=VARCHAR},
+      search_id = #{searchId,jdbcType=VARCHAR},
+      operatorJson = #{operatorjson,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Operator">
+    update operator
+    set userId = #{userid,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      attestationStatus = #{attestationstatus,jdbcType=VARCHAR},
+      reqId = #{reqid,jdbcType=VARCHAR},
+      search_id = #{searchId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    				  
+	<insert id="setredIdAndPhone" parameterType="java.util.Map">
+		insert into operator (reqId,phone,userId)
+		values (#{reqId},#{phone},#{userId})
+	</insert>
+	
+	
+	  <update id="updateSearch_id" parameterType="java.util.Map">
+    update operator
+    set search_id = #{search_id}
+    where userId = #{userId}
+  </update>
+  
+	<select id="getOperator" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select phone,attestationStatus,reqId,search_id from user_attestation where userId = #{userId}
+	</select>
+	
+		  <update id="updateOperatorJson" parameterType="java.util.Map">
+    update operator
+    set operatorJson = #{url},
+        attestationStatus ='1'
+    where userId = #{userId}
+  </update>
+	
+  
+</mapper>

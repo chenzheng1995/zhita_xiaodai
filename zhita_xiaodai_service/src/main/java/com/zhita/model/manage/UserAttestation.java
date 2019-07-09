@@ -58,8 +58,10 @@ public class UserAttestation {
     private String validDateStart;
 
     private String validDateEnd;
+    
+    private String attestationStatus;
 
-    public UserAttestation(Integer id, Integer userid, String truename, String idcardNumber, String birthday, String householdregister, String homeaddresslongitude, String homeaddresslatitude, String detailaddress, String headurl, String nationalemblemurl, String linkmanonerelation, String linkmanonename, String linkmanonephone, String linkmantworelation, String linkmantwoname, String linkmantwophone, String facebiztoken, String idcardbiztoken, String sign, String gender, String nationality, String birthYear, String birthMonth, String birthDay, String address, String issuedBy, String validDateStart, String validDateEnd) {
+    public UserAttestation(Integer id, Integer userid, String truename, String idcardNumber, String birthday, String householdregister, String homeaddresslongitude, String homeaddresslatitude, String detailaddress, String headurl, String nationalemblemurl, String linkmanonerelation, String linkmanonename, String linkmanonephone, String linkmantworelation, String linkmantwoname, String linkmantwophone, String facebiztoken, String idcardbiztoken, String sign, String gender, String nationality, String birthYear, String birthMonth, String birthDay, String address, String issuedBy, String validDateStart, String validDateEnd,String attestationStatus) {
         this.id = id;
         this.userid = userid;
         this.truename = truename;
@@ -89,6 +91,7 @@ public class UserAttestation {
         this.issuedBy = issuedBy;
         this.validDateStart = validDateStart;
         this.validDateEnd = validDateEnd;
+        this.attestationStatus = attestationStatus;
     }
 
     public UserAttestation() {
@@ -325,5 +328,13 @@ public class UserAttestation {
 
     public void setValidDateEnd(String validDateEnd) {
         this.validDateEnd = validDateEnd == null ? null : validDateEnd.trim();
+    }
+    
+    public String getAttestationStatus() {
+        return attestationStatus;
+    }
+
+    public void setAttestationStatus(String attestationStatus) {
+        this.attestationStatus = attestationStatus == null ? null : attestationStatus.trim();
     }
 }
