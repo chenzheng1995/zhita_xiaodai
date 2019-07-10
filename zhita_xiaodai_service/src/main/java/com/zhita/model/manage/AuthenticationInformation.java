@@ -13,6 +13,11 @@ public class AuthenticationInformation {
     private String ifauthentication;//是否需认证（1：需认证；2：免认证）
 
     private String deleted;//假删除（1：删除；0：没删除）
+    
+    private String certificationstatus;//认证状态
+    
+
+    
 
     public Integer getId() {
         return id;
@@ -61,5 +66,13 @@ public class AuthenticationInformation {
 
     public void setDeleted(String deleted) {
         this.deleted = deleted == null ? null : deleted.trim();
+    }
+    
+    public String getCertificationstatus() {
+        return certificationstatus;
+    }
+
+    public void setCertificationstatus(String certificationstatus) {
+        this.certificationstatus = certificationstatus == null ? null : certificationstatus.trim();
     }
 }

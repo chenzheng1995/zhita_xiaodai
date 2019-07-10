@@ -35,6 +35,8 @@ public class User {
     private String operaattestationstatus;//运营商认证状态
     
     private String ifblacklist;//是否是黑名单（1：是；0：不是）
+    
+    private Integer riskControlPoints;//分控分数
 
 	public Integer getId() {
 		return id;
@@ -170,6 +172,14 @@ public class User {
 
 	public void setIfblacklist(String ifblacklist) {
 		this.ifblacklist = ifblacklist;
+	}
+	
+	public Integer getRiskControlPoints() {
+		return riskControlPoints;
+	}
+
+	public void setRiskControlPoints(Integer riskControlPoints) {
+		this.riskControlPoints = riskControlPoints;
 	}
 
 }

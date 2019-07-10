@@ -410,7 +410,7 @@
 	
 					<!-- 根据userid查询sign -->
 	<select id="getuserAttestation" parameterType="java.lang.Integer" resultType="java.util.Map">
-		select sign,faceBizToken,trueName,idCardBizToken,idcard_number from user_attestation where userId = #{userId}
+		select sign,faceBizToken,trueName,idCardBizToken,idcard_number,attestationStatus from user_attestation where userId = #{userId}
 	</select>
 
 	

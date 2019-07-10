@@ -1,6 +1,7 @@
 package com.zhita.service.manage.autheninfor;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
 import com.zhita.util.OssUtil;
+
+import sun.text.normalizer.ICUBinary.Authenticate;
 
 @Service
 public class AutheninforServiceImp implements IntAutheninforService{
@@ -142,4 +145,11 @@ public class AutheninforServiceImp implements IntAutheninforService{
     	int sum=authenticationInformationMapper.updateByPrimaryKey(record);
     	return map;
     }
+
+
+	@Override
+	public ArrayList<AuthenticationInformation> getCertificationCenter(int companyId) {
+		ArrayList<AuthenticationInformation> CertificationCenter = authenticationInformationMapper.getCertificationCenter(companyId);
+		return CertificationCenter;
+	}
 }

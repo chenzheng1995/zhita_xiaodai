@@ -28,4 +28,6 @@ public interface IntHomepageViewpageService {
     //后台管理---修改当前对象假删除状态
     public int updateFalDel(Integer id);
 
+	public List<HomepageViewpager> gethomepageViewpager(int companyId);
+
 }

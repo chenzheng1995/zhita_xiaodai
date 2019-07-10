@@ -16,6 +16,7 @@
       <arg column="registeClient" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="useMarket" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="drainageOfPlatformId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="riskControlPoints" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -189,12 +190,10 @@
   </update>
   
   	  	<!--判断用户名是否存在 -->
-	<select id="findphone" resultMap="BaseResultMap" parameterType="java.util.Map">
-    	<![CDATA[
-       SELECT a.* FROM user a WHERE 1=1 
-       AND a.phone=#{newPhone} and a.companyId=#{companyId}
-       ]]>
+	<select id="findphone" resultType="java.lang.Integer" parameterType="java.util.Map">
+       SELECT id FROM user where phone=#{newPhone} and companyId=#{companyId}
 	</select>
+	
 	
 	
 				  	<!--APP 插入用户信息 -->
@@ -275,13 +274,13 @@
 	<update id="updatePwd" parameterType="java.util.Map" >
 		update user
 		set pwd = #{md5Pwd}
-		where phone = #{phone} and companyId = #{companyId}
+		where phone = #{newPhone} and companyId = #{companyId}
 	</update>
 	
 	
 					<!--APP 查询密码-->
 	<select id="getMd5pwd" parameterType="java.util.Map" resultType="java.lang.String">
-      select pwd from user where phone = #{phone} and companyId = #{companyId}
+      select pwd from user where phone = #{newPhone} and companyId = #{companyId}
 	</select>
 	
 	
@@ -291,4 +290,18 @@
 		set pwd = #{md5Pwd}
 		where id = #{userId}
 	</update>	
+	
+	
+				<!--APP 更新分控分数-->
+		<update id="updateScore" parameterType="java.util.Map" >
+		update user
+		set riskControlPoints = #{score}
+		where id = #{userId}
+	</update>	
+	
+						<!--APP 查询用户的分控分数-->
+	<select id="getRiskControlPoints" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      select riskControlPoints from user where id = #{userId}
+	</select>
+	
 </mapper>

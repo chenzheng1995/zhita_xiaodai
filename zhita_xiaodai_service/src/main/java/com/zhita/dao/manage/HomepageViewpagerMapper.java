@@ -28,4 +28,6 @@ public interface HomepageViewpagerMapper {
     
     //后台管理---通过id  查询当前对象的首页轮播图图片
     String queryViewpagerpicture(Integer id);
+
+	List<HomepageViewpager> gethomepageViewpager(int companyId);
 }

@@ -8,4 +8,8 @@ public interface IntUserService {
 	
 	//后台管理---添加黑名单
 	public int insertBlacklist(Integer companyId,Integer userId,String operator);
+
+	public void updateScore(int score, int userId);
+
+	public int getRiskControlPoints(int userId);
 }

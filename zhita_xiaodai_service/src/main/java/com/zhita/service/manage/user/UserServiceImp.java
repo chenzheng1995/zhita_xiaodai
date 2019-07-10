@@ -50,4 +50,16 @@ public class UserServiceImp implements IntUserService{
 		int num=userMapper.addBlacklist(companyId, userId, operator, operationTime);
 		return num;
 	}
+
+	@Override
+	public void updateScore(int score,int userId) {
+		userMapper.updateScore(score,userId);
+		
+	}
+
+	@Override
+	public int getRiskControlPoints(int userId) {
+		 int riskControlPoints = userMapper.getRiskControlPoints(userId);
+		return riskControlPoints;
+	}
 }

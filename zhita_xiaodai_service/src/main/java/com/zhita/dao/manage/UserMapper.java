@@ -19,7 +19,7 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-	User findphone(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
+    Integer findphone(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
 	int insertUser1(@Param("newPhone")String newPhone,@Param("loginStatus")String loginStatus,@Param("companyId")int companyId,@Param("registeClient")String registeClient,
 			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket);
@@ -46,4 +46,8 @@ public interface UserMapper {
 	String getMd5pwd(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
 	int setPwd(@Param("userId")int userId,@Param("md5Pwd") String md5Pwd);
+
+	void updateScore(@Param("score")int score,@Param("userId") int userId);
+
+	int getRiskControlPoints(int userId);
 }

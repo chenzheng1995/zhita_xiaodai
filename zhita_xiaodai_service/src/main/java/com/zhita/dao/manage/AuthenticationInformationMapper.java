@@ -1,8 +1,12 @@
 package com.zhita.dao.manage;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.AuthenticationInformation;
+
+import sun.text.normalizer.ICUBinary.Authenticate;
 
 public interface AuthenticationInformationMapper {
     int deleteByPrimaryKey(Integer id);
@@ -25,4 +29,6 @@ public interface AuthenticationInformationMapper {
     
     //后台管理---根据id查询图标字段
     String queryIcon(Integer id);
+
+	ArrayList<AuthenticationInformation> getCertificationCenter(int companyId);
 }

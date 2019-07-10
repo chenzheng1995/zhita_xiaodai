@@ -156,7 +156,7 @@
   </update>
   
 	<select id="getOperator" parameterType="java.lang.Integer" resultType="java.util.Map">
-		select phone,attestationStatus,reqId,search_id from user_attestation where userId = #{userId}
+		select phone,attestationStatus,reqId,search_id from operator where userId = #{userId}
 	</select>
 	
 		  <update id="updateOperatorJson" parameterType="java.util.Map">

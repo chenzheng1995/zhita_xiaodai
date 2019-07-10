@@ -7,6 +7,7 @@
     <result column="authenticationName" property="authenticationname" jdbcType="VARCHAR" />
     <result column="ifAuthentication" property="ifauthentication" jdbcType="VARCHAR" />
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, companyId, authenticationName, icon,ifAuthentication, deleted
@@ -104,4 +105,10 @@
   <select id="queryIcon" parameterType="java.lang.Integer" resultType="java.lang.String">
   	select icon from authentication_information where id=#{arg0}
   </select>
+  
+  
+    <select id="getCertificationCenter" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.AuthenticationInformation">
+  	select id,icon,authenticationName,ifAuthentication from authentication_information where companyId=#{companyId} and deleted =0;
+  </select>
+  
 </mapper>
