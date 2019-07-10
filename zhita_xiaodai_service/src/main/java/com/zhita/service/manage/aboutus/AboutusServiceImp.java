@@ -90,55 +90,9 @@ public class AboutusServiceImp implements IntAboutusService{
     }
     
     //后台管理---更新功能
-    public Map<String, Object> updateByPrimaryKey(Aboutus record,MultipartFile file) throws Exception{
-    	Map<String, Object> map = new HashMap<>();
-		if (file.getSize()!=0) {// 判断上传的文件是否为空
-			String path = null;// 文件路径
-			String type = null;// 文件类型
-			InputStream iStream = file.getInputStream();
-			String fileName = file.getOriginalFilename();// 文件原名称
-			// 判断文件类型
-			type = fileName.indexOf(".") != -1? fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()): null;
-			if (type != null) {// 判断文件类型是否为空
-				if ("GIF".equals(type.toUpperCase()) || "PNG".equals(type.toUpperCase()) || "JPG".equals(type.toUpperCase())) {
-					// 自定义的文件名称
-					String trueFileName = String.valueOf(System.currentTimeMillis()) + fileName;
-					// 设置存放图片文件的路径
-					//path = "D://image" +trueFileName;
-					path = "D://nginx-1.14.2/html/dist/image/aboutus/" + /* System.getProperty("file.separator")+ */trueFileName;
-					OssUtil ossUtil = new OssUtil();
-					String ossPath = ossUtil.uploadFile(iStream, path);
-					if(ossPath.substring(0, 5).equals("https")) {
-						System.out.println("路径为："+ossPath);
-						record.setLogo(ossPath);
-						map.put("msg", "图片上传成功");
-					}
-					/*InputStream inStream = file.getInputStream();
-					FolderUtil folderUtil = new FolderUtil();
-					String code = folderUtil.uploadImage(inStream, path);
-					if(code.equals("200")) {
-						record.setLogo("http://tg.mis8888.com/image/aboutus/"+trueFileName);
-						map.put("msg", "图片上传成功");
-					}*/else {
-						map.put("msg", "图片上传失败");
-					}
-
-				} else {
-					map.put("msg", "不是我们想要的文件类型,请按要求重新上传");
-					return map;
-				}
-			} else {
-				map.put("msg", "文件类型为空");
-				return map;
-			}
-		}else {
-			int id = record.getId();
-			String applogo = aboutusMapper.queryAppLogo(id); //通过传过来的轮播图id，查询当前对象的logo
-			record.setLogo(applogo);
-		} 
-		
-		aboutusMapper.updateByPrimaryKey(record);
-		return map;
+    public int updateByPrimaryKey(Aboutus record){
+		int num=aboutusMapper.updateByPrimaryKey(record);
+		return num;
     }
     
 }

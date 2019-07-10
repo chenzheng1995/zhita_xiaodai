@@ -1,9 +1,6 @@
 package com.zhita.service.manage.homepageviewpager;
 
 import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.HomepageViewpager;
@@ -14,7 +11,7 @@ public interface IntHomepageViewpageService {
     public List<HomepageViewpager> queryAll(Integer companyId);
     
     //后台管理---添加功能
-    public Map<String, Object> insert(HomepageViewpager record,MultipartFile file) throws Exception;
+    public int insert(HomepageViewpager record);
     
     //后台管理---添加功能（查询出所有公司）
     public List<Company> queryAllCompany();
@@ -23,7 +20,7 @@ public interface IntHomepageViewpageService {
     public HomepageViewpager selectByPrimaryKey(Integer id);
     
     //后台管理---编辑功能
-    public Map<String, Object> updateByPrimaryKey(HomepageViewpager record,MultipartFile file)throws Exception;
+    public int updateByPrimaryKey(HomepageViewpager record);
     
     //后台管理---修改当前对象假删除状态
     public int updateFalDel(Integer id);

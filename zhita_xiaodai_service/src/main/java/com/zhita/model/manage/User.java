@@ -7,6 +7,8 @@ public class User {
     private Integer companyid;//公司id
 
     private Integer sourceid;//渠道id（关联渠道表）
+    
+    private String sourcename;//渠道名字
 
     private String name;//姓名
 
@@ -170,6 +172,14 @@ public class User {
 
 	public void setIfblacklist(String ifblacklist) {
 		this.ifblacklist = ifblacklist;
+	}
+
+	public String getSourcename() {
+		return sourcename;
+	}
+
+	public void setSourcename(String sourcename) {
+		this.sourcename = sourcename;
 	}
 
 }

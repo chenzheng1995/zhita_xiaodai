@@ -23,6 +23,12 @@ public class DeferredsetServcieImp implements IntDeferredsetService{
 	//后台管理---查询延期设置表所有信息
     public List<DeferredSettings> queryAll(Integer companyId){
     	List<DeferredSettings> list=deferredSettingsMapper.queryAll(companyId);
+    	for (int i = 0; i < list.size(); i++) {
+    		BorrowMoneyMessage borr=deferredSettingsMapper.queryBorrow(list.get(i).getProductid());
+    		list.get(i).setOncedeferredday(borr.getLifeofloan());
+    		list.get(i).setOncedeferredmoney(borr.getCanborrowlines()*borr.getPlatformfeeratio()/100);
+		}
+    	
     	return list;
     }
     

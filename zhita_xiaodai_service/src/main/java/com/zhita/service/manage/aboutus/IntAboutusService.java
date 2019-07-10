@@ -22,5 +22,5 @@ public interface IntAboutusService {
     public Aboutus selectByPrimaryKey(Integer id);
     
     //后台管理---更新功能
-    public Map<String, Object> updateByPrimaryKey(Aboutus record,MultipartFile file)throws Exception;
+    public int updateByPrimaryKey(Aboutus record);
 }

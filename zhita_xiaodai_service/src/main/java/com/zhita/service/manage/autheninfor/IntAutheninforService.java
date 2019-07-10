@@ -1,9 +1,6 @@
 package com.zhita.service.manage.autheninfor;
 
 import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
@@ -14,7 +11,7 @@ public interface IntAutheninforService {
     public List<AuthenticationInformation> queryAll(Integer companyId);
     
     //后台管理---添加功能
-    public Map<String, Object> insert(AuthenticationInformation record,MultipartFile file) throws Exception;
+    public int insert(AuthenticationInformation record);
     
     //后台管理---添加功能（查询出所有公司）
     public List<Company> queryAllCompany();
@@ -23,5 +20,5 @@ public interface IntAutheninforService {
     public AuthenticationInformation selectByPrimaryKey(Integer id);
     
     //后台管理---更新保存功能
-    public Map<String, Object> updateByPrimaryKey(AuthenticationInformation record,MultipartFile file) throws Exception;
+    public int updateByPrimaryKey(AuthenticationInformation record);
 }
