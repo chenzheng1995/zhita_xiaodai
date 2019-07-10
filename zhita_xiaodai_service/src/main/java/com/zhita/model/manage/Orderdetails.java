@@ -3,6 +3,8 @@ package com.zhita.model.manage;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.swing.tree.VariableHeightLayoutCache;
+
 
 //订单明细表
 public class Orderdetails {
@@ -15,13 +17,13 @@ public class Orderdetails {
 	
 	private BigDecimal makeLoans;//放款金额(元)
 	
-	private BigDecimal interestDay;//期内日均利息（0.06%）
+	private String interestDay;//期内日均利息（0.06%）
 	
 	private BigDecimal interestSum;//期内总利息（元）
 	
 	private String overdueNumberOfDays;//逾期天数
 	
-	private BigDecimal interestPenaltyDay;//日均罚息（0.1%）
+	private String interestPenaltyDay;//日均罚息（0.1%）
 	
 	private BigDecimal interestPenaltySum;//逾期总罚息（元）
 	
@@ -38,6 +40,9 @@ public class Orderdetails {
 	private String DrainageOfPlatform;//引流平台
 	
 	private String registerClient;//注册客户端
+	
+	
+	private String borrowMoneyState;//还款状态（已还和未还）
 	
 	private String name;//姓名
 	
@@ -220,11 +225,11 @@ public class Orderdetails {
 		this.makeLoans = makeLoans;
 	}
 
-	public BigDecimal getInterestDay() {
+	public String getInterestDay() {
 		return interestDay;
 	}
 
-	public void setInterestDay(BigDecimal interestDay) {
+	public void setInterestDay(String interestDay) {
 		this.interestDay = interestDay;
 	}
 
@@ -244,11 +249,11 @@ public class Orderdetails {
 		this.overdueNumberOfDays = overdueNumberOfDays;
 	}
 
-	public BigDecimal getInterestPenaltyDay() {
+	public String getInterestPenaltyDay() {
 		return interestPenaltyDay;
 	}
 
-	public void setInterestPenaltyDay(BigDecimal interestPenaltyDay) {
+	public void setInterestPenaltyDay(String interestPenaltyDay) {
 		this.interestPenaltyDay = interestPenaltyDay;
 	}
 
@@ -284,6 +289,14 @@ public class Orderdetails {
 		this.technicalServiceMoney = technicalServiceMoney;
 	}
 
+	public BigDecimal getRealityAccount() {
+		return realityAccount;
+	}
+
+	public void setRealityAccount(BigDecimal realityAccount) {
+		this.realityAccount = realityAccount;
+	}
+
 	public String getRejectMonadCause() {
 		return rejectMonadCause;
 	}
@@ -306,6 +319,14 @@ public class Orderdetails {
 
 	public void setRegisterClient(String registerClient) {
 		this.registerClient = registerClient;
+	}
+
+	public String getBorrowMoneyState() {
+		return borrowMoneyState;
+	}
+
+	public void setBorrowMoneyState(String borrowMoneyState) {
+		this.borrowMoneyState = borrowMoneyState;
 	}
 
 	public String getName() {
@@ -508,12 +529,28 @@ public class Orderdetails {
 		this.shouldReturnTime = shouldReturnTime;
 	}
 
+	public String getPipelinenumber() {
+		return pipelinenumber;
+	}
+
+	public void setPipelinenumber(String pipelinenumber) {
+		this.pipelinenumber = pipelinenumber;
+	}
+
 	public List<Integer> getIds() {
 		return ids;
 	}
 
 	public void setIds(List<Integer> ids) {
 		this.ids = ids;
+	}
+
+	public String getCollectiondate() {
+		return collectiondate;
+	}
+
+	public void setCollectiondate(String collectiondate) {
+		this.collectiondate = collectiondate;
 	}
 
 	public Integer getOverdue_id() {
@@ -588,14 +625,6 @@ public class Orderdetails {
 		CollectionSuccessdata = collectionSuccessdata;
 	}
 
-	public String getPipelinenumber() {
-		return pipelinenumber;
-	}
-
-	public void setPipelinenumber(String pipelinenumber) {
-		this.pipelinenumber = pipelinenumber;
-	}
-
 	public String getAccounttime() {
 		return accounttime;
 	}
@@ -620,28 +649,12 @@ public class Orderdetails {
 		this.statu = statu;
 	}
 
-	public String getCollectiondate() {
-		return collectiondate;
-	}
-
-	public void setCollectiondate(String collectiondate) {
-		this.collectiondate = collectiondate;
-	}
-	
 	public BigDecimal getSurplus_money() {
 		return surplus_money;
 	}
 
 	public void setSurplus_money(BigDecimal surplus_money) {
 		this.surplus_money = surplus_money;
-	}
-
-	public BigDecimal getRealityAccount() {
-		return realityAccount;
-	}
-
-	public void setRealityAccount(BigDecimal realityAccount) {
-		this.realityAccount = realityAccount;
 	}
 
 	public Integer getOnceDeferredDay() {
@@ -748,6 +761,5 @@ public class Orderdetails {
 		this.overdueGrade = overdueGrade;
 	}
 	
-	
-	
+
 }
