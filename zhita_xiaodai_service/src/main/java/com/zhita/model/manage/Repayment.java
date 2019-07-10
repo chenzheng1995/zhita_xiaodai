@@ -19,7 +19,7 @@ public class Repayment {
 	
 	private String pipelinenumber;//流水号
 	
-	private String repaymentSource;//还款渠道 (支付方式 微信  支付宝  银行卡)
+	private Integer thirdparty_id;//还款渠道 (支付方式 微信  支付宝  银行卡)
 	
 	private List<Integer> ids;
 	
@@ -33,6 +33,17 @@ public class Repayment {
 	
 	private BigDecimal Collection_money;//逾期还款金额
 	
+	private String operator_time;
+	
+	
+	
+	public String getOperator_time() {
+		return operator_time;
+	}
+
+	public void setOperator_time(String operator_time) {
+		this.operator_time = operator_time;
+	}
 
 	public Integer getId() {
 		return id;
@@ -130,12 +141,12 @@ public class Repayment {
 		this.pipelinenumber = pipelinenumber;
 	}
 
-	public String getRepaymentSource() {
-		return repaymentSource;
+	public Integer getThirdparty_id() {
+		return thirdparty_id;
 	}
 
-	public void setRepaymentSource(String repaymentSource) {
-		this.repaymentSource = repaymentSource;
+	public void setThirdparty_id(Integer thirdparty_id) {
+		this.thirdparty_id = thirdparty_id;
 	}
 	
 	

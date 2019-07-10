@@ -3,7 +3,7 @@ package com.zhita.model.manage;
 import java.math.BigDecimal;
 
 //支付表
-public class PaymentRecord {
+public class Payment_record {
 	
 	private Integer id;
 	
@@ -39,7 +39,7 @@ public class PaymentRecord {
 	
 	private String sourceName;//放宽渠道名称
 	
-	private BigDecimal realityBorrowMoney;//流水号
+	private BigDecimal paymentmoney;//流水号
 	
 	private String orderNumber;//订单编号
 
@@ -163,12 +163,12 @@ public class PaymentRecord {
 		this.sourceName = sourceName;
 	}
 
-	public BigDecimal getRealityBorrowMoney() {
-		return realityBorrowMoney;
+	public BigDecimal getPaymentmoney() {
+		return paymentmoney;
 	}
 
-	public void setRealityBorrowMoney(BigDecimal realityBorrowMoney) {
-		this.realityBorrowMoney = realityBorrowMoney;
+	public void setPaymentmoney(BigDecimal paymentmoney) {
+		this.paymentmoney = paymentmoney;
 	}
 
 	public String getOrderNumber() {

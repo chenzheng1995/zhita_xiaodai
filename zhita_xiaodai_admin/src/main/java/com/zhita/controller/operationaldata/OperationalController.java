@@ -10,7 +10,7 @@ import com.zhita.service.manage.operational.OperationalService;
 
 
 @Controller
-@RequestMapping("Operationa")
+@RequestMapping("operation")
 public class OperationalController {
 	
 	

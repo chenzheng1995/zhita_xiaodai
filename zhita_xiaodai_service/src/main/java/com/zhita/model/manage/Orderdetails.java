@@ -39,8 +39,6 @@ public class Orderdetails {
 	
 	private String registerClient;//注册客户端
 	
-	private String borrowMoneyState;//还款状态（已还和未还）
-	
 	private String name;//姓名
 	
 	private String phone;//手机号
@@ -64,8 +62,6 @@ public class Orderdetails {
     private String grade;//催收等级
     
     private String collectionStatus;//催收状态
-    
-    private Integer collectionMemberId;//催收员ID
     
     private String start_time;//开始时间
     
@@ -141,6 +137,57 @@ public class Orderdetails {
     
     private Integer blaid;//黑名单标识
     
+    private String repaymentnumber;//流水号
+    
+    private String shouldAlsoInterest;
+    
+    private Integer defeNum;//延期次数
+    
+    private String orderStatus;
+    
+    private String overdueGrade;//逾期等级
+    
+    private BigDecimal order_money;//含逾期利息总金
+    
+    private Integer collectionMemberId;
+    
+    private Integer collNum;
+    
+    private BigDecimal defeMoney;
+    
+    
+	public BigDecimal getDefeMoney() {
+		return defeMoney;
+	}
+
+	public void setDefeMoney(BigDecimal defeMoney) {
+		this.defeMoney = defeMoney;
+	}
+
+	public Integer getCollNum() {
+		return collNum;
+	}
+
+	public void setCollNum(Integer collNum) {
+		this.collNum = collNum;
+	}
+
+	public Integer getCollectionMemberId() {
+		return collectionMemberId;
+	}
+
+	public void setCollectionMemberId(Integer collectionMemberId) {
+		this.collectionMemberId = collectionMemberId;
+	}
+
+	public BigDecimal getOrder_money() {
+		return order_money;
+	}
+
+	public void setOrder_money(BigDecimal order_money) {
+		this.order_money = order_money;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -355,14 +402,6 @@ public class Orderdetails {
 
 	public void setCollectionStatus(String collectionStatus) {
 		this.collectionStatus = collectionStatus;
-	}
-
-	public Integer getCollectionMemberId() {
-		return collectionMemberId;
-	}
-
-	public void setCollectionMemberId(Integer collectionMemberId) {
-		this.collectionMemberId = collectionMemberId;
 	}
 
 	public String getStart_time() {
@@ -669,12 +708,44 @@ public class Orderdetails {
 		this.blaid = blaid;
 	}
 
-	public String getBorrowMoneyState() {
-		return borrowMoneyState;
+	public String getRepaymentnumber() {
+		return repaymentnumber;
 	}
 
-	public void setBorrowMoneyState(String borrowMoneyState) {
-		this.borrowMoneyState = borrowMoneyState;
+	public void setRepaymentnumber(String repaymentnumber) {
+		this.repaymentnumber = repaymentnumber;
+	}
+
+	public String getShouldAlsoInterest() {
+		return shouldAlsoInterest;
+	}
+
+	public void setShouldAlsoInterest(String shouldAlsoInterest) {
+		this.shouldAlsoInterest = shouldAlsoInterest;
+	}
+
+	public Integer getDefeNum() {
+		return defeNum;
+	}
+
+	public void setDefeNum(Integer defeNum) {
+		this.defeNum = defeNum;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public String getOverdueGrade() {
+		return overdueGrade;
+	}
+
+	public void setOverdueGrade(String overdueGrade) {
+		this.overdueGrade = overdueGrade;
 	}
 	
 	

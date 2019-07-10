@@ -74,7 +74,7 @@ public class PostloanordersController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("CollectionOrders")
+	@RequestMapping("CollectionOrderSum")
 	public Map<String, Object> CollectionOrders(Orderdetails detils){
 		return postloanor.CollecOrders(detils);
 	}

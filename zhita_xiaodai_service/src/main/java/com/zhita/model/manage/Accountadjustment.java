@@ -29,6 +29,26 @@ public class Accountadjustment {
 	
 	private String statu;
 	
+	private String idcardFaceAuthentication;
+	
+	private Integer thirdparty_id;
+	
+
+	public Integer getThirdparty_id() {
+		return thirdparty_id;
+	}
+
+	public void setThirdparty_id(Integer thirdparty_id) {
+		this.thirdparty_id = thirdparty_id;
+	}
+
+	public String getIdcardFaceAuthentication() {
+		return idcardFaceAuthentication;
+	}
+
+	public void setIdcardFaceAuthentication(String idcardFaceAuthentication) {
+		this.idcardFaceAuthentication = idcardFaceAuthentication;
+	}
 
 	public Integer getId() {
 		return id;

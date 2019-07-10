@@ -43,7 +43,6 @@ public class Orders {
 	
 	private String overdueGrade;//逾期等级
 	
-	
 	private Integer adoptcount;//放款通过数
 	
 	private Integer Loancount;//实际借款数
@@ -75,6 +74,18 @@ public class Orders {
 	private BigDecimal Actualrevenue;//实际营收
 	
 	private Integer daysofrepayment;//还款天数
+	
+	private String operator_time;
+	
+	
+
+	public String getOperator_time() {
+		return operator_time;
+	}
+
+	public void setOperator_time(String operator_time) {
+		this.operator_time = operator_time;
+	}
 
 	public Integer getId() {
 		return id;

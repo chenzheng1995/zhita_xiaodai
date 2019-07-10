@@ -9,6 +9,8 @@ public class Collection {
 	
 	private Integer collectionId;//催收Id
 	
+	private String orderNumber;
+	
 	private Integer collectionMemberId;//催收员ID
 	
 	private Integer orderId;//订单ID
@@ -61,12 +63,73 @@ public class Collection {
 	
 	private Integer PaymentmadeData;//当天还款率
 	
+	private Integer CollCuiNum;//催收次数
+	
 	private Integer CollSum;//分配数
 	
 	private Integer Chenggnum;//承诺还款
 	
 	private Integer collNumdata;//催回率
 	
+	private String realtime;
+	
+	private String collection_time;
+	
+	private String orderCreateTime;
+	
+	private String describe;
+	
+	private String collectiondate;
+	
+	
+	public String getCollectiondate() {
+		return collectiondate;
+	}
+
+	public void setCollectiondate(String collectiondate) {
+		this.collectiondate = collectiondate;
+	}
+
+	public String getDescribe() {
+		return describe;
+	}
+
+	public void setDescribe(String describe) {
+		this.describe = describe;
+	}
+
+	public String getOrderCreateTime() {
+		return orderCreateTime;
+	}
+
+	public void setOrderCreateTime(String orderCreateTime) {
+		this.orderCreateTime = orderCreateTime;
+	}
+
+	public String getCollection_time() {
+		return collection_time;
+	}
+
+	public void setCollection_time(String collection_time) {
+		this.collection_time = collection_time;
+	}
+
+	public String getRealtime() {
+		return realtime;
+	}
+
+	public void setRealtime(String realtime) {
+		this.realtime = realtime;
+	}
+
+	public Integer getCollCuiNum() {
+		return CollCuiNum;
+	}
+
+	public void setCollCuiNum(Integer collCuiNum) {
+		CollCuiNum = collCuiNum;
+	}
+
 	public Integer getCollectionId() {
 		return collectionId;
 	}
@@ -305,6 +368,14 @@ public class Collection {
 
 	public void setCollNumdata(Integer collNumdata) {
 		this.collNumdata = collNumdata;
+	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 
 
