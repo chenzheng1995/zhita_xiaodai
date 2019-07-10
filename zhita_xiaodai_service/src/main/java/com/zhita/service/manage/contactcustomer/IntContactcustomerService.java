@@ -22,6 +22,6 @@ public interface IntContactcustomerService {
     public ContactCustomerService selectByPrimaryKey(Integer id);
     
     //后台管理---修改功能
-    public Map<String, Object> updateByPrimaryKey(ContactCustomerService record,MultipartFile file,MultipartFile file1)throws Exception;
+    public int updateByPrimaryKey(ContactCustomerService record);
     
 }

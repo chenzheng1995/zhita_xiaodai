@@ -106,4 +106,7 @@ public interface PostloanorderMapper {
 	
 	
 	List<Orderdetails> HuaiZhangOrders(Orderdetails order);
+	
+	
+	Integer OrderDefeNum(Orderdetails order);
 }

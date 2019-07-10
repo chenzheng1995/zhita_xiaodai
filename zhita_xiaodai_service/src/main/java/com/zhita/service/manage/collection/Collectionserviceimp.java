@@ -15,6 +15,7 @@ import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collection_member;
 import com.zhita.model.manage.Collectiondetails;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.util.PageUtil;
 
@@ -34,16 +35,32 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> allBeoverdueConnection(Collection coll) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		coll.setRealtime(sim.format(new Date()));
 		List<Integer> collIds = collmapp.SelectCollectionId(coll.getCompanyId());//根据公司ID 查询催收员ID
 		if(collIds.size() != 0){
-			coll.setIds(collmapp.OrderId(collIds)); 
+			coll.setIds(collmapp.OrderIdMa(collIds)); 
 			Integer totalCount = collmapp.SelectTotalCount(coll);
 			PageUtil pages = new PageUtil(coll.getPage(), totalCount);
 			coll.setPage(pages.getPage());
 			pages.setTotalCount(totalCount);
 			List<Orderdetails> orders = collmapp.Allorderdetails(coll);
+			for(int i=0;i<orders.size();i++){
+				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+				Deferred des = collmapp.DefeSet(orders.get(i));
+				Collection colla = collmapp.CollMen(orders.get(i));
+				if(des != null && colla != null){
+					orders.get(i).setDeferBeforeReturntime(des.getDeferBeforeReturntime());
+					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
+					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
+					orders.get(i).setDeferAfterReturntime(des.getDeferAfterReturntime());
+					orders.get(i).setReallyName(colla.getReallyName());
+					orders.get(i).setCollectionTime(colla.getCollectionTime());
+					orders.get(i).setCollectionStatus(colla.getCollectionStatus());
+				}
+				
+			}
 			map.put("Orderdetails", orders);
-			map.put("pageutil", pages);
 			return map;
 		}
 		map.put("Orderdetails", 0);
@@ -98,13 +115,22 @@ public class Collectionserviceimp implements Collectionservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(order.getCompanyId() != null){
 			List<Integer> collIds = collmapp.SelectCollectionId(order.getCompanyId());//根据公司ID 查询催收员ID
-			List<Integer> ids = collmapp.OrderId(collIds);
+			List<Integer> ids = collmapp.OrderIdMa(collIds);
 			PageUtil pages = new PageUtil(order.getPage(), ids.size());
 			order.setPage(pages.getPage());
 			pages.setTotalCount(ids.size());
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
+			for(int i=0;i<orders.size();i++){
+				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+				Deferred des = collmapp.DefeSet(orders.get(i));
+				if(des != null ){
+					orders.get(i).setDeferBeforeReturntime(des.getDeferBeforeReturntime());
+					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
+					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
+					orders.get(i).setDeferAfterReturntime(des.getDeferAfterReturntime());
+				}
+			}
 			map.put("Orderdetails", orders);
-			map.put("pageutil", pages);
 		}else{
 			map.put("Orderdetails", "0");
 			map.put("pageutil", "数据异常");
@@ -145,18 +171,20 @@ public class Collectionserviceimp implements Collectionservice{
 			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
 			colles.get(i).setCollSum(collmapp.SelectCollectionNum(colles.get(i)));
 			colles.get(i).setCollectionStatus("承诺还款");
-			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计成功
-			colles.get(i).setCollectionStatus("承诺还清一部分");
-			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//承诺还款
+			colles.get(i).setSameday(collmapp.SelectcollectionStatus(colles.get(i)));//承诺还款
 			colles.get(i).setCollectionStatus("电话无人接听");
-			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//未还清
+			colles.get(i).setPaymentmade(collmapp.SelectcollectionStatus(colles.get(i)));//未还清
 			colles.get(i).setCollectionStatus("态度恶劣");
 			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计坏账数
-			colles.get(i).setCollNumdata(colles.get(i).getOrderNum()/colles.get(i).getConnected());
+			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
+				colles.get(i).setCollNumdata((colles.get(i).getOrderNum()/colles.get(i).getConnected()));
+			}else{
+				colles.get(i).setCollNumdata(100);
+			}
+			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", colles);
-		map.put("Pageutil", pages);
 		return map;
 	}
 
@@ -180,8 +208,10 @@ public class Collectionserviceimp implements Collectionservice{
 			PageUtil pages = new PageUtil(col.getPage(), totalCount);
 			col.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
+			for(int i=0;i<orders.size();i++){
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()));
+			}
 			map.put("Orderdetails", orders);
-			map.put("Pageutil", pages);
 		}else{
 			map.put("Orderdetails", "0");
 			map.put("Pageutil", "数据异常");
@@ -204,16 +234,22 @@ public class Collectionserviceimp implements Collectionservice{
 				coldetids.add(CollectionMemberIds.get(i));//查询已催收ID
 			}
 		}
-		col.setIds(coldetids);
+		if(coldetids.size() != 0){
+			col.setIds(coldetids);
+		}else{
+			coldetids.add(0);
+			col.setIds(coldetids);
+		}
+		
 		Integer totalCount = collmapp.CollectionWeiTotalcount(col);
 		PageUtil pages = new PageUtil(col.getPage(), totalCount);
 		col.setPage(pages.getPage());
 		List<Orderdetails> orders = collmapp.WeiControllerOrdetialis(col);
 		for(int i=0;i<orders.size();i++){
 			orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
+			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
 		}
 		map.put("Orderdetails", orders);
-		map.put("PageUtil", pages);
 		}else{
 			map.put("Orderdetails", "0");
 			map.put("Pageutil", "数据异常");
@@ -276,15 +312,19 @@ public class Collectionserviceimp implements Collectionservice{
 			colles.get(i).setCollectionStatus("承诺还款");
 			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计成功
 			colles.get(i).setCollectionStatus("承诺还清一部分");
-			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//承诺还款
+			colles.get(i).setSameday(collmapp.SelectUsercollectionStatus(colles.get(i)));//承诺还款
 			colles.get(i).setCollectionStatus("电话无人接听");
-			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//未还清
+			colles.get(i).setPaymentmade(collmapp.SelectUsercollectionStatus(colles.get(i)));//未还清
 			colles.get(i).setCollectionStatus("态度恶劣");
 			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计坏账数
-			colles.get(i).setCollNumdata(colles.get(i).getOrderNum()/colles.get(i).getConnected());
+			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
+				colles.get(i).setCollNumdata((colles.get(i).getOrderNum()/colles.get(i).getConnected()));
+			}else{
+				colles.get(i).setCollNumdata(100);
+			}
+			
 		}
 		map.put("Collections", colles);
-		map.put("PageUtil", pages);
 		return map;
 	}
 	

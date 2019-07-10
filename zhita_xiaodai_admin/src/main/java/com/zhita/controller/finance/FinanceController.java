@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Accountadjustment;
+import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.Orderdetails;
-import com.zhita.model.manage.PaymentRecord;
+import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Undertheline;
 import com.zhita.service.manage.finance.FinanceService;
 
@@ -33,7 +34,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("Allpayment_record")
-	public Map<String, Object> Allpayment(PaymentRecord payrecord){
+	public Map<String, Object> Allpayment(Payment_record payrecord){
 		return fianser.AllPaymentrecord(payrecord);
 	}
 	
@@ -48,8 +49,8 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("PaymentOrder")
-	public Map<String, Object> OrderPayment(Integer orderId){
-		return fianser.OrderPayment(orderId);
+	public Map<String, Object> OrderPayment(Orderdetails orderNumber){
+		return fianser.OrderPayment(orderNumber);
 	}
 	
 	
@@ -62,7 +63,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("HuanKuan")
-	public Map<String, Object> HuanKuan(PaymentRecord payrecord){
+	public Map<String, Object> HuanKuan(Payment_record payrecord){
 		return fianser.Huankuan(payrecord);
 	}
 	
@@ -107,7 +108,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("OrderAcount")
-	public Map<String, Object> OrderAccount(String orderNumber){
+	public Map<String, Object> OrderAccount(Orderdetails orderNumber){
 		return fianser.OrderAccount(orderNumber);
 	}
 	
@@ -193,6 +194,49 @@ public class FinanceController {
 	}
 	
 	
+	
+	
+	
+	
+	/**
+	 * 查询一键扣款银行
+	 * @param bank
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("BankDeduction")
+	public Map<String, Object> BankDeduction(Bankdeduction bank){
+		return fianser.SelectBankDeductOrders(bank);
+	}
+	
+	
+	
+	
+	/**
+	 * 查询扣款详情
+	 * @param bank
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AllBank")
+	public Map<String, Object> AllBank(Integer orderId){
+		return fianser.AllBank(orderId);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 添加
+	 * @param bank
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AddBank")
+	public Map<String, Object> AddBank(Bankdeduction orderId){
+		return fianser.AddBank(orderId);
+	}
 	
 	
 	

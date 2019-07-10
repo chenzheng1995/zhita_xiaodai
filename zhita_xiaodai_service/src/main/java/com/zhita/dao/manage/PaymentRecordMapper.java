@@ -3,9 +3,9 @@ package com.zhita.dao.manage;
 import java.util.List;
 
 import com.zhita.model.manage.Accountadjustment;
+import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.Orderdetails;
-import com.zhita.model.manage.PaymentRecord;
-import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.model.manage.Undertheline;
 
@@ -16,33 +16,33 @@ public interface PaymentRecordMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(PaymentRecord record);
+    int insert(Payment_record record);
 
-    int insertSelective(PaymentRecord record);
+    int insertSelective(Payment_record record);
 
-    PaymentRecord selectByPrimaryKey(Integer id);
+    Payment_record selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(PaymentRecord record);
+    int updateByPrimaryKeySelective(Payment_record record);
 
-    int updateByPrimaryKey(PaymentRecord record);
+    int updateByPrimaryKey(Payment_record record);
     
     
-    Integer TotalCountPayment(PaymentRecord record);
+    Integer TotalCountPayment(Payment_record record);
     
     
-    List<PaymentRecord> PaymentAll(PaymentRecord record);
+    List<Payment_record> PaymentAll(Payment_record record);
     
     
-    Integer RepaymentTotalCount(PaymentRecord record);
+    Integer RepaymentTotalCount(Payment_record record);
     
     
-    List<Repayment> RepaymentAll(PaymentRecord record);
+    List<Payment_record> RepaymentAll(Payment_record record);
     
     
-    Orderdetails SelectPaymentOrder(Integer orderId);
+    Orderdetails SelectPaymentOrder(Orderdetails orderNumber);
     
     
-    Orderdetails OrdeRepayment(String orderNumber);
+    Orderdetails OrdeRepayment(Orderdetails orderNumber);
     
     
     Integer AddCAccount(Accountadjustment acount);
@@ -65,4 +65,18 @@ public interface PaymentRecordMapper {
     
     Integer AddUndertheline(Undertheline unde);
     
+    
+    Integer SelectUnderthTotalCount(Orderdetails order);
+
+    
+    List<Undertheline> AllUnderthe(Orderdetails order);
+    
+    
+    Integer BankDeduOrderNum(Bankdeduction bank);
+    
+    
+    List<Orderdetails> BankDeduOrder(Bankdeduction bank);
+    
+    
+    List<Bankdeduction> BanAll(Integer orderId);
 }

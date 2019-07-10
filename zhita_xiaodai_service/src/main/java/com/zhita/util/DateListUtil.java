@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.TongjiSorce;
 
 public class DateListUtil {
@@ -112,6 +113,30 @@ public class DateListUtil {
                 try {
                     Date dt1 = format.parse(o1.getDate());
                     Date dt2 = format.parse(o2.getDate());
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+    
+    //将集合按照集合里对象的日期属性进行倒排序
+    public static void ListSort2(List<Orders> list) {
+        Collections.sort(list, new Comparator<Orders>() {
+            @Override
+            public int compare(Orders o1, Orders o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    Date dt1 = format.parse(o1.getOrderCreateTime());
+                    Date dt2 = format.parse(o2.getOrderCreateTime());
                     if (dt1.getTime() < dt2.getTime()) {
                         return 1;
                     } else if (dt1.getTime() > dt2.getTime()) {

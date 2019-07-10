@@ -160,7 +160,7 @@
 			defer.onceDeferredDay,defer.onceDeferredMoney,o.realtime,o.borrowMoneyWay,o.borrowTimeLimit
 			 from orderdetails orde,user u,orders o,deferred d,deferred_settings defer
 			<where>
-			    AND o.shouldReturnTime &lt; #{shouldReturnTime}
+			    AND o.shouldReturnTime &gt; #{shouldReturnTime}
 				AND o.userId = u.id 
 				AND orde.orderId = o.id
 				AND o.companyId = #{companyId}
@@ -171,7 +171,7 @@
 				#{id}
 			</foreach>
 			</where>
-			order by o.id desc
+			group by o.id
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -221,7 +221,7 @@
 				AND col.collectionMemberId = #{collectionMemberId}
 			</if>
 			</where>
-			order by o.id desc
+			group by o.id 
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -238,14 +238,15 @@
 		
 		
 		<select id="CollDateNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select DATE_FORMAT(orderCreateTime,'%Y-%m-%d') as collectionTime,count(orderCreateTime) as collection_count from orders 
+			select DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.overdue_id) as collection_count from overdue ov,collection_member c
 			<where>
-				AND  shouldReturnTime &gt; #{shouldReturnTime}
+				AND c.collectionMemberId = ov.collectionMemberId
+				AND c.companyId = #{companyId}
 				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
-					AND collectionTime between #{statu_time} and#{end_time}
+					AND collectiondate between #{statu_time} and#{end_time}
 				</if>
 			</where>
-			GROUP BY DATE_FORMAT(orderCreateTime,'%Y-%m-%d')
+			GROUP BY DATE_FORMAT(collectiondate,'%Y-%m-%d')
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -256,6 +257,7 @@
 			select colme.collectionMemberId,colme.reallyName,DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.collectiondate) as collection_count 
 			from overdue ov,collection_member colme
 			<where>
+				AND colme.companyId = #{companyId}
 				AND ov.collectionMemberId = colme.collectionMemberId 
 				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 					AND collectionTime between #{statu_time} and#{end_time}
@@ -280,9 +282,9 @@
 		
 		
 		<select id="MyOrderdue" resultType="com.zhita.model.manage.Orderdetails" parameterType="com.zhita.model.manage.Orderdetails">
-			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
+			select o.id,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
 			defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,deset.onceDeferredDay,defe.deferAfterReturntime,colme.reallyName,
-			col.collectionTime,col.collectionStatus,o.borrowMoneyState,ovd.overdue_id
+			col.collectionTime,col.collectionStatus,o.orderStatus,ovd.overdue_id
 			from orders o,orderdetails ord,collection col,collection_member colme,deferred defe,deferred_settings deset,user u,overdue ovd
 			<where>
 				AND o.id = ord.orderId
@@ -294,6 +296,7 @@
 				AND o.companyId = #{companyId}
 				AND col.collectionMemberId = #{collectionMemberId}
 			</where>
+			GROUP BY o.id
 				limit #{page},#{pagesize}
 		</select>
 		
@@ -325,6 +328,7 @@
 			select Count(*) from overdue 
 			<where>
 				AND overdue_phonestaus = #{overdue_phonestaus}
+				AND collectiondate = #{collectionTime}
 				AND collectionMemberId in
 				<foreach collection="ids" item="id" open="(" separator="," close=")">
 					#{id}
@@ -362,6 +366,7 @@
 		<select id="StatusOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select count(*) from overdue where collectiondate = #{collectiondate}
 			and statu = #{statu}
+			AND collectiondate = #{collectionTime}
 			AND collectionMemberId in
 				<foreach collection="ids" item="id" open="(" separator="," close=")">
 					#{id}
@@ -371,9 +376,9 @@
 		
 		
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.daysofrepayment,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
+			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
 			defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,deset.onceDeferredDay,defe.deferAfterReturntime,colme.reallyName,
-			col.collectionTime,col.collectionStatus,o.borrowMoneyState
+			col.collectionTime,col.collectionStatus,o.orderStatus,o.borrowTimeLimit
 			from orders o,orderdetails ord,collection col,collection_member colme,deferred defe,deferred_settings deset,user u
 			<where>
 				AND o.id = ord.orderId
@@ -396,6 +401,8 @@
 					AND col.collectionMemberId = #{collectionMemberId}
 				</if>
 			</where>
+			group by o.id
+			limit #{page},#{pagesize}
 		</select>
 		
 		
@@ -434,7 +441,7 @@
 			select count(ov.overdue_id) from overdue ov,orders o
 			<where>
 				AND ov.orderId = o.id
-				AND o.borrowMoneyState = #{borrowMoneyState}
+				AND o.orderStatus != #{orderStatus}
 				AND ov.collectiondate = #{collectiondate}
 				AND ov.collectionMemberId = #{collectionMemberId}
 			</where>
@@ -447,10 +454,13 @@
 			select count(o.id) from orders o,user u
 			<where>
 			 AND u.id = o.userId
-			 AND borrowMoneyState = #{borrowMoneyState} 
-			 AND companyId = #{companyId}
+			 AND o.orderStatus = #{orderStatus} 
+			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
+			 </if>
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
 			 </if>
 			 <if test="phone != null and phone != ''">
 			 	AND u.phone = #{phone}
@@ -458,8 +468,8 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="borrowMoneyState != null and borrowMoneyState != ''">
-			 	AND o.borrowMoneyState = #{borrowMoneyState}
+			 <if test="orderStatus != null and orderStatus != ''">
+			 	AND o.orderStatus = #{orderStatus}
 			 </if>
 			 <if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{statu_time} and#{end_time}
@@ -470,16 +480,18 @@
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
-			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,o.canDeferNumberoftime,defe.interestOnArrears,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.surplus_money
-			 from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset
+			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,
+			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.surplus_money,defe.interestOnArrears,colme.reallyName
+			 from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme,collection c
 			<where>
 			 AND u.id = o.userId
 			 AND o.id = ord.orderId
 			 AND o.id = defe.orderid
+			 AND o.id = c.orderId
+			 AND colme.collectionMemberId = c.collectionMemberId
 			 AND o.companyId = deset.companyId
-			 AND borrowMoneyState = #{borrowMoneyState} 
-			 AND companyId = #{companyId}
+			 AND o.orderStatus = #{orderStatus} 
+			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -489,8 +501,8 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="borrowMoneyState != null and borrowMoneyState != ''">
-			 	AND o.borrowMoneyState = #{borrowMoneyState}
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
 			 </if>
 			 <if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{statu_time} and#{end_time}
@@ -506,9 +518,8 @@
 			select count(o.id) from orders o,user u
 			<where>
 			 AND u.id = o.userId
-			 AND o.shouldReturnTime &gt; #{shouldReturnTime}
-			 AND borrowMoneyState = #{borrowMoneyState} 
-			 AND companyId = #{companyId}
+			 AND o.orderStatus = "1" 
+			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -518,31 +529,35 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="borrowMoneyState != null and borrowMoneyState != ''">
-			 	AND o.borrowMoneyState = #{borrowMoneyState}
+			 <if test="orderStatus != null and orderStatus != ''">
+			 	AND o.orderStatus = #{orderStatus}
 			 </if>
 			 <if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{statu_time} and#{end_time}
 			</if>
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
+			 </if>
 			</where>
 		</select>
 		
 		
 		
 		
-		<select id="CollecOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+		<select id="CollecOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,ord.realityBorrowMoney,ord.makeLoans,
 			defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,o.canDeferNumberoftime,defe.interestOnArrears,o.overdueGrade,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.realityBorrowMoney 
-			from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.realityBorrowMoney,c.collectionStatus,o.realtime,colme.reallyName,ord.overdueNumberOfDays,o.orderCreateTime
+			from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme,collection c
 			<where>
 			 AND u.id = o.userId
 			 AND o.id = ord.orderId
 			 AND o.id = defe.orderid
+			  AND o.id = c.orderId
+			 AND colme.collectionMemberId = c.collectionMemberId
 			 AND o.companyId = deset.companyId
-			 AND o.shouldReturnTime &gt; #{shouldReturnTime}
-			 AND borrowMoneyState = #{borrowMoneyState} 
-			 AND companyId = #{companyId}
+			 AND o.orderStatus = "1" 
+			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -552,12 +567,15 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="borrowMoneyState != null and borrowMoneyState != ''">
-			 	AND o.borrowMoneyState = #{borrowMoneyState}
+			 <if test="orderStatus != null and orderStatus != ''">
+			 	AND o.orderStatus = #{orderStatus}
 			 </if>
 			 <if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{statu_time} and#{end_time}
 			</if>
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
+			 </if>
 			</where>
 			limit #{page},#{pagesize}
 		</select>
@@ -572,7 +590,7 @@
 		<select id="HuaiZhangOrdersTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select count(c.collectionId) from orders o,collection c,user u,blacklist_user bl,whitelist_user wh
 			<where>
-				 AND wh.userId = u.id
+				 AND wh.phone = u.phone
 				 AND u.id = o.userId
 				 AND c.orderId = o.id
 				 AND o.companyId = #{companyId}
@@ -586,8 +604,8 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="borrowMoneyState != null and borrowMoneyState != ''">
-			 	AND o.borrowMoneyState = #{borrowMoneyState}
+			 <if test="orderStatus != null and orderStatus != ''">
+			 	AND o.orderStatus = #{orderStatus}
 			 </if>
 			 <if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{statu_time} and#{end_time}
@@ -596,22 +614,22 @@
 				AND ord.overdueGrade = #{overdueGrade}
 			</if>
 			</where>
-			limit #{page},#{pagesize}
 		</select>
 		
 		
 		
 		<select id="HuaiZhangOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
-			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,o.canDeferNumberoftime,
-			o.overdueGrade,ord.overdueNumberOfDays,ord.interestPenaltySum,wh.id as whid,bl.id as blaid
-			 from orders o,collection c,user u,blacklist_user bl,whitelist_user wh,orderdetails ord,deferred defe,deferred_settings deset
+			select o.id,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,
+			o.orderCreateTime,ord.realityBorrowMoney, ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,
+			defe.deferAfterReturntime,defe.interestOnArrears, o.overdueGrade,ord.overdueNumberOfDays,c.collectionStatus,o.realtime,colme.reallyName
+			 from orders o,collection c,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme
 			<where>
-				 AND wh.userId = u.id
+				AND c.orderId = o.id
+				AND c.collectionMemberId = colme.collectionMemberId
+				AND c.collectionStatus = "态度恶劣"
 				 AND u.id = o.userId
 				 AND c.orderId = o.id
 				 AND o.companyId = #{companyId}
-				 AND bl.userId = u.id
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -621,8 +639,8 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="borrowMoneyState != null and borrowMoneyState != ''">
-			 	AND o.borrowMoneyState = #{borrowMoneyState}
+			 <if test="orderStatus != null and orderStatus != ''">
+			 	AND o.orderStatus = #{orderStatus}
 			 </if>
 			 <if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{statu_time} and#{end_time}
@@ -631,6 +649,14 @@
 				AND ord.overdueGrade = #{overdueGrade}
 			</if>
 			</where>
+			group by o.id
 			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		
+		<select id="OrderDefeNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(id) from deferred where orderid = #{orderId}
 		</select>
 </mapper>

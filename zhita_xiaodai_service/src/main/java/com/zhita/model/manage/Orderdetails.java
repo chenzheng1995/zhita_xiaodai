@@ -3,6 +3,8 @@ package com.zhita.model.manage;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.swing.tree.VariableHeightLayoutCache;
+
 
 //订单明细表
 public class Orderdetails {
@@ -15,13 +17,13 @@ public class Orderdetails {
 	
 	private BigDecimal makeLoans;//放款金额(元)
 	
-	private BigDecimal interestDay;//期内日均利息（0.06%）
+	private String interestDay;//期内日均利息（0.06%）
 	
 	private BigDecimal interestSum;//期内总利息（元）
 	
 	private String overdueNumberOfDays;//逾期天数
 	
-	private BigDecimal interestPenaltyDay;//日均罚息（0.1%）
+	private String interestPenaltyDay;//日均罚息（0.1%）
 	
 	private BigDecimal interestPenaltySum;//逾期总罚息（元）
 	
@@ -38,6 +40,7 @@ public class Orderdetails {
 	private String DrainageOfPlatform;//引流平台
 	
 	private String registerClient;//注册客户端
+	
 	
 	private String borrowMoneyState;//还款状态（已还和未还）
 	
@@ -64,8 +67,6 @@ public class Orderdetails {
     private String grade;//催收等级
     
     private String collectionStatus;//催收状态
-    
-    private Integer collectionMemberId;//催收员ID
     
     private String start_time;//开始时间
     
@@ -141,6 +142,57 @@ public class Orderdetails {
     
     private Integer blaid;//黑名单标识
     
+    private String repaymentnumber;//流水号
+    
+    private String shouldAlsoInterest;
+    
+    private Integer defeNum;//延期次数
+    
+    private String orderStatus;
+    
+    private String overdueGrade;//逾期等级
+    
+    private BigDecimal order_money;//含逾期利息总金
+    
+    private Integer collectionMemberId;
+    
+    private Integer collNum;
+    
+    private BigDecimal defeMoney;
+    
+    
+	public BigDecimal getDefeMoney() {
+		return defeMoney;
+	}
+
+	public void setDefeMoney(BigDecimal defeMoney) {
+		this.defeMoney = defeMoney;
+	}
+
+	public Integer getCollNum() {
+		return collNum;
+	}
+
+	public void setCollNum(Integer collNum) {
+		this.collNum = collNum;
+	}
+
+	public Integer getCollectionMemberId() {
+		return collectionMemberId;
+	}
+
+	public void setCollectionMemberId(Integer collectionMemberId) {
+		this.collectionMemberId = collectionMemberId;
+	}
+
+	public BigDecimal getOrder_money() {
+		return order_money;
+	}
+
+	public void setOrder_money(BigDecimal order_money) {
+		this.order_money = order_money;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -173,11 +225,11 @@ public class Orderdetails {
 		this.makeLoans = makeLoans;
 	}
 
-	public BigDecimal getInterestDay() {
+	public String getInterestDay() {
 		return interestDay;
 	}
 
-	public void setInterestDay(BigDecimal interestDay) {
+	public void setInterestDay(String interestDay) {
 		this.interestDay = interestDay;
 	}
 
@@ -197,11 +249,11 @@ public class Orderdetails {
 		this.overdueNumberOfDays = overdueNumberOfDays;
 	}
 
-	public BigDecimal getInterestPenaltyDay() {
+	public String getInterestPenaltyDay() {
 		return interestPenaltyDay;
 	}
 
-	public void setInterestPenaltyDay(BigDecimal interestPenaltyDay) {
+	public void setInterestPenaltyDay(String interestPenaltyDay) {
 		this.interestPenaltyDay = interestPenaltyDay;
 	}
 
@@ -237,6 +289,14 @@ public class Orderdetails {
 		this.technicalServiceMoney = technicalServiceMoney;
 	}
 
+	public BigDecimal getRealityAccount() {
+		return realityAccount;
+	}
+
+	public void setRealityAccount(BigDecimal realityAccount) {
+		this.realityAccount = realityAccount;
+	}
+
 	public String getRejectMonadCause() {
 		return rejectMonadCause;
 	}
@@ -259,6 +319,14 @@ public class Orderdetails {
 
 	public void setRegisterClient(String registerClient) {
 		this.registerClient = registerClient;
+	}
+
+	public String getBorrowMoneyState() {
+		return borrowMoneyState;
+	}
+
+	public void setBorrowMoneyState(String borrowMoneyState) {
+		this.borrowMoneyState = borrowMoneyState;
 	}
 
 	public String getName() {
@@ -355,14 +423,6 @@ public class Orderdetails {
 
 	public void setCollectionStatus(String collectionStatus) {
 		this.collectionStatus = collectionStatus;
-	}
-
-	public Integer getCollectionMemberId() {
-		return collectionMemberId;
-	}
-
-	public void setCollectionMemberId(Integer collectionMemberId) {
-		this.collectionMemberId = collectionMemberId;
 	}
 
 	public String getStart_time() {
@@ -469,12 +529,28 @@ public class Orderdetails {
 		this.shouldReturnTime = shouldReturnTime;
 	}
 
+	public String getPipelinenumber() {
+		return pipelinenumber;
+	}
+
+	public void setPipelinenumber(String pipelinenumber) {
+		this.pipelinenumber = pipelinenumber;
+	}
+
 	public List<Integer> getIds() {
 		return ids;
 	}
 
 	public void setIds(List<Integer> ids) {
 		this.ids = ids;
+	}
+
+	public String getCollectiondate() {
+		return collectiondate;
+	}
+
+	public void setCollectiondate(String collectiondate) {
+		this.collectiondate = collectiondate;
 	}
 
 	public Integer getOverdue_id() {
@@ -549,14 +625,6 @@ public class Orderdetails {
 		CollectionSuccessdata = collectionSuccessdata;
 	}
 
-	public String getPipelinenumber() {
-		return pipelinenumber;
-	}
-
-	public void setPipelinenumber(String pipelinenumber) {
-		this.pipelinenumber = pipelinenumber;
-	}
-
 	public String getAccounttime() {
 		return accounttime;
 	}
@@ -581,28 +649,12 @@ public class Orderdetails {
 		this.statu = statu;
 	}
 
-	public String getCollectiondate() {
-		return collectiondate;
-	}
-
-	public void setCollectiondate(String collectiondate) {
-		this.collectiondate = collectiondate;
-	}
-	
 	public BigDecimal getSurplus_money() {
 		return surplus_money;
 	}
 
 	public void setSurplus_money(BigDecimal surplus_money) {
 		this.surplus_money = surplus_money;
-	}
-
-	public BigDecimal getRealityAccount() {
-		return realityAccount;
-	}
-
-	public void setRealityAccount(BigDecimal realityAccount) {
-		this.realityAccount = realityAccount;
 	}
 
 	public Integer getOnceDeferredDay() {
@@ -669,14 +721,45 @@ public class Orderdetails {
 		this.blaid = blaid;
 	}
 
-	public String getBorrowMoneyState() {
-		return borrowMoneyState;
+	public String getRepaymentnumber() {
+		return repaymentnumber;
 	}
 
-	public void setBorrowMoneyState(String borrowMoneyState) {
-		this.borrowMoneyState = borrowMoneyState;
+	public void setRepaymentnumber(String repaymentnumber) {
+		this.repaymentnumber = repaymentnumber;
+	}
+
+	public String getShouldAlsoInterest() {
+		return shouldAlsoInterest;
+	}
+
+	public void setShouldAlsoInterest(String shouldAlsoInterest) {
+		this.shouldAlsoInterest = shouldAlsoInterest;
+	}
+
+	public Integer getDefeNum() {
+		return defeNum;
+	}
+
+	public void setDefeNum(Integer defeNum) {
+		this.defeNum = defeNum;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public String getOverdueGrade() {
+		return overdueGrade;
+	}
+
+	public void setOverdueGrade(String overdueGrade) {
+		this.overdueGrade = overdueGrade;
 	}
 	
-	
-	
+
 }

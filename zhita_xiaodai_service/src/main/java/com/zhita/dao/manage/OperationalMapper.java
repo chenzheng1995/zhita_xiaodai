@@ -62,7 +62,8 @@ public interface OperationalMapper {
 	
 	Integer SelecNumberCollection(Orderdetails ord);
 	
-
+	
+	Orderdetails SelectOperNum(Orderdetails orde);
 	
 	
 	List<Orders> SelectOrderBudeNum(Orderdetails ord);

@@ -27,4 +27,7 @@ public interface DeferredSettingsMapper {
     //后台管理---查询借款信息表的产品id和产品名称
     List<BorrowMoneyMessage> queryAllBorrow(Integer companyId);
     
+    //后台管理---根据id查询信息（借款期限   平台服务费比率）
+    BorrowMoneyMessage queryBorrow(Integer productid);
+    
 }

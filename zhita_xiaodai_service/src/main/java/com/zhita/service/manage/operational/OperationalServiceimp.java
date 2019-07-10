@@ -36,6 +36,8 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> PlatformsNu(Orderdetails ordera) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		List<Integer> ids = coldao.SelectCollectionId(ordera.getCompanyId());
+		ordera.setIds(ids);//查询催收员  参数 公司ID
 		List<Orders> ors = operdao.OrderNum(ordera);
 		Integer totalCount = null;
 		if(ors.size()!=0){
@@ -47,12 +49,19 @@ public class OperationalServiceimp implements OperationalService{
 		ordera.setPage(pages.getPage());
 		List<Orders> ordes = operdao.Ordersdata(ordera);
 		for(int i=0;i<ordes.size();i++){
+			ordera.setOrderCreateTime(ordes.get(i).getOperator_time());
 			ordera.setRiskManagemenType("成功");
 			ordes.get(i).setAdoptcount(operdao.datastatistics(ordera));//放款通过数
 			ordera.setRiskManagemenType("通过已借款");
 			ordes.get(i).setLoancount(operdao.datastatistics(ordera));//实际借款数
-			ordes.get(i).setPassrate(ordes.get(i).getAdoptcount()/ordes.get(i).getLoancount());//放款通过率
-			ordes.get(i).setBeoverdue(operdao.Datacollection(ordera));//逾期笔数
+			if(ordes.get(i).getLoancount() != 0 && ordes.get(i).getLoancount() != null){
+				ordes.get(i).setPassrate(ordes.get(i).getAdoptcount()/ordes.get(i).getLoancount());//放款通过率
+			}else{
+				ordes.get(i).setPassrate(100);//放款通过率
+			}
+			ordera.setShouldReturnTime(ordes.get(i).getOperator_time());
+			Orderdetails ord = operdao.SelectOperNum(ordera);
+			ordes.get(i).setBeoverdue(ord.getOrderId());//逾期还款数
 			ordes.get(i).setMemberid(pdap.CollMemberId(ordera.getCompanyId()));//获取催收员ID
 			ordes.get(i).setPressformoney(operdao.Cuishoudata(ordera));//催款笔数
 			ordera.setCollectionStatus("态度恶劣");
@@ -61,9 +70,9 @@ public class OperationalServiceimp implements OperationalService{
 			ordes.get(i).setRealreturn(operdao.SelectRealityAccount(ordera));//实还金额
 			ordera.setCollectionStatus("态度恶劣");
 			ordes.get(i).setAmountofbaddebts(operdao.SelectAmountofbaddebts(ordera));
+			System.out.println(ordes.get(i));
 		}
 		map.put("Orders", ordes);
-		map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -72,26 +81,42 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		List<Integer> ids = coldao.SelectCollectionId(order.getCompanyId());
+		order.setIds(ids);//查询催收员  参数 公司ID
 		List<Repayment> orNum = operdao.SelectRepaymentNum(order);
 		Integer totalCount = null;
-		if(orNum.size() != 0){
+		if(orNum.size() != 0 && orNum != null){
 			totalCount = orNum.size();
 		}else{
 			totalCount = 0;
 		}
-		order.setIds(coldao.SelectCollectionId(order.getCompanyId()));//查询催收员  参数 公司ID
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);	//参数page pagesize
 		order.setPage(pages.getPage());
 		List<Repayment> ords = operdao.SelectRepayment(order);//获取还款时间   还款数     还款金额
 		for(int i=0;i<ords.size();i++){
 			ords.get(i).setIds(operdao.ConnectionidAll(order));//
-			Repayment res = operdao.RepaymentCollection(order);
-			ords.get(i).setCollection_count(res.getCollection_count());//逾期还款数
-			ords.get(i).setCollection_money(res.getCollection_money());//逾期还款金额
-			ords.get(i).setRepaymeny_collectiondata(ords.get(i).getRepayment_Count()/ords.get(i).getCollection_count());//还款率
+			order.setShouldReturnTime(ords.get(i).getOperator_time());
+			Orderdetails ord = operdao.SelectOperNum(order);
+			if(ord.getOrderId() != null && ord.getInterestPenaltySum() != null){
+				ords.get(i).setCollection_count(ord.getOrderId());//逾期还款数
+				ords.get(i).setCollection_money(ord.getInterestPenaltySum());//逾期还款金额
+				if(ords.get(i).getCollection_count() != 0 && ords.get(i).getCollection_count() != null){
+					ords.get(i).setRepaymeny_collectiondata(ords.get(i).getRepayment_Count()/ords.get(i).getCollection_count());//还款率	
+				}else{
+					ords.get(i).setRepaymeny_collectiondata(100);//还款率	
+				}
+			}else{
+				ords.get(i).setCollection_count(0);//逾期还款数
+				if(ords.get(i).getCollection_count() != 0 && ords.get(i).getCollection_count() != null){
+					ords.get(i).setRepaymeny_collectiondata(ords.get(i).getRepayment_Count()/ords.get(i).getCollection_count());//还款率	
+				}else{
+					ords.get(i).setRepaymeny_collectiondata(100);//还款率	
+				}
+			}
+			
+			
 		}
 		map.put("Repayment", ords);
-		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -117,11 +142,15 @@ public class OperationalServiceimp implements OperationalService{
 			ordesa.get(i).setNumberCollection(operdao.SelecNumberCollection(orde));//查询催收次数
 			orde.setCollectionStatus("承诺还款");
 			ordesa.get(i).setCollectionSuccess(operdao.SelecNumberCollection(orde));//查询成功数
-			ordesa.get(i).setCollectionSuccessdata(ordesa.get(i).getCollection_count()/ordesa.get(i).getCollectionSuccess());//催收成功率
+			if(ordesa.get(i).getCollectionSuccess() != null && ordesa.get(i).getCollectionSuccess() != 0){
+				ordesa.get(i).setCollectionSuccessdata(ordesa.get(i).getCollection_count()/ordesa.get(i).getCollectionSuccess());//催收成功率
+			}else{
+				ordesa.get(i).setCollectionSuccessdata(100);//催收成功率
+			}
+			
 			orde.setCollectionStatus("态度恶劣");
 			ordesa.get(i).setBaddebt(operdao.SelecNumberCollection(orde));//查询坏账数
 		}
-		map.put("PageUtil", pages);
 		map.put("Orderdetails", ordesa);
 		return map;
 	}

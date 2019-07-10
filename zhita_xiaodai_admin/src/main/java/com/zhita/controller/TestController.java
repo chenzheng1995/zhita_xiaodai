@@ -95,6 +95,6 @@ public class TestController {
 		String dateyes = df.format(calendar.getTime());
 		System.out.println("今天日期的前一天："+dateyes);*/
 		
-		
+		 System.out.println(1000*20/100);
 	}
 }

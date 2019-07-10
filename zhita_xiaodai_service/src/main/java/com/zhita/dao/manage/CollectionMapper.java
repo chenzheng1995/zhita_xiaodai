@@ -7,12 +7,13 @@ import org.apache.ibatis.annotations.Param;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collection_member;
 import com.zhita.model.manage.Collectiondetails;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 
 public interface CollectionMapper {
 	
 	
-	List<Integer> OrderId(@Param("ids")List<Integer> ids);
+	List<Integer> OrderIdMa(@Param("ids")List<Integer> ids);
 	
 	
 	Integer SelectTotalCount(Collection coll);
@@ -91,5 +92,16 @@ public interface CollectionMapper {
 	
 	
 	Integer SelectUsercollectionStatus(Collection col);
-
+	
+	
+	Deferred DefeSet(Orderdetails order);
+	
+	
+	Collection CollMen(Orderdetails order);
+	
+	
+	Integer CollNum(Integer orderId);
+	
+	
+	Deferred DefNum(Integer orderId);
 }

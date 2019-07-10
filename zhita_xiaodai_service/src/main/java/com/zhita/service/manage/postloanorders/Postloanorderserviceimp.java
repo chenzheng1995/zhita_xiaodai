@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
 import com.zhita.util.PageUtil;
@@ -37,6 +38,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		details.setPage(pages.getPage());
 		details.setTotalCount(totalCount);
 		List<Orderdetails> orderdetils = postloanorder.allOrderdetails(details);
+		for(int i=0;i<orderdetils.size();i++){
+			Deferred defe =  coldao.DefNum(orderdetils.get(i).getOrderId());
+			orderdetils.get(i).setDefeNum(defe.getId());
+			orderdetils.get(i).setDefeMoney(defe.getInterestOnArrears());
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orderdetils);
 		return map;
@@ -56,7 +62,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orderdetils = postloanorder.allBeoverdueOrderdetails(details);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orderdetils);
-		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -74,10 +79,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		if(CollMember.size() != 0 && null != CollMember){
 			List<Integer> nodeid = postloanorder.SelectNodetId(CollMember);//获取已分配订单ID
 			order.setIds(nodeid);
-			PageUtil pages = new PageUtil(order.getPage(), totalCount);
-			order.setPage(pages.getPage());
+			if(totalCount != null){
+				PageUtil pages = new PageUtil(order.getPage(), totalCount);
+				order.setPage(pages.getPage());
+			}else{
+				PageUtil pages = new PageUtil(order.getPage(), 0);
+				order.setPage(pages.getPage());
+			}
+			
 			List<Orderdetails> ordeids = postloanorder.SelectOrderDetails(order);//获取未逾期未分配订单
-			map.put("pageutil", pages);
 			map.put("Orderdetails", ordeids);
 		}else{
 			map.put("pageutil", "无数据");
@@ -99,10 +109,19 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		if(CollMember.size() != 0 && null != CollMember){
 		List<Integer> nodeid = postloanorder.SelectNodetId(CollMember);//获取已分配订单ID
 		order.setIds(nodeid);
-		PageUtil pages = new PageUtil(order.getPage(), totalCount);
-		order.setPage(pages.getPage());
+		if(totalCount != null){
+			PageUtil pages = new PageUtil(order.getPage(), totalCount);
+			order.setPage(pages.getPage());
+		}else{
+			PageUtil pages = new PageUtil(order.getPage(), 0);
+			order.setPage(pages.getPage());
+		}
 		List<Orderdetails> ordeids = postloanorder.AOrderDetails(order);//获取未逾期未分配订单
-		map.put("pageutil", pages);
+		for(int i=0;i<ordeids.size();i++){
+			Deferred defe =  coldao.DefNum(ordeids.get(i).getOrderId());
+			ordeids.get(i).setDefeNum(defe.getId());
+			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());
+		}
 		map.put("Orderdetails", ordeids);
 		}else{
 			map.put("Orderdetails", "无数据");
@@ -132,7 +151,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			Integer OrderIdNum = postloanorder.OrderIdNum(order);//订单总数
 			order.setIds(coldao.SelectCollectionId(order.getCompanyId()));
 			Integer OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
-			cols.get(i).setDialNum(OrderIdNum-OverIdNum);
+			if(OrderIdNum != null && OverIdNum != null){
+				cols.get(i).setDialNum(OrderIdNum-OverIdNum);
+			}else{
+				cols.get(i).setDialNum(OverIdNum);
+			}
+			
 			order.setOverdue_phonestaus("未接通");
 			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
 			order.setOverdue_phonestaus("已接通");
@@ -141,7 +165,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			cols.get(i).setSameday(postloanorder.StatusOrders(order));
 			order.setStatu("1");
 			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
-			cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
+			if(cols.get(i).getPaymentmade() != 0){
+				cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
+			}else{
+				cols.get(i).setPaymentmadeData(100);
+			}
+			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
@@ -163,23 +192,24 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		PageUtil pages = new PageUtil(order.getPage(), asa);
 		order.setPage(pages.getPage());
 		List<Collection> cols = postloanorder.MemberName(order);
+		System.out.println(cols.size());
 		for(int i=0;i<cols.size();i++){
-			Integer sum = postloanorder.UserNumOrder(order);
-			Integer notNull = postloanorder.UserDianlNum(order);
-			cols.get(i).setDialNum(sum-notNull);
 			order.setOverdue_phonestaus("未接通");
 			cols.get(i).setNotconnected(postloanorder.Userphonestaus(order));
 			order.setOverdue_phonestaus("已接通");
 			cols.get(i).setConnected(postloanorder.Userphonestaus(order));
-			order.setBorrowMoneyState("已还款");
+			order.setOrderStatus("2");
+			cols.get(i).setSameday(postloanorder.UserOrderStatu(order));
+			order.setOrderStatus("1");
 			cols.get(i).setPaymentmade(postloanorder.UserOrderStatu(order));
-			order.setBorrowMoneyState("未还款");
-			cols.get(i).setPaymentmade(postloanorder.UserOrderStatu(order));
-			cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
+			if(cols.get(i).getPaymentmade() != 0){
+				cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
+			}else{
+				cols.get(i).setPaymentmadeData(100);
+			}
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
-		map.put("Pageutil", pages);
 		return map;
 	}
 
@@ -189,12 +219,21 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> MyOverdues(Orderdetails order) {
 		Integer totalCount = postloanorder.MyOrderNum(order);
-		PageUtil pages = new PageUtil(order.getPage(), totalCount);
-		order.setPage(pages.getPage());
+		if(totalCount != null){
+			PageUtil pages = new PageUtil(order.getPage(), totalCount);
+			order.setPage(pages.getPage());
+		}else{
+			PageUtil pages = new PageUtil(order.getPage(), 0);
+			order.setPage(pages.getPage());
+		}
 		List<Orderdetails> orders = postloanorder.MyOrderdue(order);
+		for(int i=0;i<orders.size();i++){
+			Deferred defe =  coldao.DefNum(orders.get(i).getOrderId());
+			orders.get(i).setDefeNum(defe.getId());
+			orders.get(i).setDefeMoney(defe.getInterestOnArrears());
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orders);
-		map.put("Pageutil", pages);
 		return map;
 	}
 
@@ -244,17 +283,23 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
+		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
+		
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
-			orders.get(i).setInterMoney(orders.get(i).getRealityBorrowMoney().multiply(orders.get(i).getInterestOnArrears()));
-			orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterMoney()));
+			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
+			if(orders.get(i).getInterMoney() != null ){
+				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterMoney()));
+			}else{
+				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney());
+			}
+			
 		}
 		map.put("Orderdetails", orders);
-		map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -271,11 +316,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.CollecOrders(order);
 		for(int i=0;i<orders.size();i++){
+			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setPhone_num(postloanorder.Phone_num(order));
 		}
 		map.put("Orderdetails", orders);
-		map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -287,14 +332,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.HuaiZhangOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
+		System.out.println("pages:"+pages.getPage());
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrders(order);
 		for(int i=0;i<orders.size();i++){
+			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setPhone_num(postloanorder.Phone_num(order));
 		}
 		map.put("Orderdetails", orders);
-		map.put("PageUtil", pages);
 		return map;
 	}
 	

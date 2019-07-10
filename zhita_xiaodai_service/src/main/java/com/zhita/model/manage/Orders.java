@@ -27,8 +27,6 @@ public class Orders {
 	
 	private String borrowMoneyWay;//贷款方式（立即贷和分期贷）
 	
-	private String borrowMoneyState;//还款状态（已还和未还）(1:已还；0：未还)
-	
 	private String shouldReturnTime;//应还时间
 	
 	private String realtime;//还款时间（实还时间）
@@ -39,10 +37,20 @@ public class Orders {
 	
 	private String riskmanagementFraction;//风控分数
 	
-	private String ifoverdue;//是否逾期
-	
 	private String overdueGrade;//逾期等级
 	
+
+	private String riskcontrolname;//风控名字
+	
+	private String orderStatus;//订单状态（0：期限中；1：已逾期；2：已延期；3：已还款）
+	
+	private String ifpeopleWhose;//是否人审（1；已人审；0：未人审）
+	
+	private String assessor;//审核员
+	
+	private Orderdetails orderdetails;//对应订单明细表
+	
+	private User user;//对应用户对象
 	
 	private Integer adoptcount;//放款通过数
 	
@@ -75,6 +83,18 @@ public class Orders {
 	private BigDecimal Actualrevenue;//实际营收
 	
 	private Integer daysofrepayment;//还款天数
+	
+	private String operator_time;
+	
+	
+
+	public String getOperator_time() {
+		return operator_time;
+	}
+
+	public void setOperator_time(String operator_time) {
+		this.operator_time = operator_time;
+	}
 
 	public Integer getId() {
 		return id;
@@ -164,14 +184,6 @@ public class Orders {
 		this.borrowMoneyWay = borrowMoneyWay;
 	}
 
-	public String getBorrowMoneyState() {
-		return borrowMoneyState;
-	}
-
-	public void setBorrowMoneyState(String borrowMoneyState) {
-		this.borrowMoneyState = borrowMoneyState;
-	}
-
 	public String getShouldReturnTime() {
 		return shouldReturnTime;
 	}
@@ -212,20 +224,60 @@ public class Orders {
 		this.riskmanagementFraction = riskmanagementFraction;
 	}
 
-	public String getIfoverdue() {
-		return ifoverdue;
-	}
-
-	public void setIfoverdue(String ifoverdue) {
-		this.ifoverdue = ifoverdue;
-	}
-
 	public String getOverdueGrade() {
 		return overdueGrade;
 	}
 
 	public void setOverdueGrade(String overdueGrade) {
 		this.overdueGrade = overdueGrade;
+	}
+
+	public String getRiskcontrolname() {
+		return riskcontrolname;
+	}
+
+	public void setRiskcontrolname(String riskcontrolname) {
+		this.riskcontrolname = riskcontrolname;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public String getIfpeopleWhose() {
+		return ifpeopleWhose;
+	}
+
+	public void setIfpeopleWhose(String ifpeopleWhose) {
+		this.ifpeopleWhose = ifpeopleWhose;
+	}
+
+	public String getAssessor() {
+		return assessor;
+	}
+
+	public void setAssessor(String assessor) {
+		this.assessor = assessor;
+	}
+
+	public Orderdetails getOrderdetails() {
+		return orderdetails;
+	}
+
+	public void setOrderdetails(Orderdetails orderdetails) {
+		this.orderdetails = orderdetails;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Integer getAdoptcount() {
@@ -355,6 +407,5 @@ public class Orders {
 	public void setDaysofrepayment(Integer daysofrepayment) {
 		this.daysofrepayment = daysofrepayment;
 	}
-	
 	
 }
