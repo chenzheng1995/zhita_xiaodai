@@ -28,10 +28,10 @@
 		    <result column="orderId" property="orderId" jdbcType="INTEGER" />
 		    <result column="realityBorrowMoney" property="realityBorrowMoney" jdbcType="DECIMAL" />
 		    <result column="makeLoans" property="makeLoans" jdbcType="DECIMAL" />
-		    <result column="interestDay" property="interestDay" jdbcType="VARCHAR" />
+		    <result column="interestDay" property="interestDay" jdbcType="DECIMAL" />
 		    <result column="interestSum" property="interestSum" jdbcType="DECIMAL" />
 		    <result column="overdueNumberOfDays" property="overdueNumberOfDays" jdbcType="VARCHAR" />
-		    <result column="interestPenaltyDay" property="interestPenaltyDay" jdbcType="VARCHAR" />
+		    <result column="interestPenaltyDay" property="interestPenaltyDay" jdbcType="DECIMAL" />
 		    <result column="interestPenaltySum" property="interestPenaltySum" jdbcType="DECIMAL" />
 		    <result column="interestInAll" property="interestInAll" jdbcType="DECIMAL" />
 		    <result column="shouldReapyMoney" property="shouldReapyMoney" jdbcType="DECIMAL" />

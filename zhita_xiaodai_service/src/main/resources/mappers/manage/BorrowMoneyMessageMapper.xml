@@ -5,9 +5,9 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="companyId" property="companyid" jdbcType="INTEGER" />
     <result column="loanType" property="loantype" jdbcType="VARCHAR" />
-    <result column="canBorrowlines" property="canborrowlines" jdbcType="INTEGER" />
+    <result column="canBorrowlines" property="canborrowlines" jdbcType="DECIMAL" />
     <result column="lifeOfLoan" property="lifeofloan" jdbcType="INTEGER" />
-    <result column="averageDailyInterest" property="averagedailyinterest" jdbcType="DOUBLE" />
+    <result column="averageDailyInterest" property="averagedailyinterest" jdbcType="DECIMAL" />
     <result column="platformfeeRatio" property="platformfeeratio" jdbcType="INTEGER" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
@@ -34,7 +34,7 @@
       platformfeeRatio, operator, operationTime
       )
     values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER}, #{loantype,jdbcType=VARCHAR}, 
-      #{canborrowlines,jdbcType=INTEGER}, #{lifeofloan,jdbcType=INTEGER}, #{averagedailyinterest,jdbcType=DOUBLE}, 
+      #{canborrowlines,jdbcType=DECIMAL}, #{lifeofloan,jdbcType=INTEGER}, #{averagedailyinterest,jdbcType=DECIMAL}, 
       #{platformfeeratio,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}
       )
   </insert>
@@ -134,9 +134,9 @@
     update borrow_money_message
     set companyId = #{companyid,jdbcType=INTEGER},
       loanType = #{loantype,jdbcType=VARCHAR},
-      canBorrowlines = #{canborrowlines,jdbcType=INTEGER},
+      canBorrowlines = #{canborrowlines,jdbcType=DECIMAL},
       lifeOfLoan = #{lifeofloan,jdbcType=INTEGER},
-      averageDailyInterest = #{averagedailyinterest,jdbcType=DOUBLE},
+      averageDailyInterest = #{averagedailyinterest,jdbcType=DECIMAL},
       platformfeeRatio = #{platformfeeratio,jdbcType=INTEGER},
       operator = #{operator,jdbcType=VARCHAR},
       operationTime = #{operationtime,jdbcType=VARCHAR}
