@@ -1,5 +1,6 @@
 package com.zhita.service.manage.deferredsettings;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class DeferredsetServcieImp implements IntDeferredsetService{
     	for (int i = 0; i < list.size(); i++) {
     		BorrowMoneyMessage borr=deferredSettingsMapper.queryBorrow(list.get(i).getProductid());
     		list.get(i).setOncedeferredday(borr.getLifeofloan());
-    		list.get(i).setOncedeferredmoney(borr.getCanborrowlines()*borr.getPlatformfeeratio()/100);
+    		list.get(i).setOncedeferredmoney(borr.getCanborrowlines().multiply(new BigDecimal(borr.getPlatformfeeratio())).divide(new BigDecimal(100)));
 		}
     	
     	return list;

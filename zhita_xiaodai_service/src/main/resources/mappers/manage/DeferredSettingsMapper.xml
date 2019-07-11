@@ -6,7 +6,7 @@
     <result column="companyId" property="companyid" jdbcType="INTEGER" />
     <result column="maximumCanDeferredTime" property="maximumcandeferredtime" jdbcType="INTEGER" />
     <result column="onceDeferredDay" property="oncedeferredday" jdbcType="INTEGER" />
-    <result column="onceDeferredMoney" property="oncedeferredmoney" jdbcType="INTEGER" />
+    <result column="onceDeferredMoney" property="oncedeferredmoney" jdbcType="DECIMAL" />
     <result column="overdueHowdayCanDeferred" property="overduehowdaycandeferred" jdbcType="INTEGER" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
@@ -32,7 +32,7 @@
       onceDeferredDay, onceDeferredMoney, overdueHowdayCanDeferred, 
       operator, operationTime)
     values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER},  #{maximumcandeferredtime,jdbcType=INTEGER}, 
-      #{oncedeferredday,jdbcType=INTEGER}, #{oncedeferredmoney,jdbcType=INTEGER}, #{overduehowdaycandeferred,jdbcType=INTEGER}, 
+      #{oncedeferredday,jdbcType=INTEGER}, #{oncedeferredmoney,jdbcType=DECIMAL}, #{overduehowdaycandeferred,jdbcType=INTEGER}, 
       #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.DeferredSettings" >
