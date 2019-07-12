@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,6 @@ public interface BorrowMoneyMessageMapper {
     List<BorrowMoneyMessage> queryAll(Integer companyId);
 
 	Map<String, Object> getborrowMoneyMessage(int companyId);
+
+	BigDecimal getCanBorrowlines(int companyId);
 }

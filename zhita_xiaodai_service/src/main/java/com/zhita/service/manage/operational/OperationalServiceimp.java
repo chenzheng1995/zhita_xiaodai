@@ -1,5 +1,6 @@
 package com.zhita.service.manage.operational;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,6 +178,14 @@ public class OperationalServiceimp implements OperationalService{
 		map.put("orders", ords);
 		return map;
 		
+	}
+
+
+
+	@Override
+	public BigDecimal getlastLine(int ordersId) {
+		BigDecimal lastLine = operdao.getlastLine(ordersId);
+		return lastLine;
 	}
 
 }

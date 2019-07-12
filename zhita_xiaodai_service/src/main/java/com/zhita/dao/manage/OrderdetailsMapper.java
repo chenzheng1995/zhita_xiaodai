@@ -1,5 +1,7 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
+
 import com.zhita.model.manage.Orderdetails;
 
 public interface OrderdetailsMapper {
@@ -15,4 +17,6 @@ public interface OrderdetailsMapper {
     int updateByPrimaryKeySelective(Orderdetails record);
 
     int updateByPrimaryKey(Orderdetails record);
+
+	BigDecimal getlastLine(int ordersId);
 }

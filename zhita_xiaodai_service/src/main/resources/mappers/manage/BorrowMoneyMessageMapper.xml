@@ -154,4 +154,8 @@
        select canBorrowlines,lifeOfLoan,averageDailyInterest,platformfeeRatio from borrow_money_message where companyId =#{companyId}
 	</select>
 	
+	
+	  	<select id="getCanBorrowlines" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+       select canBorrowlines from borrow_money_message where companyId =#{companyId}
+	</select>
 </mapper>

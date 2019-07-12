@@ -426,4 +426,16 @@
         and o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR}
     </where>
   </select>
+  
+        <!--编辑账单中根据日期和甲方查询出有多少条数据-->
+ <select id="borrowNumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+select count(id) from orders where companyId = #{companyId} and userId = #{userId} and orderStatus = '3'
+ </select> 
+ 
+ 
+         <!--获取OrdersId-->
+ <select id="getOrdersId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+select id from orders where companyId = #{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+ </select> 
+  
 </mapper>

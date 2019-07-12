@@ -30,10 +30,14 @@ public class borrowMoneyMessageController {
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> map2 = new HashMap<String, Object>();
         map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
-        int canBorrowlines = (int) map.get("canBorrowlines");
-        double averageDailyInterest = (double) map.get("averageDailyInterest");
-        int lifeOfLoan = (int) map.get("lifeOfLoan");
-        double alsoAmount = canBorrowlines*averageDailyInterest*lifeOfLoan+canBorrowlines;
+        BigDecimal canBorrowlines = (BigDecimal) map.get("canBorrowlines");
+        BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");
+        BigDecimal bd8 = new BigDecimal("100");
+        averageDailyInterest = averageDailyInterest.divide(bd8);
+        int lifeOfLoan = ((int) map.get("lifeOfLoan"));
+        BigDecimal loan = new BigDecimal(0);
+        loan=BigDecimal.valueOf((int)lifeOfLoan);
+        BigDecimal alsoAmount = ((canBorrowlines.multiply(loan).multiply(averageDailyInterest)).add(canBorrowlines)).setScale(2,BigDecimal.ROUND_HALF_UP);
         map2.put("alsoAmount", alsoAmount);
         map2.put("map1", map);
         return map2;
