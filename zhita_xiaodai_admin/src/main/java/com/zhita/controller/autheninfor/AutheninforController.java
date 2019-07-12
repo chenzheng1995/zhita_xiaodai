@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zhita.model.manage.AuthenField;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
 import com.zhita.service.manage.autheninfor.IntAutheninforService;
@@ -112,8 +113,12 @@ public class AutheninforController {
     //后台管理---编辑功能
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
-    public int updateByPrimaryKey(AuthenticationInformation record){
-    	int num=intAutheninforService.updateByPrimaryKey(record);
-    	return num;
+    public int updateByPrimaryKey(AuthenField record){
+		int num=0;
+		num=intAutheninforService.updateByPrimaryKey(record.getId1(), record.getValue1());
+		num=intAutheninforService.updateByPrimaryKey(record.getId2(), record.getValue3());
+		num=intAutheninforService.updateByPrimaryKey(record.getId3(), record.getValue3());
+		num=intAutheninforService.updateByPrimaryKey(record.getId4(), record.getValue4());
+		return num;
     }
 }

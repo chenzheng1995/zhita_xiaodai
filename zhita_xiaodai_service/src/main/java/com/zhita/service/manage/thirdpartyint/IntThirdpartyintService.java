@@ -1,8 +1,8 @@
 package com.zhita.service.manage.thirdpartyint;
 
 import java.util.List;
+import java.util.Map;
 
-import com.zhita.model.manage.Company;
 import com.zhita.model.manage.ThirdpartyInterface;
 
 public interface IntThirdpartyintService {
@@ -11,7 +11,7 @@ public interface IntThirdpartyintService {
     public List<ThirdpartyInterface> queryAll(Integer companyId);
     
     //后台管理---添加功能（查询出所有公司）
-    public List<Company> queryAllCompany();
+    public Map<String, Object> queryAllCompany();
     
     //后台管理---添加功能
     public int insert(ThirdpartyInterface record);

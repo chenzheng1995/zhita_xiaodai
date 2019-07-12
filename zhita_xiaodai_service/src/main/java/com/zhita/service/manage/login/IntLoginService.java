@@ -34,7 +34,7 @@ public interface IntLoginService {
    //admin---登录——查询当前用户权限id（通过手机号）
    public List<Integer> queryFunctionsByPhone(String phone);
 
-public User findphone(String newPhone, int companyId);
+public Integer findphone(String newPhone, int companyId);
    
    //admin---登录——退出登录
    public int updateLoginStatus(Integer userId);

@@ -1,6 +1,10 @@
 package com.zhita.service.manage.autheninfor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
@@ -19,6 +23,13 @@ public interface IntAutheninforService {
     //后台管理---根据主键id查询出当前对象信息
     public AuthenticationInformation selectByPrimaryKey(Integer id);
     
-    //后台管理---更新保存功能
-    public int updateByPrimaryKey(AuthenticationInformation record);
+    
+
+    public Map<String, Object> updateByPrimaryKey1(AuthenticationInformation record,MultipartFile file) throws Exception;
+
+	public ArrayList<AuthenticationInformation> getCertificationCenter(int companyId);
+	
+	//后台管理---更新保存功能
+    public int updateByPrimaryKey(Integer id,String value);
+
 }

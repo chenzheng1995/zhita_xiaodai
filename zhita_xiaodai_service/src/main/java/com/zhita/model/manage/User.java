@@ -59,6 +59,7 @@ public class User {
 	public void setUserMoney(BigDecimal userMoney) {
 		UserMoney = userMoney;
 	}
+    private Integer riskControlPoints;//分控分数
 
 	public Integer getId() {
 		return id;
@@ -194,6 +195,14 @@ public class User {
 
 	public void setIfblacklist(String ifblacklist) {
 		this.ifblacklist = ifblacklist;
+	}
+	
+	public Integer getRiskControlPoints() {
+		return riskControlPoints;
+	}
+
+	public void setRiskControlPoints(Integer riskControlPoints) {
+		this.riskControlPoints = riskControlPoints;
 	}
 
 	public String getSourcename() {

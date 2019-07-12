@@ -84,9 +84,9 @@ public class LoginServiceImp implements IntLoginService{
 
 
 	@Override
-	public User findphone(String newPhone, int companyId) {
-		User user = userMapper.findphone(newPhone, companyId); // 判断该用户是否存在
-		return user;
+	public Integer findphone(String newPhone, int companyId) {
+		Integer id = userMapper.findphone(newPhone, companyId); // 判断该用户是否存在
+		return id;
 	}
 	
 	//admin---登录——退出登录

@@ -1,5 +1,7 @@
 package com.zhita.model.manage;
 
+import java.math.BigDecimal;
+
 //延期设置表
 public class DeferredSettings {
     private Integer id;
@@ -12,7 +14,7 @@ public class DeferredSettings {
 
     private Integer oncedeferredday;//单次延期天数
 
-    private Integer oncedeferredmoney;//单次延期费用
+    private BigDecimal oncedeferredmoney;//单次延期费用
 
     private Integer overduehowdaycandeferred;//逾期多少天前可延期
     
@@ -62,11 +64,12 @@ public class DeferredSettings {
 		this.oncedeferredday = oncedeferredday;
 	}
 
-	public Integer getOncedeferredmoney() {
+
+	public BigDecimal getOncedeferredmoney() {
 		return oncedeferredmoney;
 	}
 
-	public void setOncedeferredmoney(Integer oncedeferredmoney) {
+	public void setOncedeferredmoney(BigDecimal oncedeferredmoney) {
 		this.oncedeferredmoney = oncedeferredmoney;
 	}
 

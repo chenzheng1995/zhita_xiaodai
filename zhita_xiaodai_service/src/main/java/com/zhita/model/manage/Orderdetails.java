@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
-
 //订单明细表
 public class Orderdetails {
 	
@@ -16,13 +15,13 @@ public class Orderdetails {
 	
 	private BigDecimal makeLoans;//放款金额(元)
 	
-	private String interestDay;//期内日均利息（0.06%）
+	private BigDecimal interestDay;//期内日均利息（0.06%）
 	
 	private BigDecimal interestSum;//期内总利息（元）
 	
 	private String overdueNumberOfDays;//逾期天数
 	
-	private String interestPenaltyDay;//日均罚息（0.1%）
+	private BigDecimal interestPenaltyDay;//日均罚息（0.1%）
 	
 	private BigDecimal interestPenaltySum;//逾期总罚息（元）
 	
@@ -163,64 +162,6 @@ public class Orderdetails {
     private BigDecimal OrderMoney;
     
     private Integer thirdparty_id;
-    
-    
-    
-	public Integer getThirdparty_id() {
-		return thirdparty_id;
-	}
-
-	public void setThirdparty_id(Integer thirdparty_id) {
-		this.thirdparty_id = thirdparty_id;
-	}
-
-	public BigDecimal getOrderMoney() {
-		return OrderMoney;
-	}
-
-	public void setOrderMoney(BigDecimal orderMoney) {
-		OrderMoney = orderMoney;
-	}
-
-	public String getDrainageOfPlatformName() {
-		return drainageOfPlatformName;
-	}
-
-	public void setDrainageOfPlatformName(String drainageOfPlatformName) {
-		this.drainageOfPlatformName = drainageOfPlatformName;
-	}
-
-	public BigDecimal getDefeMoney() {
-		return defeMoney;
-	}
-
-	public void setDefeMoney(BigDecimal defeMoney) {
-		this.defeMoney = defeMoney;
-	}
-
-	public Integer getCollNum() {
-		return collNum;
-	}
-
-	public void setCollNum(Integer collNum) {
-		this.collNum = collNum;
-	}
-
-	public Integer getCollectionMemberId() {
-		return collectionMemberId;
-	}
-
-	public void setCollectionMemberId(Integer collectionMemberId) {
-		this.collectionMemberId = collectionMemberId;
-	}
-
-	public BigDecimal getOrder_money() {
-		return order_money;
-	}
-
-	public void setOrder_money(BigDecimal order_money) {
-		this.order_money = order_money;
-	}
 
 	public Integer getId() {
 		return id;
@@ -254,11 +195,11 @@ public class Orderdetails {
 		this.makeLoans = makeLoans;
 	}
 
-	public String getInterestDay() {
+	public BigDecimal getInterestDay() {
 		return interestDay;
 	}
 
-	public void setInterestDay(String interestDay) {
+	public void setInterestDay(BigDecimal interestDay) {
 		this.interestDay = interestDay;
 	}
 
@@ -278,11 +219,11 @@ public class Orderdetails {
 		this.overdueNumberOfDays = overdueNumberOfDays;
 	}
 
-	public String getInterestPenaltyDay() {
+	public BigDecimal getInterestPenaltyDay() {
 		return interestPenaltyDay;
 	}
 
-	public void setInterestPenaltyDay(String interestPenaltyDay) {
+	public void setInterestPenaltyDay(BigDecimal interestPenaltyDay) {
 		this.interestPenaltyDay = interestPenaltyDay;
 	}
 
@@ -789,6 +730,62 @@ public class Orderdetails {
 	public void setOverdueGrade(String overdueGrade) {
 		this.overdueGrade = overdueGrade;
 	}
-	
+
+	public BigDecimal getOrder_money() {
+		return order_money;
+	}
+
+	public void setOrder_money(BigDecimal order_money) {
+		this.order_money = order_money;
+	}
+
+	public Integer getCollectionMemberId() {
+		return collectionMemberId;
+	}
+
+	public void setCollectionMemberId(Integer collectionMemberId) {
+		this.collectionMemberId = collectionMemberId;
+	}
+
+	public Integer getCollNum() {
+		return collNum;
+	}
+
+	public void setCollNum(Integer collNum) {
+		this.collNum = collNum;
+	}
+
+	public BigDecimal getDefeMoney() {
+		return defeMoney;
+	}
+
+	public void setDefeMoney(BigDecimal defeMoney) {
+		this.defeMoney = defeMoney;
+	}
+
+	public String getDrainageOfPlatformName() {
+		return drainageOfPlatformName;
+	}
+
+	public void setDrainageOfPlatformName(String drainageOfPlatformName) {
+		this.drainageOfPlatformName = drainageOfPlatformName;
+	}
+
+	public BigDecimal getOrderMoney() {
+		return OrderMoney;
+	}
+
+	public void setOrderMoney(BigDecimal orderMoney) {
+		OrderMoney = orderMoney;
+	}
+
+	public Integer getThirdparty_id() {
+		return thirdparty_id;
+	}
+
+	public void setThirdparty_id(Integer thirdparty_id) {
+		this.thirdparty_id = thirdparty_id;
+	}
+    
 
 }

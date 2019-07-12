@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,8 +44,8 @@ public class SourcesideTongjiController {
 	 */
 	@ResponseBody
 	@RequestMapping("/queryAllTongji")
-	public void queryAllTongji(Integer page,Integer companyId,String sourceName) throws ParseException{
-		HashMap<String, Object> map = new HashMap<>();
+	public Map<String, Object> queryAllTongji(Integer page,Integer companyId,String sourceName) throws ParseException{
+		Map<String, Object> map = new HashMap<>();
 		
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		List<TongjiSorce> listsource = new ArrayList<>();
@@ -139,6 +140,7 @@ public class SourcesideTongjiController {
 				listPageUtil.getTotalCount());
 		map.put("listsourceto", listsourceto);
 		map.put("pageutil", pageUtil);
+		return map;
 	}
 	
 	

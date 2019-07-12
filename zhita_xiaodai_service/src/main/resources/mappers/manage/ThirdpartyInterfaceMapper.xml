@@ -114,4 +114,20 @@
     from thirdparty_interface
     where companyId=#{arg0}
   </select>
+  <!-- 后台管理      查询人脸设置表所有信息 -->
+  <select id="queryface" resultType="com.zhita.model.manage.FaceRecognition">
+  	select * from face_recognition where deleted=0;
+  </select>
+    <!-- 后台管理      查询运营商设置表所有信息 -->
+  <select id="queryopera" resultType="com.zhita.model.manage.OperatorSetting">
+  	select * from operator_setting where deleted=0;
+  </select>
+    <!-- 后台管理      查询放款渠道设置表所有信息 -->
+  <select id="queryloan" resultType="com.zhita.model.manage.LoanSetting">
+  	select * from loan_setting where deleted=0;
+  </select>
+  <!-- 后台管理      查询还款渠道设置表所有信息 -->
+   <select id="queryrepayment" resultType="com.zhita.model.manage.RepaymentSetting">
+  	select * from repayment_setting where deleted=0;
+  </select>
 </mapper>

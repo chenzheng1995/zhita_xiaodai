@@ -15,6 +15,8 @@ public class TongjiSorce {
 	private Integer machineauditpass;//机审通过人数
 	private String cvr2;//注册到借款转化率
 	private Integer companyid;//公司名id
+	private Integer activatecount;//激活人数
+	private Integer authencount;//认证人数
 	
 	public Integer getId() {
 		return id;
@@ -95,6 +97,17 @@ public class TongjiSorce {
 	public void setCompanyid(Integer companyid) {
 		this.companyid = companyid;
 	}
-	
+	public Integer getActivatecount() {
+		return activatecount;
+	}
+	public void setActivatecount(Integer activatecount) {
+		this.activatecount = activatecount;
+	}
+	public Integer getAuthencount() {
+		return authencount;
+	}
+	public void setAuthencount(Integer authencount) {
+		this.authencount = authencount;
+	}
 	
 }

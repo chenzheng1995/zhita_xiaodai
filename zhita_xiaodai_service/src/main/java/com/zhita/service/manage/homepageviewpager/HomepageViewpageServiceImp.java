@@ -57,4 +57,10 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     	return num;
     }
 
+	@Override
+	public List<HomepageViewpager> gethomepageViewpager(int companyId) {
+		List<HomepageViewpager> list=homepageViewpagerMapper.gethomepageViewpager(companyId); //获取轮播图的所有数据   	
+		return list;
+	}
+
 }

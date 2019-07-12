@@ -1,5 +1,7 @@
 package com.zhita.model.manage;
 
+import java.math.BigDecimal;
+
 //借款信息表
 public class BorrowMoneyMessage {
     private Integer id;
@@ -10,11 +12,11 @@ public class BorrowMoneyMessage {
 
     private String loantype;//贷款类型
 
-    private Integer canborrowlines;//可借额度
+    private BigDecimal canborrowlines;//可借额度
 
     private Integer lifeofloan;//借款期限
 
-    private Double averagedailyinterest;//期限内日均利息
+    private BigDecimal averagedailyinterest;//期限内日均利息
 
     private Integer platformfeeratio;//平台服务费比率
 
@@ -22,15 +24,15 @@ public class BorrowMoneyMessage {
 
     private String operationtime;//操作时间
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    
-    public Integer getProductid() {
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getProductid() {
 		return productid;
 	}
 
@@ -39,66 +41,67 @@ public class BorrowMoneyMessage {
 	}
 
 	public Integer getCompanyid() {
-        return companyid;
-    }
+		return companyid;
+	}
 
-    public void setCompanyid(Integer companyid) {
-        this.companyid = companyid;
-    }
+	public void setCompanyid(Integer companyid) {
+		this.companyid = companyid;
+	}
 
-    public String getLoantype() {
-        return loantype;
-    }
+	public String getLoantype() {
+		return loantype;
+	}
 
-    public void setLoantype(String loantype) {
-        this.loantype = loantype == null ? null : loantype.trim();
-    }
+	public void setLoantype(String loantype) {
+		this.loantype = loantype;
+	}
 
-    public Integer getCanborrowlines() {
-        return canborrowlines;
-    }
+	public BigDecimal getCanborrowlines() {
+		return canborrowlines;
+	}
 
-    public void setCanborrowlines(Integer canborrowlines) {
-        this.canborrowlines = canborrowlines;
-    }
+	public void setCanborrowlines(BigDecimal canborrowlines) {
+		this.canborrowlines = canborrowlines;
+	}
 
-    public Integer getLifeofloan() {
-        return lifeofloan;
-    }
+	public Integer getLifeofloan() {
+		return lifeofloan;
+	}
 
-    public void setLifeofloan(Integer lifeofloan) {
-        this.lifeofloan = lifeofloan;
-    }
+	public void setLifeofloan(Integer lifeofloan) {
+		this.lifeofloan = lifeofloan;
+	}
 
-    public Double getAveragedailyinterest() {
-        return averagedailyinterest;
-    }
+	public BigDecimal getAveragedailyinterest() {
+		return averagedailyinterest;
+	}
 
-    public void setAveragedailyinterest(Double averagedailyinterest) {
-        this.averagedailyinterest = averagedailyinterest;
-    }
+	public void setAveragedailyinterest(BigDecimal averagedailyinterest) {
+		this.averagedailyinterest = averagedailyinterest;
+	}
 
-    public Integer getPlatformfeeratio() {
-        return platformfeeratio;
-    }
+	public Integer getPlatformfeeratio() {
+		return platformfeeratio;
+	}
 
-    public void setPlatformfeeratio(Integer platformfeeratio) {
-        this.platformfeeratio = platformfeeratio;
-    }
+	public void setPlatformfeeratio(Integer platformfeeratio) {
+		this.platformfeeratio = platformfeeratio;
+	}
 
-    public String getOperator() {
-        return operator;
-    }
+	public String getOperator() {
+		return operator;
+	}
 
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
 
-    public String getOperationtime() {
-        return operationtime;
-    }
+	public String getOperationtime() {
+		return operationtime;
+	}
 
-    public void setOperationtime(String operationtime) {
-        this.operationtime = operationtime == null ? null : operationtime.trim();
-    }
+	public void setOperationtime(String operationtime) {
+		this.operationtime = operationtime;
+	}
+
 }

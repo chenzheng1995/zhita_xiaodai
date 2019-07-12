@@ -13,6 +13,7 @@ public class OrderQueryParameter {
 	private String end;//结束分数
 	private String assessor;//审核员
 	private Integer sourcename;//渠道名字
+	private Integer userid;//用户id
 	public Integer getCompanyid() {
 		return companyid;
 	}
@@ -80,12 +81,12 @@ public class OrderQueryParameter {
 	public void setSourcename(Integer sourcename) {
 		this.sourcename = sourcename;
 	}
-	@Override
-	public String toString() {
-		return "OrderQueryParameter [companyid=" + companyid + ", page=" + page + ", ordernumber=" + ordernumber
-				+ ", orderstarttime=" + orderstarttime + ", orderendtime=" + orderendtime + ", riskmanagementype="
-				+ riskmanagementype + ", riskcontrolname=" + riskcontrolname + ", start=" + start + ", end=" + end
-				+ ", assessor=" + assessor + ", sourcename=" + sourcename + "]";
+	
+	public Integer getUserid() {
+		return userid;
+	}
+	public void setUserid(Integer userid) {
+		this.userid = userid;
 	}
 	
 }

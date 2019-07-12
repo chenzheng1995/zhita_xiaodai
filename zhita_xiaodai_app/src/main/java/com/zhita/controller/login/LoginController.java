@@ -133,12 +133,12 @@ public class LoginController {
             if (redisCode.equals(code)) {
                 redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
                 String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
-                User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
-                if (user == null) {
+                Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+                if (id == null) {
                     int merchantId = intSourceService.getsourceId(sourceName);
                     int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
                     if (number == 1) {
-                        int id = loginService.getId(newPhone, companyId); //获取该用户的id
+                        id = loginService.getId(newPhone, companyId); //获取该用户的id
                         map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
                         map.put("SCode", "201");
                         map.put("loginStatus", loginStatus);
@@ -152,7 +152,7 @@ public class LoginController {
                     String loginTime = System.currentTimeMillis() + "";
                     int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);
                     if (num == 1) {
-                        int id = loginService.getId(newPhone, companyId); // 获取该用户的id
+                        id = loginService.getId(newPhone, companyId); // 获取该用户的id
                         String pwd = loginService.getPwd(id);
                         if (pwd == null) {
                             map.put("msg", "用户登录成功，登录状态修改成功，让用户添加密码");
@@ -206,7 +206,7 @@ public class LoginController {
             PhoneDeal phoneDeal = new PhoneDeal();
             String newPhone = phoneDeal.encryption(phone);
             RedisClientUtil redisClientUtil = new RedisClientUtil();
-            String key = phone + "Key";
+            String key = phone + "xiaodaiKey";
             String redisCode = redisClientUtil.get(key);
             if (redisCode == null) {
                 map.put("msg", "验证码已过期，请重新发送");
@@ -246,7 +246,7 @@ public class LoginController {
     @RequestMapping("/pwdlogin")
     @ResponseBody
     @Transactional
-    public Map<String, Object> pwdLogin(String phone, String pwd, int companyId, String sourceName, String useMarket) {
+    public Map<String, Object> pwdLogin(String phone, String pwd, int companyId, String sourceName, String useMarket,String registeClient) {
         Map<String, Object> map = new HashMap<String, Object>();
         String loginStatus = "1";
         if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(pwd)) {
@@ -255,11 +255,22 @@ public class LoginController {
         } else {
             PhoneDeal phoneDeal = new PhoneDeal();
             String newPhone = phoneDeal.encryption(phone);
-            User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
-            if (user == null) {
-                map.put("msg", "用户名不存在,请先注册");
-                map.put("SCode", "405");
-                return map;
+            Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+            if (id == null) {
+            	String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
+            	 int merchantId = intSourceService.getsourceId(sourceName);
+            	 int num = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
+            	 if (num == 1) {
+                     id = loginService.getId(newPhone, companyId); //获取该用户的id
+                     map.put("msg", "用户登录成功，数据插入成功");
+                     map.put("SCode", "201");
+                     map.put("loginStatus", loginStatus);
+                     map.put("userId", id);
+                     map.put("phone", phone);
+                 } else {
+                     map.put("msg", "用户登录失败，用户数据插入失败");
+                     map.put("SCode", "405");
+                 }
             } else {
                 MD5Util md5Util = new MD5Util();
                 String dataMd5Pwd = loginService.getMd5pwd(newPhone, companyId);
@@ -268,7 +279,7 @@ public class LoginController {
                     String loginTime = System.currentTimeMillis() + "";
                     int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);
                     if (num == 1) {
-                        int id = loginService.getId(newPhone, companyId); // 获取该用户的id
+                        id = loginService.getId(newPhone, companyId); // 获取该用户的id
                         map.put("msg", "用户登录成功，登录状态修改成功");
                         map.put("SCode", "200");
                         map.put("loginStatus", loginStatus);
@@ -326,8 +337,8 @@ public class LoginController {
         Map<String, Object> map = new HashMap<String, Object>();
         PhoneDeal phoneDeal = new PhoneDeal();
         String newPhone = phoneDeal.encryption(phone);
-        User user = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
-        if (user == null) {
+        Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+        if (id == null) {
             map.put("msg", "用户名不存在,请先注册");
             map.put("SCode", "405");
         } else {

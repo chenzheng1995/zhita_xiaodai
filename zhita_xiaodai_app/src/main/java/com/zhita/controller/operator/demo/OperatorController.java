@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.zhita.service.manage.operator.OperatorService;
+import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 
 
@@ -25,7 +26,10 @@ public class OperatorController {
 	
 	@Autowired 
 	UserAttestationService userAttestationService;
-
+	
+	@Autowired 
+	IntUserService intUserService;
+	
     @RequestMapping("/getOperator")
     @ResponseBody
     @Transactional
@@ -85,11 +89,12 @@ public class OperatorController {
     }
     
     
+//    分控分数
     @RequestMapping("/getScore")
     @ResponseBody
     @Transactional
-    public Map<String, String> getScore(int userId){
-    	Map<String, String> map = new HashMap<>();
+    public Map<String, Object> getScore(int userId){
+    	Map<String, Object> map = new HashMap<>();
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
 		String idNumber = (String) userAttestation.get("idcard_number");
@@ -106,12 +111,27 @@ public class OperatorController {
     	  jsonObject = JSONObject.parseObject(result);
           String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
           jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
-          int score = Integer.parseInt(jsonObject.get("score").toString());
+          int score = Integer.parseInt(jsonObject.get("score").toString());  
+          intUserService.updateScore(score,userId);
+          
+          
+          int a = 300;
+          if(score>a||score==a) {
+        	  map.put("code", 200);
+        	  map.put("msg", "分数够了");
+          }else {
+        	  map.put("code", 400);
+        	  map.put("msg", "分数不够");
+		}
+          map.put("score", score);
+          
     	
     	
-		return null;
+		return map;
     	
     }
+    
+    
     
 
 }
