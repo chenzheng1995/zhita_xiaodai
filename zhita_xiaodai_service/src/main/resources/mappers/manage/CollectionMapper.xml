@@ -80,8 +80,7 @@
 		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,
-			col.collectionTime,col.collectionStatus,o.orderStatus, from orders o,orderdetails ord,collection col,collection_member colme,
-			user u
+			col.collectionTime,col.collectionStatus,o.orderStatus from orders o,orderdetails ord,collection col,collection_member colme,user u
 			<where>
 				AND o.id = ord.orderId
 				AND u.id = o.userId
@@ -131,8 +130,8 @@
 		<select id="OneOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,
 			c.collectionTime,o.orderNumber,o.id,o.borrowMoneyWay,defe.deferBeforeReturntime,defe.deferAfterReturntime 
-			from collection 
-			c,collection_member cmem,orderdetails orders,overdue_class overdue,orders o,user u,deferred defe
+			from 
+			collection c,collection_member cmem,orderdetails orders,overdue_class overdue,orders o,user u,deferred defe
 			<where>
 				AND u.id = o.userId
 				AND o.id = orders.orderId
@@ -150,7 +149,7 @@
 		
 		
 		<select id="SelectSumOrderNum" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			select  DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as orderCreateTime from orders o
+			select  o.orderCreateTime  from orders o
 				<where>
 					AND o.companyId = #{companyId} 
 					<if test="borrowMoneyType != null and borrowMoneyType != ''">
@@ -160,13 +159,13 @@
 						AND o.orderCreateTime between #{start_time} and#{end_time}
 					</if>
 				</where>
-				GROUP BY DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d')
+				GROUP BY o.orderCreateTime
 		</select>
 		
 		
  	
 		<select id="SelectSumOrder" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			select  DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as orderCreateTime,count(o.id) as collection_count from orders o
+			select  o.orderCreateTime,count(o.id) as collection_count from orders o
 				<where>
 					AND o.companyId = #{companyId} 
 					<if test="borrowMoneyType != null and borrowMoneyType != ''">
@@ -176,7 +175,7 @@
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 				</where>
-				GROUP BY DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d')
+				GROUP BY o.orderCreateTime
 				limit #{page},#{pagesize}
 		</select>
 		
@@ -184,7 +183,7 @@
 		
 		
 		<select id="SelectReallyName" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
-			select colme.reallyName,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime,count(c.collectionTime) as collection_count from 
+			select colme.reallyName,c.collectionTime,count(c.collectionTime) as collection_count from 
 			collection c,collection_member colme
 			<where>
 				AND c.collectionMemberId = colme.collectionMemberId 
@@ -210,7 +209,7 @@
 		
 		
 		<select id="SelectUserNum" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			SELECT DATE_FORMAT(collectionTime,'%Y-%m-%d') as collectionTime from collection
+			SELECT collectionTime from collection
 				<where>
 					<if test="collectionMemberId != null and collectionMemberId != ''">
 						AND collectionMemberId = #{collectionMemberId}
@@ -223,7 +222,7 @@
 		
 		
 		<select id="Collectionmemberdetilas" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			SELECT cmember.reallyName,count(c.collectionId) as collection_count,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime FROM 
+			SELECT cmember.reallyName,count(c.collectionId) as collection_count,c.collectionTime FROM 
 			collection c,collection_member cmember
 		 	<where>
 		 		AND c.collectionMemberId=cmember.collectionMemberId
@@ -234,7 +233,7 @@
 					AND c.collectionTime between #{start_time} and #{end_time}
 				</if>
 			</where>
-		 	GROUP BY DATE_FORMAT(c.collectionTime,'%Y-%m-%d')
+		 	GROUP BY c.collectionTime
 		 	limit #{page},#{pagesize}
 		</select>
 		
@@ -374,8 +373,8 @@
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber = #{orderNumber}
 				</if>
-				<if test="orderCreateTime != null and orderCreateTime != ''">
-					AND o.orderCreateTime = #{orderCreateTime}
+				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND o.orderCreateTime between #{start_time} and #{end_time}
 				</if>
 				<if test="realtime != null and realtime != ''">
 					AND ord.realtime = #{realtime}

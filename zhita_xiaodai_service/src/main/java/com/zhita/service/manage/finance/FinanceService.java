@@ -51,4 +51,10 @@ public interface FinanceService {
 	
 	
 	Map<String, Object> AddBank(Bankdeduction banl);
+	
+	
+	Map<String, Object> AllDelayStatis(Bankdeduction banl);
+	
+	
+	Map<String, Object> Financialover(Bankdeduction banl);
 }

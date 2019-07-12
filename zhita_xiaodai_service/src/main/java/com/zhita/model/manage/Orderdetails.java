@@ -39,7 +39,6 @@ public class Orderdetails {
 	
 	private String registerClient;//注册客户端
 	
-	
 	private String borrowMoneyState;//还款状态（已还和未还）
 	
 	private String name;//姓名
@@ -76,7 +75,7 @@ public class Orderdetails {
     
     private String collectionTime;//催收时间
     
-    private Integer borrowTimeLimit;//借款期限
+    private String borrowTimeLimit;//借款期限
     
     private String borrowMoneyWay;//'贷款方式（立即贷和分期贷）',
     
@@ -157,6 +156,12 @@ public class Orderdetails {
     private Integer collNum;
     
     private BigDecimal defeMoney;
+    
+    private String drainageOfPlatformName;//引流渠道
+    
+    private BigDecimal OrderMoney;
+    
+    private Integer thirdparty_id;
 
 	public Integer getId() {
 		return id;
@@ -430,11 +435,11 @@ public class Orderdetails {
 		this.collectionTime = collectionTime;
 	}
 
-	public Integer getBorrowTimeLimit() {
+	public String getBorrowTimeLimit() {
 		return borrowTimeLimit;
 	}
 
-	public void setBorrowTimeLimit(Integer borrowTimeLimit) {
+	public void setBorrowTimeLimit(String borrowTimeLimit) {
 		this.borrowTimeLimit = borrowTimeLimit;
 	}
 
@@ -756,6 +761,30 @@ public class Orderdetails {
 
 	public void setDefeMoney(BigDecimal defeMoney) {
 		this.defeMoney = defeMoney;
+	}
+
+	public String getDrainageOfPlatformName() {
+		return drainageOfPlatformName;
+	}
+
+	public void setDrainageOfPlatformName(String drainageOfPlatformName) {
+		this.drainageOfPlatformName = drainageOfPlatformName;
+	}
+
+	public BigDecimal getOrderMoney() {
+		return OrderMoney;
+	}
+
+	public void setOrderMoney(BigDecimal orderMoney) {
+		OrderMoney = orderMoney;
+	}
+
+	public Integer getThirdparty_id() {
+		return thirdparty_id;
+	}
+
+	public void setThirdparty_id(Integer thirdparty_id) {
+		this.thirdparty_id = thirdparty_id;
 	}
     
 

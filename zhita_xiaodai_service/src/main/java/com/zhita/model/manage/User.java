@@ -40,6 +40,25 @@ public class User {
     
     private String ifblacklist;//是否是黑名单（1：是；0：不是）
     
+    private Integer userNum;
+    
+    private BigDecimal UserMoney;
+
+	public Integer getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(Integer userNum) {
+		this.userNum = userNum;
+	}
+
+	public BigDecimal getUserMoney() {
+		return UserMoney;
+	}
+
+	public void setUserMoney(BigDecimal userMoney) {
+		UserMoney = userMoney;
+	}
     private Integer riskControlPoints;//分控分数
     
     private BigDecimal canBorrowLines;//可借额度

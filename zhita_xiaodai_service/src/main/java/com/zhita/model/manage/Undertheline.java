@@ -23,6 +23,8 @@ public class Undertheline {
 	private String repaymentnumber;//还款流水号
 	
 	private String remarks;//备注
+	
+	
 
 	public Integer getId() {
 		return id;

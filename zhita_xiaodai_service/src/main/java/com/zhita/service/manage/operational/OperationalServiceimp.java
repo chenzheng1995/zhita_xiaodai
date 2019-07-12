@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.OperationalMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
@@ -13,6 +15,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
 import com.zhita.util.PageUtil;
+import com.zhita.util.Timestamps;
 
 
 @Service
@@ -36,6 +39,12 @@ public class OperationalServiceimp implements OperationalService{
 
 	@Override
 	public Map<String, Object> PlatformsNu(Orderdetails ordera) {
+		try {
+			ordera.setStart_time(Timestamps.dateToStamp(ordera.getStart_time()));
+			ordera.setEnd_time(Timestamps.dateToStamp(ordera.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Integer> ids = coldao.SelectCollectionId(ordera.getCompanyId());
 		ordera.setIds(ids);//查询催收员  参数 公司ID
@@ -60,7 +69,6 @@ public class OperationalServiceimp implements OperationalService{
 			}else{
 				ordes.get(i).setPassrate(100);//放款通过率
 			}
-			ordera.setShouldReturnTime(ordes.get(i).getOperator_time());
 			Orderdetails ord = operdao.SelectOperNum(ordera);
 			ordes.get(i).setBeoverdue(ord.getOrderId());//逾期还款数
 			ordes.get(i).setMemberid(pdap.CollMemberId(ordera.getCompanyId()));//获取催收员ID
@@ -71,6 +79,8 @@ public class OperationalServiceimp implements OperationalService{
 			ordes.get(i).setRealreturn(operdao.SelectRealityAccount(ordera));//实还金额
 			ordera.setCollectionStatus("态度恶劣");
 			ordes.get(i).setAmountofbaddebts(operdao.SelectAmountofbaddebts(ordera));
+			ordes.get(i).setOrderCreateTime(Timestamps.stampToDate(ordes.get(i).getOrderCreateTime()));
+			ordera.setShouldReturnTime(Timestamps.stampToDate(ordes.get(i).getOperator_time()));
 			System.out.println(ordes.get(i));
 		}
 		map.put("Orders", ordes);
@@ -81,6 +91,12 @@ public class OperationalServiceimp implements OperationalService{
 
 	@Override
 	public Map<String, Object> HuanKuan(Orderdetails order) {
+		try {
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Integer> ids = coldao.SelectCollectionId(order.getCompanyId());
 		order.setIds(ids);//查询催收员  参数 公司ID
@@ -95,6 +111,7 @@ public class OperationalServiceimp implements OperationalService{
 		order.setPage(pages.getPage());
 		List<Repayment> ords = operdao.SelectRepayment(order);//获取还款时间   还款数     还款金额
 		for(int i=0;i<ords.size();i++){
+			ords.get(i).setRepaymentDate(Timestamps.stampToDate(ords.get(i).getRepaymentDate()));
 			ords.get(i).setIds(operdao.ConnectionidAll(order));//
 			order.setShouldReturnTime(ords.get(i).getOperator_time());
 			Orderdetails ord = operdao.SelectOperNum(order);
@@ -125,6 +142,12 @@ public class OperationalServiceimp implements OperationalService{
 
 	@Override
 	public Map<String, Object> CollectionData(Orderdetails orde) {
+		try {
+			orde.setStart_time(Timestamps.dateToStamp(orde.getStart_time()));
+			orde.setEnd_time(Timestamps.dateToStamp(orde.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orderdetails> col = operdao.CollectionDataNum(orde);
 		Integer totalCount = null;
@@ -151,6 +174,7 @@ public class OperationalServiceimp implements OperationalService{
 			
 			orde.setCollectionStatus("态度恶劣");
 			ordesa.get(i).setBaddebt(operdao.SelecNumberCollection(orde));//查询坏账数
+			ordesa.get(i).setOrderCreateTime(Timestamps.stampToDate(ordesa.get(i).getOrderCreateTime()));
 		}
 		map.put("Orderdetails", ordesa);
 		return map;
@@ -160,6 +184,12 @@ public class OperationalServiceimp implements OperationalService{
 
 	@Override
 	public Map<String, Object> OrderBudget(Orderdetails orde) {
+		try {
+			orde.setStart_time(Timestamps.dateToStamp(orde.getStart_time()));
+			orde.setEnd_time(Timestamps.dateToStamp(orde.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> ord = operdao.SelectOrderBudeNum(orde);
 		Integer totalCount = null;
@@ -172,6 +202,7 @@ public class OperationalServiceimp implements OperationalService{
 		orde.setPage(pages.getPage());
 		List<Orders> ords = operdao.SelectOrderBude(orde);
 		for(int i=0;i<ords.size();i++){
+			ords.get(i).setOrderCreateTime(Timestamps.stampToDate(ords.get(i).getOrderCreateTime()));
 			ords.get(i).setActualrevenue(ords.get(i).getMakeLoans().subtract(ords.get(i).getRealityAccount()));
 		}
 		map.put("Pageutil", pages);

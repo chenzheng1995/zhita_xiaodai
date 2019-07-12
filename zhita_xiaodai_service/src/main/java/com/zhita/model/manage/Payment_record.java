@@ -42,6 +42,27 @@ public class Payment_record {
 	private BigDecimal paymentmoney;//流水号
 	
 	private String orderNumber;//订单编号
+	
+	private String repaymentDate;
+	
+	private BigDecimal repaymentMoney;
+	
+
+	public String getRepaymentDate() {
+		return repaymentDate;
+	}
+
+	public void setRepaymentDate(String repaymentDate) {
+		this.repaymentDate = repaymentDate;
+	}
+
+	public BigDecimal getRepaymentMoney() {
+		return repaymentMoney;
+	}
+
+	public void setRepaymentMoney(BigDecimal repaymentMoney) {
+		this.repaymentMoney = repaymentMoney;
+	}
 
 	public Integer getId() {
 		return id;
