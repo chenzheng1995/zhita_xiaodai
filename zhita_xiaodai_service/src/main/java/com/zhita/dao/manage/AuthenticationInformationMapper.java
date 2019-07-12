@@ -2,11 +2,8 @@ package com.zhita.dao.manage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.zhita.model.manage.AuthenticationInformation;
-
-import sun.text.normalizer.ICUBinary.Authenticate;
 
 public interface AuthenticationInformationMapper {
     int deleteByPrimaryKey(Integer id);
@@ -22,7 +19,7 @@ public interface AuthenticationInformationMapper {
     int updateByPrimaryKeySelective(AuthenticationInformation record);
     
     //后台管理---更新保存功能
-    int updateByPrimaryKey(AuthenticationInformation record);
+    int updateByPrimaryKey(Integer id,String value);
     
     //后台管理---查询认证信息表所有信息
     List<AuthenticationInformation> queryAll(Integer companyId);

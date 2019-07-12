@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.ManageControlSettingsMapper;
+import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.SourceDiscountHistoryMapper;
 import com.zhita.dao.manage.SourceMapper;
 import com.zhita.dao.manage.SourceTemplateMapper;
@@ -42,6 +43,8 @@ public class SourceServiceImp implements IntSourceService{
 	private SourceTemplateMapper sourceTemplateMapper;
 	@Autowired
 	private SourceDiscountHistoryMapper sourceDiscountHistoryMapper;
+	@Autowired
+	private OrdersMapper ordersMapper;
 	
 	//后台管理---查询渠道表所有信息
     public Map<String,Object> queryAll(Integer companyId,Integer page){
@@ -219,6 +222,11 @@ public class SourceServiceImp implements IntSourceService{
     	return list;
     }
     
+    //后台管理---查询当天各个渠道在用户表的注册数量(通过渠道查询)
+    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,String sourcename){
+    	List<TongjiSorce> list=sourceMapper.queryAllSourceBySouce(companyid, StartTime, EndTime, sourcename);
+    	return list;
+    }
     //后台管理---查询某一天某个渠道的注册数量
     public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,String sourceName){
     	TongjiSorce tongjisource=sourceMapper.queryAllSourceByUserDetail(companyid, StartTime, EndTime, sourceName);
@@ -392,4 +400,44 @@ public class SourceServiceImp implements IntSourceService{
     	TongjiSorce tongjiSorce=sourceDiscountHistoryMapper.queryBySourcenameAndDate(sourcename, startdate, enddate);
     	return tongjiSorce;
     }
+    //后台管理---查询当前渠道下有多少用户是登录过得
+    public int queryCount(String sourceName,String startTime,String endTime){
+    	int count=sourceMapper.queryCount(sourceName,startTime,endTime);
+    	return count;
+    }
+    //后台管理---当前渠道下所有的用户id
+    public List<Integer> queryUserid(String sourceName){
+    	List<Integer> list=sourceMapper.queryUserid(sourceName);
+    	return list;
+    }
+    //后台管理---查询当前用户id是否在个人信息认证表有值
+    public int queryIfExist(Integer userid){
+    	int count=sourceMapper.queryIfExist(userid);
+    	return count;
+    }
+    //后台管理---查询当前用户id是否在银行卡表有值
+    public int queryIfExist1(Integer userid){
+    	int count=sourceMapper.queryIfExist1(userid);
+    	return count;
+    }
+    //后台管理---查询当前用户id是否在运营商表有值
+    public int queryIfExist2(Integer userid){
+    	int count=sourceMapper.queryIfExist2(userid);
+    	return count;
+    }
+  	//后台管理---渠道统计模块——申请人数字段
+  	public int queryNum(Integer companyId,String sourcename){
+  		int count=ordersMapper.queryNum(companyId, sourcename);
+  		return count;
+  	}
+ 	//后台管理---查询当前渠道所使用的风控       机审风控分数段的值
+    public String querymancon(String sourceName){
+    	String airappFractionalSegment=sourceMapper.querymancon(sourceName);
+    	return airappFractionalSegment;
+    }
+    //后台管理---渠道统计模块——机审通过字段
+   	public int queryNum1(Integer companyId,String sourcename,String startscore,String endscore){
+   		int airappFractionalSegment=ordersMapper.queryNum1(companyId, sourcename, startscore, endscore);
+   		return airappFractionalSegment;
+   	}
 }

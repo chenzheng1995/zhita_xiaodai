@@ -42,7 +42,22 @@ public interface OrdersMapper {
 	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id   风控名字）
   	List<Orders> queryAllOrders(OrderQueryParameter orderQueryParameter);
 
+
 	int borrowNumber(@Param("userId")int userId,@Param("companyId") int companyId);
 
 	int getOrdersId(@Param("userId")int userId,@Param("companyId") int companyId);
+
+  	
+	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id）
+  	List<Orders> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter);
+  	
+  	//后台管理----订单 查询（公司id）
+  	List<Orders> queryAllOrdersByUserid1(Integer companyId);
+  	
+  	//后台管理---渠道统计模块——申请人数字段
+  	int queryNum(Integer companyId,String sourcename);
+  	
+  	//后台管理---渠道统计模块——机审通过字段
+  	int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
+
 }

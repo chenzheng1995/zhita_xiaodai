@@ -88,11 +88,8 @@
   <!-- 后台管理       更新保存功能 -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.AuthenticationInformation" >
     update authentication_information
-    set companyId = #{companyid,jdbcType=INTEGER},
-      authenticationName = #{authenticationname,jdbcType=VARCHAR},
-      icon = #{icon,jdbcType=VARCHAR},
-      ifAuthentication = #{ifauthentication,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    set ifAuthentication = #{arg1}
+    where id = #{arg0}
   </update>
   <!-- 后台管理        查询认证信息表所有信息 -->
   <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.AuthenticationInformation">

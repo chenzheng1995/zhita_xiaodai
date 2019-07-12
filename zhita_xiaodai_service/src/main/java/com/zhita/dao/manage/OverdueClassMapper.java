@@ -1,5 +1,8 @@
 package com.zhita.dao.manage;
 
+import java.util.List;
+
+import com.zhita.model.manage.BlackDemarcationLine;
 import com.zhita.model.manage.OverdueClass;
 
 public interface OverdueClassMapper {
@@ -19,5 +22,11 @@ public interface OverdueClassMapper {
     int updateByPrimaryKey(OverdueClass record);
     
     //后台管理 --- 查询逾期等级表所有信息
-    int queryAll(Integer companyId);
+    List<OverdueClass> queryAll(Integer companyId);
+    
+    //后台管理---查询黑名单分界线表的信息
+    BlackDemarcationLine query();
+    
+    //后台管理---修改黑名单分界线的值
+    int update(Integer blacklinevalue);
 }

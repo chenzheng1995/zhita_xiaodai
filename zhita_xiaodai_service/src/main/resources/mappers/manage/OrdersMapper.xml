@@ -426,6 +426,7 @@
         and o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR}
     </where>
   </select>
+
   
         <!--编辑账单中根据日期和甲方查询出有多少条数据-->
  <select id="borrowNumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -438,4 +439,41 @@ select count(id) from orders where companyId = #{companyId} and userId = #{userI
 select id from orders where companyId = #{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
  </select> 
   
+
+    <!-- 后台管理         订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id） -->
+  <select id="queryAllOrdersByUserid" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List1" />
+    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
+    <where>
+        <if test="ordernumber != null">
+           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="orderstarttime != null and orderstarttime!='' and orderendtime!=null and orderendtime!=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename != null">
+           and s.sourcename =#{sourcename,jdbcType=VARCHAR}
+        </if>
+        and o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
+    </where>
+  </select>
+     <!-- 后台管理         订单 查询（公司id） -->
+  <select id="queryAllOrdersByUserid1" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List1" />
+    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
+    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userid from blacklist_user where userid!='' and deleted=0)
+  </select>
+  <!-- 后台管理         渠道统计模块——申请人数字段 -->
+  <select id="queryNum" resultType="java.lang.Integer">
+  	 select count(*) from orders o inner join user u on o.userId=u.id inner join source s on u.sourceId=s.id
+     where o.companyId=#{arg0} and s.sourceName=#{arg1}
+  </select>
+  <!-- 后台管理        渠道统计模块——机审通过字段 -->
+  <select id="queryNum1" resultType="java.lang.Integer">
+  	 select count(*) from orders o inner join user u on o.userId=u.id inner join source s on u.sourceId=s.id
+     where o.companyId=#{arg0} and s.sourceName=#{arg1} and o.riskmanagementFraction between #{arg2} and #{arg3}
+  </select>
+
 </mapper>

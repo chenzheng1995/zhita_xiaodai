@@ -110,18 +110,16 @@
   	select 
     <include refid="Base_Column_List" />
     from whitelist_user
-    <where>
-    	<if test="name != null">
-           name like "%"#{arg1}"%"
+    where companyId=#{companyId} and deleted=0
+    	<if test="name != null and name!=''">
+           and name like "%"#{name}"%"
         </if>
-        <if test="phone != null">
-           and phone="%"#{arg2}"%"
+        <if test="phone != null and phone!=''">
+           and phone="%"#{phone}"%"
         </if>
-        <if test="idcard != null">
-           and idcard="%"#{arg3}"%"
+        <if test="idcard != null and idcard!=''">
+           and idcard="%"#{idcard}"%"
         </if>
-    </where>
-    and companyId=#{arg0} and deleted=0
   </select>
   <!-- 后台管理        更新假删除状态 -->
   <update id="upaFalseDel" parameterType="java.lang.Integer">

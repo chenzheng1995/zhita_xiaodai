@@ -1,6 +1,8 @@
 package com.zhita.service.manage.thirdpartyint;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,10 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.dao.manage.ThirdpartyInterfaceMapper;
 import com.zhita.model.manage.Company;
+import com.zhita.model.manage.FaceRecognition;
+import com.zhita.model.manage.LoanSetting;
+import com.zhita.model.manage.OperatorSetting;
+import com.zhita.model.manage.RepaymentSetting;
 import com.zhita.model.manage.ThirdpartyInterface;
 
 @Service
@@ -24,9 +30,19 @@ public class ThirdpartyintServiceImp implements IntThirdpartyintService{
     }
     
     //后台管理---添加功能（查询出所有公司）
-    public List<Company> queryAllCompany(){
+    public Map<String, Object> queryAllCompany(){
     	List<Company> list=sysUserMapper.queryAllCompany();
-    	return list;
+    	List<FaceRecognition> list1=thirdpartyInterfaceMapper.queryface();
+    	List<OperatorSetting> list2=thirdpartyInterfaceMapper.queryopera();
+    	List<LoanSetting> list3=thirdpartyInterfaceMapper.queryloan();
+    	List<RepaymentSetting> list4=thirdpartyInterfaceMapper.queryrepayment();
+    	Map<String, Object> map=new HashMap<>();
+    	map.put("comlist", list);
+    	map.put("facelist", list1);
+    	map.put("operalist", list2);
+    	map.put("loanlist", list3);
+    	map.put("repaylist", list4);
+    	return map;
     }
     
     //后台管理---添加功能

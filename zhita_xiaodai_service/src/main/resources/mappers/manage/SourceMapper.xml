@@ -187,6 +187,18 @@
 	select t.sourcename,count(*) registernum,t.companyid from 
    	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
    	and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t 
+   	group by t.sourcename
+   </select>
+   <!-- 后台管理        查询当天各个渠道在用户表的注册数量(通过渠道查询) -->
+   <select id="queryAllSourceBySouce" resultType="com.zhita.model.manage.TongjiSorce">
+	select t.sourcename,count(*) registernum,t.companyid from 
+   	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id 
+   	<where>
+        <if test="sourcename != null">
+          s.sourcename like "%"#{sourcename}"%"
+        </if>
+   	</where>
+   	and u.companyid=#{companyid} and u.registeTime>=#{StartTime} and u.registeTime &lt;#{EndTime}) t 
    	group by t.sourcename 
    </select>
    <!-- 后台管理        通过渠道名称查询出当前渠道的折扣率 -->
@@ -220,5 +232,29 @@
     <!-- 后台管理      根据渠道id查询渠道的折扣率 -->
    <select id="queryDiscountById" parameterType="java.lang.Integer" resultType="java.lang.String">
 	select discount from source where id=#{arg0}
+  </select>
+  <!--后台管理         查询当前渠道下有多少用户是登录过得  -->
+  <select id="queryCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from user u inner join source s on u.sourceId=s.id where s.sourceName=#{arg0} and u.loginStatus=1 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
+  </select>
+  <!-- 后台管理      当前渠道下所有的用户id -->
+  <select id="queryUserid" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select u.id from user u inner join source s on u.sourceId=s.id where s.sourceName=#{arg0}
+  </select>
+  <!-- 后台管理          查询当前用户id是否在个人信息认证表有值 -->
+  <select id="queryIfExist" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select count(*) from user_attestation uat inner join user u on uat.userid=u.id where u.id=#{arg0}
+  </select>
+  <!-- 后台管理       查询当前用户id是否在银行卡表有值 -->
+  <select id="queryIfExist1" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select count(*) from bankcard b inner join user u on b.userid=u.id where u.id=#{arg0}
+  </select>
+  <!-- 后台管理     查询当前用户id是否在运营商表有值 -->
+  <select id="queryIfExist2" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select count(*) from operator op inner join user u on op.userid=u.id where u.id=#{arg0}
+  </select>
+  <!-- 后台管理          查询当前渠道所使用的风控       机审风控分数段的值-->
+  <select id="querymancon" parameterType="java.lang.String" resultType="java.lang.String">
+  	select airappFractionalSegment from manage_control_settings mcs inner join source s on mcs.id=s.manageControlId where s.sourceName=#{arg0}
   </select>
 </mapper>

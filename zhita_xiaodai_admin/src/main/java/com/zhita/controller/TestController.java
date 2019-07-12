@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,9 +85,9 @@ public class TestController {
 	
 	
 	public static void main(String[] args) throws ParseException {
-		 String str="600-800"; 
+		 /*String str="600-800"; 
 		 String[] strarray=str.split("-"); 
-		 System.out.println(strarray[0]+"----"+strarray[1]);
+		 System.out.println(strarray[0]+"----"+strarray[1]);*/
 		 
 		/*//获取前一天的日期
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -95,6 +96,18 @@ public class TestController {
 		String dateyes = df.format(calendar.getTime());
 		System.out.println("今天日期的前一天："+dateyes);*/
 		
-		 System.out.println(1000*20/100);
+		// System.out.println(1000*20/100);
+		/*int a=0;
+		int b=0;
+		int c=0;
+		if((a==1||(b==1)||(c==1))){
+			System.out.println("0000");
+		}*/
+		String date="2019-07-12";
+		String startTime = date;
+		String startTimestamps = Timestamps.dateToStamp(startTime);
+		String endTime = date;
+		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		System.out.println(startTimestamps+"---"+endTimestamps);
 	}
 }

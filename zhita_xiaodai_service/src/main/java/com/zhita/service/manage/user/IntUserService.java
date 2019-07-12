@@ -2,12 +2,23 @@ package com.zhita.service.manage.user;
 
 import java.util.Map;
 
+import com.zhita.model.manage.OrderQueryParameter;
+
 public interface IntUserService {
 	//后台管理----用户列表(公司id，page,姓名，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
 	public Map<String, Object> queryUserList(Integer companyId,Integer page,String name,String registeTimeStart,String registeTimeEnd,String userattestationstatus,String bankattestationstatus,String operaattestationstatus);
 	
 	//后台管理---添加黑名单
 	public int insertBlacklist(Integer companyId,Integer userId,String operator);
+	
+	//后台管理---解除黑名单
+	public int removeBlacklist(Integer companyId,Integer userId);
+	
+	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id）
+  	public Map<String,Object> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter);
+  	
+	//后台管理----订单 查询（公司id  page）
+  	public Map<String, Object> queryAllOrdersByUserid1(Integer companyId,Integer page);
 
 	public void updateScore(int score, int userId);
 
