@@ -33,13 +33,21 @@ public interface UserMapper {
 	int updatelogOutStatus(@Param("loginStatus")String loginStatus,@Param("userId") int userId,@Param("companyId") String companyId);
 	
 	//后台管理----用户列表(公司id，姓名，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
-	List<User> queryUserList(Integer companyId,String name,String registeTimeStart,String registeTimeEnd,String userattestationstatus,String bankattestationstatus,String operaattestationstatus);
+	List<User> queryUserList(@Param("companyId") Integer companyId,@Param("name") String name,@Param("registeTimeStart") String registeTimeStart,
+			@Param("registeTimeEnd")String registeTimeEnd,@Param("userattestationstatus")  String userattestationstatus,
+			@Param("bankattestationstatus") String bankattestationstatus,@Param("operaattestationstatus")  String operaattestationstatus);
 	
 	//后台管理---添加黑名单(修改当前用户的黑名单状态)
 	int upaBlacklistStatus(Integer userid);
 	
+	//后台管理---解除黑名单(修改当前用户的黑名单状态)
+	int upaBlacklistStatus1(Integer userid);
+	
 	//后台管理---添加黑名单（将当前用户存进黑名单里）
 	int addBlacklist(Integer companyId,Integer userId,String operator,String operationTime);
+	
+	//后台管理---解除黑名单（修改当前用在户黑名单表里的假删除状态）
+	int upaBlacklist(Integer userId);
 
 	int updatePwd(@Param("newPhone")String newPhone,@Param("md5Pwd") String md5Pwd,@Param("companyId") int companyId);
 

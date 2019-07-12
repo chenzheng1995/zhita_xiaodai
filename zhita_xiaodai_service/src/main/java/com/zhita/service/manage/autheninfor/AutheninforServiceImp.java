@@ -52,8 +52,8 @@ public class AutheninforServiceImp implements IntAutheninforService{
     }
     
     //后台管理---更新保存功能
-    public int updateByPrimaryKey(AuthenticationInformation record){
-    	int num=authenticationInformationMapper.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(Integer id,String value){
+    	int num=authenticationInformationMapper.updateByPrimaryKey(id,value);
     	return num;
     }
 
@@ -66,7 +66,7 @@ public class AutheninforServiceImp implements IntAutheninforService{
 
 
 	@Override
-	public Map<String, Object> updateByPrimaryKey(AuthenticationInformation record, MultipartFile file)
+	public Map<String, Object> updateByPrimaryKey1(AuthenticationInformation record, MultipartFile file)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

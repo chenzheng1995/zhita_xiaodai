@@ -43,7 +43,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
 		}
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());

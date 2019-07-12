@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.Company;
+import com.zhita.model.manage.FaceRecognition;
 import com.zhita.model.manage.Role;
 import com.zhita.model.manage.SysUser;
 
@@ -80,5 +81,6 @@ public interface SysUserMapper {
     
     //admin---登录——退出登录
     int updateLoginStatus(Integer userId);
+    
 
 }

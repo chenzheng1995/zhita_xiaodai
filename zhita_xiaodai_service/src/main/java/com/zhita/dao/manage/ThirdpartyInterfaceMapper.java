@@ -2,6 +2,10 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import com.zhita.model.manage.FaceRecognition;
+import com.zhita.model.manage.LoanSetting;
+import com.zhita.model.manage.OperatorSetting;
+import com.zhita.model.manage.RepaymentSetting;
 import com.zhita.model.manage.ThirdpartyInterface;
 
 public interface ThirdpartyInterfaceMapper {
@@ -22,4 +26,16 @@ public interface ThirdpartyInterfaceMapper {
     
     //后台管理---查询出第三方接口配置表所有信息
     List<ThirdpartyInterface> queryAll(Integer companyId);
+    
+    //后台管理---查询人脸设置表所有信息
+    List<FaceRecognition> queryface();
+    
+    //后台管理---查询运营商设置表所有信息
+    List<OperatorSetting> queryopera();
+    
+    //后台管理---查询放款渠道设置表所有信息
+    List<LoanSetting> queryloan();
+    
+   //后台管理---查询还款渠道设置表所有信息
+    List<RepaymentSetting> queryrepayment();
 }

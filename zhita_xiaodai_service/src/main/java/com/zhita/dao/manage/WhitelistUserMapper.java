@@ -2,6 +2,8 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.WhitelistUser;
 
 public interface WhitelistUserMapper {
@@ -21,7 +23,7 @@ public interface WhitelistUserMapper {
     int updateByPrimaryKey(WhitelistUser record);
     
     //后台管理---查询列表
-    List<WhitelistUser> queryAll(Integer companyId,String name,String phone,String idcard);
+    List<WhitelistUser> queryAll(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard);
     
     //后台管理---更新假删除状态
     int upaFalseDel(Integer id);

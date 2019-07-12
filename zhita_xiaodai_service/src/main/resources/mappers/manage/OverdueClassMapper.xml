@@ -26,7 +26,7 @@
   <insert id="insert" parameterType="com.zhita.model.manage.OverdueClass" >
     insert into overdue_class (companyId, grade,describe)
     values (#{companyid,jdbcType=INTEGER}, #{grade,jdbcType=VARCHAR}, 
-      #{describe,jdbcType=INTEGER})
+      #{describe,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.OverdueClass" >
     insert into overdue_class
@@ -88,14 +88,23 @@
     update overdue_class
     set companyId = #{companyid,jdbcType=INTEGER},
       grade = #{grade,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=INTEGER}
+      describe = #{describe,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <!-- 后台管理        查询逾期等级表所有信息 -->
-  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueClass">
+  <select id="
+" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueClass">
   	select 
     <include refid="Base_Column_List" />
     from overdue_class
     where companyId=#{arg0}
   </select>
+  <!-- 后台管理       查询黑名单分界线表的信息 -->
+  <select id="query" resultType="com.zhita.model.manage.BlackDemarcationLine">
+  	select * from black_demarcation_line
+  </select>
+  <!-- 后台管理       修改黑名单分界线的值 -->
+  <update id="update" parameterType="java.lang.String">
+  	update black_demarcation_line set demarcationline=#{arg0}
+  </update>
 </mapper>

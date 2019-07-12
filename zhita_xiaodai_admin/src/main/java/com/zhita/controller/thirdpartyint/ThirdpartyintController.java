@@ -1,13 +1,13 @@
 package com.zhita.controller.thirdpartyint;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.Company;
 import com.zhita.model.manage.ThirdpartyInterface;
 import com.zhita.service.manage.thirdpartyint.IntThirdpartyintService;
 
@@ -28,9 +28,9 @@ public class ThirdpartyintController {
 	//后台管理---添加功能（查询出所有公司）
 	@ResponseBody
 	@RequestMapping("/queryAllCompany")
-    public List<Company> queryAllCompany(){
-    	List<Company> list=intThirdpartyintService.queryAllCompany();
-    	return list;
+    public Map<String, Object> queryAllCompany(){
+		Map<String, Object> map=intThirdpartyintService.queryAllCompany();
+    	return map;
     }
     
     //后台管理---添加功能
