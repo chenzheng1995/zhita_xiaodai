@@ -36,7 +36,7 @@ public class Bankdeduction {
 	
 	private String overdueGrade;//逾期等级
 	
-	private String statu_time;//延期后范围开始时间
+	private String startu_time;//延期后范围开始时间
 	
 	private String end_time;//延期后范围结束时间
 	
@@ -49,7 +49,43 @@ public class Bankdeduction {
 	private Integer pagesize=10;
 	
 	private Integer companyId;//公司ID
-
+	
+	private BigDecimal interestOnArrearsSum;//总延期费
+	
+	private Integer orderNum;//延期笔数
+	
+	private Integer realborrowing;//实借笔数
+	
+	private BigDecimal realexpenditure;//实借金额
+	
+	private Integer realreturn;//实还笔数
+	
+	private BigDecimal paymentamount;//实还金额
+	
+	private BigDecimal overdueamount;//逾期金额
+	
+	private BigDecimal deferredamount;//延期金额
+	
+	private BigDecimal identityfee;//身份证认证费
+	
+	private Integer identityNum;//身份证笔数
+	
+	private BigDecimal facefee;//人脸识别费
+	
+	private Integer faceNum;//人脸识别笔数
+	
+	private BigDecimal operatorsfee;//运营商费
+	
+	private Integer operatorsNum;//运营商笔数
+	
+	private Integer riskmanagementNum;//风控笔数
+	
+	private BigDecimal riskmanagementfee;//风控费
+	
+	private Integer offlinemanualNum;//线下手动调账数
+	
+	private BigDecimal offlinemanualfee;//线下手动调账费
+	
 	public Integer getId() {
 		return id;
 	}
@@ -186,12 +222,12 @@ public class Bankdeduction {
 		this.pagesize = pagesize;
 	}
 
-	public String getStatu_time() {
-		return statu_time;
+	public String getStartu_time() {
+		return startu_time;
 	}
 
-	public void setStatu_time(String statu_time) {
-		this.statu_time = statu_time;
+	public void setStartu_time(String startu_time) {
+		this.startu_time = startu_time;
 	}
 
 	public String getEnd_time() {
@@ -224,6 +260,150 @@ public class Bankdeduction {
 
 	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
+	}
+
+	public BigDecimal getInterestOnArrearsSum() {
+		return interestOnArrearsSum;
+	}
+
+	public void setInterestOnArrearsSum(BigDecimal interestOnArrearsSum) {
+		this.interestOnArrearsSum = interestOnArrearsSum;
+	}
+
+	public Integer getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(Integer orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public Integer getRealborrowing() {
+		return realborrowing;
+	}
+
+	public void setRealborrowing(Integer realborrowing) {
+		this.realborrowing = realborrowing;
+	}
+
+	public BigDecimal getRealexpenditure() {
+		return realexpenditure;
+	}
+
+	public void setRealexpenditure(BigDecimal realexpenditure) {
+		this.realexpenditure = realexpenditure;
+	}
+
+	public Integer getRealreturn() {
+		return realreturn;
+	}
+
+	public void setRealreturn(Integer realreturn) {
+		this.realreturn = realreturn;
+	}
+
+	public BigDecimal getPaymentamount() {
+		return paymentamount;
+	}
+
+	public void setPaymentamount(BigDecimal paymentamount) {
+		this.paymentamount = paymentamount;
+	}
+
+	public BigDecimal getOverdueamount() {
+		return overdueamount;
+	}
+
+	public void setOverdueamount(BigDecimal overdueamount) {
+		this.overdueamount = overdueamount;
+	}
+
+	public BigDecimal getDeferredamount() {
+		return deferredamount;
+	}
+
+	public void setDeferredamount(BigDecimal deferredamount) {
+		this.deferredamount = deferredamount;
+	}
+
+	public BigDecimal getIdentityfee() {
+		return identityfee;
+	}
+
+	public void setIdentityfee(BigDecimal identityfee) {
+		this.identityfee = identityfee;
+	}
+
+	public Integer getIdentityNum() {
+		return identityNum;
+	}
+
+	public void setIdentityNum(Integer identityNum) {
+		this.identityNum = identityNum;
+	}
+
+	public BigDecimal getFacefee() {
+		return facefee;
+	}
+
+	public void setFacefee(BigDecimal facefee) {
+		this.facefee = facefee;
+	}
+
+	public Integer getFaceNum() {
+		return faceNum;
+	}
+
+	public void setFaceNum(Integer faceNum) {
+		this.faceNum = faceNum;
+	}
+
+	public BigDecimal getOperatorsfee() {
+		return operatorsfee;
+	}
+
+	public void setOperatorsfee(BigDecimal operatorsfee) {
+		this.operatorsfee = operatorsfee;
+	}
+
+	public Integer getOperatorsNum() {
+		return operatorsNum;
+	}
+
+	public void setOperatorsNum(Integer operatorsNum) {
+		this.operatorsNum = operatorsNum;
+	}
+
+	public Integer getRiskmanagementNum() {
+		return riskmanagementNum;
+	}
+
+	public void setRiskmanagementNum(Integer riskmanagementNum) {
+		this.riskmanagementNum = riskmanagementNum;
+	}
+
+	public BigDecimal getRiskmanagementfee() {
+		return riskmanagementfee;
+	}
+
+	public void setRiskmanagementfee(BigDecimal riskmanagementfee) {
+		this.riskmanagementfee = riskmanagementfee;
+	}
+
+	public Integer getOfflinemanualNum() {
+		return offlinemanualNum;
+	}
+
+	public void setOfflinemanualNum(Integer offlinemanualNum) {
+		this.offlinemanualNum = offlinemanualNum;
+	}
+
+	public BigDecimal getOfflinemanualfee() {
+		return offlinemanualfee;
+	}
+
+	public void setOfflinemanualfee(BigDecimal offlinemanualfee) {
+		this.offlinemanualfee = offlinemanualfee;
 	}
 	
 	

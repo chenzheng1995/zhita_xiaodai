@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.zhita.model.manage.Accountadjustment;
@@ -79,4 +80,19 @@ public interface PaymentRecordMapper {
     
     
     List<Bankdeduction> BanAll(Integer orderId);
+    
+    
+    Integer DelayTatolCount(Bankdeduction bank);
+    
+    
+    List<Bankdeduction> DelayStatisc(Bankdeduction bank);
+    
+    
+    Bankdeduction OneBank(Bankdeduction banl);
+    
+    
+    BigDecimal YanMoney(Bankdeduction banl);
+    
+    
+    List<Integer> Sys_userIds(Integer companyId);
 }

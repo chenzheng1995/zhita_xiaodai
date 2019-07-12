@@ -79,6 +79,7 @@ public class FinanceController {
 	@ResponseBody
 	@RequestMapping("ThirdpatyAll")
 	public Map<String, Object> Thirdpaty(Integer compayId){
+		System.out.println(compayId);
 		return fianser.ThirdpatyAll(compayId);
 	}
 	
@@ -241,5 +242,34 @@ public class FinanceController {
 	
 	
 	
+	
+	/**
+	 * 延期   扣款统计
+	 * @param bank
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("DelayStatistics")
+	public Map<String, Object> DelayStatistics(Bankdeduction bank){
+		return fianser.AllDelayStatis(bank);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 总收入支出
+	 * @param banl
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("financialoverview")
+	public Map<String, Object> Financialove(Bankdeduction banl){
+		return fianser.Financialover(banl);
+	}
 	
 }

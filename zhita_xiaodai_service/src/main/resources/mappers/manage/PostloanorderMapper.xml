@@ -228,7 +228,7 @@
 		
 		
 		<select id="DateNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select DATE_FORMAT(collectionTime,'%Y-%m-%d') as collectionTime,count(collectionTime) as collection_count from collection
+			select collectionTime,count(collectionTime) as collection_count from collection
 			<where>
 				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
 					AND collectionTime between #{statu_time} and#{end_time}
@@ -238,7 +238,7 @@
 		
 		
 		<select id="CollDateNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.overdue_id) as collection_count from overdue ov,collection_member c
+			select ov.collectiondate,count(ov.overdue_id) as collection_count from overdue ov,collection_member c
 			<where>
 				AND c.collectionMemberId = ov.collectionMemberId
 				AND c.companyId = #{companyId}
@@ -246,7 +246,7 @@
 					AND collectiondate between #{statu_time} and#{end_time}
 				</if>
 			</where>
-			GROUP BY DATE_FORMAT(collectiondate,'%Y-%m-%d')
+			GROUP BY collectiondate
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -254,7 +254,7 @@
 		
 		
 		<select id="MemberName" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select colme.collectionMemberId,colme.reallyName,DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.collectiondate) as collection_count 
+			select colme.collectionMemberId,colme.reallyName,ov.collectiondate,count(ov.collectiondate) as collection_count 
 			from overdue ov,collection_member colme
 			<where>
 				AND colme.companyId = #{companyId}
@@ -269,7 +269,7 @@
 		
 		
 		<select id="MemberNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select colme.reallyName,DATE_FORMAT(ov.collectiondate,'%Y-%m-%d') as collectiondate,count(ov.collectiondate) as collection_count from 
+			select colme.reallyName,ov.collectiondate,count(ov.collectiondate) as collection_count from 
 			overdue ov,collection_member colme
 			<where>
 				AND ov.collectionMemberId = colme.collectionMemberId 
@@ -481,7 +481,7 @@
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.surplus_money,defe.interestOnArrears,colme.reallyName
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName
 			 from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme,collection c
 			<where>
 			 AND u.id = o.userId

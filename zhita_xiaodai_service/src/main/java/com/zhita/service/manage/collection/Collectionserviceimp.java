@@ -18,6 +18,7 @@ import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.util.PageUtil;
+import com.zhita.util.Timestamps;
 
 
 @Service
@@ -47,13 +48,16 @@ public class Collectionserviceimp implements Collectionservice{
 			List<Orderdetails> orders = collmapp.Allorderdetails(coll);
 			for(int i=0;i<orders.size();i++){
 				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+				
 				Deferred des = collmapp.DefeSet(orders.get(i));
 				Collection colla = collmapp.CollMen(orders.get(i));
+				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				if(des != null && colla != null){
-					orders.get(i).setDeferBeforeReturntime(des.getDeferBeforeReturntime());
+					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
 					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
 					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
-					orders.get(i).setDeferAfterReturntime(des.getDeferAfterReturntime());
+					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
 					orders.get(i).setReallyName(colla.getReallyName());
 					orders.get(i).setCollectionTime(colla.getCollectionTime());
 					orders.get(i).setCollectionStatus(colla.getCollectionStatus());
@@ -113,6 +117,12 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> BeoverdueYi(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		if(order.getCompanyId() != null){
 			List<Integer> collIds = collmapp.SelectCollectionId(order.getCompanyId());//根据公司ID 查询催收员ID
 			List<Integer> ids = collmapp.OrderIdMa(collIds);
@@ -121,13 +131,18 @@ public class Collectionserviceimp implements Collectionservice{
 			pages.setTotalCount(ids.size());
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
+				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
 				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
 				Deferred des = collmapp.DefeSet(orders.get(i));
+				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				if(des != null ){
-					orders.get(i).setDeferBeforeReturntime(des.getDeferBeforeReturntime());
+					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
 					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
 					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
-					orders.get(i).setDeferAfterReturntime(des.getDeferAfterReturntime());
+					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
 				}
 			}
 			map.put("Orderdetails", orders);
@@ -142,11 +157,16 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> Colldetails(Orderdetails order) {
-		Orderdetails orders = collmapp.OneOrdersdetails(order.getOrderNumber());
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = collmapp.CollectionTotalCount();
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
+		Orderdetails orders = collmapp.OneOrdersdetails(order.getOrderNumber());
+		orders.setBorrowTimeLimit(Timestamps.stampToDate(orders.getBorrowTimeLimit()));
+		orders.setOrderCreateTime(Timestamps.stampToDate(orders.getOrderCreateTime()));
+		orders.setShouldReturnTime(Timestamps.stampToDate(orders.getShouldReturnTime()));
+		orders.setDeferBeforeReturntime(Timestamps.stampToDate(orders.getDeferBeforeReturntime()));
+		orders.setDeferAfterReturntime(Timestamps.stampToDate(orders.getDeferAfterReturntime()));
 		map.put("Orderdetails", orders);
 		return map;
 	}
@@ -155,7 +175,20 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> Collectionmemberdetails(Collection coll) {
+		try {
+			coll.setStart_time(Timestamps.dateToStamp(coll.getStart_time()));
+			coll.setEnd_time(Timestamps.dateToStamp(coll.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		List<Collection> totalCount = collmapp.SelectSumOrderNum(coll);
+		try {
+			coll.setStart_time(Timestamps.dateToStamp(coll.getStart_time()));
+			coll.setEnd_time(Timestamps.dateToStamp(coll.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		Integer asa = null;
 		if(totalCount.size() != 0){
 			asa = totalCount.size();
@@ -166,6 +199,7 @@ public class Collectionserviceimp implements Collectionservice{
 		coll.setPage(pages.getPage());
 		List<Collection> colles = collmapp.SelectSumOrder(coll);
 		for(int i=0;i<colles.size();i++){
+			coll.setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
 			colles.get(i).setCompanyId(coll.getCompanyId());
 			colles.get(i).setOrderNum(collmapp.SelectOrderNum(colles.get(i)));//累计订单总数  参数  时间   公司ID
 			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
@@ -209,6 +243,11 @@ public class Collectionserviceimp implements Collectionservice{
 			col.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
 			for(int i=0;i<orders.size();i++){
+				orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
+				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()));
 			}
 			map.put("Orderdetails", orders);
@@ -224,6 +263,12 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> YiCollection(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			col.setStart_time(Timestamps.dateToStamp(col.getStart_time()));
+			col.setEnd_time(Timestamps.dateToStamp(col.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		if(col.getCompanyId() != null){
 		List<Integer> collIds = collmapp.SelectCollectionId(col.getCompanyId());//根据公司ID 查询催收员ID
 		List<Integer> CollectionMemberIds = collmapp.SelectCollectionMemberIds(collIds);//查询已分配催收员订单ID
@@ -246,6 +291,11 @@ public class Collectionserviceimp implements Collectionservice{
 		col.setPage(pages.getPage());
 		List<Orderdetails> orders = collmapp.WeiControllerOrdetialis(col);
 		for(int i=0;i<orders.size();i++){
+			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 			orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
 			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
 		}
@@ -264,7 +314,11 @@ public class Collectionserviceimp implements Collectionservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(col.getUser_type() != null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			col.setCollection_time(sim.format(new Date()));
+			try {
+				col.setCollection_time(Timestamps.dateToStamp(sim.format(new Date())));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			Integer addId = collmapp.AddCollectiondetails(col);
 			if(addId != null){
 				map.put("code", 200);
@@ -295,6 +349,12 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> CollectionmemberUser(Collection coll) {
+		try {
+			coll.setStart_time(Timestamps.dateToStamp(coll.getStart_time()));
+			coll.setEnd_time(Timestamps.dateToStamp(coll.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Collection> colleas = collmapp.SelectUserNum(coll);
 		Integer totalCount = null ;		
@@ -307,6 +367,7 @@ public class Collectionserviceimp implements Collectionservice{
 		coll.setPage(pages.getPage());
 		List<Collection> colles = collmapp.Collectionmemberdetilas(coll);
 		for(int i=0;i<colles.size();i++){
+			colles.get(i).setCollectionTime(Timestamps.stampToDate(colles.get(i).getCollectionTime()));
 			colles.get(i).setCompanyId(coll.getCompanyId());
 			colles.get(i).setOrderNum(collmapp.SelectUserCollectionNum(colles.get(i)));
 			colles.get(i).setCollectionStatus("承诺还款");

@@ -27,12 +27,41 @@ public class Accountadjustment {
 	
 	private String repaymentSource;//还款渠道
 	
+	private Integer overdueNumberOfDays;
+	
 	private String statu;
 	
 	private String idcardFaceAuthentication;
 	
 	private Integer thirdparty_id;
 	
+	private String amou_time;
+	
+	private Integer sys_uerId;
+	
+	public String getAmou_time() {
+		return amou_time;
+	}
+
+	public Integer getOverdueNumberOfDays() {
+		return overdueNumberOfDays;
+	}
+
+	public void setOverdueNumberOfDays(Integer overdueNumberOfDays) {
+		this.overdueNumberOfDays = overdueNumberOfDays;
+	}
+
+	public void setAmou_time(String amou_time) {
+		this.amou_time = amou_time;
+	}
+
+	public Integer getSys_uerId() {
+		return sys_uerId;
+	}
+
+	public void setSys_uerId(Integer sys_uerId) {
+		this.sys_uerId = sys_uerId;
+	}
 
 	public Integer getThirdparty_id() {
 		return thirdparty_id;
