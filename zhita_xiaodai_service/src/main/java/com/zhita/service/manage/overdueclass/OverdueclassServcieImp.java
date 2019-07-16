@@ -39,8 +39,9 @@ public class OverdueclassServcieImp implements IntOverdueclassService{
     
     //后台管理---添加功能
     public int insert(OverdueClass record){
-    	int num=overdueClassMapper.insert(record);
-    	return num;
+    	overdueClassMapper.insert(record);
+    	Integer id=record.getId();
+    	return id;
     }
     
     //后台管理---根据id查询出当前对象信息
@@ -58,6 +59,11 @@ public class OverdueclassServcieImp implements IntOverdueclassService{
     //后台管理---修改黑名单分界线的值
     public int update(Integer blacklinevalue){
     	int num=overdueClassMapper.update(blacklinevalue);
+    	return num;
+    }
+  //后台管理---修改假删除功能
+    public int upaFalseDel(Integer id){
+    	int num=overdueClassMapper.upaFalseDel(id);
     	return num;
     }
 }

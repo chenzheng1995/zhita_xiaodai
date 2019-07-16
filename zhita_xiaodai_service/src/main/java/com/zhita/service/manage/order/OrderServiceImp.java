@@ -1,5 +1,6 @@
 package com.zhita.service.manage.order;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.OrdersMapper;
+import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Source;
+import com.zhita.model.manage.SysUser;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
@@ -22,9 +26,18 @@ public class OrderServiceImp implements IntOrderService{
 	@Autowired
 	private OrdersMapper ordersMapper;
 	
-	//后台管理----机审订单     (公司id，page，订单号，订单开始时间，订单结束时间，风控反馈)
+	//后台管理----机审订单      (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
 	public Map<String, Object> queryatrOrders(OrderQueryParameter orderQueryParameter){
-		System.out.println("service:"+orderQueryParameter);
+		if((orderQueryParameter.getOrderstarttime()!=null&&!"".equals(orderQueryParameter.getOrderstarttime()))&&(orderQueryParameter.getOrderendtime()!=null&&!"".equals(orderQueryParameter.getOrderendtime()))){
+			try {
+				orderQueryParameter.setOrderstarttime(Timestamps.dateToStamp(orderQueryParameter.getOrderstarttime()));
+				orderQueryParameter.setOrderendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getOrderendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
@@ -55,19 +68,23 @@ public class OrderServiceImp implements IntOrderService{
 			
 		}
 		
-		for (int i = 0; i <listorderfor.size(); i++) {
-			listorderfor.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderfor.get(i).getOrderCreateTime()));
-		}
-		
-		DateListUtil.ListSort2(listorderfor);
-		
 	    if(listorderfor!=null && !listorderfor.isEmpty()){
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }
-	    	
+	    
+	    for (int i = 0; i < listorderto.size(); i++) {
+			listorderto.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderto.get(i).getOrderCreateTime()));
+			List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listorderto.get(i).getId());
+			if(listdefer.size()!=0){
+				listorderto.get(i).setDeferrTime(listdefer.size());
+				listorderto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
+			}
+		}
+	    DateListUtil.ListSort2(listorderto);
+	    
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listorderto", listorderto);
 		map.put("pageutil", pageUtil);
@@ -75,8 +92,19 @@ public class OrderServiceImp implements IntOrderService{
 		
 	}
 	
-	//后台管理----机审拒绝未人审订单     (公司id，page，订单号，订单开始时间，订单结束时间)
+	//后台管理----机审拒绝未人审订单     (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间)
 	public Map<String, Object> queryroaOrders(OrderQueryParameter orderQueryParameter){
+		if((orderQueryParameter.getOrderstarttime()!=null&&!"".equals(orderQueryParameter.getOrderstarttime()))&&(orderQueryParameter.getOrderendtime()!=null&&!"".equals(orderQueryParameter.getOrderendtime()))){
+			try {
+				orderQueryParameter.setOrderstarttime(Timestamps.dateToStamp(orderQueryParameter.getOrderstarttime()));
+				orderQueryParameter.setOrderendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getOrderendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
@@ -102,17 +130,23 @@ public class OrderServiceImp implements IntOrderService{
 			listorderfor.addAll(listorder);
 			
 		}
-		for (int i = 0; i <listorderfor.size(); i++) {
-			listorderfor.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderfor.get(i).getOrderCreateTime()));
-		}
-		DateListUtil.ListSort2(listorderfor);
 		
-	    if(listorderfor!=null && !listorderfor.isEmpty()){
+		if(listorderfor!=null && !listorderfor.isEmpty()){
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }
+	    
+	    for (int i = 0; i < listorderto.size(); i++) {
+			listorderto.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderto.get(i).getOrderCreateTime()));
+			List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listorderto.get(i).getId());
+			if(listdefer.size()!=0){
+				listorderto.get(i).setDeferrTime(listdefer.size());
+				listorderto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
+			}
+		}
+	    DateListUtil.ListSort2(listorderto);
 	    	
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listorderto", listorderto);
@@ -126,8 +160,17 @@ public class OrderServiceImp implements IntOrderService{
   		return num;
   	}
   	
-    //后台管理----已机审已人审（公司id，订单号，订单开始时间，订单结束时间      审核员 ）
+    //后台管理----已机审已人审（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间      审核员 ）
   	public Map<String, Object> queryroasOrders(OrderQueryParameter orderQueryParameter){
+  		if((orderQueryParameter.getOrderstarttime()!=null&&!"".equals(orderQueryParameter.getOrderstarttime()))&&(orderQueryParameter.getOrderendtime()!=null&&!"".equals(orderQueryParameter.getOrderendtime()))){
+			try {
+				orderQueryParameter.setOrderstarttime(Timestamps.dateToStamp(orderQueryParameter.getOrderstarttime()));
+				orderQueryParameter.setOrderendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getOrderendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
@@ -152,27 +195,44 @@ public class OrderServiceImp implements IntOrderService{
 			listorderfor.addAll(listorder);
 			
 		}
-		for (int i = 0; i <listorderfor.size(); i++) {
-			listorderfor.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderfor.get(i).getOrderCreateTime()));
-		}
-		DateListUtil.ListSort2(listorderfor);
-		
-	    if(listorderfor!=null && !listorderfor.isEmpty()){
+		if(listorderfor!=null && !listorderfor.isEmpty()){
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }
+	    
+	    for (int i = 0; i < listorderto.size(); i++) {
+			listorderto.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderto.get(i).getOrderCreateTime()));
+			List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listorderto.get(i).getId());
+			if(listdefer.size()!=0){
+				listorderto.get(i).setDeferrTime(listdefer.size());
+				listorderto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
+			}
+		}
+	    DateListUtil.ListSort2(listorderto);
+	    
+	    List<SysUser> listacount=ordersMapper.queryname(companyId);
 	    	
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listorderto", listorderto);
+		map.put("operatorlist", listacount);
 		map.put("pageutil", pageUtil);
 		return map;
 	
   	}
   	
-  	//后台管理----订单 查询（公司id，page,订单号，订单开始时间，订单结束时间     渠道id）
+  	//后台管理----订单 查询（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id）
   	public Map<String, Object> queryAllOrders(OrderQueryParameter orderQueryParameter){
+  		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
+			try {
+				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
+				orderQueryParameter.setRegisteendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getRegisteendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
@@ -189,21 +249,27 @@ public class OrderServiceImp implements IntOrderService{
 			listorderfor.addAll(listorder);
 			
 		}
-		for (int i = 0; i <listorderfor.size(); i++) {
-			listorderfor.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderfor.get(i).getOrderCreateTime()));
-			listorderfor.get(i).getUser().setRegistetime(Timestamps.stampToDate(listorderfor.get(i).getUser().getRegistetime()));
-		}
-		DateListUtil.ListSort2(listorderfor);
-		
-	    if(listorderfor!=null && !listorderfor.isEmpty()){
+		if(listorderfor!=null && !listorderfor.isEmpty()){
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }
-	    	
+	    
+	    for (int i = 0; i < listorderto.size(); i++) {
+			listorderto.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderto.get(i).getOrderCreateTime()));
+			List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listorderto.get(i).getId());
+			if(listdefer.size()!=0){
+				listorderto.get(i).setDeferrTime(listdefer.size());
+				listorderto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
+			}
+		}
+	    DateListUtil.ListSort2(listorderto);
+	    
+	    List<Source> listsource=ordersMapper.querysource(companyId);	    	
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listorderto", listorderto);
+		map.put("sourcelist", listsource);
 		map.put("pageutil", pageUtil);
 		return map;
 	

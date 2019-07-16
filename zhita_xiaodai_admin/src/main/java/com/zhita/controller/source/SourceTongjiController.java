@@ -212,7 +212,7 @@ public class SourceTongjiController {
 	//例如01号-03号   外面显示的是01号到03号总的统计数据    里面显示的是01,02,03号每一天的详细统计数据
 	@ResponseBody
 	@RequestMapping("/queryAllPageDetail")
-	public void queryAllPageDetail(Integer companyId,String sourcename, String dateStart,String dateEnd) throws ParseException {
+	public List<TongjiSorce> queryAllPageDetail(Integer companyId,String sourcename, String dateStart,String dateEnd) throws ParseException {
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
 		List<TongjiSorce> listsource = new ArrayList<>();
@@ -243,6 +243,7 @@ public class SourceTongjiController {
 				} else {
 					cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 				}
+				tongjiSorce.setDate(date);
 				tongjiSorce.setCvr(cvr);//uv到注册的转化率
 				tongjiSorce.setActivatecount(intSourceService.queryCount(sourcename,startTimestamps,endTimestamps));//激活数
 				
@@ -259,7 +260,7 @@ public class SourceTongjiController {
 				}
 				tongjiSorce.setApplynum(authencount);//当前渠道的认证人数
 				Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
-				listsource.get(i).setApplynum(applynum);//申请数
+				tongjiSorce.setApplynum(applynum);//申请数
 				String cvr1=null;
 				if ((registernum < 0.000001) || (applynum == 0)) {
 					cvr1 = 0 + "%";// 得到注册到申请转化率
@@ -283,5 +284,6 @@ public class SourceTongjiController {
 				listsource.add(tongjiSorce);//listsoruce里面将每一天的数据都存进去
 			}
 		}
+		return listsource;
 	}
 }

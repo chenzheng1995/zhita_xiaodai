@@ -38,7 +38,6 @@ public class Orders {
 	private String riskmanagementFraction;//风控分数
 	
 	private String overdueGrade;//逾期等级
-	
 
 	private String riskcontrolname;//风控名字
 	
@@ -51,6 +50,15 @@ public class Orders {
 	private Orderdetails orderdetails;//对应订单明细表
 	
 	private User user;//对应用户对象
+	
+	private String repaymentMoney;//还款金额
+	
+	private String howManyTimesBorMoney;//第几次借款----
+	
+	private Integer deferrTime;//延期次数
+	
+	private String deferAfterReturntime;//延期后应还时间
+	
 	
 	private Integer adoptcount;//放款通过数
 	
@@ -85,16 +93,6 @@ public class Orders {
 	private Integer daysofrepayment;//还款天数
 	
 	private String operator_time;
-	
-	
-
-	public String getOperator_time() {
-		return operator_time;
-	}
-
-	public void setOperator_time(String operator_time) {
-		this.operator_time = operator_time;
-	}
 
 	public Integer getId() {
 		return id;
@@ -280,6 +278,14 @@ public class Orders {
 		this.user = user;
 	}
 
+	public String getRepaymentMoney() {
+		return repaymentMoney;
+	}
+
+	public void setRepaymentMoney(String repaymentMoney) {
+		this.repaymentMoney = repaymentMoney;
+	}
+
 	public Integer getAdoptcount() {
 		return adoptcount;
 	}
@@ -406,6 +412,38 @@ public class Orders {
 
 	public void setDaysofrepayment(Integer daysofrepayment) {
 		this.daysofrepayment = daysofrepayment;
+	}
+
+	public String getOperator_time() {
+		return operator_time;
+	}
+
+	public void setOperator_time(String operator_time) {
+		this.operator_time = operator_time;
+	}
+
+	public String getHowManyTimesBorMoney() {
+		return howManyTimesBorMoney;
+	}
+
+	public void setHowManyTimesBorMoney(String howManyTimesBorMoney) {
+		this.howManyTimesBorMoney = howManyTimesBorMoney;
+	}
+
+	public Integer getDeferrTime() {
+		return deferrTime;
+	}
+
+	public void setDeferrTime(Integer deferrTime) {
+		this.deferrTime = deferrTime;
+	}
+
+	public String getDeferAfterReturntime() {
+		return deferAfterReturntime;
+	}
+
+	public void setDeferAfterReturntime(String deferAfterReturntime) {
+		this.deferAfterReturntime = deferAfterReturntime;
 	}
 	
 }

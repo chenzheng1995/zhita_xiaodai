@@ -1,23 +1,22 @@
 package com.zhita.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.zhita.model.manage.JsonBean;
+import com.zhita.model.manage.OrderQueryParameter;
+import com.zhita.model.manage.Xtest;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.Timestamps;
@@ -103,11 +102,29 @@ public class TestController {
 		if((a==1||(b==1)||(c==1))){
 			System.out.println("0000");
 		}*/
-		String date="2019-07-12";
-		String startTime = date;
-		String startTimestamps = Timestamps.dateToStamp(startTime);
-		String endTime = date;
-		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
-		System.out.println(startTimestamps+"---"+endTimestamps);
+		
+		
+	/*	Xtest test = new Xtest();
+		test.setId(1);
+		test.setName("make");
+		String s=JSON.toJSONString(test);
+		System.out.println(s);
+	
+		String str="{'id':1,'name':'make'}";
+		Xtest test1=JSON.parseObject(str, Xtest.class);
+		System.out.println(test1+"------");
+		
+		
+		String str1="{'error':200,'msg':'成功','wd_api_mobilephone_getdatav2_response':{'date':{'datelist':[{'id':1,'name'+'make'},{'id':2,'name'+'make1'}]}}}";
+		JsonBean jsonBean=JSON.parseObject(str1, JsonBean.class);
+		//System.out.println(jsonBean+"--******---");
+		System.out.println(jsonBean.getWd_api_mobilephone_getdatav2_response());*/
+		OrderQueryParameter orderQueryParameter=new OrderQueryParameter();
+		orderQueryParameter.setOrderstarttime("2019-01-01");
+		orderQueryParameter.setOrderendtime("2019-10-01");
+		orderQueryParameter.setOrderstarttime(Timestamps.dateToStamp(orderQueryParameter.getOrderstarttime()));
+		orderQueryParameter.setOrderendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getOrderendtime()))+86400000)+"");
+		System.out.println(orderQueryParameter.getOrderstarttime()+"----"+orderQueryParameter.getOrderendtime());
+		
 	}
 }

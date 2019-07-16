@@ -27,4 +27,24 @@ public interface WhitelistUserMapper {
     
     //后台管理---更新假删除状态
     int upaFalseDel(Integer id);
+    
+
+    /**
+     * 批量插入
+     * @param list
+     */
+	void insertInfoBatch(List<WhitelistUser> list);
+	/**
+	 * 批量插入，通过手机号查询数据库表中是否有该白名单用户
+	 * @param phone
+	 * @return
+	 */
+	WhitelistUser queryByPhone(String phone);
+	
+	/**
+	 * 批量插入，通过手机号更新信息
+	 * @param record
+	 * @return
+	 */
+    int updateByPhone(WhitelistUser record);
 }

@@ -2,9 +2,12 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Source;
+import com.zhita.model.manage.SysUser;
 
 public interface OrdersMapper {
     int deleteByPrimaryKey(Integer id);
@@ -25,30 +28,39 @@ public interface OrdersMapper {
     //后台管理---通过风控名查询风控信息
     ManageControlSettings querymancon(Integer companyId,String riskcontrolname);
     
-    //后台管理----机审订单     (公司id，订单号，订单开始时间，订单结束时间，风控反馈，风控名字，风控分数(需要大于的参数)，风控分数（需要小于的参数）)
+    //后台管理----机审订单     (公司id，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈，风控名字，风控分数(需要大于的参数)，风控分数（需要小于的参数）)
     List<Orders> queryatrOrders(OrderQueryParameter oqOrderQueryParameter);
   	
-   //后台管理----机审拒绝未人审订单     (公司id，订单号，订单开始时间，订单结束时间   风控名字    风控分数开始   风控分数结束)
+   //后台管理----机审拒绝未人审订单     (公司id，订单号，姓名，手机号，订单开始时间，订单结束时间   风控名字    风控分数开始   风控分数结束)
   	List<Orders> queryroaOrders(OrderQueryParameter oqOrderQueryParameter);
   	
   	//后台管理----机审拒绝未人审订单——审核通过操作
   	int upaOrderIfpeopleWhose(Integer orderid,String assessor);
   	
-  	//后台管理----已机审已人审（公司id，订单号，订单开始时间，订单结束时间      审核员    风控名字       风控分数开始   风控分数结束）
+  	//后台管理----已机审已人审（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间      审核员    风控名字       风控分数开始   风控分数结束）
   	List<Orders> queryroasOrders(OrderQueryParameter oqOrderQueryParameter);
   	
-	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id   风控名字）
+	//后台管理----订单 查询（公司id，订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id   风控名字）
   	List<Orders> queryAllOrders(OrderQueryParameter orderQueryParameter);
   	
-	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id）
+	//后台管理----订单 查询（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间     渠道id  用户id）
   	List<Orders> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter);
   	
-  	//后台管理----订单 查询（公司id）
-  	List<Orders> queryAllOrdersByUserid1(Integer companyId);
+  	//后台管理----订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）
+  	List<Orders> queryAllOrdersByUserid1(OrderQueryParameter orderQueryParameter);
   	
   	//后台管理---渠道统计模块——申请人数字段
   	int queryNum(Integer companyId,String sourcename);
   	
   	//后台管理---渠道统计模块——机审通过字段
   	int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
+  	
+  	//后台管理---通过订单查询改订单在延期表信息
+  	List<DeferredAndOrder> queryDefer(Integer orderid);
+ 
+  	//后台管理--查询出sysuser表所有的信息
+  	List<SysUser> queryname(Integer companyId);
+  	
+  	//后台管理---查询出source表所有的信息
+  	List<Source> querysource(Integer companyId);
 }

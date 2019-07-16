@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.User;
+import com.zhita.model.manage.UserAttestation;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
@@ -32,8 +35,8 @@ public interface UserMapper {
 
 	int updatelogOutStatus(@Param("loginStatus")String loginStatus,@Param("userId") int userId,@Param("companyId") String companyId);
 	
-	//后台管理----用户列表(公司id，姓名，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
-	List<User> queryUserList(@Param("companyId") Integer companyId,@Param("name") String name,@Param("registeTimeStart") String registeTimeStart,
+	//后台管理----用户列表(公司id，姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
+	List<User> queryUserList(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("registeTimeStart") String registeTimeStart,
 			@Param("registeTimeEnd")String registeTimeEnd,@Param("userattestationstatus")  String userattestationstatus,
 			@Param("bankattestationstatus") String bankattestationstatus,@Param("operaattestationstatus")  String operaattestationstatus);
 	
@@ -48,6 +51,15 @@ public interface UserMapper {
 	
 	//后台管理---解除黑名单（修改当前用在户黑名单表里的假删除状态）
 	int upaBlacklist(Integer userId);
+	
+	//后台管理---查询当前用户在用户认证表的信息
+	UserAttestation queryUserAttesta(Integer userid);
+	
+	//后台管理---查询当前用户在银行卡表的信息
+	Bankcard queryBankcard(Integer userid);
+	
+	//后台管理----查询当前用户在运营商表的信息
+	Operator queryOperator(Integer userid);
 
 	int updatePwd(@Param("newPhone")String newPhone,@Param("md5Pwd") String md5Pwd,@Param("companyId") int companyId);
 

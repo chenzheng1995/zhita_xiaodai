@@ -68,8 +68,7 @@ public class HomepageViewpagerController {
 					// 自定义的文件名称
 					String trueFileName = String.valueOf(System.currentTimeMillis()) + fileName;
 					// 设置存放图片文件的路径
-					//path = "D://image" +trueFileName;
-					path = "D://nginx-1.14.2/html/dist/image/homepageviewpage/" + /* System.getProperty("file.separator")+ */trueFileName;
+					path = "homepageviewpage/" + trueFileName;
 					OssUtil ossUtil = new OssUtil();
 					String ossPath = "";
 					try {
