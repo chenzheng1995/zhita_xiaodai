@@ -2,12 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhita.dao.manage.CollectionMapper">
 	
-		<select id="OrderIdMa" resultType="java.lang.Integer" parameterType="java.util.List">
-			select orderId from collection where collectionMemberId in
-			<foreach collection="ids" item="id" open="(" separator="," close=")">
-				#{id}
-			</foreach>
-			group by orderId
+		<select id="OrderIdMa" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+			select c.orderId from collection c,collection_member com where 
+			com.companyId=#{companyId} and com.collectionMemberId = c.collectionMemberId
+			group by c.orderId
 		</select> 
 		
 		
@@ -21,7 +19,7 @@
 		
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
-			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
+			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount
 			 from orders o,orderdetails ord,user u
 			<where>
@@ -29,7 +27,7 @@
 				<foreach collection="ids" item="nos" index="no" open="(" separator="," close=")">
 		 		 	 #{nos}
 		 		</foreach>
-			    AND o.realtime &lt; #{realtime}
+			    AND o.orderStatus = "1"
 				AND o.id = ord.orderId
 				AND u.id = o.userId
 				AND o.companyId = #{companyId}
@@ -78,17 +76,22 @@
 		
 		
 		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
+			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,
-			col.collectionTime,col.collectionStatus,o.orderStatus from orders o,orderdetails ord,collection col,collection_member colme,user u
+			col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade
+			from orders o,orderdetails ord,collection col,collection_member colme,user u,overdue_class ov
 			<where>
 				AND o.id = ord.orderId
 				AND u.id = o.userId
+				AND ov.grade = o.overdueGrade
 				AND colme.collectionMemberId = col.collectionMemberId
 				AND o.id = col.orderId
 				AND o.companyId = #{companyId}
 				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
 					AND ord.realityBorrowMoney = #{realityBorrowMoney}
+				</if>
+				<if test="overdueGrade != null and overdueGrade != ''">
+					AND o.overdueGrade = #{overdueGrade}
 				</if>
 				<if test="makeLoans != null and makeLoans != ''">
 					AND ord.makeLoans = #{makeLoans}
@@ -112,13 +115,13 @@
 					AND overdue.grade = #{grade}
 				</if>
 				<if test="collectionStatus != null and collectionStatus != ''">
-					AND c.collectionStatus = #{collectionStatus}
+					AND col.collectionStatus = #{collectionStatus}
 				</if>
 				<if test="collectionMemberId != null and collectionMemberId != ''">
-					AND cmem.collectionMemberId = #{collectionMemberId}
+					AND col.collectionMemberId = #{collectionMemberId}
 				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-					AND c.collectionTime between #{start_time} and #{end_time}
+					AND col.collectionTime between #{start_time} and #{end_time}
 				</if>
 			</where>
 			group by o.id
@@ -222,8 +225,8 @@
 		
 		
 		<select id="Collectionmemberdetilas" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			SELECT cmember.reallyName,count(c.collectionId) as collection_count,c.collectionTime FROM 
-			collection c,collection_member cmember
+			SELECT cmember.reallyName,count(c.collectionId) as collection_count,c.collectionTime  
+			from collection c,collection_member cmember
 		 	<where>
 		 		AND c.collectionMemberId=cmember.collectionMemberId
 				<if test="collectionMemberId != null and collectionMemberId != ''">
@@ -246,8 +249,7 @@
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,
-			col.collectionTime,col.collectionStatus,o.orderStatus,defe.deferBeforeReturntime,defe.deferAfterReturntime  
+			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,defe.deferBeforeReturntime,defe.deferAfterReturntime  
 			 from orders o,orderdetails ord,collection col,collection_member colme,user u,deferred defe
 			<where>
 				AND defe.orderId = o.id
@@ -322,7 +324,7 @@
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber = #{orderNumber}
 				</if>
-				AND o.id not in 
+				AND o.id  in 
 				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
 					#{orderid}
 				</foreach>
@@ -346,20 +348,25 @@
 		
 		
 		<select id="SelectId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-			select collection_id from collectiondetails where orderId = #{id}
+			select collectionId from collection where orderId = #{id}
 			group by orderId
+		</select>
+		
+		<select id="OneCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select c.collectionStatus,c.collectionTime,c.promise_money,o.orderStatus from Collection c,orders o where 
+			c.orderId = o.id and c.orderId = #{orderId} and deleted = 0
 		</select>
 				
 				
 		<select id="WeiControllerOrdetialis" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.promise_money,
-			col.collectionTime,col.collectionStatus,o.orderStatus,defe.deferBeforeReturntime,defe.deferAfterReturntime  
-			 from orders o,orderdetails ord,collection col,collection_member colme,user u,deferred defe,deferred_settings deset
+			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,defe.deferBeforeReturntime,defe.deferAfterReturntime,o.overdueGrade 
+			 from orders o,orderdetails ord,collection col,collection_member colme,user u,deferred defe,deferred_settings deset,overdue_class ov
 			<where>
 				AND col.collectionMemberId = colme.collectionMemberId
 				AND o.id = ord.orderId
+				AND o.overdueGrade = ov.grade
 				AND u.id = o.userId
 				AND o.id = col.orderId
 				AND deset.companyId = o.companyId
@@ -373,6 +380,9 @@
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber = #{orderNumber}
 				</if>
+				<if test="overdueGrade != null and overdueGrade != ''">
+					AND o.overdueGrade = #{overdueGrade}
+				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND o.orderCreateTime between #{start_time} and #{end_time}
 				</if>
@@ -383,7 +393,7 @@
 					AND ord.overdueNumberOfDays = #{describe}
 				</if>
 				AND o.companyId = #{companyId} 
-				AND o.id not in 
+				AND o.id in 
 				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
 					#{orderid}
 				</foreach>
@@ -399,31 +409,16 @@
 		</select>
 		
 		
-		<insert id="AddCollectiondetails" parameterType="com.zhita.model.manage.Collectiondetails">
-			INSERT INTO `Collectiondetails` (
-				collection_time,
-				user_type,
-				collectionmoney,
+		<insert id="AddCollectionAs" parameterType="com.zhita.model.manage.Collection">
+			INSERT INTO `Collection` (
+				collectionMemberId,
 				orderId,
-				collectionMemberId
+				collectionStatus,
+				collectionTime,
+				promise_money
 			)VALUES
-			(#{collection_time},#{user_type},#{collectionmoney},#{orderId},#{collectionMemberId})
+			(#{collectionMemberId},#{orderId},#{collectionStatus},#{collectionTime},#{promise_money})
 		</insert>
-		
-		
-		
-		
-		<select id="SelectUserCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
-			cmember.reallyName,count(c.collectionTime) as collection_count,DATE_FORMAT(c.collectionTime,'%Y-%m-%d') as collectionTime
-		</select>
-		
-		
-		
-		<select id="Coldetails" parameterType="com.zhita.model.manage.Collectiondetails" resultType="com.zhita.model.manage.Collectiondetails">
-			select o.orderStatus,co.* from orders o,collectiondetails co
-			where o.id = co.orderId and o.id = #{orderId}
-		</select>
-		
 		
 		
 		<select id="SelectOrderNum" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
@@ -471,6 +466,14 @@
 		</select>
 		
 		
+		<update id="UpdateCollectionDelete" parameterType="java.lang.Integer">
+			update collection set deleted = 1 where orderId = #{orderId}			
+		</update>
+		
+		
+		<update id="UpdateOrderStatus" parameterType="java.lang.Integer">
+			update orders set orderStatus = "4" where id = #{orderId}
+		</update>
 		
 		
 </mapper>

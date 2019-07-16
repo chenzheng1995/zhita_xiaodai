@@ -81,7 +81,36 @@ public class Collection {
 	
 	private String collectiondate;
 	
+	private String orderStatus;
 	
+	private String orderIds;
+	
+	private String overdueGrade;
+	
+	public String getOverdueGrade() {
+		return overdueGrade;
+	}
+
+	public void setOverdueGrade(String overdueGrade) {
+		this.overdueGrade = overdueGrade;
+	}
+
+	public String getOrderIds() {
+		return orderIds;
+	}
+
+	public void setOrderIds(String orderIds) {
+		this.orderIds = orderIds;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
 	public String getCollectiondate() {
 		return collectiondate;
 	}

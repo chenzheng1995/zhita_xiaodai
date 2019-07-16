@@ -9,7 +9,11 @@ public class Orderdetails {
 	
 	private Integer id;//明细ID
 	
+	private String orderIds;
+	
 	private Integer orderId;//订单表ID
+	
+	private Integer drainageOfPlatformId;
 	
 	private BigDecimal realityBorrowMoney;//实际借款金额（元）
 	
@@ -95,6 +99,8 @@ public class Orderdetails {
     
     private List<Integer> ids;
     
+    private List<String> orderas;
+    
     private String collectiondate;
     
     private Integer overdue_id;
@@ -162,6 +168,14 @@ public class Orderdetails {
     private BigDecimal OrderMoney;
     
     private Integer thirdparty_id;
+
+	public Integer getDrainageOfPlatformId() {
+		return drainageOfPlatformId;
+	}
+
+	public void setDrainageOfPlatformId(Integer drainageOfPlatformId) {
+		this.drainageOfPlatformId = drainageOfPlatformId;
+	}
 
 	public Integer getId() {
 		return id;
@@ -785,6 +799,22 @@ public class Orderdetails {
 
 	public void setThirdparty_id(Integer thirdparty_id) {
 		this.thirdparty_id = thirdparty_id;
+	}
+
+	public String getOrderIds() {
+		return orderIds;
+	}
+
+	public void setOrderIds(String orderIds) {
+		this.orderIds = orderIds;
+	}
+
+	public List<String> getOrderas() {
+		return orderas;
+	}
+
+	public void setOrderas(List<String> orderas) {
+		this.orderas = orderas;
 	}
     
 

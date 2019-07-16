@@ -11,7 +11,7 @@ public class Collectiondetails {
 	
 	private String collection_time;//催收时间
 	
-	private Integer user_type;//用户态度
+	private String user_type;//用户态度
 	
 	private BigDecimal collectionmoney;//承诺还款金额
 	
@@ -22,6 +22,8 @@ public class Collectiondetails {
 	private String user_neir;//用户名称
 	
 	private String reallyName;
+	
+	private String orderStatus;//订单状态
 	
 	private List<Integer> ids;//催收员ID
 
@@ -41,11 +43,11 @@ public class Collectiondetails {
 		this.collection_time = collection_time;
 	}
 
-	public Integer getUser_type() {
+	public String getUser_type() {
 		return user_type;
 	}
 
-	public void setUser_type(Integer user_type) {
+	public void setUser_type(String user_type) {
 		this.user_type = user_type;
 	}
 
@@ -95,6 +97,14 @@ public class Collectiondetails {
 
 	public void setIds(List<Integer> ids) {
 		this.ids = ids;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 	
 	

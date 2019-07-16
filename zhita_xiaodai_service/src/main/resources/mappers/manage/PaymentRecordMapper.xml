@@ -522,6 +522,7 @@
   			<insert id="AddUndertheline" parameterType="com.zhita.model.manage.Undertheline">
 	  			 INSERT INTO `Undertheline`(
 	  				 		underthe_time,
+	  				 		orderId,
 	  				 		finance_id,
 	  				 		project_name,
 	  				 		repayment,
@@ -531,7 +532,7 @@
 	  				 		remarks
 	  				 )
 	  				 VALUES
-	  				 (#{underthe_time},#{finance_id},#{project_name},#{repayment},#{income},#{expenditure},#{repaymentnumber},#{remarks})
+	  				 (#{underthe_time},#{orderId},#{finance_id},#{project_name},#{repayment},#{income},#{expenditure},#{repaymentnumber},#{remarks})
   			</insert>
   			
   			
@@ -568,8 +569,67 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
+  				group by o.id
   				limit #{page},#{pagesize}
   			</select>
+  			
+  			
+  			
+  			<select id="XiaOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Undertheline">
+  					select u.underthe_time,sy.account,o.orderNumber,u.finance_id,ua.name,ua.phone,ord.makeLoans,u.income,u.remarks
+  				 from Undertheline u,sys_user sy,orderdetails ord,user ua,orders o
+  				<where>
+  					AND o.companyId = #{companyId}
+  					AND u.finance_id = sy.userId
+					AND o.id = ord.orderId
+					AND o.id = u.orderId
+					AND o.companyId = sy.companyId
+  					<if test="orderNumber != null and orderNumber != ''">
+  						AND o.orderNumber = #{orderNumber}
+  					</if>
+  					<if test="phone != null and phone != ''">
+  						AND ua.phone = #{phone}
+  					</if>
+  					<if test="name != null and name != ''">
+  						AND ua.name = #{name}
+  					</if>
+  					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND u.underthe_time between #{start_time} and #{end_time}
+					</if>
+  				</where> 
+  				GROUP BY u.finance_id
+  				limit #{page},#{pagesize}
+  			</select>
+  			
+  			
+  			
+  			
+  			<select id="XiaTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+  				select count(u.id)
+  				 from Undertheline u,sys_user sy,orderdetails ord,user ua,orders o
+  				<where>
+  					AND o.companyId = #{companyId}
+  					AND u.finance_id = sy.userId
+  					AND o.id = u.orderId
+					AND o.id = ord.orderId
+					AND o.companyId = sy.companyId
+  					<if test="orderNumber != null and orderNumber != ''">
+  						AND o.orderNumber = #{orderNumber}
+  					</if>
+  					<if test="phone != null and phone != ''">
+  						AND ua.phone = #{phone}
+  					</if>
+  					<if test="name != null and name != ''">
+  						AND ua.name = #{name}
+  					</if>
+  					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND u.underthe_time between #{start_time} and #{end_time}
+					</if>
+  				</where> 
+  				GROUP BY u.finance_id
+  			</select>
+  			
+  			
   			
   			
   			
@@ -717,4 +777,13 @@
   				</where>
   			</select>
   			
+  			
+  			<insert id="AddOffJianMian" parameterType="com.zhita.model.manage.Offlinjianmian">
+  				INSERT INTO `offlinjianmian`(
+  					orderId,
+  					fina_id,
+  					offusermoney,
+  					remarks
+  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks})
+  			</insert>
 </mapper>

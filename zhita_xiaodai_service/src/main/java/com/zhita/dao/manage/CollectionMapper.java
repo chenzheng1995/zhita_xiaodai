@@ -13,7 +13,7 @@ import com.zhita.model.manage.Orderdetails;
 public interface CollectionMapper {
 	
 	
-	List<Integer> OrderIdMa(@Param("ids")List<Integer> ids);
+	List<Integer> OrderIdMa(Integer companyId);
 	
 	
 	Integer SelectTotalCount(Collection coll);
@@ -61,10 +61,15 @@ public interface CollectionMapper {
 	List<Integer> SelectId(Integer id);
 	
 	
+	List<Collection> OneCollection(Orderdetails order);
+	
+	
+	
+	
 	List<Orderdetails> WeiControllerOrdetialis(Collection coll);
 	
 	
-	Integer AddCollectiondetails(Collectiondetails col);
+	Integer AddCollectionAs(Collection col);
 	
 	
 	List<Collection> SelectSumOrderNum(Collection coll);
@@ -74,9 +79,6 @@ public interface CollectionMapper {
 	
 	
 	List<Collection> SelectUserNum(Collection col);
-	
-	
-	List<Collectiondetails> Coldetails(Collectiondetails orderId);
 	
 	
 	Integer SelectOrderNum(Collection coll);
@@ -104,4 +106,10 @@ public interface CollectionMapper {
 	
 	
 	Deferred DefNum(Integer orderId);
+	
+	
+	Integer UpdateCollectionDelete(Integer orderId);
+	
+	
+	Integer UpdateOrderStatus(Integer orderId);
 }

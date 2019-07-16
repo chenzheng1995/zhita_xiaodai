@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Thirdparty_interface;
@@ -95,4 +96,13 @@ public interface PaymentRecordMapper {
     
     
     List<Integer> Sys_userIds(Integer companyId);
+    
+    
+    Integer AddOffJianMian(Offlinjianmian off);
+    
+    
+    List<Undertheline> XiaOrder(Orderdetails order);
+    
+    
+    Integer XiaTotalCount(Orderdetails ord);
 }

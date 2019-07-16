@@ -5,6 +5,7 @@ import io.protostuff.StringSerializer.STRING;
 import java.util.Map;
 
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Overdue;
 
 public interface Postloanorderservice {
 	
@@ -42,4 +43,7 @@ public interface Postloanorderservice {
 	
 	
 	Map<String, Object> CollecOrders(Orderdetails order);
+	
+	
+	Map<String, Object> WanchengUser(Overdue ov);
 }

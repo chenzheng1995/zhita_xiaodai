@@ -24,7 +24,66 @@ public class Undertheline {
 	
 	private String remarks;//备注
 	
+	private String account;
 	
+	private Integer orderId;
+	
+	private String name;
+	
+	private String phone;
+	
+	private BigDecimal makeLoans;
+	
+	private String orderNumber;
+	
+	
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public BigDecimal getMakeLoans() {
+		return makeLoans;
+	}
+
+	public void setMakeLoans(BigDecimal makeLoans) {
+		this.makeLoans = makeLoans;
+	}
 
 	public Integer getId() {
 		return id;
