@@ -209,4 +209,16 @@ public class OrderServiceImp implements IntOrderService{
 	
   	
   	}
+
+	@Override
+	public int borrowNumber(int userId, int companyId) {
+		int borrowNumber = ordersMapper.borrowNumber(userId,companyId);
+		return borrowNumber;
+	}
+
+	@Override
+	public int getOrdersId(int userId, int companyId) {
+		 int ordersId =  ordersMapper.getOrdersId(userId,companyId);
+		return ordersId;
+	}
 }

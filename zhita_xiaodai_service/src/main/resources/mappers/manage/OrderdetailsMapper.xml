@@ -223,4 +223,9 @@
       registerClient = #{registerclient,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+           <!--获取OrdersId-->
+ <select id="getlastLine" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+select realityBorrowMoney from orderdetails where  orderId = #{ordersId}
+ </select> 
 </mapper>

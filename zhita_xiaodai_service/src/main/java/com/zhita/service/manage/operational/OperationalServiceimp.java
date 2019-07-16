@@ -226,5 +226,10 @@ public class OperationalServiceimp implements OperationalService{
 		map.put("OverdueClass", overd);
 		return map;
 	}
+	
+	public BigDecimal getlastLine(int ordersId) {
+		BigDecimal lastLine = operdao.getlastLine(ordersId);
+		return lastLine;
+	}
 
 }

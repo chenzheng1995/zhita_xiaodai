@@ -1,6 +1,11 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.LiftingAmount;
 
@@ -25,4 +30,10 @@ public interface LiftingAmountMapper {
     
     //后台管理---修改当前对象的假删除状态
     int upaFalseDel(String operator,String operationTime,Integer id);
+
+	ArrayList<LiftingAmount> getintLiftingamount(int companyId);
+
+	int getIncreaseThequota(@Param("num")int num,@Param("companyId") int companyId);
+
+	Integer getFirstline(int companyId);
 }

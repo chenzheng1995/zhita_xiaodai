@@ -73,6 +73,11 @@ public interface OperationalMapper {
 	
 	
 	List<Orders> SelectOrderBude(Orderdetails ord);
+
+
+	BigDecimal getlastLine(int ordersId);
+
+
 	
 	
 	List<Drainage_of_platform> AllDrainage(Integer companyId);

@@ -2,6 +2,8 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
@@ -39,6 +41,12 @@ public interface OrdersMapper {
   	
 	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id   风控名字）
   	List<Orders> queryAllOrders(OrderQueryParameter orderQueryParameter);
+
+
+	int borrowNumber(@Param("userId")int userId,@Param("companyId") int companyId);
+
+	int getOrdersId(@Param("userId")int userId,@Param("companyId") int companyId);
+
   	
 	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id）
   	List<Orders> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter);
@@ -51,4 +59,5 @@ public interface OrdersMapper {
   	
   	//后台管理---渠道统计模块——机审通过字段
   	int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
+
 }

@@ -1,5 +1,6 @@
 package com.zhita.service.manage.operational;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import com.zhita.model.manage.Orderdetails;
 
@@ -23,5 +24,8 @@ public interface OperationalService {
 	
 	
 	Map<String, Object> AllOverdueclass(Integer companyId);
+
+
+	BigDecimal getlastLine(int ordersId);
 
 }

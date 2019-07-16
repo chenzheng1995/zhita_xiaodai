@@ -60,6 +60,8 @@ public class User {
 		UserMoney = userMoney;
 	}
     private Integer riskControlPoints;//分控分数
+    
+    private BigDecimal canBorrowLines;//可借额度
 
 	public Integer getId() {
 		return id;
@@ -211,6 +213,14 @@ public class User {
 
 	public void setSourcename(String sourcename) {
 		this.sourcename = sourcename;
+	}
+	
+	public BigDecimal getCanBorrowLines() {
+		return canBorrowLines;
+	}
+
+	public void setCanBorrowLines(BigDecimal canBorrowLines) {
+		this.canBorrowLines = canBorrowLines;
 	}
 
 }
