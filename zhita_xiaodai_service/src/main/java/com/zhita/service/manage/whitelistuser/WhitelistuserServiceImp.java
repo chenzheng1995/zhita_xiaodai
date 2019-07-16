@@ -7,13 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.dao.manage.WhitelistUserMapper;
@@ -71,6 +67,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     //后台管理---根据id查询当前用户的信息
     public WhitelistUser selectByPrimaryKey(Integer id){
     	WhitelistUser whitelistUser=whitelistUserMapper.selectByPrimaryKey(id);
+    	whitelistUser.setOperationtime(Timestamps.stampToDate(whitelistUser.getOperationtime()));
     	return whitelistUser;
     }
     
@@ -87,60 +84,73 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     	return num;
     }
     
-    
-    //批量导入Excel
-	public String ajaxUploadExcel(HttpServletRequest request,HttpServletResponse response){
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;    
-        
-        MultipartFile file = multipartRequest.getFile("upfile");  
-        if(file.isEmpty()){  
-            try {
-				throw new Exception("文件不存在！");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}  
-        }  
-          
-        InputStream in =null;  
-        try {
-			in = file.getInputStream();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}  
-        
-		List<List<Object>> listob = null; 
-		try {
-			listob = new ExcelUtils().getBankListByExcel(in,file.getOriginalFilename());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}   
-		
-	    //该处可调用service相应方法进行数据保存到数据库中，现只对数据输出  
-        for (int i = 0; i < listob.size(); i++) {  
-            List<Object> lo = listob.get(i);  
-            WhitelistUser vo = new WhitelistUser(); 
-            WhitelistUser j = null;
-        	
-			try {
-				j = whitelistUserMapper.selectByPrimaryKey(Integer.valueOf(String.valueOf(lo.get(0))));
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				System.out.println("没有新增");
-			}
-			    vo.setId(Integer.valueOf(String.valueOf(lo.get(0))));  
-			    vo.setName(String.valueOf(lo.get(1)));
-			    vo.setPhone(String.valueOf(lo.get(2)));
-			    vo.setIdcard(String.valueOf(lo.get(3)));
-			if(j == null)
-			{
-		            whitelistUserMapper.insert(vo);
-			}
-			else
-			{
-				whitelistUserMapper.updateByPrimaryKey(vo);
-			}
-        }   
-        return "文件导入成功！";
-	}
+    /**
+     * 批量导入Excel
+     */
+    public String ajaxUploadExcel(MultipartFile file,Integer companyId,String operator){
+	       /* MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+	        MultipartFile file = multipartRequest.getFile("excelFile");*/
+	        if(file.isEmpty()){
+	            try {
+	                throw new Exception("文件不存在！");
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	 
+	        InputStream in =null;
+	        try {
+	            in = file.getInputStream();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	 
+	        List<List<Object>> listob = null;
+	        try {
+	            listob = new ExcelUtils().getBankListByExcel(in,file.getOriginalFilename());
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        for (int i = 0; i < listob.size(); i++) {
+	            /*   List<Object> lo = listob.get(i);
+	               if (lo.get(i)=="") {
+	                    continue;
+	                }*/
+	            System.out.println(listob.get(i)+"-------");
+	 
+	        }
+	        for (int i = 0; i < listob.size(); i++) {
+	            List<Object> lo = listob.get(i);
+	            WhitelistUser vo = new WhitelistUser();
+	            WhitelistUser j = null;
+	 
+	            try {
+	                j = whitelistUserMapper.queryByPhone(String.valueOf(lo.get(1)));//通过手机号查询表中是否有该白名单用户
+	            } catch (NumberFormatException e) {
+	                // TODO Auto-generated catch block
+	                System.out.println("数据库中无该条数据，新增");
+	 
+	            }
+	            vo.setCompanyid(companyId);
+	            vo.setName(String.valueOf(lo.get(0)));
+	            vo.setPhone(String.valueOf(lo.get(1)));
+	            vo.setIdcard(String.valueOf(lo.get(2)));
+	            vo.setOperator(operator);
+	            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
+	 
+	            if(j == null)
+	            {
+	            	whitelistUserMapper.insert(vo);
+	                System.out.println("susscess");
+	            }
+	            else
+	            {
+	            	whitelistUserMapper.updateByPhone(vo);
+	            }
+	        }
+	 
+	        return "1";
+	    }
 
 }
+

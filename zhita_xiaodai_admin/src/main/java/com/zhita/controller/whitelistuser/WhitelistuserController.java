@@ -3,14 +3,12 @@ package com.zhita.controller.whitelistuser;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.WhitelistUser;
@@ -70,11 +68,28 @@ public class WhitelistuserController {
     	return num;
     }
 	
-	//批量导入Excel
+	/**
+	 * 批量导入Excel
+	 * @param excelFile
+	 * @return
+	 */
 	@ResponseBody
-    @RequestMapping(value="ajaxUpload",method={RequestMethod.GET,RequestMethod.POST})
-    public String ajaxUploadExcel(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        System.out.println("这是请求");
-         return intWhitelistuserService.ajaxUploadExcel(request, response);
-    }
+	@RequestMapping("/importExc")
+	public String importExc(@RequestParam(value="excelFile",required = false) MultipartFile excelFile,Integer companyId,String operator) {
+	    try {
+	        String s = intWhitelistuserService.ajaxUploadExcel(excelFile,companyId,operator);
+	        return s;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        success(false);
+	    }
+	    return "0";
+
+	}
+
+	private void success(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

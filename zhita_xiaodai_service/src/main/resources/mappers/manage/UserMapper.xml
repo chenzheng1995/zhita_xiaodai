@@ -24,6 +24,13 @@
     id, companyId, sourceId, name, phone, pwd, transactionPwd, registeTime, loginTime, 
     loginStatus, registeClient, useMarket, drainageOfPlatformId
   </sql>
+   <sql id="Base_Column_List1">
+    u.phone,ut.id, ut.userId, ut.trueName, ut.idcard_number,ut.homeAddressLongitude, 
+    ut.homeAddressLatitude, ut.detailAddress, ut.headUrl, ut.nationalEmblemUrl, ut.linkmanOneRelation, 
+    ut.linkmanOneName, ut.linkmanOnePhone, ut.linkmanTwoRelation, ut.linkmanTwoName, ut.linkmanTwoPhone, 
+    ut.faceBizToken, ut.idCardBizToken, ut.sign, ut.gender, ut.nationality, ut.birth_year, ut.birth_month, 
+    ut.birth_day, ut.address, ut.issued_by,ut.valid_date_start, ut.valid_date_end
+  </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -237,16 +244,19 @@
 		set loginStatus = #{loginStatus}
 		where id = #{userId} and company = #{company} 
 	</update>
-	<!-- 后台管理           用户列表(公司id，姓名，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态) -->
+	<!-- 后台管理           用户列表(公司id，姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态) -->
 	<select id="queryUserList" resultType="com.zhita.model.manage.User">
-		select u.id,u.name,u.phone,u.registeTime,uat.attestationStatus,b.attestationStatus,o.attestationStatus from user u 
-		LEFT JOIN user_attestation uat on uat.userId=u.id LEFT JOIN bankcard b on b.userId=u.id LEFT JOIN operator o on o.userId=u.id
+		select u.id,u.name,u.phone,u.registeTime,uat.attestationStatus userattestationstatus,b.attestationStatus bankattestationstatus,o.attestationStatus operaattestationstatus from  
+		user u LEFT JOIN user_attestation uat on uat.userId=u.id LEFT JOIN bankcard b on b.userId=u.id LEFT JOIN operator o on o.userId=u.id
 		where companyId=#{companyId} and u.ifBlacklist=0
 	        <if test="name != null and name!='' ">
 	        	and u.name=#{name}
 	        </if>
-	        <if test="registeTimeStart != null and registeTimeEnd != null">
-	           and u.registeTimeStart between #{registeTimeStart} and #{registeTimeEnd}
+	        <if test="phone != null and phone!='' ">
+	        	and u.phone=#{phone}
+	        </if>
+	        <if test="registeTimeStart != null and registeTimeStart!='' and registeTimeEnd != null and registeTimeEnd!='' ">
+	           and u.registeTime between #{registeTimeStart} and #{registeTimeEnd}
 	        </if>
 	        <if test="userattestationstatus!=null">
 	           and uat.attestationStatus=#{userattestationstatus}
@@ -310,8 +320,21 @@
 	<select id="getRiskControlPoints" parameterType="java.lang.Integer" resultType="java.lang.Integer">
       select riskControlPoints from user where id = #{userId}
 	</select>
-	
 
-	
-	
+	<!-- 后台管理         查询当前用户在用户认证表的信息 -->
+	<select id="queryUserAttesta" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.UserAttestation">
+		select 
+    	<include refid="Base_Column_List1" />
+   		from user_attestation ut inner join user u on ut.userid=u.id
+    	where userid = #{arg0}
+	</select>
+	<!--后台管理          查询当前用户在银行卡表的信息  -->
+	<select id="queryBankcard" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Bankcard">
+		select bt.bankcardTypeName,b.id,b.userid,b.bankcardName,b.tiedCardPhone from bankcard b INNER JOIN bankcard_type bt on b.bankcardTypeId=bt.id where b.userid=#{arg0}
+	</select>
+	<!-- 后台管理        查询当前用户在运营商表的信息 -->
+	<select id="queryOperator" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Operator">
+		select * from operator where userid=#{arg0}
+	</select>
+
 </mapper>

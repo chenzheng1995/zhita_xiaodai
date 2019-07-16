@@ -65,4 +65,12 @@ public class OverdueclassController {
     	return num;
     }
 	
+	//后台管理---修改假删除功能
+	@ResponseBody
+	@RequestMapping("/upaFalseDel")
+	public int upaFalseDel(Integer id){
+		int num=intOverdueclassService.upaFalseDel(id);
+		return num;
+	}
+	
 }

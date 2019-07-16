@@ -1,5 +1,6 @@
 package com.zhita.service.manage.user;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +9,21 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
+import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.DatalistJsonBean;
+import com.zhita.model.manage.DeferredAndOrder;
+import com.zhita.model.manage.JsonBean;
+import com.zhita.model.manage.MsgDataJsonBean;
+import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Source;
+import com.zhita.model.manage.TelDataJsonBean;
 import com.zhita.model.manage.User;
+import com.zhita.model.manage.UserAttestation;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
@@ -25,12 +36,25 @@ public class UserServiceImp implements IntUserService{
 	@Autowired
 	private OrdersMapper ordersMapper;
 	
-	//后台管理----用户列表(公司id，page,姓名，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
-	public Map<String, Object> queryUserList(Integer companyId,Integer page,String name,String registeTimeStart,String registeTimeEnd,String userattestationstatus,String bankattestationstatus,String operaattestationstatus){
+	//后台管理----用户列表(公司id，page,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
+	public Map<String, Object> queryUserList(Integer companyId,Integer page,String name,String phone,String registeTimeStart,String registeTimeEnd,String userattestationstatus,String bankattestationstatus,String operaattestationstatus){
+		if((registeTimeStart!=null&&!"".equals(registeTimeStart))&&(registeTimeEnd!=null&&!"".equals(registeTimeEnd))){
+			try {
+				registeTimeStart=Timestamps.dateToStamp(registeTimeStart);
+				registeTimeEnd=(Long.parseLong(Timestamps.dateToStamp(registeTimeEnd))+86400000)+"";
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
 		List<User> list=new ArrayList<>();
 		List<User> listto=new ArrayList<>();
 		PageUtil pageUtil=null;
-		list=userMapper.queryUserList(companyId, name, registeTimeStart, registeTimeEnd, userattestationstatus, bankattestationstatus, operaattestationstatus);
+		list=userMapper.queryUserList(companyId, name, phone,registeTimeStart, registeTimeEnd, userattestationstatus, bankattestationstatus, operaattestationstatus);
 		
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setRegistetime(Timestamps.stampToDate(list.get(i).getRegistetime()));
@@ -64,40 +88,66 @@ public class UserServiceImp implements IntUserService{
 		return num;
 	}
 	
-	//后台管理----订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id）
+	//后台管理----订单 查询（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id  用户id）-用户认证信息——借款信息
   	public Map<String,Object> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter){
+  		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
+			try {
+				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
+				orderQueryParameter.setRegisteendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getRegisteendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+  		Integer companyId=orderQueryParameter.getCompanyid();//得到公司id
   		Integer page=orderQueryParameter.getPage();//得到page
   		List<Orders> list=new ArrayList<>();
 		List<Orders> listto=new ArrayList<>();
 		PageUtil pageUtil=null;
 		list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);
 		
-		for (int i = 0; i <list.size(); i++) {
-			list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
-		}
-		
-		DateListUtil.ListSort2(list);
-		
-	    if(list!=null && !list.isEmpty()){
+		if(list!=null && !list.isEmpty()){
 	    	ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
 	    	listto.addAll(listPageUtil.getData());
 	    		
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }
-	    	
+	    
+	    for (int i = 0; i < listto.size(); i++) {
+	    	listto.get(i).setOrderCreateTime(Timestamps.stampToDate(listto.get(i).getOrderCreateTime()));
+			List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listto.get(i).getId());
+			if(listdefer.size()!=0){
+				listto.get(i).setDeferrTime(listdefer.size());
+				listto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
+			}
+		}
+	    DateListUtil.ListSort2(listto);
+	    
+	    List<Source> listsource=ordersMapper.querysource(companyId);	    	
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listorderto", listto);
+		map.put("sourcelist", listsource);
 		map.put("pageutil", pageUtil);
 		return map;
 		
   	}
   	
-	//后台管理----订单 查询（公司id    page）
-  	public Map<String,Object> queryAllOrdersByUserid1(Integer companyId,Integer page){
+	//后台管理----订单 查询（公司id  page，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）——黑名单用户  机审判定黑名单
+  	public Map<String,Object> queryAllOrdersByUserid1(OrderQueryParameter orderQueryParameter){
+  		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
+			try {
+				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
+				orderQueryParameter.setRegisteendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getRegisteendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+  		Integer page=orderQueryParameter.getPage();
   		List<Orders> list=new ArrayList<>();
 		List<Orders> listto=new ArrayList<>();
 		PageUtil pageUtil=null;
-		list=ordersMapper.queryAllOrdersByUserid1(companyId);
+		list=ordersMapper.queryAllOrdersByUserid1(orderQueryParameter);
 		
 		for (int i = 0; i <list.size(); i++) {
 			list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
@@ -117,6 +167,27 @@ public class UserServiceImp implements IntUserService{
 		map.put("pageutil", pageUtil);
 		return map;
   	}
+  	
+	//后台管理---用户认证信息
+	public Map<String,Object> queryUserAttesta(Integer userid){
+		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息
+		Bankcard bankcard=userMapper.queryBankcard(userid);//用户银行卡信息
+		Operator operator=userMapper.queryOperator(userid);//运营商信息
+		String operatorjson=operator.getOperatorjson();//取出对象里的json串
+		
+		JsonBean jsonBean=JSON.parseObject(operatorjson,JsonBean.class);
+		List<DatalistJsonBean> jsondata=jsonBean.getWd_api_mobilephone_getdatav2_response().getData().getData_list();
+		DatalistJsonBean datalistjsonbean=jsondata.get(0);
+		List<TelDataJsonBean> lstTel=datalistjsonbean.getTeldata();//通话记录信息
+		List<MsgDataJsonBean> listmsg=datalistjsonbean.getMsgdata();//短信记录信息
+		
+		
+		
+		///--------------------
+		
+		HashMap<String,Object> map=new HashMap<>();
+		return map;
+	}
 
 	@Override
 	public void updateScore(int score,int userId) {

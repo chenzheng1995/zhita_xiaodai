@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.ManageControlSettingsMapper;
 import com.zhita.dao.manage.OrdersMapper;
@@ -235,6 +236,7 @@ public class SourceServiceImp implements IntSourceService{
     
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
+    @Transactional
     public void queryAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
     	Integer companyId=3;

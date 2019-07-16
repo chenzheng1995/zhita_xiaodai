@@ -25,8 +25,9 @@ public class LiftingamountServiceImp implements IntLiftingamountServcie{
     //后台管理---添加功能
     public int insert(LiftingAmount record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
-    	int num=liftingAmountMapper.insert(record);
-    	return num;
+    	liftingAmountMapper.insert(record);
+    	Integer id=record.getId();
+    	return id;
     }
     
     //后台管理---根据当前id查询当前对象信息

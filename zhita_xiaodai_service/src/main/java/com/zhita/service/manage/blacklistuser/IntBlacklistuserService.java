@@ -3,6 +3,8 @@ package com.zhita.service.manage.blacklistuser;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Company;
 
@@ -24,4 +26,11 @@ public interface IntBlacklistuserService {
      
      //后台管理---更新假删除状态
      public int upaFalseDel(Integer id);
+     
+     /**
+      * 批量导入Excel
+      * @param excelFile
+      * @return
+      */
+     String ajaxUploadExcel(MultipartFile excelFile,Integer companyId,String operator);
 }

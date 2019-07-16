@@ -8,7 +8,7 @@ public class OverdueClass {
 
     private String grade;//等级
 
-    private String describe;//对应逾期天数（区间段）
+    private String describes;//对应逾期天数（区间段）
 
     private String deleted;//假删除（1：删除；0：没删除）
 
@@ -36,12 +36,12 @@ public class OverdueClass {
 		this.grade = grade;
 	}
 
-	public String getDescribe() {
-		return describe;
+	public String getDescribes() {
+		return describes;
 	}
 
-	public void setDescribe(String describe) {
-		this.describe = describe;
+	public void setDescribes(String describes) {
+		this.describes = describes;
 	}
 
 	public String getDeleted() {
@@ -51,5 +51,6 @@ public class OverdueClass {
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
 	}
+
 
 }

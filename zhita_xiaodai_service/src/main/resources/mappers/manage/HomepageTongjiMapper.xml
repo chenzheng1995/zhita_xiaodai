@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.HomepageTongjiMapper" >
+<!-- ==============今日数据================== -->
+
+	<!-- 后台管理        今日注册人数 -->
+	<select id="queryToDayRegiste" resultType="java.lang.Integer">
+		select count(*) from user where companyId=#{arg0} and  registeTime>=#{arg1} and registeTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        今日申请人数 -->
+	<select id="queryToDayApply" resultType="java.lang.Integer">
+		select count(*) from orders where companyId=#{arg0} and orderCreateTime>=#{arg1} and orderCreateTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日放款人数 -->
+	<select id="queryToDayLoan" resultType="java.lang.Integer">
+		
+	</select>
+	<!-- 后台管理      今日延期笔数 -->
+	<select id="queryToDayDeferred" resultType="java.lang.Integer">
+		select count(*) from order o inner join deferred df on o.id=df.orderid where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日还款笔数 -->
+	<select id="queryToDayRepayment" resultType="java.lang.Integer">
+		select count(*) from order o inner join repayment rp on o.id=rp.orderid where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
+	</select>
+	<!-- 后台管理      今日逾期已还笔数 -->
+	<select id="queryToDayOverdue" resultType="java.lang.Integer">
+		
+	</select>
+	<!--后台管理        今日放款总金额  -->
+	<select id="queryToDayLoanTotalmoney" resultType="java.math.BigDecimal">
+	
+	</select>
+	<!-- 后台管理     今日回款总金额 -->
+	<select id="queryToDayReturTotalmoney" resultType="java.math.BigDecimal">
+	
+	</select>
+	<!--后台管理     今日逾期已还金额  -->
+	<select id="queryToDayOverueTotalmoney" resultType="java.math.BigDecimal">
+	
+	</select>
+	
+	<!-- ==============累计数据================== -->
+	
+	<!-- 后台管理       已注册用户总数 -->
+	<select id="querySumRegiste" parameterType="java.lang.Integer">
+		select count(*) from user where companyId=#{arg0}
+	</select>
+	<!-- 后台管理      用户申请总笔数 -->
+	<select id="querySumApply" parameterType="java.lang.Integer">
+		select count(*) from orders where companyId=#{arg0}
+	</select>
+	<!-- 后台管理      放款总笔数 -->
+	<select id="querySumLoan" parameterType="java.lang.Integer">
+	
+	</select>
+	<!-- 后台管理     还款总笔数 -->
+	<select id="querySumRepayment" resultType="java.lang.Integer">
+		select count(*) from order o inner join repayment rp on o.id=rp.orderid where o.companyId=#{arg0} 
+	</select>
+	
+	<!--  ============期限内数据===============-->
+	
+	<!-- 后台管理        逾前未还笔数 -->
+	<select id="overdue" parameterType="java.lang.Integer">
+		select count(*) from orders where orderStatus='0' and companyId=#{arg0}
+	</select>
+	<!-- 后台管理       逾前实还金额 -->
+	<select id="overdueMoney" parameterType="java.lang.Integer">
+	
+	</select>
+	
+	<!--============逾期数据=============-->
+	
+	<!-- 后台管理         已逾未还笔数 -->
+	<select id="overdue1" parameterType="java.lang.Integer">
+		select count(*) from orders where orderStatus='1' and companyId=#{arg0}
+	</select>
+</mapper>
