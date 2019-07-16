@@ -393,8 +393,8 @@
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
-					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND a.accounttime between #{start_time} and #{end_time}
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
 					</if>
 					<if test="name != null and name != ''">
 						AND u.name = #{name}
@@ -440,6 +440,9 @@
 					<if test="thirdparty_id != null and thirdparty_id != ''">
 						AND th.id = #{thirdparty_id}
 					</if>
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
+					</if>
   				</where>
   				order by o.id desc
   				limit #{page},#{pagesize}
@@ -474,6 +477,9 @@
 					<if test="repaymentSource != null and repaymentSource != ''">
 						AND th.repaymentSource = #{repaymentSource}
 					</if>
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
+					</if>
   				</where>
   				order by o.id desc
   				limit #{page},#{pagesize}
@@ -507,6 +513,9 @@
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
 						AND th.repaymentSource = #{repaymentSource}
+					</if>
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
 					</if>
   				</where>
   				order by o.id desc

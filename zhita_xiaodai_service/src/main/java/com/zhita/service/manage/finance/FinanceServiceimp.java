@@ -79,7 +79,7 @@ public class FinanceServiceimp implements FinanceService{
 		List<Payment_record> rapay = padao.PaymentAll(payrecord);
 		//List<Payment_record> rapay = padao.RepaymentAll(payrecord);
 		for(int i = 0 ;i<rapay.size();i++){
-			rapay.get(i).setRepaymentDate(Timestamps.stampToDate(rapay.get(i).getRepaymentDate()));
+			rapay.get(i).setRemittanceTime(Timestamps.stampToDate(rapay.get(i).getRemittanceTime()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Repayment", rapay);
@@ -171,6 +171,8 @@ public class FinanceServiceimp implements FinanceService{
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
 			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -196,6 +198,8 @@ public class FinanceServiceimp implements FinanceService{
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
 			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -221,6 +225,8 @@ public class FinanceServiceimp implements FinanceService{
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
 			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

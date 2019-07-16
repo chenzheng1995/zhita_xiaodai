@@ -79,11 +79,10 @@
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,
 			col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade
-			from orders o,orderdetails ord,collection col,collection_member colme,user u,overdue_class ov
+			from orders o,orderdetails ord,collection col,collection_member colme,user u,overdue_class ov,deferred defe
 			<where>
+				AND o.id = defe.orderId
 				AND o.id = ord.orderId
-				AND u.id = o.userId
-				AND ov.grade = o.overdueGrade
 				AND colme.collectionMemberId = col.collectionMemberId
 				AND o.id = col.orderId
 				AND o.companyId = #{companyId}
@@ -112,7 +111,7 @@
 					AND u.phone LIKE concat('%',#{phone},'%')
 				</if>
 				<if test="grade != null and grade != ''">
-					AND overdue.grade = #{grade}
+					AND o.grade = #{grade}
 				</if>
 				<if test="collectionStatus != null and collectionStatus != ''">
 					AND col.collectionStatus = #{collectionStatus}
@@ -122,6 +121,9 @@
 				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND col.collectionTime between #{start_time} and #{end_time}
+				</if>
+				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+					AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
 			</where>
 			group by o.id
@@ -308,10 +310,11 @@
 		
 		<select id="CollectionWeiTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(o.id) from collection 
-			c,collection_member cmem,orderdetails orders,orders o,user u
+			c,collection_member cmem,orderdetails orders,orders o,user u,deferred defe
 			<where>
 				AND o.id = orders.orderId
 				AND u.id = o.userId
+				AND o.id = defe.orderId
 				AND c.orderId = o.id
 				AND c.collectionMemberId = cmem.collectionMemberId
 				AND o.companyId = #{companyId} 
@@ -323,6 +326,9 @@
 				</if>
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber = #{orderNumber}
+				</if>
+				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+					AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
 				AND o.id  in 
 				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
@@ -366,7 +372,6 @@
 			<where>
 				AND col.collectionMemberId = colme.collectionMemberId
 				AND o.id = ord.orderId
-				AND o.overdueGrade = ov.grade
 				AND u.id = o.userId
 				AND o.id = col.orderId
 				AND deset.companyId = o.companyId
@@ -391,6 +396,9 @@
 				</if>
 				<if test="describe != null and describe != ''">
 					AND ord.overdueNumberOfDays = #{describe}
+				</if>
+				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+					AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
 				AND o.companyId = #{companyId} 
 				AND o.id in 

@@ -87,6 +87,27 @@ public class Collection {
 	
 	private String overdueGrade;
 	
+	private String deferAfterReturntimeStatu_time;
+	
+	private String deferAfterReturntimeEnd_time;
+	
+	public String getDeferAfterReturntimeEnd_time() {
+		return deferAfterReturntimeEnd_time;
+	}
+
+	public void setDeferAfterReturntimeEnd_time(String deferAfterReturntimeEnd_time) {
+		this.deferAfterReturntimeEnd_time = deferAfterReturntimeEnd_time;
+	}
+
+	public String getDeferAfterReturntimeStatu_time() {
+		return deferAfterReturntimeStatu_time;
+	}
+
+	public void setDeferAfterReturntimeStatu_time(
+			String deferAfterReturntimeStatu_time) {
+		this.deferAfterReturntimeStatu_time = deferAfterReturntimeStatu_time;
+	}
+
 	public String getOverdueGrade() {
 		return overdueGrade;
 	}

@@ -35,6 +35,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> allpostOrders(Orderdetails details) {
 		try {
 			details.setReturntime(System.currentTimeMillis()+"");
+			details.setStart_time(Timestamps.dateToStamp(details.getStart_time()));
+			details.setEnd_time(Timestamps.dateToStamp(details.getEnd_time()));
+			details.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(details.getDeferBeforeReturntimeStatu_time()));
+			details.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(details.getDeferBeforeReturntimeEnd_time()));
+			details.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(details.getDeferAfterReturntimeStatu_time()));
+			details.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(details.getDeferAfterReturntimeEnd_time()));
+			details.setRealtimeStatu_time(Timestamps.dateToStamp(details.getRealtimeStatu_time()));
+			details.setRealtimeEnd_time(Timestamps.dateToStamp(details.getRealtimeEnd_time()));
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -353,11 +362,21 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
 		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
+			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
+			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
+			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
+			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
+			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		
+		
+		System.out.println(order.getStart_time()+"CCCCC"+order.getEnd_time());
+		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
 		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
@@ -391,11 +410,22 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
+			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
+			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
+			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
+			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
+			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
 		}catch(Exception e){
 			
 		}
+		
+		System.out.println(order.getStart_time()+"CCCCC"+order.getEnd_time());
+		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
+		
+		
 		order.setShouldReturnTime(System.currentTimeMillis()+"");
 		Integer totalCount = postloanorder.CollecOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
@@ -423,8 +453,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try{
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
+			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
+			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
+			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
+			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
+			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
 		}catch(Exception e){
 			
 		}

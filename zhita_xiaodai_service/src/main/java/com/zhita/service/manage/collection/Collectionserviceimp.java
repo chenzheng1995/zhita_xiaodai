@@ -137,7 +137,14 @@ public class Collectionserviceimp implements Collectionservice{
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
-				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+				if(orders.get(i).getMakeLoans() != null && orders.get(i).getInterestPenaltySum() != null){
+					orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+				}else if(orders.get(i).getInterestPenaltySum() != null){
+					orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
+				}else{
+					orders.get(i).setOrder_money(orders.get(i).getMakeLoans());
+				}
+				
 				Deferred des = collmapp.DefeSet(orders.get(i));
 				if(des != null ){
 					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));

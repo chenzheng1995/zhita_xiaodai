@@ -451,13 +451,14 @@
 		
 		
 		<select id="YiHuanOrdersTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(o.id) from orders o,user u
+			select count(o.id) from orders o,user u,deferred defe
 			<where>
 			 AND u.id = o.userId
+			 AND defe.orderId = o.id
 			 AND o.orderStatus = #{orderStatus} 
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
-			 	AND name = #{name}
+			 	AND u.name = #{name}
 			 </if>
 			 <if test="overdueGrade != null and overdueGrade != ''">
 			 	AND o.overdueGrade = #{overdueGrade}
@@ -472,7 +473,16 @@
 			 	AND o.orderStatus = #{orderStatus}
 			 </if>
 			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-				AND o.orderCreateTime between #{start_time} and#{end_time}
+				AND o.orderCreateTime between #{start_time} and #{end_time}
+			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 			</if>
 			 </where>
 		</select>
@@ -507,6 +517,15 @@
 			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{start_time} and#{end_time}
 			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
 			 </where>
 			 GROUP BY o.id
 			 limit #{page},#{pagesize}
@@ -516,10 +535,11 @@
 		
 		
 		<select id="CollecOrdersTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(o.id) from orders o,user u
+			select count(o.id) from orders o,user u,deferred defe
 			<where>
 			 AND u.id = o.userId
 			 AND o.orderStatus = "1" 
+			 AND defe.orderId = o.id
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
@@ -539,6 +559,15 @@
 			 <if test="overdueGrade != null and overdueGrade != ''">
 			 	AND o.overdueGrade = #{overdueGrade}
 			 </if>
+			 <if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
 			</where>
 		</select>
 		
@@ -578,6 +607,15 @@
 			 <if test="overdueGrade != null and overdueGrade != ''">
 			 	AND o.overdueGrade = #{overdueGrade}
 			 </if>
+			 <if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
 			</where>
 			GROUP BY o.id
 			limit #{page},#{pagesize}
@@ -591,8 +629,9 @@
 		
 		
 		<select id="HuaiZhangOrdersTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(c.collectionId) from orders o,collection c,user u,blacklist_user bl,whitelist_user wh
+			select count(c.collectionId) from orders o,collection c,user u,blacklist_user bl,whitelist_user wh,deferred defe
 			<where>
+				 AND o.id = defe.orderId
 				 AND wh.phone = u.phone
 				 AND u.id = o.userId
 				 AND c.orderId = o.id
@@ -616,6 +655,15 @@
 			<if test="overdueGrade != null and overdueGrade != ''">
 				AND o.overdueGrade = #{overdueGrade}
 			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
 			</where>
 		</select>
 		
@@ -629,7 +677,7 @@
 			<where>
 				AND c.orderId = o.id
 				AND c.collectionMemberId = colme.collectionMemberId
-				AND c.collectionStatus = "态度恶劣"
+				AND o.orderStatus = "4"
 				 AND u.id = o.userId
 				 AND ov.grade = o.overdueGrade
 				 AND c.orderId = o.id
@@ -646,11 +694,17 @@
 			 <if test="orderNumber != null and orderNumber != ''">
 			 	AND o.orderNumber = #{orderNumber}
 			 </if>
-			 <if test="orderStatus != null and orderStatus != ''">
-			 	AND o.orderStatus = "4"
-			 </if>
 			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 				AND o.orderCreateTime between #{start_time} and#{end_time}
+			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 			</if>
 			</where>
 			group by o.id
