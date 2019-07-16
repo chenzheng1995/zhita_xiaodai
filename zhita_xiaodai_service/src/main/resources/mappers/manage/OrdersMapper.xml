@@ -475,5 +475,24 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   	 select count(*) from orders o inner join user u on o.userId=u.id inner join source s on u.sourceId=s.id
      where o.companyId=#{arg0} and s.sourceName=#{arg1} and o.riskmanagementFraction between #{arg2} and #{arg3}
   </select>
+  
+  
+  	<insert id="setOrder" parameterType="java.util.Map">
+		insert into orders(companyId,userId,orderNumber,orderCreateTime,borrowTimeLimit,howManyTimesBorMoney,shouldReturnTime,riskmanagementFraction) values(#{companyId},#{userId},#{orderNumber},#{orderCreateTime},#{lifeOfLoan},#{howManyTimesBorMoney},#{shouldReturned},#{riskmanagementFraction})
+	</insert>
+
+
+  <select id="getOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+  select id from orders where orderNumber = #{orderNumber}
+  </select>
+  
+  
+    <select id="getReimbursement" parameterType="java.lang.Integer" resultType="java.util.Map">
+  select borrowTimeLimit, from orders where orderNumber = #{orderNumber}
+  </select>
+  
+      <select id="getRepayment" parameterType="java.lang.Integer" resultType="java.util.Map">
+  select id,orderStatus,shouldReturnTime from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2')
+  </select>
 
 </mapper>

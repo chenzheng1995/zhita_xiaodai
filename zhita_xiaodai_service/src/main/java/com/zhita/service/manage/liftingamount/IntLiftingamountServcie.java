@@ -28,4 +28,6 @@ public interface IntLiftingamountServcie {
 	public int getIncreaseThequota(int num, int companyId);
 
 	public Integer getFirstline(int companyId);
+
+	public int getlastuserHowManyConsecutivePayments(int companyId);
 }

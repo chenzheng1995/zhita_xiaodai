@@ -129,4 +129,6 @@ public class UserServiceImp implements IntUserService{
 		 int riskControlPoints = userMapper.getRiskControlPoints(userId);
 		return riskControlPoints;
 	}
+
+
 }

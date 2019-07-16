@@ -311,4 +311,7 @@
       select riskControlPoints from user where id = #{userId}
 	</select>
 	
+
+	
+	
 </mapper>

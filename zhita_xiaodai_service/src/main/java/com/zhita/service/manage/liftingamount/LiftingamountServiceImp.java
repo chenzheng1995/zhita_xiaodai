@@ -66,4 +66,10 @@ public class LiftingamountServiceImp implements IntLiftingamountServcie{
 		Integer firstline = liftingAmountMapper.getFirstline(companyId);
 		return firstline;
 	}
+
+	@Override
+	public int getlastuserHowManyConsecutivePayments(int companyId) {
+		int lastuserHowManyConsecutivePayments = liftingAmountMapper.getlastuserHowManyConsecutivePayments(companyId);
+		return lastuserHowManyConsecutivePayments;
+	}
 }
