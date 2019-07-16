@@ -193,13 +193,13 @@
 		  			AND ra.pipelinenumber = #{pipelinenumber}
 		  		</if>
 		  		<if test="name != null and name != ''">
-		  			AND ra.name = #{name}
+		  			AND u.name = #{name}
 		  		</if>
 		  		<if test="phone != null and phone != ''">
-		  			AND ra.phone = #{phone}
+		  			AND u.phone = #{phone}
 		  		</if>
 		  		<if test="thirdparty_id != null and thirdparty_id != ''">
-					AND ra.thirdparty_id = #{thirdparty_id}
+					AND thir.id = #{thirdparty_id}
 				</if>
 		  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND ra.remittanceTime between #{start_time} and #{end_time}
@@ -229,13 +229,13 @@
 		  			AND ra.pipelinenumber = #{pipelinenumber}
 		  		</if>
 		  		<if test="name != null and name != ''">
-		  			AND ra.name = #{name}
+		  			AND u.name = #{name}
 		  		</if>
 		  		<if test="phone != null and phone != ''">
-		  			AND ra.phone = #{phone}
+		  			AND u.phone = #{phone}
 		  		</if>
 		  		<if test="thirdparty_id != null and thirdparty_id != ''">
-					AND ra.thirdparty_id = #{thirdparty_id}
+					AND thir.id = #{thirdparty_id}
 				</if>
 		  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND ra.remittanceTime between #{start_time} and #{end_time}
@@ -255,10 +255,10 @@
   
   
   			<select id="RepaymentTotalCount" parameterType="com.zhita.model.manage.Payment_record" resultType="java.lang.Integer">
-			  	select count(re.*) from repayment ra,user u,orders o,thirdparty_interface thir
+			  	select count(ra.id) from repayment ra,user u,orders o,thirdparty_interface thir
 			  	<where>
 			  		AND ra.orderId = o.id
-			  		AND ra.thirdparty = thir.id
+			  		AND ra.thirdparty_id = thir.id
 			  		AND o.userId = u.id
 			  		AND o.companyId = #{companyId}
 			  		<if test="orderId != null and orderId != ''">
@@ -268,13 +268,13 @@
 			  			AND ra.pipelinenumber = #{pipelinenumber}
 			  		</if>
 			  		<if test="name != null and name != ''">
-			  			AND ra.name = #{name}
+			  			AND u.name = #{name}
 			  		</if>
 			  		<if test="phone != null and phone != ''">
-			  			AND ra.phone = #{phone}
+			  			AND u.phone = #{phone}
 			  		</if>
 			  		<if test="thirdparty_id != null and thirdparty_id != ''">
-						AND ra.thirdparty_id = #{thirdparty_id}
+						AND thir.id = #{thirdparty_id}
 					</if>
 			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND ra.repaymentDate between #{start_time} and #{end_time}
@@ -300,16 +300,16 @@
 			  			AND ra.pipelinenumber = #{pipelinenumber}
 			  		</if>
 			  		<if test="name != null and name != ''">
-			  			AND ra.name = #{name}
+			  			AND u.name = #{name}
 			  		</if>
 			  		<if test="phone != null and phone != ''">
-			  			AND ra.phone = #{phone}
+			  			AND u.phone = #{phone}
 			  		</if>
 			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND ra.repaymentDate between #{start_time} and #{end_time}
 					</if>
 					<if test="thirdparty_id != null and thirdparty_id != ''">
-						AND ra.thirdparty_id = #{thirdparty_id}
+						AND thir.id = #{thirdparty_id}
 					</if>
 			  	</where>
 			  	order by ra.id desc
@@ -325,14 +325,16 @@
   			
   			
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  			 		select o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
-  			 		o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
-  			 		ord.overdueNumberOfDays,
-  			 		ord.interestPenaltySum,o.realtime from drainage_of_platform d,orders o,orderdetails ord,user u
+  			 		select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
+  			 		o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,
+  			 		ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
+  			 		ord.interestPenaltySum,o.realtime from drainage_of_platform d,orders o,orderdetails ord,user u,deferred defe,deferred_settings defeset
   			 		<where>
   			 			AND d.id = u.drainageOfPlatformId
   			 			AND o.userId = u.id
   			 			AND o.id = ord.orderId
+  			 			AND defe.orderid = o.id
+  			 			AND defeset.companyId = o.companyId
   			 			AND o.orderNumber = #{orderNumber}
   			 			AND d.companyId = #{companyId}
   			 		</where>
@@ -342,16 +344,19 @@
   
   
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  					select o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
-  					defe.deferAfterReturntime,ord.overdueNumberOfDays,ord.interestPenaltySum,ord.realityAccount,pay.pipelinenumber from 
-  					orders o,orderdetails ord,user u,payment_record pay,deferred defe
+  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
+  			 		o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,o.borrowTimeLimit,
+  			 		ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,pay.pipelinenumber,
+  			 		ord.interestPenaltySum,o.realtime from drainage_of_platform d,orders o,orderdetails ord,user u,deferred defe,deferred_settings defeset,payment_record pay
   					<where>
-  						AND o.id = ord.orderId
-  						AND o.userId = u.id
-  						AND o.id = pay.orderId
-  						AND o.id = defe.orderId
-  						AND o.orderNumber = #{orderNumber}
-  						AND d.companyId = #{companyId}
+  						AND pay.orderId = o.id
+  						AND d.id = u.drainageOfPlatformId
+  			 			AND o.userId = u.id
+  			 			AND o.id = ord.orderId
+  			 			AND defe.orderid = o.id
+  			 			AND defeset.companyId = o.companyId
+  			 			AND o.orderNumber = #{orderNumber}
+  			 			AND d.companyId = #{companyId}
   					</where>
   			</select>
   			
@@ -365,9 +370,12 @@
   				 		remarks,
   				 		accounttime,
   				 		beoverdue,
+  				 		repaymentSource,
+  				 		amou_time,
+  				 		sys_uerId
   				 )
   				 VALUES
-  				 (#{orderId},#{totalamount},#{amountmoney},#{remarks},#{accounttime},#{beoverdue})
+  				 (#{orderId},#{totalamount},#{amountmoney},#{remarks},#{accounttime},#{beoverdue},#{repaymentSource},#{amou_time},#{sys_uerId})
   			</insert>
   			
   			
@@ -375,13 +383,13 @@
   			
   			
   			<select id="AccountTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-  				select count(a.*) from orders o,user u,accountadjustment a,repayment re
+  				select count(a.id) from orders o,user u,accountadjustment a,repayment re
   				<where>
   					AND o.id = a.orderId
   					AND re.orderId = o.id
   					AND o.companyId = #{companyId}
   					AND o.userId = u.id
-  					AND a.accounttime <![CDATA[>= ]]> #{accounttime} 
+  					AND o.orderStatus = "2"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
@@ -398,7 +406,7 @@
 						AND o.orderNumber = #{orderNumber}
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
-						AND re.repaymentSource = #{repaymentSource}
+						AND th.repaymentSource = #{repaymentSource}
 					</if>
   				</where>
   			</select>
@@ -409,15 +417,14 @@
   			
   			
   			<select id="AllAccount" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.orderNumber,u.name,u.phone,th.idcardFaceAuthentication,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.beoverdue
+  				select o.orderNumber,u.name,u.phone,th.repaymentSource,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.beoverdue,a.amou_time
   				 from orders o,user u,accountadjustment a,repayment re,thirdparty_interface th
   				<where>
   					AND o.id = a.orderId
-  					AND ra.thirdparty_id = thir.id
   					AND re.orderId = o.id
   					AND o.userId = u.id
   					AND o.companyId = #{companyId}
-  					AND a.accounttime &gt; #{accounttime} 
+  					AND o.orderStatus = "2"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
@@ -431,7 +438,7 @@
 						AND o.orderNumber = #{orderNumber}
 					</if>
 					<if test="thirdparty_id != null and thirdparty_id != ''">
-						AND re.thirdparty_id = #{thirdparty_id}
+						AND th.id = #{thirdparty_id}
 					</if>
   				</where>
   				order by o.id desc
@@ -443,19 +450,17 @@
   			
   			
   			<select id="AllStatu" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.orderNumber,u.name,u.phone,re.repaymentSource,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue
-  				 from orders o,user u,accountadjustment a,repayment re
+  				select o.orderNumber,u.name,u.phone,th.repaymentSource,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue,
+  				 a.amou_time from orders o,user u,accountadjustment a,repayment re,thirdparty_interface th
   				<where>
   					AND o.id = a.orderId
   					AND re.orderId = o.id
+  					AND th.id = re.thirdparty_id
   					AND o.userId = u.id
   					AND o.companyId = #{companyId}
-  					AND a.statu = "1"
+  					AND o.orderStatus = "3"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
-					</if>
-					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND a.accounttime between #{start_time} and #{end_time}
 					</if>
 					<if test="name != null and name != ''">
 						AND u.name = #{name}
@@ -467,7 +472,7 @@
 						AND o.orderNumber = #{orderNumber}
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
-						AND re.repaymentSource = #{repaymentSource}
+						AND th.repaymentSource = #{repaymentSource}
 					</if>
   				</where>
   				order by o.id desc
@@ -478,15 +483,16 @@
   			
   			
   			<select id="AllNotMoneyStatu" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.orderNumber,u.name,u.phone,re.repaymentSource,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue
-  				 from orders o,user u,accountadjustment a,repayment re
+  				select o.orderNumber,u.name,u.phone,th.repaymentSource,a.accounttime,a.totalamount,a.amou_time,a.amountmoney,a.remarks,a.accounttime,a.beoverdue
+  				,ord.overdueNumberOfDays from orderdetails ord,orders o,user u,accountadjustment a,repayment re,thirdparty_interface th
   				<where>
+  					AND o.id = ord.orderId
   					AND o.id = a.orderId
   					AND re.orderId = o.id
+  					AND o.companyId = th.companyId
   					AND o.userId = u.id
-  					AND a.statu = "2"
+  					AND o.orderStatus = "1"
   					AND o.companyId = #{companyId}
-  					AND a.accounttime <![CDATA[<= ]]> #{accounttime} 
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
@@ -500,7 +506,7 @@
 						AND o.orderNumber = #{orderNumber}
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
-						AND re.repaymentSource = #{repaymentSource}
+						AND th.repaymentSource = #{repaymentSource}
 					</if>
   				</where>
   				order by o.id desc
@@ -532,7 +538,7 @@
   			
   			
   			<select id="SelectUnderthTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-  				select count(*) from Undertheline 
+  				select count(id) from Undertheline 
   				<where>
   					<if test="repaymentnumber != null and repaymentnumber != ''">
   						AND repaymentnumber = #{repaymentnumber}
@@ -547,20 +553,29 @@
   			
   			<select id="AllUnderthe" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Undertheline">
   				select u.underthe_time,sy.account,u.project_name,u.repayment,u.income,u.expenditure,u.repaymentnumber,u.remarks
-  				 from Undertheline u,sys_user sy
+  				 from Undertheline u,sys_user sy,orders o
   				<where>
+  					AND o.companyId = #{companyId}
   					AND u.finance_id = sy.userId
+  					AND u.finance_id in 
+  					<foreach collection="ids" item="id" open="(" separator="," close=")">
+  						#{id}
+  					</foreach>
   					<if test="repaymentnumber != null and repaymentnumber != ''">
-  						AND repaymentnumber = #{repaymentnumber}
+  						AND u.repaymentnumber = #{repaymentnumber}
   					</if>
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND underthe_time between #{start_time} and #{end_time}
+						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
   				limit #{page},#{pagesize}
   			</select>
   			
   			
+  			
+  			<select id="Sys_userIds" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  				select userId from sys_user where companyId = #{companyId}
+  			</select>
   			
   			
   			
@@ -648,5 +663,58 @@
   			
   			
   			
+  			
+  			<select id="DelayTatolCount" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  				select count(id) from deferred 
+  				<where>
+  					<if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
+  						AND deferAfterReturntime between #{startu_time} and #{end_time}
+  					</if>
+  				</where>
+  			</select>
+  			
+  			
+  			
+  			
+  			<select id="DelayStatisc" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  				select d.deferAfterReturntime,count(d.deferAfterReturntime) as orderNum,
+  				sum(d.interestOnArrears) as interestOnArrearsSum from deferred d,orders o
+  				<where>
+  					AND o.companyId = #{companyId}
+  					<if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
+  						AND d.deferAfterReturntime between #{startu_time} and #{end_time}
+  					</if>
+  				</where>
+  				group by d.deferAfterReturntime
+  				limit #{page},#{pagesize}
+  			</select>
+  			
+  			
+  			
+  			
+  			<select id="OneBank" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  				select count(o.id) as realborrowing,sum(ord.realityBorrowMoney) as realexpenditure,count(o.id) as realreturn,sum(ord.makeLoans) as paymentamount,
+  				sum(ord.interestPenaltySum) as overdueamount from orders o,orderdetails ord 
+  				 <where>
+  				 AND o.id = ord.orderId
+  				 AND o.companyId = #{companyId}
+  				 <if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
+  				 	AND o.realtime between #{startu_time} and #{end_time}
+  				 </if>
+  				 </where>
+  			</select>
+  			
+  			
+  			
+  			<select id="YanMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
+  				select sum(d.interestOnArrears) as deferredamount from deferred d,orders o 
+  				<where>
+  					AND o.id = d.orderid
+  					AND o.companyId = #{companyId}
+  					 <if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
+  					 	AND o.realtime between #{startu_time} and #{end_time}
+  					 </if>
+  				</where>
+  			</select>
   			
 </mapper>

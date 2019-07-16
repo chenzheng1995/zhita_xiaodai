@@ -5,6 +5,7 @@ import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.BorrowMoneyMessage;
 import com.zhita.model.manage.Company;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -55,5 +56,11 @@ public class BorrowmonmesServiceImp implements IntBorrowmonmesService{
 	public Map<String, Object> getborrowMoneyMessage(int companyId) {
 		Map<String, Object> map = borrowMoneyMessageMapper.getborrowMoneyMessage(companyId); 
 		return map;
+	}
+
+	@Override
+	public BigDecimal getCanBorrowlines(int companyId) {
+		BigDecimal canBorrowlines = borrowMoneyMessageMapper.getCanBorrowlines(companyId);
+		return canBorrowlines;
 	}
 }

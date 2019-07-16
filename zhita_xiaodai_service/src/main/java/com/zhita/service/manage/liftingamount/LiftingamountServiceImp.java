@@ -1,6 +1,9 @@
 package com.zhita.service.manage.liftingamount;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,4 +49,22 @@ public class LiftingamountServiceImp implements IntLiftingamountServcie{
 		 int num=liftingAmountMapper.upaFalseDel(operator, operationtime, id);
 		 return num;
 	 }
+
+	@Override
+	public ArrayList<LiftingAmount> getintLiftingamount(int companyId) {
+		ArrayList<LiftingAmount> map1 = liftingAmountMapper.getintLiftingamount(companyId);
+		return map1;
+	}
+
+	@Override
+	public int getIncreaseThequota(int num, int companyId) {
+		int increaseThequota = liftingAmountMapper.getIncreaseThequota(num,companyId);
+		return increaseThequota;
+	}
+
+	@Override
+	public Integer getFirstline(int companyId) {
+		Integer firstline = liftingAmountMapper.getFirstline(companyId);
+		return firstline;
+	}
 }

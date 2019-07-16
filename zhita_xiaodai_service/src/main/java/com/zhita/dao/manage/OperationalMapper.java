@@ -70,6 +70,11 @@ public interface OperationalMapper {
 	
 	
 	List<Orders> SelectOrderBude(Orderdetails ord);
+
+
+	BigDecimal getlastLine(int ordersId);
+
+
 	
 	
 	

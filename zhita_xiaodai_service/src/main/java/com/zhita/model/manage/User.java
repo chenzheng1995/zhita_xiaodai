@@ -1,5 +1,7 @@
 package com.zhita.model.manage;
 
+import java.math.BigDecimal;
+
 //用户表
 public class User {
     private Integer id;
@@ -38,7 +40,28 @@ public class User {
     
     private String ifblacklist;//是否是黑名单（1：是；0：不是）
     
+    private Integer userNum;
+    
+    private BigDecimal UserMoney;
+
+	public Integer getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(Integer userNum) {
+		this.userNum = userNum;
+	}
+
+	public BigDecimal getUserMoney() {
+		return UserMoney;
+	}
+
+	public void setUserMoney(BigDecimal userMoney) {
+		UserMoney = userMoney;
+	}
     private Integer riskControlPoints;//分控分数
+    
+    private BigDecimal canBorrowLines;//可借额度
 
 	public Integer getId() {
 		return id;
@@ -190,6 +213,14 @@ public class User {
 
 	public void setSourcename(String sourcename) {
 		this.sourcename = sourcename;
+	}
+	
+	public BigDecimal getCanBorrowLines() {
+		return canBorrowLines;
+	}
+
+	public void setCanBorrowLines(BigDecimal canBorrowLines) {
+		this.canBorrowLines = canBorrowLines;
 	}
 
 }

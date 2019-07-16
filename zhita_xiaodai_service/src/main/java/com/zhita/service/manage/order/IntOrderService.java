@@ -20,4 +20,8 @@ public interface IntOrderService {
   	
   	//后台管理----订单 查询（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id）
   	public Map<String, Object> queryAllOrders(OrderQueryParameter orderQueryParameter);
+
+	public int borrowNumber(int userId, int companyId);
+
+	public int getOrdersId(int userId, int companyId);
 }

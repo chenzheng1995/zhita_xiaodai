@@ -4,22 +4,21 @@
 		
 		
 		<select id="Ordersdata" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select  DATE_FORMAT(orderCreateTime,'%Y-%m-%d') as operator_time,count(orderCreateTime) as collection_count from orders 
+			select  orderCreateTime,count(orderCreateTime) as collection_count from orders 
 			<where>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND orderCreateTime between #{start_time} and #{end_time}
 				</if>
 				AND companyId = #{companyId}
 			</where>
-			GROUP BY DATE_FORMAT(orderCreateTime,'%Y-%m-%d')
-			order by orderCreateTime desc
+			GROUP BY orderCreateTime
 			limit #{page},#{pagesize}
 		</select>
 		
 		
 		
 		<select id="OrderNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select  DATE_FORMAT(orderCreateTime,'%Y-%m-%d') as operator_time,count(orderCreateTime) as collection_count from orders 
+			select  orderCreateTime,count(orderCreateTime) as collection_count from orders 
 			<where>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND orderCreateTime between #{start_time} and #{end_time}
@@ -32,7 +31,7 @@
 		
 		<select id="datastatistics" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select count(id) from orders where riskManagemenType = #{riskManagemenType} and companyId = #{companyId}
-			 and DATE_FORMAT(orderCreateTime,'%Y-%m-%d') = #{orderCreateTime}
+			 and orderCreateTime = #{orderCreateTime}
 		</select>
 		
 		
@@ -50,7 +49,7 @@
 			<foreach collection="ids" item="id" open="(" separator="," close=")">
 				#{id}
 			</foreach>
-			and DATE_FORMAT(collectionTime,'%Y-%m-%d') = #{orderCreateTime}
+			and collectionTime = #{orderCreateTime}
 		</select>
 		
 		
@@ -60,7 +59,7 @@
 				#{id}
 			</foreach>
 			and collectionStatus = #{collectionStatus}
-			and DATE_FORMAT(collectionTime,'%Y-%m-%d') = #{orderCreateTime}
+			and collectionTime = #{orderCreateTime}
 			GROUP BY orderId
 		</select>
 		
@@ -102,7 +101,7 @@
 		
 		
 		<select id="SelectRepaymentNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Repayment">
-			select  orderId,DATE_FORMAT(repaymentDate,'%Y-%m-%d') as operator_time,count(repaymentDate) as repayment_Count from repayment 
+			select  orderId,repaymentDate,count(repaymentDate) as repayment_Count from repayment 
 			<where>
 				 and collectionMemberId in 
 				<foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -123,7 +122,7 @@
 		
 		
 		<select id="SelectRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Repayment">
-			select  DATE_FORMAT(repaymentDate,'%Y-%m-%d') as operator_time,count(repaymentDate) as repayment_Count,sum(repaymentMoney) as repaymentSumMoney
+			select  repaymentDate as operator_time,count(repaymentDate) as repayment_Count,sum(repaymentMoney) as repaymentSumMoney
 			 from repayment 
 			<where>
 				 and collectionMemberId in 
@@ -134,7 +133,7 @@
 						AND repaymentDate between #{start_time} and #{end_time}
 				</if>
 			</where>
-			GROUP BY DATE_FORMAT(repaymentDate,'%Y-%m-%d')
+			GROUP BY repaymentDate
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -160,7 +159,7 @@
 		
 		
 		<select id="CollectionDatas" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select 	DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as orderCreateTime,count(o.id) as collection_count,sum(ora.makeLoans) as makeLoans,
+			select 	o.orderCreateTime,count(o.id) as collection_count,sum(ora.makeLoans) as makeLoans,
 			sum(interestPenaltySum) as interestPenaltySum from orderdetails ora,orders o 
 			<where>	
 				AND ora.orderId = o.id
@@ -170,14 +169,14 @@
 					AND o.orderCreateTime between #{start_time} and #{end_time}
 				</if>
 			</where>
-			GROUP BY DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d')
+			GROUP BY o.orderCreateTime
 			limit #{page},#{pagesize}		
 		</select>
 		
 		
 		
 		<select id="CollectionDataNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select 	DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as orderCreateTime,count(o.orderCreateTime) as collection_count,sum(ora.makeLoans) as makeLoans,
+			select 	o.orderCreateTime,count(o.orderCreateTime) as collection_count,sum(ora.makeLoans) as makeLoans,
 			sum(interestPenaltySum) as interestPenaltySum from orderdetails ora,orders o 
 			<where>	
 				AND ora.orderId = o.id
@@ -218,7 +217,7 @@
 		
 		
 		<select id="SelectOrderBudeNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as orderCreateTime,sum(ora.makeLoans) as Realborrowing,
+			select o.orderCreateTime,sum(ora.makeLoans) as Realborrowing,
 			sum(ora.realityAccount) as realityAccount from orders o,orderdetails ora 
 			<where>
 				AND o.id = ora.orderId
@@ -232,7 +231,7 @@
 		
 		
 		<select id="SelectOrderBude" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d') as orderCreateTime,sum(ora.makeLoans) as Realborrowing,
+			select o.orderCreateTime,sum(ora.makeLoans) as Realborrowing,
 			sum(ora.realityAccount) as realityAccount from orders o,orderdetails ora 
 			<where>
 				AND o.id = ora.orderId
@@ -241,7 +240,7 @@
 				</if>
 				AND o.companyId = #{companyId}
 			</where>
-			GROUP BY DATE_FORMAT(o.orderCreateTime,'%Y-%m-%d')
+			GROUP BY o.orderCreateTime
 			limit #{page},#{pagesize}
 		</select>
 		

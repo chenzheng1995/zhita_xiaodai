@@ -1,5 +1,6 @@
 package com.zhita.service.manage.borrowmoneymessage;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,4 +25,6 @@ public interface IntBorrowmonmesService {
     public int updateByPrimaryKey(BorrowMoneyMessage record);
 
 	public Map<String, Object> getborrowMoneyMessage(int companyId);
+
+	public BigDecimal getCanBorrowlines(int companyId);
 }

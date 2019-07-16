@@ -446,7 +446,21 @@
            and u.sourceId =#{sourcename,jdbcType=VARCHAR}
         </if>
   </select>
-    <!-- 后台管理         订单 查询（公司id，订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id  用户id） -->
+
+  
+        <!--编辑账单中根据日期和甲方查询出有多少条数据-->
+ <select id="borrowNumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+select count(id) from orders where companyId = #{companyId} and userId = #{userId} and orderStatus = '3'
+ </select> 
+ 
+ 
+         <!--获取OrdersId-->
+ <select id="getOrdersId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+select id from orders where companyId = #{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+ </select> 
+  
+
+    <!-- 后台管理         订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id） -->
   <select id="queryAllOrdersByUserid" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	 select 
     <include refid="Base_Column_List1" />

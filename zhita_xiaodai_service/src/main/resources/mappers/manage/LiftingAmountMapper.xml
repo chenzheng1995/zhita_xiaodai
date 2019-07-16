@@ -127,4 +127,22 @@
   <update id="upaFalseDel">
   	update lifting_amount set deleted=1,operator=#{arg0}, operationTime=#{arg1} where id=#{arg2}
   </update>
+  
+    <!--获取用户提高额度的次数和提高的额度  -->
+  <select id="getintLiftingamount" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.LiftingAmount">
+     select userHowManyConsecutivePayments,increaseThequota from lifting_amount where companyId = #{companyId} ORDER BY userHowManyConsecutivePayments
+      </select>
+      
+      
+          <!--获取用户提高的额度  -->
+  <select id="getIncreaseThequota" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     select increaseThequota from lifting_amount where companyId = #{companyId} and userHowManyConsecutivePayments =#{num}
+      </select>
+      
+            <!--获取用户第一次提高额度的次数-->
+  <select id="getFirstline" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     select userHowManyConsecutivePayments from lifting_amount where companyId = #{companyId} ORDER BY userHowManyConsecutivePayments limit 1
+      </select>    
+      
+      
 </mapper>
