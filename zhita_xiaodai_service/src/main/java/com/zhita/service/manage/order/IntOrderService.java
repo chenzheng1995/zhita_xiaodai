@@ -1,6 +1,5 @@
 package com.zhita.service.manage.order;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import com.zhita.model.manage.OrderQueryParameter;
@@ -34,5 +33,10 @@ public interface IntOrderService {
 	public Map<String, Object> getReimbursement(int userId, int companyId);
 
 	public Map<String, Object> getRepayment(int userId, int companyId);
+	
+	/**
+	 * 机审通过订单（公司id，page,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	public Map<String,Object> queryAllordersByLike(OrderQueryParameter orderQueryParameter);
 
 }

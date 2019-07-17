@@ -16,7 +16,7 @@ public class OrderController {
 	@Autowired
 	private IntOrderService intOrderService;
 	
-	//后台管理----机审订单     (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
+/*	//后台管理----机审订单     (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
 	@ResponseBody
 	@RequestMapping("/queryatrOrders")
 	public Map<String, Object> queryatrOrders(OrderQueryParameter orderQueryParameter){
@@ -54,5 +54,17 @@ public class OrderController {
   	public Map<String, Object> queryAllOrders(OrderQueryParameter orderQueryParameter){
 		Map<String, Object> map=intOrderService.queryAllOrders(orderQueryParameter);
 		return map;
+	}*/
+	
+	
+	/**
+	 * 机审通过订单（公司id，page,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	@ResponseBody
+	@RequestMapping("queryAllordersByLike")
+	public Map<String,Object> queryAllordersByLike(OrderQueryParameter orderQueryParameter){
+		Map<String, Object> map=intOrderService.queryAllordersByLike(orderQueryParameter);
+		return map;
 	}
+	
 }

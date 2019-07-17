@@ -329,7 +329,13 @@ public class OrderServiceImp implements IntOrderService{
 		return map1;
 	}
 
-
+	/**
+	 * 机审通过订单（公司id，page,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	public Map<String,Object> queryAllordersByLike(OrderQueryParameter orderQueryParameter){
+		Map<String,Object> map=new HashMap<>();
+		return map;
+	}
 
 
 }

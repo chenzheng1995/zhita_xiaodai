@@ -82,8 +82,11 @@ public interface OrdersMapper {
 	Map<String, Object> getReimbursement(@Param("userId")int userId,@Param("companyId") int companyId);
 
 	Map<String, Object> getRepayment(@Param("userId")int userId,@Param("companyId") int companyId);
-
-
+	
+	/**
+	 * 机审通过订单（公司id，page,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	List<Orders> queryAllordersByLike(OrderQueryParameter orderQueryParameter);
 
 
 
