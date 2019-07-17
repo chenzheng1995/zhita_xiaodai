@@ -20,7 +20,7 @@ public class DeferredSettings {
     
     private String status;//状态（1：开启2；关闭）
 
-    private String operator;//操作人
+    private Integer operator;//操作人id
 
     private String operationtime;//操作时间
 
@@ -89,11 +89,11 @@ public class DeferredSettings {
 		this.status = status;
 	}
 
-	public String getOperator() {
+	public Integer getOperator() {
 		return operator;
 	}
 
-	public void setOperator(String operator) {
+	public void setOperator(Integer operator) {
 		this.operator = operator;
 	}
 

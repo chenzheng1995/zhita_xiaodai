@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.DateListUtil;
@@ -110,10 +111,13 @@ public class SourceTongjiController {
     		listsourcepage.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1,10,0);
     	}
-    	
+	  	List<Source> sourcelist=intSourceService.querysource(companyId);	    	
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listsourcepage", listsourcepage);
+		map.put("sourcelist", sourcelist);
 		map.put("pageutil", pageUtil);
     	return map;
 	}
@@ -121,7 +125,7 @@ public class SourceTongjiController {
 	//后台管理---我们自己看的统计数据——在用户表存在的渠道    某个时间段的统计信息
 	@ResponseBody
 	@RequestMapping("/queryByTimeslot")
-	public Map<String,Object> queryByTimeslot(Integer companyId,Integer page,String dateStart,String dateEnd,String sourcename1) throws ParseException{
+	public Map<String,Object> queryByTimeslot(Integer companyId,Integer page,String dateStart,String dateEnd,Integer sourceid) throws ParseException{
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourcepage = new ArrayList<>();//经过分页后的数据集合
 		PageUtil pageUtil=null;
@@ -134,7 +138,7 @@ public class SourceTongjiController {
 		
 		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
 		
-		listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourcename1);
+		listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourceid);
 		for (int i = 0; i < listsource.size(); i++) {
 			String sourcename=listsource.get(i).getSourcename();//渠道名
 			float registernum=listsource.get(i).getRegisternum();//真实的注册数
@@ -200,6 +204,8 @@ public class SourceTongjiController {
     		listsourcepage.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1,10,0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();

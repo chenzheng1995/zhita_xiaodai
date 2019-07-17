@@ -12,7 +12,7 @@ public class OverdueSettings {
 
     private Double penaltyinterestrates;//罚息利率
 
-    private String operator;//操作人
+    private Integer operator;//操作人
 
     private String operationtime;//操作时间
 
@@ -58,15 +58,16 @@ public class OverdueSettings {
         this.penaltyinterestrates = penaltyinterestrates;
     }
 
-    public String getOperator() {
-        return operator;
-    }
 
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
+    public Integer getOperator() {
+		return operator;
+	}
 
-    public String getOperationtime() {
+	public void setOperator(Integer operator) {
+		this.operator = operator;
+	}
+
+	public String getOperationtime() {
         return operationtime;
     }
 

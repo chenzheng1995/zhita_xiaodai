@@ -20,7 +20,7 @@ public class BorrowMoneyMessage {
 
     private Integer platformfeeratio;//平台服务费比率
 
-    private String operator;//操作人
+    private Integer operator;//操作人
 
     private String operationtime;//操作时间
 
@@ -88,11 +88,12 @@ public class BorrowMoneyMessage {
 		this.platformfeeratio = platformfeeratio;
 	}
 
-	public String getOperator() {
+
+	public Integer getOperator() {
 		return operator;
 	}
 
-	public void setOperator(String operator) {
+	public void setOperator(Integer operator) {
 		this.operator = operator;
 	}
 

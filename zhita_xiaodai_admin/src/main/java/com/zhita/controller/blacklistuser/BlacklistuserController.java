@@ -75,7 +75,7 @@ public class BlacklistuserController {
 	 */
 	@ResponseBody
 	@RequestMapping("/importExc")
-	public String importExc(@RequestParam(value="excelFile",required = false) MultipartFile excelFile,Integer companyId,String operator) {
+	public String importExc(@RequestParam(value="excelFile",required = false) MultipartFile excelFile,Integer companyId,Integer operator) {
 	    try {
 	        String s = intBlacklistuserService.ajaxUploadExcel(excelFile,companyId,operator);
 	        return s;

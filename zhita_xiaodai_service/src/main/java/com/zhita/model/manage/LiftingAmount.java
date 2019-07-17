@@ -12,7 +12,7 @@ public class LiftingAmount {
 
     private Integer increasethequota;//提高额度
 
-    private String operator;//操作人
+    private Integer operator;//操作人id
 
     private String operationtime;//操作时间
 
@@ -58,15 +58,15 @@ public class LiftingAmount {
         this.increasethequota = increasethequota;
     }
 
-    public String getOperator() {
-        return operator;
-    }
+    public Integer getOperator() {
+		return operator;
+	}
 
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
+	public void setOperator(Integer operator) {
+		this.operator = operator;
+	}
 
-    public String getOperationtime() {
+	public String getOperationtime() {
         return operationtime;
     }
 

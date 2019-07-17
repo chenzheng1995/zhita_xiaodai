@@ -40,6 +40,8 @@ public class SysuserServiceImp implements IntSysuserService{
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -66,6 +68,8 @@ public class SysuserServiceImp implements IntSysuserService{
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1, 10, 0);
     	}
 		
 		HashMap<String,Object> map=new HashMap<>();

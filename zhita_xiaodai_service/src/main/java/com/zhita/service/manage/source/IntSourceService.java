@@ -31,7 +31,7 @@ public interface IntSourceService {
     public List<TongjiSorce> queryAllSourceByUser(Integer companyid,String StartTime,String EndTime);
     
     //后台管理---查询当天各个渠道在用户表的注册数量(通过渠道查询)
-    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,String sourcename);
+    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,Integer sourceid);
     
     //后台管理---查询某一天某个渠道的注册数量
     public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,String sourceName);
@@ -72,4 +72,7 @@ public interface IntSourceService {
     public String querymancon(String sourceName);
    //后台管理---渠道统计模块——机审通过字段
   	public int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
+  	
+  	//后台管理---查询出source表所有的信息
+  	public List<Source> querysource(Integer companyId);
 }

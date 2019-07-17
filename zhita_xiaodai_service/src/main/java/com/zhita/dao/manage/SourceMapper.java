@@ -40,7 +40,7 @@ public interface SourceMapper {
     
     //后台管理---查询当天各个渠道在用户表的注册数量(通过渠道查询)
     List<TongjiSorce> queryAllSourceBySouce(@Param("companyid") Integer companyid,@Param("StartTime")String StartTime,
-    		@Param("EndTime")String EndTime,@Param("sourcename")String sourcename);
+    		@Param("EndTime")String EndTime,@Param("sourceid")Integer sourceid);
     
     //后台管理---查询某一天某个渠道的注册数量
     TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,String sourceName);

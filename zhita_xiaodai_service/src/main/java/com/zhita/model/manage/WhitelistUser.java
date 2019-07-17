@@ -12,7 +12,9 @@ public class WhitelistUser {
 
     private String idcard;//身份证号
 
-    private String operator;//操作人
+    private Integer operator;//操作人id
+    
+    private String account;//操作人
     
     private String operationtime;//操作时间
 
@@ -58,11 +60,19 @@ public class WhitelistUser {
 		this.idcard = idcard;
 	}
 
-	public String getOperator() {
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public Integer getOperator() {
 		return operator;
 	}
 
-	public void setOperator(String operator) {
+	public void setOperator(Integer operator) {
 		this.operator = operator;
 	}
 

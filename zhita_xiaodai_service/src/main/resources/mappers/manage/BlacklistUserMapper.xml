@@ -11,7 +11,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, name, phone, idcard, userId,operator,operationtime,deleted
+    b.id, b.companyId, b.name,b.phone, b.idcard, b.userId,su.account,b.operationtime,b.deleted
   </sql>
   <!-- 后台管理       根据id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -120,16 +120,16 @@
   <select id="queryAll" resultType="com.zhita.model.manage.BlacklistUser">
   	select 
     <include refid="Base_Column_List" />
-    from blacklist_user
-    where companyId=#{companyId} and deleted=0
+    from blacklist_user b inner join sys_user su on b.operator=su.userId
+    where b.companyId=#{companyId} and b.deleted=0
     	<if test="name != null and name!='' ">
-          and name like "%"#{name}"%"
+          and b.name like "%"#{name}"%"
         </if>
         <if test="phone != null and phone!='' ">
-           and phone="%"#{phone}"%"
+           and b.phone="%"#{phone}"%"
         </if>
         <if test="idcard != null and idcard!='' ">
-           and idcard="%"#{idcard}"%"
+           and b.idcard="%"#{idcard}"%"
         </if>
   </select>
   <!-- 后台管理       更新假删除状态 -->

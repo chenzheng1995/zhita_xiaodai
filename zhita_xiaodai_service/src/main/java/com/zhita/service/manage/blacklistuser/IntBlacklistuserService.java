@@ -32,5 +32,5 @@ public interface IntBlacklistuserService {
       * @param excelFile
       * @return
       */
-     String ajaxUploadExcel(MultipartFile excelFile,Integer companyId,String operator);
+     String ajaxUploadExcel(MultipartFile excelFile,Integer companyId,Integer operator);
 }

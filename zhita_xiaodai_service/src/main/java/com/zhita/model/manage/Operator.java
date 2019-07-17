@@ -15,16 +15,6 @@ public class Operator {
 
     private String operatorjson;
 
-    public Operator(Integer id, Integer userid, String phone, String attestationstatus, String reqid, String searchId, String operatorjson) {
-        this.id = id;
-        this.userid = userid;
-        this.phone = phone;
-        this.attestationstatus = attestationstatus;
-        this.reqid = reqid;
-        this.searchId = searchId;
-        this.operatorjson = operatorjson;
-    }
-
     public Operator() {
         super();
     }
@@ -84,4 +74,13 @@ public class Operator {
     public void setOperatorjson(String operatorjson) {
         this.operatorjson = operatorjson == null ? null : operatorjson.trim();
     }
+
+	@Override
+	public String toString() {
+		return "Operator [id=" + id + ", userid=" + userid + ", phone=" + phone + ", attestationstatus="
+				+ attestationstatus + ", reqid=" + reqid + ", searchId=" + searchId + ", operatorjson=" + operatorjson
+				+ "]";
+	}
+    
+    
 }

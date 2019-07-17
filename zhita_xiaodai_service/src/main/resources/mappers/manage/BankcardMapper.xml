@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.BankcardMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Bankcard" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="attestationStatus" property="attestationstatus" jdbcType="VARCHAR" />
+    <result column="bankcardTypeId" property="bankcardtypeid" jdbcType="INTEGER" />
+    <result column="bankcardName" property="bankcardname" jdbcType="VARCHAR" />
+    <result column="tiedCardPhone" property="tiedcardphone" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+    <result column="IDcardnumber" property="idcardnumber" jdbcType="VARCHAR" />
+    <result column="cstmrnm" property="cstmrnm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, attestationStatus, bankcardTypeId, bankcardName, tiedCardPhone, deleted, 
+    IDcardnumber, cstmrnm
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bankcard
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bankcard
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Bankcard" >
+    insert into bankcard (id, userId, attestationStatus, 
+      bankcardTypeId, bankcardName, tiedCardPhone, 
+      deleted, IDcardnumber, cstmrnm
+      )
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{attestationstatus,jdbcType=VARCHAR}, 
+      #{bankcardtypeid,jdbcType=INTEGER}, #{bankcardname,jdbcType=VARCHAR}, #{tiedcardphone,jdbcType=VARCHAR}, 
+      #{deleted,jdbcType=VARCHAR}, #{idcardnumber,jdbcType=VARCHAR}, #{cstmrnm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Bankcard" >
+    insert into bankcard
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="attestationstatus != null" >
+        attestationStatus,
+      </if>
+      <if test="bankcardtypeid != null" >
+        bankcardTypeId,
+      </if>
+      <if test="bankcardname != null" >
+        bankcardName,
+      </if>
+      <if test="tiedcardphone != null" >
+        tiedCardPhone,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="idcardnumber != null" >
+        IDcardnumber,
+      </if>
+      <if test="cstmrnm != null" >
+        cstmrnm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="attestationstatus != null" >
+        #{attestationstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bankcardtypeid != null" >
+        #{bankcardtypeid,jdbcType=INTEGER},
+      </if>
+      <if test="bankcardname != null" >
+        #{bankcardname,jdbcType=VARCHAR},
+      </if>
+      <if test="tiedcardphone != null" >
+        #{tiedcardphone,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardnumber != null" >
+        #{idcardnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cstmrnm != null" >
+        #{cstmrnm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Bankcard" >
+    update bankcard
+    <set >
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="attestationstatus != null" >
+        attestationStatus = #{attestationstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bankcardtypeid != null" >
+        bankcardTypeId = #{bankcardtypeid,jdbcType=INTEGER},
+      </if>
+      <if test="bankcardname != null" >
+        bankcardName = #{bankcardname,jdbcType=VARCHAR},
+      </if>
+      <if test="tiedcardphone != null" >
+        tiedCardPhone = #{tiedcardphone,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardnumber != null" >
+        IDcardnumber = #{idcardnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cstmrnm != null" >
+        cstmrnm = #{cstmrnm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Bankcard" >
+    update bankcard
+    set userId = #{userid,jdbcType=INTEGER},
+      attestationStatus = #{attestationstatus,jdbcType=VARCHAR},
+      bankcardTypeId = #{bankcardtypeid,jdbcType=INTEGER},
+      bankcardName = #{bankcardname,jdbcType=VARCHAR},
+      tiedCardPhone = #{tiedcardphone,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=VARCHAR},
+      IDcardnumber = #{idcardnumber,jdbcType=VARCHAR},
+      cstmrnm = #{cstmrnm,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

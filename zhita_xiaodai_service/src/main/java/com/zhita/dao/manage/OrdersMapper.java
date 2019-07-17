@@ -37,7 +37,7 @@ public interface OrdersMapper {
   	List<Orders> queryroaOrders(OrderQueryParameter oqOrderQueryParameter);
   	
   	//后台管理----机审拒绝未人审订单——审核通过操作
-  	int upaOrderIfpeopleWhose(Integer orderid,String assessor);
+  	int upaOrderIfpeopleWhose(Integer orderid,Integer assessor);
   	
   	//后台管理----已机审已人审（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间      审核员    风控名字       风控分数开始   风控分数结束）
   	List<Orders> queryroasOrders(OrderQueryParameter oqOrderQueryParameter);

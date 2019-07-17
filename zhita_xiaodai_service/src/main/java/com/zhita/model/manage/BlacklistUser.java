@@ -14,7 +14,9 @@ public class BlacklistUser {
 
     private Integer userid;//用户id
     
-    private String operator;//操作人
+    private Integer operator;//操作人id
+    
+    private String account;//操作人
     
     private String operationtime;//操作时间
 
@@ -68,11 +70,19 @@ public class BlacklistUser {
 		this.userid = userid;
 	}
 
-	public String getOperator() {
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public Integer getOperator() {
 		return operator;
 	}
 
-	public void setOperator(String operator) {
+	public void setOperator(Integer operator) {
 		this.operator = operator;
 	}
 

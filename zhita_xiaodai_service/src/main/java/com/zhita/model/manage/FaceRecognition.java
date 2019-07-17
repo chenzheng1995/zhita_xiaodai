@@ -5,6 +5,8 @@ public class FaceRecognition {
     private Integer id;
 
     private String name;//人脸设置名字
+    
+    private Integer companyid;//公司id
 
     private String deleted;//假删除（1：删除；0：没删除）
 
@@ -23,8 +25,17 @@ public class FaceRecognition {
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
     }
+    
 
-    public String getDeleted() {
+	public Integer getCompanyid() {
+		return companyid;
+	}
+
+	public void setCompanyid(Integer companyid) {
+		this.companyid = companyid;
+	}
+
+	public String getDeleted() {
         return deleted;
     }
 

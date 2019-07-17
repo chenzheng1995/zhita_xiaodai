@@ -28,14 +28,14 @@ public interface ThirdpartyInterfaceMapper {
     List<ThirdpartyInterface> queryAll(Integer companyId);
     
     //后台管理---查询人脸设置表所有信息
-    List<FaceRecognition> queryface();
+    List<FaceRecognition> queryface(Integer companyId);
     
     //后台管理---查询运营商设置表所有信息
-    List<OperatorSetting> queryopera();
+    List<OperatorSetting> queryopera(Integer companyId);
     
     //后台管理---查询放款渠道设置表所有信息
-    List<LoanSetting> queryloan();
+    List<LoanSetting> queryloan(Integer companyId);
     
    //后台管理---查询还款渠道设置表所有信息
-    List<RepaymentSetting> queryrepayment();
+    List<RepaymentSetting> queryrepayment(Integer companyId);
 }
