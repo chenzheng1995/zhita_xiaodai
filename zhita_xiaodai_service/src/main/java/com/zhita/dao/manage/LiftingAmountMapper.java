@@ -36,4 +36,6 @@ public interface LiftingAmountMapper {
 	int getIncreaseThequota(@Param("num")int num,@Param("companyId") int companyId);
 
 	Integer getFirstline(int companyId);
+
+	int getlastuserHowManyConsecutivePayments(int companyId);
 }

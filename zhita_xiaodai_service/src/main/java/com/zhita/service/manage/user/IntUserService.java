@@ -26,4 +26,6 @@ public interface IntUserService {
 	public void updateScore(int score, int userId);
 
 	public int getRiskControlPoints(int userId);
+
+
 }

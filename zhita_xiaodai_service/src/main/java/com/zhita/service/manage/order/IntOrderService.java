@@ -1,5 +1,6 @@
 package com.zhita.service.manage.order;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.zhita.model.manage.OrderQueryParameter;
@@ -24,4 +25,14 @@ public interface IntOrderService {
 	public int borrowNumber(int userId, int companyId);
 
 	public int getOrdersId(int userId, int companyId);
+
+	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction);
+
+	public int getOrderId(String orderNumber);
+
+	public Map<String, Object> getReimbursement(int userId, int companyId);
+
+	public Map<String, Object> getRepayment(int userId, int companyId);
+
 }

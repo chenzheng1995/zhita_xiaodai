@@ -1,5 +1,7 @@
 package com.zhita.service.manage.order;
 
+
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -301,4 +303,33 @@ public class OrderServiceImp implements IntOrderService{
 		 int ordersId =  ordersMapper.getOrdersId(userId,companyId);
 		return ordersId;
 	}
+
+	@Override
+	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction) {
+		int num = ordersMapper.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction);
+		return num;
+	}
+
+	@Override
+	public int getOrderId(String orderNumber) {
+		int orderId = ordersMapper.getOrderId(orderNumber);
+		return orderId;
+	}
+
+	@Override
+	public Map<String, Object> getReimbursement(int userId, int companyId) {
+		Map<String, Object> map  = ordersMapper.getReimbursement(userId,companyId);
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getRepayment(int userId, int companyId) {
+		Map<String, Object> map1  = ordersMapper.getRepayment(userId,companyId);
+		return map1;
+	}
+
+
+
+
 }

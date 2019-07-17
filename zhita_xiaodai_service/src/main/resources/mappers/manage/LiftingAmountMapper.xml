@@ -145,4 +145,8 @@
       </select>    
       
       
+                  <!--获取用户最后一次提高额度的次数-->
+  <select id="getlastuserHowManyConsecutivePayments" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     select userHowManyConsecutivePayments from lifting_amount where companyId = #{companyId} ORDER BY userHowManyConsecutivePayments desc limit 1
+      </select> 
 </mapper>

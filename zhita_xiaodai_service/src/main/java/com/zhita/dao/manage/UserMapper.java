@@ -70,4 +70,6 @@ public interface UserMapper {
 	void updateScore(@Param("score")int score,@Param("userId") int userId);
 
 	int getRiskControlPoints(int userId);
+
+
 }

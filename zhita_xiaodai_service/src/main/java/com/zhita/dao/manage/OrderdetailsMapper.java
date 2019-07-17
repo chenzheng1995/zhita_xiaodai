@@ -1,6 +1,9 @@
 package com.zhita.dao.manage;
 
 import java.math.BigDecimal;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.Orderdetails;
 
@@ -19,4 +22,14 @@ public interface OrderdetailsMapper {
     int updateByPrimaryKey(Orderdetails record);
 
 	BigDecimal getlastLine(int ordersId);
+
+	int setororderdetails(@Param("orderId")int orderId,@Param("finalLine") BigDecimal finalLine,@Param("averageDailyInterest") BigDecimal averageDailyInterest,
+			@Param("totalInterest")BigDecimal totalInterest,@Param("platformServiceFee") BigDecimal platformServiceFee,@Param("actualAmountReceived") BigDecimal actualAmountReceived,
+			@Param("registeClient")String registeClient,@Param("sourceName") String sourceName,@Param("shouldTotalAmount") BigDecimal shouldTotalAmount);
+
+	Map<String, Object> getOrderdetails(String orderStatus);
+
+	BigDecimal getShouldReapyMoney(int orderId);
+
+
 }

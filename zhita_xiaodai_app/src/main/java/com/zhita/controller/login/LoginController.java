@@ -75,7 +75,7 @@ public class LoginController {
     @ResponseBody
     public Map<String, String> sendShortMessage(String phone, int companyId, String appNumber, String code) {
     	String company ="";
-    	if (companyId==1) {
+    	if (companyId==3) {
     	 company = "借吧";
     	}
         Map<String, String> map = new HashMap<>();

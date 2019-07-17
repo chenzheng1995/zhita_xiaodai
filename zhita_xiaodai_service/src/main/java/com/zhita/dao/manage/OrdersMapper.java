@@ -1,6 +1,8 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -71,5 +73,18 @@ public interface OrdersMapper {
   	
   	//后台管理---查询出source表所有的信息
   	List<Source> querysource(Integer companyId);
+
+	int setOrder(@Param("companyId")int companyId,@Param("userId") int userId,@Param("orderNumber") String orderNumber,@Param("orderCreateTime") String orderCreateTime,@Param("lifeOfLoan") int lifeOfLoan,
+			@Param("howManyTimesBorMoney")int howManyTimesBorMoney,@Param("shouldReturned") String shouldReturned,@Param("riskmanagementFraction") int riskmanagementFraction);
+
+	int getOrderId(String orderNumber);
+
+	Map<String, Object> getReimbursement(@Param("userId")int userId,@Param("companyId") int companyId);
+
+	Map<String, Object> getRepayment(@Param("userId")int userId,@Param("companyId") int companyId);
+
+
+
+
 
 }

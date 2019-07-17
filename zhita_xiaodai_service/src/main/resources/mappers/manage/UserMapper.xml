@@ -320,6 +320,7 @@
 	<select id="getRiskControlPoints" parameterType="java.lang.Integer" resultType="java.lang.Integer">
       select riskControlPoints from user where id = #{userId}
 	</select>
+
 	<!-- 后台管理         查询当前用户在用户认证表的信息 -->
 	<select id="queryUserAttesta" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.UserAttestation">
 		select 
@@ -335,4 +336,5 @@
 	<select id="queryOperator" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Operator">
 		select * from operator where userid=#{arg0}
 	</select>
+
 </mapper>
