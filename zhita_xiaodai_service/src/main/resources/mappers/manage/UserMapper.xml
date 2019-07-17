@@ -18,6 +18,7 @@
       <arg column="drainageOfPlatformId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="riskControlPoints" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="canBorrowLines" jdbcType="DECIMAL" />
+      <arg column="shareOfState" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -312,7 +313,7 @@
 				<!--APP 更新分控分数-->
 		<update id="updateScore" parameterType="java.util.Map" >
 		update user
-		set riskControlPoints = #{score}
+		set riskControlPoints = #{score},shareOfState = #{shareOfState}
 		where id = #{userId}
 	</update>	
 	

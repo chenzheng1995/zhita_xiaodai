@@ -76,5 +76,7 @@ public interface SourceMapper {
     
     //后台管理---查询当前渠道所使用的风控       机审风控分数段的值
     String querymancon(String sourceName);
+
+	int getmanageControlId(String sourceName);
     
 }

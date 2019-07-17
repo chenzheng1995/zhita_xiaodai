@@ -88,6 +88,10 @@ public interface OrdersMapper {
 	 */
 	List<Orders> queryAllordersByLike(OrderQueryParameter orderQueryParameter);
 
+	int getmanageControlId(String sourceName);
+
+
+
 
 
 }

@@ -203,8 +203,8 @@ public class UserServiceImp implements IntUserService{
 	}
 
 	@Override
-	public void updateScore(int score,int userId) {
-		userMapper.updateScore(score,userId);
+	public void updateScore(int score,int userId,String shareOfState) {
+		userMapper.updateScore(score,userId,shareOfState);
 		
 	}
 

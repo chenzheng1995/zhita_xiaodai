@@ -444,10 +444,19 @@ public class SourceServiceImp implements IntSourceService{
    		int airappFractionalSegment=ordersMapper.queryNum1(companyId, sourcename, startscore, endscore);
    		return airappFractionalSegment;
    	}
+
+
+	@Override
+	public int getmanageControlId(String sourceName) {
+		int manageControlId = sourceMapper.getmanageControlId(sourceName);//风控id
+		return manageControlId;
+	}
+
   	//后台管理---查询出source表所有的信息
   	public List<Source> querysource(Integer companyId){
   		List<Source> list=ordersMapper.querysource(companyId);
   		return list;
   	}
    	
+
 }

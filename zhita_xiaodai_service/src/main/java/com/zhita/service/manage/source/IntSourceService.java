@@ -72,7 +72,10 @@ public interface IntSourceService {
     public String querymancon(String sourceName);
    //后台管理---渠道统计模块——机审通过字段
   	public int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
+
+	public int getmanageControlId(String sourceName);
   	
   	//后台管理---查询出source表所有的信息
   	public List<Source> querysource(Integer companyId);
+
 }

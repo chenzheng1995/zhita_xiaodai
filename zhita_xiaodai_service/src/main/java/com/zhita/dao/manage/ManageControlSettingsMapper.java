@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.ManageControlSettings;
 
@@ -22,4 +23,6 @@ public interface ManageControlSettingsMapper {
     
     //后台管理---查询风控设置管理表所有信息
     List<ManageControlSettings> queryAll(Integer companyId);
+
+	Map<String, Object> getManconsettings(int manageControlId);
 }

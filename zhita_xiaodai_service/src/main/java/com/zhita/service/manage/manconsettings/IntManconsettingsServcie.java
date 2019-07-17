@@ -1,6 +1,7 @@
 package com.zhita.service.manage.manconsettings;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.ManageControlSettings;
@@ -21,4 +22,6 @@ public interface IntManconsettingsServcie {
     
     //后台管理---编辑保存功能
     public int updateByPrimaryKey(ManageControlSettings record);
+
+	public Map<String, Object> getManconsettings(int manageControlId);
 }
