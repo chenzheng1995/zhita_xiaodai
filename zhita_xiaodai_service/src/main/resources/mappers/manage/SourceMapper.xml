@@ -184,21 +184,21 @@
   </update>
   <!--后台管理       查询当天各个渠道在用户表的注册数量  -->
   <select id="queryAllSourceByUser" resultType="com.zhita.model.manage.TongjiSorce">
-	select t.sourcename,count(*) registernum,t.companyid from 
+	select t.sourceid,count(*) registernum,t.companyid,t.sourcename from 
    	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
    	and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t 
-   	group by t.sourcename
+   	group by t.sourceid
    </select>
    <!-- 后台管理        查询当天各个渠道在用户表的注册数量(通过渠道查询) -->
    <select id="queryAllSourceBySouce" resultType="com.zhita.model.manage.TongjiSorce">
-	select t.sourcename,count(*) registernum,t.companyid from 
+	select t.sourceid,count(*) registernum,t.companyid,t.sourcename from 
    	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id 
     	where u.companyid=#{companyid} and u.registeTime>=#{StartTime} and u.registeTime &lt;#{EndTime}
         <if test="sourceid != null and sourceid!='' ">
           and u.sourceid =#{sourceid,jdbcType=INTEGER}
         </if>
    	) t 
-   	group by t.sourcename 
+   	group by t.sourceid
    </select>
    <!-- 后台管理        通过渠道名称查询出当前渠道的折扣率 -->
    <select id="queryDiscount" resultType="java.lang.String">
@@ -206,10 +206,10 @@
    </select>
    <!--后台管理             查询某一天某个渠道的注册数量  -->
    <select id="queryAllSourceByUserDetail" resultType="com.zhita.model.manage.TongjiSorce">
-	select t.sourcename,count(*) registernum,t.companyid from 
+	select t.sourceid,count(*) registernum,t.companyid,t.sourcename from 
 	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
-	 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t where t.sourcename=#{arg3}
-	 group by t.sourcename 
+	 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t where t.sourceid=#{arg3}
+	 group by t.sourceid 
    </select>
 
    
@@ -233,12 +233,12 @@
 	select discount from source where id=#{arg0}
   </select>
   <!--后台管理         查询当前渠道下有多少用户是登录过得  -->
-  <select id="queryCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-  	select count(*) from user u inner join source s on u.sourceId=s.id where s.sourceName=#{arg0} and u.loginStatus=1 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
+  <select id="queryCount"  resultType="java.lang.Integer">
+  	select count(*) from user u where u.sourceid=#{arg0} and u.loginStatus=1 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
   </select>
   <!-- 后台管理      当前渠道下所有的用户id -->
-  <select id="queryUserid" parameterType="java.lang.String" resultType="java.lang.Integer">
-  	select u.id from user u inner join source s on u.sourceId=s.id where s.sourceName=#{arg0}
+  <select id="queryUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select u.id from user u  where u.sourceid=#{arg0}
   </select>
   <!-- 后台管理          查询当前用户id是否在个人信息认证表有值 -->
   <select id="queryIfExist" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -260,5 +260,13 @@
   
     <select id="getmanageControlId" parameterType="java.lang.String" resultType="java.lang.Integer">
   	select manageControlId from source where sourceName =#{sourceName}
+  </select>
+  <!-- 后台管理      通过人数（包含机审通过和人审通过） -->
+  <select id="querypass"  resultType="java.lang.Integer">
+  	select count(*) from user where sourceid=#{arg0} and (shareOfState=2 or shareOfState=4) and registeTime>=#{arg1} and registeTime &lt;#{arg2}
+  </select>
+  <!-- 后台管理     已借款人数 -->
+  <select id="queryorderpass" resultType="java.lang.Integer">
+  	select count(*) from orders o inner join user u on o.userid=u.id where u.sourceid=#{arg0} and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
   </select>
 </mapper>

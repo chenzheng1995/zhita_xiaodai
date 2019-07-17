@@ -56,8 +56,14 @@ public interface OrdersMapper {
 	//后台管理----订单 查询（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间     渠道id  用户id）
   	List<Orders> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter);
   	
+  	//后台管理----订单 查询（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间     渠道id  用户id）——查询数量
+   int queryAllOrdersByUseridcount(OrderQueryParameter orderQueryParameter);
+  	
   	//后台管理----订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）
   	List<Orders> queryAllOrdersByUserid1(OrderQueryParameter orderQueryParameter);
+  	
+	//后台管理----订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）——查询数量
+  	int queryAllOrdersByUserid1count(OrderQueryParameter orderQueryParameter);
   	
   	//后台管理---渠道统计模块——申请人数字段
   	int queryNum(Integer companyId,String sourcename);
@@ -84,14 +90,16 @@ public interface OrdersMapper {
 	Map<String, Object> getRepayment(@Param("userId")int userId,@Param("companyId") int companyId);
 	
 	/**
-	 * 机审通过订单（公司id，page,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 * 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
 	 */
 	List<Orders> queryAllordersByLike(OrderQueryParameter orderQueryParameter);
-
+	
+	/**
+	 * 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	Integer queryAllordersByLikeCount(OrderQueryParameter orderQueryParameter);
+	
 	int getmanageControlId(String sourceName);
-
-
-
 
 
 }

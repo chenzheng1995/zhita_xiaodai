@@ -8,6 +8,7 @@ import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
+import com.zhita.model.manage.UserLikeParameter;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
@@ -35,10 +36,11 @@ public interface UserMapper {
 
 	int updatelogOutStatus(@Param("loginStatus")String loginStatus,@Param("userId") int userId,@Param("companyId") String companyId);
 	
-	//后台管理----用户列表(公司id，姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
-	List<User> queryUserList(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("registeTimeStart") String registeTimeStart,
-			@Param("registeTimeEnd")String registeTimeEnd,@Param("userattestationstatus")  String userattestationstatus,
-			@Param("bankattestationstatus") String bankattestationstatus,@Param("operaattestationstatus")  String operaattestationstatus);
+	//后台管理----用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
+	List<User> queryUserList(UserLikeParameter userLikeParameter);
+	
+	//后台管理----用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)——查询数量
+	int queryUserListcount(UserLikeParameter userLikeParameter);
 	
 	//后台管理---添加黑名单(修改当前用户的黑名单状态)
 	int upaBlacklistStatus(Integer userid);
@@ -71,5 +73,42 @@ public interface UserMapper {
 
 	int getRiskControlPoints(int userId);
 
-
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）
+	 */
+	List<User> queryAllUser(UserLikeParameter userLikeParameter);
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 */
+	int queryAllUsercount(UserLikeParameter userLikeParameter);
+	
+	
+	/**
+	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）
+	 */
+	List<User> queryAllUserPeople(UserLikeParameter userLikeParameter);
+	/**
+	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 */
+	int queryAllUserPeoplecount(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审通过按钮
+	 */
+	int updateShareOfState(Integer sysuserid,String operationTime,Integer userid);
+	
+	/**
+	 * 人审不通过按钮
+	 */
+	int updateShareOfStateNo(Integer sysuserid,String operationTime,Integer userid);
+	
+	/**
+	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）
+	 */
+	List<User> queryAllUserPeopleYet(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）——查询数量
+	 */
+	int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter);
 }

@@ -19,6 +19,7 @@ import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
+import com.zhita.model.manage.UserLikeParameter;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
@@ -32,43 +33,43 @@ public class UserServiceImp implements IntUserService{
 	private OrdersMapper ordersMapper;
 	
 	//后台管理----用户列表(公司id，page,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
-	public Map<String, Object> queryUserList(Integer companyId,Integer page,String name,String phone,String registeTimeStart,String registeTimeEnd,String userattestationstatus,String bankattestationstatus,String operaattestationstatus){
-		if((registeTimeStart!=null&&!"".equals(registeTimeStart))&&(registeTimeEnd!=null&&!"".equals(registeTimeEnd))){
-			try {
-				registeTimeStart=Timestamps.dateToStamp(registeTimeStart);
-				registeTimeEnd=(Long.parseLong(Timestamps.dateToStamp(registeTimeEnd))+86400000)+"";
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public Map<String, Object> queryUserList(UserLikeParameter userLikeParameter){
+		if((userLikeParameter.getRegisteTimeStart()!=null&&!"".equals(userLikeParameter.getRegisteTimeStart()))&&(userLikeParameter.getRegisteTimeEnd()!=null&&!"".equals(userLikeParameter.getRegisteTimeEnd()))){
+				try {
+					userLikeParameter.setRegisteTimeStart(Timestamps.dateToStamp(userLikeParameter.getRegisteTimeStart()));
+					userLikeParameter.setRegisteTimeEnd((Long.parseLong(Timestamps.dateToStamp(userLikeParameter.getRegisteTimeEnd()))+86400000)+"");
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
-	
-		List<User> list=new ArrayList<>();
-		List<User> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
-		list=userMapper.queryUserList(companyId, name, phone,registeTimeStart, registeTimeEnd, userattestationstatus, bankattestationstatus, operaattestationstatus);
-		
-		if(list!=null && !list.isEmpty()){
-			System.out.println("if");
-			ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
-    		listto.addAll(listPageUtil.getData());
-    		
-    		for (int i = 0; i < listto.size(); i++) {
-        		listto.get(i).setRegistetime(Timestamps.stampToDate(listto.get(i).getRegistetime()));
+		int page=userLikeParameter.getPage();//页面传进来的当前页
+		int totalCount=userMapper.queryUserListcount(userLikeParameter);//查询总条数
+		PageUtil pageUtil=new PageUtil(page,totalCount);
+    	if(page<1) {
+    		page=1;
+    		pageUtil.setPage(page);
+    	}
+    	else if(page>pageUtil.getTotalPageCount()) {
+    		if(totalCount==0) {
+    			page=pageUtil.getTotalPageCount()+1;
+    		}else {
+    			page=pageUtil.getTotalPageCount();
     		}
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
-		}else{
-			System.out.println("else");
-			pageUtil=new PageUtil(1, 10,0);
+    		pageUtil.setPage(page);
+    	}
+    	int pages=(page-1)*pageUtil.getPageSize();
+    	userLikeParameter.setPage(pages);
+    	userLikeParameter.setPagesize(pageUtil.getPageSize());
+    	List<User> list=userMapper.queryUserList(userLikeParameter);//查询list集合
+    	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).setRegistetime(Timestamps.stampToDate(list.get(i).getRegistetime()));
 		}
-		
-		HashMap<String,Object> map=new HashMap<>();
-		map.put("userlist", listto);
+		Map<String,Object> map=new HashMap<>();
+		map.put("userlist", list);
 		map.put("pageutil", pageUtil);
-    	return map;
+		return map;
+		
 	}
 	
 	//后台管理---添加黑名单
@@ -86,9 +87,9 @@ public class UserServiceImp implements IntUserService{
 		return num;
 	}
 	
-	//后台管理----订单 查询（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id  用户id）-用户认证信息——借款信息
+	//后台管理----用户认证信息——借款信息    订单 查询（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id  用户id）
   	public Map<String,Object> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter){
-  		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
+		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
 			try {
 				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
 				orderQueryParameter.setRegisteendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getRegisteendtime()))+86400000)+"");
@@ -97,46 +98,45 @@ public class UserServiceImp implements IntUserService{
 				e.printStackTrace();
 			}
 		}
-  		Integer companyId=orderQueryParameter.getCompanyid();//得到公司id
-  		Integer page=orderQueryParameter.getPage();//得到page
-  		List<Orders> list=new ArrayList<>();
-		List<Orders> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
-		list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);
-		
-		if(list!=null && !list.isEmpty()){
-	    	ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
-	    	listto.addAll(listPageUtil.getData());
-	    		
-	    	for (int i = 0; i < listto.size(); i++) {
-		    	listto.get(i).setOrderCreateTime(Timestamps.stampToDate(listto.get(i).getOrderCreateTime()));
-				List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listto.get(i).getId());
-				if(listdefer.size()!=0){
-					listto.get(i).setDeferrTime(listdefer.size());
-					listto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
-				}
+		int page=orderQueryParameter.getPage();//页面传进来的当前页
+		int companyId=orderQueryParameter.getCompanyid();//公司id
+		int totalCount=ordersMapper.queryAllOrdersByUseridcount(orderQueryParameter);//查询总条数
+		PageUtil pageUtil=new PageUtil(page,totalCount);
+    	if(page<1) {
+    		page=1;
+    		pageUtil.setPage(page);
+    	}
+    	else if(page>pageUtil.getTotalPageCount()) {
+    		if(totalCount==0) {
+    			page=pageUtil.getTotalPageCount()+1;
+    		}else {
+    			page=pageUtil.getTotalPageCount();
+    		}
+    		pageUtil.setPage(page);
+    	}
+    	int pages=(page-1)*pageUtil.getPageSize();
+    	orderQueryParameter.setPage(pages);
+    	orderQueryParameter.setPagesize(pageUtil.getPageSize());
+    	List<Orders> list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);//查询list集合
+    	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
+    		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
+			if(listdefer.size()!=0){
+				list.get(i).setDeferrTime(listdefer.size());//延期次数
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(listdefer.get(listdefer.size()-1).getDeferAfterReturntime()));//延期后还款时间
 			}
-		    DateListUtil.ListSort2(listto);
-	    
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
-	    }else{
-	    	pageUtil=new PageUtil(1, 10,0);
-	    }
-	    
-	    
-	    
-	    List<Source> listsource=ordersMapper.querysource(companyId);	    	
-		HashMap<String,Object> map=new HashMap<>();
-		map.put("listorderto", listto);
-		map.put("sourcelist", listsource);
+		}
+    	 List<Source> listsource=ordersMapper.querysource(companyId);	
+		Map<String,Object> map=new HashMap<>();
+		map.put("listorders", list);
+		map.put("listsource", listsource);
 		map.put("pageutil", pageUtil);
 		return map;
-		
-  	}
+	}
   	
 	//后台管理----订单 查询（公司id  page，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）——黑名单用户  机审判定黑名单
   	public Map<String,Object> queryAllOrdersByUserid1(OrderQueryParameter orderQueryParameter){
-  		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
+		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
 			try {
 				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
 				orderQueryParameter.setRegisteendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getRegisteendtime()))+86400000)+"");
@@ -145,60 +145,53 @@ public class UserServiceImp implements IntUserService{
 				e.printStackTrace();
 			}
 		}
-  		Integer page=orderQueryParameter.getPage();
-  		List<Orders> list=new ArrayList<>();
-		List<Orders> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
-		list=ordersMapper.queryAllOrdersByUserid1(orderQueryParameter);
-		
-		
-	    if(list!=null && !list.isEmpty()){
-	    	ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
-	    	listto.addAll(listPageUtil.getData());
-	    	
-	    	for (int i = 0; i <listto.size(); i++) {
-				listto.get(i).setOrderCreateTime(Timestamps.stampToDate(listto.get(i).getOrderCreateTime()));
+		int page=orderQueryParameter.getPage();//页面传进来的当前页
+		int companyId=orderQueryParameter.getCompanyid();//公司id
+		int totalCount=ordersMapper.queryAllOrdersByUserid1count(orderQueryParameter);//查询总条数
+		PageUtil pageUtil=new PageUtil(page,totalCount);
+    	if(page<1) {
+    		page=1;
+    		pageUtil.setPage(page);
+    	}
+    	else if(page>pageUtil.getTotalPageCount()) {
+    		if(totalCount==0) {
+    			page=pageUtil.getTotalPageCount()+1;
+    		}else {
+    			page=pageUtil.getTotalPageCount();
+    		}
+    		pageUtil.setPage(page);
+    	}
+    	int pages=(page-1)*pageUtil.getPageSize();
+    	orderQueryParameter.setPage(pages);
+    	orderQueryParameter.setPagesize(pageUtil.getPageSize());
+    	List<Orders> list=ordersMapper.queryAllOrdersByUserid1(orderQueryParameter);//查询list集合
+    	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));;
+    		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
+    		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
+			if(listdefer.size()!=0){
+				list.get(i).setDeferrTime(listdefer.size());//延期次数
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(listdefer.get(listdefer.size()-1).getDeferAfterReturntime()));//延期后还款时间
 			}
-			
-			DateListUtil.ListSort2(listto);
-	    		
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
-	    }else{
-	    	pageUtil=new PageUtil(1, 10,0);
-	    }
-	    	
-		HashMap<String,Object> map=new HashMap<>();
-		map.put("listorderto", listto);
+		}
+    	 List<Source> listsource=ordersMapper.querysource(companyId);	
+		Map<String,Object> map=new HashMap<>();
+		map.put("listorders", list);
+		map.put("listsource", listsource);
 		map.put("pageutil", pageUtil);
 		return map;
-  	}
+	}
   	
 	//后台管理---用户认证信息
 	public Map<String,Object> queryUserAttesta(Integer userid){
 		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息
 		Bankcard bankcard=userMapper.queryBankcard(userid);//用户银行卡信息
 		Operator operator=userMapper.queryOperator(userid);//运营商信息
-		System.out.println(operator+"-------");
-		//String json=operator.getOperatorjson();//取出里面的json串
-		
-		//System.out.println("------"+operator.getOperatorjson()+"*****");
-		//String operatorjson="\""+json.substring(6)+"\"";//只取出json串里   去掉"运营商链接:"后面的内容
-		
-		
-		//JsonBean jsonBean=JSON.parseObject(JSON.parse(operatorjson),JsonBean.class);
-		/*List<DatalistJsonBean> jsondata=jsonBean.getWd_api_mobilephone_getdatav2_response().getData().getData_list();
-		DatalistJsonBean datalistjsonbean=jsondata.get(0);
-		List<TelDataJsonBean> listTel=datalistjsonbean.getTeldata();//通话记录信息
-		List<MsgDataJsonBean> listmsg=datalistjsonbean.getMsgdata();//短信记录信息
-*/		
-		
-		///--------------------
 		
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("userAttestation", userAttestation);
 		map.put("bankcard",bankcard );
-		//map.put("listTel",listTel );
-		//map.put("listmsg",listmsg );
+		map.put("operator", operator);
 		return map;
 	}
 

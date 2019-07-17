@@ -6,7 +6,7 @@ package com.zhita.util;
 public class PageUtil{
     private int page;      //当前页
 
-    private int pageSize;     //每页显示的数量
+    private int pageSize=2;     //每页显示的数量
 
     private int totalCount;     //总记录数
     
@@ -23,7 +23,11 @@ public class PageUtil{
         this.pageSize=pagesize;
         this.totalCount = totalCount;
     }
-    
+    /**
+     * 通过构造函数，传入当前页和总记录数
+     * @param page
+     * @param totalCount
+     */
     public PageUtil(int page,int totalCount) {
         this.page=page;
         this.totalCount = totalCount;
