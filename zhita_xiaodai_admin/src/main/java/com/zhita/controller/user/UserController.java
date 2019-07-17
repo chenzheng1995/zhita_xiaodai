@@ -27,7 +27,7 @@ public class UserController {
 	//后台管理---添加黑名单
 	@ResponseBody
 	@RequestMapping("/insertBlacklist")
-	public int insertBlacklist(Integer companyId,Integer userId,String operator){
+	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
 		int num=intUserService.insertBlacklist(companyId, userId, operator);
 		return num;
 	}
@@ -55,4 +55,12 @@ public class UserController {
   		Map<String,Object> map=intUserService.queryAllOrdersByUserid1(orderQueryParameter);
   		return map;
   	}
+	
+	//后台管理---用户认证信息
+	@ResponseBody
+	@RequestMapping("/queryUserAttesta")
+	public Map<String,Object> queryUserAttesta(Integer userid){
+		Map<String,Object> map=intUserService.queryUserAttesta(userid);
+		return map;
+	}
 }

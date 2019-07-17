@@ -47,7 +47,7 @@ public interface UserMapper {
 	int upaBlacklistStatus1(Integer userid);
 	
 	//后台管理---添加黑名单（将当前用户存进黑名单里）
-	int addBlacklist(Integer companyId,Integer userId,String operator,String operationTime);
+	int addBlacklist(Integer companyId,Integer userId,Integer operator,String operationTime);
 	
 	//后台管理---解除黑名单（修改当前用在户黑名单表里的假删除状态）
 	int upaBlacklist(Integer userId);

@@ -77,6 +77,21 @@
     
     r.repaymentMoney
   </sql>
+    <sql id="Base_Column_List2" >
+    o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
+    o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
+    o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
+    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.howManyTimesBorMoney,
+    
+    od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
+    od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
+    od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
+    
+    u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,
+    
+    r.repaymentMoney,su.account as assessor
+  </sql>
   <sql id="Base_Column_List1" >
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
     o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
@@ -405,11 +420,11 @@
   <!--后台管理             已机审已人审（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间      审核员    风控名字       风控分数开始   风控分数结束）-->
   <select id="queryroasOrders" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	select 
-    <include refid="Base_Column_List" />
-    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join repayment r on r.orderId=o.id
+    <include refid="Base_Column_List2" />
+    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join repayment r on r.orderId=o.id left join sys_user su on su.userId=o.assessor
     where o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and o.riskmanagementFraction between #{start,jdbcType=VARCHAR} and #{end,jdbcType=VARCHAR} and ifpeopleWhose=1
         <if test="ordernumber != null and ordernumber!='' ">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
         <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
@@ -465,9 +480,9 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   	 select 
     <include refid="Base_Column_List1" />
     from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id
-    <where>
+    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
         <if test="ordernumber != null">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
          <if test="name != null">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
@@ -481,8 +496,6 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="sourcename != null">
            and u.sourceId=#{sourcename,jdbcType=Integer}
         </if>
-        and o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
-    </where>
   </select>
      <!-- 后台管理         订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id） -->
   <select id="queryAllOrdersByUserid1" parameterType="java.lang.Integer" resultMap="BaseResultMap">

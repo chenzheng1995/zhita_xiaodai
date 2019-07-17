@@ -34,15 +34,18 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     	PageUtil pageUtil=null;
     	list=blacklistUserMapper.queryAll(companyId, name, phone, idcard);
     	
-    	for (int i = 0; i < list.size(); i++) {
-    		list.get(i).setOperationtime(Timestamps.stampToDate(list.get(i).getOperationtime()));
-		}
     	
     	if(list!=null && !list.isEmpty()){
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
+    		for (int i = 0; i < listto.size(); i++) {
+    			listto.get(i).setOperationtime(Timestamps.stampToDate(listto.get(i).getOperationtime()));
+    		}
+    		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -86,7 +89,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     /**
      * 批量导入Excel
      */
-    public String ajaxUploadExcel(MultipartFile file,Integer companyId,String operator){
+    public String ajaxUploadExcel(MultipartFile file,Integer companyId,Integer operator){
 	       /* MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 	        MultipartFile file = multipartRequest.getFile("excelFile");*/
 	        if(file.isEmpty()){

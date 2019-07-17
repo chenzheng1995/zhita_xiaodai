@@ -43,6 +43,8 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -87,7 +89,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     /**
      * 批量导入Excel
      */
-    public String ajaxUploadExcel(MultipartFile file,Integer companyId,String operator){
+    public String ajaxUploadExcel(MultipartFile file,Integer companyId,Integer operator){
 	       /* MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 	        MultipartFile file = multipartRequest.getFile("excelFile");*/
 	        if(file.isEmpty()){

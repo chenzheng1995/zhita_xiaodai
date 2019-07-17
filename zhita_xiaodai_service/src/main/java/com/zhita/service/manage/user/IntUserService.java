@@ -9,7 +9,7 @@ public interface IntUserService {
 	public Map<String, Object> queryUserList(Integer companyId,Integer page,String name,String phone,String registeTimeStart,String registeTimeEnd,String userattestationstatus,String bankattestationstatus,String operaattestationstatus);
 	
 	//后台管理---添加黑名单
-	public int insertBlacklist(Integer companyId,Integer userId,String operator);
+	public int insertBlacklist(Integer companyId,Integer userId,Integer operator);
 	
 	//后台管理---解除黑名单
 	public int removeBlacklist(Integer companyId,Integer userId);

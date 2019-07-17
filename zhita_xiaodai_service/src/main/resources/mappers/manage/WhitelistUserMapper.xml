@@ -10,7 +10,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, name, phone, idcard, operator,operationtime,deleted
+    w.id, w.companyId, w.name, w.phone, w.idcard, su.account,w.operationtime,w.deleted
   </sql>
   <!-- 后台管理        根据id查询当前用户的信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -109,16 +109,16 @@
   <select id="queryAll" resultType="com.zhita.model.manage.WhitelistUser">
   	select 
     <include refid="Base_Column_List" />
-    from whitelist_user
-    where companyId=#{companyId} and deleted=0
+    from whitelist_user w left join sys_user su on su.userid=w.operator
+    where w.companyId=#{companyId} and w.deleted=0
     	<if test="name != null and name!=''">
-           and name like "%"#{name}"%"
+           and w.name like "%"#{name}"%"
         </if>
         <if test="phone != null and phone!=''">
-           and phone like "%"#{phone}"%"
+           and w.phone like "%"#{phone}"%"
         </if>
         <if test="idcard != null and idcard!=''">
-           and idcard like "%"#{idcard}"%"
+           and w.idcard like "%"#{idcard}"%"
         </if>
   </select>
   <!-- 后台管理        更新假删除状态 -->

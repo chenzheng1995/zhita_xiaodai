@@ -30,12 +30,12 @@ public class ThirdpartyintServiceImp implements IntThirdpartyintService{
     }
     
     //后台管理---添加功能（查询出所有公司）
-    public Map<String, Object> queryAllCompany(){
+    public Map<String, Object> queryAllCompany(Integer companyId){
     	List<Company> list=sysUserMapper.queryAllCompany();
-    	List<FaceRecognition> list1=thirdpartyInterfaceMapper.queryface();
-    	List<OperatorSetting> list2=thirdpartyInterfaceMapper.queryopera();
-    	List<LoanSetting> list3=thirdpartyInterfaceMapper.queryloan();
-    	List<RepaymentSetting> list4=thirdpartyInterfaceMapper.queryrepayment();
+    	List<FaceRecognition> list1=thirdpartyInterfaceMapper.queryface(companyId);
+    	List<OperatorSetting> list2=thirdpartyInterfaceMapper.queryopera(companyId);
+    	List<LoanSetting> list3=thirdpartyInterfaceMapper.queryloan(companyId);
+    	List<RepaymentSetting> list4=thirdpartyInterfaceMapper.queryrepayment(companyId);
     	Map<String, Object> map=new HashMap<>();
     	map.put("comlist", list);
     	map.put("facelist", list1);

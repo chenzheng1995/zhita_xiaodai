@@ -9,19 +9,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.DatalistJsonBean;
 import com.zhita.model.manage.DeferredAndOrder;
-import com.zhita.model.manage.JsonBean;
-import com.zhita.model.manage.MsgDataJsonBean;
 import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Source;
-import com.zhita.model.manage.TelDataJsonBean;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
 import com.zhita.util.DateListUtil;
@@ -56,17 +51,20 @@ public class UserServiceImp implements IntUserService{
 		PageUtil pageUtil=null;
 		list=userMapper.queryUserList(companyId, name, phone,registeTimeStart, registeTimeEnd, userattestationstatus, bankattestationstatus, operaattestationstatus);
 		
-		for (int i = 0; i < list.size(); i++) {
-			list.get(i).setRegistetime(Timestamps.stampToDate(list.get(i).getRegistetime()));
-		}
-    	
-    	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
+		if(list!=null && !list.isEmpty()){
+			System.out.println("if");
+			ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
+    		for (int i = 0; i < listto.size(); i++) {
+        		listto.get(i).setRegistetime(Timestamps.stampToDate(listto.get(i).getRegistetime()));
+    		}
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
-    	}
-    	
+		}else{
+			System.out.println("else");
+			pageUtil=new PageUtil(1, 10,0);
+		}
+		
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("userlist", listto);
 		map.put("pageutil", pageUtil);
@@ -74,7 +72,7 @@ public class UserServiceImp implements IntUserService{
 	}
 	
 	//后台管理---添加黑名单
-	public int insertBlacklist(Integer companyId,Integer userId,String operator){
+	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
 		userMapper.upaBlacklistStatus(userId);
 		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 		int num=userMapper.addBlacklist(companyId, userId, operator, operationTime);
@@ -110,18 +108,22 @@ public class UserServiceImp implements IntUserService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
 	    	listto.addAll(listPageUtil.getData());
 	    		
+	    	for (int i = 0; i < listto.size(); i++) {
+		    	listto.get(i).setOrderCreateTime(Timestamps.stampToDate(listto.get(i).getOrderCreateTime()));
+				List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listto.get(i).getId());
+				if(listdefer.size()!=0){
+					listto.get(i).setDeferrTime(listdefer.size());
+					listto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
+				}
+			}
+		    DateListUtil.ListSort2(listto);
+	    
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    }else{
+	    	pageUtil=new PageUtil(1, 10,0);
 	    }
 	    
-	    for (int i = 0; i < listto.size(); i++) {
-	    	listto.get(i).setOrderCreateTime(Timestamps.stampToDate(listto.get(i).getOrderCreateTime()));
-			List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listto.get(i).getId());
-			if(listdefer.size()!=0){
-				listto.get(i).setDeferrTime(listdefer.size());
-				listto.get(i).setDeferAfterReturntime(listdefer.get(listdefer.size()-1).getDeferAfterReturntime());
-			}
-		}
-	    DateListUtil.ListSort2(listto);
+	    
 	    
 	    List<Source> listsource=ordersMapper.querysource(companyId);	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -149,17 +151,20 @@ public class UserServiceImp implements IntUserService{
 		PageUtil pageUtil=null;
 		list=ordersMapper.queryAllOrdersByUserid1(orderQueryParameter);
 		
-		for (int i = 0; i <list.size(); i++) {
-			list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
-		}
-		
-		DateListUtil.ListSort2(list);
 		
 	    if(list!=null && !list.isEmpty()){
 	    	ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
 	    	listto.addAll(listPageUtil.getData());
+	    	
+	    	for (int i = 0; i <listto.size(); i++) {
+				listto.get(i).setOrderCreateTime(Timestamps.stampToDate(listto.get(i).getOrderCreateTime()));
+			}
+			
+			DateListUtil.ListSort2(listto);
 	    		
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    }else{
+	    	pageUtil=new PageUtil(1, 10,0);
 	    }
 	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -173,19 +178,27 @@ public class UserServiceImp implements IntUserService{
 		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息
 		Bankcard bankcard=userMapper.queryBankcard(userid);//用户银行卡信息
 		Operator operator=userMapper.queryOperator(userid);//运营商信息
-		String operatorjson=operator.getOperatorjson();//取出对象里的json串
+		System.out.println(operator+"-------");
+		//String json=operator.getOperatorjson();//取出里面的json串
 		
-		JsonBean jsonBean=JSON.parseObject(operatorjson,JsonBean.class);
-		List<DatalistJsonBean> jsondata=jsonBean.getWd_api_mobilephone_getdatav2_response().getData().getData_list();
+		//System.out.println("------"+operator.getOperatorjson()+"*****");
+		//String operatorjson="\""+json.substring(6)+"\"";//只取出json串里   去掉"运营商链接:"后面的内容
+		
+		
+		//JsonBean jsonBean=JSON.parseObject(JSON.parse(operatorjson),JsonBean.class);
+		/*List<DatalistJsonBean> jsondata=jsonBean.getWd_api_mobilephone_getdatav2_response().getData().getData_list();
 		DatalistJsonBean datalistjsonbean=jsondata.get(0);
-		List<TelDataJsonBean> lstTel=datalistjsonbean.getTeldata();//通话记录信息
+		List<TelDataJsonBean> listTel=datalistjsonbean.getTeldata();//通话记录信息
 		List<MsgDataJsonBean> listmsg=datalistjsonbean.getMsgdata();//短信记录信息
-		
-		
+*/		
 		
 		///--------------------
 		
 		HashMap<String,Object> map=new HashMap<>();
+		map.put("userAttestation", userAttestation);
+		map.put("bankcard",bankcard );
+		//map.put("listTel",listTel );
+		//map.put("listmsg",listmsg );
 		return map;
 	}
 

@@ -119,12 +119,7 @@ public class TestController {
 		JsonBean jsonBean=JSON.parseObject(str1, JsonBean.class);
 		//System.out.println(jsonBean+"--******---");
 		System.out.println(jsonBean.getWd_api_mobilephone_getdatav2_response());*/
-		OrderQueryParameter orderQueryParameter=new OrderQueryParameter();
-		orderQueryParameter.setOrderstarttime("2019-01-01");
-		orderQueryParameter.setOrderendtime("2019-10-01");
-		orderQueryParameter.setOrderstarttime(Timestamps.dateToStamp(orderQueryParameter.getOrderstarttime()));
-		orderQueryParameter.setOrderendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getOrderendtime()))+86400000)+"");
-		System.out.println(orderQueryParameter.getOrderstarttime()+"----"+orderQueryParameter.getOrderendtime());
-		
+		String str="运营商链接：{abcde123456}";
+		System.out.println("\""+str.substring(6)+"\"");
 	}
 }

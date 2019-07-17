@@ -59,6 +59,8 @@ public class SourceServiceImp implements IntSourceService{
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -224,8 +226,8 @@ public class SourceServiceImp implements IntSourceService{
     }
     
     //后台管理---查询当天各个渠道在用户表的注册数量(通过渠道查询)
-    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,String sourcename){
-    	List<TongjiSorce> list=sourceMapper.queryAllSourceBySouce(companyid, StartTime, EndTime, sourcename);
+    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,Integer sourceid){
+    	List<TongjiSorce> list=sourceMapper.queryAllSourceBySouce(companyid, StartTime, EndTime, sourceid);
     	return list;
     }
     //后台管理---查询某一天某个渠道的注册数量
@@ -443,9 +445,18 @@ public class SourceServiceImp implements IntSourceService{
    		return airappFractionalSegment;
    	}
 
+
 	@Override
 	public int getmanageControlId(String sourceName) {
 		int manageControlId = sourceMapper.getmanageControlId(sourceName);//风控id
 		return manageControlId;
 	}
+
+  	//后台管理---查询出source表所有的信息
+  	public List<Source> querysource(Integer companyId){
+  		List<Source> list=ordersMapper.querysource(companyId);
+  		return list;
+  	}
+   	
+
 }

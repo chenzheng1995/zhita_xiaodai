@@ -176,10 +176,9 @@
       account = #{account,jdbcType=VARCHAR},
       pwd = #{pwd,jdbcType=VARCHAR},
       link = #{link,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
       discount = #{discount,jdbcType=VARCHAR},
       templateid = #{templateid,jdbcType=VARCHAR},
-      managecontrolid = #{managecontrolid,jdbcType=VARCHAR}
+      managecontrolid = #{managecontrolid,jdbcType=VARCHAR},
       deleted = 0
     where sourcename = #{sourcename,jdbcType=VARCHAR}
   </update>
@@ -194,12 +193,11 @@
    <select id="queryAllSourceBySouce" resultType="com.zhita.model.manage.TongjiSorce">
 	select t.sourcename,count(*) registernum,t.companyid from 
    	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id 
-   	<where>
-        <if test="sourcename != null">
-          s.sourcename like "%"#{sourcename}"%"
+    	where u.companyid=#{companyid} and u.registeTime>=#{StartTime} and u.registeTime &lt;#{EndTime}
+        <if test="sourceid != null and sourceid!='' ">
+          and u.sourceid =#{sourceid,jdbcType=INTEGER}
         </if>
-   	</where>
-   	and u.companyid=#{companyid} and u.registeTime>=#{StartTime} and u.registeTime &lt;#{EndTime}) t 
+   	) t 
    	group by t.sourcename 
    </select>
    <!-- 后台管理        通过渠道名称查询出当前渠道的折扣率 -->

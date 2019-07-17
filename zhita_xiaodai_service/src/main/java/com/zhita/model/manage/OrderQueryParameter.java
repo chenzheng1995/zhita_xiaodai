@@ -15,7 +15,7 @@ public class OrderQueryParameter {
 	private String riskcontrolname;//风控名
 	private String start;//开始分数
 	private String end;//结束分数
-	private String assessor;//审核员
+	private Integer assessor;//审核员
 	private Integer sourcename;//渠道名字id
 	private Integer userid;//用户id
 	public Integer getCompanyid() {
@@ -96,10 +96,10 @@ public class OrderQueryParameter {
 	public void setEnd(String end) {
 		this.end = end;
 	}
-	public String getAssessor() {
+	public Integer getAssessor() {
 		return assessor;
 	}
-	public void setAssessor(String assessor) {
+	public void setAssessor(Integer assessor) {
 		this.assessor = assessor;
 	}
 	public Integer getSourcename() {
