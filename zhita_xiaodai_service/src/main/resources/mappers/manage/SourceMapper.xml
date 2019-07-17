@@ -12,6 +12,7 @@
     <result column="discount" property="discount" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+    <result column="manageControlId" property="manageControlId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId, s.deleted,
@@ -256,5 +257,10 @@
   <!-- 后台管理          查询当前渠道所使用的风控       机审风控分数段的值-->
   <select id="querymancon" parameterType="java.lang.String" resultType="java.lang.String">
   	select airappFractionalSegment from manage_control_settings mcs inner join source s on mcs.id=s.manageControlId where s.sourceName=#{arg0}
+  </select>
+  
+  
+    <select id="getmanageControlId" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select manageControlId from source where sourceName =#{sourceName}
   </select>
 </mapper>

@@ -40,6 +40,8 @@ public class User {
     
     private String ifblacklist;//是否是黑名单（1：是；0：不是）
     
+    private String shareOfState;//风控状态（0，审核未通过。1需要人工审核。2，审核通过）
+    
     private Integer userNum;
     
     private BigDecimal UserMoney;
@@ -221,6 +223,15 @@ public class User {
 
 	public void setCanBorrowLines(BigDecimal canBorrowLines) {
 		this.canBorrowLines = canBorrowLines;
+	}
+	
+	
+	public String getShareOfState() {
+		return shareOfState;
+	}
+
+	public void setShareOfState(String shareOfState) {
+		this.shareOfState = shareOfState;
 	}
 
 }

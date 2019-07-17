@@ -83,6 +83,8 @@ public interface OrdersMapper {
 
 	Map<String, Object> getRepayment(@Param("userId")int userId,@Param("companyId") int companyId);
 
+	int getmanageControlId(String sourceName);
+
 
 
 

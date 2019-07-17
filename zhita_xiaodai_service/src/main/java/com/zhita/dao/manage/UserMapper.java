@@ -67,7 +67,7 @@ public interface UserMapper {
 
 	int setPwd(@Param("userId")int userId,@Param("md5Pwd") String md5Pwd);
 
-	void updateScore(@Param("score")int score,@Param("userId") int userId);
+	void updateScore(@Param("score")int score,@Param("userId") int userId,@Param("shareOfState") String shareOfState);
 
 	int getRiskControlPoints(int userId);
 

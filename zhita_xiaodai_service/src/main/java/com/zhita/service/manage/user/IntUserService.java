@@ -23,7 +23,7 @@ public interface IntUserService {
 	//后台管理---用户认证信息
 	public Map<String,Object> queryUserAttesta(Integer userid);
 
-	public void updateScore(int score, int userId);
+	public void updateScore(int score, int userId, String shareOfState);
 
 	public int getRiskControlPoints(int userId);
 
