@@ -73,7 +73,7 @@ public class SysuserServiceImp implements IntSysuserService{
     	}
 		
 		HashMap<String,Object> map=new HashMap<>();
-		map.put("sysuserlistlike", listto);
+		map.put("sysuserlist", listto);
 		map.put("pageutil", pageUtil);
     	return map;
 	}

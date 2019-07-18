@@ -44,7 +44,7 @@ public interface SysUserMapper {
     List<SysUser> queryAll(Integer companyId);
     
     //admin------系统用户——模糊查询（账号和账号状态）
-    List<SysUser> queryAllByLike(@Param("companyId") Integer companyid,@Param("account") String account,@Param("status") String status);
+    List<SysUser> queryAllByLike(@Param("companyId") Integer companyId,@Param("account") String account,@Param("status") String status);
     
     //admin-----系统用户——设置账号状态为开启
     int upaStatusOpen(Integer id);
