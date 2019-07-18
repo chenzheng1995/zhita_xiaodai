@@ -2,6 +2,7 @@ package com.zhita.service.manage.whitelistuser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,17 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
 	
 	//后台管理---查询列表
     public Map<String, Object>  queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
+    	List<WhitelistUser> list=new ArrayList<WhitelistUser>();
+    	List<WhitelistUser> listto=new ArrayList<WhitelistUser>();
+    	PageUtil pageUtil=null;
+    	
+    	for (int i = 0; i < list.size(); i++) {
+    		list.get(i).setOperationtime(Timestamps.stampToDate(list.get(i).getOperationtime()));
+		}
+    	
+    	
 		int totalCount=whitelistUserMapper.queryAllcount(companyId, name, phone, idcard);//查询总数量
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		pageUtil=new PageUtil(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);
@@ -42,7 +52,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     		pageUtil.setPage(page);
     	}
     	int pages=(page-1)*pageUtil.getPageSize();
-    	List<WhitelistUser> list=whitelistUserMapper.queryAll(companyId, pages, pageUtil.getPageSize(), name, phone, idcard);//查询list集合
+    	list=whitelistUserMapper.queryAll(companyId, pages, pageUtil.getPageSize(), name, phone, idcard);//查询list集合
     	for (int i = 0; i < list.size();i++) {
 			list.get(i).setOperationtime(Timestamps.stampToDate(list.get(i).getOperationtime()));
 		}

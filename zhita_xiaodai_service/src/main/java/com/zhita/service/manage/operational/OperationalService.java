@@ -18,6 +18,12 @@ public interface OperationalService {
 	
 	
 	Map<String, Object> OrderBudget(Orderdetails orde);
+	
+	
+	Map<String, Object> AllDrainageOf(Integer companyId);
+	
+	
+	Map<String, Object> AllOverdueclass(Integer companyId);
 
 
 	BigDecimal getlastLine(int ordersId);

@@ -4,21 +4,25 @@
 		
 		
 		<select id="Ordersdata" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select  orderCreateTime,count(orderCreateTime) as collection_count from orders 
+			select  o.orderCreateTime,count(o.orderCreateTime) as collection_count from orders o,user u
 			<where>
+				and o.userId = u.id
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND orderCreateTime between #{start_time} and #{end_time}
+						AND o.orderCreateTime between #{start_time} and #{end_time}
 				</if>
-				AND companyId = #{companyId}
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+						AND u.drainageOfPlatformId = #{drainageOfPlatformId}
+				</if>
+				AND o.companyId = #{companyId}
 			</where>
-			GROUP BY orderCreateTime
+			GROUP BY o.orderCreateTime
 			limit #{page},#{pagesize}
 		</select>
 		
 		
 		
-		<select id="OrderNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select  orderCreateTime,count(orderCreateTime) as collection_count from orders 
+		<select id="OrderNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select  count(orderCreateTime) from orders 
 			<where>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND orderCreateTime between #{start_time} and #{end_time}
@@ -101,14 +105,17 @@
 		
 		
 		<select id="SelectRepaymentNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Repayment">
-			select  orderId,repaymentDate,count(repaymentDate) as repayment_Count from repayment 
+			select  count(o.orderCreateTime) from orders o,orderdetails ord,user u
 			<where>
-				 and collectionMemberId in 
-				<foreach collection="ids" item="id" open="(" separator="," close=")">
-					#{id}
-				</foreach>
+				AND ord.orderId = o.id
+				AND u.id = o.userId
+				AND o.companyId = #{companyId}
+				AND o.orderStatus = "3"
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+						AND u.drainageOfPlatformId = #{drainageOfPlatformId}
+				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND repaymentDate between #{start_time} and #{end_time}
+						AND o.orderCreateTime between #{start_time} and #{end_time}
 				</if>
 			</where>
 		</select>
@@ -122,20 +129,45 @@
 		
 		
 		<select id="SelectRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Repayment">
-			select  repaymentDate as operator_time,count(repaymentDate) as repayment_Count,sum(repaymentMoney) as repaymentSumMoney
-			 from repayment 
+			select  o.orderCreateTime,count(o.id) as repayment_Count,sum(ord.realityAccount) as realityAccount
+			 from orders o LEFT JOIN Orderdetails ord ON o.id = ord.orderId
+			 LEFT JOIN user u ON u.id = o.userId
 			<where>
-				 and collectionMemberId in 
-				<foreach collection="ids" item="id" open="(" separator="," close=")">
-					#{id}
-				</foreach>
+				AND o.companyId = #{companyId}
+				AND o.orderStatus = "3"
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND repaymentDate between #{start_time} and #{end_time}
+						AND o.orderCreateTime between #{start_time} and #{end_time}
+				</if>
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+						AND u.drainageOfPlatformId = #{drainageOfPlatformId}
 				</if>
 			</where>
-			GROUP BY repaymentDate
+			GROUP BY o.orderCreateTime
 			limit #{page},#{pagesize}
 		</select>
+		
+		
+		<select id="SelectNodeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Repayment">
+			select count(o.id) as collection_count,sum(ord.realityAccount) as collection_money 
+			from orders o LEFT JOIN Orderdetails ord ON o.id = ord.orderId
+			 LEFT JOIN user u ON u.id = o.userId
+			<where>
+				AND o.companyId = #{companyId}
+				AND o.orderStatus = "3"
+				AND ord.overdueNumberOfDays != 0
+				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND o.orderCreateTime between #{start_time} and #{end_time}
+				</if>
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+						AND u.drainageOfPlatformId = #{drainageOfPlatformId}
+				</if>
+			</where>
+			GROUP BY o.orderCreateTime
+			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
 		
 		
 		
@@ -158,15 +190,19 @@
 		
 		
 		
-		<select id="CollectionDatas" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+		<select id="CollectionDatas" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select 	o.orderCreateTime,count(o.id) as collection_count,sum(ora.makeLoans) as makeLoans,
-			sum(interestPenaltySum) as interestPenaltySum from orderdetails ora,orders o 
+			sum(ora.interestPenaltySum) as interestPenaltySum from orderdetails ora,orders o,user u
 			<where>	
 				AND ora.orderId = o.id
+				AND u.id = o.userId
 				AND o.orderStatus = "1"
 				AND o.companyId = #{companyId} 
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND o.orderCreateTime between #{start_time} and #{end_time}
+				</if>
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+				    AND u.drainageOfPlatformId = #{drainageOfPlatformId}
 				</if>
 			</where>
 			GROUP BY o.orderCreateTime
@@ -175,14 +211,17 @@
 		
 		
 		
-		<select id="CollectionDataNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select 	o.orderCreateTime,count(o.orderCreateTime) as collection_count,sum(ora.makeLoans) as makeLoans,
-			sum(interestPenaltySum) as interestPenaltySum from orderdetails ora,orders o 
+		<select id="CollectionDataNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select 	count(o.orderCreateTime) from orderdetails ora,orders o,user u
 			<where>	
 				AND ora.orderId = o.id
+				AND u.id = o.userId
 				AND o.companyId = #{companyId} 
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND o.orderCreateTime between #{start_time} and #{end_time}
+				</if>
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+						AND u.drainageOfPlatformId = #{drainageOfPlatformId}
 				</if>
 			</where>
 		</select>
@@ -200,16 +239,7 @@
 		
 		
 		<select id="SelecNumberCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(orderId) from collection 
-			<where>
-				AND collectionMemberId in
-			<foreach collection="ids" item="id" open="(" separator="," close=")">
-				#{id}
-			</foreach>
-			<if test="collectionStatus != null and collectionStatus != ''">
-				AND collectionStatus = #{collectionStatus}
-			</if>
-			</where>
+			select count(id) from orders where companyId = #{companyId} AND orderStatus = "4" and orderCreateTime = #{orderCreateTime}
 		</select>
 		
 		
@@ -244,4 +274,60 @@
 			limit #{page},#{pagesize}
 		</select>
 		
+		
+		
+		
+		<select id="AllDrainage" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Drainage_of_platform">
+			select id,drainageOfPlatformName from drainage_of_platform where companyId = #{companyId}
+		</select>
+		
+		
+		
+		
+		<select id="GesamtbetragderDarlehen" parameterType="com.zhita.model.manage.Orders" resultType="com.zhita.model.manage.Orders">
+			select sum(ord.makeLoans) as GesamtbetragderDarlehen,count(o.id) as ZahlderGesamtdarlehen from orders o,orderdetails ord
+			where o.orderCreateTime = #{orderCreateTime} and o.companyId = #{companyId}
+		</select>
+		
+		
+		<select id="GesamtbetragderRvckzahlung" parameterType="com.zhita.model.manage.Orders" resultType="com.zhita.model.manage.Orders">
+			select sum(ord.realityAccount) as GesamtbetragderRvckzahlung,count(o.id) as GesamtbetragderNum from orders o,orderdetails ord
+			where o.orderCreateTime = #{orderCreateTime} and o.companyId = #{companyId}
+		</select>
+		
+		
+		<select id="GesamtbetraguberfalligerBetrag" parameterType="com.zhita.model.manage.Orders" resultType="com.zhita.model.manage.Orders">
+			select sum(ord.realityAccount) as GesamtbetraguberfalligerBetrag,count(o.id) as GesamtbetraguberfallNum from orders o,orderdetails ord
+			where o.orderCreateTime = #{orderCreateTime} and o.companyId = #{companyId} and o.orderStatus = "1"
+		</select>
+		
+		<select id="GesamtbetragderVerbindlichkeiten" parameterType="com.zhita.model.manage.Orders" resultType="com.zhita.model.manage.Orders">
+			select sum(ord.realityAccount) as GesamtbetragderVerbindlichkeiten,count(o.id) as GesamtbetragdererNum from orders o,orderdetails ord
+			where o.orderCreateTime = #{orderCreateTime} and o.companyId = #{companyId} and o.orderStatus = "3"
+		</select>
+		
+		
+		
+		
+		<select id="Pressformoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
+			select count(c.collectionId) as pressformoney from orders o,collection c,user u
+			<where>
+				AND o.id = c.orderId 
+				AND u.id = o.userId 
+				AND o.orderCreateTime = #{orderCreateTime} 
+				AND o.companyId = #{companyId}
+				AND c.collectionStatus = #{collectionStatus}
+			</where>	
+		 
+		</select>
+		
+		
+		<select id="Beoverdue" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select c.orderId from collection c,orders o where o.orderCreateTime = #{orderCreateTime} and o.companyId = #{companyId} group by c.orderId
+		</select>
+		
+		
+		<select id="Overdue_class" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueClass">
+			select id,grade from Overdue_class where companyid = #{companyid}
+		</select>
 </mapper>

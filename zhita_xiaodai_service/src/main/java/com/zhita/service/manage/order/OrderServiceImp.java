@@ -88,9 +88,13 @@ public class OrderServiceImp implements IntOrderService{
 			}
 		    DateListUtil.ListSort2(listorderto);
 	    		
+
+//	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
 	    	pageUtil=new PageUtil(1, 10, 0);
+
 	    }
 	    
 	    
@@ -155,9 +159,13 @@ public class OrderServiceImp implements IntOrderService{
 			}
 		    DateListUtil.ListSort2(listorderto);
 	    		
+
+//	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
 	    	pageUtil=new PageUtil(1, 10, 0);
+
 	    }
 	    
 		HashMap<String,Object> map=new HashMap<>();
@@ -211,6 +219,9 @@ public class OrderServiceImp implements IntOrderService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
+
+//	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
 	    	for (int i = 0; i < listorderto.size(); i++) {
 				listorderto.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderto.get(i).getOrderCreateTime()));
 				List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listorderto.get(i).getId());
@@ -224,6 +235,7 @@ public class OrderServiceImp implements IntOrderService{
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
 	    	pageUtil=new PageUtil(1, 10, 0);
+
 	    }
 	    
 	    
@@ -269,6 +281,9 @@ public class OrderServiceImp implements IntOrderService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
+
+//	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
 	    	for (int i = 0; i < listorderto.size(); i++) {
 				listorderto.get(i).setOrderCreateTime(Timestamps.stampToDate(listorderto.get(i).getOrderCreateTime()));
 				List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(listorderto.get(i).getId());
@@ -282,6 +297,7 @@ public class OrderServiceImp implements IntOrderService{
 	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
 	    	pageUtil=new PageUtil(1, 10, 0);
+
 	    }
 	    
 	    

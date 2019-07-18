@@ -84,5 +84,14 @@ public class Timestamps {
 	      return res;
 	  }
 	  
-	  
+	 public static void main(String[] args) {
+		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 String s = simpleDateFormat.format(new Date());
+		 try {
+			String a = dateToStamp(s);
+			System.out.println(a);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	} 
 }

@@ -117,9 +117,13 @@ public class SourceTongjiController {
     		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,10);
     		listsourcepage.addAll(listPageUtil.getData());
     		
+
+//    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1,10,0);
+
     	}
 	  	List<Source> sourcelist=intSourceService.querysource(companyId);	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -210,9 +214,13 @@ public class SourceTongjiController {
     		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,2);
     		listsourcepage.addAll(listPageUtil.getData());
     		
+
+//    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1,2,0);
+
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();

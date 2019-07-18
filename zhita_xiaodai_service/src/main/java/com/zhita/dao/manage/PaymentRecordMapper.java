@@ -5,8 +5,11 @@ import java.util.List;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Loan_setting;
+import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.model.manage.Undertheline;
 
@@ -61,7 +64,7 @@ public interface PaymentRecordMapper {
     List<Accountadjustment> AllNotMoneyStatu(Orderdetails orde);
     
     
-    List<Thirdparty_interface> SelectThird(Integer companyId);
+    List<Loan_setting> SelectThird(Integer companyId);
     
     
     Integer AddUndertheline(Undertheline unde);
@@ -95,4 +98,16 @@ public interface PaymentRecordMapper {
     
     
     List<Integer> Sys_userIds(Integer companyId);
+    
+    
+    Integer AddOffJianMian(Offlinjianmian off);
+    
+    
+    List<Undertheline> XiaOrder(Orderdetails order);
+    
+    
+    Integer XiaTotalCount(Orderdetails ord);
+    
+    
+    List<Repayment_setting> SelectRepay(Integer companyId);
 }

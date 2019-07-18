@@ -1,7 +1,6 @@
 package com.zhita.service.manage.user;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +97,7 @@ public class UserServiceImp implements IntUserService{
 				e.printStackTrace();
 			}
 		}
+		
 		int page=orderQueryParameter.getPage();//页面传进来的当前页
 		int companyId=orderQueryParameter.getCompanyid();//公司id
 		int totalCount=ordersMapper.queryAllOrdersByUseridcount(orderQueryParameter);//查询总条数
@@ -187,6 +187,7 @@ public class UserServiceImp implements IntUserService{
 		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息
 		Bankcard bankcard=userMapper.queryBankcard(userid);//用户银行卡信息
 		Operator operator=userMapper.queryOperator(userid);//运营商信息
+		
 		
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("userAttestation", userAttestation);

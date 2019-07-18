@@ -136,8 +136,7 @@ public class SourcesideTongjiController {
 		ListPageUtil listPageUtil = new ListPageUtil(listsource, page, 10);
 		listsourceto.addAll(listPageUtil.getData());
 		
-		PageUtil pageUtil = new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),
-				listPageUtil.getTotalCount());
+		PageUtil pageUtil = new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 		map.put("listsourceto", listsourceto);
 		map.put("pageutil", pageUtil);
 		return map;

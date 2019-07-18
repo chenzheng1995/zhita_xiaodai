@@ -1,5 +1,6 @@
 package com.zhita.controller.postloanorders;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Overdue;
 import com.zhita.service.manage.postloanorders.Postloanorderservice;
 
 /**
@@ -167,6 +169,19 @@ public class PostloanordersController {
 		return postloanor.OverdueUser(order);
 	}
 	
+	
+	
+	
+	/**
+	 * 完成逾前催收
+	 * @param ov
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("Wancheng")
+	public Map<String, Object> OverDueUserA(Overdue ov){
+		return postloanor.WanchengUser(ov);
+	}
 	
 	
 	

@@ -39,6 +39,7 @@ public class SysuserServiceImp implements IntSysuserService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
+    	//	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1, 10, 0);

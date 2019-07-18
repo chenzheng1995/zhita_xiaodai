@@ -6,13 +6,23 @@ public class Overdue {
 	
 	private Integer overdue_id;//催收ID
 	
-	private Integer overdue_phonestaus;//电话状态( 已接通   未接通)
+	private String overdue_phonestaus;//电话状态( 已接通   未接通)
 	
 	private Integer collectionMemberId;//催收员ID
 	
 	private String collectiondate;//分配催收时间
 	
 	private Integer orderId;//订单ID
+	
+	private String deled;
+
+	public String getDeled() {
+		return deled;
+	}
+
+	public void setDeled(String deled) {
+		this.deled = deled;
+	}
 
 	public Integer getOverdue_id() {
 		return overdue_id;
@@ -22,11 +32,11 @@ public class Overdue {
 		this.overdue_id = overdue_id;
 	}
 
-	public Integer getOverdue_phonestaus() {
+	public String getOverdue_phonestaus() {
 		return overdue_phonestaus;
 	}
 
-	public void setOverdue_phonestaus(Integer overdue_phonestaus) {
+	public void setOverdue_phonestaus(String overdue_phonestaus) {
 		this.overdue_phonestaus = overdue_phonestaus;
 	}
 

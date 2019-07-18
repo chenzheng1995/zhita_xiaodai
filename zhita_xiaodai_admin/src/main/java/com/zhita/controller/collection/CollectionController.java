@@ -1,20 +1,19 @@
 package com.zhita.controller.collection;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.zhita.model.manage.Collection;
-import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.service.manage.collection.Collectionservice;
 
-
+/**
+ * 支付
+ * @author Administrator
+ *
+ */
 @Controller
 @RequestMapping("collection")
 public class CollectionController {
@@ -201,7 +200,7 @@ public class CollectionController {
 	 */
 	@ResponseBody
 	@RequestMapping("AddCollectiondertilas")
-	public Map<String, Object> AddCollectiondertails(Collectiondetails coldets){
+	public Map<String, Object> AddCollectiondertails(Collection coldets){
 		return collservice.AddColloetails(coldets);
 	}
 	
@@ -210,22 +209,16 @@ public class CollectionController {
 	
 	
 	
+	
 	/**
-	 * 查看催收记录
+	 * 结束催收
 	 * @param orderId
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("Alldetails")
-	public Map<String, Object> AllDetails(Integer orderId){
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collectiondetails> cols = collservice.AllCollectiondetail(orderId);
-		map.put("Collectiondetils", cols);
-		return map;
+	@RequestMapping("JieShu")
+	public Map<String, Object> JieShu(Integer orderId){
+		return collservice.JieShuCollection(orderId);
 	}
-	
-	
-	
-	
 	
 }
