@@ -112,4 +112,7 @@ public interface CollectionMapper {
 	
 	
 	Integer UpdateOrderStatus(Integer orderId);
+	
+	
+	Integer AllCountNum(Collection coll);
 }

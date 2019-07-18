@@ -65,7 +65,7 @@ public class OrderServiceImp implements IntOrderService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 	    }
 	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -111,7 +111,7 @@ public class OrderServiceImp implements IntOrderService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 	    }
 	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -161,7 +161,7 @@ public class OrderServiceImp implements IntOrderService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 	    }
 	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -199,7 +199,7 @@ public class OrderServiceImp implements IntOrderService{
 	    	ListPageUtil listPageUtil=new ListPageUtil(listorderfor,page,10);
 	    	listorderto.addAll(listPageUtil.getData());
 	    		
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 	    }
 	    	
 		HashMap<String,Object> map=new HashMap<>();

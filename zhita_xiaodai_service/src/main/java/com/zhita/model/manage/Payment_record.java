@@ -31,7 +31,7 @@ public class Payment_record {
 	
 	private String loanSource;//支付渠道 (支付方式 微信  支付宝  银行卡)
 	
-	private Integer page=0;
+	private Integer page=1;
 	
 	private Integer pagesize=10;
 	

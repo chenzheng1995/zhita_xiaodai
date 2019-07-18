@@ -2,9 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhita.dao.manage.StatisticsDao" >
 
-
-
-
-
+			
+			<insert id="AddBankcard" parameterType="com.zhita.model.manage.Bankcard">
+				INSERT INTO `bankcard`
+				(
+				userId,
+				attestationStatus,
+				bankcardName,
+				tiedCardPhone,
+				deleted,
+				IDcardnumber,
+				cstmrnm
+				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
+			</insert>
 
 </mapper>

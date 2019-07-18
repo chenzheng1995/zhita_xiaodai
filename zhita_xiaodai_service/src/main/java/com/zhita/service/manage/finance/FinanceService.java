@@ -64,4 +64,7 @@ public interface FinanceService {
 	
 	
 	Map<String, Object> SelectXiaOrder(Orderdetails ord);
+	
+	
+	Map<String, Object> RepaymentAll(Integer compayId);
 }

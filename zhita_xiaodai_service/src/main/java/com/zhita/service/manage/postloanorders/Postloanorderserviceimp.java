@@ -54,6 +54,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		details.setTotalCount(totalCount);
 		List<Orderdetails> orderdetils = postloanorder.allOrderdetails(details);
 		for(int i=0;i<orderdetils.size();i++){
+			orderdetils.get(i).setOrderCreateTime(Timestamps.stampToDate(orderdetils.get(i).getOrderCreateTime()));
 			orderdetils.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferBeforeReturntime()));
 			orderdetils.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferAfterReturntime()));
 			orderdetils.get(i).setRealtime(Timestamps.stampToDate(orderdetils.get(i).getRealtime()));
@@ -151,6 +152,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		List<Orderdetails> ordeids = postloanorder.AOrderDetails(order);//获取未逾期未分配订单
 		for(int i=0;i<ordeids.size();i++){
+			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));
+			ordeids.get(i).setCollectionTime(Timestamps.stampToDate(ordeids.get(i).getCollectionTime()));
 			ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
 			ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
@@ -223,8 +226,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				cols.get(i).setPaymentmadeData(100);
 			}
 			
-//			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
-			System.out.println("时间:"+cols.get(i).getCollectiondate());	
+			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
@@ -273,6 +275,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{ 
 				cols.get(i).setPaymentmadeData(100);
 			}
+			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
@@ -382,7 +385,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
-		
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
@@ -399,6 +401,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		}
 		map.put("Orderdetails", orders);
+		map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -466,7 +469,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		Integer totalCount = postloanorder.HuaiZhangOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
-		System.out.println("pages:"+pages.getPage());
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrders(order);
 		for(int i=0;i<orders.size();i++){

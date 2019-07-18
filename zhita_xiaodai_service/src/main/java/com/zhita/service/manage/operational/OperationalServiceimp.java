@@ -76,6 +76,7 @@ public class OperationalServiceimp implements OperationalService{
 			ordes.get(i).setOrderCreateTime(Timestamps.stampToDate(ordes.get(i).getOrderCreateTime()));
 		}
 		map.put("Orders", ordes);
+		map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -99,6 +100,7 @@ public class OperationalServiceimp implements OperationalService{
 		}else{
 			totalCount = 0;
 		}
+		System.out.println("数量"+totalCount);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);	//参数page pagesize
 		order.setPage(pages.getPage());
 		List<Repayment> ords = operdao.SelectRepayment(order);//获取还款时间   还款笔数  还款总金额 
@@ -126,6 +128,7 @@ public class OperationalServiceimp implements OperationalService{
 			ords.get(i).setOrderCreateTime(Timestamps.stampToDate(ords.get(i).getOrderCreateTime()));
 			
 		}
+		map.put("PageUtil", pages);
 		map.put("Repayment", ords);
 		return map;
 	}
@@ -146,7 +149,14 @@ public class OperationalServiceimp implements OperationalService{
 		orde.setPage(pages.getPage());
 		List<Orders> ordesa = operdao.CollectionDatas(orde);
 		for(int i=0;i<ordesa.size();i++){
-			ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans().add(ordesa.get(i).getInterestPenaltySum()));
+			if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() != null){
+				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans().add(ordesa.get(i).getInterestPenaltySum()));
+			}else if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() == null){
+				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans());
+			}else if(ordesa.get(i).getMakeLoans() == null && ordesa.get(i).getInterestPenaltySum() != null){
+				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getInterestPenaltySum());
+			}
+			
 			Orders or = new Orders();
 			orde.setOrderCreateTime(ordesa.get(i).getOrderCreateTime());
 			List<Integer> ordIds = operdao.Beoverdue(orde);
@@ -172,6 +182,7 @@ public class OperationalServiceimp implements OperationalService{
 			ordesa.get(i).setBaddebt(operdao.SelecNumberCollection(orde));//查询坏账数
 			ordesa.get(i).setOrderCreateTime(Timestamps.stampToDate(ordesa.get(i).getOrderCreateTime()));
 		}
+		map.put("PageUtil", pages);
 		map.put("Orderdetails", ordesa);
 		return map;
 	}

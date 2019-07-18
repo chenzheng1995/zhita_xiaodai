@@ -13,6 +13,16 @@ public class Overdue {
 	private String collectiondate;//分配催收时间
 	
 	private Integer orderId;//订单ID
+	
+	private String deled;
+
+	public String getDeled() {
+		return deled;
+	}
+
+	public void setDeled(String deled) {
+		this.deled = deled;
+	}
 
 	public Integer getOverdue_id() {
 		return overdue_id;

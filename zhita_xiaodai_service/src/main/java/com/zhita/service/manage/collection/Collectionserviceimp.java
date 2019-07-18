@@ -14,7 +14,6 @@ import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collection_member;
-import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.util.PageUtil;
@@ -42,6 +41,7 @@ public class Collectionserviceimp implements Collectionservice{
 			coll.setIds(collmapp.OrderIdMa(coll.getCompanyId())); 
 			Integer totalCount = collmapp.SelectTotalCount(coll);
 			PageUtil pages = new PageUtil(coll.getPage(), totalCount);
+			
 			coll.setPage(pages.getPage());
 			pages.setTotalCount(totalCount);
 			List<Orderdetails> orders = collmapp.Allorderdetails(coll);
@@ -127,11 +127,11 @@ public class Collectionserviceimp implements Collectionservice{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		PageUtil pages=null;
 		if(order.getCompanyId() != null){
 			List<Integer> ids = collmapp.OrderIdMa(order.getCompanyId());
-			PageUtil pages = new PageUtil(order.getPage(), ids.size());
+			pages = new PageUtil(order.getPage(), ids.size());
 			order.setPage(pages.getPage());
-			pages.setTotalCount(ids.size());
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
@@ -202,7 +202,6 @@ public class Collectionserviceimp implements Collectionservice{
 		coll.setPage(pages.getPage());
 		List<Collection> colles = collmapp.SelectSumOrder(coll);
 		for(int i=0;i<colles.size();i++){
-			coll.setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
 			colles.get(i).setCompanyId(coll.getCompanyId());
 			colles.get(i).setOrderNum(collmapp.SelectOrderNum(colles.get(i)));//累计订单总数  参数  时间   公司ID
 			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
@@ -218,6 +217,7 @@ public class Collectionserviceimp implements Collectionservice{
 			}else{
 				colles.get(i).setCollNumdata(100);
 			}
+			colles.get(i).setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
 			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -230,21 +230,19 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> FenpeiWeiCollection(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		Integer as = 0;
 		if(col.getCompanyId() != null){
-			List<Integer> collIds = collmapp.SelectCollectionId(col.getCompanyId());//根据公司ID 查询催收员ID
-			List<Integer> CollectionMemberIds = collmapp.SelectCollectionMemberIds(collIds);//查询已分配催收员订单ID
-			List<Integer> coldetids = new ArrayList<Integer>();
-			for(int i=0;i<CollectionMemberIds.size();i++){
-				List<Integer> id = collmapp.SelectId(CollectionMemberIds.get(i));
+				List<Integer> id = collmapp.SelectId(col.getCompanyId());
 				if(id.size() != 0){
-					coldetids.add(CollectionMemberIds.get(i));//根据订单ID查询催收详情  返回Null 就是未催收
+					col.setIds(id);
+					as=id.size();
 				}else{
-					coldetids.add(0);
+					id.add(0);
+					col.setIds(id);
 				}
 			}
-			col.setIds(coldetids);
-			Integer totalCount = collmapp.CollectionTotalcount(col);
-			PageUtil pages = new PageUtil(col.getPage(), totalCount);
+			Integer totalCount = collmapp.AllCountNum(col);
+			PageUtil pages = new PageUtil(col.getPage(),totalCount-as);
 			col.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
 			for(int i=0;i<orders.size();i++){
@@ -253,13 +251,17 @@ public class Collectionserviceimp implements Collectionservice{
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()));
+				if(orders.get(i).getRealityBorrowMoney() != null && orders.get(i).getInterestPenaltySum() != null){
+					orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()));
+				}else if(orders.get(i).getRealityBorrowMoney() != null && orders.get(i).getInterestPenaltySum() == null){
+					orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney());
+				}else{
+					orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
+				}
+				
 			}
 			map.put("Orderdetails", orders);
-		}else{
-			map.put("Orderdetails", "0");
-			map.put("Pageutil", "数据异常");
-		}
+			map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -320,10 +322,11 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> AddColloetails(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
 			try {
-				col.setCollection_time(System.currentTimeMillis()+"");
+				col.setCollectionTime(System.currentTimeMillis()+"");
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+			col.setDeleted("0");
 			Integer addId = collmapp.AddCollectionAs(col);
 			if(addId != null){
 				map.put("code", 200);

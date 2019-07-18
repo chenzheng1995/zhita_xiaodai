@@ -614,14 +614,12 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-		//	map.put("ReturnChanpay", retu);
+			map.put("ReturnChanpay", retu);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			System.out.println(result);
 		//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
-		map.put("code", "200");
-		map.put("desc", "金额已到账");
 		return map;
 	}
 
@@ -810,14 +808,12 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-			//map.put("ReturnChanpay", retu);
+			map.put("ReturnChanpay", retu);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			System.out.println(result);
 		//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
-			map.put("code", 200);
-			map.put("desc", "还款成功");
 		return map;
 	}
 	

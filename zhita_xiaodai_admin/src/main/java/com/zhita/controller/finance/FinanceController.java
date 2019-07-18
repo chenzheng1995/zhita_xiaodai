@@ -73,16 +73,31 @@ public class FinanceController {
 	
 	
 	/**
-	 * 渠道查询
+	 * 放款渠道查询
 	 * @param compayId
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("ThirdpatyAll")
 	public Map<String, Object> Thirdpaty(Integer compayId){
-		System.out.println(compayId);
 		return fianser.ThirdpatyAll(compayId);
 	}
+	
+	
+	
+	
+	/**
+	 * 还款渠道查询
+	 * @param compayId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("RepaymentAll")
+	public Map<String, Object> Repayment(Integer compayId){
+		return fianser.RepaymentAll(compayId);
+	}
+	
+	
 	
 	
 	

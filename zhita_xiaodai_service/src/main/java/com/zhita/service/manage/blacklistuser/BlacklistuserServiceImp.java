@@ -38,7 +38,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();

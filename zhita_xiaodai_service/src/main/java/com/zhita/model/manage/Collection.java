@@ -27,7 +27,7 @@ public class Collection {
 	
 	private BigDecimal promise_money;//承诺金额
 	
-	private Integer page=0;
+	private Integer page=1;
 
 	private Integer pagesize=10;
 	
@@ -91,6 +91,18 @@ public class Collection {
 	
 	private String deferAfterReturntimeEnd_time;
 	
+	private Integer totalCount;
+	
+	
+	
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
+
 	public String getDeferAfterReturntimeEnd_time() {
 		return deferAfterReturntimeEnd_time;
 	}

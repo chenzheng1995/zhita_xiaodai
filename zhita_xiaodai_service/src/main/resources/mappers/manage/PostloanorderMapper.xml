@@ -32,7 +32,7 @@
 		
 		
 		<select id="allOrderdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select orde.*,u.name,u.phone,o.orderNumber,o.id,d.deferBeforeReturntime,d.interestOnArrears,d.postponeDate,d.deferAfterReturntime,
+			select orde.*,o.orderCreateTime,u.name,u.phone,o.orderNumber,o.id,d.deferBeforeReturntime,d.interestOnArrears,d.postponeDate,d.deferAfterReturntime,
 			defer.onceDeferredDay,defer.onceDeferredMoney,o.realtime,o.borrowMoneyWay,o.borrowTimeLimit
 			 from orderdetails orde,user u,orders o,deferred d,deferred_settings defer
 			<where>
@@ -285,17 +285,19 @@
 		<select id="MyOrderdue" resultType="com.zhita.model.manage.Orderdetails" parameterType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
 			defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,defe.deferAfterReturntime,deset.onceDeferredDay,
-			col.collectionTime,col.collectionStatus,o.orderStatus,ovd.overdue_id,ovd.overdue_phonestaus
-			from orders o,orderdetails ord,deferred defe,user u,overdue ovd,collection col,deferred_settings deset
+			ovd.statu,ovd.overdue_phonestaus,o.orderStatus,ovd.overdue_id,ovd.overdue_phonestaus
+			from orders o,orderdetails ord,deferred defe,user u,overdue ovd,deferred_settings deset,collection_member colme
 			<where>
 				AND o.id = ord.orderId
-				AND col.collectionMemberId = ovd.collectionMemberId
+				AND colme.collectionMemberId = ovd.collectionMemberId
 				AND ovd.orderId = o.id
 				and u.id = o.userId
 				AND defe.orderId = o.id
-				AND ovd.overdue_phonestaus = ''
+				AND ovd.deled = '0'
 				AND o.companyId = #{companyId}
-				AND col.collectionMemberId = #{collectionMemberId}
+				<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND ovd.collectionMemberId = #{collectionMemberId}
+				</if>
 			</where>
 			GROUP BY ovd.overdue_id
 			limit #{page},#{pagesize}
@@ -378,16 +380,18 @@
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
 			defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,deset.onceDeferredDay,defe.deferAfterReturntime,colme.reallyName,
-			col.collectionTime,col.collectionStatus,o.orderStatus,o.borrowTimeLimit
-			from orders o,orderdetails ord,collection col,collection_member colme,deferred defe,deferred_settings deset,user u
+			ov.statu,ov.overdue_phonestaus,o.orderStatus,o.borrowTimeLimit
+			from orders o, orderdetails ord,deferred defe
+			,deferred_settings deset ,user u,overdue ov,collection_member colme
 			<where>
-				AND o.id = ord.orderId
-				AND u.id = o.userId
-				AND colme.collectionMemberId = col.collectionMemberId
-				AND o.id = col.orderId
-				AND o.id = defe.orderid
-				AND o.companyId = deset.companyId
+				colme.collectionMemberId = ov.collectionMemberId 
+				and o.id = defe.orderid
+				and ov.orderId = o.id 
+				and o.id = ord.orderId 
+				and deset.companyId = o.companyId 
+				and o.userId = u.id
 				AND o.companyId = #{companyId}
+				AND ov.deled = "1"
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber = #{orderNumber}
 				</if>
@@ -489,19 +493,19 @@
 		
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
-			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName
-			 from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme,collection c
+			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
+			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName 
+			from orders o LEFT JOIN user u on u.id = o.userId
+			LEFT JOIN orderdetails ord on o.id = ord.orderId
+			LEFT JOIN deferred defe on o.id = defe.orderid
+			LEFT JOIN deferred_settings deset on o.companyId = deset.companyId
+			LEFT JOIN collection c on c.orderId = o.id
+			LEFT JOIN collection_member colme on colme.collectionMemberId = c.collectionMemberId
+			LEFT JOIN drainage_of_platform drain on drain.id = u.drainageOfPlatformId
 			<where>
-			 AND u.id = o.userId
-			 AND o.id = ord.orderId
-			 AND o.id = defe.orderid
-			 AND o.id = c.orderId
-			 AND colme.collectionMemberId = c.collectionMemberId
-			 AND o.companyId = deset.companyId
-			 AND o.orderStatus = #{orderStatus} 
-			 AND o.companyId = #{companyId}
+				AND	o.companyId = #{companyId}
+			    AND o.orderStatus = "3"
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -575,20 +579,19 @@
 		
 		
 		<select id="CollecOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,ord.realityBorrowMoney,ord.makeLoans,
-			defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,o.canDeferNumberoftime,defe.interestOnArrears,o.overdueGrade,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.realityBorrowMoney,c.collectionStatus,o.realtime,colme.reallyName,ord.overdueNumberOfDays,o.orderCreateTime
-			from orders o,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme,collection c,overdue_class ov
+			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
+			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName 
+			from orders o LEFT JOIN user u on u.id = o.userId
+			LEFT JOIN orderdetails ord on o.id = ord.orderId
+			LEFT JOIN deferred defe on o.id = defe.orderid
+			LEFT JOIN deferred_settings deset on o.companyId = deset.companyId
+			LEFT JOIN collection c on c.orderId = o.id
+			LEFT JOIN collection_member colme on colme.collectionMemberId = c.collectionMemberId
+			LEFT JOIN drainage_of_platform drain on drain.id = u.drainageOfPlatformId
 			<where>
-			 AND u.id = o.userId
-			 AND o.id = ord.orderId
-			 AND o.id = defe.orderid
-			 AND o.id = c.orderId
-			 AND colme.collectionMemberId = c.collectionMemberId
-			 AND o.companyId = deset.companyId
-			 AND o.orderStatus = "1" 
-			 AND ov.grade = o.overdueGrade
-			 AND o.companyId = #{companyId}
+				AND	o.companyId = #{companyId}
+			    AND o.orderStatus = "1"
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -670,18 +673,19 @@
 		
 		
 		<select id="HuaiZhangOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,
-			o.orderCreateTime,ord.realityBorrowMoney, ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,o.overdueGrade,
-			defe.deferAfterReturntime,defe.interestOnArrears, o.overdueGrade,ord.overdueNumberOfDays,c.collectionStatus,o.realtime,colme.reallyName
-			 from orders o,collection c,user u,orderdetails ord,deferred defe,deferred_settings deset,collection_member colme,overdue_class ov
+			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
+			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName 
+			from orders o LEFT JOIN user u on u.id = o.userId
+			LEFT JOIN orderdetails ord on o.id = ord.orderId
+			LEFT JOIN deferred defe on o.id = defe.orderid
+			LEFT JOIN deferred_settings deset on o.companyId = deset.companyId
+			LEFT JOIN collection c on c.orderId = o.id
+			LEFT JOIN collection_member colme on colme.collectionMemberId = c.collectionMemberId
+			LEFT JOIN drainage_of_platform drain on drain.id = u.drainageOfPlatformId
 			<where>
-				AND c.orderId = o.id
-				AND c.collectionMemberId = colme.collectionMemberId
-				AND o.orderStatus = "4"
-				 AND u.id = o.userId
-				 AND ov.grade = o.overdueGrade
-				 AND c.orderId = o.id
-				 AND o.companyId = #{companyId}
+				AND	o.companyId = #{companyId}
+			    AND o.orderStatus = "4"
 			 <if test="name != null and name != ''">
 			 	AND name = #{name}
 			 </if>
@@ -723,6 +727,6 @@
 		
 		
 		<update id="UserOverdue" parameterType="com.zhita.model.manage.Overdue">
-			update overdue set overdue_phonestaus = #{overdue_phonestaus} where orderId =#{orderId} AND collectionMemberId = #{collectionMemberId}
+			update overdue set overdue_phonestaus = #{overdue_phonestaus},deled=1 where orderId =#{orderId} AND collectionMemberId = #{collectionMemberId}
 		</update>
 </mapper>

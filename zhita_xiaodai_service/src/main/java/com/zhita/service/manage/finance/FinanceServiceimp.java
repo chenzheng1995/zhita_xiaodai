@@ -1,23 +1,20 @@
 package com.zhita.service.manage.finance;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
-import com.zhita.model.manage.Thirdparty_interface;
+import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Undertheline;
 import com.zhita.util.PageUtil;
 import com.zhita.util.Timestamps;
@@ -273,12 +270,14 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> ThirdpatyAll(Integer compayId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Thirdparty_interface> third = padao.SelectThird(compayId);
-		map.put("Thirdparty_interface", third);
+		List<Loan_setting> third = padao.SelectThird(compayId);
+		map.put("Loan_setting", third);
 		return map;
 	}
 
 
+	
+	
 
 
 	@Override
@@ -446,6 +445,17 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Undertheline", unders);
+		return map;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> RepaymentAll(Integer compayId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Repayment_setting> repay = padao.SelectRepay(compayId);
+		map.put("Repayment_setting", repay);
 		return map;
 	}
 
