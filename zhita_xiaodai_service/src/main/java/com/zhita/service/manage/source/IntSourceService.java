@@ -31,10 +31,10 @@ public interface IntSourceService {
     public List<TongjiSorce> queryAllSourceByUser(Integer companyid,String StartTime,String EndTime);
     
     //后台管理---查询当天各个渠道在用户表的注册数量(通过渠道查询)
-    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,String sourcename);
+    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,Integer sourceid);
     
     //后台管理---查询某一天某个渠道的注册数量
-    public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,String sourceName);
+    public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,Integer sourceid);
     
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
@@ -57,9 +57,9 @@ public interface IntSourceService {
     public TongjiSorce queryBySourcenameAndDate(String sourcename,String startdate,String enddate);
     
     //后台管理---查询当前渠道下有多少用户是登录过得
-    public int queryCount(String sourceName,String startTime,String endTime);
+    public int queryCount(Integer sourceid,String startTime,String endTime);
     //后台管理---当前渠道下所有的用户id
-    public List<Integer> queryUserid(String sourceName);
+    public List<Integer> queryUserid(Integer sourceid);
     //后台管理---查询当前用户id是否在个人信息认证表有值
     public int queryIfExist(Integer userid);
     //后台管理---查询当前用户id是否在银行卡表有值
@@ -72,4 +72,16 @@ public interface IntSourceService {
     public String querymancon(String sourceName);
    //后台管理---渠道统计模块——机审通过字段
   	public int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
+
+	public int getmanageControlId(String sourceName);
+  	
+  	//后台管理---查询出source表所有的信息
+  	public List<Source> querysource(Integer companyId);
+  	
+	//后台管理----通过人数（包含机审通过和人审通过）
+	public int  querypass(Integer sourceid,String starttime,String endtime);
+	
+	//后台管理----已借款人数
+	public int queryorderpass(Integer sourceid,String starttime,String endtime);
+
 }

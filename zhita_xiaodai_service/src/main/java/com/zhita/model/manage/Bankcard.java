@@ -96,4 +96,33 @@ public class Bankcard {
 	
 	
 	
+	private Integer bankcardtypeid;
+	private String bankcardname;
+	private String tiedcardphone;
+	private String bankcardtypename;
+	public Integer getBankcardtypeid() {
+		return bankcardtypeid;
+	}
+	public void setBankcardtypeid(Integer bankcardtypeid) {
+		this.bankcardtypeid = bankcardtypeid;
+	}
+	public String getBankcardname() {
+		return bankcardname;
+	}
+	public void setBankcardname(String bankcardname) {
+		this.bankcardname = bankcardname;
+	}
+	public String getTiedcardphone() {
+		return tiedcardphone;
+	}
+	public void setTiedcardphone(String tiedcardphone) {
+		this.tiedcardphone = tiedcardphone;
+	}
+	public String getBankcardtypename() {
+		return bankcardtypename;
+	}
+	public void setBankcardtypename(String bankcardtypename) {
+		this.bankcardtypename = bankcardtypename;
+	}
+	
 }

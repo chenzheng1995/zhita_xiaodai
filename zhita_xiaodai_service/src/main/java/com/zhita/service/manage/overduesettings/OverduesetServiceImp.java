@@ -22,8 +22,9 @@ public class OverduesetServiceImp implements IntOverduesetService{
 	 //后台管理---添加功能
 	 public int insert(OverdueSettings record){
 		 record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
-		 int num=overdueSettingsMapper.insert(record);
-		 return num;
+		 overdueSettingsMapper.insert(record);
+		 int id=record.getId();
+		 return id;
 	 }
 	 
 	 //后台管理---根据当前id查询出当前用户信息

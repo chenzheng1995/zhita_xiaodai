@@ -23,6 +23,8 @@
     <result column="ifpeopleWhose" property="ifpeopleWhose" jdbcType="VARCHAR" />
     <result column="assessor" property="assessor" jdbcType="VARCHAR" />
     <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="repaymentMoney" property="repaymentMoney" jdbcType="VARCHAR" />
+    <result column="howManyTimesBorMoney" property="howManyTimesBorMoney" jdbcType="VARCHAR" />
     <association property="orderdetails" javaType="com.zhita.model.manage.Orderdetails">
 		    <id column="id" property="id" jdbcType="INTEGER" />
 		    <result column="orderId" property="orderId" jdbcType="INTEGER" />
@@ -56,7 +58,10 @@
 	      <result column="useMarket" property="usemarket" jdbcType="VARCHAR" />
 	      <result column="drainageOfPlatformId" property="drainageofplatformid" jdbcType="INTEGER" />
 	      <result column="ifBlacklist" property="ifblacklist" jdbcType="VARCHAR" />
+	      <result column="shareOfState" property="shareOfState" jdbcType="VARCHAR" />
 	      <result column="sourcename" property="sourcename" jdbcType="VARCHAR" />
+	      <result column="account" property="account" jdbcType="VARCHAR" />
+	      <result column="idcard_number" property="idcard" jdbcType="VARCHAR" />
 	</association>
 
   </resultMap>
@@ -64,27 +69,44 @@
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
     o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
     o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
-    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.assessor,
+    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.assessor,o.howManyTimesBorMoney,
     
     od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
     od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
     od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
     
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
-    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,u.shareOfState,
+    
+    s.sourcename,r.repaymentMoney,su.account
+  </sql>
+    <sql id="Base_Column_List2" >
+    o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
+    o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
+    o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
+    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.howManyTimesBorMoney,
+    
+    od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
+    od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
+    od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
+    
+    u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,
+    
+    r.repaymentMoney,su.account as assessor
   </sql>
   <sql id="Base_Column_List1" >
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
     o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
     o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
-    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.assessor,
+    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.assessor,o.howManyTimesBorMoney,
     
     od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
     od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
     od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
     
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
-    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,s.sourcename
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,s.sourcename,r.repaymentMoney,uat.idcard_number
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -349,14 +371,20 @@
   	from manage_control_settings where companyId=#{arg0} and rmModleName=#{arg1} and deleted=0 
   </select>
   
-  <!-- 后台管理             机审订单     (公司id，订单号，订单开始时间，订单结束时间，风控反馈，风控名字，风控分数开始，风控分数结束) -->
+  <!-- 后台管理             机审订单     (公司id，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈，风控名字，风控分数开始，风控分数结束) -->
   <select id="queryatrOrders" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	select 
     <include refid="Base_Column_List" />
-    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
-    	<where>
-        <if test="ordernumber != null">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join repayment r on r.orderId=o.id
+    where o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and (o.riskmanagementFraction &lt;= #{start,jdbcType=VARCHAR} or o.riskmanagementFraction &gt;= #{end,jdbcType=VARCHAR})
+      <if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
         </if>
         <if test="orderstarttime != null and orderstarttime!='' and orderendtime!=null and orderendtime!=''">
            and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
@@ -364,24 +392,26 @@
         <if test="riskmanagementype!=null and riskmanagementype!= ''">
            and o.riskManagemenType=#{riskmanagementype,jdbcType=VARCHAR}
         </if>
-        and o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and (o.riskmanagementFraction &lt;= #{start,jdbcType=VARCHAR} or o.riskmanagementFraction &gt;= #{end,jdbcType=VARCHAR})
-    </where>
   </select>
   
-    <!--后台管理        机审拒绝未人审订单     (公司id，订单号，订单开始时间，订单结束时间 ，风控名字，  风控分数开始   风控分数结束) -->
+    <!--后台管理        机审拒绝未人审订单     (公司id，订单号，姓名，手机号，订单开始时间，订单结束时间 ，风控名字，  风控分数开始   风控分数结束) -->
   <select id="queryroaOrders" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	select 
     <include refid="Base_Column_List" />
-    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
-    	<where>
-        <if test="ordernumber != null">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join repayment r on r.orderId=o.id
+    where o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and o.riskmanagementFraction between #{start,jdbcType=VARCHAR} and #{end,jdbcType=VARCHAR} and ifpeopleWhose=0
+        <if test="ordernumber != null and ordernumber!='' ">
+          and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
         </if>
         <if test="orderstarttime != null and orderstarttime!='' and orderendtime!=null and orderendtime!=''">
            and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
         </if>
-        and o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and o.riskmanagementFraction between #{start,jdbcType=VARCHAR} and #{end,jdbcType=VARCHAR} and ifpeopleWhose=0
-    </where>
   </select>
   <!-- 后台管理         机审拒绝未人审订单——审核通过操作 -->
   <update id="upaOrderIfpeopleWhose">
@@ -390,41 +420,49 @@
   
   
   
-  <!--后台管理             已机审已人审（公司id，订单号，订单开始时间，订单结束时间      审核员    风控名字       风控分数开始   风控分数结束）-->
+  <!--后台管理             已机审已人审（公司id，订单号，姓名，手机号，订单开始时间，订单结束时间      审核员    风控名字       风控分数开始   风控分数结束）-->
   <select id="queryroasOrders" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	select 
-    <include refid="Base_Column_List" />
-    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
-    	<where>
-        <if test="ordernumber != null">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+    <include refid="Base_Column_List2" />
+    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join repayment r on r.orderId=o.id left join sys_user su on su.userId=o.assessor
+    where o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and o.riskmanagementFraction between #{start,jdbcType=VARCHAR} and #{end,jdbcType=VARCHAR} and ifpeopleWhose=1
+        <if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
         </if>
         <if test="orderstarttime != null and orderstarttime!='' and orderendtime!=null and orderendtime!=''">
            and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
         </if>
-        <if test="assessor != null">
+        <if test="assessor != null and assessor!='' ">
            and o.assessor =#{assessor,jdbcType=VARCHAR}
         </if>
-        and o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR} and o.riskmanagementFraction between #{start,jdbcType=VARCHAR} and #{end,jdbcType=VARCHAR} and ifpeopleWhose=1
-    </where>
   </select>
-  <!-- 后台管理         订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id   风控名字） -->
+  <!-- 后台管理         订单 查询（公司id，订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id   风控名字） -->
   <select id="queryAllOrders" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	 select 
     <include refid="Base_Column_List1" />
-    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id inner join source s on u.sourceId=s.id
-    	<where>
-        <if test="ordernumber != null">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id
+    where o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR}
+        <if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
-        <if test="orderstarttime != null and orderstarttime!='' and orderendtime!=null and orderendtime!=''">
-           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
-        <if test="sourcename != null">
-           and s.sourcename =#{sourcename,jdbcType=VARCHAR}
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
         </if>
-        and o.companyId=#{companyid,jdbcType=INTEGER} and o.riskcontrolname=#{riskcontrolname,jdbcType=VARCHAR}
-    </where>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime !=null and registeendtime!=''">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename != null and sourcename!='' ">
+           and u.sourceId =#{sourcename,jdbcType=VARCHAR}
+        </if>
   </select>
 
   
@@ -442,28 +480,92 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 
     <!-- 后台管理         订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id） -->
   <select id="queryAllOrdersByUserid" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
-  	 select 
-    <include refid="Base_Column_List1" />
-    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
-    <where>
-        <if test="ordernumber != null">
-           o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+	select 
+    	<include refid="Base_Column_List" />
+   		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid left join repayment r on r.orderId=o.id
+    	where o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
-        <if test="orderstarttime != null and orderstarttime!='' and orderendtime!=null and orderendtime!=''">
-           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
-        <if test="sourcename != null">
-           and s.sourcename =#{sourcename,jdbcType=VARCHAR}
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
         </if>
-        and o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
-    </where>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+        order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
   </select>
-     <!-- 后台管理         订单 查询（公司id） -->
-  <select id="queryAllOrdersByUserid1" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  
+   <!-- 后台管理         订单 查询（公司id，订单号，订单开始时间，订单结束时间     渠道id  用户id）    查询数量 -->
+  <select id="queryAllOrdersByUseridcount" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
+	select count(*) from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid left join repayment r on r.orderId=o.id
+    	where o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+  </select>
+   <!-- 后台管理         订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id） -->
+  <select id="queryAllOrdersByUserid1" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
   	 select 
     <include refid="Base_Column_List1" />
-    from orders o inner join orderdetails od on o.id=od.orderId inner join user u on o.userId=u.id
+    from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
+    left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userid from blacklist_user where userid!='' and deleted=0)
+         <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="idcard != null and idcard!='' ">
+           and uat.idcard_number like "%"#{idcard,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime and registeendtime!='' ">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename != null and sourcename!='' ">
+           and u.sourceId=#{sourcename,jdbcType=INTEGER}
+        </if>
+        order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
+  </select>
+   <!-- 后台管理         订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）   查询数量 -->
+  <select id="queryAllOrdersByUserid1count" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
+  	 select count(*) from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
+  	 left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
+     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userid from blacklist_user where userid!='' and deleted=0)
+         <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="idcard != null and idcard!='' ">
+           and uat.idcard_number like "%"#{idcard,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime and registeendtime!='' ">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename != null and sourcename!='' ">
+           and u.sourceId=#{sourcename,jdbcType=INTEGER}
+        </if>
   </select>
   <!-- 后台管理         渠道统计模块——申请人数字段 -->
   <select id="queryNum" resultType="java.lang.Integer">
@@ -476,4 +578,90 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
      where o.companyId=#{arg0} and s.sourceName=#{arg1} and o.riskmanagementFraction between #{arg2} and #{arg3}
   </select>
 
+  
+  
+  	<insert id="setOrder" parameterType="java.util.Map">
+		insert into orders(companyId,userId,orderNumber,orderCreateTime,borrowTimeLimit,howManyTimesBorMoney,shouldReturnTime,riskmanagementFraction) values(#{companyId},#{userId},#{orderNumber},#{orderCreateTime},#{lifeOfLoan},#{howManyTimesBorMoney},#{shouldReturned},#{riskmanagementFraction})
+	</insert>
+
+
+  <select id="getOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+  select id from orders where orderNumber = #{orderNumber}
+  </select>
+  
+  
+    <select id="getReimbursement" parameterType="java.lang.Integer" resultType="java.util.Map">
+  select borrowTimeLimit, from orders where orderNumber = #{orderNumber}
+  </select>
+  
+      <select id="getRepayment" parameterType="java.lang.Integer" resultType="java.util.Map">
+  select id,orderStatus,shouldReturnTime from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2')
+  </select>
+
+  <!-- 后台管理        通过订单查询改订单在延期表信息 -->
+  <select id="queryDefer" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.DeferredAndOrder">
+  	select o.id,o.orderNumber,d.deferAfterReturntime from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0}
+  </select>
+  <!-- 后台管理      查询出sysuser表所有的name -->
+  <select id="queryname" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.SysUser">
+  	select userId,account from sys_user where companyId=#{arg0} and status=1
+  </select>
+  <!-- 后台管理      查询出source表所有的信息 -->
+  <select id="querysource" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Source">
+  	select id,sourceName from source where companyId=#{arg0} and deleted=0
+  </select>
+  
+  
+  
+  
+  
+  
+  <!-- 订单 修改 -->
+  <!-- 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
+  <select id="queryAllordersByLike" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
+		select 
+    	<include refid="Base_Column_List" />
+   		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+        order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
+  </select>
+  <!-- 订单 修改 -->
+  <!-- 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） 查询数量-->
+  <select id="queryAllordersByLikeCount" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
+		select count(*)
+   		from orders o left join orderdetails od on o.id=od.orderid left join user u on o.userId=u.id left join source s on s.id=u.sourceid left join repayment r on r.orderId=o.id
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
+           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+  </select>
+  
 </mapper>

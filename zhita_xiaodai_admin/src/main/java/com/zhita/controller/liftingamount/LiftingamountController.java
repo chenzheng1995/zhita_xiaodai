@@ -23,8 +23,8 @@ public class LiftingamountController {
 	//后台管理---查询续借提额表所有信息
 	@ResponseBody
 	@RequestMapping("/queryAll")
-    public List<LiftingAmount> queryAll(Integer comapnyId){
-    	List<LiftingAmount> list=intLiftingamountServcie.queryAll(comapnyId);
+    public List<LiftingAmount> queryAll(Integer companyId){
+    	List<LiftingAmount> list=intLiftingamountServcie.queryAll(companyId);
     	return list;
     }
 	

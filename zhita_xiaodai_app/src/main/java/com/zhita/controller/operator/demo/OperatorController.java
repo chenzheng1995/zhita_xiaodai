@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.zhita.model.manage.ManageControlSettings;
+import com.zhita.service.manage.manconsettings.IntManconsettingsServcie;
 import com.zhita.service.manage.operator.OperatorService;
+import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 
@@ -29,6 +32,12 @@ public class OperatorController {
 	
 	@Autowired 
 	IntUserService intUserService;
+	
+	@Autowired 
+	IntSourceService intSourceService;
+	
+	@Autowired 
+	IntManconsettingsServcie intManconsettingsServcie;
 	
     @RequestMapping("/getOperator")
     @ResponseBody
@@ -93,7 +102,8 @@ public class OperatorController {
     @RequestMapping("/getScore")
     @ResponseBody
     @Transactional
-    public Map<String, Object> getScore(int userId){
+    public Map<String, Object> getScore(int userId,String sourceName){
+    	String shareOfState =null;
     	Map<String, Object> map = new HashMap<>();
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
@@ -112,17 +122,29 @@ public class OperatorController {
           String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
           jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
           int score = Integer.parseInt(jsonObject.get("score").toString());  
-          intUserService.updateScore(score,userId);
-          
-          
-          int a = 300;
-          if(score>a||score==a) {
-        	  map.put("code", 200);
-        	  map.put("msg", "分数够了");
-          }else {
-        	  map.put("code", 400);
-        	  map.put("msg", "分数不够");
-		}
+           int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
+           Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);  
+           String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+           int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+           if(score<roatnptFractionalSegmentSmall) {
+        	   shareOfState ="0";
+        	   map.put("code", 200);
+        	   map.put("msg", "分数不够");
+           }
+           if(score>roatnptFractionalSegmentSmall&&score<roatnptFractionalSegmentBig) {
+        	   shareOfState ="1";
+        	   map.put("code", 200);
+        	   map.put("msg", "需要人工审核");
+           }
+           if(score>roatnptFractionalSegmentBig) {
+        	   shareOfState ="2";
+        	   map.put("code", 200);
+        	   map.put("msg", "分数够了");
+           }
+           intUserService.updateScore(score,userId,shareOfState);
           map.put("score", score);
           
     	

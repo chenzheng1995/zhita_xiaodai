@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Company;
@@ -65,4 +67,28 @@ public class BlacklistuserController {
     	int num=intBlacklistuserService.upaFalseDel(id);
     	return num;
     }
+	
+	/**
+	 * 批量导入Excel
+	 * @param excelFile
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/importExc")
+	public String importExc(@RequestParam(value="excelFile",required = false) MultipartFile excelFile,Integer companyId,Integer operator) {
+	    try {
+	        String s = intBlacklistuserService.ajaxUploadExcel(excelFile,companyId,operator);
+	        return s;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        success(false);
+	    }
+	    return "0";
+
+	}
+
+	private void success(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }

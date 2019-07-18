@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.ManageControlSettingsMapper;
 import com.zhita.dao.manage.OrdersMapper;
@@ -57,7 +58,10 @@ public class SourceServiceImp implements IntSourceService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+    	//	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -223,18 +227,19 @@ public class SourceServiceImp implements IntSourceService{
     }
     
     //后台管理---查询当天各个渠道在用户表的注册数量(通过渠道查询)
-    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,String sourcename){
-    	List<TongjiSorce> list=sourceMapper.queryAllSourceBySouce(companyid, StartTime, EndTime, sourcename);
+    public List<TongjiSorce> queryAllSourceBySouce(Integer companyid,String StartTime,String EndTime,Integer sourceid){
+    	List<TongjiSorce> list=sourceMapper.queryAllSourceBySouce(companyid, StartTime, EndTime, sourceid);
     	return list;
     }
     //后台管理---查询某一天某个渠道的注册数量
-    public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,String sourceName){
-    	TongjiSorce tongjisource=sourceMapper.queryAllSourceByUserDetail(companyid, StartTime, EndTime, sourceName);
+    public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,Integer sourceid){
+    	TongjiSorce tongjisource=sourceMapper.queryAllSourceByUserDetail(companyid, StartTime, EndTime, sourceid);
     	return tongjisource;
     }
     
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
+    @Transactional
     public void queryAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
     	Integer companyId=3;
@@ -401,13 +406,13 @@ public class SourceServiceImp implements IntSourceService{
     	return tongjiSorce;
     }
     //后台管理---查询当前渠道下有多少用户是登录过得
-    public int queryCount(String sourceName,String startTime,String endTime){
-    	int count=sourceMapper.queryCount(sourceName,startTime,endTime);
+    public int queryCount(Integer sourceid,String startTime,String endTime){
+    	int count=sourceMapper.queryCount(sourceid,startTime,endTime);
     	return count;
     }
     //后台管理---当前渠道下所有的用户id
-    public List<Integer> queryUserid(String sourceName){
-    	List<Integer> list=sourceMapper.queryUserid(sourceName);
+    public List<Integer> queryUserid(Integer sourceid){
+    	List<Integer> list=sourceMapper.queryUserid(sourceid);
     	return list;
     }
     //后台管理---查询当前用户id是否在个人信息认证表有值
@@ -440,4 +445,28 @@ public class SourceServiceImp implements IntSourceService{
    		int airappFractionalSegment=ordersMapper.queryNum1(companyId, sourcename, startscore, endscore);
    		return airappFractionalSegment;
    	}
+
+
+	@Override
+	public int getmanageControlId(String sourceName) {
+		int manageControlId = sourceMapper.getmanageControlId(sourceName);//风控id
+		return manageControlId;
+	}
+
+  	//后台管理---查询出source表所有的信息
+  	public List<Source> querysource(Integer companyId){
+  		List<Source> list=ordersMapper.querysource(companyId);
+  		return list;
+  	}
+   	
+	//后台管理----通过人数（包含机审通过和人审通过）
+	public int querypass(Integer sourceid,String starttime,String endtime){
+		int count=sourceMapper.querypass(sourceid,starttime,endtime);
+		return count;
+	}
+	//后台管理----已借款人数
+	public int queryorderpass(Integer sourceid,String starttime,String endtime){
+		int count=sourceMapper.queryorderpass(sourceid, starttime, endtime);
+		return count;
+	}
 }

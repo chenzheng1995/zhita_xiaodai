@@ -28,8 +28,8 @@ public class ThirdpartyintController {
 	//后台管理---添加功能（查询出所有公司）
 	@ResponseBody
 	@RequestMapping("/queryAllCompany")
-    public Map<String, Object> queryAllCompany(){
-		Map<String, Object> map=intThirdpartyintService.queryAllCompany();
+    public Map<String, Object> queryAllCompany(Integer companyId){
+		Map<String, Object> map=intThirdpartyintService.queryAllCompany(companyId);
     	return map;
     }
     

@@ -5,10 +5,20 @@ public class OperatorSetting {
     private Integer id;
 
     private String name;//运营商名字
+    
+    private Integer companyid;//公司id
 
     private String deleted;
 
-    public Integer getId() {
+	public Integer getCompanyid() {
+		return companyid;
+	}
+
+	public void setCompanyid(Integer companyid) {
+		this.companyid = companyid;
+	}
+
+	public Integer getId() {
         return id;
     }
 

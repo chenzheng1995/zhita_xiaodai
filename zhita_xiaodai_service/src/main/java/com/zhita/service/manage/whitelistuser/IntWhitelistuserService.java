@@ -3,8 +3,7 @@ package com.zhita.service.manage.whitelistuser;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.WhitelistUser;
@@ -28,6 +27,11 @@ public interface IntWhitelistuserService {
     //后台管理---更新假删除状态
     public int upaFalseDel(Integer id);
     
-    //批量导入Excel
-    String ajaxUploadExcel(HttpServletRequest request,HttpServletResponse response) throws Exception;
+    /**
+     * 批量导入Excel
+     * @param excelFile
+     * @return
+     */
+    String ajaxUploadExcel(MultipartFile excelFile,Integer companyId,Integer operator);
+
 }

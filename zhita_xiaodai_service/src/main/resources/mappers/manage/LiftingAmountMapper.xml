@@ -26,7 +26,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <!-- 后台管理       添加功能 -->
-  <insert id="insert" parameterType="com.zhita.model.manage.LiftingAmount" >
+  <insert id="insert" parameterType="com.zhita.model.manage.LiftingAmount" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into lifting_amount (companyId, productid,userHowManyConsecutivePayments, 
       increaseThequota, operator, operationTime)
     values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER}, #{userhowmanyconsecutivepayments,jdbcType=INTEGER}, 
@@ -117,7 +117,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <!-- 后台管理      查询续借提额表所有信息 -->
-  <select id="queryAll" parameterType="com.zhita.model.manage.LiftingAmount">
+  <select id="queryAll" resultType="com.zhita.model.manage.LiftingAmount">
   	 select 
     <include refid="Base_Column_List" />
     from lifting_amount
@@ -145,4 +145,8 @@
       </select>    
       
       
+                  <!--获取用户最后一次提高额度的次数-->
+  <select id="getlastuserHowManyConsecutivePayments" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     select userHowManyConsecutivePayments from lifting_amount where companyId = #{companyId} ORDER BY userHowManyConsecutivePayments desc limit 1
+      </select> 
 </mapper>

@@ -1,6 +1,7 @@
 package com.zhita.service.manage.manconsettings;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,4 +48,10 @@ public class ManconsettingsServiceImp implements IntManconsettingsServcie{
     	int num=manageControlSettingsMapper.updateByPrimaryKey(record);
     	return num;
     }
+
+	@Override
+	public Map<String, Object> getManconsettings(int manageControlId) {
+		 Map<String, Object> map1 =  manageControlSettingsMapper.getManconsettings(manageControlId);  
+		return map1;
+	}
 }

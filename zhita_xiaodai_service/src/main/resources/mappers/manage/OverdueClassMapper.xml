@@ -9,7 +9,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, grade, describe, deleted
+    id, companyId, grade, describes, deleted
   </sql>
   <!-- 后台管理       根据id查询出当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -23,10 +23,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <!-- 后台管理    添加功能 -->
-  <insert id="insert" parameterType="com.zhita.model.manage.OverdueClass" >
-    insert into overdue_class (companyId, grade,describe)
+  <insert id="insert" parameterType="com.zhita.model.manage.OverdueClass" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into overdue_class (companyId, grade,describes)
     values (#{companyid,jdbcType=INTEGER}, #{grade,jdbcType=VARCHAR}, 
-      #{describe,jdbcType=VARCHAR})
+      #{describes,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.OverdueClass" >
     insert into overdue_class
@@ -83,28 +83,28 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 后台管理       查询逾期等级表所有信息 -->
+  <select id="queryAll" resultType="com.zhita.model.manage.OverdueClass">
+  	select * from overdue_class  where companyId=#{arg0} and  deleted=0
+  </select>
   <!-- 后台管理       修改保存功能 -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.OverdueClass" >
     update overdue_class
     set companyId = #{companyid,jdbcType=INTEGER},
       grade = #{grade,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=VARCHAR}
+      describes = #{describes,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <!-- 后台管理        查询逾期等级表所有信息 -->
-  <select id="
-" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueClass">
-  	select 
-    <include refid="Base_Column_List" />
-    from overdue_class
-    where companyId=#{arg0}
-  </select>
   <!-- 后台管理       查询黑名单分界线表的信息 -->
   <select id="query" resultType="com.zhita.model.manage.BlackDemarcationLine">
   	select * from black_demarcation_line
   </select>
   <!-- 后台管理       修改黑名单分界线的值 -->
-  <update id="update" parameterType="java.lang.String">
+  <update id="update" parameterType="java.lang.Integer">
   	update black_demarcation_line set demarcationline=#{arg0}
+  </update>
+  <!-- 后台管理      修改假删除功能 -->
+    <update id="upaFalseDel" parameterType="java.lang.Integer">
+  	update overdue_class set deleted=1 where id=#{arg0}
   </update>
 </mapper>

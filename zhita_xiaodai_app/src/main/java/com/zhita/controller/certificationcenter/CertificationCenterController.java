@@ -43,32 +43,51 @@ public class CertificationCenterController {
 	    @ResponseBody
 	    @Transactional
 		public Map<String, Object> getCertificationCenter(int userId,int companyId){
-			Map<String, Object> map1 = new HashMap<String, Object>();
-		   ArrayList<AuthenticationInformation> CertificationCenter = IntAutheninforService.getCertificationCenter(companyId);
+//			Map<String, Object> map1 = new HashMap<String, Object>();
+//		   ArrayList<Object> list = new ArrayList<Object>();
+//		   ArrayList<AuthenticationInformation> CertificationCenter = IntAutheninforService.getCertificationCenter(companyId);
 		   Map<String, Object> map = userAttestationService.getuserAttestation(userId);
-		   String attestationStatus = (String) map.get("attestationStatus");
-		   
-		   
+		   Map<String, Object> map3  = new HashMap<String, Object>();
+		   String userAttestation =null;
+		   String Operator =null;
+		   if(map==null) {
+			   userAttestation ="0";
+		   }else {
+			   userAttestation = (String) map.get("attestationStatus");
+		   }
+		   		  		   
 		   Map<String, Object> map2 = operatorService.getOperator(userId);
-		   String attestationStatus1 = (String) map2.get("attestationStatus");
+		   if(map2==null) {
+			  Operator ="0";
+		   }else {
+			   Operator = (String) map2.get("attestationStatus");
+		   }
 		   
+		   Map<String, Object> map4 = operatorService.getOperator(userId);
+		   if(map4==null) {
+			  Operator ="0";
+		   }else {
+			   Operator = (String) map4.get("attestationStatus");
+		   }
 		   
-for (AuthenticationInformation authenticationInformation : CertificationCenter) {
-	   int id = authenticationInformation.getId();
-	   if(id==1) {
-		   authenticationInformation.setCertificationstatus(attestationStatus);
-		   map1.put("userAttestation", authenticationInformation);
-	   }
-	   
-	   if(id==3) {
-		   authenticationInformation.setCertificationstatus(attestationStatus1);
-		   map1.put("Operator", authenticationInformation);
-	   }
-}
+//for (AuthenticationInformation authenticationInformation : CertificationCenter) {
+//	   int id = authenticationInformation.getId();
+//	   if(id==1) {
+//		   authenticationInformation.setCertificationstatus(attestationStatus);
+////		   map1.put("userAttestation", authenticationInformation);
+//		   list.add(authenticationInformation);
+//	   }
+//	   
+//	   if(id==3) {
+//		   authenticationInformation.setCertificationstatus(attestationStatus1);
+//		   list.add(authenticationInformation);
+//	   }
+//}
+             map3.put("userAttestation", userAttestation);
+             map3.put("Operator", Operator);
 
-
 		   
-			return map1;
+			return map3;
 		   
 	   }
 	   

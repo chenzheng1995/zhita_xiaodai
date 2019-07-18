@@ -2,6 +2,8 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.BlacklistUser;
 
 public interface BlacklistUserMapper {
@@ -21,8 +23,27 @@ public interface BlacklistUserMapper {
     int updateByPrimaryKey(BlacklistUser record);
     
     //后台管理---查询列表
-    List<BlacklistUser> queryAll(Integer companyId,String name,String phone,String idcard);
+    List<BlacklistUser> queryAll(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard);
     
     //后台管理---更新假删除状态
     int upaFalseDel(Integer id);
+    
+    /**
+     * 批量插入
+     * @param list
+     */
+	void insertInfoBatch(List<BlacklistUser> list);
+	/**
+	 * 批量插入，通过手机号查询数据库表中是否有该黑名单用户
+	 * @param phone
+	 * @return
+	 */
+	BlacklistUser queryByPhone(String phone);
+	
+	/**
+	 * 批量插入，通过手机号更新信息
+	 * @param record
+	 * @return
+	 */
+    int updateByPhone(BlacklistUser record);
 }

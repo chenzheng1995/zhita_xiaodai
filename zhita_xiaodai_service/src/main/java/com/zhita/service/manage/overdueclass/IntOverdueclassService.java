@@ -24,4 +24,7 @@ public interface IntOverdueclassService {
     
     //后台管理---修改黑名单分界线的值
     public int update(Integer blacklinevalue);
+    
+  //后台管理---修改假删除功能
+    public int upaFalseDel(Integer id);
 }

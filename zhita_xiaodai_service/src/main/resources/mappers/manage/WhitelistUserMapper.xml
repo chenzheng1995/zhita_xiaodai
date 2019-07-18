@@ -10,7 +10,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, name, phone, idcard, operator,operationtime,deleted
+    w.id, w.companyId, w.name, w.phone, w.idcard, su.account,w.operationtime,w.deleted
   </sql>
   <!-- 后台管理        根据id查询当前用户的信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -109,20 +109,65 @@
   <select id="queryAll" resultType="com.zhita.model.manage.WhitelistUser">
   	select 
     <include refid="Base_Column_List" />
-    from whitelist_user
-    where companyId=#{companyId} and deleted=0
+    from whitelist_user w left join sys_user su on su.userid=w.operator
+    where w.companyId=#{companyId} and w.deleted=0
     	<if test="name != null and name!=''">
-           and name like "%"#{name}"%"
+           and w.name like "%"#{name}"%"
         </if>
         <if test="phone != null and phone!=''">
-           and phone="%"#{phone}"%"
+           and w.phone like "%"#{phone}"%"
         </if>
         <if test="idcard != null and idcard!=''">
-           and idcard="%"#{idcard}"%"
+           and w.idcard like "%"#{idcard}"%"
+        </if>
+        limit #{page},#{pagesize}
+  </select>
+    <!-- 后台管理        查询列表     查询数量-->
+  <select id="queryAllcount" resultType="java.lang.Integer">
+  	select count(*)
+    from whitelist_user w left join sys_user su on su.userid=w.operator
+    where w.companyId=#{companyId} and w.deleted=0
+    	<if test="name != null and name!=''">
+           and w.name like "%"#{name}"%"
+        </if>
+        <if test="phone != null and phone!=''">
+           and w.phone like "%"#{phone}"%"
+        </if>
+        <if test="idcard != null and idcard!=''">
+           and w.idcard like "%"#{idcard}"%"
         </if>
   </select>
   <!-- 后台管理        更新假删除状态 -->
   <update id="upaFalseDel" parameterType="java.lang.Integer">
   	update whitelist_user set deleted=1 where id=#{arg0}
+  </update>
+  
+  <!-- 批量导入 -->
+   <insert id="insertInfoBatch" parameterType="java.util.List">
+      insert into whitelist_user (companyId, name, phone, idcard, operator,operationtime)
+      values
+      <foreach collection="list" item="item" index="index" separator=",">
+          (#{companyid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+          #{idcard,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}
+      </foreach>
+    </insert>
+    <!--批量插入，通过手机号查询数据库表中是否有该白名单用户  -->
+    <select id="queryByPhone"  parameterType="java.lang.String" resultType="com.zhita.model.manage.WhitelistUser">
+    select 
+    <include refid="Base_Column_List" />
+    from whitelist_user
+    where phone=#{arg0}
+  </select>
+    <!-- 批量插入，通过手机号更新信息 -->
+  <update id="updateByPhone" parameterType="com.zhita.model.manage.WhitelistUser" >
+    update whitelist_user
+    set companyId = #{companyid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      operationtime = #{operationtime,jdbcType=VARCHAR},
+      deleted=0
+    where phone = #{phone,jdbcType=INTEGER}
   </update>
 </mapper>

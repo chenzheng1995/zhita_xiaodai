@@ -29,4 +29,6 @@ public interface OverdueClassMapper {
     
     //后台管理---修改黑名单分界线的值
     int update(Integer blacklinevalue);
+    //后台管理---修改假删除功能
+    int upaFalseDel(Integer id);
 }

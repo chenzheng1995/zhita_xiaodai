@@ -60,10 +60,14 @@ public class LoginController {
 				int num=intLoginService.updateByAccountAndPwd(loginstatus, logintime, account, pwd);
 				if(num==1){
 					map.put("msg", "用户登录成功,登录状态修改成功");
+					request.getSession().setAttribute("userid", sysUser.getUserid());
 					request.getSession().setAttribute("account", account);
 					request.getSession().setAttribute("pwd", pwd);
 					subject.getSession().setTimeout(3600000);//以毫秒为单位    设置一小时之内没访问接口就要重新登录
 					map.put("loginStatus", loginstatus);
+					map.put("userid", sysUser.getUserid());
+					map.put("account", sysUser.getAccount());
+					map.put("companyid", sysUser.getCompanyid());
 					
 				}else{
 					map.put("msg", "用户登录失败，登录状态修改失败");

@@ -11,7 +11,7 @@ public interface IntThirdpartyintService {
     public List<ThirdpartyInterface> queryAll(Integer companyId);
     
     //后台管理---添加功能（查询出所有公司）
-    public Map<String, Object> queryAllCompany();
+    public Map<String, Object> queryAllCompany(Integer companyId);
     
     //后台管理---添加功能
     public int insert(ThirdpartyInterface record);
