@@ -117,9 +117,6 @@ public class SourceTongjiController {
     		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,10);
     		listsourcepage.addAll(listPageUtil.getData());
     		
-
-//    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
-
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1,10,0);
@@ -188,8 +185,8 @@ public class SourceTongjiController {
 				}
 			}
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
-			Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
-			/*listsource.get(i).setApplynum(applynum);//申请数
+			/*Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
+			listsource.get(i).setApplynum(applynum);//申请数
 			String cvr1=null;
 			if ((registernum < 0.000001) || (applynum == 0)) {
 				cvr1 = 0 + "%";// 得到注册到申请转化率
@@ -214,12 +211,9 @@ public class SourceTongjiController {
     		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,2);
     		listsourcepage.addAll(listPageUtil.getData());
     		
-
-//    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
-
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1,2,0);
+    		pageUtil=new PageUtil(1,10,0);
 
     	}
     	
@@ -281,16 +275,15 @@ public class SourceTongjiController {
 					}
 				}
 				tongjiSorce.setApplynum(authencount);//当前渠道的认证人数
-				Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
-				/*tongjiSorce.setApplynum(applynum);//申请数
+				/*Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
+				tongjiSorce.setApplynum(applynum);//申请数
 				String cvr1=null;
 				if ((registernum < 0.000001) || (applynum == 0)) {
 					cvr1 = 0 + "%";// 得到注册到申请转化率
 				} else {
 					cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
 				}
-				tongjiSorce.setCvr1(cvr1);// 得到注册到申请转化率
-*/				
+				tongjiSorce.setCvr1(cvr1);// 得到注册到申请转化率*/
 				Integer machineauditpass=intSourceService.querypass(sourceid, startTimestamps, endTimestamps);
 				tongjiSorce.setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
 				int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);

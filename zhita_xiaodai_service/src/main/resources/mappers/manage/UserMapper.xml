@@ -373,7 +373,7 @@
      <include refid="Base_Column_List" />
      from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
      where u.companyId=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2)
-     	<if test="applynumber != null and applynumber !='' ">
+     		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	        </if>
       		<if test="name != null and name!='' ">
