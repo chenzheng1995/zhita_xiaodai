@@ -12,8 +12,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.util.HttpProtocolHandler;
 import com.zhita.util.HttpRequest;
 import com.zhita.util.HttpResponse;
@@ -39,6 +43,9 @@ public class ChanpayGatewayDemo {
 	 * 编码类型
 	 */
 	private static String charset = "UTF-8";
+	
+	
+	
 
 	/**
 	 * 建立请求，以模拟远程HTTP的POST请求方式构造并获取钱包的处理结果
@@ -491,6 +498,7 @@ public class ChanpayGatewayDemo {
 	public void nmg_biz_api_auth_req() {
 
 		Map<String, String> origMap = new HashMap<String, String>();
+	
 		origMap = setCommonMap(origMap);
 		// 2.1 鉴权绑卡 api 业务参数
 		origMap.put("Service", "nmg_biz_api_auth_req");// 鉴权绑卡的接口名(商户采集方式)

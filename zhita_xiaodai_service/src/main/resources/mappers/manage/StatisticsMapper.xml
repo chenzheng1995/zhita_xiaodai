@@ -15,5 +15,17 @@
 				cstmrnm
 				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
 			</insert>
+			
+			
+			
+			<select id="SelectTrxId" parameterType="com.zhita.model.manage.Bankcard" resultType="java.lang.Integer">
+				select id from bankcard where userId = #{userId} AND bankcardName = #{bankcardName} AND tiedCardPhone = #{tiedCardPhone}
+			</select>
+			
+			
+			
+			<update id="UpdateStatu" parameterType="java.lang.Integer">
+				update bankcard set attestationStatus = "1" where id = #{id}
+			</update>
 
 </mapper>

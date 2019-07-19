@@ -14,13 +14,16 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.ReturnChanpay;
+import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.util.HttpProtocolHandler;
 import com.zhita.util.HttpRequest;
 import com.zhita.util.HttpResponse;
@@ -41,7 +44,7 @@ public class ChanpayQuickCollection {
 	/**
 	 * 生产环境 测试商户号私钥
 	 */
-	private static String MERCHANT_PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANB5cQ5pf+QHF9Z2+DjrAXstdxQHJDHyrni1PHijKVn5VHy/+ONiEUwSd5nx1d/W+mtYKxyc6HiN+5lgWSB5DFimyYCiOInh3tGQtN+pN/AtE0dhMh4J9NXad0XEetLPRgmZ795O/sZZTnA3yo54NBquT19ijYfrvi0JVf3BY9glAgMBAAECgYBFdSCox5eXlpFnn+2lsQ6mRoiVAKgbiBp/FwsVum7NjleK1L8MqyDOMpzsinlSgaKfXxnGB7UgbVW1TTeErS/iQ06zx3r4CNMDeIG1lYwiUUuguIDMedIJxzSNXfk65Bhps37lm129AE/VnIecpKxzelaUuzyGEoFWYGevwc/lQQJBAPO0mGUxOR/0eDzqsf7ehE+Iq9tEr+aztPVacrLsEBAwqOjUEYABvEasJiBVj4tECnbgGxXeZAwyQAJ5YmgseLUCQQDa/dgviW/4UMrY+cQnzXVSZewISKg/bv+nW1rsbnk+NNwdVBxR09j7ifxg9DnQNk1Edardpu3z7ipHDTC+z7exAkAM5llOue1JKLqYlt+3GvYr85MNNzSMZKTGe/QoTmCHStwV/uuyN+VMZF5cRcskVwSqyDAG10+6aYqD1wMDep8lAkBQBoVS0cmOF5AY/CTXWrht1PsNB+gbzic0dCjkz3YU6mIpgYwbxuu69/C3SWg7EyznQIyhFRhNlJH0hvhyMhvxAkEAuf7DNrgmOJjRPcmAXfkbaZUf+F4iK+szpggOZ9XvKAhJ+JGd+3894Y/05uYYRhECmSlPv55CBAPwd8VUsSb/1w==";
+	private static String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALmnE/9rQUoiSGubWg1B7nomyBMJ1xvLqAbiSa91dYAERUig2dG9xsSSjdvcPuN0ghoOCfPRp++NsjQ9YTzrp3Mla7DwNcWsr9Q3J5De9LKR2BaOs8GH6tlGMrNTZeciKASEYftH3B1a7lCmNUNzsQwB5stmZBQZUOs4oHPo4pTjAgMBAAECgYA5iW1qMHxolF1rdBchmrhlBRXmyJrxE1n84C7EARwsU6aBTtCS70Tl8SGj7QtUhOw5VPaCqQxp8rky9X7oWYRoZQHuub6jvvgmCBQXoBDeUaaO4JQ+7KDYP1OpR+e0s0D0fTzL2yujChkF5LyngF2tdwi2272foAaIQgqVLFo9MQJBAOPwNqane7bXiWCuyKgcEeIA8iKGNSXZqTiF+Yf1cW/CaudXdVyV1kFdnlEqAws9fwOEbtSmr2qhdgEUjMxHVQkCQQDQgix8oqAmxmUGqwAMSfIKCUY8xc+ghd1UxmrsnPtpzVjNG/QKaa4D0pC1Li/YmX2u9tAd+oFpTF/LqH+iN2GLAkA20D1UNlJ51bsjlOSMCLQENVYFF2EQiRc4kH9BQrTUu1wZ5d5DNYUgkvLPcdrpiRBSODauzKbCbbGC8P4q4byBAkEApFrnzDq4eLgL7EygVg93nVegKMlYF1VNmMRqhiZbuxNlexActpSE2XiCHn7QsjCTNHZSqD7NAX51SGiCaxCybwJBALZSXAWzQxinkGJXYvTyvktanGqAkHzn1pSf+XbGYtokryVANhuf+YTMm/lYedq8w9um8byZhGl53ph33xn+U0Y=";
 
 	/**
 	 * 编码类型
@@ -49,7 +52,8 @@ public class ChanpayQuickCollection {
 	private static String charset = "UTF-8";
 	
 	
-	
+	@Autowired
+	private Chanpayservice chanser;
 
 	
 	
@@ -452,7 +456,7 @@ public class ChanpayQuickCollection {
 	public Map<String, String> setCommonMap(Map<String, String> origMap) {
 		// 2.1 基本参数
 		origMap.put("Version", "1.0");
-		origMap.put("PartnerId", "200001160097");//生产环境测试商户号
+		origMap.put("PartnerId", "200005280090");//生产环境测试商户号
 		
 		origMap.put("InputCharset", charset);// 字符集
 		origMap.put("TradeDate", "20170612");// 商户请求时间
@@ -469,46 +473,64 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_req")
-	public Map<String, Object> nmg_biz_api_auth_req(String MerUserId,String BkAcctTp,String BkAcctNo,String IDNo,String CstmrNm,String MobNo) {
+	public Map<String, Object> nmg_biz_api_auth_req(String MerUserId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, String> origMap = new HashMap<String, String>();
-		origMap = setCommonMap(origMap);
-		// 2.1 鉴权绑卡 api 业务参数
-		origMap.put("Service", "nmg_biz_api_auth_req");// 鉴权绑卡的接口名(商户采集方式)
-		String trxId = Long.toString(System.currentTimeMillis());	
-		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("ExpiredTime", "90m");// 订单有效期
-		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("BkAcctTp", BkAcctTp);// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-		origMap.put("BkAcctNo", this.encrypt(BkAcctNo, MERCHANT_PUBLIC_KEY, charset));// 卡号
-		//System.out.println(this.encrypt("621483011*******", MERCHANT_PUBLIC_KEY, charset));
-		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-		origMap.put("IDNo", this.encrypt(IDNo, MERCHANT_PUBLIC_KEY, charset));// 证件号
-		//System.out.println(this.encrypt("13010*********", MERCHANT_PUBLIC_KEY, charset));
-		origMap.put("CstmrNm", this.encrypt(CstmrNm, MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
-		//信用卡
-//		origMap.put("CardCvn2", "004");// cvv2码
-//		origMap.put("CardExprDt", "09/21");// 有效期
+		Bankcard bank = new Bankcard();
+		bank.setAttestationStatus("0");
+		bank.setUserId(Integer.valueOf(MerUserId));//登陆人ID
+		bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
+		bank.setBankcardName(BkAcctNo);//卡号
+		bank.setTiedCardPhone(MobNo);//手机号
+		bank.setDeleted("0");
+		bank.setIDcardnumber(IDNo);//身份证号
+		bank.setCstmrnm(CstmrNm);//持卡人姓名
 		
 		
-		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知url
-		origMap.put("SmsFlag", "1");
-		origMap.put("Extension", "");
-		String result = "";
-		try {
-			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-						urlStr);
-			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+		Integer SeleId = chanser.SelectTrxId(bank);
+		if(SeleId == null){
+		Integer addId = chanser.AddBankcard(bank);
+		if(addId != null){
+			Integer trxId = chanser.SelectTrxId(bank);
+			Map<String, String> origMap = new HashMap<String, String>();
+			origMap = setCommonMap(origMap);
+			// 2.1 鉴权绑卡 api 业务参数
+			origMap.put("Service", "nmg_biz_api_auth_req");// 鉴权绑卡的接口名(商户采集方式)
+			origMap.put("TrxId", trxId.toString());// 订单号
+			origMap.put("ExpiredTime", "90m");// 订单有效期
+			origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
+			origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
+			origMap.put("BkAcctNo", this.encrypt(BkAcctNo, MERCHANT_PUBLIC_KEY, charset));// 卡号
+			origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
+			origMap.put("IDNo", this.encrypt(IDNo, MERCHANT_PUBLIC_KEY, charset));// 证件号
+			origMap.put("CstmrNm", this.encrypt(CstmrNm, MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+			origMap.put("MobNo", this.encrypt(MobNo, MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 			
-			map.put("ReturnChanpay", retu);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			System.out.println(result);
-		//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
+			origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知url
+			origMap.put("SmsFlag", "1");
+			origMap.put("Extension", "");
+			String result = "";
+			try {
+				String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
+				Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
+					result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+							urlStr);
+				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+				map.put("OriAuthTrxId", trxId);
+				map.put("code", "200");
+				map.put("ReturnChanpay", retu);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				System.out.println(result);
+			//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
+		}else{
+			map.put("code", "0");
+			map.put("ReturnChanpay", "数据异常");
+		}
+		}else{
+			map.put("code", "0");
+			map.put("ReturnChanpay", "此卡已绑定");
+		}
 		return map;
 	}
 
@@ -552,13 +574,14 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_sms")
-	public Map<String, Object> nmg_api_auth_sms(String trxId,String OriAuthTrxId,String SmsCode) {
+	public Map<String, Object> nmg_api_auth_sms(String OriAuthTrxId,String SmsCode) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
 		// 2.1 鉴权绑卡  业务参数
+		String trxId = Long.toString(System.currentTimeMillis());	
 		origMap.put("TrxId", trxId);// 订单号
 		origMap.put("OriAuthTrxId", OriAuthTrxId);// 原鉴权绑卡订单号
 		origMap.put("SmsCode", SmsCode);// 鉴权短信验证码
@@ -570,12 +593,19 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-			map.put("ReturnChanpay", retu);
+			
+			if(retu.getAcceptStatus().equals("S")){
+				chanser.UpdateChanpay(Integer.valueOf(OriAuthTrxId));
+				map.put("code", "200");
+				map.put("ReturnChanpay", retu);
+			}else{
+				map.put("code", "200");
+				map.put("ReturnChanpay", retu);
+			}
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println(result);
-		//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		return map;
 	}
 	
@@ -595,8 +625,6 @@ public class ChanpayQuickCollection {
 		String trxId = Long.toString(System.currentTimeMillis());
 		
 		origMap.put("TrxId", trxId);// 订单号
-
-		//origMap.put("TrxId", "201703131045234230112");// 订单号
 		origMap.put("OrdrName", OrdrName);// 商品名称
 		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", SellerId);// 子账户号

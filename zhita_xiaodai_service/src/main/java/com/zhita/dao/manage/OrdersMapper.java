@@ -1,12 +1,12 @@
 package com.zhita.dao.manage;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.DeferredAndOrder;
+//import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
@@ -71,8 +71,8 @@ public interface OrdersMapper {
   	//后台管理---渠道统计模块——机审通过字段
   	int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
   	
-  	//后台管理---通过订单查询改订单在延期表信息
-  	List<DeferredAndOrder> queryDefer(Integer orderid);
+ 	//后台管理---通过订单查询改订单在延期表信息
+	List<DeferredAndOrder> queryDefer(Integer orderid);
  
   	//后台管理--查询出sysuser表所有的信息
   	List<SysUser> queryname(Integer companyId);

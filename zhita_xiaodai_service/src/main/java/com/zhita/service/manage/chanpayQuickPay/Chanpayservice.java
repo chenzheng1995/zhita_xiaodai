@@ -1,8 +1,11 @@
-package com.zhita.dao.manage;
+package com.zhita.service.manage.chanpayQuickPay;
+
 
 import com.zhita.model.manage.Bankcard;
 
-public interface StatisticsDao {
+public interface Chanpayservice {
+	
+	
 	
 	Integer AddBankcard(Bankcard bank);
 	
@@ -10,6 +13,5 @@ public interface StatisticsDao {
 	Integer SelectTrxId(Bankcard bank);
 	
 	
-	Integer UpdateStatu(Integer id);
-
+	Integer UpdateChanpay(Integer id);
 }
