@@ -61,13 +61,13 @@ public interface IntSourceService {
     //后台管理---当前渠道下所有的用户id
     public List<Integer> queryUserid(Integer sourceid);
     //后台管理---查询当前用户id是否在个人信息认证表有值
-    public int queryIfExist(Integer userid);
+    public int queryIfExist(Integer userid,String startTime,String endTime);
     //后台管理---查询当前用户id是否在银行卡表有值
-    public int queryIfExist1(Integer userid);
+    public int queryIfExist1(Integer userid,String startTime,String endTime);
     //后台管理---查询当前用户id是否在运营商表有值
-    public int queryIfExist2(Integer userid);
+    public int queryIfExist2(Integer userid,String startTime,String endTime);
   	//后台管理---渠道统计模块——申请人数字段
-  	public int queryNum(Integer companyId,String sourcename);
+  	public int queryNum(Integer companyId,Integer sourceid,String starttime,String endtime);
   	//后台管理---查询当前渠道所使用的风控       机审风控分数段的值
     public String querymancon(String sourceName);
    //后台管理---渠道统计模块——机审通过字段

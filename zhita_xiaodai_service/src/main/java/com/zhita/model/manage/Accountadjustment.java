@@ -2,14 +2,14 @@ package com.zhita.model.manage;
 
 import java.math.BigDecimal;
 
-//调账表
+//调账表(线上调账表)
 public class Accountadjustment {
 	
 	private Integer id;
 	
 	private Integer orderId;//订单ID
 	
-	private BigDecimal totalamount;//减免总金额
+	private BigDecimal totalamount;//减免后应还总金额(线上调账)
 	
 	private BigDecimal amountmoney;//减免金额
 	
@@ -175,6 +175,4 @@ public class Accountadjustment {
 		this.statu = statu;
 	}
 	
-	
-
 }

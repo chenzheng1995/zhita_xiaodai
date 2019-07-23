@@ -919,6 +919,12 @@ public class Orderdetails {
 	public void setOrderas(List<String> orderas) {
 		this.orderas = orderas;
 	}
+
+	@Override
+	public String toString() {
+		return "Orderdetails [id=" + id + ", orderIds=" + orderIds + ", orderId=" + orderId + ", interestPenaltySum="
+				+ interestPenaltySum + "]";
+	}
     
 
 }

@@ -21,6 +21,8 @@ public class Bankcard {
 	private String IDcardnumber;//身份证号
 	
 	private String cstmrnm;//持卡人姓名
+	
+	private String authentime;//认证时间
 
 	public Integer getId() {
 		return id;
@@ -123,6 +125,14 @@ public class Bankcard {
 	}
 	public void setBankcardtypename(String bankcardtypename) {
 		this.bankcardtypename = bankcardtypename;
+	}
+
+	public String getAuthentime() {
+		return authentime;
+	}
+
+	public void setAuthentime(String authentime) {
+		this.authentime = authentime;
 	}
 	
 }

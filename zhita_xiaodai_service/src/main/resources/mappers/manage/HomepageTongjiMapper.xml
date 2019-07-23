@@ -5,23 +5,23 @@
 
 	<!-- 后台管理        今日注册人数 -->
 	<select id="queryToDayRegiste" resultType="java.lang.Integer">
-		select count(*) from user where companyId=#{arg0} and  registeTime>=#{arg1} and registeTime &lt;#{arg2}
+		select count(id) from user where companyId=#{arg0} and  registeTime>=#{arg1} and registeTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        今日申请人数 -->
 	<select id="queryToDayApply" resultType="java.lang.Integer">
-		select count(*) from orders where companyId=#{arg0} and orderCreateTime>=#{arg1} and orderCreateTime &lt;#{arg2}
+		select count(id) from user where companyId=#{arg0} and applytime>=#{arg1} and applytime &lt;#{arg2}
 	</select>
 	<!-- 后台管理       今日放款人数 -->
 	<select id="queryToDayLoan" resultType="java.lang.Integer">
-		
+		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理      今日延期笔数 -->
 	<select id="queryToDayDeferred" resultType="java.lang.Integer">
-		select count(*) from order o inner join deferred df on o.id=df.orderid where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2}
+		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2}
 	</select>
-	<!-- 后台管理       今日还款笔数 -->
+	<!-- 后台管理       今日回款笔数 -->
 	<select id="queryToDayRepayment" resultType="java.lang.Integer">
-		select count(*) from order o inner join repayment rp on o.id=rp.orderid where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
+		select count(rp.id) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
 	</select>
 	<!-- 后台管理      今日逾期已还笔数 -->
 	<select id="queryToDayOverdue" resultType="java.lang.Integer">
@@ -29,11 +29,15 @@
 	</select>
 	<!--后台管理        今日放款总金额  -->
 	<select id="queryToDayLoanTotalmoney" resultType="java.math.BigDecimal">
-	
+		select sum(pr.paymentmoney) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2} 
 	</select>
-	<!-- 后台管理     今日回款总金额 -->
+	<!-- 后台管理     今日回款总金额（实还金额） -->
 	<select id="queryToDayReturTotalmoney" resultType="java.math.BigDecimal">
-	
+		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日回款总金额（延期费） -->
+	<select id="queryToDayDeffer" resultType="java.math.BigDecimal">
+		select sum(interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deferredTime>=#{arg1} and d.deferredTime &lt;#{arg2}
 	</select>
 	<!--后台管理     今日逾期已还金额  -->
 	<select id="queryToDayOverueTotalmoney" resultType="java.math.BigDecimal">
@@ -43,37 +47,108 @@
 	<!-- ==============累计数据================== -->
 	
 	<!-- 后台管理       已注册用户总数 -->
-	<select id="querySumRegiste" parameterType="java.lang.Integer">
-		select count(*) from user where companyId=#{arg0}
+	<select id="querySumRegiste" resultType="java.lang.Integer">
+		select count(id) from user where companyId=#{arg0}
 	</select>
 	<!-- 后台管理      用户申请总笔数 -->
-	<select id="querySumApply" parameterType="java.lang.Integer">
-		select count(*) from orders where companyId=#{arg0}
+	<select id="querySumApply" resultType="java.lang.Integer">
+		select count(applynumber) from user where companyId=#{arg0}
 	</select>
 	<!-- 后台管理      放款总笔数 -->
-	<select id="querySumLoan" parameterType="java.lang.Integer">
-	
+	<select id="querySumLoan" resultType="java.lang.Integer">
+		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0}
 	</select>
 	<!-- 后台管理     还款总笔数 -->
 	<select id="querySumRepayment" resultType="java.lang.Integer">
-		select count(*) from order o inner join repayment rp on o.id=rp.orderid where o.companyId=#{arg0} 
+		select count(rp.id) from  repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} 
+	</select>
+	<!--后台管理        累计放款总金额  -->
+	<select id="querypayrecMoney" resultType="java.math.BigDecimal">
+		select sum(pr.paymentmoney) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0}
+	</select>
+	<!--后台管理      累计回款总金额 （实还金额）-->
+	<select id="queryrepayMoney" resultType="java.math.BigDecimal">
+		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} 
+	</select>
+	<!-- 后台管理       累计回款总金额（延期费） -->
+	<select id="querydeffermoney" resultType="java.math.BigDecimal">
+		select sum(interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0}
+	</select>
+	<!--后台管理      累计应收总金额  -->
+	<select id="queryshouldMoney" resultType="java.math.BigDecimal">
+	
 	</select>
 	
 	<!--  ============期限内数据===============-->
 	
 	<!-- 后台管理        逾前未还笔数 -->
-	<select id="overdue" parameterType="java.lang.Integer">
-		select count(*) from orders where orderStatus='0' and companyId=#{arg0}
+	<select id="overdue" resultType="java.lang.Integer">
+		select count(id) from orders where orderStatus='0' and companyId=#{arg0}
 	</select>
-	<!-- 后台管理       逾前实还金额 -->
-	<select id="overdueMoney" parameterType="java.lang.Integer">
+	<!-- 后台管理       逾前应收总金额 -->
+	<select id="overdueMoney" resultType="java.math.BigDecimal">
 	
 	</select>
 	
 	<!--============逾期数据=============-->
 	
-	<!-- 后台管理         已逾未还笔数 -->
+	<!-- 后台管理         逾后未还笔数 -->
 	<select id="overdue1" parameterType="java.lang.Integer">
-		select count(*) from orders where orderStatus='1' and companyId=#{arg0}
+		select count(id) from orders where orderStatus='1' and companyId=#{arg0}
+	</select>
+	
+	
+	<!-- =============回收率报表=============-->
+	<!-- 后台管理           应还订单 -->
+	<select id="shouldorder" resultType="java.lang.Integer">
+		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理          逾前未还 -->
+	<select id="overduenotrepay" resultType="java.lang.Integer">
+		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=0
+	</select>
+	<!-- 后台管理      已还款订单 -->
+	<select id="overduerepay" resultType="com.zhita.model.manage.Orders">
+		select id,companyId,orderNumber,orderCreateTime,shouldReturnTime,realtime from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
+	</select>
+	<!-- 后台管理          逾后未还 -->
+	<select id="overdueafternotrepay" resultType="java.lang.Integer">
+		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=1
+	</select>
+	<!-- 后台管理          已坏账 -->
+	<select id="baddebt" resultType="java.lang.Integer">
+		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=4
+	</select>
+	<!-- 后台管理        应还金额 -->
+	<select id="shouldmoney" resultType="com.zhita.model.manage.Orderdetails">
+		select shouldReapyMoney,interestPenaltySum from orderdetails od inner join orders o on od.orderid=o.id where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        实际还金额 -->
+	<select id="realymoney" resultType="java.math.BigDecimal">
+		select sum(repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        延期费 -->
+	<select id="deferredmoney" resultType="java.math.BigDecimal">
+		select sum(interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        逾期费 -->
+	<select id="overduemoney" resultType="com.zhita.model.manage.Orderdetails">
+		select orderid,interestPenaltySum from orders o inner join orderditails od on o.id=od.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        减免金额（线上减免） -->
+	<select id="deratemoneyon" resultType="java.math.BigDecimal">
+		select sum(acc.amountmoney) from orders o inner join accountadjustment acc on o.id=acc.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        减免金额（线下减免） -->
+	<select id="deratemoneyunder" resultType="java.math.BigDecimal">
+		select sum(off.money) from orders o inner join offlinetransfer off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	
+	
+	
+	
+	
+	<select id="test" resultType="com.zhita.model.manage.Orderdetails">
+	 select orderid,interestPenaltySum from orderdetails
 	</select>
 </mapper>

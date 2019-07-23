@@ -66,13 +66,13 @@ public interface SourceMapper {
     List<Integer> queryUserid(Integer sourceid);
     
     //后台管理---查询当前用户id是否在个人信息认证表有值
-    int queryIfExist(Integer userid);
+    int queryIfExist(Integer userid,String startTime,String endTime);
     
     //后台管理---查询当前用户id是否在银行卡表有值
-    int queryIfExist1(Integer userid);
+    int queryIfExist1(Integer userid,String startTime,String endTime);
     
     //后台管理---查询当前用户id是否在运营商表有值
-    int queryIfExist2(Integer userid);
+    int queryIfExist2(Integer userid,String startTime,String endTime);
     
     //后台管理---查询当前渠道所使用的风控       机审风控分数段的值
     String querymancon(String sourceName);
@@ -84,5 +84,8 @@ public interface SourceMapper {
 	
 	//后台管理----已借款人数
 	int queryorderpass(Integer sourceid,String starttime,String endtime);
+	
+	//后台管理---渠道统计模块——申请人数字段
+	int queryNum(Integer companyId,Integer sourceid,String starttime,String endtime);
     
 }
