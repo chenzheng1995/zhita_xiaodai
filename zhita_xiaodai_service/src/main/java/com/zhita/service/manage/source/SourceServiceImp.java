@@ -416,23 +416,23 @@ public class SourceServiceImp implements IntSourceService{
     	return list;
     }
     //后台管理---查询当前用户id是否在个人信息认证表有值
-    public int queryIfExist(Integer userid){
-    	int count=sourceMapper.queryIfExist(userid);
+    public int queryIfExist(Integer userid,String startTime,String endTime){
+    	int count=sourceMapper.queryIfExist(userid,startTime,endTime);
     	return count;
     }
     //后台管理---查询当前用户id是否在银行卡表有值
-    public int queryIfExist1(Integer userid){
-    	int count=sourceMapper.queryIfExist1(userid);
+    public int queryIfExist1(Integer userid,String startTime,String endTime){
+    	int count=sourceMapper.queryIfExist1(userid,startTime,endTime);
     	return count;
     }
     //后台管理---查询当前用户id是否在运营商表有值
-    public int queryIfExist2(Integer userid){
-    	int count=sourceMapper.queryIfExist2(userid);
+    public int queryIfExist2(Integer userid,String startTime,String endTime){
+    	int count=sourceMapper.queryIfExist2(userid,startTime,endTime);
     	return count;
     }
   	//后台管理---渠道统计模块——申请人数字段
-  	public int queryNum(Integer companyId,String sourcename){
-  		int count=ordersMapper.queryNum(companyId, sourcename);
+  	public int queryNum(Integer companyId,Integer sourceid,String starttime,String endtime){
+  		int count=sourceMapper.queryNum(companyId, sourceid, starttime, endtime);
   		return count;
   	}
  	//后台管理---查询当前渠道所使用的风控       机审风控分数段的值

@@ -1,6 +1,8 @@
 package com.zhita.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-import com.zhita.model.manage.JsonBean;
-import com.zhita.model.manage.OrderQueryParameter;
-import com.zhita.model.manage.Xtest;
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.Timestamps;
@@ -119,7 +118,43 @@ public class TestController {
 		JsonBean jsonBean=JSON.parseObject(str1, JsonBean.class);
 		//System.out.println(jsonBean+"--******---");
 		System.out.println(jsonBean.getWd_api_mobilephone_getdatav2_response());*/
+	/*	BigDecimal b1=new BigDecimal("90.01");
+		BigDecimal b2=new BigDecimal("90.02");
+		BigDecimal b3=new BigDecimal("90.03");
+		BigDecimal b4=new BigDecimal("90.04");
+		BigDecimal b5=new BigDecimal("0");
+		List<BigDecimal> list=new ArrayList<>();
+		list.add(b1);
+		list.add(b2);
+		list.add(b3);
+		list.add(b4);
+		list.add(b5);
+		BigDecimal shouldmoney = new BigDecimal("0.00");//应还金额
+		for (int i = 0; i <list.size(); i++) {
+			BigDecimal shouldmoney1=list.get(i);
+			shouldmoney=shouldmoney.add(shouldmoney1);
+			System.out.println(shouldmoney+"----");
+		}
 		
-	
+		System.out.println(shouldmoney);*/
+		
+		List<String> list=new ArrayList<>();
+		list.add("2019-09-23");
+		for (int i = 0; i < list.size(); i++) {
+			String startTimefor = list.get(i);
+			String endTimefor = list.get(i);
+			
+			
+			String startTimestampsfor = null;//开始时间（时间戳格式）
+			String endTimestampsfor = null;//结束时间（时间戳格式）
+			try {
+				startTimestampsfor = Timestamps.dateToStamp(startTimefor);
+				endTimestampsfor = (Long.parseLong(Timestamps.dateToStamp(endTimefor))+86400000)+"";
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(startTimestampsfor+"----------"+endTimestampsfor);
+		}
 	}
 }

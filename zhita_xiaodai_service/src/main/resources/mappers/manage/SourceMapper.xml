@@ -241,16 +241,16 @@
   	select u.id from user u  where u.sourceid=#{arg0}
   </select>
   <!-- 后台管理          查询当前用户id是否在个人信息认证表有值 -->
-  <select id="queryIfExist" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select count(*) from user_attestation uat inner join user u on uat.userid=u.id where u.id=#{arg0}
+  <select id="queryIfExist" resultType="java.lang.Integer">
+  	select count(*) from user_attestation uat inner join user u on uat.userid=u.id where u.id=#{arg0} and uat.authentime>=#{arg1} and uat.authentime &lt;#{arg2}
   </select>
   <!-- 后台管理       查询当前用户id是否在银行卡表有值 -->
-  <select id="queryIfExist1" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select count(*) from bankcard b inner join user u on b.userid=u.id where u.id=#{arg0}
+  <select id="queryIfExist1" resultType="java.lang.Integer">
+  	select count(*) from bankcard b inner join user u on b.userid=u.id where u.id=#{arg0} and b.authentime>=#{arg1} and b.authentime &lt;#{arg2}
   </select>
   <!-- 后台管理     查询当前用户id是否在运营商表有值 -->
-  <select id="queryIfExist2" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select count(*) from operator op inner join user u on op.userid=u.id where u.id=#{arg0}
+  <select id="queryIfExist2" resultType="java.lang.Integer">
+  	select count(*) from operator op inner join user u on op.userid=u.id where u.id=#{arg0} and op.authentime>=#{arg1} and op.authentime &lt;#{arg2}
   </select>
   <!-- 后台管理          查询当前渠道所使用的风控       机审风控分数段的值-->
   <select id="querymancon" parameterType="java.lang.String" resultType="java.lang.String">
@@ -268,5 +268,9 @@
   <!-- 后台管理     已借款人数 -->
   <select id="queryorderpass" resultType="java.lang.Integer">
   	select count(*) from orders o inner join user u on o.userid=u.id where u.sourceid=#{arg0} and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
+  </select>
+  <!-- 后台管理      渠道统计模块——申请人数字段 -->
+  <select id="queryNum" resultType="java.lang.Integer">
+  	select count(*) from user where companyId=#{arg0} and sourceId=#{arg1} and applytime>=#{arg2} and applytime &lt;#{arg3}
   </select>
 </mapper>

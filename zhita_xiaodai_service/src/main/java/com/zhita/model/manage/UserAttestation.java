@@ -62,6 +62,8 @@ public class UserAttestation {
     private String attestationStatus;
     
     private String phone;
+    
+    private String authentime;//认证时间
 
 	public Integer getId() {
 		return id;
@@ -309,6 +311,14 @@ public class UserAttestation {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getAuthentime() {
+		return authentime;
+	}
+
+	public void setAuthentime(String authentime) {
+		this.authentime = authentime;
 	}
    
 }

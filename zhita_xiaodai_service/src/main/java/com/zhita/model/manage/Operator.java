@@ -14,6 +14,8 @@ public class Operator {
     private String searchId;
 
     private String operatorjson;
+    
+    private String authentime;//认证时间
 
     public Operator() {
         super();
@@ -75,12 +77,19 @@ public class Operator {
         this.operatorjson = operatorjson == null ? null : operatorjson.trim();
     }
 
+	public String getAuthentime() {
+		return authentime;
+	}
+
+	public void setAuthentime(String authentime) {
+		this.authentime = authentime;
+	}
+
 	@Override
 	public String toString() {
 		return "Operator [id=" + id + ", userid=" + userid + ", phone=" + phone + ", attestationstatus="
 				+ attestationstatus + ", reqid=" + reqid + ", searchId=" + searchId + ", operatorjson=" + operatorjson
-				+ "]";
+				+ ", authentime=" + authentime + "]";
 	}
-    
-    
+
 }
