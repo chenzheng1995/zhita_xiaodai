@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.SmsMapper" >
+
+			
+			<insert id="AddSms" parameterType="com.zhita.model.manage.Shortmessage">
+				INSERT INTO `shortmessage`
+				(
+				send_time,
+				phonenumber,
+				phonenum,
+				companyid,
+				smg,
+				collection_time,
+				successnum
+				)VALUES(#{send_time},#{phonenumber},#{phonenum},#{companyid},#{smg},#{collection_time},#{successnum})
+			</insert>
+			
+			
+			
+			<select id="DayShortMessage" parameterType="com.zhita.model.manage.Shortmessage" resultType="com.zhita.model.manage.Shortmessage">
+				select DATE_FORMAT(send_time,'%Y-%m-%d') as send_time,collection_time,sum(phonenum) as phonenum,sum(successnum) as successnum
+				from shortmessage where companyid = #{companyid}  
+				group by collection_time
+				limit #{page},#{pagesize}
+			</select>
+			
+			
+			<select id="DayTotalCount" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Shortmessage">
+				select DATE_FORMAT(send_time,'%Y-%m-%d') as send_time from shortmessage where companyid = #{companyid}
+			</select>
+			
+			
+			<select id="AllDayShortMessage" parameterType="com.zhita.model.manage.Shortmessage" resultType="com.zhita.model.manage.Shortmessage">
+				select send_time,collection_time,phonenum,successnum from `shortmessage` WHERE DATE_FORMAT(send_time,'%Y-%m-%d')=#{send_time}
+				and companyid = #{companyid}
+			</select>
+			
+			
+			<select id="AllPhone" parameterType="com.zhita.model.manage.SmsSendResponse" resultType="java.lang.String">
+				select u.phone from user u,orders o where o.userId = u.id and o.realtime between #{statu_time} and #{end_time} and o.companyid = #{companyid}
+			</select>
+			
+			
+			<select id="AllController" parameterType="java.lang.String" resultType="com.zhita.model.manage.Shortmessage">
+				select collection_time,send_time,phonenum,successnum from shortmessage where DATE_FORMAT(collection_time,'%Y-%m-%d')=#{collection_time}
+			</select>
+			
+
+</mapper>

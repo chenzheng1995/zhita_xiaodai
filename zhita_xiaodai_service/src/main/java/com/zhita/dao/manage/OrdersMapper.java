@@ -101,5 +101,11 @@ public interface OrdersMapper {
 	
 	int getmanageControlId(String sourceName);
 
+	int getBorrowTimeLimit(@Param("userId")int userId,@Param("companyId") int companyId);
+
+	int getorderStatus(@Param("userId")int userId,@Param("companyId") int companyId);
+
+	String getorderStatus1(@Param("userId")int userId,@Param("companyId") int companyId);
+
 
 }

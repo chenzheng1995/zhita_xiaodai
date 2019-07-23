@@ -291,6 +291,7 @@ public class FinanceServiceimp implements FinanceService{
 		Integer addId = padao.AddUndertheline(unde);
 		if(addId != null){
 			map.put("code", 200);
+			padao.UpdateOrderType(unde.getOrderId());
 			map.put("desc", "添加成功");
 		}else{
 			map.put("code", 0);

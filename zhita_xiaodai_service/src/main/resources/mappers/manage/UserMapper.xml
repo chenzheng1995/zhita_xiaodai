@@ -19,6 +19,7 @@
       <arg column="riskControlPoints" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="canBorrowLines" jdbcType="DECIMAL" />
       <arg column="shareOfState" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="delayTimes" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -367,6 +368,18 @@
 	<select id="queryOperator" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Operator">
 		select * from operator where userid=#{arg0}
 	</select>
+
+
+	<select id="getshareOfState" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select shareOfState from user where id=#{userId}
+	</select>
+	
+	
+		<select id="getdelayTimes" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select delayTimes from user where id = #{userId}
+	</select>	
+	
+
   <!-- 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束） -->
   <select id="queryAllUser" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
   	 select 
@@ -496,4 +509,5 @@
 	        	and u.operator =#{operatorid,jdbcType=INTEGER}
 	        </if>
   </select>
+
 </mapper>

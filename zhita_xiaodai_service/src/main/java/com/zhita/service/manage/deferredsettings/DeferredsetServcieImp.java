@@ -63,4 +63,10 @@ public class DeferredsetServcieImp implements IntDeferredsetService{
     	int num=deferredSettingsMapper.updateByPrimaryKey(record);
     	return num;
     }
+
+	@Override
+	public Map<String, Object> getDeferredset(int companyId) {
+		Map<String, Object> map1 = deferredSettingsMapper.getDeferredset(companyId); 
+		return map1;
+	}
 }

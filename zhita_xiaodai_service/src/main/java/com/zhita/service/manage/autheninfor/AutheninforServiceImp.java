@@ -71,4 +71,11 @@ public class AutheninforServiceImp implements IntAutheninforService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public ArrayList<String> getifAuthentication(int companyId) {
+		ArrayList<String> list = authenticationInformationMapper.getifAuthentication(companyId);
+		return list;
+	}
 }

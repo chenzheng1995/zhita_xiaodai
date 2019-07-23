@@ -27,5 +27,23 @@
 			<update id="UpdateStatu" parameterType="java.lang.Integer">
 				update bankcard set attestationStatus = "1" where id = #{id}
 			</update>
+			
+			
+			
+			<update id="UpdateOrders" parameterType="com.zhita.model.manage.Orders">
+				update orders set orderStatus = "3" where id = #{id}
+			</update>
+			
+			
+			<insert id="AddRepay" parameterType="com.zhita.model.manage.Repayment">
+				INSERT INTO `repayment`(
+					orderId,
+					repaymentMoney,
+					repaymentDate,
+					thirdparty_id,
+					pipelinenumber,
+					companyId					
+				)VALUES(#{orderId},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{pipelinenumber},#{companyId})
+			</insert>
 
 </mapper>

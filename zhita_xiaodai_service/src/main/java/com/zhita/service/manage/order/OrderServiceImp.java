@@ -349,6 +349,26 @@ public class OrderServiceImp implements IntOrderService{
 		return map1;
 	}
 
+
+	@Override
+	public int getBorrowTimeLimit(int userId, int companyId) {
+		int borrowTimeLimit  = ordersMapper.getBorrowTimeLimit(userId,companyId);
+		return borrowTimeLimit;
+	}
+
+	@Override
+	public int getorderStatus(int userId, int companyId) {
+		int num = ordersMapper.getorderStatus(userId,companyId);
+		return num;
+	}
+
+	@Override
+	public String getorderStatus1(int userId, int companyId) {
+		String orderStatus = ordersMapper.getorderStatus1(userId, companyId);
+		return orderStatus;
+	}
+
+
 	/**
 	 * 订单查询【机审通过和人审通过的用户    在放款后在订单表产生的订单数据】（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间，渠道id）
 	 */
@@ -547,4 +567,5 @@ public class OrderServiceImp implements IntOrderService{
 		map.put("pageutil", pageUtil);
 		return map;
 	}
+
 }

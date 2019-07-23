@@ -6,11 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.ReturnChanpay;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.util.HttpProtocolHandler;
@@ -456,7 +460,7 @@ public class ChanpayQuickCollection {
 	public Map<String, String> setCommonMap(Map<String, String> origMap) {
 		// 2.1 基本参数
 		origMap.put("Version", "1.0");
-		origMap.put("PartnerId", "200005280090");//生产环境测试商户号
+		origMap.put("PartnerId", "200005640044");//生产环境测试商户号
 		
 		origMap.put("InputCharset", charset);// 字符集
 		origMap.put("TradeDate", "20170612");// 商户请求时间
@@ -587,7 +591,7 @@ public class ChanpayQuickCollection {
 		origMap.put("SmsCode", SmsCode);// 鉴权短信验证码
 		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
 		String result = "";
-		try {                                                                                                                                                                                                                                 
+		try {                                                                                                                                                                                             
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
 			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
@@ -609,6 +613,10 @@ public class ChanpayQuickCollection {
 		return map;
 	}
 	
+	
+	
+	
+	
 	/**
 	 * 
 	 * 2.4 支付请求接口 api nmg_biz_api_quick_payment
@@ -624,15 +632,15 @@ public class ChanpayQuickCollection {
 		// 2.2 业务参数
 		String trxId = Long.toString(System.currentTimeMillis());
 		
-		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OrdrName", OrdrName);// 商品名称
-		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("SellerId", SellerId);// 子账户号
-		origMap.put("SubMerchantNo", "");// 子商户号
+		origMap.put("TrxId", "1");// 订单号
+		origMap.put("OrdrName", "笔记本");// 商品名称
+		origMap.put("MerUserId", "1");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("SellerId", "200005640044");// 子账户号
+		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-		origMap.put("CardBegin", CardBegin);// 卡号前6位
-		origMap.put("CardEnd", CardEnd);// 卡号后4位
-		origMap.put("TrxAmt", TrxAmt);// 交易金额
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
+		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("SmsFlag", "1");
 		String result = "";
@@ -665,10 +673,10 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_quick_payment_smsconfirm");// 请求的接口名称
 		// 2.2 业务参数
-		origMap.put("TrxId", trxId);// 订单号
+		origMap.put("TrxId", "5");// 订单号
 		//origMap.put("TrxId", "101149785980144593760");// 订单号
-		origMap.put("OriPayTrxId", OriPayTrxId);// 原有支付请求订单号
-		origMap.put("SmsCode", SmsCode);// 短信验证码
+		origMap.put("OriPayTrxId", "1");// 原有支付请求订单号
+		origMap.put("SmsCode", "137458");// 短信验证码
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		String result = "";
 		try {
@@ -698,21 +706,26 @@ public class ChanpayQuickCollection {
 		// 2.1 基本参数
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_zft_api_quick_payment");// 支付接口名称
+		 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 		// 2.2 业务参数
-		origMap.put("TrxId", "2017031310452344543522");// 订单号
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
+		String ssid = df.format(new Date());
+		
+		origMap.put("TrxId", uuid);// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
-		origMap.put("MerUserId", "20201");// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("SellerId", "200001160097");// 子账户号
-		origMap.put("SubMerchantNo", "200001160097");// 子商户号
+		origMap.put("MerUserId", "a001");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("SellerId", "200005640044");// 子账户号
+		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-//		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-//		origMap.put("BkAcctNo", this.encrypt("6200000000000000", MERCHANT_PUBLIC_KEY, charset));// 卡号
-//		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-//		origMap.put("IDNo", this.encrypt("360000000000000000", MERCHANT_PUBLIC_KEY, charset));// 证件号
-//		origMap.put("CstmrNm", this.encrypt("XXX", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-//		origMap.put("MobNo", this.encrypt("13511111111", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		
+		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
+		origMap.put("BkAcctNo", this.encrypt("6228481428190956971", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
+		origMap.put("IDNo", this.encrypt("441402199404121035", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("CstmrNm", this.encrypt("李真纯", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("15219990556", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 //		origMap.put("EnsureAmount", "1");//担保金额
-		origMap.put("TrxAmt", "30");// 交易金额
+		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("SmsFlag", "1");//短信发送标识
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
@@ -753,7 +766,7 @@ public class ChanpayQuickCollection {
 		origMap.put("OrdrDesc", "[{'商品型号':'D007','商品性能':'Test'}]");// 商品描述
 		origMap.put("MerUserId", "1700000001");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200001160097");// 生产环境
-		origMap.put("SubMerchantNo", "");// 子商户号
+		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
 //		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
 //		origMap.put("BkAcctNo", this.encrypt("430000000000000000", MERCHANT_PUBLIC_KEY, charset));// 卡号
@@ -769,7 +782,7 @@ public class ChanpayQuickCollection {
 		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("AccessChannel", "web");//用户终端类型  web  wap
-		origMap.put("ReturnUrl", "http://www.baidu.com");//同步回调地址
+		origMap.put("ReturnUrl", "http://192.168.0.168");//同步回调地址
 		origMap.put("NotifyUrl", "");//异步回调地址
 		origMap.put("Extension", "");//扩展字段
 		String result = "";
@@ -1061,7 +1074,39 @@ public class ChanpayQuickCollection {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void uuID(){
+		  String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+		  System.out.println(uuid);
+	}
+	
 
 	
+	
+	
+	public static void main(String[] args) {
+		ChanpayQuickCollection test = new ChanpayQuickCollection();
+		
+//		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
+//		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
+//		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
+		test.nmg_quick_onekeypay();
+//		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
+//		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
+//		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端
+//		test.nmg_nquick_onekeypay();  //2.8 支付请求---畅捷前端
+//		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
+//		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
+//		test.nmg_api_refund();//商户退款请求
+		
+
+//		test.nmg_sms_resend(); //2.11 短信重发
+//		test.nmg_api_query_trade(); //2.14 订单状态查询
+//		test.nmg_api_refund_trade_file(); //2.12 退款对账单
+//		test.nmg_api_everyday_trade_file(); //2.15 交易对账单
+//		test.nmg_api_quick_payment_receiptconfirm();// 2.13 确认收货接口
+//		test.notifyVerify(); // 测试异步通知验签
+	}
 	
 }

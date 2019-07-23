@@ -1,6 +1,8 @@
 package com.zhita.dao.manage;
 
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Repayment;
 
 public interface StatisticsDao {
 	
@@ -11,5 +13,11 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdateStatu(Integer id);
+	
+	
+	Integer AddRepay(Repayment repay);
+	
+	
+	Integer UpdateOrders(Orders ord);
 
 }
