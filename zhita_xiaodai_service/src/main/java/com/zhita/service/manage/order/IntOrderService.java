@@ -34,6 +34,15 @@ public interface IntOrderService {
 	public Map<String, Object> getReimbursement(int userId, int companyId);
 
 	public Map<String, Object> getRepayment(int userId, int companyId);
+
+
+	public int getBorrowTimeLimit(int userId, int companyId);
+
+	public int getorderStatus(int userId, int companyId);
+
+	public String getorderStatus1(int userId, int companyId);
+
+
 	
 	/**
 	 * 订单查询【机审通过和人审通过的用户    在放款后在订单表产生的订单数据】（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间，渠道id）
@@ -64,4 +73,5 @@ public interface IntOrderService {
 	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）
 	 */
 	public Map<String, Object> queryAllUserPeopleYet(UserLikeParameter userLikeParameter);
+
 }

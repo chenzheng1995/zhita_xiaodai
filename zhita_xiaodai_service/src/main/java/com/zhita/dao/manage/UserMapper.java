@@ -73,6 +73,12 @@ public interface UserMapper {
 
 	int getRiskControlPoints(int userId);
 
+
+	String getshareOfState(int userId);
+
+	int getdelayTimes(int userId);
+
+
 	/**
 	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）
 	 */
@@ -111,4 +117,5 @@ public interface UserMapper {
 	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）——查询数量
 	 */
 	int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter);
+
 }

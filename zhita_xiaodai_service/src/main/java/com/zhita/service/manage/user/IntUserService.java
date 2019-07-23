@@ -28,5 +28,9 @@ public interface IntUserService {
 
 	public int getRiskControlPoints(int userId);
 
+	public String getshareOfState(int userId);
+
+	public int getdelayTimes(int userId);
+
 
 }

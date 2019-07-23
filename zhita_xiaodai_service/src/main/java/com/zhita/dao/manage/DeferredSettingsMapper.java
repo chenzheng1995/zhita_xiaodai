@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.BorrowMoneyMessage;
 import com.zhita.model.manage.DeferredSettings;
@@ -29,5 +30,7 @@ public interface DeferredSettingsMapper {
     
     //后台管理---根据id查询信息（借款期限   平台服务费比率）
     BorrowMoneyMessage queryBorrow(Integer productid);
+
+	Map<String, Object> getDeferredset(int companyId);
     
 }

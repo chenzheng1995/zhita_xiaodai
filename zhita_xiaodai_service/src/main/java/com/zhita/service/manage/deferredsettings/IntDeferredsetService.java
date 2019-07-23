@@ -21,4 +21,6 @@ public interface IntDeferredsetService {
     
     //后台管理---修改保存功能
     public int updateByPrimaryKey(DeferredSettings record);
+
+	public Map<String, Object> getDeferredset(int companyId);
 }

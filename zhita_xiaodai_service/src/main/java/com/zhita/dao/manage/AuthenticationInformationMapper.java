@@ -3,6 +3,8 @@ package com.zhita.dao.manage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.AuthenticationInformation;
 
 public interface AuthenticationInformationMapper {
@@ -28,4 +30,6 @@ public interface AuthenticationInformationMapper {
     String queryIcon(Integer id);
 
 	ArrayList<AuthenticationInformation> getCertificationCenter(int companyId);
+
+	ArrayList<String> getifAuthentication(int companyId);
 }

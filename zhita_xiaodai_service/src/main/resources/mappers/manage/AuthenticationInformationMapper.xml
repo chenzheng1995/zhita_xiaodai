@@ -108,4 +108,9 @@
   	select id,icon,authenticationName,ifAuthentication from authentication_information where companyId=#{companyId} and deleted =0;
   </select>
   
+      <select id="getifAuthentication" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select ifAuthentication from authentication_information where companyId=#{companyId} and deleted =0;
+  </select>
+  
+  
 </mapper>
