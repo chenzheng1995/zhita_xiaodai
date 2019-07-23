@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import redis.clients.jedis.BinaryClient.LIST_POSITION;
+
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
@@ -63,16 +65,16 @@ public interface PostloanorderMapper {
 	Integer AddOverdue(Overdue ov);
 	
 	
-	Integer connectedNum(Orderdetails order);
+	List<Integer> connectedNum(Orderdetails order);
 	
 	
 	Integer OrderIdNum(Orderdetails order);
 
 
-	Integer OverIdNum(Orderdetails order);
+	List<Integer> OverIdNum(Orderdetails order);
 	
 	
-	Integer StatusOrders(Orderdetails order);
+	List<Integer> StatusOrders(Orderdetails order);
 	
 	
 	Integer UserDianlNum(Orderdetails order);
@@ -109,4 +111,7 @@ public interface PostloanorderMapper {
 	
 	
 	Integer OrderDefeNum(Orderdetails order);
+	
+	
+	Integer UserOverdue(Overdue ov);
 }

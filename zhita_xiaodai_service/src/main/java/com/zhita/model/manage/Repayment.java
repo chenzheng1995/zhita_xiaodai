@@ -35,8 +35,48 @@ public class Repayment {
 	
 	private String operator_time;
 	
+	private BigDecimal interestPenaltySum;
+	
+	private BigDecimal realityAccount;
+	
+	private String orderCreateTime;
+	
+	private Integer CouNum;
 	
 	
+	
+	public Integer getCouNum() {
+		return CouNum;
+	}
+
+	public void setCouNum(Integer couNum) {
+		CouNum = couNum;
+	}
+
+	public String getOrderCreateTime() {
+		return orderCreateTime;
+	}
+
+	public void setOrderCreateTime(String orderCreateTime) {
+		this.orderCreateTime = orderCreateTime;
+	}
+
+	public BigDecimal getRealityAccount() {
+		return realityAccount;
+	}
+
+	public void setRealityAccount(BigDecimal realityAccount) {
+		this.realityAccount = realityAccount;
+	}
+
+	public BigDecimal getInterestPenaltySum() {
+		return interestPenaltySum;
+	}
+
+	public void setInterestPenaltySum(BigDecimal interestPenaltySum) {
+		this.interestPenaltySum = interestPenaltySum;
+	}
+
 	public String getOperator_time() {
 		return operator_time;
 	}

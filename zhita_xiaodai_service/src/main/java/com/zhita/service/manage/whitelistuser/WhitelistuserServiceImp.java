@@ -16,7 +16,6 @@ import com.zhita.dao.manage.WhitelistUserMapper;
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.WhitelistUser;
 import com.zhita.util.ExcelUtils;
-import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.Timestamps;
 
@@ -29,26 +28,37 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
 	
 	//后台管理---查询列表
     public Map<String, Object>  queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
-    	List<WhitelistUser> list=new ArrayList<>();
-    	List<WhitelistUser> listto=new ArrayList<>();
+    	List<WhitelistUser> list=new ArrayList<WhitelistUser>();
+    	List<WhitelistUser> listto=new ArrayList<WhitelistUser>();
     	PageUtil pageUtil=null;
-    	list=whitelistUserMapper.queryAll(companyId, name, phone, idcard);
     	
     	for (int i = 0; i < list.size(); i++) {
     		list.get(i).setOperationtime(Timestamps.stampToDate(list.get(i).getOperationtime()));
 		}
     	
-    	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
-    		listto.addAll(listPageUtil.getData());
-    		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
-    	}else{
-    		pageUtil=new PageUtil(1, 10, 0);
-    	}
     	
-		HashMap<String,Object> map=new HashMap<>();
-		map.put("whituserlist", listto);
+		int totalCount=whitelistUserMapper.queryAllcount(companyId, name, phone, idcard);//查询总数量
+		pageUtil=new PageUtil(page,totalCount);
+    	if(page<1) {
+    		page=1;
+    		pageUtil.setPage(page);
+    	}
+    	else if(page>pageUtil.getTotalPageCount()) {
+    		if(totalCount==0) {
+    			page=pageUtil.getTotalPageCount()+1;
+    		}else {
+    			page=pageUtil.getTotalPageCount();
+    		}
+    		pageUtil.setPage(page);
+    	}
+    	int pages=(page-1)*pageUtil.getPageSize();
+    	list=whitelistUserMapper.queryAll(companyId, pages, pageUtil.getPageSize(), name, phone, idcard);//查询list集合
+    	for (int i = 0; i < list.size();i++) {
+			list.get(i).setOperationtime(Timestamps.stampToDate(list.get(i).getOperationtime()));
+		}
+    	
+		Map<String,Object> map=new HashMap<>();
+		map.put("whituserlist", list);
 		map.put("pageutil", pageUtil);
     	return map;
     }

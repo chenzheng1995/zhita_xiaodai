@@ -2,14 +2,17 @@ package com.zhita.dao.manage;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import com.zhita.model.manage.Drainage_of_platform;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.OverdueClass;
 import com.zhita.model.manage.Repayment;
 
 public interface OperationalMapper {
 	
 	
-	List<Orders> OrderNum(Orderdetails orders);
+	Integer OrderNum(Orderdetails orders);
 	
 	
 	List<Orders> Ordersdata(Orderdetails orders);
@@ -51,10 +54,10 @@ public interface OperationalMapper {
 	List<Integer> ConnectionidAll(Orderdetails orde);
 	
 	
-	List<Orderdetails> CollectionDatas(Orderdetails orde);
+	List<Orders> CollectionDatas(Orderdetails orde);
 	
 	
-	List<Orderdetails> CollectionDataNum(Orderdetails orde);
+	Integer CollectionDataNum(Orderdetails orde);
 	
 	
 	List<Integer> CollectionNumberofreminders(Orderdetails ord);
@@ -77,5 +80,30 @@ public interface OperationalMapper {
 
 	
 	
+	List<Drainage_of_platform> AllDrainage(Integer companyId);
+	
+	
+	Orders GesamtbetragderDarlehen(Orders orde);
+	
+	
+	Orders GesamtbetragderRvckzahlung(Orders orde);
+	
+	
+	Orders GesamtbetraguberfalligerBetrag(Orders orde);
+	
+	
+	Orders GesamtbetragderVerbindlichkeiten(Orders orde);
+	
+	
+	Orders Pressformoney(Orderdetails ord);
+	
+	
+	List<Integer> Beoverdue(Orderdetails ord);
+	
+	
+	Repayment SelectNodeRepayment(Orderdetails orderdetails);
+	
+	
+	List<OverdueClass> Overdue_class(Integer companyId);
 	
 }

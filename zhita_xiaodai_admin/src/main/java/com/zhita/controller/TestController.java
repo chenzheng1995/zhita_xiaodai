@@ -119,7 +119,7 @@ public class TestController {
 		JsonBean jsonBean=JSON.parseObject(str1, JsonBean.class);
 		//System.out.println(jsonBean+"--******---");
 		System.out.println(jsonBean.getWd_api_mobilephone_getdatav2_response());*/
-		String str="运营商链接：{abcde123456}";
-		System.out.println("\""+str.substring(6)+"\"");
+		
+	
 	}
 }

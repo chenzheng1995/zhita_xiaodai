@@ -9,7 +9,11 @@ public class Orderdetails {
 	
 	private Integer id;//明细ID
 	
+	private String orderIds;
+	
 	private Integer orderId;//订单表ID
+	
+	private Integer drainageOfPlatformId;
 	
 	private BigDecimal realityBorrowMoney;//实际借款金额（元）
 	
@@ -51,7 +55,7 @@ public class Orderdetails {
 	
 	private String returntime;//应还时间
 	
-	private Integer page=0;
+	private Integer page=1;
 	
 	private Integer pagesize=10;
 	
@@ -94,6 +98,8 @@ public class Orderdetails {
     private String pipelinenumber;//流水号
     
     private List<Integer> ids;
+    
+    private List<String> orderas;
     
     private String collectiondate;
     
@@ -162,6 +168,117 @@ public class Orderdetails {
     private BigDecimal OrderMoney;
     
     private Integer thirdparty_id;
+    
+    private String orderCreateTimeStatu_time;//实借开始时间
+    
+    private String orderCreateTimeEnd_time;//实借结束时间
+    
+    private String deferBeforeReturntimeStatu_time;//延期前开始时间
+    
+    private String deferBeforeReturntimeEnd_time;//延期前接受时间
+    
+    private String deferAfterReturntimeStatu_time;//延期后开始时间
+    
+    private String deferAfterReturntimeEnd_time;//延期后结束时间
+    
+    private String realtimeStatu_time;//实还开始时间
+    
+    private String realtimeEnd_time;//实还结束时间
+    
+    private String  accounttimestart_time;
+    
+    private String accounttimeent_time;
+
+	public String getAccounttimestart_time() {
+		return accounttimestart_time;
+	}
+
+	public void setAccounttimestart_time(String accounttimestart_time) {
+		this.accounttimestart_time = accounttimestart_time;
+	}
+
+	public String getAccounttimeent_time() {
+		return accounttimeent_time;
+	}
+
+	public void setAccounttimeent_time(String accounttimeent_time) {
+		this.accounttimeent_time = accounttimeent_time;
+	}
+
+	public String getOrderCreateTimeStatu_time() {
+		return orderCreateTimeStatu_time;
+	}
+
+	public void setOrderCreateTimeStatu_time(String orderCreateTimeStatu_time) {
+		this.orderCreateTimeStatu_time = orderCreateTimeStatu_time;
+	}
+
+	public String getOrderCreateTimeEnd_time() {
+		return orderCreateTimeEnd_time;
+	}
+
+	public void setOrderCreateTimeEnd_time(String orderCreateTimeEnd_time) {
+		this.orderCreateTimeEnd_time = orderCreateTimeEnd_time;
+	}
+
+	public String getDeferBeforeReturntimeStatu_time() {
+		return deferBeforeReturntimeStatu_time;
+	}
+
+	public void setDeferBeforeReturntimeStatu_time(
+			String deferBeforeReturntimeStatu_time) {
+		this.deferBeforeReturntimeStatu_time = deferBeforeReturntimeStatu_time;
+	}
+
+	public String getDeferBeforeReturntimeEnd_time() {
+		return deferBeforeReturntimeEnd_time;
+	}
+
+	public void setDeferBeforeReturntimeEnd_time(
+			String deferBeforeReturntimeEnd_time) {
+		this.deferBeforeReturntimeEnd_time = deferBeforeReturntimeEnd_time;
+	}
+
+	public String getDeferAfterReturntimeStatu_time() {
+		return deferAfterReturntimeStatu_time;
+	}
+
+	public void setDeferAfterReturntimeStatu_time(
+			String deferAfterReturntimeStatu_time) {
+		this.deferAfterReturntimeStatu_time = deferAfterReturntimeStatu_time;
+	}
+
+	public String getDeferAfterReturntimeEnd_time() {
+		return deferAfterReturntimeEnd_time;
+	}
+
+	public void setDeferAfterReturntimeEnd_time(String deferAfterReturntimeEnd_time) {
+		this.deferAfterReturntimeEnd_time = deferAfterReturntimeEnd_time;
+	}
+
+	public String getRealtimeStatu_time() {
+		return realtimeStatu_time;
+	}
+
+	public void setRealtimeStatu_time(String realtimeStatu_time) {
+		this.realtimeStatu_time = realtimeStatu_time;
+	}
+
+	public String getRealtimeEnd_time() {
+		return realtimeEnd_time;
+	}
+
+	public void setRealtimeEnd_time(String realtimeEnd_time) {
+		this.realtimeEnd_time = realtimeEnd_time;
+	}
+
+	public Integer getDrainageOfPlatformId() {
+		return drainageOfPlatformId;
+	}
+
+	public void setDrainageOfPlatformId(Integer drainageOfPlatformId) {
+		this.drainageOfPlatformId = drainageOfPlatformId;
+	}
 
 	public Integer getId() {
 		return id;
@@ -785,6 +902,22 @@ public class Orderdetails {
 
 	public void setThirdparty_id(Integer thirdparty_id) {
 		this.thirdparty_id = thirdparty_id;
+	}
+
+	public String getOrderIds() {
+		return orderIds;
+	}
+
+	public void setOrderIds(String orderIds) {
+		this.orderIds = orderIds;
+	}
+
+	public List<String> getOrderas() {
+		return orderas;
+	}
+
+	public void setOrderas(List<String> orderas) {
+		this.orderas = orderas;
 	}
     
 

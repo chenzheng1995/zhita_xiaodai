@@ -52,7 +52,8 @@ public class SourceTongjiController {
 		
 		listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
 		for (int i = 0; i < listsource.size(); i++) {
-			String sourcename=listsource.get(i).getSourcename();//渠道名
+			int sourceid=listsource.get(i).getSourceid();//渠道id
+			String sourcename=listsource.get(i).getSourcename();//渠道名称
 			float registernum=listsource.get(i).getRegisternum();//得到真实的注册数
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
 			int uv=0;
@@ -69,8 +70,8 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
-			listsource.get(i).setActivatecount(intSourceService.queryCount(sourcename,startTimestamps,endTimestamps));//激活数
-			List<Integer> listuserid=intSourceService.queryUserid(sourcename);//查询当前渠道下的所有userid
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
+			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
 				Integer userid=listuserid.get(j);
@@ -82,28 +83,34 @@ public class SourceTongjiController {
 				}
 			}
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
-			Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
-			listsource.get(i).setApplynum(applynum);//申请数
-			String cvr1=null;
-			if ((registernum < 0.000001) || (applynum == 0)) {
+			//Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
+			//listsource.get(i).setApplynum(applynum);//申请数
+			//String cvr1=null;
+			/*if ((registernum < 0.000001) || (applynum == 0)) {
 				cvr1 = 0 + "%";// 得到注册到申请转化率
 			} else {
 				cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
 			}
-			listsource.get(i).setCvr1(cvr1);// 得到注册到申请转化率
-			String airappFractionalSegment=intSourceService.querymancon(sourcename);
-			String[] strarray=airappFractionalSegment.split("-");
-			String start=strarray[0];
-			String end=strarray[1];
-			Integer machineauditpass=intSourceService.queryNum1(companyId, sourcename, start, end);
-			listsource.get(i).setMachineauditpass(machineauditpass);//机审通过人数
-			String cvr2=null;
+			listsource.get(i).setCvr1(cvr1);// 得到注册到申请转化率*/
+			Integer machineauditpass=intSourceService.querypass(sourceid, startTimestamps, endTimestamps);
+			listsource.get(i).setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
+		/*	String cvr2=null;
 			if ((registernum < 0.000001) || (machineauditpass == 0)) {
 				cvr2 = 0 + "%";// 得到注册到借款转化率
 			} else {
 				cvr2 = (new DecimalFormat("#.00").format( machineauditpass/ registernum * 100)) + "%";// 得到注册到借款转化率
 			}
-			listsource.get(i).setCvr2(cvr2);// 得到注册到借款转化率
+			listsource.get(i).setCvr2(cvr2);// 得到注册到借款转化率*/
+			
+			int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);
+			listsource.get(i).setOrderpass(orderpass);//已借款人数
+			String cvr2=null;
+			if ((registernum < 0.000001) || (orderpass == 0)) {
+				cvr2 = 0 + "%";// 得到借款率
+			} else {
+				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
+			}
+			listsource.get(i).setCvr2(cvr2);
 		}
 		
 	  	if(listsource!=null && !listsource.isEmpty()){
@@ -113,6 +120,7 @@ public class SourceTongjiController {
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1,10,0);
+
     	}
 	  	List<Source> sourcelist=intSourceService.querysource(companyId);	    	
 		HashMap<String,Object> map=new HashMap<>();
@@ -140,6 +148,8 @@ public class SourceTongjiController {
 		
 		listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourceid);
 		for (int i = 0; i < listsource.size(); i++) {
+			Integer sourceids=listsource.get(i).getSourceid();//渠道id
+			System.out.println(sourceids+"------------");
 			String sourcename=listsource.get(i).getSourcename();//渠道名
 			float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
@@ -162,8 +172,8 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
-			listsource.get(i).setActivatecount(intSourceService.queryCount(sourcename,startTimestamps,endTimestamps));//激活数
-			List<Integer> listuserid=intSourceService.queryUserid(sourcename);//查询当前渠道下的所有userid
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceids,startTimestamps,endTimestamps));//激活数
+			List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
 				Integer userid=listuserid.get(j);
@@ -175,7 +185,7 @@ public class SourceTongjiController {
 				}
 			}
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
-			Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
+			/*Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
 			listsource.get(i).setApplynum(applynum);//申请数
 			String cvr1=null;
 			if ((registernum < 0.000001) || (applynum == 0)) {
@@ -184,28 +194,27 @@ public class SourceTongjiController {
 				cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
 			}
 			listsource.get(i).setCvr1(cvr1);// 得到注册到申请转化率
-			String airappFractionalSegment=intSourceService.querymancon(sourcename);
-			String[] strarray=airappFractionalSegment.split("-");
-			String start=strarray[0];
-			String end=strarray[1];
-			Integer machineauditpass=intSourceService.queryNum1(companyId, sourcename, start, end);
-			listsource.get(i).setMachineauditpass(machineauditpass);//机审通过人数
+*/			Integer machineauditpass=intSourceService.querypass(sourceids, startTimestamps, endTimestamps);
+			listsource.get(i).setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
+			int orderpass=intSourceService.queryorderpass(sourceids, startTimestamps, endTimestamps);
+			listsource.get(i).setOrderpass(orderpass);//已借款人数
 			String cvr2=null;
-			if ((registernum < 0.000001) || (machineauditpass == 0)) {
-				cvr2 = 0 + "%";// 得到注册到借款转化率
+			if ((registernum < 0.000001) || (orderpass == 0)) {
+				cvr2 = 0 + "%";// 得到借款率
 			} else {
-				cvr2 = (new DecimalFormat("#.00").format( machineauditpass/ registernum * 100)) + "%";// 得到注册到借款转化率
+				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
 			}
-			listsource.get(i).setCvr2(cvr2);// 得到注册到借款转化率
+			listsource.get(i).setCvr2(cvr2);
 		}
 		
 	  	if(listsource!=null && !listsource.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,10);
+    		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,2);
     		listsourcepage.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1,10,0);
+
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -218,7 +227,7 @@ public class SourceTongjiController {
 	//例如01号-03号   外面显示的是01号到03号总的统计数据    里面显示的是01,02,03号每一天的详细统计数据
 	@ResponseBody
 	@RequestMapping("/queryAllPageDetail")
-	public List<TongjiSorce> queryAllPageDetail(Integer companyId,String sourcename, String dateStart,String dateEnd) throws ParseException {
+	public List<TongjiSorce> queryAllPageDetail(Integer companyId,Integer sourceid, String dateStart,String dateEnd) throws ParseException {
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
 		List<TongjiSorce> listsource = new ArrayList<>();
@@ -233,9 +242,10 @@ public class SourceTongjiController {
 			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 			
 			TongjiSorce tongjiSorce=new TongjiSorce();
-			tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourcename);
+			tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourceid);
 			if(tongjiSorce!=null){
 				float registernum=tongjiSorce.getRegisternum();//真实的注册数
+				String sourcename=tongjiSorce.getSourcename();//渠道名称
 				int uv=0;
 				String cvr=null;
 				if (redisClientUtil.getSourceClick(companyId + sourcename + listdate.get(i) + "daichaoKey") == null) {
@@ -251,9 +261,9 @@ public class SourceTongjiController {
 				}
 				tongjiSorce.setDate(date);
 				tongjiSorce.setCvr(cvr);//uv到注册的转化率
-				tongjiSorce.setActivatecount(intSourceService.queryCount(sourcename,startTimestamps,endTimestamps));//激活数
+				tongjiSorce.setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 				
-				List<Integer> listuserid=intSourceService.queryUserid(sourcename);//查询当前渠道下的所有userid
+				List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 				int authencount=0;//认证人数
 				for (int j = 0; j < listuserid.size(); j++) {
 					Integer userid=listuserid.get(j);
@@ -265,7 +275,7 @@ public class SourceTongjiController {
 					}
 				}
 				tongjiSorce.setApplynum(authencount);//当前渠道的认证人数
-				Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
+				/*Integer applynum=intSourceService.queryNum(companyId, sourcename);//申请人数
 				tongjiSorce.setApplynum(applynum);//申请数
 				String cvr1=null;
 				if ((registernum < 0.000001) || (applynum == 0)) {
@@ -273,20 +283,18 @@ public class SourceTongjiController {
 				} else {
 					cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
 				}
-				tongjiSorce.setCvr1(cvr1);// 得到注册到申请转化率
-				String airappFractionalSegment=intSourceService.querymancon(sourcename);
-				String[] strarray=airappFractionalSegment.split("-");
-				String start=strarray[0];
-				String end=strarray[1];
-				Integer machineauditpass=intSourceService.queryNum1(companyId, sourcename, start, end);
-				tongjiSorce.setMachineauditpass(machineauditpass);//机审通过人数
+				tongjiSorce.setCvr1(cvr1);// 得到注册到申请转化率*/
+				Integer machineauditpass=intSourceService.querypass(sourceid, startTimestamps, endTimestamps);
+				tongjiSorce.setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
+				int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);
+				tongjiSorce.setOrderpass(orderpass);//已借款人数
 				String cvr2=null;
-				if ((registernum < 0.000001) || (machineauditpass == 0)) {
-					cvr2 = 0 + "%";// 得到注册到借款转化率
+				if ((registernum < 0.000001) || (orderpass == 0)) {
+					cvr2 = 0 + "%";// 得到借款率
 				} else {
-					cvr2 = (new DecimalFormat("#.00").format( machineauditpass/ registernum * 100)) + "%";// 得到注册到借款转化率
+					cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
 				}
-				tongjiSorce.setCvr2(cvr2);// 得到注册到借款转化率
+				tongjiSorce.setCvr2(cvr2);
 				listsource.add(tongjiSorce);//listsoruce里面将每一天的数据都存进去
 			}
 		}

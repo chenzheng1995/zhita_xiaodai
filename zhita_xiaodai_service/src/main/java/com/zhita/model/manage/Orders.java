@@ -66,9 +66,9 @@ public class Orders {
 	
 	private Integer Passrate;//放款通过率
 	
-	private Integer Beoverdue;//逾期笔数
+	private Integer Beoverdue;//催收笔数
 	
-	private Integer pressformoney;//催款笔数
+	private Integer pressformoney;//催收次数
 	
 	private Integer Baddebt;//坏账笔数
 	
@@ -93,6 +93,132 @@ public class Orders {
 	private Integer daysofrepayment;//还款天数
 	
 	private String operator_time;
+
+	
+	private BigDecimal GesamtbetragderDarlehen;//总放款金额
+	
+	private Integer ZahlderGesamtdarlehen;//总放款笔数
+	
+	private BigDecimal GesamtbetragderRvckzahlung;//总还款金额
+	
+	private Integer GesamtbetragderNum;//总还款笔数
+	
+	private BigDecimal GesamtbetraguberfalligerBetrag;//总逾期金额
+	
+	private Integer GesamtbetraguberfallNum;//总逾期数
+	
+	private BigDecimal GesamtbetragderVerbindlichkeiten;//总坏账金额
+	
+	private Integer GesamtbetragdererNum;//总坏账数
+	
+	private Integer collection_count;
+	
+	private BigDecimal interestPenaltySum;
+	
+	private Integer chenggNum;
+	
+	private Integer chenggData;
+	
+	
+	
+
+	public Integer getChenggData() {
+		return chenggData;
+	}
+
+	public void setChenggData(Integer chenggData) {
+		this.chenggData = chenggData;
+	}
+
+	public Integer getChenggNum() {
+		return chenggNum;
+	}
+
+	public void setChenggNum(Integer chenggNum) {
+		this.chenggNum = chenggNum;
+	}
+
+	public Integer getCollection_count() {
+		return collection_count;
+	}
+
+	public void setCollection_count(Integer collection_count) {
+		this.collection_count = collection_count;
+	}
+
+	public BigDecimal getInterestPenaltySum() {
+		return interestPenaltySum;
+	}
+
+	public void setInterestPenaltySum(BigDecimal interestPenaltySum) {
+		this.interestPenaltySum = interestPenaltySum;
+	}
+
+	public BigDecimal getGesamtbetragderDarlehen() {
+		return GesamtbetragderDarlehen;
+	}
+
+	public void setGesamtbetragderDarlehen(BigDecimal gesamtbetragderDarlehen) {
+		GesamtbetragderDarlehen = gesamtbetragderDarlehen;
+	}
+
+	public Integer getZahlderGesamtdarlehen() {
+		return ZahlderGesamtdarlehen;
+	}
+
+	public void setZahlderGesamtdarlehen(Integer zahlderGesamtdarlehen) {
+		ZahlderGesamtdarlehen = zahlderGesamtdarlehen;
+	}
+
+	public BigDecimal getGesamtbetragderRvckzahlung() {
+		return GesamtbetragderRvckzahlung;
+	}
+
+	public void setGesamtbetragderRvckzahlung(BigDecimal gesamtbetragderRvckzahlung) {
+		GesamtbetragderRvckzahlung = gesamtbetragderRvckzahlung;
+	}
+
+	public Integer getGesamtbetragderNum() {
+		return GesamtbetragderNum;
+	}
+
+	public void setGesamtbetragderNum(Integer gesamtbetragderNum) {
+		GesamtbetragderNum = gesamtbetragderNum;
+	}
+
+	public BigDecimal getGesamtbetraguberfalligerBetrag() {
+		return GesamtbetraguberfalligerBetrag;
+	}
+
+	public void setGesamtbetraguberfalligerBetrag(
+			BigDecimal gesamtbetraguberfalligerBetrag) {
+		GesamtbetraguberfalligerBetrag = gesamtbetraguberfalligerBetrag;
+	}
+
+	public Integer getGesamtbetraguberfallNum() {
+		return GesamtbetraguberfallNum;
+	}
+
+	public void setGesamtbetraguberfallNum(Integer gesamtbetraguberfallNum) {
+		GesamtbetraguberfallNum = gesamtbetraguberfallNum;
+	}
+
+	public BigDecimal getGesamtbetragderVerbindlichkeiten() {
+		return GesamtbetragderVerbindlichkeiten;
+	}
+
+	public void setGesamtbetragderVerbindlichkeiten(
+			BigDecimal gesamtbetragderVerbindlichkeiten) {
+		GesamtbetragderVerbindlichkeiten = gesamtbetragderVerbindlichkeiten;
+	}
+
+	public Integer getGesamtbetragdererNum() {
+		return GesamtbetragdererNum;
+	}
+
+	public void setGesamtbetragdererNum(Integer gesamtbetragdererNum) {
+		GesamtbetragdererNum = gesamtbetragdererNum;
+	}
 
 	public Integer getId() {
 		return id;

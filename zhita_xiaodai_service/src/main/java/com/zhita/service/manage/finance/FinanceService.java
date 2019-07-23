@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Undertheline;
@@ -57,4 +58,13 @@ public interface FinanceService {
 	
 	
 	Map<String, Object> Financialover(Bankdeduction banl);
+	
+	
+	Map<String, Object> AddOffJianmian(Offlinjianmian off);
+	
+	
+	Map<String, Object> SelectXiaOrder(Orderdetails ord);
+	
+	
+	Map<String, Object> RepaymentAll(Integer compayId);
 }

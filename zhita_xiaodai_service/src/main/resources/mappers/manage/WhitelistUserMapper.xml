@@ -120,6 +120,22 @@
         <if test="idcard != null and idcard!=''">
            and w.idcard like "%"#{idcard}"%"
         </if>
+        limit #{page},#{pagesize}
+  </select>
+    <!-- 后台管理        查询列表     查询数量-->
+  <select id="queryAllcount" resultType="java.lang.Integer">
+  	select count(*)
+    from whitelist_user w left join sys_user su on su.userid=w.operator
+    where w.companyId=#{companyId} and w.deleted=0
+    	<if test="name != null and name!=''">
+           and w.name like "%"#{name}"%"
+        </if>
+        <if test="phone != null and phone!=''">
+           and w.phone like "%"#{phone}"%"
+        </if>
+        <if test="idcard != null and idcard!=''">
+           and w.idcard like "%"#{idcard}"%"
+        </if>
   </select>
   <!-- 后台管理        更新假删除状态 -->
   <update id="upaFalseDel" parameterType="java.lang.Integer">

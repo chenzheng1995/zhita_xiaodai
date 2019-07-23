@@ -42,30 +42,31 @@ public class User {
     
     private String shareOfState;//风控状态（0，审核未通过。1需要人工审核。2，审核通过）
     
+
     private Integer delayTimes;//延期次数
+
+    private Integer riskControlPoints;//风控分数
+    
+    private BigDecimal canBorrowLines;//可借额度
+    
+    private String applynumber;//申请编号
+    
+    private String applytime;//申请时间
+    
+    private Integer operator;//操作人
+    
+    private String operationTime;//操作时间
+    
+    private String account;//操作人名字
+    
+    private String rmModleName;//风控名字
+
     
     private Integer userNum;
     
     private BigDecimal UserMoney;
-
-	public Integer getUserNum() {
-		return userNum;
-	}
-
-	public void setUserNum(Integer userNum) {
-		this.userNum = userNum;
-	}
-
-	public BigDecimal getUserMoney() {
-		return UserMoney;
-	}
-
-	public void setUserMoney(BigDecimal userMoney) {
-		UserMoney = userMoney;
-	}
-    private Integer riskControlPoints;//分控分数
     
-    private BigDecimal canBorrowLines;//可借额度
+    private String idcard;
 
 	public Integer getId() {
 		return id;
@@ -89,6 +90,14 @@ public class User {
 
 	public void setSourceid(Integer sourceid) {
 		this.sourceid = sourceid;
+	}
+
+	public String getSourcename() {
+		return sourcename;
+	}
+
+	public void setSourcename(String sourcename) {
+		this.sourcename = sourcename;
 	}
 
 	public String getName() {
@@ -202,7 +211,15 @@ public class User {
 	public void setIfblacklist(String ifblacklist) {
 		this.ifblacklist = ifblacklist;
 	}
-	
+
+	public String getShareOfState() {
+		return shareOfState;
+	}
+
+	public void setShareOfState(String shareOfState) {
+		this.shareOfState = shareOfState;
+	}
+
 	public Integer getRiskControlPoints() {
 		return riskControlPoints;
 	}
@@ -211,14 +228,6 @@ public class User {
 		this.riskControlPoints = riskControlPoints;
 	}
 
-	public String getSourcename() {
-		return sourcename;
-	}
-
-	public void setSourcename(String sourcename) {
-		this.sourcename = sourcename;
-	}
-	
 	public BigDecimal getCanBorrowLines() {
 		return canBorrowLines;
 	}
@@ -226,14 +235,77 @@ public class User {
 	public void setCanBorrowLines(BigDecimal canBorrowLines) {
 		this.canBorrowLines = canBorrowLines;
 	}
-	
-	
-	public String getShareOfState() {
-		return shareOfState;
+
+	public String getApplynumber() {
+		return applynumber;
 	}
 
-	public void setShareOfState(String shareOfState) {
-		this.shareOfState = shareOfState;
+	public void setApplynumber(String applynumber) {
+		this.applynumber = applynumber;
+	}
+
+	public String getApplytime() {
+		return applytime;
+	}
+
+	public void setApplytime(String applytime) {
+		this.applytime = applytime;
+	}
+
+	public Integer getOperator() {
+		return operator;
+	}
+
+	public void setOperator(Integer operator) {
+		this.operator = operator;
+	}
+
+	public String getOperationTime() {
+		return operationTime;
+	}
+
+	public void setOperationTime(String operationTime) {
+		this.operationTime = operationTime;
+	}
+
+	public Integer getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(Integer userNum) {
+		this.userNum = userNum;
+	}
+
+	public BigDecimal getUserMoney() {
+		return UserMoney;
+	}
+
+	public void setUserMoney(BigDecimal userMoney) {
+		UserMoney = userMoney;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getRmModleName() {
+		return rmModleName;
+	}
+
+	public void setRmModleName(String rmModleName) {
+		this.rmModleName = rmModleName;
+	}
+
+	public String getIdcard() {
+		return idcard;
+	}
+
+	public void setIdcard(String idcard) {
+		this.idcard = idcard;
 	}
 	
 	public Integer getDelayTimes() {

@@ -39,6 +39,9 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
+
+//    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+
     		for (int i = 0; i < listto.size(); i++) {
     			listto.get(i).setOperationtime(Timestamps.stampToDate(listto.get(i).getOperationtime()));
     		}
@@ -46,6 +49,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1, 10, 0);
+
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();

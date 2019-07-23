@@ -1,15 +1,11 @@
 package com.zhita.service.manage.collection;
 
-import java.util.List;
-import java.util.Map;
 
+import java.util.Map;
 import com.zhita.model.manage.Collection;
-import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Orderdetails;
 
 public interface Collectionservice {
-	
-	Map<String, Object> allBeoverdueConnection(Collection coll);
 	
 	
 	Map<String, Object> Collectionmember(Integer companyId);
@@ -33,12 +29,14 @@ public interface Collectionservice {
 	Map<String, Object> YiCollection(Collection col);
 	
 	
-	Map<String, Object> AddColloetails(Collectiondetails col);
-	
-	
-	List<Collectiondetails> AllCollectiondetail(Integer orderId);
+	Map<String, Object> AddColloetails(Collection col);
 	
 	
 	Map<String, Object> CollectionmemberUser(Collection collectio);
 
+	
+	Map<String, Object> JieShuCollection(Integer orderId);
+	
+	
+	Map<String, Object> allBeoverdueConnection(Collection col);
 }

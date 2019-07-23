@@ -1,6 +1,7 @@
 package com.zhita.service.manage.postloanorders;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +33,17 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> allpostOrders(Orderdetails details) {
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			details.setReturntime(Timestamps.dateToStamp(sim.format(new Date())));
+			details.setReturntime(System.currentTimeMillis()+"");
+			details.setStart_time(Timestamps.dateToStamp(details.getStart_time()));
+			details.setEnd_time(Timestamps.dateToStamp(details.getEnd_time()));
+			details.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(details.getDeferBeforeReturntimeStatu_time()));
+			details.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(details.getDeferBeforeReturntimeEnd_time()));
+			details.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(details.getDeferAfterReturntimeStatu_time()));
+			details.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(details.getDeferAfterReturntimeEnd_time()));
+			details.setRealtimeStatu_time(Timestamps.dateToStamp(details.getRealtimeStatu_time()));
+			details.setRealtimeEnd_time(Timestamps.dateToStamp(details.getRealtimeEnd_time()));
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -45,6 +54,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		details.setTotalCount(totalCount);
 		List<Orderdetails> orderdetils = postloanorder.allOrderdetails(details);
 		for(int i=0;i<orderdetils.size();i++){
+			orderdetils.get(i).setOrderCreateTime(Timestamps.stampToDate(orderdetils.get(i).getOrderCreateTime()));
 			orderdetils.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferBeforeReturntime()));
 			orderdetils.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferAfterReturntime()));
 			orderdetils.get(i).setRealtime(Timestamps.stampToDate(orderdetils.get(i).getRealtime()));
@@ -63,9 +73,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	
 	@Override
 	public Map<String, Object> allpostOrdersBeoverdue(Orderdetails details) {
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			details.setReturntime(Timestamps.dateToStamp(sim.format(new Date())));
+			details.setReturntime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -85,9 +94,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> SelectCollection(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			order.setShouldReturnTime(Timestamps.dateToStamp(sim.format(new Date())));
+			order.setShouldReturnTime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -125,9 +133,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> CollectionOrderdet(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			order.setShouldReturnTime(Timestamps.dateToStamp(sim.format(new Date())));
+			order.setShouldReturnTime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -145,6 +152,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		List<Orderdetails> ordeids = postloanorder.AOrderDetails(order);//获取未逾期未分配订单
 		for(int i=0;i<ordeids.size();i++){
+			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));
+			ordeids.get(i).setCollectionTime(Timestamps.stampToDate(ordeids.get(i).getCollectionTime()));
 			ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
 			ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
@@ -166,9 +175,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> CollectionRecovery(Orderdetails order) {
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			order.setShouldReturnTime(Timestamps.dateToStamp(sim.format(new Date())));
+			order.setShouldReturnTime(System.currentTimeMillis()+"");
 			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
 		} catch (Exception e) {
@@ -187,32 +195,38 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		for(int i=0;i<cols.size();i++){
 			Integer OrderIdNum = postloanorder.OrderIdNum(order);//订单总数
 			order.setIds(coldao.SelectCollectionId(order.getCompanyId()));
-			Integer OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
-			if(OrderIdNum != null && OverIdNum != null){
-				cols.get(i).setDialNum(OrderIdNum-OverIdNum);
+			List<Integer> OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
+			if(OrderIdNum != null && OverIdNum.size() != 0){
+				cols.get(i).setDialNum(OrderIdNum-OverIdNum.size());
 			}else{
-				cols.get(i).setDialNum(OverIdNum);
+				cols.get(i).setDialNum(OverIdNum.size());
 			}
-			cols.get(i).setCollectionTime(Timestamps.stampToDate(cols.get(i).getCollectionTime()));
-			order.setOverdue_phonestaus("未接通");
-			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
-			order.setOverdue_phonestaus("已接通");
-			cols.get(i).setConnected(postloanorder.connectedNum(order));
-			order.setStatu("2");
+			
 			try {
-				order.setCollectionTime(Timestamps.dateToStamp(order.getCollectionTime()));
+				order.setCollectionTime(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			cols.get(i).setSameday(postloanorder.StatusOrders(order));
+			order.setOverdue_phonestaus("未接通");
+			List<Integer> idsa = null;
+			idsa=postloanorder.connectedNum(order);
+			cols.get(i).setNotconnected(idsa.size());
+			order.setOverdue_phonestaus("已接通");
+			idsa = postloanorder.connectedNum(order);
+			cols.get(i).setConnected(idsa.size());
+			order.setStatu("2");
+			idsa=postloanorder.StatusOrders(order);
+			cols.get(i).setSameday(idsa.size());
 			order.setStatu("1");
-			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
+			idsa=postloanorder.StatusOrders(order);
+			cols.get(i).setPaymentmade(idsa.size());
 			if(cols.get(i).getPaymentmade() != 0){
 				cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
 			}else{
 				cols.get(i).setPaymentmadeData(100);
 			}
 			
+			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
@@ -243,11 +257,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		System.out.println(cols.size());
 		for(int i=0;i<cols.size();i++){
 			try {
-				order.setCollectiondate(Timestamps.dateToStamp(order.getCollectiondate()));
+				order.setCollectiondate(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			
+			order.setCollectionMemberId(cols.get(i).getCollectionMemberId());
 			order.setOverdue_phonestaus("未接通");
 			cols.get(i).setNotconnected(postloanorder.Userphonestaus(order));
 			order.setOverdue_phonestaus("已接通");
@@ -258,7 +272,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			cols.get(i).setPaymentmade(postloanorder.UserOrderStatu(order));
 			if(cols.get(i).getPaymentmade() != 0){
 				cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
-			}else{
+			}else{ 
 				cols.get(i).setPaymentmadeData(100);
 			}
 			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
@@ -273,6 +287,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> MyOverdues(Orderdetails order) {
+		try {
+			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Integer totalCount = postloanorder.MyOrderNum(order);
 		if(totalCount != null){
 			PageUtil pages = new PageUtil(order.getPage(), totalCount);
@@ -320,18 +340,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> UpdateOrder(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		if(order.getIds().size() != 0){
-			for(int i=0;i<order.getIds().size();i++){
+		System.out.println("数据:"+order.getOrderIds());
+		String []strs=order.getOrderIds().split(",");
+		if(strs.length != 0){
+			for(int i=0;i<strs.length;i++){
 				Overdue ovdeu = new Overdue();
 				ovdeu.setCollectionMemberId(order.getCollectionMemberId());
-				try {
-					ovdeu.setCollectiondate(Timestamps.dateToStamp(sim.format(new Date())));
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				
+				ovdeu.setCollectiondate(System.currentTimeMillis()+"");//获取当前时间戳
+				ovdeu.setOrderId(Integer.valueOf(strs[i]));
 				postloanorder.AddOverdue(ovdeu);
 			}
 			map.put("code", 200);
@@ -341,26 +357,34 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			map.put("desc", "数据异常");
 		}
 		
-		return map;
+	return map;
 	}
-
 
 
 
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
 		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
+			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
+			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
+			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
+			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
+			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		
+		
+		System.out.println(order.getStart_time()+"CCCCC"+order.getEnd_time());
+		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
 		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
-		
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
@@ -377,6 +401,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		}
 		map.put("Orderdetails", orders);
+		map.put("PageUtil", pages);
 		return map;
 	}
 
@@ -386,15 +411,25 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> CollecOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			order.setShouldReturnTime(Timestamps.dateToStamp(sim.format(new Date())));
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
+			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
+			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
+			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
+			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
+			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
 		}catch(Exception e){
 			
 		}
 		
+		System.out.println(order.getStart_time()+"CCCCC"+order.getEnd_time());
+		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
+		
+		
+		order.setShouldReturnTime(System.currentTimeMillis()+"");
 		Integer totalCount = postloanorder.CollecOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
@@ -421,14 +456,19 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try{
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
+			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
+			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
+			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
+			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
+			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
+			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
 		}catch(Exception e){
 			
 		}
 		Integer totalCount = postloanorder.HuaiZhangOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
-		System.out.println("pages:"+pages.getPage());
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrders(order);
 		for(int i=0;i<orders.size();i++){
@@ -443,6 +483,23 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		}
 		map.put("Orderdetails", orders);
+		return map;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> WanchengUser(Overdue ov) {
+		Integer updateId = postloanorder.UserOverdue(ov);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(updateId != null){
+			map.put("code", 200);
+			map.put("desc", "已完成联系");
+		}else{
+			map.put("code", 0);
+			map.put("desc", "数据异常");
+		}
 		return map;
 	}
 	

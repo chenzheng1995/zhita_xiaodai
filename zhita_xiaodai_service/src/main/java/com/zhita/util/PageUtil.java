@@ -4,9 +4,9 @@ package com.zhita.util;
  * 分页工具类.泛型类
  */
 public class PageUtil{
-    private int page;      //当前页
+    private int page=1;      //当前页
 
-    private int pageSize;     //每页显示的数量
+    private int pageSize=10;     //每页显示的数量
 
     private int totalCount;     //总记录数
     

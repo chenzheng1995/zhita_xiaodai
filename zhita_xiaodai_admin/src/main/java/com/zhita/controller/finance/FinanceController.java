@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Undertheline;
@@ -72,16 +73,31 @@ public class FinanceController {
 	
 	
 	/**
-	 * 渠道查询
+	 * 放款渠道查询
 	 * @param compayId
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("ThirdpatyAll")
 	public Map<String, Object> Thirdpaty(Integer compayId){
-		System.out.println(compayId);
 		return fianser.ThirdpatyAll(compayId);
 	}
+	
+	
+	
+	
+	/**
+	 * 还款渠道查询
+	 * @param compayId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("RepaymentAll")
+	public Map<String, Object> Repayment(Integer compayId){
+		return fianser.RepaymentAll(compayId);
+	}
+	
+	
 	
 	
 	
@@ -199,6 +215,23 @@ public class FinanceController {
 	
 	
 	
+	
+	/**
+	 * 线下查询
+	 * @param order
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AllXiaOrder")
+	public Map<String, Object> XiaOrder(Orderdetails order){
+		return fianser.SelectXiaOrder(order);
+	}
+	
+	
+	
+	
+	
+	
 	/**
 	 * 查询一键扣款银行
 	 * @param bank
@@ -270,6 +303,20 @@ public class FinanceController {
 	@RequestMapping("financialoverview")
 	public Map<String, Object> Financialove(Bankdeduction banl){
 		return fianser.Financialover(banl);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 添加线下调账
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("Addoff")
+	public Map<String, Object> AddOff(Offlinjianmian off){
+		return fianser.AddOffJianmian(off);
 	}
 	
 }

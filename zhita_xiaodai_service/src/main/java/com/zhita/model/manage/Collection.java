@@ -27,7 +27,7 @@ public class Collection {
 	
 	private BigDecimal promise_money;//承诺金额
 	
-	private Integer page=0;
+	private Integer page=1;
 
 	private Integer pagesize=10;
 	
@@ -81,7 +81,69 @@ public class Collection {
 	
 	private String collectiondate;
 	
+	private String orderStatus;
 	
+	private String orderIds;
+	
+	private String overdueGrade;
+	
+	private String deferAfterReturntimeStatu_time;
+	
+	private String deferAfterReturntimeEnd_time;
+	
+	private Integer totalCount;
+	
+	
+	
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	public String getDeferAfterReturntimeEnd_time() {
+		return deferAfterReturntimeEnd_time;
+	}
+
+	public void setDeferAfterReturntimeEnd_time(String deferAfterReturntimeEnd_time) {
+		this.deferAfterReturntimeEnd_time = deferAfterReturntimeEnd_time;
+	}
+
+	public String getDeferAfterReturntimeStatu_time() {
+		return deferAfterReturntimeStatu_time;
+	}
+
+	public void setDeferAfterReturntimeStatu_time(
+			String deferAfterReturntimeStatu_time) {
+		this.deferAfterReturntimeStatu_time = deferAfterReturntimeStatu_time;
+	}
+
+	public String getOverdueGrade() {
+		return overdueGrade;
+	}
+
+	public void setOverdueGrade(String overdueGrade) {
+		this.overdueGrade = overdueGrade;
+	}
+
+	public String getOrderIds() {
+		return orderIds;
+	}
+
+	public void setOrderIds(String orderIds) {
+		this.orderIds = orderIds;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
 	public String getCollectiondate() {
 		return collectiondate;
 	}

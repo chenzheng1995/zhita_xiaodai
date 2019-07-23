@@ -1,9 +1,9 @@
 package com.zhita.service.manage.order;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import com.zhita.model.manage.OrderQueryParameter;
+import com.zhita.model.manage.UserLikeParameter;
 
 public interface IntOrderService {
 	
@@ -35,10 +35,43 @@ public interface IntOrderService {
 
 	public Map<String, Object> getRepayment(int userId, int companyId);
 
+
 	public int getBorrowTimeLimit(int userId, int companyId);
 
 	public int getorderStatus(int userId, int companyId);
 
 	public String getorderStatus1(int userId, int companyId);
+
+
+	
+	/**
+	 * 订单查询【机审通过和人审通过的用户    在放款后在订单表产生的订单数据】（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间，渠道id）
+	 */
+	public Map<String,Object> queryAllordersByLike(OrderQueryParameter orderQueryParameter);
+	
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
+	 */
+	public Map<String, Object> queryAllUser(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
+	 */
+	public Map<String, Object> queryAllUserPeople(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审通过按钮
+	 */
+	public int updateShareOfState(Integer sysuserid,Integer userid);
+	
+	/**
+	 * 人审不通过按钮
+	 */
+	public int updateShareOfStateNo(Integer sysuserid,Integer userid);
+	
+	/**
+	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）
+	 */
+	public Map<String, Object> queryAllUserPeopleYet(UserLikeParameter userLikeParameter);
 
 }

@@ -126,10 +126,10 @@
           and b.name like "%"#{name}"%"
         </if>
         <if test="phone != null and phone!='' ">
-           and b.phone="%"#{phone}"%"
+           and b.phone like "%"#{phone}"%"
         </if>
         <if test="idcard != null and idcard!='' ">
-           and b.idcard="%"#{idcard}"%"
+           and b.idcard like "%"#{idcard}"%"
         </if>
   </select>
   <!-- 后台管理       更新假删除状态 -->

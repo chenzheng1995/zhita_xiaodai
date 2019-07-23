@@ -54,6 +54,9 @@ public class OrdersController {
 	
 	@Autowired
 	IntDeferredsetService intDeferredsetService;
+	
+	@Autowired
+	
 
 	//获取用户借款额度
 	   @RequestMapping("/getCanBorrowLines")

@@ -167,15 +167,13 @@
 	select 
   	<include refid="Base_Column_List" />
   	from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId
-  	<where>
-        <if test="account != null">
-           s.account like "%"#{account}"%"
+  	where companyId=#{companyId}
+        <if test="account != null and account!='' ">
+           and s.account like "%"#{account}"%"
         </if>
-        <if test="status != null">
+        <if test="status != null and status!='' ">
            and s.status=#{status}
         </if>
-        and companyId=#{companyId}
-    </where>
     group by s.userId
     order by loginTime desc
     </select>

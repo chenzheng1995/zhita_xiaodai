@@ -85,4 +85,29 @@ public class OperationalController {
 	
 	
 	
+	/**
+	 * 查询引流平台
+	 * @param companyId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AllDrainage")
+	public Map<String, Object> AllDrainge(Integer companyId){
+		return oser.AllDrainageOf(companyId);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 逾期等级
+	 * @param companyId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("YuqiM")
+	public Map<String, Object> YuqiM(Integer companyId){
+		return oser.AllOverdueclass(companyId);
+	}
 }

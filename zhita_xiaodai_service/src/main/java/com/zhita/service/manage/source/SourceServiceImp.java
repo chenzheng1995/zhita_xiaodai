@@ -58,6 +58,7 @@ public class SourceServiceImp implements IntSourceService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
+    	//	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
     		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil(1, 10, 0);
@@ -231,8 +232,8 @@ public class SourceServiceImp implements IntSourceService{
     	return list;
     }
     //后台管理---查询某一天某个渠道的注册数量
-    public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,String sourceName){
-    	TongjiSorce tongjisource=sourceMapper.queryAllSourceByUserDetail(companyid, StartTime, EndTime, sourceName);
+    public TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,Integer sourceid){
+    	TongjiSorce tongjisource=sourceMapper.queryAllSourceByUserDetail(companyid, StartTime, EndTime, sourceid);
     	return tongjisource;
     }
     
@@ -405,13 +406,13 @@ public class SourceServiceImp implements IntSourceService{
     	return tongjiSorce;
     }
     //后台管理---查询当前渠道下有多少用户是登录过得
-    public int queryCount(String sourceName,String startTime,String endTime){
-    	int count=sourceMapper.queryCount(sourceName,startTime,endTime);
+    public int queryCount(Integer sourceid,String startTime,String endTime){
+    	int count=sourceMapper.queryCount(sourceid,startTime,endTime);
     	return count;
     }
     //后台管理---当前渠道下所有的用户id
-    public List<Integer> queryUserid(String sourceName){
-    	List<Integer> list=sourceMapper.queryUserid(sourceName);
+    public List<Integer> queryUserid(Integer sourceid){
+    	List<Integer> list=sourceMapper.queryUserid(sourceid);
     	return list;
     }
     //后台管理---查询当前用户id是否在个人信息认证表有值
@@ -458,5 +459,14 @@ public class SourceServiceImp implements IntSourceService{
   		return list;
   	}
    	
-
+	//后台管理----通过人数（包含机审通过和人审通过）
+	public int querypass(Integer sourceid,String starttime,String endtime){
+		int count=sourceMapper.querypass(sourceid,starttime,endtime);
+		return count;
+	}
+	//后台管理----已借款人数
+	public int queryorderpass(Integer sourceid,String starttime,String endtime){
+		int count=sourceMapper.queryorderpass(sourceid, starttime, endtime);
+		return count;
+	}
 }
