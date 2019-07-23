@@ -110,4 +110,7 @@ public interface PaymentRecordMapper {
     
     
     List<Repayment_setting> SelectRepay(Integer companyId);
+    
+    
+    Integer UpdateOrderType(Integer orderId);
 }

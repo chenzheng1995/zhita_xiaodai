@@ -673,20 +673,20 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_zft_api_quick_payment");// 支付接口名称
 		// 2.2 业务参数
-		origMap.put("TrxId", "2017031310452344543522");// 订单号
+		origMap.put("TrxId", "20190909154872");// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
 		origMap.put("MerUserId", "20201");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200001160097");// 子账户号
 		origMap.put("SubMerchantNo", "200001160097");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-//		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-//		origMap.put("BkAcctNo", this.encrypt("6200000000000000", MERCHANT_PUBLIC_KEY, charset));// 卡号
-//		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-//		origMap.put("IDNo", this.encrypt("360000000000000000", MERCHANT_PUBLIC_KEY, charset));// 证件号
-//		origMap.put("CstmrNm", this.encrypt("XXX", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-//		origMap.put("MobNo", this.encrypt("13511111111", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
+		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
+		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 //		origMap.put("EnsureAmount", "1");//担保金额
-		origMap.put("TrxAmt", "30");// 交易金额
+		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("SmsFlag", "1");//短信发送标识
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
@@ -727,14 +727,14 @@ public class ChanpayQuickCollection {
 		origMap.put("OrdrDesc", "[{'商品型号':'D007','商品性能':'Test'}]");// 商品描述
 		origMap.put("MerUserId", "1700000001");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200001160097");// 生产环境
-		origMap.put("SubMerchantNo", "");// 子商户号
+		origMap.put("SubMerchantNo", "200001160097");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-//		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-//		origMap.put("BkAcctNo", this.encrypt("430000000000000000", MERCHANT_PUBLIC_KEY, charset));// 卡号
-//		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-//		origMap.put("IDNo", this.encrypt("1300000000000000", MERCHANT_PUBLIC_KEY, charset));// 证件号
-//		origMap.put("CstmrNm", this.encrypt("XXX", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-//		origMap.put("MobNo", this.encrypt("1380000000", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
+		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
+		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 		
 //		origMap.put("CardCvn2", "");//cvv2
 //		origMap.put("CardExprDt", "07/21");//有效期
@@ -1038,6 +1038,11 @@ public class ChanpayQuickCollection {
 		}
 	}
 
+	
+	public static void main(String[] args) {
+		ChanpayQuickCollection chan = new ChanpayQuickCollection();
+		chan.nmg_zft_api_quick_payment();
+	}
 	
 	
 }

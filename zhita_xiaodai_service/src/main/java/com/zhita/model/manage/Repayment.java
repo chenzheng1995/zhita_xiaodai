@@ -25,6 +25,8 @@ public class Repayment {
 	
 	private Integer repaymeny_collectiondata;//逾期还款率
 	
+	private Integer companyId;//公司ID
+	
 	private Integer collectionMemberId;//催收员ID
 	
 	private Integer collection_count;//逾期还款笔数
@@ -43,8 +45,14 @@ public class Repayment {
 	
 	private Integer CouNum;
 	
-	
-	
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
 	public Integer getCouNum() {
 		return CouNum;
 	}

@@ -799,4 +799,9 @@
   					remarks
   				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks})
   			</insert>
+  			
+  			
+  			<update id="UpdateOrderType" parameterType="java.lang.Integer">
+  				update orders set orderStatus = "3" where orderId = #{orderId}
+  			</update>
 </mapper>
