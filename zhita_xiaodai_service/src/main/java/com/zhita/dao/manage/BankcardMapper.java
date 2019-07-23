@@ -18,4 +18,5 @@ public interface BankcardMapper {
     int updateByPrimaryKey(Bankcard record);
 
 	Map<String, Object> getbankcard(int userId);
+
 }

@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.druid.sql.visitor.functions.Length;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.LiftingAmount;
+import com.zhita.service.manage.bankcard.BankcardService;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.deferredsettings.IntDeferredsetService;
 import com.zhita.service.manage.liftingamount.IntLiftingamountServcie;
@@ -56,6 +58,8 @@ public class OrdersController {
 	IntDeferredsetService intDeferredsetService;
 	
 	@Autowired
+	BankcardMapper bankcardMapper;
+	
 	
 
 	//获取用户借款额度
@@ -228,7 +232,11 @@ public class OrdersController {
        pr = pr.divide(bd8);//平台服务费比率除以100之后
    	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
    	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
-   	Map<String, Object> map2  = intOrderService.getRepayment(userId,companyId);
+   	Map<String, Object> map2  = bankcardMapper.getbankcard(userId);
+   	String bankcardName = (String) map2.get("bankcardName");
+   	int bankcardTypeId = (int) map2.get("bankcardTypeId");
+//   	String bankcardTypeName = 
+   	
    	
    	
    	map1.put("shouldReapyMoney", shouldReapyMoney);
@@ -241,7 +249,7 @@ public class OrdersController {
    
    
    //立即还款按钮
-   @RequestMapping("/repayment")
+   @RequestMapping("/repaymentbutton")
    @ResponseBody
    @Transactional
    public Map<String, Object> repaymentbutton (int userId,int companyId) {

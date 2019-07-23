@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Orders;
@@ -17,6 +18,11 @@ public class BankcardServiceimp implements BankcardService{
 	
 	@Autowired
 	private StatisticsDao sdao;
+	
+	@Autowired
+	private BankcardMapper bankcardMapper;
+	
+	
 	
 
 	@Override
@@ -39,6 +45,9 @@ public class BankcardServiceimp implements BankcardService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
 
 
 	
