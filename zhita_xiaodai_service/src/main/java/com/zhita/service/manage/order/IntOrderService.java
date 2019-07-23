@@ -35,4 +35,10 @@ public interface IntOrderService {
 
 	public Map<String, Object> getRepayment(int userId, int companyId);
 
+	public int getBorrowTimeLimit(int userId, int companyId);
+
+	public int getorderStatus(int userId, int companyId);
+
+	public String getorderStatus1(int userId, int companyId);
+
 }

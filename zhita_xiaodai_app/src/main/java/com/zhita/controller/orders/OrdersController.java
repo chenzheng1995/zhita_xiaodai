@@ -2,6 +2,7 @@
 package com.zhita.controller.orders;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Year;
@@ -25,6 +26,7 @@ import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.LiftingAmount;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
+import com.zhita.service.manage.deferredsettings.IntDeferredsetService;
 import com.zhita.service.manage.liftingamount.IntLiftingamountServcie;
 import com.zhita.service.manage.operational.OperationalService;
 import com.zhita.service.manage.order.IntOrderService;
@@ -49,6 +51,9 @@ public class OrdersController {
 	
 	@Autowired
 	IntUserService intUserService;
+	
+	@Autowired
+	IntDeferredsetService intDeferredsetService;
 
 	//获取用户借款额度
 	   @RequestMapping("/getCanBorrowLines")
@@ -180,14 +185,27 @@ public class OrdersController {
 		   Map<String, Object> map1  = intOrderService.getRepayment(userId,companyId);
 		   int orderId = (int) map1.get("id");
 		   String orderStatus = (String) map1.get("orderStatus");
-		   String shouldReturnTime = (String) map1.get("shouldReturnTime");
+		   String shouldReturnTime = (String) map1.get("shouldReturnTime");//应还时间
+		   BigDecimal shouldReapyMoney  = orderdetailsMapper.getShouldReapyMoney(orderId);//共需还钱
 		   
 		   
 		   
-   if(orderStatus.equals("0")||orderStatus.equals("2")) {
-	   BigDecimal shouldReapyMoney  = orderdetailsMapper.getShouldReapyMoney(orderId);
+   if(orderStatus.equals("0")||orderStatus.equals("2")) {//逾期前
+	   map.put("shouldReturnTime",shouldReturnTime);
+	   map.put("shouldReapyMoney",shouldReapyMoney);
+	   map.put("msg","未逾期");
 	   
    }
+   if(orderStatus.equals("1")) {//逾期后
+	   BigDecimal interestInAll = orderdetailsMapper.getinterestInAll(orderId);//总利息
+	   String overdueNumberOfDays = orderdetailsMapper.getoverdueNumberOfDays(orderId);//逾期天数
+	   BigDecimal overdueMoney = shouldReapyMoney.add(interestInAll);//逾期应还钱
+	   map.put("overdueMoney", overdueMoney);
+	   map.put("overdueNumberOfDays", overdueNumberOfDays);
+	   map.put("msg","已逾期");
+	   
+   }
+   
 		return map;
 		   
 		   
@@ -198,26 +216,152 @@ public class OrdersController {
    @RequestMapping("/reimbursement")
    @ResponseBody
    @Transactional
-   public Map<String, Object> reimbursement(int userId,int companyId) {
-	   Map<String, Object> map  = intOrderService.getReimbursement(userId,companyId);
-	   
-	return map;
+   public Map<String, Object> reimbursement(int userId,int companyId,BigDecimal shouldReapyMoney) {//shouldReapyMoney 应还总金额，从上个接口获取
+	   Map<String, Object> map1  = new HashMap<String, Object>();	
+	   int borrowTimeLimit  = intOrderService.getBorrowTimeLimit(userId,companyId);	//借款期限   
+	   Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
+	   BigDecimal pr = new BigDecimal(0);
+       BigDecimal bd8 = new BigDecimal("100");
+       pr = pr.divide(bd8);//平台服务费比率除以100之后
+   	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
+   	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
+   	Map<String, Object> map2  = intOrderService.getRepayment(userId,companyId);
+   	
+   	
+   	map1.put("shouldReapyMoney", shouldReapyMoney);
+   	map1.put("averageDailyInterest1", averageDailyInterest1);
+   	map1.put("borrowTimeLimit", borrowTimeLimit);
+	return map1;
 	   
 	   
    }
    
    
+   //立即还款按钮
+   @RequestMapping("/repayment")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> repaymentbutton (int userId,int companyId) {
+	   
+	return null;
+	   
+   }  
+   
+   
+   //判断该用户是否已借钱
+   @RequestMapping("/whetherborrow")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> whetherborrow (int userId,int companyId) {
+	   Map<String, Object> map  = new HashMap<String, Object>();
+	   int num = intOrderService.getorderStatus(userId,companyId);
+	   if(num==0) {
+		   map.put("code", "1");
+		   map.put("msg", "没有正在执行的订单");
+	   }else {
+		   map.put("code", "2");
+		   map.put("msg", "有正在执行的订单");
+	}
+	   
+	return map;
+         
+   }
+   
+   
+   //判断用户是否可以延期
+   @RequestMapping("/whetherdelay")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> whetherdelay (int userId,int companyId) throws ParseException {
+	   Map<String, Object> map  = new HashMap<String, Object>();
+       String orderStatus = intOrderService.getorderStatus1(userId, companyId);
+       if(orderStatus.equals("2")) {
+    	   map.put("msg","不能延期");
+       }else {
+    	   
+    	   Map<String, Object> map1 = intDeferredsetService.getDeferredset(companyId); 
+    	   int overdueHowdayCanDeferred = (int) map1.get("overdueHowdayCanDeferred");//逾期多少天前可延期
+    	   int maximumCanDeferredTime = (int) map1.get("maximumCanDeferredTime");//最多可延期次数
+    	   int currentDelays = intUserService.getdelayTimes(userId);//当前延期次数
+		   Map<String, Object> map2  = intOrderService.getRepayment(userId,companyId);
+		   String shouldReturnTime = (String) map2.get("shouldReturnTime");//应还时间
+		   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		   df.format(new Date());// new Date()为获取当前系统时间
+           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+           String sd = sdf.format(new Date(Long.parseLong(shouldReturnTime))); // 时间戳转换日期
+           Date date = new SimpleDateFormat("yyyy-MM-dd").parse(df.format(new Date()));//取时间 
+           Calendar calendar  =   Calendar.getInstance();		 
+		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+		    calendar.add(calendar.DATE, overdueHowdayCanDeferred);//把日期往后增加n天.正数往后推,负数往前移动 
+		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		    sdf1.format(date);
+		    int num = compare_date(sdf1.format(date),sd);
+		    if(num==1) {
+		    	map.put("msg","不能延期");
+		    }else {
+				if(currentDelays<=maximumCanDeferredTime) {
+					map.put("msg","可以延期");
+				}else {
+					map.put("msg","不能延期");
+				}
+			}
+	}
+	   
+	return map;
+         
+   }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   public static int compare_date(String DATE1, String DATE2) {//比较时间大小
+ DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+ try {
+     Date dt1 = df.parse(DATE1);
+     Date dt2 = df.parse(DATE2);
+     if (dt1.getTime() > dt2.getTime()) {
+         return 1;
+     } else if (dt1.getTime() < dt2.getTime()) {
+         return -1;
+     } else {
+         return 0;
+     }
+ } catch (Exception exception) {
+     exception.printStackTrace();
+ }
+ return 0;
+      }
+   
+   
+   
+   
+   
+   
+   
    public static void main(String[] args) {
-	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
-	   System.out.println(sdf.format(new Date(Long.valueOf(("1563188604000")))));
-	    Date date = new Date();//取时间 
-	    Calendar calendar  =   Calendar.getInstance();		 
-	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
-	    calendar.add(calendar.DATE, 7);//把日期往后增加n天.正数往后推,负数往前移动   
-	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-	    System.out.println(sdf.format(date));
+//	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
+//	   System.out.println(sdf.format(new Date(Long.valueOf(("1563188604000")))));
+//	    Date date = new Date();//取时间 
+//	    Calendar calendar  =   Calendar.getInstance();		 
+//	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+//	    calendar.add(calendar.DATE, 7);//把日期往后增加n天.正数往后推,负数往前移动   
+//	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+//	    System.out.println(sdf.format(date));
+//	   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+//	   System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+//	   System.out.println(System.currentTimeMillis());
+//	  System.out.println(compare_date("2019-11-2","2019-11-2"));
+
+    } 
+	   
 }
 
 
-}
+
 

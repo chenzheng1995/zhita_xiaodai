@@ -32,4 +32,6 @@ public interface IntAutheninforService {
 	//后台管理---更新保存功能
     public int updateByPrimaryKey(Integer id,String value);
 
+	public ArrayList<String> getifAuthentication(int companyId);
+
 }

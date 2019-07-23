@@ -214,5 +214,17 @@ public class UserServiceImp implements IntUserService{
 		return riskControlPoints;
 	}
 
+	@Override
+	public String getshareOfState(int userId) {
+		String shareOfState = userMapper.getshareOfState(userId);
+		return shareOfState;
+	}
+
+	@Override
+	public int getdelayTimes(int userId) {
+		int currentDelays = userMapper.getdelayTimes(userId);
+		return currentDelays;
+	}
+
 
 }

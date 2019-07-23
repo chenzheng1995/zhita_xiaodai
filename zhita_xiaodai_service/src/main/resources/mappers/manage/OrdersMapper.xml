@@ -545,11 +545,11 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   
   
     <select id="getReimbursement" parameterType="java.lang.Integer" resultType="java.util.Map">
-  select borrowTimeLimit, from orders where orderNumber = #{orderNumber}
+  select borrowTimeLimit from orders where orderNumber = #{orderNumber}
   </select>
   
       <select id="getRepayment" parameterType="java.lang.Integer" resultType="java.util.Map">
-  select id,orderStatus,shouldReturnTime from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2')
+  select id,orderStatus,shouldReturnTime from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2') order by shouldReturnTime desc limit 1
   </select>
 
   <!-- 后台管理        通过订单查询改订单在延期表信息 -->
@@ -564,5 +564,18 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <select id="querysource" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Source">
   	select id,sourceName from source where companyId=#{arg0} and deleted=0
   </select>
+
+  <select id="getBorrowTimeLimit" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select borrowTimeLimit from orders where companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+  </select>
+  
+  
+    <select id="getorderStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2') and companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+  </select>
+  
+  		<select id="getorderStatus1" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select orderStatus from orders where userId = #{userId} and companyId = #{companyId} order by shouldReturnTime desc limit 1
+	</select>
 
 </mapper>

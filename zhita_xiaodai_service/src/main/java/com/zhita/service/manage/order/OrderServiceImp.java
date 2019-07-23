@@ -329,6 +329,24 @@ public class OrderServiceImp implements IntOrderService{
 		return map1;
 	}
 
+	@Override
+	public int getBorrowTimeLimit(int userId, int companyId) {
+		int borrowTimeLimit  = ordersMapper.getBorrowTimeLimit(userId,companyId);
+		return borrowTimeLimit;
+	}
+
+	@Override
+	public int getorderStatus(int userId, int companyId) {
+		int num = ordersMapper.getorderStatus(userId,companyId);
+		return num;
+	}
+
+	@Override
+	public String getorderStatus1(int userId, int companyId) {
+		String orderStatus = ordersMapper.getorderStatus1(userId, companyId);
+		return orderStatus;
+	}
+
 
 
 

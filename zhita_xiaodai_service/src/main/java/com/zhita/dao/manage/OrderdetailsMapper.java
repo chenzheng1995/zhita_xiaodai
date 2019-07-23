@@ -31,5 +31,9 @@ public interface OrderdetailsMapper {
 
 	BigDecimal getShouldReapyMoney(int orderId);
 
+	BigDecimal getinterestInAll(int orderId);
+
+	String getoverdueNumberOfDays(int orderId);
+
 
 }

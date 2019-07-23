@@ -1,5 +1,7 @@
 package com.zhita.dao.manage;
 
+import java.util.Map;
+
 import com.zhita.model.manage.Bankcard;
 
 public interface BankcardMapper {
@@ -14,4 +16,6 @@ public interface BankcardMapper {
     int updateByPrimaryKeySelective(Bankcard record);
 
     int updateByPrimaryKey(Bankcard record);
+
+	Map<String, Object> getbankcard(int userId);
 }

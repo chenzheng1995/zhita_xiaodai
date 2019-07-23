@@ -242,4 +242,13 @@ select shouldReapyMoney from orderdetails where  orderId = #{ordersId}
 select shouldReapyMoney from orderdetails where  orderId = #{orderId}
  </select> 
 
+
+
+  <select id="getinterestInAll" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+select interestInAll from orderdetails where orderId = #{orderId}
+ </select> 
+ 
+   <select id="getoverdueNumberOfDays" parameterType="java.lang.Integer" resultType="java.lang.String">
+select overdueNumberOfDays from orderdetails where orderId = #{orderId}
+ </select> 
 </mapper>

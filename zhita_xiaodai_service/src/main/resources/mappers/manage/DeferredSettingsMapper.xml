@@ -143,4 +143,9 @@
   <select id="queryBorrow" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BorrowMoneyMessage">
   	select lifeOfLoan,canBorrowlines,platformfeeRatio from borrow_money_message where productid=#{arg0}
   </select>
+  
+
+      <select id="getDeferredset" parameterType="java.lang.Integer" resultType="java.util.Map">
+  	select maximumCanDeferredTime,overdueHowdayCanDeferred from deferred_settings where companyId=#{companyId}
+  </select>
 </mapper>

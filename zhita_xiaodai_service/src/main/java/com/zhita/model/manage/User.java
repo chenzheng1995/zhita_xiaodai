@@ -42,6 +42,8 @@ public class User {
     
     private String shareOfState;//风控状态（0，审核未通过。1需要人工审核。2，审核通过）
     
+    private Integer delayTimes;//延期次数
+    
     private Integer userNum;
     
     private BigDecimal UserMoney;
@@ -232,6 +234,14 @@ public class User {
 
 	public void setShareOfState(String shareOfState) {
 		this.shareOfState = shareOfState;
+	}
+	
+	public Integer getDelayTimes() {
+		return delayTimes;
+	}
+
+	public void setDelayTimes(Integer delayTimes) {
+		this.delayTimes = delayTimes;
 	}
 
 }

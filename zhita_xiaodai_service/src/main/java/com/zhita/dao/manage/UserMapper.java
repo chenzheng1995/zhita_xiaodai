@@ -71,5 +71,9 @@ public interface UserMapper {
 
 	int getRiskControlPoints(int userId);
 
+	String getshareOfState(int userId);
+
+	int getdelayTimes(int userId);
+
 
 }

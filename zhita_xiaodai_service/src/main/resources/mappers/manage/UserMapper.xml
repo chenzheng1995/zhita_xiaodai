@@ -19,6 +19,7 @@
       <arg column="riskControlPoints" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="canBorrowLines" jdbcType="DECIMAL" />
       <arg column="shareOfState" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="delayTimes" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -338,4 +339,14 @@
 		select * from operator where userid=#{arg0}
 	</select>
 
+	<select id="getshareOfState" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select shareOfState from user where id=#{userId}
+	</select>
+	
+	
+		<select id="getdelayTimes" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select delayTimes from user where id = #{userId}
+	</select>	
+	
+	
 </mapper>
