@@ -28,7 +28,7 @@ import com.zhita.model.manage.Source;
 import com.zhita.model.manage.SourceTemplate;
 import com.zhita.model.manage.TongjiSorce;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 
@@ -51,7 +51,7 @@ public class SourceServiceImp implements IntSourceService{
     public Map<String,Object> queryAll(Integer companyId,Integer page){
     	List<Source> list=new ArrayList<>();
     	List<Source> listto=new ArrayList<>();
-    	PageUtil pageUtil=null;
+    	PageUtil2 pageUtil=null;
     	list=sourceMapper.queryAll(companyId);
     	
     	if(list!=null && !list.isEmpty()){
@@ -59,9 +59,9 @@ public class SourceServiceImp implements IntSourceService{
     		listto.addAll(listPageUtil.getData());
     		
     	//	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1, 10, 0);
+    		pageUtil=new PageUtil2(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();

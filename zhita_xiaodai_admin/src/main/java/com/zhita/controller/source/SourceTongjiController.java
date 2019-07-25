@@ -19,7 +19,7 @@ import com.zhita.model.manage.TongjiSorce;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 /**
@@ -39,7 +39,7 @@ public class SourceTongjiController {
 	public Map<String,Object> queryByToday(Integer companyId,Integer page)throws ParseException{
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourcepage = new ArrayList<>();//经过分页后的数据集合
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		Date date=new Date();//得到当天时间
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
@@ -117,9 +117,9 @@ public class SourceTongjiController {
     		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,10);
     		listsourcepage.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1,10,0);
+    		pageUtil=new PageUtil2(1,10,0);
 
     	}
 	  	List<Source> sourcelist=intSourceService.querysource(companyId);	    	
@@ -136,7 +136,7 @@ public class SourceTongjiController {
 	public Map<String,Object> queryByTimeslot(Integer companyId,Integer page,String dateStart,String dateEnd,Integer sourceid) throws ParseException{
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourcepage = new ArrayList<>();//经过分页后的数据集合
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		
 		String startTime = dateStart;
@@ -211,9 +211,9 @@ public class SourceTongjiController {
     		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,2);
     		listsourcepage.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1,10,0);
+    		pageUtil=new PageUtil2(1,10,0);
 
     	}
     	

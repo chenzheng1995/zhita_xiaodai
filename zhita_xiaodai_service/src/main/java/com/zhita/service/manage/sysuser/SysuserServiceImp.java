@@ -14,7 +14,7 @@ import com.zhita.model.manage.Company;
 import com.zhita.model.manage.Role;
 import com.zhita.model.manage.SysUser;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -27,7 +27,7 @@ public class SysuserServiceImp implements IntSysuserService{
     public Map<String, Object> queryAll(Integer companyId,Integer page){
 		List<SysUser> list=new ArrayList<>();
 		List<SysUser> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
     
     	list=sysUserMapper.queryAll(companyId);
     	
@@ -40,9 +40,9 @@ public class SysuserServiceImp implements IntSysuserService{
     		listto.addAll(listPageUtil.getData());
     		
     	//	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1, 10, 0);
+    		pageUtil=new PageUtil2(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -56,7 +56,7 @@ public class SysuserServiceImp implements IntSysuserService{
 	public Map<String, Object> queryAllByLike(Integer companyId,String account, String status, Integer page) {
 		List<SysUser> list=new ArrayList<>();
 		List<SysUser> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		
 		list=sysUserMapper.queryAllByLike(companyId,account, status);
 		
@@ -68,9 +68,9 @@ public class SysuserServiceImp implements IntSysuserService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1, 10, 0);
+    		pageUtil=new PageUtil2(1, 10, 0);
     	}
 		
 		HashMap<String,Object> map=new HashMap<>();

@@ -1,6 +1,6 @@
 package com.zhita.controller;
 
-import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.DateListUtil;
@@ -182,12 +181,25 @@ public class TestController {
 		 System.out.println((days+1)+"---------");
 		 */
 		 
-		 String starttime="2019-07-23";
-		 String endtime="2019-07-23";
-		 	String startTime = starttime;
-			String startTimestamps = Timestamps.dateToStamp(startTime);
-			String endTime = endtime;
-			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
-			System.out.println(startTimestamps+"----------"+endTimestamps);
+			/*Date d=new Date();
+			SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+			String date=sf.format(d);//date为当天时间(格式为年月日)
+			
+*/		 
+		 String startTime="2019-07-20";
+		 String endTime="2019-07-25";
+		 List<String> list=DateListUtil.getDays(startTime, endTime);
+		
+		 
+		List<String> liststrStamp = new ArrayList<>();
+		liststrStamp.add("2019-07-22");
+		liststrStamp.add("2019-07-23");
+		liststrStamp.add("2019-07-25");
+		
+		list.retainAll(liststrStamp);//两个集合的交集
+		
+		 for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i));
+			}
 	}
 }

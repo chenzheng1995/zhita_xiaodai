@@ -17,7 +17,7 @@ import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Company;
 import com.zhita.util.ExcelUtils;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -31,7 +31,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
      	List<BlacklistUser> list=new ArrayList<>();
     	List<BlacklistUser> listto=new ArrayList<>();
-    	PageUtil pageUtil=null;
+    	PageUtil2 pageUtil=null;
     	list=blacklistUserMapper.queryAll(companyId, name, phone, idcard);
     	
     	
@@ -46,9 +46,9 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     			listto.get(i).setOperationtime(Timestamps.stampToDate(listto.get(i).getOperationtime()));
     		}
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1, 10, 0);
+    		pageUtil=new PageUtil2(1, 10, 0);
 
     	}
     	

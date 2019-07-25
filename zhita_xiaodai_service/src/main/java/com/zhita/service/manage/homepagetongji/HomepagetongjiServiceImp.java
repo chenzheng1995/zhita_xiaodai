@@ -18,7 +18,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -53,7 +53,13 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int todayapply = homepageTongjiMapper.queryToDayApply(companyId, startTimestamps, endTimestamps);//今日申请人数
 		int todayloan = homepageTongjiMapper.queryToDayLoan(companyId, startTimestamps, endTimestamps);//今日放款人数
 		int todaydeferred = homepageTongjiMapper.queryToDayDeferred(companyId, startTimestamps, endTimestamps);//今日延期笔数
-		int todayrepayment = homepageTongjiMapper.queryToDayRepayment(companyId, startTimestamps, endTimestamps);//今日回款笔数
+		int todayrepayment = 0;//今日回款笔数
+		int todayrepaymentreal = homepageTongjiMapper.queryToDayRepayment(companyId,startTimestamps, endTimestamps);//今日回款笔数（实际回款）
+		int todayrepaymentacc = homepageTongjiMapper.queryToDayRepaymentacc(companyId, startTimestamps, endTimestamps);//今日回款笔数（线上回款）
+		int todayrepaymentoff = homepageTongjiMapper.queryToDayRepaymentoff(companyId,startTimestamps, endTimestamps);//今日回款笔数（线下回款）
+		int todayrepaymentbank = homepageTongjiMapper.queryToDayRepaymentbank(companyId, startTimestamps, endTimestamps);//今日回款笔数（银行卡回款）
+		todayrepayment=todayrepaymentreal+todayrepaymentacc+todayrepaymentoff+todayrepaymentbank;
+		
 		List<Orders> listorders = homepageTongjiMapper.queryToDayOverdue(companyId, startTimestamps, endTimestamps);//今日逾期已还笔数
 		int todayoverdue=0;//今日逾期已还笔数
 		for (int j = 0; j < listorders.size(); j++) {
@@ -115,13 +121,17 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int sumregiste = homepageTongjiMapper.querySumRegiste(companyId);//累计注册用户
 		int sumapply = homepageTongjiMapper.querySumApply(companyId);//累计申请用户总数
 		int sumloan = homepageTongjiMapper.querySumLoan(companyId);//累计放款总笔数
-		int sumrepayment = homepageTongjiMapper.querySumRepayment(companyId);//累计还款总笔数
+		
+		int sumrepayment = 0;//累计回款总笔数
+		int sumrepaymentreal = homepageTongjiMapper.querySumRepayment(companyId);//累计回款总笔数（实还笔数）
+		int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//累计回款总笔数（线上减免已还清笔数）
+		int sumrepaymentoff = homepageTongjiMapper.querySumRepaymentoff(companyId);//累计回款总笔数（线下减免已还清笔数）
+		int sumrepaymentbank = homepageTongjiMapper.querySumRepaymentbank(companyId);//累计回款总笔数（银行卡扣款已结清笔数）
+		sumrepayment=sumrepaymentreal+sumrepaymentacc+sumrepaymentoff+sumrepaymentbank;
+		
 		String paymentpasscvr = (sumloan/sumregiste)*100+"%";//放款通过率
 		
-		int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//线上减免已还清笔数
-		int sumrepaymentoff = homepageTongjiMapper.querySumRepaymentoff(companyId);//线下减免已还清笔数
-		int sumrepaymentbank = homepageTongjiMapper.querySumRepaymentbank(companyId);//银行卡扣款已结清笔数
-		String orderrepaycvr = ((sumrepayment+sumrepaymentacc+sumrepaymentoff+sumrepaymentbank)/sumloan)*100+"%";//订单回款率
+		String orderrepaycvr = (sumrepayment/sumloan)*100+"%";//订单回款率
 		
 		BigDecimal payrecmoney = homepageTongjiMapper.querypayrecMoney(companyId);//累计放款总金额
 		
@@ -239,7 +249,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 	public Map<String, Object> recoveryStatement(Integer companyId,Integer page,String shouldrepayStartTime,String shouldrepayEndTime){
 		List<HomepageTongji> listtongji=new ArrayList<HomepageTongji>();
 		List<HomepageTongji> listtongjito=new ArrayList<HomepageTongji>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date d=new Date();
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
@@ -322,8 +332,8 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			BigDecimal overduemoney = new BigDecimal("0.00");//（逾期费）
 			List<Orderdetails> listorderdetail=homepageTongjiMapper.overduemoney(companyId,startTimestampsfor, endTimestampsfor);
 			for (int o = 0; o < listorderdetail.size(); o++) {
-				if(orderdetails.get(o).getInterestPenaltySum()==null){
-					orderdetails.get(o).setInterestPenaltySum(new BigDecimal("0.00") );
+				if(listorderdetail.get(o).getInterestPenaltySum()==null){
+					listorderdetail.get(o).setInterestPenaltySum(new BigDecimal("0.00") );
 				}
 				overduemoney=overduemoney.add(listorderdetail.get(o).getInterestPenaltySum());
 			}
@@ -390,9 +400,9 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
     		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
     		listtongjito.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil(1,10,0);
+    		pageUtil=new PageUtil2(1,10,0);
 
     	}
 		
