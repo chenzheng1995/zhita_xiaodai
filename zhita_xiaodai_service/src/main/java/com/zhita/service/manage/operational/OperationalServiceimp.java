@@ -119,13 +119,14 @@ public class OperationalServiceimp implements OperationalService{
 			Orders o = new Orders();
 			o.setOrderCreateTime(ords.get(i).getOrderCreateTime());
 			Orders ord = operdao.GesamtbetragderDarlehen(o);
+			
 			ords.get(i).setCouNum(ord.getZahlderGesamtdarlehen());
 			if(ords.get(i).getCollection_count() != 0 && ords.get(i).getCollection_count() != null){
 				ords.get(i).setRepaymeny_collectiondata(ords.get(i).getRepayment_Count()/ords.get(i).getCollection_count());//还款率	
 			}else{
 				ords.get(i).setRepaymeny_collectiondata(0);//还款率	
 			}
-			ords.get(i).setOrderCreateTime(Timestamps.stampToDate(ords.get(i).getOrderCreateTime()));
+			ords.get(i).setOrderCreateTime(Timestamps.stampToDate1(ords.get(i).getOrderCreateTime()));
 			
 		}
 		map.put("PageUtil", pages);

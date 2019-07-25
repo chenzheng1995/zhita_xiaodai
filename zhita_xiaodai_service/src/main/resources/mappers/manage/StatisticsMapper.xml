@@ -45,5 +45,18 @@
 					companyId					
 				)VALUES(#{orderId},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{pipelinenumber},#{companyId})
 			</insert>
+			
+			
+			<insert id="AddDeferred" parameterType="com.zhita.model.manage.Deferred">
+				INSERT INTO `deferred`
+				(
+				orderid,
+				interestOnArrears,
+				deferBeforeReturntime,
+				postponeDate,
+				deferAfterReturntime,
+				deleted
+				)VALUES(#{orderid},#{interestOnArrears},#{deferBeforeReturntime},#{postponeDate},#{deferAfterReturntime},#{deferredTime},#{deleted})
+			</insert>
 
 </mapper>

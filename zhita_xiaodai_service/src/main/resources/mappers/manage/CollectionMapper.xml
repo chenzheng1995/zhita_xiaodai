@@ -78,14 +78,13 @@
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,
 			col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade
-			from orders o left join orderdetails ord on o.id = ord.orderId 
-			left join collection col on o.id = col.orderId 
-			left join collection_member colme on colme.collectionMemberId = col.collectionMemberId 
-			left join user u on u.id = o.userId
-			left join overdue_class ov on ov.companyId = o.companyId
-			left join deferred defe on o.id = defe.orderId
+			from orders o,orderdetails ord,collection col,user u,collection_member colme
 			<where>
+				    o.id = ord.orderId 
+				and col.orderId = o.id
 				AND o.companyId = #{companyId}
+				and u.id = o.userId 
+				and colme.collectionMemberId = col.collectionMemberId
 				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
 					AND ord.realityBorrowMoney = #{realityBorrowMoney}
 				</if>
@@ -121,9 +120,6 @@
 				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND col.collectionTime between #{start_time} and #{end_time}
-				</if>
-				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
-					AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
 			</where>
 			group by o.id
@@ -165,12 +161,12 @@
 				</where>
 				GROUP BY o.orderCreateTime
 		</select>
-		
-		
+	
  	
 		<select id="SelectSumOrder" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			select  o.orderCreateTime,count(o.id) as collection_count from orders o
+			select col.collectionTime,count(col.orderId) as collection_count from orders o,collection col
 				<where>
+					and o.id = col.orderId
 					AND o.companyId = #{companyId} 
 					<if test="borrowMoneyType != null and borrowMoneyType != ''">
 						AND o.borrowMoneyType = #{borrowMoneyType}
@@ -179,7 +175,7 @@
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 				</where>
-				GROUP BY o.orderCreateTime
+				GROUP BY col.collectionTime
 				limit #{page},#{pagesize}
 		</select>
 		

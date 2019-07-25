@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
 
@@ -19,5 +20,7 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdateOrders(Orders ord);
-
+	
+	
+	Integer AddDeferred(Deferred defe);
 }

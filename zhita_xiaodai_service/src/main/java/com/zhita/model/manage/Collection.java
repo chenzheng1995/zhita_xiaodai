@@ -3,6 +3,8 @@ package com.zhita.model.manage;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 //催收表
 public class Collection {
@@ -61,7 +63,7 @@ public class Collection {
 	    
 	private Integer Paymentmade;//当天已还款
 	
-	private Integer PaymentmadeData;//当天还款率
+	private String PaymentmadeData;//当天还款率
 	
 	private Integer CollCuiNum;//催收次数
 	
@@ -102,7 +104,7 @@ public class Collection {
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
-
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
 	public String getDeferAfterReturntimeEnd_time() {
 		return deferAfterReturntimeEnd_time;
 	}
@@ -384,11 +386,11 @@ public class Collection {
 		Paymentmade = paymentmade;
 	}
 
-	public Integer getPaymentmadeData() {
+	public String getPaymentmadeData() {
 		return PaymentmadeData;
 	}
 
-	public void setPaymentmadeData(Integer paymentmadeData) {
+	public void setPaymentmadeData(String paymentmadeData) {
 		PaymentmadeData = paymentmadeData;
 	}
 
