@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.TongjiSorce;
 
@@ -150,5 +151,41 @@ public class DateListUtil {
                 return 0;
             }
         });
+    }
+    
+    //将集合按照集合里对象的日期属性进行倒排序
+    public static void ListSort3(List<HomepageTongji> list) {
+        Collections.sort(list, new Comparator<HomepageTongji>() {
+            @Override
+            public int compare(HomepageTongji o1, HomepageTongji o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date dt1 = format.parse(o1.getShouldtime());
+                    Date dt2 = format.parse(o2.getShouldtime());
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+    
+    /**
+     * 通过时间秒毫秒数判断两个时间的间隔
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDaysByMillisecond(Date date1,Date date2)
+    {
+        int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
+        return days;
     }
 }
