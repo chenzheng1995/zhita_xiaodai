@@ -106,7 +106,7 @@ public interface PaymentRecordMapper {
     List<Undertheline> XiaOrder(Orderdetails order);
     
     
-    Integer XiaTotalCount(Orderdetails ord);
+    List<Integer> XiaTotalCount(Orderdetails ord);
     
     
     List<Repayment_setting> SelectRepay(Integer companyId);

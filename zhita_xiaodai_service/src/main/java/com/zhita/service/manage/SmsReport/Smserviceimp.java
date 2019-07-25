@@ -98,12 +98,23 @@ public class Smserviceimp implements Smservice{
 	@Override
 	public Map<String, Object> DayShortMessage(Shortmessage shor) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Shortmessage> Total = sdao.DayTotalCount(shor.getCompanyid());
-		PageUtil pages = new PageUtil(shor.getPage(), Total.size());
-		shor.setPage(pages.getPage());
-		List<Shortmessage> allsho = sdao.DayShortMessage(shor);
-		map.put("Shortmessage", allsho);
-		map.put("pages", pages);
+		if(shor.getCompanyid() != null){
+			List<Shortmessage> Total = sdao.DayTotalCount(shor.getCompanyid());
+			PageUtil pages = new PageUtil(shor.getPage(), Total.size());
+			shor.setPage(pages.getPage());
+			if(shor.getCompanyid() != null){
+				List<Shortmessage> allsho = sdao.DayShortMessage(shor);
+				map.put("Shortmessage", allsho);
+				map.put("pages", pages);
+			}else{
+				map.put("Shortmessage", "无数据");
+				map.put("pages", 0);
+			}
+		}else{
+			map.put("Shortmessage", "公司ID不未null");
+			map.put("pages", 0);
+		}
+		
 		return map;
 	}
 	
@@ -154,10 +165,10 @@ public class Smserviceimp implements Smservice{
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 2){
-			calendar.add(Calendar.DATE, +2); //得到前一天
+			calendar.add(Calendar.DATE, +2);
 			date = calendar.getTime();
 			a = sim.format(date);
-			calendar.add(Calendar.DATE, +3); //得到前一天
+			calendar.add(Calendar.DATE, +3); 
 			date = calendar.getTime();
 			b = sim.format(date);
 			try {
@@ -167,10 +178,10 @@ public class Smserviceimp implements Smservice{
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 3){
-			calendar.add(Calendar.DATE, +3); //得到前一天
+			calendar.add(Calendar.DATE, +3);
 			date = calendar.getTime();
 			a = sim.format(date);
-			calendar.add(Calendar.DATE, +4); //得到前一天
+			calendar.add(Calendar.DATE, +4);
 			date = calendar.getTime();
 			b = sim.format(date);
 			try {

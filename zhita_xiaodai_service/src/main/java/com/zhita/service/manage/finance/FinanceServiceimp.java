@@ -1,10 +1,14 @@
 package com.zhita.service.manage.finance;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Accountadjustment;
@@ -115,6 +119,7 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> Accountadjus(Accountadjustment acc) {
 		try {
 			acc.setAmou_time(System.currentTimeMillis()+"");
+			acc.setAccounttime(Timestamps.dateToStamp(acc.getAccounttime()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -142,7 +147,14 @@ public class FinanceServiceimp implements FinanceService{
 			System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
 			ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
 			ordetails.setOrder_money(ordetails.getInterestSum().add(ordetails.getMakeLoans()));
-			ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum().add(ordetails.getRealityBorrowMoney()));
+			if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() != null){
+				ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum().add(ordetails.getRealityBorrowMoney()));
+			}else if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() == null){
+				ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum());
+			}else{
+				ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney());
+			}
+			
 			Deferred defe =  coldao.DefNum(ordetails.getOrderId());
 			orderNumber.setDefeNum(defe.getId());
 			orderNumber.setDefeMoney(defe.getInterestOnArrears());
@@ -150,6 +162,7 @@ public class FinanceServiceimp implements FinanceService{
 			ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 			ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));
 			ordetails.setDeferBeforeReturntime(Timestamps.stampToDate(ordetails.getDeferBeforeReturntime()));
+			map.put("aaa", ordetails.getInterestPenaltySum());
 			map.put("Orderdetails", ordetails);
 		}else{
 			
@@ -165,6 +178,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
 		try {
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
 			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
@@ -219,6 +234,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectOkMoney(Orderdetails ordetail) {
 		try {
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
 			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
@@ -434,11 +451,12 @@ public class FinanceServiceimp implements FinanceService{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		Integer totalCount = padao.XiaTotalCount(ord);
+		List<Integer> totalCount = padao.XiaTotalCount(ord);
+		Integer a = null;
 		if(totalCount == null){
-			totalCount = 0;
+			a=0;
 		}
-		PageUtil pages = new PageUtil(ord.getPage(), totalCount);
+		PageUtil pages = new PageUtil(ord.getPage(), totalCount.size());
 		ord.setPage(pages.getPage());
 		List<Undertheline> unders = padao.XiaOrder(ord);
 		for(int i=0;i<unders.size();i++){

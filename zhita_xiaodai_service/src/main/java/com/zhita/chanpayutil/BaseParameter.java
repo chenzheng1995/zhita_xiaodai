@@ -1,4 +1,4 @@
-﻿package com.zhita.util;
+﻿package com.zhita.chanpayutil;
 
 import java.util.HashMap;
 import java.util.Map;

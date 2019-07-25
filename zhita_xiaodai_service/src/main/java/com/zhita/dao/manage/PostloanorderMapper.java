@@ -35,7 +35,7 @@ public interface PostloanorderMapper {
 	List<Integer> CollMemberId(Integer companyId);
 	
 	
-	List<Integer> SelectNodetId(@Param("ids")List<Integer> ids);
+	List<Integer> SelectNodetId(Orderdetails order);
 	
 	
 	List<Orderdetails> AOrderDetails(Orderdetails order);
@@ -45,6 +45,9 @@ public interface PostloanorderMapper {
 	
 	
 	List<Collection> CollDateNum(Orderdetails order); 
+	
+	
+	Integer UserOrderStatuSame(Orderdetails order);
 	
 	
 	List<Collection> MemberName(Orderdetails order);
@@ -65,7 +68,7 @@ public interface PostloanorderMapper {
 	Integer AddOverdue(Overdue ov);
 	
 	
-	List<Integer> connectedNum(Orderdetails order);
+	Integer connectedNum(Orderdetails order);
 	
 	
 	Integer OrderIdNum(Orderdetails order);
@@ -74,7 +77,7 @@ public interface PostloanorderMapper {
 	List<Integer> OverIdNum(Orderdetails order);
 	
 	
-	List<Integer> StatusOrders(Orderdetails order);
+	Integer StatusOrders(Orderdetails order);
 	
 	
 	Integer UserDianlNum(Orderdetails order);
