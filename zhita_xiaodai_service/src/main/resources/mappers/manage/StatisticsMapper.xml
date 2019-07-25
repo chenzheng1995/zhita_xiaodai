@@ -31,19 +31,19 @@
 			
 			
 			<update id="UpdateOrders" parameterType="com.zhita.model.manage.Orders">
-				update orders set orderStatus = "3" where id = #{id}
+				update orders set orderStatus = "2" where id = #{id}
 			</update>
 			
 			
 			<insert id="AddRepay" parameterType="com.zhita.model.manage.Repayment">
 				INSERT INTO `repayment`(
-					orderId,
+					orderid,
 					repaymentMoney,
 					repaymentDate,
 					thirdparty_id,
 					pipelinenumber,
-					companyId					
-				)VALUES(#{orderId},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{pipelinenumber},#{companyId})
+					paymentbtiao					
+				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{pipelinenumber},#{paymentbtiao})
 			</insert>
 			
 			
@@ -55,8 +55,24 @@
 				deferBeforeReturntime,
 				postponeDate,
 				deferAfterReturntime,
+				deferredTime,
 				deleted
 				)VALUES(#{orderid},#{interestOnArrears},#{deferBeforeReturntime},#{postponeDate},#{deferAfterReturntime},#{deferredTime},#{deleted})
 			</insert>
 
+
+
+			<select id="SelectUserdelayTimes" parameterType="com.zhita.model.manage.Orders" resultType="java.lang.Integer">
+				select delayTimes from user where id = #{userId}
+			</select>
+			
+			
+			<update id="UpdateUser" parameterType="com.zhita.model.manage.Orders">
+				update user set delayTimes = #{chenggNum} where id = #{userId}
+			</update>
+			
+			
+			<select id="SelectOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+				select id from orders where orderNumber = #{orderNumber}
+			</select>
 </mapper>

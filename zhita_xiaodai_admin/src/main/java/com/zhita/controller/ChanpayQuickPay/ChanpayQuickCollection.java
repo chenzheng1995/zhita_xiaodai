@@ -585,7 +585,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_biz_api_quick_payment")
-	private Map<String, Object> nmg_biz_api_quick_payment(String OrdrName,String MerUserId,String SellerId,String CardBegin,String CardEnd,String TrxAmt) {
+	private Map<String, Object> nmg_biz_api_quick_payment() {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数 
@@ -597,14 +597,14 @@ public class ChanpayQuickCollection {
 		origMap.put("TrxId", trxId);// 订单号
 
 		//origMap.put("TrxId", "201703131045234230112");// 订单号
-		origMap.put("OrdrName", OrdrName);// 商品名称
-		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("SellerId", SellerId);// 子账户号
-		origMap.put("SubMerchantNo", "");// 子商户号
+		origMap.put("OrdrName", "支付");// 商品名称
+		origMap.put("MerUserId", "1");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("SellerId", "200005640044");// 子账户号
+		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-		origMap.put("CardBegin", CardBegin);// 卡号前6位
-		origMap.put("CardEnd", CardEnd);// 卡号后4位
-		origMap.put("TrxAmt", TrxAmt);// 交易金额
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
+		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("SmsFlag", "1");
 		String result = "";
@@ -1041,7 +1041,7 @@ public class ChanpayQuickCollection {
 	
 	public static void main(String[] args) {
 		ChanpayQuickCollection chan = new ChanpayQuickCollection();
-		chan.nmg_zft_api_quick_payment();
+		chan.nmg_biz_api_quick_payment();
 	}
 	
 	

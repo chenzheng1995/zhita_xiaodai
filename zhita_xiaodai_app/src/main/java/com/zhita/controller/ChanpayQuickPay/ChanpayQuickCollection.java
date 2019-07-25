@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
@@ -639,7 +640,7 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
 		Repayment repay = new Repayment();
-		repay.setOrderid(Integer.valueOf(TrxId));
+		repay.setOrderNumber(TrxId);
 		 BigDecimal bd=new BigDecimal(TrxAmt);   
 		repay.setRepaymentMoney(bd);
 		origMap.put("TrxId", TrxId);// 订单号
@@ -700,7 +701,7 @@ public class ChanpayQuickCollection {
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			Orders ord = new Orders();
-			ord.setId(Integer.valueOf(OriPayTrxId));
+			ord.setOrderNumber(OriPayTrxId);
 			chanser.UpdateOrders(ord);
 			map.put("code", "200");
 			map.put("ReturnChanpay", retu);
@@ -1070,17 +1071,21 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Defenmg_biz_api_quick_payment")
-	private Map<String, Object> Defenmg_biz_api_quick_payment(String TrxId,String OrdrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt) {
+	private Map<String, Object> Defenmg_biz_api_quick_payment(String TrxId,String OrdrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,String deferBeforeReturntime,Integer postponeDate,String deferAfterReturntime) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		if(TrxId != null && OrdrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数 
+		System.out.println("走接口");
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
-		Repayment repay = new Repayment();
-		repay.setOrderid(Integer.valueOf(TrxId));
-		 BigDecimal bd=new BigDecimal(TrxAmt);   
-		repay.setRepaymentMoney(bd);
+		Deferred defe = new Deferred();
+		defe.setOrderNumber(TrxId);
+		BigDecimal onarrears = new BigDecimal(TrxAmt);
+		defe.setInterestOnArrears(onarrears);
+		defe.setDeferBeforeReturntime(deferBeforeReturntime);
+		defe.setPostponeDate(postponeDate);
+		defe.setDeferAfterReturntime(deferAfterReturntime);
 		origMap.put("TrxId", TrxId);// 订单号
 		origMap.put("OrdrName", OrdrName);// 商品名称
 		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
@@ -1099,7 +1104,7 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-			chanser.AddRepayment(repay);
+			chanser.AddDeferred(defe);
 			map.put("ReturnChanpay", retu);
 			map.put("code", 200);
 			} catch (Exception e) {
@@ -1120,7 +1125,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Defenmg_api_quick_payment_smsconfirm")
-	private Map<String, Object> Defenmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode) {
+	private Map<String, Object> Defenmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,Integer userId) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
@@ -1140,6 +1145,7 @@ public class ChanpayQuickCollection {
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			Orders ord = new Orders();
 			ord.setId(Integer.valueOf(OriPayTrxId));
+			ord.setUserId(userId);
 			chanser.UpdateOrders(ord);
 			map.put("code", "200");
 			map.put("ReturnChanpay", retu);

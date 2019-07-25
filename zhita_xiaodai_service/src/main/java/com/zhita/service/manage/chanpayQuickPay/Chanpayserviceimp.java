@@ -60,6 +60,9 @@ public class Chanpayserviceimp implements Chanpayservice{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		repay.setPaymentbtiao("畅捷支付");
+		repay.setOrderid(stdao.SelectOrderId(repay.getOrderNumber()));
+		System.out.println(repay.getOrderid());
 		return stdao.AddRepay(repay);
 	}
 
@@ -69,7 +72,17 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateOrders(Orders ord) {
-		return stdao.UpdateOrders(ord);
+		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
+		Integer id = stdao.UpdateOrders(ord);
+		if(id != null){
+			Integer num = stdao.SelectUserdelayTimes(ord);
+			Integer delaytimes = num+1;
+			ord.setChenggNum(delaytimes);
+			stdao.UpdateUser(ord);
+		}else{
+			return 0;
+		}
+		return 200;
 	}
 
 	@Override
@@ -80,6 +93,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 
 	@Override
 	public Integer AddDeferred(Deferred defe) {
+		defe.setDeleted("0");
+		defe.setOrderid(stdao.SelectOrderId(defe.getOrderNumber()));
 		return stdao.AddDeferred(defe);
 	}
 	

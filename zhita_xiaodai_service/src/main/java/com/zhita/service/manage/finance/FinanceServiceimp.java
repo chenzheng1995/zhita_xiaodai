@@ -44,8 +44,10 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
 		try {
-			payrecord.setStart_time(Timestamps.dateToStamp(payrecord.getStart_time()));
-			payrecord.setEnd_time(Timestamps.dateToStamp(payrecord.getEnd_time()));
+			System.out.println(payrecord.getStart_time()+"+++"+payrecord.getEnd_time());
+			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
+			System.out.println(payrecord.getStart_time()+"++++"+payrecord.getEnd_time());
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -68,8 +70,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Huankuan(Payment_record payrecord) {
 		try {
-			payrecord.setStart_time(Timestamps.dateToStamp(payrecord.getStart_time()));
-			payrecord.setEnd_time(Timestamps.dateToStamp(payrecord.getEnd_time()));
+			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -119,7 +121,7 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> Accountadjus(Accountadjustment acc) {
 		try {
 			acc.setAmou_time(System.currentTimeMillis()+"");
-			acc.setAccounttime(Timestamps.dateToStamp(acc.getAccounttime()));
+			acc.setAccounttime(Timestamps.dateToStamp1(acc.getAccounttime()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -179,12 +181,12 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
 		try {
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
+			ordetail.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
-			ordetail.setAccounttimestart_time(Timestamps.dateToStamp(ordetail.getAccounttimestart_time()));
-			ordetail.setAccounttimeent_time(Timestamps.dateToStamp(ordetail.getAccounttimeent_time()));
+			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
+			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -208,10 +210,10 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectNoMoney(Orderdetails ordetail) {
 		try {
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
-			ordetail.setAccounttimestart_time(Timestamps.dateToStamp(ordetail.getAccounttimestart_time()));
-			ordetail.setAccounttimeent_time(Timestamps.dateToStamp(ordetail.getAccounttimeent_time()));
+			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
+			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -237,10 +239,10 @@ public class FinanceServiceimp implements FinanceService{
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
-			ordetail.setAccounttimestart_time(Timestamps.dateToStamp(ordetail.getAccounttimestart_time()));
-			ordetail.setAccounttimeent_time(Timestamps.dateToStamp(ordetail.getAccounttimeent_time()));
+			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
+			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -263,8 +265,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Selectoffine(Orderdetails ordetail) {
 		try {
-			ordetail.setStart_time(Timestamps.dateToStamp(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp(ordetail.getEnd_time()));
+			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
+			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -324,10 +326,10 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectBankDeductOrders(Bankdeduction bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			bank.setStartu_time(Timestamps.dateToStamp(bank.getStartu_time()));
-			bank.setEnd_time(Timestamps.dateToStamp(bank.getEnd_time()));
-			bank.setStatu_timeOrder(Timestamps.dateToStamp(bank.getStatu_timeOrder()));
-			bank.setEnd_timeOrder(Timestamps.dateToStamp(bank.getEnd_timeOrder()));
+			bank.setStartu_time(Timestamps.dateToStamp1(bank.getStartu_time()));
+			bank.setEnd_time(Timestamps.dateToStamp1(bank.getEnd_time()));
+			bank.setStatu_timeOrder(Timestamps.dateToStamp1(bank.getStatu_timeOrder()));
+			bank.setEnd_timeOrder(Timestamps.dateToStamp1(bank.getEnd_timeOrder()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -377,8 +379,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AllDelayStatis(Bankdeduction banl) {
 		try {
-			banl.setStartu_time(Timestamps.dateToStamp(banl.getStartu_time()));
-			banl.setEnd_time(Timestamps.dateToStamp(banl.getEnd_time()));
+			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -407,8 +409,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Financialover(Bankdeduction banl) {
 		try {
-			banl.setStartu_time(Timestamps.dateToStamp(banl.getStartu_time()));
-			banl.setEnd_time(Timestamps.dateToStamp(banl.getEnd_time()));
+			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -446,8 +448,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectXiaOrder(Orderdetails ord) {
 		try {
-			ord.setStart_time(Timestamps.dateToStamp(ord.getStart_time()));
-			ord.setEnd_time(Timestamps.dateToStamp(ord.getEnd_time()));
+			ord.setStart_time(Timestamps.dateToStamp1(ord.getStart_time()));
+			ord.setEnd_time(Timestamps.dateToStamp1(ord.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

@@ -35,9 +35,17 @@ public class SmsSendRequest {
     private String statu_time;//开始时间
     
     private String end_time;//结束时间
+    
+    private String collection_time;
 
 
-    public String getStatu_time() {
+    public String getCollection_time() {
+		return collection_time;
+	}
+	public void setCollection_time(String collection_time) {
+		this.collection_time = collection_time;
+	}
+	public String getStatu_time() {
 		return statu_time;
 	}
 	public void setStatu_time(String statu_time) {

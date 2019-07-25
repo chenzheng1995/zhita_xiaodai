@@ -2,6 +2,7 @@ package com.zhita.dao.manage;
 
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
 
@@ -23,4 +24,13 @@ public interface StatisticsDao {
 	
 	
 	Integer AddDeferred(Deferred defe);
+	
+	
+	Integer SelectUserdelayTimes(Orders ord);
+	
+	
+	Integer UpdateUser(Orders ord);
+	
+	
+	Integer SelectOrderId(String orderNumber);
 }

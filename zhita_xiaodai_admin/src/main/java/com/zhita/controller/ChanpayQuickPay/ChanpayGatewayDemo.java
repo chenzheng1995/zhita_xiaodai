@@ -581,8 +581,8 @@ public class ChanpayGatewayDemo {
 		origMap.put("SellerId", "200001160097");// 子账户号
 		origMap.put("SubMerchantNo", "");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-		origMap.put("CardBegin", "430000");// 卡号前6位
-		origMap.put("CardEnd", "7200");// 卡号后4位
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
 		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("SmsFlag", "1");

@@ -21,7 +21,7 @@
 			<select id="DayShortMessage" parameterType="com.zhita.model.manage.Shortmessage" resultType="com.zhita.model.manage.Shortmessage">
 				select DATE_FORMAT(send_time,'%Y-%m-%d') as send_time,collection_time,sum(phonenum) as phonenum,sum(successnum) as successnum
 				from shortmessage where companyid = #{companyid}  
-				group by collection_time
+				group by send_time
 				limit #{page},#{pagesize}
 			</select>
 			
@@ -38,13 +38,18 @@
 			
 			
 			<select id="AllPhone" parameterType="com.zhita.model.manage.SmsSendResponse" resultType="java.lang.String">
-				select u.phone from user u,orders o where o.userId = u.id and o.realtime between #{statu_time} and #{end_time} and o.companyid = #{companyid}
+				select u.phone from user u,orders o where o.orderStatus = "0" and o.userId = u.id and o.realtime between #{statu_time} and #{end_time} 
+				and o.companyid = #{companyid}
 			</select>
 			
 			
 			<select id="AllController" parameterType="java.lang.String" resultType="com.zhita.model.manage.Shortmessage">
-				select collection_time,send_time,phonenum,successnum from shortmessage where DATE_FORMAT(collection_time,'%Y-%m-%d')=#{collection_time}
+				select collection_time,send_time,phonenum,successnum from shortmessage where DATE_FORMAT(send_time,'%Y-%m-%d')=#{collection_time}
 			</select>
 			
 
+
+			<select id="SelectTimeSize" parameterType="com.zhita.model.manage.Shortmessage" resultType="java.lang.Integer">
+				select count(id) from shortmessage where DATE_FORMAT(send_time,'%Y-%m-%d')=#{send_time} and companyid = #{companyid}
+			</select>
 </mapper>

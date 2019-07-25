@@ -45,6 +45,27 @@ public class Repayment {
 	
 	private Integer CouNum;
 	
+	private String orderNumber;
+	
+	private String paymentbtiao;
+	
+	
+	public String getPaymentbtiao() {
+		return paymentbtiao;
+	}
+
+	public void setPaymentbtiao(String paymentbtiao) {
+		this.paymentbtiao = paymentbtiao;
+	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
 	public Integer getCompanyId() {
 		return companyId;
 	}
