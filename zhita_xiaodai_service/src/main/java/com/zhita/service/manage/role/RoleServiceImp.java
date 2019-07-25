@@ -15,7 +15,7 @@ import com.zhita.model.manage.Role;
 import com.zhita.model.manage.SecondFunction;
 import com.zhita.model.manage.ThirdFunction;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 
 
 @Service
@@ -28,7 +28,7 @@ public class RoleServiceImp implements IntRoleService{
 	public Map<String,Object> queryAll(Integer page) {
 		List<Role> list=new ArrayList<>();
 		List<Role> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
     
 		list=roleMapper.queryAll();
     	
@@ -36,7 +36,7 @@ public class RoleServiceImp implements IntRoleService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -50,7 +50,7 @@ public class RoleServiceImp implements IntRoleService{
 	public Map<String,Object> queryAllByLike(String status, Integer page) {
 		List<Role> list=new ArrayList<>();
 		List<Role> listto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
     
 		list=roleMapper.queryAllByLike(status);
     	
@@ -58,7 +58,7 @@ public class RoleServiceImp implements IntRoleService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();

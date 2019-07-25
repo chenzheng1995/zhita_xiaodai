@@ -28,8 +28,17 @@ public interface HomepageTongjiMapper {
 	//后台管理---今日延期笔数
 	int queryToDayDeferred(Integer companyId,String startTime,String endTime);
 	
-	//后台管理---今日回款笔数******-------
+	//后台管理---今日回款笔数(实还笔数)
 	int queryToDayRepayment(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日回款笔数(线上回款)
+	int queryToDayRepaymentacc(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日回款笔数(线下回款)
+	int queryToDayRepaymentoff(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日回款笔数(银行卡回款)
+	int queryToDayRepaymentbank(Integer companyId,String startTime,String endTime);
 	
 	//后台管理---今日逾期已还笔数***
 	List<Orders> queryToDayOverdue(Integer companyId,String startTime,String endTime);
@@ -75,21 +84,21 @@ public interface HomepageTongjiMapper {
 	//后台管理---放款总笔数
 	int querySumLoan(Integer companyId);
 	
-	//后台管理---还款总笔数
+	//后台管理---回款总笔数(实还笔数)
 	int querySumRepayment(Integer companyId);
 	
-	//后台管理---线上减免已还清笔数
+	//后台管理---回款总笔数（线上减免已还清笔数）
 	int querySumRepaymentacc(Integer companyId);
 	
-	//后台管理---线下减免已还清笔数
+	//后台管理---回款总笔数（线下减免已还清笔数）
 	int querySumRepaymentoff(Integer companyId);
 	
-	//后台管理---银行卡扣款已结清笔数
+	//后台管理---回款总笔数（银行卡扣款已结清笔数）
 	int querySumRepaymentbank(Integer companyId);
 	
 	//后台管理---放款通过率---放款总笔数/注册用户总数*100%
 	
-	//后台管理---订单回款率---（还款总笔数+线上减免已还清+线下减免已还清+银行扣款已结清）/放款总笔数*100%
+	//后台管理---订单回款率---（回款总笔数）/放款总笔数*100%
 	
 	//后台管理---累计放款总金额
 	BigDecimal querypayrecMoney(Integer companyId);

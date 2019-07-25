@@ -1,10 +1,7 @@
 package com.zhita.service.manage.autheninfor;
 
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +13,6 @@ import com.zhita.dao.manage.AuthenticationInformationMapper;
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
-
-import sun.text.normalizer.ICUBinary.Authenticate;
 
 @Service
 public class AutheninforServiceImp implements IntAutheninforService{

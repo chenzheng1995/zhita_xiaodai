@@ -1,10 +1,10 @@
 package com.zhita.util;
 
 /**
- * 分页工具类.泛型类dxy
+ * 分页工具类.泛型类lhq
  */
-public class PageUtil{
-    private int page=1;      //当前页
+public class PageUtil2{
+    private int page;      //当前页
 
     private int pageSize=10;     //每页显示的数量
 
@@ -18,22 +18,15 @@ public class PageUtil{
      * @param pageNow
      * @param totalCount
      */
-    public PageUtil(int page,int pagesize,int totalCount) {
+    public PageUtil2(int page,int pagesize,int totalCount) {
         this.page=page;
         this.pageSize=pagesize;
         this.totalCount = totalCount;
     }
     
-    public PageUtil(int page,int totalCount) {
-    	if(page != 0){
-    		this.page=(page-1)*pageSize;
-            this.totalCount = totalCount;
-    	}else{
-    		page = 1;
-    		this.page=(page-1)*pageSize;
-            this.totalCount = totalCount;
-    	}
-    	
+    public PageUtil2(int page,int totalCount) {
+        this.page=page;
+        this.totalCount = totalCount;
     }
     
     public int getPage() {

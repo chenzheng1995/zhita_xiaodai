@@ -19,9 +19,21 @@
 	<select id="queryToDayDeferred" resultType="java.lang.Integer">
 		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2}
 	</select>
-	<!-- 后台管理       今日回款笔数 -->
+	<!-- 后台管理       今日回款笔数  （实还笔数）-->
 	<select id="queryToDayRepayment" resultType="java.lang.Integer">
 		select count(rp.id) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日回款笔数  （线上回款）-->
+	<select id="queryToDayRepaymentacc" resultType="java.lang.Integer">
+		select count(acc.id) from accountadjustment acc inner join orders o on acc.orderid=o.id where o.companyId=#{arg0} and acc.amou_time>=#{arg1} and acc.amou_time &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日回款笔数  （线下回款）-->
+	<select id="queryToDayRepaymentoff" resultType="java.lang.Integer">
+		select count(off.id) from offlinetransfer off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} and off.offinetransfertime>=#{arg1} and off.offinetransfertime &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日回款笔数  （银行卡回款）-->
+	<select id="queryToDayRepaymentbank" resultType="java.lang.Integer">
+		select count(b.id) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deductions_time>=#{arg1} and b.deductions_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理      今日逾期已还笔数 -->
 	<select id="queryToDayOverdue" resultType="com.zhita.model.manage.Orders">
@@ -78,27 +90,25 @@
 	<select id="querySumLoan" resultType="java.lang.Integer">
 		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0}
 	</select>
-	<!-- 后台管理    线上减免已还清笔数 -->
+	<!-- 后台管理     回款总笔数（线上减免已还清笔数） -->
 	<select id="querySumRepaymentacc" resultType="java.lang.Integer">
 		select count(acc.id) from  accountadjustment acc inner join orders o on acc.orderid=o.id where o.companyId=#{arg0} 
 	</select>
 	
-	<!-- 后台管理     线下减免已还清 笔数-->
+	<!-- 后台管理      回款总笔数（线下减免已还清 笔数）-->
 	<select id="querySumRepaymentoff" resultType="java.lang.Integer">
 		select count(off.id) from  offlinetransfer off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} 
 	</select>
 	
-	<!-- 后台管理     银行卡已还清笔数 -->
+	<!-- 后台管理     回款总笔数（ 银行卡已还清笔数） -->
 	<select id="querySumRepaymentbank" resultType="java.lang.Integer">
 		select count(b.id) from  bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} 
 	</select>
 	
-	<!-- 后台管理     还款总笔数 -->
+	<!-- 后台管理     回款总笔数  （实还笔数）-->
 	<select id="querySumRepayment" resultType="java.lang.Integer">
 		select count(rp.id) from  repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} 
 	</select>
-	
-	
 	<!--后台管理        累计放款总金额  -->
 	<select id="querypayrecMoney" resultType="java.math.BigDecimal">
 		select sum(pr.paymentmoney) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0}
@@ -201,11 +211,11 @@
 	</select>
 	<!-- 后台管理        实际还金额 -->
 	<select id="realymoney" resultType="java.math.BigDecimal">
-		select sum(repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(r.repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        延期费 -->
 	<select id="deferredmoney" resultType="java.math.BigDecimal">
-		select sum(interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(d.interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        逾期费 -->
 	<select id="overduemoney" resultType="com.zhita.model.manage.Orderdetails">
