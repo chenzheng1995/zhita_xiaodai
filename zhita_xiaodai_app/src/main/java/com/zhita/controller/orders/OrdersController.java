@@ -23,6 +23,7 @@ import com.alibaba.druid.sql.visitor.functions.Length;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 import com.zhita.dao.manage.BankcardMapper;
+import com.zhita.dao.manage.BankcardTypeMapper;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.LiftingAmount;
@@ -59,6 +60,9 @@ public class OrdersController {
 	
 	@Autowired
 	BankcardMapper bankcardMapper;
+	
+	@Autowired
+	BankcardTypeMapper bankcardTypeMapper;
 	
 	
 
@@ -108,16 +112,13 @@ public class OrdersController {
 	   
 	   
 	   
-	 //展示用户的借款明细，并生成订单
-		//获取用户借款额度
-	    @RequestMapping("/setorder")
+	 //立即提现页面
+	    @RequestMapping("/borrowinginformation")
 	    @ResponseBody
 	    @Transactional
-	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName) {  //finalLine是上面那个接口得到的额度
-	    	
+	    public Map<String, Object> borrowinginformation(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName) {  //finalLine是上面那个接口得到的额度
+	    	 Map<String, Object> map1 = new HashMap<String, Object>();		   
 	    	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
-	    	int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
-	        int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    	BigDecimal ll = new BigDecimal(0);
 	    	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//借款期限
 	    	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
@@ -132,7 +133,29 @@ public class OrdersController {
 	    	BigDecimal shouldTotalAmount = (((finalLine.multiply(averageDailyInterest1)).multiply(ll)).add(finalLine)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内应还总金额
 	    	BigDecimal totalInterest =((finalLine.multiply(averageDailyInterest1)).multiply(ll)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内总利息
 	    	BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
+	    	map1.put("code", 200);
+	    	map1.put("lifeOfLoan", lifeOfLoan);
+	    	map1.put("averageDailyInterest1", averageDailyInterest1);
+	    	map1.put("finalLine", finalLine);
+	    	map1.put("platformServiceFee", platformServiceFee);
+	    	map1.put("shouldTotalAmount", shouldTotalAmount);
+	    	map1.put("actualAmountReceived", actualAmountReceived);
+	    	map1.put("totalInterest", totalInterest);
+	    	map1.put("averageDailyInterest", averageDailyInterest);
+			return map1;
 	    	
+	    	
+	    	
+	    	
+	    }
+	    //立即提现按钮
+	    @RequestMapping("/setorder")
+	    @ResponseBody
+	    @Transactional
+	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName,int lifeOfLoan,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {  //finalLine是上面那个接口得到的额度
+	    	 Map<String, Object> map = new HashMap<String, Object>();		 
+		    	int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
+		        int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    	Calendar now = Calendar.getInstance(); 
 	    	String year = now.get(Calendar.YEAR)+""; //年
 	    	String month = now.get(Calendar.MONTH) + 1 + "";//月
@@ -145,13 +168,15 @@ public class OrdersController {
 	    	String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
 	    	int riskmanagementFraction = intUserService.getRiskControlPoints(userId);//获取风控分数
 	    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
-	    	int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction);
+	    	String borrowMoneyWay = "立即贷";//贷款方式
+	    	int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 	    	if(num==1) {
 	    		int orderId = intOrderService.getOrderId(orderNumber);
 		    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,registeClient,sourceName,shouldTotalAmount);
 		    	if(num==1) {
 		    		map.put("code", 200);
 		    		map.put("msg","插入成功");
+		    		map.put("orderNumber",orderNumber);
 		    	}else {
 					map.put("code",405);
 					map.put("msg", "插入失败");
@@ -193,6 +218,8 @@ public class OrdersController {
 		   int orderId = (int) map1.get("id");
 		   String orderStatus = (String) map1.get("orderStatus");
 		   String shouldReturnTime = (String) map1.get("shouldReturnTime");//应还时间
+		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		   shouldReturnTime = sdf.format(new Date(Long.parseLong(shouldReturnTime))); // 时间戳转换日期
 		   BigDecimal shouldReapyMoney  = orderdetailsMapper.getShouldReapyMoney(orderId);//共需还钱
 		   
 		   
@@ -201,6 +228,8 @@ public class OrdersController {
 	   map.put("shouldReturnTime",shouldReturnTime);
 	   map.put("shouldReapyMoney",shouldReapyMoney);
 	   map.put("msg","未逾期");
+	   map.put("code",1);
+	   
 	   
    }
    if(orderStatus.equals("1")) {//逾期后
@@ -210,6 +239,7 @@ public class OrdersController {
 	   map.put("overdueMoney", overdueMoney);
 	   map.put("overdueNumberOfDays", overdueNumberOfDays);
 	   map.put("msg","已逾期");
+	   map.put("code",0);
 	   
    }
    
@@ -218,30 +248,64 @@ public class OrdersController {
 		   
 	   }	   
 	   
+	   @RequestMapping("/getrepayment")
+	   @ResponseBody
+	   @Transactional
+	   public Map<String, Object> getrepayment(int userId,int companyId) {
+		   Map<String, Object> map  = new HashMap<String, Object>();		
+		   Map<String, Object> map1  = intOrderService.getRepayment(userId,companyId);
+		   String TrxId = (String) map1.get("orderNumber");//订单号
+           Map<String, Object> map2 = bankcardMapper.getbankcard(userId);
+           int bankcardTypeId = (int) map2.get("bankcardTypeId");
+           String bankcardTypeName = bankcardTypeMapper.getbankcardTypeName(bankcardTypeId);
+		   String bankcardName = (String) map2.get("bankcardName");
+		   String CardBegin = bankcardName.substring(0,6);//卡号前6位
+		   String CardEnd = bankcardName.substring(bankcardName.length()-4,bankcardName.length());//卡号前4位
+		   map.put("TrxId", TrxId);
+		   map.put("CardBegin", CardBegin);
+		   map.put("CardEnd", CardEnd);
+		   map.put("bankcardTypeName",bankcardTypeName);
+		return map;
+		   
+	   }
 	   
+
 //还款按钮
    @RequestMapping("/reimbursement")
    @ResponseBody
    @Transactional
-   public Map<String, Object> reimbursement(int userId,int companyId,BigDecimal shouldReapyMoney) {//shouldReapyMoney 应还总金额，从上个接口获取
+   public Map<String, Object> reimbursement(int userId,int companyId,String overdueState) {//shouldReapyMoney 应还总金额，从上个接口获取,overdueState 逾期状态
 	   Map<String, Object> map1  = new HashMap<String, Object>();	
-	   int borrowTimeLimit  = intOrderService.getBorrowTimeLimit(userId,companyId);	//借款期限   
-	   Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
-	   BigDecimal pr = new BigDecimal(0);
-       BigDecimal bd8 = new BigDecimal("100");
-       pr = pr.divide(bd8);//平台服务费比率除以100之后
-   	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
-   	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
+	   BigDecimal shouldReapyMoney = null;
+	   if(overdueState.equals("0")) {//未逾期
+		   Map<String, Object> map  = intOrderService.getRepayment(userId,companyId);
+		   int id = (int) map.get("id");
+		   shouldReapyMoney = orderdetailsMapper.getShouldReapyMoney(id);
+	   }
+	   if(overdueState.equals("1")) {//已逾期
+		   Map<String, Object> map  = intOrderService.getRepayment(userId,companyId);
+		   int id = (int) map.get("id");
+		   shouldReapyMoney = orderdetailsMapper.getShouldReapyMoney(id);
+		   BigDecimal interestPenaltySum = orderdetailsMapper.interestPenaltySum(id);
+		   shouldReapyMoney = shouldReapyMoney.add(interestPenaltySum);
+	   }
+//	   int borrowTimeLimit  = intOrderService.getBorrowTimeLimit(userId,companyId);	//借款期限   
+//	   Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
+//	   BigDecimal pr = new BigDecimal(0);
+//       BigDecimal bd8 = new BigDecimal("100");
+//       pr = pr.divide(bd8);//平台服务费比率除以100之后
+//   	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
+//   	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
    	Map<String, Object> map2  = bankcardMapper.getbankcard(userId);
    	String bankcardName = (String) map2.get("bankcardName");
    	int bankcardTypeId = (int) map2.get("bankcardTypeId");
-//   	String bankcardTypeName = 
-   	
-   	
-   	
+   	String bankcardTypeName = bankcardTypeMapper.getbankcardTypeName(bankcardTypeId);
+   	String payment = bankcardTypeName+bankcardName;//支付方式
+
    	map1.put("shouldReapyMoney", shouldReapyMoney);
-   	map1.put("averageDailyInterest1", averageDailyInterest1);
-   	map1.put("borrowTimeLimit", borrowTimeLimit);
+//   	map1.put("averageDailyInterest1", averageDailyInterest1);
+//   	map1.put("borrowTimeLimit", borrowTimeLimit);
+   	map1.put("payment", payment);
 	return map1;
 	   
 	   
@@ -288,6 +352,7 @@ public class OrdersController {
        String orderStatus = intOrderService.getorderStatus1(userId, companyId);
        if(orderStatus.equals("2")) {
     	   map.put("msg","不能延期");
+    	   map.put("code",0);
        }else {
     	   
     	   Map<String, Object> map1 = intDeferredsetService.getDeferredset(companyId); 
@@ -310,11 +375,14 @@ public class OrdersController {
 		    int num = compare_date(sdf1.format(date),sd);
 		    if(num==1) {
 		    	map.put("msg","不能延期");
+		    	map.put("code",0);
 		    }else {
 				if(currentDelays<=maximumCanDeferredTime) {
 					map.put("msg","可以延期");
+					map.put("code",1);
 				}else {
 					map.put("msg","不能延期");
+					map.put("code",0);
 				}
 			}
 	}
@@ -324,9 +392,57 @@ public class OrdersController {
    }
    
    
+ //延期页面
+   @RequestMapping("/deferredpage")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> deferredpage (int userId,int companyId,String orderNumber,BigDecimal finalLine) throws ParseException{
+  	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
+    Map<String, Object> map1  = new HashMap<String, Object>();
+  	BigDecimal ll = new BigDecimal(0);
+  	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//延期天数
+  	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
+  	int platformfeeRatio =  ((int) map.get("platformfeeRatio"));//平台服务费比率
+      BigDecimal pr = new BigDecimal(0);
+      pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
+      BigDecimal bd8 = new BigDecimal("100");
+      pr = pr.divide(bd8);//平台服务费比率除以100之后
+      BigDecimal deferredexpenses = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//延期费用	
+	  String beforeTime = intOrderService.getshouldReturnTime(orderNumber);//延期前应还时间
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+	beforeTime = sdf.format(new Date(Long.parseLong(beforeTime))); // 时间戳转换日期  
+      Date date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);//取时间 
+      Calendar calendar  =   Calendar.getInstance();		 
+	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+	    calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
+	    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");  
+	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+	    String afterTime = sdf1.format(date);//延期后应还时间
+	   	Map<String, Object> map2  = bankcardMapper.getbankcard(userId);
+	   	String bankcardName = (String) map2.get("bankcardName");
+	   	int bankcardTypeId = (int) map2.get("bankcardTypeId");
+	   	String bankcardTypeName = bankcardTypeMapper.getbankcardTypeName(bankcardTypeId);
+	   	String payment = bankcardTypeName+bankcardName;//支付方式
+      map1.put("deferredexpenses", deferredexpenses);
+      map1.put("beforeTime", beforeTime);
+      map1.put("lifeOfLoan", lifeOfLoan);
+      map1.put("afterTime", afterTime);
+      map1.put("payment", payment);
+	  
+	return map1;
+	   
+   }
    
    
-   
+   //立即延期按钮
+   @RequestMapping("/delayButton")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> delayButton (int userId,int companyId,String orderNumber,BigDecimal finalLine) throws ParseException{
+	   
+	return null;
+	   
+   }
    
    
    

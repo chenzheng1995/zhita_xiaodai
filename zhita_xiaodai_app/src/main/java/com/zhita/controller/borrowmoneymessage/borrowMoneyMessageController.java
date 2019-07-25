@@ -15,7 +15,7 @@ import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.util.PhoneDeal;
 
 
-//借款金额
+//虚拟宣传页的立即提现的页面数据
 @Controller
 @RequestMapping(value="/borrowMoneyMessage")
 public class borrowMoneyMessageController {

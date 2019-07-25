@@ -17,4 +17,6 @@ public interface BankcardTypeMapper {
     int updateByPrimaryKeySelective(BankcardType record);
 
     int updateByPrimaryKey(BankcardType record);
+
+	String getbankcardTypeName(int bankcardTypeId);
 }

@@ -326,8 +326,8 @@ public class OrderServiceImp implements IntOrderService{
 
 	@Override
 	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
-			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction) {
-		int num = ordersMapper.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction);
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction,String borrowMoneyWay) {
+		int num = ordersMapper.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 		return num;
 	}
 
@@ -566,6 +566,12 @@ public class OrderServiceImp implements IntOrderService{
 		map.put("listacount", listacount);
 		map.put("pageutil", pageUtil);
 		return map;
+	}
+
+	@Override
+	public String getshouldReturnTime(String orderNumber) {
+		String beforeTime = ordersMapper.getshouldReturnTime(orderNumber);
+		return beforeTime;
 	}
 
 }

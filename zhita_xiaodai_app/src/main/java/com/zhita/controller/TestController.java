@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.controller.face.postDemo;
 import com.zhita.service.test.TestService;
 
 
@@ -54,8 +55,12 @@ public class TestController {
 	
 	}
 	public static void main(String[] args) {
-		DateFormat format = new SimpleDateFormat("yyyy/M/d");
-		System.out.println(format.format(new Date()));
+//		DateFormat format = new SimpleDateFormat("yyyy/M/d");
+//		System.out.println(format.format(new Date()));
+		postDemo postDemo = new postDemo();
+		String param = "{'account':'N7893961','password':'xap6Mikey','msg':'贷回家','phone':'13486070402','report':'true'}";
+		postDemo.post("http://smssh1.253.com/msg/send/json", param);
 	}
 
+	
 }

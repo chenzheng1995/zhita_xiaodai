@@ -581,7 +581,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   
   
   	<insert id="setOrder" parameterType="java.util.Map">
-		insert into orders(companyId,userId,orderNumber,orderCreateTime,borrowTimeLimit,howManyTimesBorMoney,shouldReturnTime,riskmanagementFraction) values(#{companyId},#{userId},#{orderNumber},#{orderCreateTime},#{lifeOfLoan},#{howManyTimesBorMoney},#{shouldReturned},#{riskmanagementFraction})
+		insert into orders(companyId,userId,orderNumber,orderCreateTime,borrowTimeLimit,howManyTimesBorMoney,shouldReturnTime,riskmanagementFraction,borrowMoneyWay) values(#{companyId},#{userId},#{orderNumber},#{orderCreateTime},#{lifeOfLoan},#{howManyTimesBorMoney},#{shouldReturned},#{riskmanagementFraction},#{borrowMoneyWay})
 	</insert>
 
 
@@ -595,7 +595,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   </select>
   
       <select id="getRepayment" parameterType="java.lang.Integer" resultType="java.util.Map">
-  select id,orderStatus,shouldReturnTime from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2') order by shouldReturnTime desc limit 1
+  select id,orderStatus,shouldReturnTime,orderNumber from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2') order by shouldReturnTime desc limit 1
   </select>
 
   <!-- 后台管理        通过订单查询改订单在延期表信息 -->
@@ -675,5 +675,10 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
            and u.sourceid=#{sourcename,jdbcType=INTEGER}
         </if>
   </select>
+
+
+  		<select id="getshouldReturnTime" parameterType="java.lang.String" resultType="java.lang.String">
+		select shouldReturnTime from orders where orderNumber = #{orderNumber}
+	</select>
 
 </mapper>

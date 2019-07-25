@@ -27,7 +27,7 @@ public interface IntOrderService {
 	public int getOrdersId(int userId, int companyId);
 
 	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
-			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction);
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay);
 
 	public int getOrderId(String orderNumber);
 
@@ -73,5 +73,9 @@ public interface IntOrderService {
 	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）
 	 */
 	public Map<String, Object> queryAllUserPeopleYet(UserLikeParameter userLikeParameter);
+
+	public String getshouldReturnTime(String orderNumber);
+
+	
 
 }

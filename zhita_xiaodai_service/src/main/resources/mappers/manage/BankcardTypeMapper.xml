@@ -79,4 +79,12 @@
       deleted = #{deleted,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  		<select id="getbankcardTypeName" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select bankcardTypeName from bankcard_type where id = #{bankcardTypeId}
+	</select>	
+  
+  
+  
 </mapper>

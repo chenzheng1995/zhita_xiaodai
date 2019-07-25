@@ -81,7 +81,7 @@ public interface OrdersMapper {
   	List<Source> querysource(Integer companyId);
 
 	int setOrder(@Param("companyId")int companyId,@Param("userId") int userId,@Param("orderNumber") String orderNumber,@Param("orderCreateTime") String orderCreateTime,@Param("lifeOfLoan") int lifeOfLoan,
-			@Param("howManyTimesBorMoney")int howManyTimesBorMoney,@Param("shouldReturned") String shouldReturned,@Param("riskmanagementFraction") int riskmanagementFraction);
+			@Param("howManyTimesBorMoney")int howManyTimesBorMoney,@Param("shouldReturned") String shouldReturned,@Param("riskmanagementFraction") int riskmanagementFraction,@Param("borrowMoneyWay") String borrowMoneyWay);
 
 	int getOrderId(String orderNumber);
 
@@ -106,6 +106,8 @@ public interface OrdersMapper {
 	int getorderStatus(@Param("userId")int userId,@Param("companyId") int companyId);
 
 	String getorderStatus1(@Param("userId")int userId,@Param("companyId") int companyId);
+
+	String getshouldReturnTime(String orderNumber);
 
 
 }
