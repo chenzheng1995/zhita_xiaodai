@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.EditAgreementMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.EditAgreement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="agreementType" property="agreementtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zhita.model.manage.EditAgreement" extends="BaseResultMap" >
+    <result column="agreementContent" property="agreementcontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,agreementTypeid,agreementContent
+  </sql>
+  <sql id="Blob_Column_List" >
+    agreementContent
+  </sql>
+  <!-- 后台管理      根据agreementType（协议分类）查询 -->
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    from edit_agreement
+    where agreementTypeid=#{arg0}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from edit_agreement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.EditAgreement" >
+    insert into edit_agreement (id, agreementType, agreementContent
+      )
+    values (#{id,jdbcType=INTEGER}, #{agreementtype,jdbcType=VARCHAR}, #{agreementcontent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.EditAgreement" >
+    insert into edit_agreement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agreementtype != null" >
+        agreementType,
+      </if>
+      <if test="agreementcontent != null" >
+        agreementContent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="agreementtype != null" >
+        #{agreementtype,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementcontent != null" >
+        #{agreementcontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.EditAgreement" >
+    update edit_agreement
+    <set >
+      <if test="agreementtype != null" >
+        agreementType = #{agreementtype,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementcontent != null" >
+        agreementContent = #{agreementcontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理         更新保存 -->
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zhita.model.manage.EditAgreement" >
+    update edit_agreement
+    set agreementContent = #{agreementcontent,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.EditAgreement" >
+    update edit_agreement
+    set agreementType = #{agreementtype,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理        查询协议分类表所有的协议 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.AgreementType">
+  	select * from agreement_type where companyId=#{arg0}
+  </select>
+</mapper>

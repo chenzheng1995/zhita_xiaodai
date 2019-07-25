@@ -25,8 +25,15 @@ public class PageUtil{
     }
     
     public PageUtil(int page,int totalCount) {
-        this.page=page;
-        this.totalCount = totalCount;
+    	if(page != 0){
+    		this.page=(page-1)*pageSize;
+            this.totalCount = totalCount;
+    	}else{
+    		page = 1;
+    		this.page=(page-1)*pageSize;
+            this.totalCount = totalCount;
+    	}
+    	
     }
     
     public int getPage() {

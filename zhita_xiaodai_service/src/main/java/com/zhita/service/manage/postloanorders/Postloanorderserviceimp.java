@@ -1,15 +1,14 @@
 package com.zhita.service.manage.postloanorders;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -58,7 +57,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orderdetils.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferBeforeReturntime()));
 			orderdetils.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferAfterReturntime()));
 			orderdetils.get(i).setRealtime(Timestamps.stampToDate(orderdetils.get(i).getRealtime()));
-			orderdetils.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orderdetils.get(i).getBorrowTimeLimit()));
 			Deferred defe =  coldao.DefNum(orderdetils.get(i).getOrderId());
 			orderdetils.get(i).setDefeNum(defe.getId());
 			orderdetils.get(i).setDefeMoney(defe.getInterestOnArrears());
@@ -101,10 +99,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
-		List<Integer> CollMember  = postloanorder.CollMemberId(order.getCompanyId());//获取催收员ID
-		if(CollMember.size() != 0 && null != CollMember){
-			List<Integer> nodeid = postloanorder.SelectNodetId(CollMember);//获取已分配订单ID
-			order.setIds(nodeid);
+			List<Integer> nodeid = postloanorder.SelectNodetId(order);//获取已分配订单ID
+			if(nodeid != null){
+				order.setIds(nodeid);
+			}else{
+				nodeid.add(0);
+				order.setIds(nodeid);
+			}
+			System.out.println(nodeid+"已分配订单数");
 			if(totalCount != null){
 				PageUtil pages = new PageUtil(order.getPage(), totalCount);
 				order.setPage(pages.getPage());
@@ -112,18 +114,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				PageUtil pages = new PageUtil(order.getPage(), 0);
 				order.setPage(pages.getPage());
 			}
-			
+			order.setIds(nodeid);
 			List<Orderdetails> ordeids = postloanorder.SelectOrderDetails(order);//获取未逾期未分配订单
 			for (int i = 0; i < ordeids.size(); i++) {
 				ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
 				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
-				ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
-				ordeids.get(i).setBorrowTimeLimit(Timestamps.stampToDate(ordeids.get(i).getBorrowTimeLimit()));
+				ordeids.get(i).setRealtime(Timestamps.stampToDate1(ordeids.get(i).getRealtime()));
 			}
 			map.put("Orderdetails", ordeids);
-		}else{
-			map.put("pageutil", "无数据");
-		}
 		return map;
 	}
 
@@ -139,10 +137,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			// TODO: handle exception
 		}
 		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
-		List<Integer> CollMember  = postloanorder.CollMemberId(order.getCompanyId());//获取催收员ID
-		if(CollMember.size() != 0 && null != CollMember){
-		List<Integer> nodeid = postloanorder.SelectNodetId(CollMember);//获取已分配订单ID
-		order.setIds(nodeid);
+		List<Integer> nodeid = postloanorder.SelectNodetId(order);//获取已分配订单ID
+		if(nodeid != null){
+			order.setIds(nodeid);
+		}else{
+			nodeid.add(0);
+			System.out.println(nodeid.size());
+			order.setIds(nodeid);
+		}
+		
 		if(totalCount != null){
 			PageUtil pages = new PageUtil(order.getPage(), totalCount);
 			order.setPage(pages.getPage());
@@ -157,16 +160,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
 			ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
-			ordeids.get(i).setBorrowTimeLimit(Timestamps.stampToDate(ordeids.get(i).getBorrowTimeLimit()));
 			Deferred defe =  coldao.DefNum(ordeids.get(i).getOrderId());
 			ordeids.get(i).setDefeNum(defe.getId());
 			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());
 		}
 		map.put("Orderdetails", ordeids);
-		}else{
-			map.put("Orderdetails", "无数据");
-		}
-		
 		return map;
 	}
 
@@ -208,22 +206,19 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				// TODO: handle exception
 			}
 			order.setOverdue_phonestaus("未接通");
-			List<Integer> idsa = null;
-			idsa=postloanorder.connectedNum(order);
-			cols.get(i).setNotconnected(idsa.size());
+			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
 			order.setOverdue_phonestaus("已接通");
-			idsa = postloanorder.connectedNum(order);
-			cols.get(i).setConnected(idsa.size());
-			order.setStatu("2");
-			idsa=postloanorder.StatusOrders(order);
-			cols.get(i).setSameday(idsa.size());
-			order.setStatu("1");
-			idsa=postloanorder.StatusOrders(order);
-			cols.get(i).setPaymentmade(idsa.size());
+			cols.get(i).setConnected(postloanorder.connectedNum(order));
+			order.setStatu("3");
+			cols.get(i).setSameday(postloanorder.StatusOrders(order));
+			order.setStatu("0");
+			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
 			if(cols.get(i).getPaymentmade() != 0){
-				cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
+				NumberFormat numberFormat = NumberFormat.getInstance();
+				numberFormat.setMaximumFractionDigits(2);
+				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
 			}else{
-				cols.get(i).setPaymentmadeData(100);
+				cols.get(i).setPaymentmadeData("0");
 			}
 			
 			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
@@ -255,27 +250,38 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Collection> cols = postloanorder.MemberName(order);
 		System.out.println(cols.size());
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(int i=0;i<cols.size();i++){
+			System.out.println("时间:"+cols.get(i).getCollectiondate());
+			//order.setCollectiondate(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
 			try {
-				order.setCollectiondate(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
+				calendar.add(Integer.valueOf(cols.get(i).getCollectiondate()), +1);
+				Date date = calendar.getTime();
+				order.setEnd_time(sim.format(date));
+				order.setStart_time(order.getCollectiondate());
+				order.setCollectiondate(cols.get(i).getCollectiondate());
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+			
 			order.setCollectionMemberId(cols.get(i).getCollectionMemberId());
 			order.setOverdue_phonestaus("未接通");
 			cols.get(i).setNotconnected(postloanorder.Userphonestaus(order));
 			order.setOverdue_phonestaus("已接通");
 			cols.get(i).setConnected(postloanorder.Userphonestaus(order));
-			order.setOrderStatus("2");
+			order.setOrderStatus("0");
 			cols.get(i).setSameday(postloanorder.UserOrderStatu(order));
-			order.setOrderStatus("1");
+			order.setOrderStatus("3");
 			cols.get(i).setPaymentmade(postloanorder.UserOrderStatu(order));
-			if(cols.get(i).getPaymentmade() != 0){
-				cols.get(i).setPaymentmadeData(cols.get(i).getCollection_count()/cols.get(i).getPaymentmade());
-			}else{ 
-				cols.get(i).setPaymentmadeData(100);
+			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
+				NumberFormat numberFormat = NumberFormat.getInstance();
+				numberFormat.setMaximumFractionDigits(2);
+				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
+			}else{
+				cols.get(i).setPaymentmadeData("0");
 			}
-			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
+			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
@@ -303,7 +309,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		List<Orderdetails> orders = postloanorder.MyOrderdue(order);
 		for(int i=0;i<orders.size();i++){
-			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
@@ -346,7 +351,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			for(int i=0;i<strs.length;i++){
 				Overdue ovdeu = new Overdue();
 				ovdeu.setCollectionMemberId(order.getCollectionMemberId());
-				ovdeu.setCollectiondate(System.currentTimeMillis()+"");//获取当前时间戳
+				SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+				System.out.println(sim.format(new Date()));
+				try {
+					System.out.println(Timestamps.dateToStamp(sim.format(new Date())));
+					ovdeu.setCollectiondate(Timestamps.dateToStamp(sim.format(new Date())));//获取当前时间戳
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				System.out.println(ovdeu.getCollectiondate());
 				ovdeu.setOrderId(Integer.valueOf(strs[i]));
 				postloanorder.AddOverdue(ovdeu);
 			}
@@ -393,7 +406,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{
 				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney());
 			}
-			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
@@ -438,7 +450,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setPhone_num(postloanorder.Phone_num(order));
-			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
@@ -475,7 +486,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setPhone_num(postloanorder.Phone_num(order));
-			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));

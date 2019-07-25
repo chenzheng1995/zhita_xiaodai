@@ -38,7 +38,15 @@ public class Collectionserviceimp implements Collectionservice{
 		coll.setRealtime(System.currentTimeMillis()+"");
 		List<Integer> collIds = collmapp.SelectCollectionId(coll.getCompanyId());//根据公司ID 查询催收员ID
 		if(collIds.size() != 0){
-			coll.setIds(collmapp.OrderIdMa(coll.getCompanyId())); 
+			 List<Integer> ids = collmapp.OrderIdMa(coll.getCompanyId());
+			if(ids != null && ids.size() != 0){
+				coll.setIds(ids); 
+			}else{
+				ids.add(0);
+				System.out.println(ids.size());
+				coll.setIds(ids); 
+			}
+					 
 			Integer totalCount = collmapp.SelectTotalCount(coll);
 			PageUtil pages = new PageUtil(coll.getPage(), totalCount);
 			
@@ -100,7 +108,12 @@ public class Collectionserviceimp implements Collectionservice{
 		for(int i = 0;i<star.length;i++){
 			Collection cola = new Collection();
 			cola.setCollectionMemberId(col.getCollectionMemberId());
-			cola.setCollectionTime(System.currentTimeMillis()+"");
+			try {
+				SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+				cola.setCollectionTime(Timestamps.dateToStamp1(sim.format(new Date())));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			cola.setOrderId(Integer.valueOf(star[i]));
 			cola.setDeleted("0");
 			cols.add(cola);

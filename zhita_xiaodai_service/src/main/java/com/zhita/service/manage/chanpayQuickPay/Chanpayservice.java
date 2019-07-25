@@ -1,10 +1,10 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
 
-import java.util.Map;
-
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 
 public interface Chanpayservice {
@@ -24,6 +24,12 @@ public interface Chanpayservice {
 	
 	
 	Integer UpdateOrders(Orders ord);
+	
+	
+	Integer AddPayment_record(Payment_record pay);
+	
+	
+	Integer AddDeferred(Deferred defe);
 	
 	
 }

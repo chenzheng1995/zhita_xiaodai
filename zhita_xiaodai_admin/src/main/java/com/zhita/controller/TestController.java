@@ -2,7 +2,9 @@ package com.zhita.controller;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
+import com.zhita.util.DateListUtil;
 import com.zhita.util.Timestamps;
 
 
@@ -138,23 +141,53 @@ public class TestController {
 		
 		System.out.println(shouldmoney);*/
 		
-		List<String> list=new ArrayList<>();
-		list.add("2019-09-23");
-		for (int i = 0; i < list.size(); i++) {
-			String startTimefor = list.get(i);
-			String endTimefor = list.get(i);
-			
-			
-			String startTimestampsfor = null;//开始时间（时间戳格式）
-			String endTimestampsfor = null;//结束时间（时间戳格式）
-			try {
-				startTimestampsfor = Timestamps.dateToStamp(startTimefor);
-				endTimestampsfor = (Long.parseLong(Timestamps.dateToStamp(endTimefor))+86400000)+"";
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println(startTimestampsfor+"----------"+endTimestampsfor);
+		 List<String> list1 = new ArrayList<String>();
+		 list1.add("2019-01-01");
+		 list1.add("2019-01-02");
+		 list1.add("2019-01-03");
+		 list1.add("2019-01-04");
+		 list1.add("2019-01-05");
+		 for (int i = 0; i < list1.size(); i++) {
+			System.out.println(list1.get(i)+"11111");
+		 }
+	     List<String> list2 = new ArrayList<String>();
+	     list2.add("2019-01-01");
+		 list2.add("2019-01-02");
+		 for (int i = 0; i < list2.size(); i++) {
+	    	 System.out.println(list2.get(i)+"22222");
 		}
+		 
+		 
+		 
+		 
+		 /*list1.retainAll(list2);
+		 for (int i = 0; i < list1.size(); i++) {
+			System.out.println(list1.get(i));
+		}
+		 
+		 List<String> list3=DateListUtil.getDiffrent2(list1, list2);
+		 for (int j = 0; j < list3.size(); j++) {
+			System.out.println(list3.get(j)+"------------");
+		}*/
+		 
+		/* Date d=new Date();
+		 
+		 String minregiste="2019-07-24";
+		 SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		 Date minregisteDate = sf.parse(minregiste);
+		 System.out.println(minregisteDate+"----"+d+"----------");
+		 
+		 int days=DateListUtil.differentDaysByMillisecond(minregisteDate, d);
+		 
+		 System.out.println((days+1)+"---------");
+		 */
+		 
+		 String starttime="2019-07-23";
+		 String endtime="2019-07-23";
+		 	String startTime = starttime;
+			String startTimestamps = Timestamps.dateToStamp(startTime);
+			String endTime = endtime;
+			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+			System.out.println(startTimestamps+"----------"+endTimestamps);
 	}
 }

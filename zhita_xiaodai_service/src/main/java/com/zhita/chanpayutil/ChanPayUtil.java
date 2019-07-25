@@ -1,4 +1,4 @@
-package com.zhita.util;
+package com.zhita.chanpayutil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,8 +16,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.NameValuePair;
 
+import com.alibaba.fastjson.JSON;
+import com.zhita.model.manage.ReturnChanpay;
 
-public class ChanPayUtil1 {
+
+
+public class ChanPayUtil {
+
 	public static void main(String[] args) {
 		String rsa_private_key = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAO/6rPCvyCC+IMalLzTy3cVBz/+wamCFNiq9qKEilEBDTttP7Rd/GAS51lsfCrsISbg5td/w25+wulDfuMbjjlW9Afh0p7Jscmbo1skqIOIUPYfVQEL687B0EmJufMlljfu52b2efVAyWZF9QBG1vx/AJz1EVyfskMaYVqPiTesZAgMBAAECgYEAtVnkk0bjoArOTg/KquLWQRlJDFrPKP3CP25wHsU4749t6kJuU5FSH1Ao81d0Dn9m5neGQCOOdRFi23cV9gdFKYMhwPE6+nTAloxI3vb8K9NNMe0zcFksva9c9bUaMGH2p40szMoOpO6TrSHO9Hx4GJ6UfsUUqkFFlN76XprwE+ECQQD9rXwfbr9GKh9QMNvnwo9xxyVl4kI88iq0X6G4qVXo1Tv6/DBDJNkX1mbXKFYL5NOW1waZzR+Z/XcKWAmUT8J9AkEA8i0WT/ieNsF3IuFvrIYG4WUadbUqObcYP4Y7Vt836zggRbu0qvYiqAv92Leruaq3ZN1khxp6gZKl/OJHXc5xzQJACqr1AU1i9cxnrLOhS8m+xoYdaH9vUajNavBqmJ1mY3g0IYXhcbFm/72gbYPgundQ/pLkUCt0HMGv89tn67i+8QJBALV6UgkVnsIbkkKCOyRGv2syT3S7kOv1J+eamGcOGSJcSdrXwZiHoArcCZrYcIhOxOWB/m47ymfE1Dw/+QjzxlUCQCmnGFUO9zN862mKYjEkjDN65n1IUB9Fmc1msHkIZAQaQknmxmCIOHC75u4W0PGRyVzq8KkxpNBq62ICl7xmsPM=";
 		try {
@@ -38,18 +43,21 @@ public class ChanPayUtil1 {
 	 * @param MERCHANT_PRIVATE_KEY
 	 *            私钥
 	 */
-	public static void sendPost(Map<String, String> origMap, String charset,
+	public static ReturnChanpay sendPost(Map<String, String> origMap, String charset,
 			String MERCHANT_PRIVATE_KEY) {
+		ReturnChanpay retu = new ReturnChanpay();
 		try {
 			Map<String, String> sPara = ChanPayUtil.buildRequestPara(origMap,
 					"RSA", MERCHANT_PRIVATE_KEY, charset);
 			String resultString = ChanPayUtil.buildRequest(sPara, "RSA",
 					MERCHANT_PRIVATE_KEY, charset, BaseConstant.GATEWAY_URL);
+			retu = JSON.parseObject(resultString,ReturnChanpay.class);
 			System.out.println(resultString);  //在调试对账文件，如果日志里面不希望显示对账文件注释掉即可
 		} catch (Exception e) {
 			System.out.println("发demo出现异常----"+e);
 			e.printStackTrace();
 		}
+		return retu;
 	}
 	
 	public static void sendFilePost(Map<String, String> origMap,
@@ -59,7 +67,7 @@ public class ChanPayUtil1 {
 			
 			Map<String, String> sPara = ChanPayUtil.buildRequestPara(origMap,
 					"RSA", MERCHANT_PRIVATE_KEY, charset);
-			String resultString = ChanPayUtil1.buildFileRequest(sPara, "RSA",
+			String resultString = ChanPayUtil.buildFileRequest(sPara, "RSA",
 					MERCHANT_PRIVATE_KEY, charset,
 					BaseConstant.BATCH_FILE_GATEWAY_URL, strParaFileName,
 					strFilePath);

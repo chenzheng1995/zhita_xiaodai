@@ -1,4 +1,4 @@
-﻿package com.zhita.util;
+﻿package com.zhita.chanpayutil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
