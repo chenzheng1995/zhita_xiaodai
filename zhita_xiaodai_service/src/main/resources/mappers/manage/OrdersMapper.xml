@@ -677,8 +677,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   </select>
 
 
-  		<select id="getshouldReturnTime" parameterType="java.lang.String" resultType="java.lang.String">
-		select shouldReturnTime from orders where orderNumber = #{orderNumber}
+  		<select id="getshouldReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select shouldReturnTime from orders where companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
 	</select>
 
 </mapper>

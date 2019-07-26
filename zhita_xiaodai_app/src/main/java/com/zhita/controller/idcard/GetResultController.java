@@ -107,4 +107,13 @@ public class GetResultController {
 		return map;
     	
     }
+    
+    
+//    @RequestMapping("/setidcard")
+//    @ResponseBody
+//    @Transactional
+//    public Map<String, Object> setidcard(int userId){
+//    	Map<String, Object> map = new HashMap<String, Object>();
+//    	
+//    }
 }

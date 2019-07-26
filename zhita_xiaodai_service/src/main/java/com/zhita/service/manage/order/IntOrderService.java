@@ -74,7 +74,8 @@ public interface IntOrderService {
 	 */
 	public Map<String, Object> queryAllUserPeopleYet(UserLikeParameter userLikeParameter);
 
-	public String getshouldReturnTime(String orderNumber);
+
+	public String getshouldReturnTime(int userId, int companyId);
 
 	
 
