@@ -75,8 +75,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
 		Integer id = stdao.UpdateOrders(ord);
 		if(id != null){
-			Integer num = stdao.SelectUserdelayTimes(ord);
-			Integer delaytimes = num+1;
+			Integer delaytimes = 0;
 			ord.setChenggNum(delaytimes);
 			stdao.UpdateUser(ord);
 		}else{
@@ -84,11 +83,30 @@ public class Chanpayserviceimp implements Chanpayservice{
 		}
 		return 200;
 	}
+	
+	
+	
+	/**
+	 * 修改延期状态
+	 */
+	@Override
+	public Integer UpdateDefeOrders(Orders ord) {
+		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
+		Integer num = stdao.SelectUserdelayTimes(ord);
+		Integer delaytimes = num+1;
+		ord.setChenggNum(delaytimes);
+		return stdao.UpdateUser(ord);
+	}
 
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
-		// TODO Auto-generated method stub
-		return null;
+		pay.setOrderId(stdao.SelectOrderId(pay.getOrderNumber()));
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		pay.setRemittanceTime(sim.format(new Date()));
+		pay.setProfessionalWork("放款");
+		pay.setThirdparty_id(1);
+		pay.setPaymentbtiao("畅捷支付");
+		return stdao.AddPaymentRecord(pay);
 	}
 
 	@Override
@@ -97,6 +115,19 @@ public class Chanpayserviceimp implements Chanpayservice{
 		defe.setOrderid(stdao.SelectOrderId(defe.getOrderNumber()));
 		return stdao.AddDeferred(defe);
 	}
+
+	@Override
+	public Integer UpdatePayment(Payment_record pay) {
+		return stdao.UpdatePaymentrecord(pay);
+	}
+
+	@Override
+	public Bankcard SelectBank(Bankcard userId) {
+		return stdao.SelectBanl(userId);
+	}
+	
+	
+	
 	
 	
 

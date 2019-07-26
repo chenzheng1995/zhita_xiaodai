@@ -32,4 +32,11 @@ public interface Chanpayservice {
 	Integer AddDeferred(Deferred defe);
 	
 	
+	Integer UpdateDefeOrders(Orders ord);
+	
+	
+	Integer UpdatePayment(Payment_record pay);
+	
+	
+	Bankcard SelectBank(Bankcard bankcard);
 }
