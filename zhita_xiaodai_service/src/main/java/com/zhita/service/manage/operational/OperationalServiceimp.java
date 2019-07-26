@@ -42,8 +42,8 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> PlatformsNu(Orderdetails ordera) {
 		try {
-			ordera.setStart_time(Timestamps.dateToStamp(ordera.getStart_time()));
-			ordera.setEnd_time(Timestamps.dateToStamp(ordera.getEnd_time()));
+			ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
+			ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -85,8 +85,8 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -139,8 +139,8 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> CollectionData(Orderdetails orde) {
 		try {
-			orde.setStart_time(Timestamps.dateToStamp(orde.getStart_time()));
-			orde.setEnd_time(Timestamps.dateToStamp(orde.getEnd_time()));
+			orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
+			orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -193,8 +193,8 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> OrderBudget(Orderdetails orde) {
 		try {
-			orde.setStart_time(Timestamps.dateToStamp(orde.getStart_time()));
-			orde.setEnd_time(Timestamps.dateToStamp(orde.getEnd_time()));
+			orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
+			orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

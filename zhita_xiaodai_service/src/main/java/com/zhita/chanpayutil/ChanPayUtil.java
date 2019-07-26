@@ -43,21 +43,21 @@ public class ChanPayUtil {
 	 * @param MERCHANT_PRIVATE_KEY
 	 *            私钥
 	 */
-	public static ReturnChanpay sendPost(Map<String, String> origMap, String charset,
+	public static String sendPost(Map<String, String> origMap, String charset,
 			String MERCHANT_PRIVATE_KEY) {
-		ReturnChanpay retu = new ReturnChanpay();
+		String resultString = null;
 		try {
 			Map<String, String> sPara = ChanPayUtil.buildRequestPara(origMap,
 					"RSA", MERCHANT_PRIVATE_KEY, charset);
-			String resultString = ChanPayUtil.buildRequest(sPara, "RSA",
+			resultString = ChanPayUtil.buildRequest(sPara, "RSA",
 					MERCHANT_PRIVATE_KEY, charset, BaseConstant.GATEWAY_URL);
-			retu = JSON.parseObject(resultString,ReturnChanpay.class);
+			
 			System.out.println(resultString);  //在调试对账文件，如果日志里面不希望显示对账文件注释掉即可
 		} catch (Exception e) {
 			System.out.println("发demo出现异常----"+e);
 			e.printStackTrace();
 		}
-		return retu;
+		return resultString;
 	}
 	
 	public static void sendFilePost(Map<String, String> origMap,

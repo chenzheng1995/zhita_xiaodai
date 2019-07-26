@@ -35,7 +35,6 @@ import com.zhita.service.manage.operational.OperationalService;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
 
-import sun.text.resources.cldr.ar.FormatData_ar_MA;
 
 @Controller
 @RequestMapping("/Order")

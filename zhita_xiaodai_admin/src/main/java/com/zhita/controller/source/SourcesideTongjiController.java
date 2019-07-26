@@ -18,7 +18,7 @@ import com.zhita.model.manage.TongjiSorce;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 /**
@@ -136,7 +136,7 @@ public class SourcesideTongjiController {
 		ListPageUtil listPageUtil = new ListPageUtil(listsource, page, 10);
 		listsourceto.addAll(listPageUtil.getData());
 		
-		PageUtil pageUtil = new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+		PageUtil2 pageUtil = new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 		map.put("listsourceto", listsourceto);
 		map.put("pageutil", pageUtil);
 		return map;

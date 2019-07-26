@@ -7,7 +7,7 @@ public class Payment_record {
 	
 	private Integer id;
 	
-	private String orderId;//订单ID
+	private Integer orderId;//订单ID
 	
 	private String remittanceTime;//打款时间
 	
@@ -39,7 +39,7 @@ public class Payment_record {
 	
 	private String sourceName;//放宽渠道名称
 	
-	private BigDecimal paymentmoney;//流水号
+	private BigDecimal paymentmoney;//放款金额
 	
 	private String orderNumber;//订单编号
 	
@@ -47,6 +47,17 @@ public class Payment_record {
 	
 	private BigDecimal repaymentMoney;
 	
+	private String paymentbtiao;
+	
+	
+	
+	public String getPaymentbtiao() {
+		return paymentbtiao;
+	}
+
+	public void setPaymentbtiao(String paymentbtiao) {
+		this.paymentbtiao = paymentbtiao;
+	}
 
 	public String getRepaymentDate() {
 		return repaymentDate;
@@ -72,11 +83,11 @@ public class Payment_record {
 		this.id = id;
 	}
 
-	public String getOrderId() {
+	public Integer getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId) {
+	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
 

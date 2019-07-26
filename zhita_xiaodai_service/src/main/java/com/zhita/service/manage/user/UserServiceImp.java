@@ -21,7 +21,7 @@ import com.zhita.model.manage.UserAttestation;
 import com.zhita.model.manage.UserLikeParameter;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -44,7 +44,7 @@ public class UserServiceImp implements IntUserService{
 		}
 		int page=userLikeParameter.getPage();//页面传进来的当前页
 		int totalCount=userMapper.queryUserListcount(userLikeParameter);//查询总条数
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);
@@ -101,7 +101,7 @@ public class UserServiceImp implements IntUserService{
 		int page=orderQueryParameter.getPage();//页面传进来的当前页
 		int companyId=orderQueryParameter.getCompanyid();//公司id
 		int totalCount=ordersMapper.queryAllOrdersByUseridcount(orderQueryParameter);//查询总条数
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);
@@ -148,7 +148,7 @@ public class UserServiceImp implements IntUserService{
 		int page=orderQueryParameter.getPage();//页面传进来的当前页
 		int companyId=orderQueryParameter.getCompanyid();//公司id
 		int totalCount=ordersMapper.queryAllOrdersByUserid1count(orderQueryParameter);//查询总条数
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);

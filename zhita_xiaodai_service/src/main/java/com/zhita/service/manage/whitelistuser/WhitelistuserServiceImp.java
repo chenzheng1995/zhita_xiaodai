@@ -16,7 +16,7 @@ import com.zhita.dao.manage.WhitelistUserMapper;
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.WhitelistUser;
 import com.zhita.util.ExcelUtils;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -30,7 +30,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     public Map<String, Object>  queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
     	List<WhitelistUser> list=new ArrayList<WhitelistUser>();
     	List<WhitelistUser> listto=new ArrayList<WhitelistUser>();
-    	PageUtil pageUtil=null;
+    	PageUtil2 pageUtil=null;
     	
     	for (int i = 0; i < list.size(); i++) {
     		list.get(i).setOperationtime(Timestamps.stampToDate(list.get(i).getOperationtime()));
@@ -38,7 +38,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     	
     	
 		int totalCount=whitelistUserMapper.queryAllcount(companyId, name, phone, idcard);//查询总数量
-		pageUtil=new PageUtil(page,totalCount);
+		pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);

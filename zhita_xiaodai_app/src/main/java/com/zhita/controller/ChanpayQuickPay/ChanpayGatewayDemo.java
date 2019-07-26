@@ -37,7 +37,7 @@ public class ChanpayGatewayDemo {
 	/**
 	 * 生产环境 测试商户号私钥
 	 */
-	private static String MERCHANT_PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANB5cQ5pf+QHF9Z2+DjrAXstdxQHJDHyrni1PHijKVn5VHy/+ONiEUwSd5nx1d/W+mtYKxyc6HiN+5lgWSB5DFimyYCiOInh3tGQtN+pN/AtE0dhMh4J9NXad0XEetLPRgmZ795O/sZZTnA3yo54NBquT19ijYfrvi0JVf3BY9glAgMBAAECgYBFdSCox5eXlpFnn+2lsQ6mRoiVAKgbiBp/FwsVum7NjleK1L8MqyDOMpzsinlSgaKfXxnGB7UgbVW1TTeErS/iQ06zx3r4CNMDeIG1lYwiUUuguIDMedIJxzSNXfk65Bhps37lm129AE/VnIecpKxzelaUuzyGEoFWYGevwc/lQQJBAPO0mGUxOR/0eDzqsf7ehE+Iq9tEr+aztPVacrLsEBAwqOjUEYABvEasJiBVj4tECnbgGxXeZAwyQAJ5YmgseLUCQQDa/dgviW/4UMrY+cQnzXVSZewISKg/bv+nW1rsbnk+NNwdVBxR09j7ifxg9DnQNk1Edardpu3z7ipHDTC+z7exAkAM5llOue1JKLqYlt+3GvYr85MNNzSMZKTGe/QoTmCHStwV/uuyN+VMZF5cRcskVwSqyDAG10+6aYqD1wMDep8lAkBQBoVS0cmOF5AY/CTXWrht1PsNB+gbzic0dCjkz3YU6mIpgYwbxuu69/C3SWg7EyznQIyhFRhNlJH0hvhyMhvxAkEAuf7DNrgmOJjRPcmAXfkbaZUf+F4iK+szpggOZ9XvKAhJ+JGd+3894Y/05uYYRhECmSlPv55CBAPwd8VUsSb/1w==";
+	private static String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALmnE/9rQUoiSGubWg1B7nomyBMJ1xvLqAbiSa91dYAERUig2dG9xsSSjdvcPuN0ghoOCfPRp++NsjQ9YTzrp3Mla7DwNcWsr9Q3J5De9LKR2BaOs8GH6tlGMrNTZeciKASEYftH3B1a7lCmNUNzsQwB5stmZBQZUOs4oHPo4pTjAgMBAAECgYA5iW1qMHxolF1rdBchmrhlBRXmyJrxE1n84C7EARwsU6aBTtCS70Tl8SGj7QtUhOw5VPaCqQxp8rky9X7oWYRoZQHuub6jvvgmCBQXoBDeUaaO4JQ+7KDYP1OpR+e0s0D0fTzL2yujChkF5LyngF2tdwi2272foAaIQgqVLFo9MQJBAOPwNqane7bXiWCuyKgcEeIA8iKGNSXZqTiF+Yf1cW/CaudXdVyV1kFdnlEqAws9fwOEbtSmr2qhdgEUjMxHVQkCQQDQgix8oqAmxmUGqwAMSfIKCUY8xc+ghd1UxmrsnPtpzVjNG/QKaa4D0pC1Li/YmX2u9tAd+oFpTF/LqH+iN2GLAkA20D1UNlJ51bsjlOSMCLQENVYFF2EQiRc4kH9BQrTUu1wZ5d5DNYUgkvLPcdrpiRBSODauzKbCbbGC8P4q4byBAkEApFrnzDq4eLgL7EygVg93nVegKMlYF1VNmMRqhiZbuxNlexActpSE2XiCHn7QsjCTNHZSqD7NAX51SGiCaxCybwJBALZSXAWzQxinkGJXYvTyvktanGqAkHzn1pSf+XbGYtokryVANhuf+YTMm/lYedq8w9um8byZhGl53ph33xn+U0Y=";
 
 	/**
 	 * 编码类型
@@ -483,7 +483,7 @@ public class ChanpayGatewayDemo {
 	public Map<String, String> setCommonMap(Map<String, String> origMap) {
 		// 2.1 基本参数
 		origMap.put("Version", "1.0");
-		origMap.put("PartnerId", "200005280090");//生产环境测试商户号
+		origMap.put("PartnerId", "200005640044");//生产环境测试商户号
 		
 		origMap.put("InputCharset", charset);// 字符集
 		origMap.put("TradeDate", "20170612");// 商户请求时间
@@ -627,22 +627,22 @@ public class ChanpayGatewayDemo {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_zft_api_quick_payment");// 支付接口名称
 		// 2.2 业务参数
-		origMap.put("TrxId", "2017031310452344543522");// 订单号
+		origMap.put("TrxId", "1563984000000");// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
-		origMap.put("MerUserId", "20201");// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("SellerId", "200001160097");// 子账户号
-		origMap.put("SubMerchantNo", "200001160097");// 子商户号
+		origMap.put("MerUserId", "1");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("SellerId", "200005640044");// 子账户号
+		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-//		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-//		origMap.put("BkAcctNo", this.encrypt("6200000000000000", MERCHANT_PUBLIC_KEY, charset));// 卡号
-//		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-//		origMap.put("IDNo", this.encrypt("360000000000000000", MERCHANT_PUBLIC_KEY, charset));// 证件号
-//		origMap.put("CstmrNm", this.encrypt("XXX", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-//		origMap.put("MobNo", this.encrypt("13511111111", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
-//		origMap.put("EnsureAmount", "1");//担保金额
-		origMap.put("TrxAmt", "30");// 交易金额
+		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
+		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
+		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("EnsureAmount", "1");//担保金额
+		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
-		origMap.put("SmsFlag", "1");//短信发送标识
+//		origMap.put("SmsFlag", "1");//短信发送标识
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
 	
@@ -666,17 +666,18 @@ public class ChanpayGatewayDemo {
 		origMap.put("SellerId", "200001160097");// 生产环境
 		origMap.put("SubMerchantNo", "");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-//		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-//		origMap.put("BkAcctNo", this.encrypt("430000000000000000", MERCHANT_PUBLIC_KEY, charset));// 卡号
-//		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-//		origMap.put("IDNo", this.encrypt("1300000000000000", MERCHANT_PUBLIC_KEY, charset));// 证件号
-//		origMap.put("CstmrNm", this.encrypt("XXX", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-//		origMap.put("MobNo", this.encrypt("1380000000", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
-		
-//		origMap.put("CardCvn2", "");//cvv2
-//		origMap.put("CardExprDt", "07/21");//有效期
 
-		//origMap.put("EnsureAmount", "1");//担保金额
+		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
+		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
+		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		
+		origMap.put("CardCvn2", "");//cvv2
+		origMap.put("CardExprDt", "07/21");//有效期
+
+		origMap.put("EnsureAmount", "1");//担保金额
 		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("AccessChannel", "web");//用户终端类型  web  wap
@@ -911,7 +912,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_quick_payment_smsconfirm(); //2.4 支付请求---API
+		test.nmg_zft_api_quick_payment(); //2.4 支付请求---API
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

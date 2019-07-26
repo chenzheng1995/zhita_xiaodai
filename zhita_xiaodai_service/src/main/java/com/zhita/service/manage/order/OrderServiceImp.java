@@ -22,7 +22,7 @@ import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserLikeParameter;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
-import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -47,7 +47,7 @@ public class OrderServiceImp implements IntOrderService{
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		
 		Integer companyId=orderQueryParameter.getCompanyid();//得到公司id
 		Integer page=orderQueryParameter.getPage();//得到page
@@ -91,9 +91,9 @@ public class OrderServiceImp implements IntOrderService{
 
 //	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
-	    	pageUtil=new PageUtil(1, 10, 0);
+	    	pageUtil=new PageUtil2(1, 10, 0);
 
 	    }
 	    
@@ -122,7 +122,7 @@ public class OrderServiceImp implements IntOrderService{
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		
 		Integer companyId=orderQueryParameter.getCompanyid();//得到公司id
 		Integer page=orderQueryParameter.getPage();//得到page
@@ -162,9 +162,9 @@ public class OrderServiceImp implements IntOrderService{
 
 //	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
 
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
-	    	pageUtil=new PageUtil(1, 10, 0);
+	    	pageUtil=new PageUtil2(1, 10, 0);
 
 	    }
 	    
@@ -194,7 +194,7 @@ public class OrderServiceImp implements IntOrderService{
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		
 		Integer companyId=orderQueryParameter.getCompanyid();//得到公司id
 		Integer page=orderQueryParameter.getPage();//得到page
@@ -232,9 +232,9 @@ public class OrderServiceImp implements IntOrderService{
 			}
 		    DateListUtil.ListSort2(listorderto);
 	    	
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
-	    	pageUtil=new PageUtil(1, 10, 0);
+	    	pageUtil=new PageUtil2(1, 10, 0);
 
 	    }
 	    
@@ -264,7 +264,7 @@ public class OrderServiceImp implements IntOrderService{
 		List<Orders> listorder=new ArrayList<>();
 		List<Orders> listorderfor=new ArrayList<>();
 		List<Orders> listorderto=new ArrayList<>();
-		PageUtil pageUtil=null;
+		PageUtil2 pageUtil=null;
 		
 		Integer companyId=orderQueryParameter.getCompanyid();//得到公司id
 		Integer page=orderQueryParameter.getPage();//得到page
@@ -294,9 +294,9 @@ public class OrderServiceImp implements IntOrderService{
 			}
 		    DateListUtil.ListSort2(listorderto);
 	    	
-	    	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
 	    }else{
-	    	pageUtil=new PageUtil(1, 10, 0);
+	    	pageUtil=new PageUtil2(1, 10, 0);
 
 	    }
 	    
@@ -385,7 +385,7 @@ public class OrderServiceImp implements IntOrderService{
 		int page=orderQueryParameter.getPage();//页面传进来的当前页
 		int companyId=orderQueryParameter.getCompanyid();//公司id
 		int totalCount=ordersMapper.queryAllordersByLikeCount(orderQueryParameter);//查询总条数
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);
@@ -434,7 +434,7 @@ public class OrderServiceImp implements IntOrderService{
 		}
 		int page=userLikeParameter.getPage();//页面传进来的当前页
 		int totalCount=userMapper.queryAllUsercount(userLikeParameter);//查询总数量
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);
@@ -478,7 +478,7 @@ public class OrderServiceImp implements IntOrderService{
 		}
 		int page=userLikeParameter.getPage();//页面传进来的当前页
 		int totalCount=userMapper.queryAllUserPeoplecount(userLikeParameter);//查询总数量
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);
@@ -540,7 +540,7 @@ public class OrderServiceImp implements IntOrderService{
 		int page=userLikeParameter.getPage();//页面传进来的当前页
 		int companyId=userLikeParameter.getCompanyId();//公司id
 		int totalCount=userMapper.queryAllUserPeopleYetcount(userLikeParameter);//查询总数量
-		PageUtil pageUtil=new PageUtil(page,totalCount);
+		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
     	if(page<1) {
     		page=1;
     		pageUtil.setPage(page);

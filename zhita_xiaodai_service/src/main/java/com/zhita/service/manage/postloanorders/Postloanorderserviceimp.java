@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -389,9 +391,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		
-		System.out.println(order.getStart_time()+"CCCCC"+order.getEnd_time());
 		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
 		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -400,6 +399,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
+			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			if(orders.get(i).getInterMoney() != null ){
 				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterMoney()));
@@ -447,6 +447,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.CollecOrders(order);
 		for(int i=0;i<orders.size();i++){
+			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			order.setOrderId(orders.get(i).getOrderId());
 			orders.get(i).setPhone_num(postloanorder.Phone_num(order));

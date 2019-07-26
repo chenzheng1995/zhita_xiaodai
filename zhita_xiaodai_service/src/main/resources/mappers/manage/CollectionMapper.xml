@@ -31,10 +31,10 @@
 			    AND o.orderStatus = "1"
 				AND o.companyId = #{companyId}
 				<if test="name != '' and name != null">
-					AND u.name = #{name}
+					AND u.name like CONCAT(CONCAT('%',#{name}),'%') 
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone = #{phone}
+					AND u.phone like CONCAT(CONCAT('%',#{phone}),'%') 
 				</if>
 				<if test="id != null and id != ''">
 					AND o.id = #{id}
@@ -139,7 +139,7 @@
 			left join orderdetails orders on o.id =orders.orderId
 			left join deferred defe on defe.orderId
 			<where>
-				AND o.orderNumber = #{orderNumber}
+				AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 				AND o.companyId = #{companyId}
 			</where>	
 				group by orders.orderId
@@ -156,7 +156,7 @@
 						AND o.borrowMoneyType = #{borrowMoneyType}
 					</if>
 					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND o.orderCreateTime between #{start_time} and#{end_time}
+						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 				</where>
 				GROUP BY o.orderCreateTime
@@ -233,7 +233,7 @@
 					AND c.collectionTime between #{start_time} and #{end_time}
 				</if>
 			</where>
-		 	GROUP BY c.collectionTime
+		 	GROUP BY c.collectionMemberId
 		 	limit #{page},#{pagesize}
 		</select>
 		
@@ -254,13 +254,13 @@
 			 left join deferred defe on defe.orderId = o.id
 			<where>
 				<if test="name != null and name != ''">
-					AND u.name = #{name}
+					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone = #{phone}
+					AND u.phone LIKE concat('%',#{phone},'%')   
 				</if>
 				<if test="orderNumber != null and orderNumber != ''">
-					AND o.orderNumber = #{orderNumber}
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')    
 				</if>
 				<if test="collectionMemberId != null and collectionMemberId != ''">
 					AND col.collectionMemberId = #{collectionMemberId}
@@ -285,13 +285,13 @@
 			left join user u on u.id = o.userId
 			<where>
 				<if test="name != null and name != ''">
-					AND u.name = #{name}
+					AND u.name LIKE concat('%',#{name},'%')    
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone = #{phone}
+					AND u.phone LIKE concat('%',#{phone},'%')
 				</if>
 				<if test="orderNumber != null and orderNumber != ''">
-					AND o.orderNumber = #{orderNumber}
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 				</if>
 				AND o.companyId = #{companyId} 
 				AND c.orderId not in 
@@ -319,13 +319,13 @@
 				AND c.collectionMemberId = cmem.collectionMemberId
 				AND o.companyId = #{companyId} 
 				<if test="name != null and name != ''">
-					AND u.name = #{name}
+					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone = #{phone}
+					AND u.phone LIKE concat('%',#{phone},'%')  
 				</if>
 				<if test="orderNumber != null and orderNumber != ''">
-					AND o.orderNumber = #{orderNumber}
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 				</if>
 				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 					AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
@@ -387,13 +387,13 @@
 				and col.collectionMemberId = colme.collectionMemberId
 				and col.deleted = "0"
 				<if test="name != null and name != ''">
-					AND u.name = #{name}
+					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone = #{phone}
+					AND u.phone LIKE concat('%',#{phone},'%') 
 				</if>
 				<if test="orderNumber != null and orderNumber != ''">
-					AND o.orderNumber = #{orderNumber}
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
 				</if>
 				<if test="overdueGrade != null and overdueGrade != ''">
 					AND o.overdueGrade = #{overdueGrade}

@@ -23,6 +23,26 @@ public class Bankcard {
 	private String cstmrnm;//持卡人姓名
 	
 	private String authentime;//认证时间
+	
+	private Integer companyId;//公司ID
+	
+	private String bankcardTypeName;//银行卡名称
+
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getBankcardTypeName() {
+		return bankcardTypeName;
+	}
+
+	public void setBankcardTypeName(String bankcardTypeName) {
+		this.bankcardTypeName = bankcardTypeName;
+	}
 
 	public Integer getId() {
 		return id;
