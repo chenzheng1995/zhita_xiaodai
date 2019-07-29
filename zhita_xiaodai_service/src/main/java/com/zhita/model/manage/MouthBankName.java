@@ -1,18 +1,30 @@
 package com.zhita.model.manage;
 
-import java.util.List;
 
-
-//代付明细返回
-public class ShortReturn {
+//扣款返回
+public class MouthBankName {
 	
-	private String AcceptStatus;
+	private String AcceptStatus;//返回状态
+	
+	private String AcctName;
+	
+	private String AcctNo;
+	
+	private String AppRetMsg;
+	
+	private String AppRetcode;
+	
+	private String CorpName;
+	
+	private String Fee;
 	
 	private String FlowNo;
 	
 	private String InputCharset;
 	
-	private List<JsonArrayDetailList> jsonarraydetaillist;
+	private String OriginalErrorMessage;
+	
+	private String OriginalRetCode;
 	
 	private String OutTradeNo;
 	
@@ -21,6 +33,8 @@ public class ShortReturn {
 	private String PlatformErrorMessage;
 	
 	private String PlatformRetCode;
+	
+	private String PostScript;
 	
 	private String Sign;
 	
@@ -32,7 +46,19 @@ public class ShortReturn {
 	
 	private String TradeTime;
 	
+	private String TransAmt;
+	
 	private String TransCode;
+	
+	private String time;
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
 
 	public String getAcceptStatus() {
 		return AcceptStatus;
@@ -40,6 +66,54 @@ public class ShortReturn {
 
 	public void setAcceptStatus(String acceptStatus) {
 		AcceptStatus = acceptStatus;
+	}
+
+	public String getAcctName() {
+		return AcctName;
+	}
+
+	public void setAcctName(String acctName) {
+		AcctName = acctName;
+	}
+
+	public String getAcctNo() {
+		return AcctNo;
+	}
+
+	public void setAcctNo(String acctNo) {
+		AcctNo = acctNo;
+	}
+
+	public String getAppRetMsg() {
+		return AppRetMsg;
+	}
+
+	public void setAppRetMsg(String appRetMsg) {
+		AppRetMsg = appRetMsg;
+	}
+
+	public String getAppRetcode() {
+		return AppRetcode;
+	}
+
+	public void setAppRetcode(String appRetcode) {
+		AppRetcode = appRetcode;
+	}
+
+	public String getCorpName() {
+		return CorpName;
+	}
+
+	public void setCorpName(String corpName) {
+		CorpName = corpName;
+	}
+
+	public String getFee() {
+		return Fee;
+	}
+
+	public void setFee(String fee) {
+		Fee = fee;
 	}
 
 	public String getFlowNo() {
@@ -58,12 +132,20 @@ public class ShortReturn {
 		InputCharset = inputCharset;
 	}
 
-	public List<JsonArrayDetailList> getJsonarraydetaillist() {
-		return jsonarraydetaillist;
+	public String getOriginalErrorMessage() {
+		return OriginalErrorMessage;
 	}
 
-	public void setJsonarraydetaillist(List<JsonArrayDetailList> jsonarraydetaillist) {
-		this.jsonarraydetaillist = jsonarraydetaillist;
+	public void setOriginalErrorMessage(String originalErrorMessage) {
+		OriginalErrorMessage = originalErrorMessage;
+	}
+
+	public String getOriginalRetCode() {
+		return OriginalRetCode;
+	}
+
+	public void setOriginalRetCode(String originalRetCode) {
+		OriginalRetCode = originalRetCode;
 	}
 
 	public String getOutTradeNo() {
@@ -96,6 +178,14 @@ public class ShortReturn {
 
 	public void setPlatformRetCode(String platformRetCode) {
 		PlatformRetCode = platformRetCode;
+	}
+
+	public String getPostScript() {
+		return PostScript;
+	}
+
+	public void setPostScript(String postScript) {
+		PostScript = postScript;
 	}
 
 	public String getSign() {
@@ -136,6 +226,14 @@ public class ShortReturn {
 
 	public void setTradeTime(String tradeTime) {
 		TradeTime = tradeTime;
+	}
+
+	public String getTransAmt() {
+		return TransAmt;
+	}
+
+	public void setTransAmt(String transAmt) {
+		TransAmt = transAmt;
 	}
 
 	public String getTransCode() {

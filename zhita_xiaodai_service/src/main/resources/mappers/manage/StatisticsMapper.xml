@@ -94,12 +94,111 @@
 			
 			
 			<update id="UpdatePaymentrecord" parameterType="com.zhita.model.manage.Payment_record" >
-				update Payment_record set status = #{status} where orderId = #{orderId}
+				update Payment_record set orderId = #{orderId} where pipelinenumber = #{pipelinenumber}
 			</update>
 			
 			
 			<select id="SelectBanl" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankcard">
 				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm from bankcard ban,bankcard_type baty 
 				where ban.bankcardTypeId = baty.id and baty.companyId = #{companyId} and ban.userId = #{userId}
+			</select>
+			
+			
+			
+			<select id="UserAll" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select idcard_number from user_attestation where userId = #{userId}
+			</select>
+			
+			
+			<select id="AllBanl" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+				select o.id,o.orderNumber,o.userId,usea.trueName,u.phone,bank.bankcardName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,
+				ord.realityBorrowMoney,ord.makeLoans,defe.deferAfterReturntime,o.overdueGrade,ord.overdueNumberOfDays,ord.interestPenaltySum,
+				ord.surplus_money,ord.realityAccount
+				from orders o,orderdetails ord,deferred defe,bankcard bank,user u,user_attestation usea 
+				<where>
+					o.id = ord.orderId
+					and u.id = o.userId
+					and u.id = usea.userId
+					and o.id = defe.orderId
+					and u.id = bank.userId
+					and o.orderStatus = "1"
+					and o.companyId = #{companyId}
+					<if test="orderNumber != null and orderNumber != ''">
+						and o.orderNumber = #{orderNumber}
+					</if>
+					<if test="name != '' and name != null">
+						AND u.name like CONCAT(CONCAT('%',#{name}),'%') 
+					</if>
+					<if test="phone != null and phone != ''">
+						AND u.phone like CONCAT(CONCAT('%',#{phone}),'%') 
+					</if>
+					<if test="bankcardName != null and bankcardName != ''">
+						AND bank.bankcardName like CONCAT(CONCAT('%',#{bankcardName}),'%') 
+					</if>
+					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND u.registeTime between #{start_time} and #{end_time}
+					</if>
+					<if test="orderCreateTimeStatu_time != null and orderCreateTimeEnd_time != '' and orderCreateTimeStatu_time != '' and orderCreateTimeEnd_time != null">
+						AND o.orderCreateTime between #{orderCreateTimeStatu_time} and #{orderCreateTimeEnd_time}
+					</if>
+					<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != '' and deferAfterReturntimeEnd_time != null">
+						AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+					</if>
+					<if test="overdueGrade != null and overdueGrade != ''">
+						AND o.overdueGrade = #{overdueGrade}
+					</if>
+				</where>
+				limit #{page},#{pagesize}
+			</select>
+			
+			
+			<select id="OrderCollectionNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select count(id) from orders where companyId = #{companyId}
+			</select>
+			
+			
+			
+			<insert id="Addbankdeduction" parameterType="com.zhita.model.manage.Bankdeduction">
+				INSERT INTO `bankdeduction`
+				(
+				sys_userId,
+				deductionproportion,
+				orderId,
+				userId,
+				deductionstatus,
+				deduction_money,
+				deduction_time
+				)VALUES(#{sys_userId},#{deductionproportion},#{orderId},#{userId},#{deductionstatus},#{deduction_money},#{deduction_time})
+			</insert>
+			
+			
+			<update id="UpdateBank" parameterType="com.zhita.model.manage.Bankdeduction">
+				update Bankdeduction set deductionstatus = #{deductionstatus} where orderId = #{orderId} and deduction_time = #{deduction_time}
+			</update>
+			
+			
+			
+			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard">
+				select DATE_FORMAT(ban.deduction_time,'%Y-%m-%d') as deduction_time,sy.account,sum(ban.id) as userNum
+				from sys_user sy,bankdeduction ban 
+				<where>
+				 ban.sys_userId = sy.userId 
+				 and companyId = #{companyId}
+				 <if test="statu_time != null and statu_time != '' and end_time != null and end_time != ''">
+				 	and ban.deduction_time between #{statu_time} and #{end_time}
+				 </if>
+				 </where>
+				 group by DATE_FORMAT(ban.deduction_time,'%Y-%m-%d'),sy.account
+				 limit #{page},#{pagesize}
+			</select>
+			
+			
+			<select id="ChenggNum" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.lang.Integer">
+				select count(id) from bankdeduction where sys_userId = #{sys_userId} and date_format(deduction_time,'%Y-%m-%d') = #{deduction_time} and deductionstatus = "扣款成功"
+			</select>
+			
+			
+			<select id="ChenggMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
+				select sum(deduction_money) from bankdeduction where sys_userId = #{sys_userId} and date_format(deduction_time,'%Y-%m-%d') = #{deduction_time} and deductionstatus = "扣款成功"
 			</select>
 </mapper>

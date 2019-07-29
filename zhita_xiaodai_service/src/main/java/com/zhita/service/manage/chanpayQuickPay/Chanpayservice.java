@@ -1,6 +1,8 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
 
+import java.util.Map;
+
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
@@ -39,4 +41,7 @@ public interface Chanpayservice {
 	
 	
 	Bankcard SelectBank(Bankcard bankcard);
+	
+	
+
 }

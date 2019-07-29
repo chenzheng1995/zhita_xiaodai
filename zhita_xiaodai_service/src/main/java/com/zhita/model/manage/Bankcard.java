@@ -27,6 +27,86 @@ public class Bankcard {
 	private Integer companyId;//公司ID
 	
 	private String bankcardTypeName;//银行卡名称
+	
+	private Integer page=0;
+	
+	private Integer pagesize=10;
+	
+	private Integer userNum;//扣款数
+	
+	private Integer chengNum;//成功数
+	
+	private Integer shiNum;//失败数
+	
+	private Integer data;//成功率
+	
+	private String statu_time;
+	
+	private String end_time;
+
+	public String getStatu_time() {
+		return statu_time;
+	}
+
+	public void setStatu_time(String statu_time) {
+		this.statu_time = statu_time;
+	}
+
+	public String getEnd_time() {
+		return end_time;
+	}
+
+	public void setEnd_time(String end_time) {
+		this.end_time = end_time;
+	}
+
+	public Integer getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(Integer userNum) {
+		this.userNum = userNum;
+	}
+
+	public Integer getChengNum() {
+		return chengNum;
+	}
+
+	public void setChengNum(Integer chengNum) {
+		this.chengNum = chengNum;
+	}
+
+	public Integer getShiNum() {
+		return shiNum;
+	}
+
+	public void setShiNum(Integer shiNum) {
+		this.shiNum = shiNum;
+	}
+
+	public Integer getData() {
+		return data;
+	}
+
+	public void setData(Integer data) {
+		this.data = data;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getPagesize() {
+		return pagesize;
+	}
+
+	public void setPagesize(Integer pagesize) {
+		this.pagesize = pagesize;
+	}
 
 	public Integer getCompanyId() {
 		return companyId;

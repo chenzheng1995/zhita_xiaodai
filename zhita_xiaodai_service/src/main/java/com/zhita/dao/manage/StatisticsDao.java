@@ -1,6 +1,9 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
+import java.util.List;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -43,4 +46,32 @@ public interface StatisticsDao {
 	
 	
 	Bankcard SelectBanl(Bankcard userId);
+	
+	
+	List<Orderdetails> AllBanl(Orderdetails order);
+	
+	
+	Integer OrderCollectionNum(Integer companyId);
+	
+	
+	String UserAll(Integer userId);
+	
+	
+	Integer Addbankdeduction(Bankdeduction ban);
+	
+	
+	Integer UpdateBank(Bankdeduction ban);
+	
+	
+	Integer SelectTotalCount(Bankcard ban);
+	
+	
+	List<Bankdeduction> AllBank(Bankcard ban);
+	
+	
+	Integer ChenggNum(Bankdeduction ban);
+	
+	
+	BigDecimal ChenggMoney(Bankdeduction ban);
+	
 }
