@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,4 +73,37 @@ public class LoanthresholdvalueServiceImp implements IntLoanthresholdvalueServic
 		int num=loanThresholdvalueMapper.upamaxthresholdvalue(maxthresholdvalue);
 		return num;
 	}
+	
+	//后台管理---查看当天放款金额
+	public Map<String,Object> queryloantoday(Integer companyId){
+		Date d=new Date();
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		String startTimestamps = null;
+		String endTimestamps = null;
+		try {
+			String startTime = date;
+			startTimestamps = Timestamps.dateToStamp(startTime);
+			String endTime = date;
+			endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//当天放款金额
+		BigDecimal loantoday = loanThresholdvalueMapper.paymentToday(companyId, startTimestamps, endTimestamps);
+		List<String> list=loanThresholdvalueMapper.queryStatus(companyId);
+		
+		Map<String,Object> map=new HashMap<>();
+		map.put("loantoday", loantoday);
+		map.put("status", list.get(0));
+		return map;
+	}
+	
+	//后台管理----修改放款渠道状态
+    public int upaloanstatus(String status,Integer companyId){
+    	int num= loanThresholdvalueMapper.upaloanstatus(status,companyId);
+    	return num;
+    }
 }

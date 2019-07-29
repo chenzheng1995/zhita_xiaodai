@@ -75,4 +75,12 @@
   <update id="upamaxthresholdvalue" parameterType="java.lang.Integer">
   	update loan_thresholdvalue set maxthresholdvalue=#{arg0}
   </update>
+  <!-- 后台管理        查询放款渠道状态 -->
+  <select id="queryStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select status from loan_setting where companyid=#{arg0}
+  </select>
+  <!--后台管理        修改放款渠道状态  -->
+  <update id="upaloanstatus">
+  	update loan_setting set status=#{arg0} where companyId=#{arg1}
+  </update>
 </mapper>

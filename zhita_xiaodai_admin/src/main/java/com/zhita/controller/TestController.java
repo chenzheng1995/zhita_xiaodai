@@ -1,6 +1,7 @@
 package com.zhita.controller;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.DateListUtil;
@@ -85,121 +87,33 @@ public class TestController {
 	
 	
 	public static void main(String[] args) throws ParseException {
-		 /*String str="600-800"; 
-		 String[] strarray=str.split("-"); 
-		 System.out.println(strarray[0]+"----"+strarray[1]);*/
-		 
-		/*//获取前一天的日期
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -1);
-		String dateyes = df.format(calendar.getTime());
-		System.out.println("今天日期的前一天："+dateyes);*/
+		/*DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date d = new Date();
+		String date = sdf.format(d);
+		System.out.println("当天时间："+date);
 		
-		// System.out.println(1000*20/100);
-		/*int a=0;
-		int b=0;
-		int c=0;
-		if((a==1||(b==1)||(c==1))){
-			System.out.println("0000");
+		String shoulddatestr = "2019-07-21 00:00:00";
+		
+		if(sdf.parse(date).getTime()>sdf.parse(shoulddatestr).getTime()){//转成long类型比较
+			System.out.println("当前时间大于应还时间");
+			Date shoulddate = sdf.parse(shoulddatestr);
+			System.out.println(DateListUtil.differentDaysByMillisecond(shoulddate,d)+"*****");
 		}*/
+		/*Integer in=5;
 		
-		
-	/*	Xtest test = new Xtest();
-		test.setId(1);
-		test.setName("make");
-		String s=JSON.toJSONString(test);
-		System.out.println(s);
-	
-		String str="{'id':1,'name':'make'}";
-		Xtest test1=JSON.parseObject(str, Xtest.class);
-		System.out.println(test1+"------");
-		
-		
-		String str1="{'error':200,'msg':'成功','wd_api_mobilephone_getdatav2_response':{'date':{'datelist':[{'id':1,'name'+'make'},{'id':2,'name'+'make1'}]}}}";
-		JsonBean jsonBean=JSON.parseObject(str1, JsonBean.class);
-		//System.out.println(jsonBean+"--******---");
-		System.out.println(jsonBean.getWd_api_mobilephone_getdatav2_response());*/
-	/*	BigDecimal b1=new BigDecimal("90.01");
-		BigDecimal b2=new BigDecimal("90.02");
-		BigDecimal b3=new BigDecimal("90.03");
-		BigDecimal b4=new BigDecimal("90.04");
-		BigDecimal b5=new BigDecimal("0");
-		List<BigDecimal> list=new ArrayList<>();
-		list.add(b1);
-		list.add(b2);
-		list.add(b3);
-		list.add(b4);
-		list.add(b5);
-		BigDecimal shouldmoney = new BigDecimal("0.00");//应还金额
-		for (int i = 0; i <list.size(); i++) {
-			BigDecimal shouldmoney1=list.get(i);
-			shouldmoney=shouldmoney.add(shouldmoney1);
-			System.out.println(shouldmoney+"----");
-		}
-		
-		System.out.println(shouldmoney);*/
-		
-		 List<String> list1 = new ArrayList<String>();
-		 list1.add("2019-01-01");
-		 list1.add("2019-01-02");
-		 list1.add("2019-01-03");
-		 list1.add("2019-01-04");
-		 list1.add("2019-01-05");
-		 for (int i = 0; i < list1.size(); i++) {
-			System.out.println(list1.get(i)+"11111");
-		 }
-	     List<String> list2 = new ArrayList<String>();
-	     list2.add("2019-01-01");
-		 list2.add("2019-01-02");
-		 for (int i = 0; i < list2.size(); i++) {
-	    	 System.out.println(list2.get(i)+"22222");
-		}
-		 
-		 
-		 
-		 
-		 /*list1.retainAll(list2);
-		 for (int i = 0; i < list1.size(); i++) {
-			System.out.println(list1.get(i));
-		}
-		 
-		 List<String> list3=DateListUtil.getDiffrent2(list1, list2);
-		 for (int j = 0; j < list3.size(); j++) {
-			System.out.println(list3.get(j)+"------------");
-		}*/
-		 
-		/* Date d=new Date();
-		 
-		 String minregiste="2019-07-24";
-		 SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-		 Date minregisteDate = sf.parse(minregiste);
-		 System.out.println(minregisteDate+"----"+d+"----------");
-		 
-		 int days=DateListUtil.differentDaysByMillisecond(minregisteDate, d);
-		 
-		 System.out.println((days+1)+"---------");
-		 */
-		 
-			/*Date d=new Date();
-			SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-			String date=sf.format(d);//date为当天时间(格式为年月日)
-			
-*/		 
-		 String startTime="2019-07-20";
-		 String endTime="2019-07-25";
-		 List<String> list=DateListUtil.getDays(startTime, endTime);
-		
-		 
-		List<String> liststrStamp = new ArrayList<>();
-		liststrStamp.add("2019-07-22");
-		liststrStamp.add("2019-07-23");
-		liststrStamp.add("2019-07-25");
-		
-		list.retainAll(liststrStamp);//两个集合的交集
-		
-		 for (int i = 0; i < list.size(); i++) {
-				System.out.println(list.get(i));
+		List<Integer> list=new ArrayList<>();
+		list.add(2);
+		list.add(4);
+		list.add(6);
+		for (int i = 0; i < list.size(); i++) {
+			if(list.get(i)>in){
+				
+			}else{
+				
 			}
+			if(){
+				
+			}
+		}*/
 	}
 }
