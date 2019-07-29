@@ -9,7 +9,17 @@ public class Orderdetails {
 	
 	private Integer id;//明细ID
 	
+	private Integer sys_userId;
+	
+	private String trueName;
+	
 	private String orderIds;
+	
+	private Integer deductionproportion;
+	
+	private Integer userId;
+	
+	private String TransAmt;
 	
 	private Integer orderId;//订单表ID
 	
@@ -188,6 +198,16 @@ public class Orderdetails {
     private String  accounttimestart_time;
     
     private String accounttimeent_time;
+    
+    private String bankcardName;//银行卡号
+
+	public String getBankcardName() {
+		return bankcardName;
+	}
+
+	public void setBankcardName(String bankcardName) {
+		this.bankcardName = bankcardName;
+	}
 
 	public String getAccounttimestart_time() {
 		return accounttimestart_time;
@@ -274,6 +294,14 @@ public class Orderdetails {
 
 	public Integer getDrainageOfPlatformId() {
 		return drainageOfPlatformId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	public void setDrainageOfPlatformId(Integer drainageOfPlatformId) {
@@ -924,6 +952,38 @@ public class Orderdetails {
 	public String toString() {
 		return "Orderdetails [id=" + id + ", orderIds=" + orderIds + ", orderId=" + orderId + ", interestPenaltySum="
 				+ interestPenaltySum + "]";
+	}
+
+	public String getTransAmt() {
+		return TransAmt;
+	}
+
+	public void setTransAmt(String transAmt) {
+		TransAmt = transAmt;
+	}
+
+	public String getTrueName() {
+		return trueName;
+	}
+
+	public void setTrueName(String trueName) {
+		this.trueName = trueName;
+	}
+
+	public Integer getSys_userId() {
+		return sys_userId;
+	}
+
+	public void setSys_userId(Integer sys_userId) {
+		this.sys_userId = sys_userId;
+	}
+
+	public Integer getDeductionproportion() {
+		return deductionproportion;
+	}
+
+	public void setDeductionproportion(Integer deductionproportion) {
+		this.deductionproportion = deductionproportion;
 	}
     
 

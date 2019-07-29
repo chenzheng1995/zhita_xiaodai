@@ -153,8 +153,8 @@ public class OrdersController {
 	    @Transactional
 	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName,int lifeOfLoan,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {  //finalLine是上面那个接口得到的额度
 	    	 Map<String, Object> map = new HashMap<String, Object>();		 
-		    	int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
-		        int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
+		    int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
+		    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    	Calendar now = Calendar.getInstance(); 
 	    	String year = now.get(Calendar.YEAR)+""; //年
 	    	String month = now.get(Calendar.MONTH) + 1 + "";//月

@@ -65,63 +65,55 @@ public class ChanpaySend extends BaseParameter{
 	@RequestMapping("send")
 	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan){
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 		Bankcard ba = new Bankcard();
 		ba.setCompanyId(companyId);
 		ba.setUserId(userId);
 		Bankcard ban = chanser.SelectBank(ba);
-		
-		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
-        int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
-		Calendar now = Calendar.getInstance(); 
-		String year = now.get(Calendar.YEAR)+""; //年
+		String phone = "13487139666";
+    	Calendar now = Calendar.getInstance(); 
+    	String year = now.get(Calendar.YEAR)+""; //年
     	String month = now.get(Calendar.MONTH) + 1 + "";//月
     	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
     	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
     	String minute = now.get(Calendar.MINUTE)+"";//分
     	String second = now.get(Calendar.SECOND)+"";//秒
-    	String afterFour = ban.getTiedCardPhone().substring(ban.getTiedCardPhone().length()-4); 
+    	String afterFour = phone.substring(phone.length()-4); 
     	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
-    	String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
-    	int riskmanagementFraction = intUserService.getRiskControlPoints(userId);//获取风控分数
-    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
-    	String borrowMoneyWay = "立即贷";//贷款方式
     	
-    	Orders orders = new Orders();
-    	orders.setCompanyId(companyId);
-    	orders.setUserId(userId);
-    	orders.setOrderNumber(orderNumber);
-    	orders.setOrderCreateTime(orderCreateTime);
-    	orders.setHowManyTimesBorMoney(String.valueOf(howManyTimesBorMoney));
-    	orders.setRiskmanagementFraction(String.valueOf(riskmanagementFraction));
-    	orders.setBorrowMoneyWay(borrowMoneyWay);
     	
-		if(orderNumber != null && ban.getBankcardname() != null && ban.getCstmrnm() != null && TransAmt != null){
+    	
+		if(userId != null && TransAmt != null && companyId != null && lifeOfLoan != 0){
 		
 		Map<String, String> map = this.requestBaseParameter();
 		map.put("TransCode", "T10000"); // 交易码
 		map.put("OutTradeNo", orderNumber); // 商户网站唯一订单号
 		map.put("CorpAcctNo", "");  //可空
 		map.put("BusinessType", "0"); // 业务类型：0对私 1对公
-		map.put("BankCommonName", ban.getBankcardTypeName()); // 通用银行名称
+		map.put("BankCommonName", "招商银行"); // 通用银行名称
 		map.put("BankCode", "");//对公必填
 		map.put("AccountType", "00"); // 账户类型
-		map.put("AcctNo", ChanPayUtil.encrypt(ban.getBankcardName(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
-		map.put("AcctName", ChanPayUtil.encrypt(ban.getCstmrnm(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
+		map.put("AcctNo", ChanPayUtil.encrypt("6214835901884138", BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
+		map.put("AcctName", ChanPayUtil.encrypt("东新雨", BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
 		map.put("TransAmt", TransAmt);
 		map.put("CorpPushUrl", "http://172.20.11.16");		
 		map.put("PostScript", "放款");
-		
-		
 		String rea = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
 				BaseConstant.MERCHANT_PRIVATE_KEY);
 		ReturnChanpay returnchanpay = JSON.parseObject(rea, ReturnChanpay.class);
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE, +1);
+		date = calendar.getTime();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMdd");
+		map1.put("End_time", sim.format(date));
 		map1.put("ReturnChanpay", returnchanpay);
-		map1.put("Orders", orders);
 		map1.put("lifeOfLoan", lifeOfLoan);
-		map1.put("shouldReturned", shouldReturned);
+		map1.put("OrderNumber", orderNumber);
 		map1.put("code", 200);
 		}else{
-			map1.put("ReturnChanpay", "orderNumber,AcctNo,AcctName,TransAmt 不能为空");
+			map1.put("msg", "userId,TransAmt,companyId,lifeOfLoan不能为空");
 			map1.put("code", 0);
 		}
 		
@@ -143,16 +135,24 @@ public class ChanpaySend extends BaseParameter{
 	 */
 	@ResponseBody
 	@RequestMapping("Mingxi")
-	public Map<String, Object> SendMing(String OriOutTradeNo,String BeginDate,String EndDate,Orders orders,int lifeOfLoan,String shouldReturned,String sourceName,String registeClient,
-			BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {
-		
+	public Map<String, Object> SendMing(String orderNumber,String BeginDate,String EndDate,int lifeOfLoan,String sourceName,String registeClient,Integer HowManyTimesBorMoney,
+			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {
+		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
+	    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
+	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
+    	int riskmanagementFraction = intUserService.getRiskControlPoints(userId);//获取风控分数
+    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
+    	String borrowMoneyWay = "立即贷";//贷款方式
+	    
+	    
 		Map<String, String> map = this.requestBaseParameter();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Payment_record pay = new Payment_record();
 		
+		
 		map.put("TransCode", "C10001");
 		map.put("OutTradeNo", ChanPayUtil.generateOutTradeNo());//官网唯一订单号
-		map.put("OriOutTradeNo", OriOutTradeNo);//原交易订单号
+		map.put("OriOutTradeNo", orderNumber);//原交易订单号
 		map.put("BeginIdx", "0");//查询起始位置，从0开始
 		map.put("QueryNum", "1");//查询记录条数
 		map.put("Status", "");//交易状态   1-成功   2-失败   3-处理中
@@ -161,21 +161,26 @@ public class ChanpaySend extends BaseParameter{
 		map.put("EndDate", EndDate);//结束时间
 		String staring = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
 				BaseConstant.MERCHANT_PRIVATE_KEY);
+		System.out.println("返回:"+staring);
 		ShortReturn sreturn = JSON.parseObject(staring,ShortReturn.class);
-		pay.setOrderNumber(OriOutTradeNo);
-		BigDecimal money = new BigDecimal("TransAmt");
-		pay.setPaymentmoney(money);
-		if(sreturn.getJsonarraydetaillist().getRetCode() =="000000" || sreturn.getJsonarraydetaillist().getStatus() == "1"){
+		pay.setPipelinenumber(orderNumber);
+		pay.setDeleted("0");
+		pay.setPaymentmoney(finalLine);
+		Integer code = Integer.valueOf(sreturn.getJsonarraydetaillist().get(0).getStatus());
+		if(code == 1){
 			pay.setStatus("支付成功");
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){
-				int num = intOrderService.setOrder(orders.getCompanyId(),orders.getUserId(),orders.getOrderNumber(),orders.getOrderCreateTime(),lifeOfLoan,
-						Integer.valueOf(orders.getHowManyTimesBorMoney()),shouldReturned,Integer.valueOf(orders.getRiskmanagementFraction()),orders.getBorrowMoneyWay());
+				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+HowManyTimesBorMoney+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
+				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 		    	if(num==1) {
-		    		int orderId = intOrderService.getOrderId(orders.getOrderNumber());
+		    		int orderId = intOrderService.getOrderId(orderNumber);
 			    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
 			    			registeClient,sourceName,shouldTotalAmount);
+			    	pay.setOrderId(orderId);
+			    	chanser.UpdatePayment(pay);
 			    	if(num==1) {
+			    		map.put("ShortReturn", staring);
 			    		map1.put("code", 200);
 			    		map1.put("msg","插入成功");
 			    	}else {
@@ -184,12 +189,16 @@ public class ChanpaySend extends BaseParameter{
 					}
 		    	}
 			}
-		
+			
 		}else{
+			System.out.println("数据:"+sreturn.getJsonarraydetaillist().get(0).getStatus()+"AAAA"+sreturn.getJsonarraydetaillist().get(0).getRetCode());
 			pay.setStatus("支付失败");
+			map1.put("查看状态", sreturn.getJsonarraydetaillist().get(0).getStatus());
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", sreturn);
 			map1.put("code", 0);
+		
+			
 		}
 		return map1;
 	}
