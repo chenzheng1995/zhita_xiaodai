@@ -71,7 +71,7 @@ public class Collection {
 	
 	private Integer Chenggnum;//承诺还款
 	
-	private Integer collNumdata;//催回率
+	private String collNumdata;//催回率
 	
 	private String realtime;
 	
@@ -426,11 +426,11 @@ public class Collection {
 		Chenggnum = chenggnum;
 	}
 
-	public Integer getCollNumdata() {
+	public String getCollNumdata() {
 		return collNumdata;
 	}
 
-	public void setCollNumdata(Integer collNumdata) {
+	public void setCollNumdata(String collNumdata) {
 		this.collNumdata = collNumdata;
 	}
 

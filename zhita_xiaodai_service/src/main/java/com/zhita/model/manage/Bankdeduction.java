@@ -101,10 +101,18 @@ public class Bankdeduction {
 	
 	private Integer shiNum;//失败数
 	
-	private Integer cdata;//成功率
+	private String cdata;//成功率
 	
 	private String statu_time;
 	
+
+	public String getCdata() {
+		return cdata;
+	}
+
+	public void setCdata(String cdata) {
+		this.cdata = cdata;
+	}
 
 	public Integer getUserNum() {
 		return userNum;
@@ -130,14 +138,6 @@ public class Bankdeduction {
 		this.shiNum = shiNum;
 	}
 
-
-	public cdata getCdata() {
-		return cdata;
-	}
-
-	public void setCdata(String cdata) {
-		this.cdata = cdata;
-	}
 
 	public String getStatu_time() {
 		return statu_time;

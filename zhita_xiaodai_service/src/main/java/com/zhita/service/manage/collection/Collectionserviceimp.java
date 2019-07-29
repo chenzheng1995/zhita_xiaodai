@@ -1,5 +1,6 @@
 package com.zhita.service.manage.collection;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -226,9 +227,11 @@ public class Collectionserviceimp implements Collectionservice{
 			colles.get(i).setCollectionStatus("态度恶劣");
 			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计坏账数
 			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
-				colles.get(i).setCollNumdata((colles.get(i).getOrderNum()/colles.get(i).getConnected()));
+				NumberFormat numberFormat = NumberFormat.getInstance();
+				numberFormat.setMaximumFractionDigits(2);
+				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
 			}else{
-				colles.get(i).setCollNumdata(100);
+				colles.get(i).setCollNumdata("0");
 			}
 			colles.get(i).setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
 			
@@ -389,9 +392,11 @@ public class Collectionserviceimp implements Collectionservice{
 			colles.get(i).setCollectionStatus("态度恶劣");
 			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计坏账数
 			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
-				colles.get(i).setCollNumdata((colles.get(i).getOrderNum()/colles.get(i).getConnected()));
+				NumberFormat numberFormat = NumberFormat.getInstance();
+				numberFormat.setMaximumFractionDigits(2);
+				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
 			}else{
-				colles.get(i).setCollNumdata(100);
+				colles.get(i).setCollNumdata("0");
 			}
 			
 		}
