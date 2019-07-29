@@ -193,10 +193,10 @@
 		  			AND ra.pipelinenumber = #{pipelinenumber}
 		  		</if>
 		  		<if test="name != null and name != ''">
-		  			AND u.name = #{name}
+		  			AND u.name LIKE concat('%',#{name},'%') 
 		  		</if>
 		  		<if test="phone != null and phone != ''">
-		  			AND u.phone = #{phone}
+		  			AND u.phone LIKE concat('%',#{phone},'%')  
 		  		</if>
 		  		<if test="thirdparty_id != null and thirdparty_id != ''">
 					AND thir.id = #{thirdparty_id}
@@ -222,16 +222,16 @@
 		  		AND ra.professionalWork = #{professionalWork}
 		  		AND o.companyId = #{companyId}
 		  		<if test="orderNumber != null and orderNumber != ''">
-		  			AND o.orderNumber = #{orderNumber}
+		  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 		  		</if>
 		  		<if test="pipelinenumber != null and pipelinenumber != ''">
 		  			AND ra.pipelinenumber = #{pipelinenumber}
 		  		</if>
 		  		<if test="name != null and name != ''">
-		  			AND u.name = #{name}
+		  			AND u.name LIKE concat('%',#{name},'%') 
 		  		</if>
 		  		<if test="phone != null and phone != ''">
-		  			AND u.phone = #{phone}
+		  			AND u.phone LIKE concat('%',#{phone},'%')  
 		  		</if>
 		  		<if test="thirdparty_id != null and thirdparty_id != ''">
 					AND thir.id = #{thirdparty_id}
@@ -267,10 +267,10 @@
 			  			AND ra.pipelinenumber = #{pipelinenumber}
 			  		</if>
 			  		<if test="name != null and name != ''">
-			  			AND u.name = #{name}
+			  			AND u.name LIKE concat('%',#{name},'%') 
 			  		</if>
 			  		<if test="phone != null and phone != ''">
-			  			AND u.phone = #{phone}
+			  			AND u.phone LIKE concat('%',#{phone},'%')  
 			  		</if>
 			  		<if test="thirdparty_id != null and thirdparty_id != ''">
 						AND thir.id = #{thirdparty_id}
@@ -298,10 +298,10 @@
 			  			AND ra.pipelinenumber = #{pipelinenumber}
 			  		</if>
 			  		<if test="name != null and name != ''">
-			  			AND u.name = #{name}
+			  			AND u.name LIKE concat('%',#{name},'%') 
 			  		</if>
 			  		<if test="phone != null and phone != ''">
-			  			AND u.phone = #{phone}
+			  			AND u.phone LIKE concat('%',#{phone},'%')
 			  		</if>
 			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND ra.repaymentDate between #{start_time} and #{end_time}
@@ -339,7 +339,7 @@
   			 		left join deferred defe on defe.orderid = o.id
   			 		left join deferred_settings defeset on defeset.companyId = o.companyId
   			 		<where>
-  			 			AND o.orderNumber = #{orderNumber}
+  			 			AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
   			 			AND d.companyId = #{companyId}
   			 		</where>
   			 </select>
@@ -359,7 +359,7 @@
   			 		left join deferred_settings defeset on defeset.companyId = o.companyId
   			 		left join payment_record pay on pay.orderId = o.id
   					<where>
-  			 			AND o.orderNumber = #{orderNumber}
+  			 			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
   			 			AND d.companyId = #{companyId}
   					</where>
   					group by ord.orderId
@@ -402,13 +402,13 @@
 						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
 					</if>
 					<if test="name != null and name != ''">
-						AND u.name = #{name}
+						AND u.name LIKE concat('%',#{name},'%') 
 					</if>
 					<if test="phone != null and phone != ''">
-						AND u.phone = #{phone}
+						AND u.phone LIKE concat('%',#{phone},'%') 
 					</if>
 					<if test="orderNumber != null and orderNumber != ''">
-						AND o.orderNumber = #{orderNumber}
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
 						AND th.repaymentSource = #{repaymentSource}
@@ -434,13 +434,13 @@
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 					<if test="name != null and name != ''">
-						AND u.name = #{name}
+						AND u.name LIKE concat('%',#{name},'%') 
 					</if>
 					<if test="phone != null and phone != ''">
-						AND u.phone = #{phone}
+						AND u.phone LIKE concat('%',#{phone},'%')  
 					</if>
 					<if test="orderNumber != null and orderNumber != ''">
-						AND o.orderNumber = #{orderNumber}
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 					</if>
 					<if test="thirdparty_id != null and thirdparty_id != ''">
 						AND re.thirdparty_id = #{thirdparty_id}
@@ -470,13 +470,13 @@
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 					<if test="name != null and name != ''">
-						AND u.name = #{name}
+						AND u.name LIKE concat('%',#{name},'%')  
 					</if>
 					<if test="phone != null and phone != ''">
-						AND u.phone = #{phone}
+						AND u.phone LIKE concat('%',#{phone},'%') 
 					</if>
 					<if test="orderNumber != null and orderNumber != ''">
-						AND o.orderNumber = #{orderNumber}
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
 						AND th.repaymentSource = #{repaymentSource}
@@ -508,13 +508,13 @@
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 					<if test="name != null and name != ''">
-						AND u.name = #{name}
+						AND u.name LIKE concat('%',#{name},'%') 
 					</if>
 					<if test="phone != null and phone != ''">
-						AND u.phone = #{phone}
+						AND u.phone LIKE concat('%',#{phone},'%')  
 					</if>
 					<if test="orderNumber != null and orderNumber != ''">
-						AND o.orderNumber = #{orderNumber}
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 					</if>
 					<if test="repaymentSource != null and repaymentSource != ''">
 						AND th.repaymentSource = #{repaymentSource}
@@ -594,13 +594,13 @@
   				<where>
   					AND o.companyId = #{companyId}
   					<if test="orderNumber != null and orderNumber != ''">
-  						AND o.orderNumber = #{orderNumber}
+  						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
   					</if>
   					<if test="phone != null and phone != ''">
-  						AND ua.phone = #{phone}
+  						AND ua.phone LIKE concat('%',#{phone},'%') 
   					</if>
   					<if test="name != null and name != ''">
-  						AND ua.name = #{name}
+  						AND ua.name LIKE concat('%',#{name},'%') 
   					</if>
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND u.underthe_time between #{start_time} and #{end_time}
@@ -626,13 +626,13 @@
 					AND o.id = ord.orderId
 					AND o.companyId = sy.companyId
   					<if test="orderNumber != null and orderNumber != ''">
-  						AND o.orderNumber = #{orderNumber}
+  						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
   					</if>
   					<if test="phone != null and phone != ''">
-  						AND ua.phone = #{phone}
+  						AND ua.phone LIKE concat('%',#{phone},'%')  
   					</if>
   					<if test="name != null and name != ''">
-  						AND ua.name = #{name}
+  						AND ua.name LIKE concat('%',#{name},'%') 
   					</if>
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND u.underthe_time between #{start_time} and #{end_time}
@@ -660,13 +660,13 @@
   					AND defe.orderId = o.id
   					AND o.companyId = #{companyId}
   					<if test="orderNumber != null and orderNumber != ''">
-  						AND o.orderNumber = #{orderNumber}
+  						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
   					</if>
   					<if test="name != null and name != ''">
-  						AND u.name = #{name}
+  						AND u.name LIKE concat('%',#{name},'%')  
   					</if>
   					<if test="phone != null and phone != ''">
-  						AND u.phone = #{phone}
+  						AND u.phone LIKE concat('%',#{phone},'%') 
   					</if>
   					<if test="bankcardName != null and bankcardName != ''">
   						AND b.bankcardName = #{bankcardName}
@@ -701,13 +701,13 @@
   				<where>
   					AND o.companyId = #{companyId}
   					<if test="orderNumber != null and orderNumber != ''">
-  						AND o.orderNumber = #{orderNumber}
+  						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
   					</if>
   					<if test="name != null and name != ''">
-  						AND u.name = #{name}
+  						AND u.name  LIKE concat('%',#{name},'%') 
   					</if>
   					<if test="phone != null and phone != ''">
-  						AND u.phone = #{phone}
+  						AND u.phone  LIKE concat('%',#{phone},'%')
   					</if>
   					<if test="bankcardName != null and bankcardName != ''">
   						AND b.bankcardName = #{bankcardName}

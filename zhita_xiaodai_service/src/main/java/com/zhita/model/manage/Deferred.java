@@ -22,6 +22,26 @@ public class Deferred {
 	private String deleted;
 	
 	private Integer onceDeferredDay;
+	
+	private String deferredTime;
+	
+	private String orderNumber;
+
+	public String getDeferredTime() {
+		return deferredTime;
+	}
+
+	public void setDeferredTime(String deferredTime) {
+		this.deferredTime = deferredTime;
+	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
 
 	public Integer getId() {
 		return id;

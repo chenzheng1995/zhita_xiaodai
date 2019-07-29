@@ -74,10 +74,6 @@ public class LoginController {
     @RequestMapping("/sendShortMessage")
     @ResponseBody
     public Map<String, String> sendShortMessage(String phone, int companyId, String appNumber, String code) {
-    	String company ="";
-    	if (companyId==3) {
-    	 company = "借吧";
-    	}
         Map<String, String> map = new HashMap<>();
         DateFormat format = new SimpleDateFormat("yyyy/M/d");
         String result = MD5Utils.getMD5(phone + appNumber + format.format(new Date()) + "@xiaodai");
@@ -85,8 +81,8 @@ public class LoginController {
             result = 0 + MD5Utils.getMD5(phone + appNumber + format.format(new Date()) + "@xiaodai");
         }
         if (result.equals(code)) {
-            SMSUtil smsUtil = new SMSUtil();
-            String state = smsUtil.sendSMS(phone, "json", company);
+            YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+            String state = yunTongXunUtil.sendSMS(phone);
             map.put("msg", state);
             return map;
         } else {

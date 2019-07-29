@@ -23,4 +23,7 @@ public interface SmsMapper {
 	
 	
 	List<Shortmessage> AllController(String collection_time);
+	
+	
+	Integer SelectTimeSize(Shortmessage shor);
 }

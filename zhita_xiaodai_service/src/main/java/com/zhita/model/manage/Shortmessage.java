@@ -28,7 +28,17 @@ public class Shortmessage {
 	
 	private Integer pagesize=10;
 	
+	private Integer shortmessagesize;
+	
 	private List<String> phonesa;
+
+	public Integer getShortmessagesize() {
+		return shortmessagesize;
+	}
+
+	public void setShortmessagesize(Integer shortmessagesize) {
+		this.shortmessagesize = shortmessagesize;
+	}
 
 	public List<String> getPhonesa() {
 		return phonesa;

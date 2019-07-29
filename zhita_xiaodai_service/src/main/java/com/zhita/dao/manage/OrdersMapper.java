@@ -116,7 +116,7 @@ public interface OrdersMapper {
 
 	String getorderStatus1(@Param("userId")int userId,@Param("companyId") int companyId);
 
-	String getshouldReturnTime(String orderNumber);
+	String getshouldReturnTime(@Param("userId")int userId,@Param("companyId") int companyId);
 
 
 }

@@ -579,8 +579,8 @@ public class OrderServiceImp implements IntOrderService{
 	}
 
 	@Override
-	public String getshouldReturnTime(String orderNumber) {
-		String beforeTime = ordersMapper.getshouldReturnTime(orderNumber);
+	public String getshouldReturnTime(int userId,int companyId) {
+		String beforeTime = ordersMapper.getshouldReturnTime(userId,companyId);
 		return beforeTime;
 	}
 

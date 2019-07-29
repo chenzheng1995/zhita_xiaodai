@@ -35,7 +35,6 @@ import com.zhita.service.manage.operational.OperationalService;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
 
-import sun.text.resources.cldr.ar.FormatData_ar_MA;
 
 @Controller
 @RequestMapping("/Order")
@@ -257,14 +256,17 @@ public class OrdersController {
 		   String TrxId = (String) map1.get("orderNumber");//订单号
            Map<String, Object> map2 = bankcardMapper.getbankcard(userId);
            int bankcardTypeId = (int) map2.get("bankcardTypeId");
-           String bankcardTypeName = bankcardTypeMapper.getbankcardTypeName(bankcardTypeId);
-		   String bankcardName = (String) map2.get("bankcardName");
-		   String CardBegin = bankcardName.substring(0,6);//卡号前6位
-		   String CardEnd = bankcardName.substring(bankcardName.length()-4,bankcardName.length());//卡号前4位
+           String bankcardTypeName = bankcardTypeMapper.getbankcardTypeName(bankcardTypeId);//银行卡类型
+           String AcctName = (String) map2.get("cstmrnm");//持卡人姓名
+		   String AcctNo = (String) map2.get("bankcardName");//卡号
+		   String CardBegin = AcctNo.substring(0,6);//卡号前6位
+		   String CardEnd = AcctNo.substring(AcctNo.length()-4,AcctNo.length());//卡号前4位
 		   map.put("TrxId", TrxId);
 		   map.put("CardBegin", CardBegin);
 		   map.put("CardEnd", CardEnd);
 		   map.put("bankcardTypeName",bankcardTypeName);
+		   map.put("AcctName",AcctName);
+		   map.put("AcctNo",AcctNo);
 		return map;
 		   
 	   }
@@ -396,7 +398,7 @@ public class OrdersController {
    @RequestMapping("/deferredpage")
    @ResponseBody
    @Transactional
-   public Map<String, Object> deferredpage (int userId,int companyId,String orderNumber,BigDecimal finalLine) throws ParseException{
+   public Map<String, Object> deferredpage (int userId,int companyId,BigDecimal finalLine) throws ParseException{
   	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
     Map<String, Object> map1  = new HashMap<String, Object>();
   	BigDecimal ll = new BigDecimal(0);
@@ -408,7 +410,7 @@ public class OrdersController {
       BigDecimal bd8 = new BigDecimal("100");
       pr = pr.divide(bd8);//平台服务费比率除以100之后
       BigDecimal deferredexpenses = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//延期费用	
-	  String beforeTime = intOrderService.getshouldReturnTime(orderNumber);//延期前应还时间
+	  String beforeTime = intOrderService.getshouldReturnTime(userId,companyId);//延期前应还时间
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 	beforeTime = sdf.format(new Date(Long.parseLong(beforeTime))); // 时间戳转换日期  
       Date date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);//取时间 

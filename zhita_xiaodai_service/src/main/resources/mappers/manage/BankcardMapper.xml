@@ -141,7 +141,7 @@
   </update>
   
   	<select id="getbankcard" parameterType="java.lang.Integer" resultType="java.util.Map">
-		select attestationStatus,bankcardTypeId,bankcardName from bankcard where userid=#{userId} and attestationStatus ='1'
+		select attestationStatus,bankcardTypeId,bankcardName,cstmrnm from bankcard where userid=#{userId} and attestationStatus ='1'
 	</select>
 
 </mapper>

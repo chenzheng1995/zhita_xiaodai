@@ -71,6 +71,8 @@ public class Smserviceimp implements Smservice{
 		        
 		        Shortmessage shor = new Shortmessage();
 		        
+		        shor.setCollection_time(sm.getCollection_time());
+		        
 		        shor.setCompanyid(sm.getCompanyid());
 		        
 		        shor.setSmg(sm.getMsg());
@@ -79,16 +81,16 @@ public class Smserviceimp implements Smservice{
 		        
 		        shor.setPhonenum(sm.getPhonenum());
 		        
-		        if(smsSingleResponse.getErrorMsg() != null && smsSingleResponse.getErrorMsg() != ""){
-		        	map.put("code", "0");
-		        	map.put("desc", "数据异常");
-		        }else{
-		        	
+		        if(smsSingleResponse.getErrorMsg().equals("")){
 		        	SimpleDateFormat def = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        	shor.setSend_time(def.format(new Date()));
 		        	sdao.AddSms(shor);
 		        	map.put("code", "200");
 		        	map.put("desc", "已发送,数据存储");
+		        }else{
+		        	map.put("code", "0");
+		        	map.put("desc", "数据异常");
+		        	
 		        }
 			}
 			
@@ -104,6 +106,10 @@ public class Smserviceimp implements Smservice{
 			shor.setPage(pages.getPage());
 			if(shor.getCompanyid() != null){
 				List<Shortmessage> allsho = sdao.DayShortMessage(shor);
+				for(int i=0;i<allsho.size();i++){
+					allsho.get(i).setCompanyid(shor.getCompanyid());
+					allsho.get(i).setShortmessagesize(sdao.SelectTimeSize(allsho.get(i)));
+				}
 				map.put("Shortmessage", allsho);
 				map.put("pages", pages);
 			}else{
@@ -194,9 +200,11 @@ public class Smserviceimp implements Smservice{
 		phones = sdao.AllPhone(sm);
 		Shortmessage shor = new Shortmessage();
 		shor.setPhonesa(phones);
+		shor.setCompanyid(sm.getCompanyid());
 		shor.setCollection_time(Timestamps.stampToDate1(sm.getStatu_time()));
 		shor.setPhonenum(phones.size());
 		List<Shortmessage> sho = new ArrayList<Shortmessage>();
+		shor.setShortmessagesize(sdao.SelectTimeSize(shor));
 		sho.add(shor);
 		map.put("Shortmessage", sho);
 		return map;
