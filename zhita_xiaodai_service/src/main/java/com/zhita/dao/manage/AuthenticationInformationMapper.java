@@ -3,8 +3,6 @@ package com.zhita.dao.manage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.zhita.model.manage.AuthenticationInformation;
 
 public interface AuthenticationInformationMapper {

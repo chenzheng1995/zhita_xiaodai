@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.controller.shiro.PhoneToken;
 import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
-import com.zhita.util.RedisClientUtil;
-import com.zhita.util.SMSUtil;
 /**
  * 
  * @author lhq
@@ -77,8 +73,8 @@ public class LoginController {
 		return map;
 	}
 	
-	//后台管理----登录验证  以及授权(手机号和验证码)
-	@ResponseBody
+	//后台管理----登录验证  以及授权(手机号和验证码)__不用的接口
+	/*@ResponseBody
 	@RequestMapping(value="/loginpc")
 	public Map<String, Object> loginpc(String phone,String code,HttpSession session){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -123,10 +119,10 @@ public class LoginController {
 	        	}
 		}
 		return map;
-	}
+	}*/
 	
 	//发送验证码
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/sendSMS")
 	public Map<String, String> sendSMS(String phone,String companyName){
 		Map<String, String> map = new HashMap<>();
@@ -134,7 +130,7 @@ public class LoginController {
 		String state = smsUtil.sendSMS(phone, "json",companyName);
 	    map.put("msg",state);		
 		return map;	
-	}
+	}*/
 	
 	// 退出登录
 	@ResponseBody

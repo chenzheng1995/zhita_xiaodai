@@ -1,11 +1,8 @@
 package com.zhita.controller;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.OrderQueryParameter;
+import com.zhita.model.manage.OverdueSettings;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
-import com.zhita.util.DateListUtil;
-import com.zhita.util.Timestamps;
 
 
 
@@ -99,21 +94,61 @@ public class TestController {
 			Date shoulddate = sdf.parse(shoulddatestr);
 			System.out.println(DateListUtil.differentDaysByMillisecond(shoulddate,d)+"*****");
 		}*/
-	/*	Integer in=5;
+		/*Integer in=9;
 		
-		List<Integer> list=new ArrayList<>();
-		list.add(2);
-		list.add(4);
-		list.add(6);
+		List<OverdueSettings> list=new ArrayList<>();
+		List<BigDecimal> list1=new ArrayList<>();
+		OverdueSettings ov=new OverdueSettings();
+		ov.setOverduehowmanydaysage(2);
+		ov.setPenaltyinterestrates(new BigDecimal(0.1));
+		
+		OverdueSettings ov1=new OverdueSettings();
+		ov1.setOverduehowmanydaysage(4);
+		ov1.setPenaltyinterestrates(new BigDecimal(0.2));
+		
+		OverdueSettings ov2=new OverdueSettings();
+		ov2.setOverduehowmanydaysage(6);
+		ov2.setPenaltyinterestrates(new BigDecimal(0.3));
+		
+		OverdueSettings ov3=new OverdueSettings();
+		ov3.setOverduehowmanydaysage(8);
+		ov3.setPenaltyinterestrates(new BigDecimal(0.4));
+		
+		OverdueSettings ov4=new OverdueSettings();
+		ov4.setOverduehowmanydaysage(10);
+		ov4.setPenaltyinterestrates(new BigDecimal(0.5));
+		
+		
+		list.add(ov);
+		list.add(ov1);
+		list.add(ov2);
+		list.add(ov3);
+		list.add(ov4);
 		for (int i = 0; i < list.size(); i++) {
-			if(list.get(i)>in){
-				
-			}else{
-				
+			if(in<=list.get(i).getOverduehowmanydaysage()){
+				System.out.println(list.get(i).getPenaltyinterestrates()+"-----------");
+				list1.add(list.get(i).getPenaltyinterestrates());
 			}
-			if(){
+		}
+		
+		System.out.println(list1.get(0)+"*********");*/
+		
+		/*BigDecimal a = new BigDecimal(3000);
+		BigDecimal b = new BigDecimal(0.1);
+		System.out.println(a.multiply(b).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)+"**********");*/
+		/*String over="5";
+		String s="1-3";
+		String[] str=s.split("-");
+		String start = str[0];
+		String end = str[0];
+		for (int i = 0; i < str.length; i++) {
+			if(Integer.parseInt(over)>=Integer.parseInt(start)&& Integer.parseInt(over)<=Integer.parseInt(end)){
 				
 			}
 		}*/
+		BigDecimal a=new BigDecimal(3000);
+		BigDecimal b=new BigDecimal(0.4);
+	 BigDecimal interestPenaltySum = a.multiply(b).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+	 System.out.println(interestPenaltySum);
 	}
 }

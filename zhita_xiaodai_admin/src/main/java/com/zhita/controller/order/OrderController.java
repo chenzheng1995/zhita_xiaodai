@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.UserLikeParameter;
 import com.zhita.service.manage.order.IntOrderService;
+import com.zhita.service.manage.user.IntUserService;
 
 @Controller
 @RequestMapping("/order")
 public class OrderController {
 	@Autowired
 	private IntOrderService intOrderService;
+	@Autowired
+	private IntUserService intUserService;
 	
 /*	//后台管理----机审订单     (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
 	@ResponseBody
@@ -116,6 +119,18 @@ public class OrderController {
 	@RequestMapping("queryAllUserPeopleYet")
 	public Map<String, Object> queryAllUserPeopleYet(UserLikeParameter userLikeParameter){
 		Map<String, Object> map=intOrderService.queryAllUserPeopleYet(userLikeParameter);
+		return map;
+	}
+	
+	/**
+	 * 用户认证信息
+	 * @param userid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/queryUserAttesta")
+	public Map<String,Object> queryUserAttesta(Integer userid){
+		Map<String,Object> map=intUserService.queryUserAttesta(userid);
 		return map;
 	}
 }

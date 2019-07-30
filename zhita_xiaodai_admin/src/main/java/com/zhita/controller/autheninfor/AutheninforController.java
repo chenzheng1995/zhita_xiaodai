@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.AuthenField;
 import com.zhita.model.manage.AuthenticationInformation;
-import com.zhita.model.manage.Company;
 import com.zhita.service.manage.autheninfor.IntAutheninforService;
 import com.zhita.util.OssUtil;
 
@@ -33,20 +32,20 @@ public class AutheninforController {
     }
 	
 	//后台管理---添加功能（查询出所有公司）
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllCompany")
     public List<Company> queryAllCompany(){
     	List<Company> list=intAutheninforService.queryAllCompany();
     	return list;
-    }
+    }*/
 	
 	//后台管理---添加功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(AuthenticationInformation record) {
 		int num=intAutheninforService.insert(record);
     	return num;
-    }
+    }*/
 	
 	
 	@ResponseBody
@@ -102,12 +101,12 @@ public class AutheninforController {
     }
 	
 	//后台管理---根据主键id查询出当前对象信息
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public AuthenticationInformation selectByPrimaryKey(Integer id){
     	AuthenticationInformation authenticationInformation=intAutheninforService.selectByPrimaryKey(id);
     	return authenticationInformation;
-    }
+    }*/
 
     //后台管理---编辑功能
 	@ResponseBody

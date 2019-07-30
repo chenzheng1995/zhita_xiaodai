@@ -61,6 +61,12 @@ public class Orders {
 	
 	private User user;//对应用户对象
 	
+	private BigDecimal realityBorrowMoney;//实际借款金额（元）
+	
+	private BigDecimal interestSum;//期内总利息（元）
+	
+	private String overdueNumberOfDays;//逾期天数
+	
 	
 	
 	private Integer adoptcount;//放款通过数
@@ -576,6 +582,30 @@ public class Orders {
 
 	public void setChenggData(Integer chenggData) {
 		this.chenggData = chenggData;
+	}
+
+	public BigDecimal getRealityBorrowMoney() {
+		return realityBorrowMoney;
+	}
+
+	public void setRealityBorrowMoney(BigDecimal realityBorrowMoney) {
+		this.realityBorrowMoney = realityBorrowMoney;
+	}
+
+	public BigDecimal getInterestSum() {
+		return interestSum;
+	}
+
+	public void setInterestSum(BigDecimal interestSum) {
+		this.interestSum = interestSum;
+	}
+
+	public String getOverdueNumberOfDays() {
+		return overdueNumberOfDays;
+	}
+
+	public void setOverdueNumberOfDays(String overdueNumberOfDays) {
+		this.overdueNumberOfDays = overdueNumberOfDays;
 	}
 
 }

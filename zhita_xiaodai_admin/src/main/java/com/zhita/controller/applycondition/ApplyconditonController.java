@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.ApplyCondition;
-import com.zhita.model.manage.Company;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
 
 @Controller
@@ -26,28 +25,28 @@ public class ApplyconditonController {
     }
 	
 	  //后台管理---添加功能（查询出所有公司）
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllCompany")
     public List<Company> queryAllCompany(){
     	List<Company> list=intApplyconditionService.queryAllCompany();
     	return list;
-    }
+    }*/
 	
 	  //后台管理---添加功能
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/insert")
     public int insert(ApplyCondition record){
     	int num=intApplyconditionService.insert(record);
     	return num;
-    }
+    }*/
 	
 	//后台管理---根据id查询出当前对象
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public ApplyCondition selectByPrimaryKey(Integer id){
     	ApplyCondition applyCondition=intApplyconditionService.selectByPrimaryKey(id);
     	return applyCondition;
-    }
+    }*/
 	
 	 //后台管理---编辑功能
 	@ResponseBody

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.ProjecttimerMapper">
+	<!-- ==========================控制订单逾期======================= -->
+	<!-- 后台管理        查询订单表     所有逾期中的订单 -->
+	<select id="queryAllover" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+		select o.id,o.orderNumber,o.shouldReturnTime,od.realityBorrowMoney,od.interestSum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus=0
+	</select>
+	<!--后台管理      修改订单状态为逾期  -->
+	<update id="updateover" parameterType="java.lang.Integer">
+		update orders set orderStatus=1 where id=#{arg0}
+	</update>
+	<!-- 后台管理      查询逾期设置表所有信息 -->
+	<select id="queryAllOversett" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueSettings">
+	 	select id,productId,overdueHowmanydaysage,penaltyInterestRates,deleted from overdue_settings where companyId=#{arg0} and deleted=0
+	</select>
+	<!-- 后台管理         修改订单明细表信息（在明细表更新逾期天数，日均罚息，逾期总罚息，更新总利息） -->
+	<update id="upaorderdetail">
+		update orderdetails set overdueNumberOfDays=#{arg0},interestPenaltyDay=#{arg1},interestPenaltySum=#{arg2},interestInAll=#{arg3} where orderid=#{arg4}
+	</update>
+	
+	<!--======================控制逾期等级============================  -->
+	<!-- 后台管理         查询出所有已逾期的订单 -->
+	<select id="queryAlloverdue" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+		select o.id,o.userid,o.orderNumber,od.overdueNumberOfDays from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus=1
+	</select>
+	<!-- 后台管理       查询所有逾期等级表的信息 -->
+	<select id="queryAlloverclass" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueClass">
+		select * from overdue_class where companyid=#{arg0} and deleted=0;
+	</select>
+	<!-- 后台管理        更新订单表逾期等级字段 -->
+	<update id="upaoverclass">
+		update orders set overdueGrade=#{arg0} where id=#{arg1}
+	</update>
+	
+	
+	<!-- ==========================控制逾期超过30天   该用户进入黑名单=================== -->
+	<!-- 后台管理         添加黑名单(修改当前用户的黑名单状态) -->
+	<update id="upaBlacklistStatus" parameterType="java.lang.Integer">
+		update user set ifBlacklist=1 where id=#{arg0}
+	</update>
+	<!--后台管理       查询黑名单分界线的值  -->
+	<select id="queryblackline" resultType="java.lang.Integer">
+		select demarcationline from black_demarcation_line
+	</select>
+</mapper>
