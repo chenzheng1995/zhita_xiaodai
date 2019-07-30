@@ -33,6 +33,7 @@
       <arg column="valid_date_start" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="valid_date_end" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="attestationStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="authenticationSteps" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -410,7 +411,7 @@
 	
 					<!-- 根据userid查询sign -->
 	<select id="getuserAttestation" parameterType="java.lang.Integer" resultType="java.util.Map">
-		select sign,faceBizToken,trueName,idCardBizToken,idcard_number,attestationStatus from user_attestation where userId = #{userId}
+		select sign,faceBizToken,trueName,idCardBizToken,idcard_number,attestationStatus,address,birth_year,birth_month,birth_day from user_attestation where userId = #{userId}
 	</select>
 
 	
@@ -429,7 +430,45 @@
 		    valid_date_end = #{valid_date_end},
 		    headUrl = #{frontsidePath},
 		    nationalEmblemUrl = #{backsidePath},
-		    idcard_number = #{idcard_number}
+		    idcard_number = #{idcard_number},
+		    homeAddressLongitude =#{homeAddressLongitude},
+		    homeAddressLatitude = #{homeAddressLatitude},
+		    detailAddress = #{detailAddress},
+		    headUrl =#{headossPath},
+		    nationalEmblemUrl =#{nationalEmblemossPath},
+		    authenticationSteps =#{authenticationSteps}
+		where userId = #{userId}
+	</update>
+	
+	
+	  				  	<!--APP 插入用户信息 -->
+	<insert id="insertUserAttestation" parameterType="java.util.Map">
+		insert into user_attestation (trueName,gender,nationality,birth_year,birth_month,birth_day,address,issued_by,valid_date_start,valid_date_end,headUrl,nationalEmblemUrl,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,userId)
+		values (#{name},
+		#{gender},
+		#{nationality},
+		#{birth_year},
+		#{birth_month},
+		#{birth_day},
+		#{address},
+		#{issued_by},
+		#{valid_date_start},
+		#{valid_date_end},
+		#{frontsidePath},
+		#{backsidePath},
+		#{idcard_number},
+		#{homeAddressLongitude},
+		#{homeAddressLatitude},
+		#{detailAddress},
+		#{authenticationSteps},
+		#{userId})
+	</insert>
+	
+	
+						<!--APP 更新用户信息-->
+		<update id="updateAuthenticationSteps" parameterType="java.util.Map">
+		update user_attestation
+		set authenticationSteps = #{authenticationSteps}
 		where userId = #{userId}
 	</update>
 	
@@ -472,7 +511,13 @@
 									<!--APP 更新认证状态-->
 		<update id="updateAttestationStatus" parameterType="java.util.Map">
 		update user_attestation
-		set attestationStatus = #{attestationStatus}
+		set attestationStatus = #{attestationStatus},
+		authenticationSteps = #{authenticationSteps}
 		where userId = #{userId}
 	</update>
+	
+		<select id="getauthenticationSteps" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select authenticationSteps from user_attestation where userId = #{userId}
+	</select>
+	
 </mapper>

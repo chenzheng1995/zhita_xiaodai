@@ -64,6 +64,8 @@ public class UserAttestation {
     private String phone;
     
     private String authentime;//认证时间
+    
+    private String authenticationSteps;//认证步骤
 
 	public Integer getId() {
 		return id;
@@ -319,6 +321,14 @@ public class UserAttestation {
 
 	public void setAuthentime(String authentime) {
 		this.authentime = authentime;
+	}
+	
+	public String getAuthenticationSteps() {
+		return authenticationSteps;
+	}
+
+	public void setAuthenticationSteps(String authenticationSteps) {
+		this.authenticationSteps = authenticationSteps;
 	}
    
 }

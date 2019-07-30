@@ -113,4 +113,11 @@
     from apply_condition
     where companyId=#{arg0} 
   </select>
+  
+
+  <select id="getApplycondition" parameterType="java.lang.Integer" resultType="java.util.Map">
+select minimumage,maximumage,refuseApplyProvince from apply_condition where companyId = #{companyId}
+  </select>
+  
+  
 </mapper>

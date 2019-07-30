@@ -132,7 +132,7 @@ public class CertificationCenterController {
 		   }
 		   
 		   Map<String, Object> map2 = operatorService.getOperator(userId);
-		   if(map==null) {
+		   if(map2==null) {
 			   Operator ="0";
 		   }else {
 		       Operator = (String) map2.get("attestationStatus");
@@ -140,7 +140,7 @@ public class CertificationCenterController {
 		   
 		   
 		   Map<String, Object> map3 = operatorService.getOperator(userId);
-		   if(map==null) {
+		   if(map3==null) {
 			   bankcard ="0";
 		   }else {
 			   bankcard = (String) map3.get("attestationStatus");
@@ -149,7 +149,8 @@ public class CertificationCenterController {
 //		   int riskControlPoints = intUserService.getRiskControlPoints(userId);
 		   String shareOfState = intUserService.getshareOfState(userId);
 		   
-		   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&(shareOfState.equals("2")||(shareOfState.equals("4")))) {
+//		   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&(shareOfState.equals("2")||(shareOfState.equals("4")))) {
+			   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")) {
 			   map1.put("code","200");
 			   map1.put("msg", "满足条件");
 		   }else {

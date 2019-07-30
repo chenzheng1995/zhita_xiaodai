@@ -46,8 +46,8 @@ public class UserAttestationServiceImp implements UserAttestationService{
 	@Override
 	public int updateUserAttestation(String name, String gender, String nationality, String birth_year,
 			String birth_month, String birth_day, String address, String issued_by, String valid_date_start,
-			String valid_date_end, String frontsidePath, String backsidePath, int userId,String idcard_number) {
-		int number = userAttestationMapper.updateUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number);
+			String valid_date_end, String frontsidePath, String backsidePath, int userId,String idcard_number,String homeAddressLongitude,String homeAddressLatitude,String detailAddress,String headossPath,String nationalEmblemossPath,String authenticationSteps) {
+		int number = userAttestationMapper.updateUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,headossPath,nationalEmblemossPath,authenticationSteps);
 		return number;
 	}
 
@@ -77,9 +77,31 @@ public class UserAttestationServiceImp implements UserAttestationService{
 	}
 
 	@Override
-	public void updateAttestationStatus(String attestationStatus, int userId) {
-		userAttestationMapper.updateAttestationStatus(attestationStatus,userId);
+	public void updateAttestationStatus(String attestationStatus, int userId,String authenticationSteps) {
+		userAttestationMapper.updateAttestationStatus(attestationStatus,userId,authenticationSteps);
 		
+	}
+
+	@Override
+	public int updateAuthenticationSteps(int userId,String authenticationSteps) {
+		int number = userAttestationMapper.updateAuthenticationSteps(userId,authenticationSteps);
+		return number;
+	}
+
+	@Override
+	public String getauthenticationSteps(int userId) {
+		String authenticationSteps = userAttestationMapper.getauthenticationSteps(userId);
+		return authenticationSteps;
+	}
+
+	@Override
+	public int insertUserAttestation(String name, String gender, String nationality, String birth_year,
+			String birth_month, String birth_day, String address, String issued_by, String valid_date_start,
+			String valid_date_end, String frontsidePath, String backsidePath, int userId, String idcard_number,
+			String homeAddressLongitude, String homeAddressLatitude, String detailAddress,
+			 String authenticationSteps) {
+		 int number = userAttestationMapper.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps);
+		return number;
 	}
 
 

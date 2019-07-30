@@ -17,7 +17,7 @@ public interface UserAttestationService {
 
 	int updateUserAttestation(String name, String gender, String nationality, String birth_year, String birth_month,
 			String birth_day, String address, String issued_by, String valid_date_start, String valid_date_end,
-			String frontsidePath, String backsidePath, int userId, String idcard_number);
+			String frontsidePath, String backsidePath, int userId, String idcard_number, String homeAddressLongitude, String homeAddressLatitude, String detailAddress, String headossPath, String nationalEmblemossPath, String authenticationSteps);
 
 	Map<String, Object> selectUserAttestationService(int userId);
 
@@ -28,7 +28,16 @@ public interface UserAttestationService {
 	int setlinkman(String linkmanOneRelation, String linkmanOneName, String linkmanOnePhone, String linkmanTwoRelation,
 			String linkmanTwoName, String linkmanTwoPhone, int userId);
 
-	void updateAttestationStatus(String attestationStatus, int userId);
+	void updateAttestationStatus(String attestationStatus, int userId, String authenticationSteps);
+
+	int updateAuthenticationSteps(int userId, String authenticationSteps);
+
+	String getauthenticationSteps(int userId);
+
+	int insertUserAttestation(String name, String gender, String nationality, String birth_year, String birth_month,
+			String birth_day, String address, String issued_by, String valid_date_start, String valid_date_end,
+			String frontsidePath, String backsidePath, int userId, String idcard_number, String homeAddressLongitude,
+			String homeAddressLatitude, String detailAddress, String nationalEmblemossPath);
 
 
 

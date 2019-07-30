@@ -116,7 +116,7 @@ public class IdCardController {
     	
     }
         
-    
+    //紧急联系人页面
     @RequestMapping("/setlinkman")
     @ResponseBody
     @Transactional
@@ -125,7 +125,8 @@ public class IdCardController {
     	 int number = UserAttestationService.setlinkman(linkmanOneRelation,linkmanOneName,linkmanOnePhone,linkmanTwoRelation,linkmanTwoName,linkmanTwoPhone,userId);
          if (number == 1) {                  	
              String attestationStatus = "1";
-             UserAttestationService.updateAttestationStatus(attestationStatus,userId);
+             String authenticationSteps ="3";
+             UserAttestationService.updateAttestationStatus(attestationStatus,userId,authenticationSteps);
              map.put("msg", "认证成功");
              map.put("Code", "200");
          } else {

@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.ApplyCondition;
 
@@ -22,4 +23,6 @@ public interface ApplyConditionMapper {
     
     //后台管理---查询申请条件配置表所有信息
     List<ApplyCondition> queryAll(Integer companyId);
+
+	Map<String, Object> getApplycondition(int companyId);
 }

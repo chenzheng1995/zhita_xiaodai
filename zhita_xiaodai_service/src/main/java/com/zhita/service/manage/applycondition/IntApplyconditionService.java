@@ -1,6 +1,7 @@
 package com.zhita.service.manage.applycondition;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.ApplyCondition;
 import com.zhita.model.manage.Company;
@@ -20,4 +21,6 @@ public interface IntApplyconditionService {
     
     //后台管理---编辑功能
     public int updateByPrimaryKey(ApplyCondition record);
+
+	public Map<String, Object> getApplycondition(int companyId);
 }
