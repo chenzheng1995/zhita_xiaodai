@@ -60,23 +60,23 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			sdao.Addbankdeduction(ban);
 			
 			map.put("TransCode", "T20000"); // 交易码
-			map.put("OutTradeNo", ChanPayUtil.generateOutTradeNo()); // 商户网站唯一订单号
+			map.put("OutTradeNo", orderNumber); // 商户网站唯一订单号
 			map.put("CorpAcctNo", ""); // 企业账号（可空）
 			map.put("BusinessType", "0"); // 业务类型
 			map.put("ProtocolNo", ""); // 协议号（可空）        
-			map.put("BankCommonName", "农业银行"); // 通用银行名称
+			map.put("BankCommonName", BankCommonName); // 通用银行名称
 			map.put("AccountType", "00"); // 账户类型
 			
 			//**************  银行四要素信息需要用真实数据  *******************
-			map.put("AcctNo", ChanPayUtil.encrypt("6214835901884138",
+			map.put("AcctNo", ChanPayUtil.encrypt(AcctNo,
 					BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号
-			map.put("AcctName", ChanPayUtil.encrypt("东新雨",
+			map.put("AcctName", ChanPayUtil.encrypt(AcctName,
 					BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
-			map.put("TransAmt", "0.01");
+			map.put("TransAmt", TransAmt);
 			map.put("LiceneceType", "01");
-			map.put("LiceneceNo", ChanPayUtil.encrypt("420621199905157170",
+			map.put("LiceneceNo", ChanPayUtil.encrypt(LiceneceNo,
 					BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET));
-			map.put("Phone", ChanPayUtil.encrypt("13487139655",
+			map.put("Phone", ChanPayUtil.encrypt(Phone,
 					BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET));
 			map.put("CorpPushUrl", "http://172.20.11.16");
 			map.put("PostScript", "用途");
@@ -131,6 +131,19 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		map.put("Bankdeduction", bans);
 		map.put("pageutil", pages);
 		return map;
+	}
+
+	@Override
+	public Map<String, Object> AllBankdetail(Bankdeduction bank) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> AllDetails(Bankdeduction bank) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 		
 		

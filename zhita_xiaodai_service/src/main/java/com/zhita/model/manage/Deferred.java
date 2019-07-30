@@ -26,6 +26,26 @@ public class Deferred {
 	private String deferredTime;
 	
 	private String orderNumber;
+	
+	private Integer DefeNum;//延期次数
+	
+	private BigDecimal DefeMoney;//延期金额
+
+	public Integer getDefeNum() {
+		return DefeNum;
+	}
+
+	public void setDefeNum(Integer defeNum) {
+		DefeNum = defeNum;
+	}
+
+	public BigDecimal getDefeMoney() {
+		return DefeMoney;
+	}
+
+	public void setDefeMoney(BigDecimal defeMoney) {
+		DefeMoney = defeMoney;
+	}
 
 	public String getDeferredTime() {
 		return deferredTime;

@@ -74,4 +74,8 @@ public interface StatisticsDao {
 	
 	BigDecimal ChenggMoney(Bankdeduction ban);
 	
+	
+	
+	List<Bankdeduction> Deails(Bankdeduction ban);
+	
 }

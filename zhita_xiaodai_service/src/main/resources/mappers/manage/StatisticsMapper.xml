@@ -111,7 +111,7 @@
 			
 			
 			<select id="AllBanl" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-				select o.id,o.orderNumber,o.userId,usea.trueName,u.phone,bank.bankcardName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,
+				select ord.orderId,o.orderNumber,o.userId,usea.trueName,u.phone,bank.bankcardName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,
 				ord.realityBorrowMoney,ord.makeLoans,defe.deferAfterReturntime,o.overdueGrade,ord.overdueNumberOfDays,ord.interestPenaltySum,
 				ord.surplus_money,ord.realityAccount
 				from orders o,orderdetails ord,deferred defe,bankcard bank,user u,user_attestation usea 
@@ -179,7 +179,7 @@
 			
 			
 			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard">
-				select DATE_FORMAT(ban.deduction_time,'%Y-%m-%d') as deduction_time,sy.account,sum(ban.id) as userNum
+				select ban.deduction_time,sy.account,ban.deductionproportion,sum(ban.id) as userNum
 				from sys_user sy,bankdeduction ban 
 				<where>
 				 ban.sys_userId = sy.userId 
@@ -188,17 +188,29 @@
 				 	and ban.deduction_time between #{statu_time} and #{end_time}
 				 </if>
 				 </where>
-				 group by DATE_FORMAT(ban.deduction_time,'%Y-%m-%d'),sy.account
 				 limit #{page},#{pagesize}
 			</select>
 			
 			
 			<select id="ChenggNum" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.lang.Integer">
-				select count(id) from bankdeduction where sys_userId = #{sys_userId} and date_format(deduction_time,'%Y-%m-%d') = #{deduction_time} and deductionstatus = "扣款成功"
+				select count(id) from bankdeduction where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} and deductionstatus = "扣款成功"
 			</select>
 			
 			
 			<select id="ChenggMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
-				select sum(deduction_money) from bankdeduction where sys_userId = #{sys_userId} and date_format(deduction_time,'%Y-%m-%d') = #{deduction_time} and deductionstatus = "扣款成功"
+				select sum(deduction_money) from bankdeduction where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} and deductionstatus = "扣款成功"
+			</select>
+			
+			
+			<select id="Bankdeail" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+				select ban.deduction_time,ban.deductionproportion,ban.deduction_money from bankdeduction ban,orders o
+				where ban.orderId = #{orderId} AND o.companyId = #{companyId}
+			</select>
+			
+			
+			
+			<select id="Deails" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+				select ban.deduction_time,u.name,ord.surplus_money,ban.deductionproportion,ban.deduction_money from bankdeduction ban,user u,orders o,orderdetails ord
+				where o.userId = u.id and o.id = ord.orderId and o.id = ban.orderId and o.companyId = #{companyId} and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
 			</select>
 </mapper>

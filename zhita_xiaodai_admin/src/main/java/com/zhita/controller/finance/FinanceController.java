@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Offlinedelay;
+import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
-import com.zhita.model.manage.Undertheline;
 import com.zhita.service.manage.finance.FinanceService;
 
 
@@ -191,7 +192,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("AddUndert")
-	public Map<String, Object> AddUndert(Undertheline unde){
+	public Map<String, Object> AddUndert(Offlinetransfer unde){
 		return fianser.AddUnderthe(unde);
 	}
 	
@@ -200,7 +201,7 @@ public class FinanceController {
 	
 	
 	/**
-	 * 线下已换清单记录表
+	 * 线下调账记录
 	 * @param ordetail
 	 * @return
 	 */
@@ -294,6 +295,9 @@ public class FinanceController {
 	
 	
 	
+	
+	
+	
 	/**
 	 * 总收入支出
 	 * @param banl
@@ -310,7 +314,7 @@ public class FinanceController {
 	
 	
 	/**
-	 * 添加线下调账
+	 * 添加线下调减免
 	 * @return
 	 */
 	@ResponseBody
@@ -319,4 +323,41 @@ public class FinanceController {
 		return fianser.AddOffJianmian(off);
 	}
 	
+	
+	
+	
+	/**
+	 * 查询公司延期数据
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("CompanyDelay")
+	public Map<String, Object> CompanyDelay(Integer companyId){
+		return fianser.CompanyDelay(companyId);
+	}
+	
+	
+	
+	/**
+	 * 添加人工延期
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AddDelaylabor")
+	public Map<String, Object> AddDelay(Offlinedelay ofdelay){
+		return fianser.AddDelay(ofdelay);
+	}
+	
+	
+	
+	/**
+	 * 查询延期记录
+	 * @param of
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("Delaylabor")
+	public Map<String, Object> Delaylabor(Offlinedelay of){
+		return fianser.Delaylabor(of);
+	}
 }

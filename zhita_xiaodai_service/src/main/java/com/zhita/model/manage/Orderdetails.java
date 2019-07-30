@@ -200,6 +200,16 @@ public class Orderdetails {
     private String accounttimeent_time;
     
     private String bankcardName;//银行卡号
+    
+    private String idcard_number;
+
+	public String getIdcard_number() {
+		return idcard_number;
+	}
+
+	public void setIdcard_number(String idcard_number) {
+		this.idcard_number = idcard_number;
+	}
 
 	public String getBankcardName() {
 		return bankcardName;

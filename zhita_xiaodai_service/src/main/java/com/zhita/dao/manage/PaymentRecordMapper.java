@@ -5,19 +5,21 @@ import java.util.List;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Deferred_settings;
 import com.zhita.model.manage.Loan_setting;
+import com.zhita.model.manage.Offlinedelay;
+import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment_setting;
-import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.model.manage.Undertheline;
+
+
 
 public interface PaymentRecordMapper {
 	
-	
-
-
     int deleteByPrimaryKey(Integer id);
 
     int insert(Payment_record record);
@@ -67,7 +69,7 @@ public interface PaymentRecordMapper {
     List<Loan_setting> SelectThird(Integer companyId);
     
     
-    Integer AddUndertheline(Undertheline unde);
+    Integer AddUndertheline(Offlinetransfer unde);
     
     
     Integer SelectUnderthTotalCount(Orderdetails order);
@@ -103,7 +105,7 @@ public interface PaymentRecordMapper {
     Integer AddOffJianMian(Offlinjianmian off);
     
     
-    List<Undertheline> XiaOrder(Orderdetails order);
+    List<Offlinjianmian> XiaOrder(Orderdetails order);
     
     
     List<Integer> XiaTotalCount(Orderdetails ord);
@@ -113,4 +115,22 @@ public interface PaymentRecordMapper {
     
     
     Integer UpdateOrderType(Integer orderId);
+    
+    
+    Bankdeduction SelectBank(Bankdeduction ban);
+    
+    
+    Deferred_settings OneCompanyDeferr(Integer companyId);
+    
+    
+    Deferred DeleteNumMoney(Integer orderId);
+    
+    
+    Integer AddDelay(Offlinedelay of);
+    
+    
+    Integer OffTotalCount(Offlinedelay of);
+    
+    
+    List<Offlinedelay> Allofflinedelay(Offlinedelay of);
 }

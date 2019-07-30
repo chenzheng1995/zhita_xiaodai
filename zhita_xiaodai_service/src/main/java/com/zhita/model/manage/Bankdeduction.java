@@ -105,6 +105,26 @@ public class Bankdeduction {
 	
 	private String statu_time;
 	
+	private Integer branKnum;//银行扣款数
+	
+	private BigDecimal brankMoney;//银行扣款金额
+	
+
+	public Integer getBranKnum() {
+		return branKnum;
+	}
+
+	public void setBranKnum(Integer branKnum) {
+		this.branKnum = branKnum;
+	}
+
+	public BigDecimal getBrankMoney() {
+		return brankMoney;
+	}
+
+	public void setBrankMoney(BigDecimal brankMoney) {
+		this.brankMoney = brankMoney;
+	}
 
 	public String getCdata() {
 		return cdata;

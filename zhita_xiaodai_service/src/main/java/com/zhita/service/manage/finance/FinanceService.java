@@ -4,10 +4,11 @@ import java.util.Map;
 
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Offlinedelay;
+import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
-import com.zhita.model.manage.Undertheline;
 
 public interface FinanceService {
 	
@@ -42,7 +43,7 @@ public interface FinanceService {
 	Map<String, Object> ThirdpatyAll(Integer compayId);
 	
 	
-	Map<String, Object> AddUnderthe(Undertheline unde);
+	Map<String, Object> AddUnderthe(Offlinetransfer unde);
 	
 	
 	Map<String, Object> SelectBankDeductOrders(Bankdeduction bank);
@@ -67,4 +68,13 @@ public interface FinanceService {
 	
 	
 	Map<String, Object> RepaymentAll(Integer compayId);
+	
+	
+	Map<String, Object> CompanyDelay(Integer companyId);
+	
+	
+	Map<String, Object> AddDelay(Offlinedelay off);
+	
+	
+	Map<String, Object> Delaylabor(Offlinedelay of);
 }

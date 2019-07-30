@@ -1,6 +1,7 @@
 package com.zhita.service.manage.finance;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,10 @@ import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Deferred_settings;
 import com.zhita.model.manage.Loan_setting;
+import com.zhita.model.manage.Offlinedelay;
+import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
@@ -79,8 +83,7 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("还款");
-		List<Payment_record> rapay = padao.PaymentAll(payrecord);
-		//List<Payment_record> rapay = padao.RepaymentAll(payrecord);
+		List<Payment_record> rapay = padao.RepaymentAll(payrecord);
 		for(int i = 0 ;i<rapay.size();i++){
 			rapay.get(i).setRemittanceTime(Timestamps.stampToDate(rapay.get(i).getRemittanceTime()));
 		}
@@ -144,7 +147,6 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> OrderAccount(Orderdetails orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(orderNumber.getOrderNumber()!=null){
 			Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
 			System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
 			ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
@@ -160,17 +162,14 @@ public class FinanceServiceimp implements FinanceService{
 			Deferred defe =  coldao.DefNum(ordetails.getOrderId());
 			orderNumber.setDefeNum(defe.getId());
 			orderNumber.setDefeMoney(defe.getInterestOnArrears());
+			Deferred de = padao.DeleteNumMoney(ordetails.getOrderId());
 			//ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
 			ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 			ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));
 			ordetails.setDeferBeforeReturntime(Timestamps.stampToDate(ordetails.getDeferBeforeReturntime()));
 			map.put("aaa", ordetails.getInterestPenaltySum());
 			map.put("Orderdetails", ordetails);
-		}else{
-			
-			map.put("Orderdetails", "参数异常");
-		}
-		
+			map.put("Deferred", de);
 		return map;
 	}
 
@@ -300,10 +299,10 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> AddUnderthe(Undertheline unde) {
+	public Map<String, Object> AddUnderthe(Offlinetransfer unde) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			unde.setUnderthe_time(System.currentTimeMillis()+"");
+			unde.setOffinetransfertime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -398,6 +397,9 @@ public class FinanceServiceimp implements FinanceService{
 		List<Bankdeduction> banks = padao.DelayStatisc(banl);
 		for (int i = 0; i < banks.size(); i++) {
 			banks.get(i).setDeferAfterReturntime(Timestamps.stampToDate(banks.get(i).getDeferAfterReturntime()));
+			Bankdeduction ban = padao.SelectBank(banks.get(i));
+			banks.get(i).setBranKnum(ban.getBranKnum());
+			banks.get(i).setBrankMoney(ban.getBrankMoney());
 		}
 		map.put("Bankdeduction", banks);
 		return map;
@@ -431,6 +433,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AddOffJianmian(Offlinjianmian off) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		off.setSedn_time(sim.format(new Date()));
 		Integer addId = padao.AddOffJianMian(off);
 		if(addId != null){
 			map.put("code", 200);
@@ -457,13 +461,12 @@ public class FinanceServiceimp implements FinanceService{
 		Integer a = null;
 		if(totalCount == null){
 			a=0;
+		}else{
+			a=totalCount.size();
 		}
-		PageUtil pages = new PageUtil(ord.getPage(), totalCount.size());
+		PageUtil pages = new PageUtil(ord.getPage(), a);
 		ord.setPage(pages.getPage());
-		List<Undertheline> unders = padao.XiaOrder(ord);
-		for(int i=0;i<unders.size();i++){
-			unders.get(i).setUnderthe_time(Timestamps.stampToDate(unders.get(i).getUnderthe_time()));
-		}
+		List<Offlinjianmian> unders = padao.XiaOrder(ord);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Undertheline", unders);
 		return map;
@@ -479,5 +482,67 @@ public class FinanceServiceimp implements FinanceService{
 		map.put("Repayment_setting", repay);
 		return map;
 	}
+
+
+
+
+	@Override
+	public Map<String, Object> CompanyDelay(Integer companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Deferred_settings deset = padao.OneCompanyDeferr(companyId);
+		map.put("Deferred_settings", deset);
+		return map;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> AddDelay(Offlinedelay off) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        ca.setTime(new Date()); //设置时间为当前时间
+        ca.add(Calendar.DATE, +off.getOnceDeferredDay());
+        Date date = ca.getTime();
+        off.setOperating_time(sdf.format(new Date()));//操作时间
+        off.setDelay_time(sdf.format(date));
+        Integer addId = padao.AddDelay(off);
+		if(addId != null){
+			map.put("code", 200);
+			map.put("desc", "已添加");
+		}else{
+			map.put("code", 0);
+			map.put("desc", "数据异常");
+		}
+		return map;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> Delaylabor(Offlinedelay of) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer totalCount = padao.OffTotalCount(of);
+		if(totalCount == null){
+			totalCount = 0;
+		}
+		PageUtil pages = new PageUtil(of.getPage(), totalCount);
+		of.setPage(pages.getPage());
+		List<Offlinedelay> ofa = padao.Allofflinedelay(of);
+		for(int i = 0;i<ofa.size();i++){
+			Deferred de = padao.DeleteNumMoney(ofa.get(i).getOrderId());
+			ofa.get(i).setDefeNum(de.getDefeNum());
+			ofa.get(i).setDefeMoney(de.getDefeMoney());
+		}
+		map.put("Offlinedelay", ofa);
+		map.put("pageutil", pages);
+		return map;
+	}
+
+
+
 
 }

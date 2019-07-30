@@ -213,7 +213,7 @@
   
   
   		  <select id="PaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-		  	select ra.remittanceTime,thir.loanSource,o.orderNumber,u.name,u.phone,ra.paymentmoney
+		  	select ra.remittanceTime,thir.loanSource,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber
 		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
 		  	 LEFT JOIN user u ON o.userId = u.id
 		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -284,7 +284,7 @@
   			
   			
   			<select id="RepaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-			  	select o.id,ra.repaymentDate,thir.loanSource,ra.pipelinenumber,ra.repaymentMoney,o.orderNumber,u.name,u.phone
+			  	select o.id,ra.repaymentDate,thir.loanSource,ra.pipelinenumber,ra.repaymentMoney,o.orderNumber,u.name,u.phone,ra.pipelinenumber
 			  	 from repayment ra LEFT JOIN orders on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -351,20 +351,32 @@
   					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
   			 		o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,o.borrowTimeLimit,
   			 		ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,pay.pipelinenumber,
-  			 		ord.interestPenaltySum,o.realtime 
+  			 		ord.interestPenaltySum,o.realtime,ur.idcard_number
   			 		from drainage_of_platform d left join user u on d.id = u.drainageOfPlatformId
   			 		left join orders o on o.userId = u.id
   			 		left join orderdetails ord on o.id = ord.orderId
   			 		left join deferred defe on defe.orderid = o.id
   			 		left join deferred_settings defeset on defeset.companyId = o.companyId
   			 		left join payment_record pay on pay.orderId = o.id
+  			 		left join user_attestation ur on ur.userId = u.id
   					<where>
-  			 			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+  					AND o.orderStatus = "1"
+  			 			<if test="phone != null and phone != ''">
+  			 				AND u.phone = #{phone}
+  			 			</if>
+  			 			<if test="idcard_number != null and idcard_number != ''">
+  			 				AND ur.idcard_number = #{idcard_number}
+  			 			</if>
   			 			AND d.companyId = #{companyId}
   					</where>
   					group by ord.orderId
   			</select>
   			
+  			
+  			
+  			<select id="DeleteNumMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
+  				select count(de.id) as DefeNum,sum(interestOnArrears) as DefeMoney from deferred de where orderId = #{orderId}
+  			</select>
   			
   			
   			<insert id="AddCAccount" parameterType="com.zhita.model.manage.Accountadjustment">
@@ -429,7 +441,7 @@
   				 left join thirdparty_interface th on th.id = re.thirdparty_id
   				<where>
   					AND o.companyId = #{companyId}
-  					AND a.accounttime &gt; #{realtime}
+  					AND o.orderStatus = "0"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
@@ -502,7 +514,7 @@
   				 LEFT JOIN repayment re ON re.orderId = o.id
   				 LEFT JOIN thirdparty_interface th ON th.id = re.thirdparty_id
   				<where>
-  					AND a.accounttime &lt; #{realtime}
+  					AND o.orderStatus = "1"
   					AND o.companyId = #{companyId}
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
@@ -533,20 +545,19 @@
   			
   			
   			
-  			<insert id="AddUndertheline" parameterType="com.zhita.model.manage.Undertheline">
-	  			 INSERT INTO `Undertheline`(
-	  				 		underthe_time,
+  			<insert id="AddUndertheline" parameterType="com.zhita.model.manage.Offlinetransfer">
+	  			 INSERT INTO `offlinetransfer`(
 	  				 		orderId,
-	  				 		finance_id,
-	  				 		project_name,
-	  				 		repayment,
-	  				 		income,
-	  				 		expenditure,
-	  				 		repaymentnumber,
-	  				 		remarks
+	  				 		projectname,
+	  				 		state,
+	  				 		channel,
+	  				 		number,
+	  				 		money,
+	  				 		remarks,
+	  				 		offinetransfertime
 	  				 )
 	  				 VALUES
-	  				 (#{underthe_time},#{orderId},#{finance_id},#{project_name},#{repayment},#{income},#{expenditure},#{repaymentnumber},#{remarks})
+	  				 (#{orderId},#{projectname},#{state},#{channel},#{number},#{money},#{remarks},#{offinetransfertime})
   			</insert>
   			
   			
@@ -585,9 +596,9 @@
   			
   			
   			
-  			<select id="XiaOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Undertheline">
-  					select u.underthe_time,sy.account,o.orderNumber,u.finance_id,ua.name,ua.phone,ord.makeLoans,u.income,u.remarks
-  				 from Undertheline u LEFT JOIN sys_user sy ON u.finance_id = sy.userId
+  			<select id="XiaOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Offlinjianmian">
+  					select u.sedn_time,sy.account,o.orderNumber,ua.name,ua.phone,ord.makeLoans,u.offusermoney,u.remarks
+  				 from offlinjianmian u LEFT JOIN sys_user sy ON u.fina_id = sy.userId
   				 LEFT JOIN orders o ON o.companyId = sy.companyId
   				 LEFT JOIN user ua ON o.id = u.orderId
   				 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -750,7 +761,7 @@
   			
   			
   			<select id="DelayStatisc" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
-  				select d.deferAfterReturntime,count(d.orderid) as orderNum,
+  				select d.deferAfterReturntime,count(d.orderid) as orderNum,o.companyId,
   				sum(d.interestOnArrears) as interestOnArrearsSum from deferred d left join orders o on o.id = d.orderid
   				<where>
   					AND o.companyId = #{companyId}
@@ -804,4 +815,84 @@
   			<update id="UpdateOrderType" parameterType="java.lang.Integer">
   				update orders set orderStatus = "3" where orderId = #{orderId}
   			</update>
+  			
+  			
+  			<select id="SelectBank" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  				select count(ban.id) as branKnum,sum(ban.deduction_money) as brankMoney from bankdeduction ban,orders o
+  				where o.companyId = #{companyId} and ban.deduction_time = #{deduction_time}
+  			</select>
+  			
+  			
+  			
+  			<select id="OneCompanyDeferr" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred_settings">
+  				select * from Deferred_settings where companyId = #{companyId}
+  			</select>
+  			
+  			
+  			<insert id="AddDelay" parameterType="com.zhita.model.manage.Offlinedelay">
+  				INSERT INTO `offlinedelay`(
+  					delay_time,
+  					extensionfee,
+  					remarks,
+  					operating_time,
+  					sys_userId,
+  					orderId
+  				)VALUES(#{delay_time},#{extensionfee},#{remarks},#{operating_time},#{sys_userId},#{orderId})
+  			</insert>
+  			
+  			
+  			
+  			<select id="Allofflinedelay" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
+  				select of.operating_time,sy.account,of.orderId,u.name,u.phone,ur.idcard_number,defe.deferAfterReturntime,ord.overdueNumberOfDays,of.extensionfee,
+  				of.remarks,of.delay_time
+  				from offlinedelay of,sys_user sy,user u,orders o,deferred defe,orderdetails ord,user_attestation ur
+  				<where>
+  					of.orderId = o.id
+  					and o.userId = u.id
+  					and ur.userId = u.id
+  					and sy.userId =  of.sys_userId
+  					and o.id = ord.orderId
+  					and defe.orderId = of.orderId
+  					and o.companyId = #{companyId}
+  					<if test="orderId != null and orderId != ''">
+  						and of.orderId = #{orderId}
+  					</if>
+  					<if test="name != null and name != ''">
+  						and u.name like CONCAT('%',#{name},'%') 
+  					</if>
+  					<if test="phone != null and phone != ''">
+  						and u.phone like CONCAT('%',#{phone},'%')  
+  					</if>
+  					<if test="statu_time != null and statu_time != '' and end_time != null and end_time != ''">
+  						and of.operating_time between #{statu_time} and #{end_time}
+  					</if>
+  				</where>
+  				limit #{page},#{pagesize}
+  			</select>
+  			
+  			
+  			
+  			<select id="OffTotalCount" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
+  				select count(of.id) from offlinedelay of,sys_user sy,user u,orders o,deferred defe,orderdetails ord,user_attestation ur
+  				<where>
+  					of.orderId = o.id
+  					and o.userId = u.id
+  					and ur.userId = u.id
+  					and sy.userId =  of.sys_userId
+  					and o.id = ord.orderId
+  					and defe.orderId = of.orderId
+  					<if test="orderId != null and orderId != ''">
+  						and of.orderId = #{orderId}
+  					</if>
+  					<if test="name != null and name != ''">
+  						and u.name like CONCAT('%',#{name},'%')   
+  					</if>
+  					<if test="phone != null and phone != ''">
+  						and u.phone like CONCAT('%',#{phone},'%')
+  					</if>
+  					<if test="statu_time != null and statu_time != '' and end_time != null and end_time != ''">
+  						and of.operating_time between #{statu_time} and #{end_time}
+  					</if>
+  				</where>
+  			</select>
 </mapper>

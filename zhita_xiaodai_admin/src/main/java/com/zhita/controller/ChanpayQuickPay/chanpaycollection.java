@@ -1,6 +1,7 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayquickpay;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,11 @@ public class chanpaycollection{
 			MouthBankName mou = ster.SendBankcomm(ban.getBankcardTypeName(), orde.get(i).getBankcardName(), orde.get(i).getTrueName(), orde.get(i).getTransAmt(), 
 					LiceneceNo, orde.get(i).getPhone(), orde.get(i).getSys_userId(),
 					orde.get(i).getDeductionproportion(), orde.get(i).getOrderNumber(), orde.get(i).getOrderId(), orde.get(i).getUserId());//扣款接口
+			NumberFormat numberFormat = NumberFormat.getInstance();
+			numberFormat.setMaximumFractionDigits(2);
+			String data = (numberFormat.format((float) orde.get(i).getDeductionproportion() / (float) 100));
+			BigDecimal da = new BigDecimal(data);
+			orde.get(i).setTransAmt(String.valueOf(orde.get(i).getSurplus_money().multiply(da)));
 			String as = mou.getOriginalRetCode();
 			Bankdeduction bas = new Bankdeduction();
 			bas.setOrderId(orde.get(i).getOrderId());
@@ -88,6 +94,35 @@ public class chanpaycollection{
 	public Map<String, Object> SelectBanK(Orderdetails order){
 		return ster.AllCollection(order);
 	}
+	
+	
+	
+	/**
+	 * orderNumber
+	 * companyId
+	 * 一键扣款详情
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AllBankDetails")
+	public Map<String, Object> AllBankDetail(Bankdeduction bank){
+		return ster.AllBankdetail(bank);
+	}
+	
+	
+	/**
+	 * orderNumber
+	 * companyId
+	 * 一键扣款详情
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AllDetails")
+	public Map<String, Object> AllDetails(Bankdeduction bank){
+		return ster.AllDetails(bank);
+	}
+	
+	
 	
 	
 	/**

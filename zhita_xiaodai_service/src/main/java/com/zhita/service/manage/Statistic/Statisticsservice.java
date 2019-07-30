@@ -27,4 +27,10 @@ public interface Statisticsservice {
 	
 	
 	Map<String, Object> AllBankdeduData(Bankcard ban);
+	
+	
+	Map<String, Object> AllBankdetail(Bankdeduction bank);
+	
+	
+	Map<String, Object> AllDetails(Bankdeduction bank);
 }

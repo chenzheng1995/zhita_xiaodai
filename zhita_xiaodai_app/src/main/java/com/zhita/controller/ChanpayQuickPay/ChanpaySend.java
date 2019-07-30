@@ -70,7 +70,6 @@ public class ChanpaySend extends BaseParameter{
 		ba.setCompanyId(companyId);
 		ba.setUserId(userId);
 		Bankcard ban = chanser.SelectBank(ba);
-		String phone = "13487139666";
     	Calendar now = Calendar.getInstance(); 
     	String year = now.get(Calendar.YEAR)+""; //年
     	String month = now.get(Calendar.MONTH) + 1 + "";//月
@@ -78,7 +77,7 @@ public class ChanpaySend extends BaseParameter{
     	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
     	String minute = now.get(Calendar.MINUTE)+"";//分
     	String second = now.get(Calendar.SECOND)+"";//秒
-    	String afterFour = phone.substring(phone.length()-4); 
+    	String afterFour = ba.getTiedCardPhone().substring(ba.getTiedCardPhone().length()-4); 
     	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
     	
     	
@@ -90,11 +89,11 @@ public class ChanpaySend extends BaseParameter{
 		map.put("OutTradeNo", orderNumber); // 商户网站唯一订单号
 		map.put("CorpAcctNo", "");  //可空
 		map.put("BusinessType", "0"); // 业务类型：0对私 1对公
-		map.put("BankCommonName", "招商银行"); // 通用银行名称
+		map.put("BankCommonName", ba.getBankcardTypeName()); // 通用银行名称
 		map.put("BankCode", "");//对公必填
 		map.put("AccountType", "00"); // 账户类型
-		map.put("AcctNo", ChanPayUtil.encrypt("6214835901884138", BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
-		map.put("AcctName", ChanPayUtil.encrypt("东新雨", BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
+		map.put("AcctNo", ChanPayUtil.encrypt(ba.getBankcardName(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
+		map.put("AcctName", ChanPayUtil.encrypt(ba.getCstmrnm(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
 		map.put("TransAmt", TransAmt);
 		map.put("CorpPushUrl", "http://172.20.11.16");		
 		map.put("PostScript", "放款");
@@ -169,6 +168,7 @@ public class ChanpaySend extends BaseParameter{
 		Integer code = Integer.valueOf(sreturn.getJsonarraydetaillist().get(0).getStatus());
 		if(code == 1){
 			pay.setStatus("支付成功");
+			pay.setPipelinenumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){
 				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+HowManyTimesBorMoney+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
