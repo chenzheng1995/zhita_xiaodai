@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 public class Offlinetransfer {
     private Integer id;
 
-    private Integer orderid;//订单id
+    private Integer orderId;//订单id
 
     private String projectname;//项目名
 
@@ -30,12 +30,12 @@ public class Offlinetransfer {
         this.id = id;
     }
 
-    public Integer getOrderid() {
-        return orderid;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrderid(Integer orderid) {
-        this.orderid = orderid;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public String getProjectname() {

@@ -100,7 +100,6 @@ public class Chanpayserviceimp implements Chanpayservice{
 
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
-		pay.setOrderId(stdao.SelectOrderId(pay.getOrderNumber()));
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		pay.setRemittanceTime(sim.format(new Date()));
 		pay.setProfessionalWork("放款");

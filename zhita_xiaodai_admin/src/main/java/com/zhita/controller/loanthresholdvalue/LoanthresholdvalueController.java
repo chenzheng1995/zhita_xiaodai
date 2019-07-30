@@ -31,5 +31,21 @@ public class LoanthresholdvalueController {
 		int num=intLoanthresholdvalueService.upamaxthresholdvalue(maxthresholdvalue);
 		return num;
 	}
+	
+	//放款渠道紧急开关——查看当天放款金额
+	@ResponseBody
+	@RequestMapping("/queryloantoday")
+	public Map<String,Object> queryloantoday(Integer companyId){
+		Map<String,Object> map=intLoanthresholdvalueService.queryloantoday(companyId);
+		return map;
+	}
+	
+	//放款渠道紧急开关——修改放款渠道状态
+	@ResponseBody
+	@RequestMapping("/upaloanstatus")
+    public int upaloanstatus(String status,Integer companyId){
+    	int num= intLoanthresholdvalueService.upaloanstatus(status,companyId);
+    	return num;
+    }
 
 }

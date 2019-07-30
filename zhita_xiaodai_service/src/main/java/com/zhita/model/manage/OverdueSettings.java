@@ -1,5 +1,7 @@
 package com.zhita.model.manage;
 
+import java.math.BigDecimal;
+
 //逾期设置表
 public class OverdueSettings {
     private Integer id;
@@ -10,7 +12,7 @@ public class OverdueSettings {
 
     private Integer overduehowmanydaysage;//逾期第N天前
 
-    private Double penaltyinterestrates;//罚息利率
+    private BigDecimal penaltyinterestrates;//罚息利率
 
     private Integer operator;//操作人
 
@@ -50,16 +52,15 @@ public class OverdueSettings {
         this.overduehowmanydaysage = overduehowmanydaysage;
     }
 
-    public Double getPenaltyinterestrates() {
-        return penaltyinterestrates;
-    }
+    public BigDecimal getPenaltyinterestrates() {
+		return penaltyinterestrates;
+	}
 
-    public void setPenaltyinterestrates(Double penaltyinterestrates) {
-        this.penaltyinterestrates = penaltyinterestrates;
-    }
+	public void setPenaltyinterestrates(BigDecimal penaltyinterestrates) {
+		this.penaltyinterestrates = penaltyinterestrates;
+	}
 
-
-    public Integer getOperator() {
+	public Integer getOperator() {
 		return operator;
 	}
 

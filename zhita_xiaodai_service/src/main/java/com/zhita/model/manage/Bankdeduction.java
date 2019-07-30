@@ -1,6 +1,7 @@
 package com.zhita.model.manage;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 //银行扣记录表
@@ -21,6 +22,8 @@ public class Bankdeduction {
 	private String deductionstatus;//扣款状态
 	
 	private BigDecimal deduction_money;//扣款金额
+	
+	private String deduction_time;
 	
 	private String orderNumber;//订单编号
 	
@@ -86,6 +89,108 @@ public class Bankdeduction {
 	
 	private BigDecimal offlinemanualfee;//线下手动调账费
 	
+	private String orderstail;
+	
+	private List<Integer> userIds;
+	
+	private List<String> orderNumbers;
+	
+	private Integer userNum;//扣款数
+	
+	private Integer chengNum;//成功数
+	
+	private Integer shiNum;//失败数
+	
+	private String cdata;//成功率
+	
+	private String statu_time;
+	
+	private Integer branKnum;//银行扣款数
+	
+	private BigDecimal brankMoney;//银行扣款金额
+	
+
+	public Integer getBranKnum() {
+		return branKnum;
+	}
+
+	public void setBranKnum(Integer branKnum) {
+		this.branKnum = branKnum;
+	}
+
+	public BigDecimal getBrankMoney() {
+		return brankMoney;
+	}
+
+	public void setBrankMoney(BigDecimal brankMoney) {
+		this.brankMoney = brankMoney;
+	}
+
+	public String getCdata() {
+		return cdata;
+	}
+
+	public void setCdata(String cdata) {
+		this.cdata = cdata;
+	}
+
+	public Integer getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(Integer userNum) {
+		this.userNum = userNum;
+	}
+
+	public Integer getChengNum() {
+		return chengNum;
+	}
+
+	public void setChengNum(Integer chengNum) {
+		this.chengNum = chengNum;
+	}
+
+	public Integer getShiNum() {
+		return shiNum;
+	}
+
+	public void setShiNum(Integer shiNum) {
+		this.shiNum = shiNum;
+	}
+
+
+	public String getStatu_time() {
+		return statu_time;
+	}
+
+	public void setStatu_time(String statu_time) {
+		this.statu_time = statu_time;
+	}
+
+	public List<String> getOrderNumbers() {
+		return orderNumbers;
+	}
+
+	public void setOrderNumbers(List<String> orderNumbers) {
+		this.orderNumbers = orderNumbers;
+	}
+
+	public List<Integer> getUserIds() {
+		return userIds;
+	}
+
+	public void setUserIds(List<Integer> userIds) {
+		this.userIds = userIds;
+	}
+
+	public String getOrderstail() {
+		return orderstail;
+	}
+
+	public void setOrderstail(String orderstail) {
+		this.orderstail = orderstail;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -404,6 +509,14 @@ public class Bankdeduction {
 
 	public void setOfflinemanualfee(BigDecimal offlinemanualfee) {
 		this.offlinemanualfee = offlinemanualfee;
+	}
+
+	public String getDeduction_time() {
+		return deduction_time;
+	}
+
+	public void setDeduction_time(String deduction_time) {
+		this.deduction_time = deduction_time;
 	}
 	
 	

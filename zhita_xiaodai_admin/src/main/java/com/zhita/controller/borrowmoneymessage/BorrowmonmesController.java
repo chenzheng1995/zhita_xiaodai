@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.BorrowMoneyMessage;
-import com.zhita.model.manage.Company;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 
 @Controller
@@ -26,28 +25,28 @@ public class BorrowmonmesController {
     }
 	
 	//后台管理---添加功能（查询出所有公司）
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllCompany")
     public List<Company> queryAllCompany(){
     	List<Company> list=intBorrowmonmesService.queryAllCompany();
     	return list;
-    }
+    }*/
 	
 	//后台管理---添加功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(BorrowMoneyMessage record){
     	int num=intBorrowmonmesService.insert(record);
     	return num;
-    }
+    }*/
 	
 	 //后台管理---根据id查询当前对象信息
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public BorrowMoneyMessage selectByPrimaryKey(Integer id){
     	BorrowMoneyMessage borrowMoneyMessage=intBorrowmonmesService.selectByPrimaryKey(id);
     	return borrowMoneyMessage;
-    }
+    }*/
 	
 	 //后台管理----修改保存功能
 	@ResponseBody

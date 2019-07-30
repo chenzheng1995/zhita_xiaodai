@@ -15,6 +15,16 @@ public class Offlinjianmian {
 	private BigDecimal offusermoney;//下线减免金额
 	
 	private String remarks;//备注
+	
+	private String sedn_time;
+
+	public String getSedn_time() {
+		return sedn_time;
+	}
+
+	public void setSedn_time(String sedn_time) {
+		this.sedn_time = sedn_time;
+	}
 
 	public Integer getId() {
 		return id;

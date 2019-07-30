@@ -1,7 +1,6 @@
 package com.zhita.controller.deferredsettings;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,28 +25,28 @@ public class DeferredsetController {
     }
 	
 	//后台管理---(添加功能)先查询借款信息表的产品id和产品名称    公司表信息     供添加时选择
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllBorrow")
     public Map<String,Object> queryAllBorrow(Integer companyId){
 		Map<String,Object> map=intDeferredsetService.queryAllBorrow(companyId);
 		return map;
-    }
+    }*/
 	
 	//后台管理---添加功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(DeferredSettings record){
     	int num=intDeferredsetService.insert(record);
     	return num;
-    }
+    }*/
 	
 	//后台管理---根据当前id查询出当前对象信息
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public DeferredSettings selectByPrimaryKey(Integer id){
     	DeferredSettings deferredSettings=intDeferredsetService.selectByPrimaryKey(id);
     	return deferredSettings;
-    }
+    }*/
 	
 	//后台管理---修改保存功能
 	@ResponseBody

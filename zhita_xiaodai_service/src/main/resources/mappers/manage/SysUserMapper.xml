@@ -21,20 +21,20 @@
     <result property="logintime" column="loginTime" />
     <result property="status" column="status" />
     <result property="rolestr" column="rolename"/>
-	   <!--  <collection  property="listrole"  ofType="com.zhita.model.manage.Role">
+	    <collection  property="listrole"  ofType="com.zhita.model.manage.Role">
             <id property="roleid" column="roleId" />
             <result property="rolename" column="roleName" />    
             <result property="roledescribe" column="roleDescribe" />   
-        </collection> -->
+        </collection>
 	</resultMap>
   <sql id="Base_Column_List" >
     s.userId, s.companyId, s.account, s.pwd, s.phone, s.loginState, s.loginTime, s.status,
-    GROUP_CONCAT(r.roleId) roleid, 
+    GROUP_CONCAT(r.roleId) listRoleIdString, 
     GROUP_CONCAT(r.roleName) rolename,
     GROUP_CONCAT(r.roleDescribe) roledescribe
   </sql>
   <!-- admin   系统用户     修改功能(通过主键id查询对象) -->
-  <select id="selectByPrimaryKey" resultMap="manageloginMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultType="com.zhita.model.manage.SysUser" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from sys_user s left join sysuser_role sr on s.userId=sr.userId left join role r on r.roleId=sr.roleId

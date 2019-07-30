@@ -71,8 +71,17 @@ public interface OrdersMapper {
   	//后台管理---渠道统计模块——机审通过字段
   	int queryNum1(Integer companyId,String sourcename,String startscore,String endscore);
   	
+  	//后台管理---查询产生该订单的用户是第几次借款
+  	int queryHow(Integer userid);
+  	
+  	//后台管理----查询产生该订单的用户最后借款金额和最后借款时间
+  	Orders qeuryafter(Integer userid);
+  	
  	//后台管理---通过订单查询改订单在延期表信息
 	List<DeferredAndOrder> queryDefer(Integer orderid);
+	
+	//后台管理---查询最后延期时间
+	String qeuryFinalDefertime(Integer orderid);
  
   	//后台管理--查询出sysuser表所有的信息
   	List<SysUser> queryname(Integer companyId);

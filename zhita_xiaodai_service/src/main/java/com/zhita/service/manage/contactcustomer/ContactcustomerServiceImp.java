@@ -13,7 +13,6 @@ import com.zhita.dao.manage.ContactCustomerServiceMapper;
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.ContactCustomerService;
-import com.zhita.util.FolderUtil;
 import com.zhita.util.OssUtil;
 
 @Service

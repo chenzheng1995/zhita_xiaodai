@@ -1,5 +1,6 @@
 package com.zhita.service.manage.user;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -73,16 +74,16 @@ public class UserServiceImp implements IntUserService{
 	
 	//后台管理---添加黑名单
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
-		userMapper.upaBlacklistStatus(userId);
-		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
-		int num=userMapper.addBlacklist(companyId, userId, operator, operationTime);
+		int num=userMapper.upaBlacklistStatus(userId);
+		//String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
+		//int num=userMapper.addBlacklist(companyId, userId, operator, operationTime);
 		return num;
 	}
 	
 	//后台管理---解除黑名单
 	public int removeBlacklist(Integer companyId,Integer userId){
-		userMapper.upaBlacklistStatus1(userId);
-		int num=userMapper.upaBlacklist(userId);
+		int num=userMapper.upaBlacklistStatus1(userId);
+		//int num=userMapper.upaBlacklist(userId);
 		return num;
 	}
 	
@@ -119,11 +120,21 @@ public class UserServiceImp implements IntUserService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
+    		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
+    		
+    		list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
+    		
     		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
+    		BigDecimal deferrMoney = new BigDecimal("0.00");//延期金额
 			if(listdefer.size()!=0){
 				list.get(i).setDeferrTime(listdefer.size());//延期次数
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(listdefer.get(listdefer.size()-1).getDeferAfterReturntime()));//延期后还款时间
+				for (int j = 0; j < listdefer.size(); j++) {
+					deferrMoney=deferrMoney.add(listdefer.get(j).getInterestOnArrears());
+				}
+				list.get(i).setDeferrMoney(deferrMoney);
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersMapper.qeuryFinalDefertime(list.get(i).getId())));//延期后还款时间
 			}
 		}
     	 List<Source> listsource=ordersMapper.querysource(companyId);	
@@ -168,11 +179,25 @@ public class UserServiceImp implements IntUserService{
     	for (int i = 0; i <list.size(); i++) {
     		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));;
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
-    		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
+    		/*List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
 			if(listdefer.size()!=0){
 				list.get(i).setDeferrTime(listdefer.size());//延期次数
 				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(listdefer.get(listdefer.size()-1).getDeferAfterReturntime()));//延期后还款时间
+			}*/
+    		
+    		list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
+    		
+    		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
+    		BigDecimal deferrMoney = new BigDecimal("0.00");//延期金额
+			if(listdefer.size()!=0){
+				list.get(i).setDeferrTime(listdefer.size());//延期次数
+				for (int j = 0; j < listdefer.size(); j++) {
+					deferrMoney=deferrMoney.add(listdefer.get(j).getInterestOnArrears());
+				}
+				list.get(i).setDeferrMoney(deferrMoney);
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersMapper.qeuryFinalDefertime(list.get(i).getId())));//延期后还款时间
 			}
+    		
 		}
     	 List<Source> listsource=ordersMapper.querysource(companyId);	
 		Map<String,Object> map=new HashMap<>();

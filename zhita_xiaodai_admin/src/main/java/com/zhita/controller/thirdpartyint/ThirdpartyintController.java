@@ -12,7 +12,7 @@ import com.zhita.model.manage.ThirdpartyInterface;
 import com.zhita.service.manage.thirdpartyint.IntThirdpartyintService;
 
 @Controller
-@RequestMapping("thirdpartyint")
+@RequestMapping("/thirdpartyint")
 public class ThirdpartyintController {
 	@Autowired
 	private IntThirdpartyintService intThirdpartyintService;

@@ -31,7 +31,7 @@
 			    AND o.orderStatus = "1"
 				AND o.companyId = #{companyId}
 				<if test="name != '' and name != null">
-					AND u.name like CONCAT(CONCAT('%',#{name}),'%') 
+					AND u.name like CONCAT('%',#{name}),'%') 
 				</if>
 				<if test="phone != null and phone != ''">
 					AND u.phone like CONCAT(CONCAT('%',#{phone}),'%') 

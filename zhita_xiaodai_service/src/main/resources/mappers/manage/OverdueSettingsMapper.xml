@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="companyId" property="companyid" jdbcType="INTEGER" />
     <result column="overdueHowmanydaysage" property="overduehowmanydaysage" jdbcType="INTEGER" />
-    <result column="penaltyInterestRates" property="penaltyinterestrates" jdbcType="DOUBLE" />
+    <result column="penaltyInterestRates" property="penaltyinterestrates" jdbcType="DECIMAL" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
@@ -30,7 +30,7 @@
     insert into overdue_settings (companyId,productid, overdueHowmanydaysage, 
       penaltyInterestRates, operator, operationTime)
     values (#{companyid,jdbcType=INTEGER},#{productid,jdbcType=INTEGER},  #{overduehowmanydaysage,jdbcType=INTEGER}, 
-      #{penaltyinterestrates,jdbcType=DOUBLE}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
+      #{penaltyinterestrates,jdbcType=DECIMAL}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.OverdueSettings" >
     insert into overdue_settings
@@ -110,7 +110,7 @@
     update overdue_settings
     set companyId = #{companyid,jdbcType=INTEGER},
       overdueHowmanydaysage = #{overduehowmanydaysage,jdbcType=INTEGER},
-      penaltyInterestRates = #{penaltyinterestrates,jdbcType=DOUBLE},
+      penaltyInterestRates = #{penaltyinterestrates,jdbcType=DECIMAL},
       operator = #{operator,jdbcType=VARCHAR},
       operationTime = #{operationtime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

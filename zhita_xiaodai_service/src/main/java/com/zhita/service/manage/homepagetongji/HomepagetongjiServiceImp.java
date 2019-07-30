@@ -2,6 +2,7 @@ package com.zhita.service.manage.homepagetongji;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,8 +11,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Orderdetails;
@@ -129,9 +132,9 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int sumrepaymentbank = homepageTongjiMapper.querySumRepaymentbank(companyId);//累计回款总笔数（银行卡扣款已结清笔数）
 		sumrepayment=sumrepaymentreal+sumrepaymentacc+sumrepaymentoff+sumrepaymentbank;
 		
-		String paymentpasscvr = (sumloan/sumregiste)*100+"%";//放款通过率
+		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
-		String orderrepaycvr = (sumrepayment/sumloan)*100+"%";//订单回款率
+		String orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
 		
 		BigDecimal payrecmoney = homepageTongjiMapper.querypayrecMoney(companyId);//累计放款总金额
 		
@@ -201,7 +204,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int overdue1 = homepageTongjiMapper.overdue1(companyId);//逾后未还笔数
 		int baddebt = homepageTongjiMapper.baddebt1(companyId);//已坏账笔数
 		int shouorder = homepageTongjiMapper.shouorder(companyId);//应还订单
-		String overduecvr = (overdue1+baddebt)/shouorder*100+"%";//逾期率
+		String overduecvr = (new DecimalFormat("#0.00").format((overdue1+baddebt)*1.0/shouorder*100))+"%";//逾期率
 		
 		BigDecimal overshouldMoney = new BigDecimal("0.00");//逾期应收总金额
 		List<Orderdetails> listtail = homepageTongjiMapper.overshouldMoney(companyId);
@@ -366,15 +369,19 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			BigDecimal tobepaidmoney=shouldmoney.subtract(repaymentmoney).subtract(deferredmoney).subtract(deratemoney);//待还金额
 			String overduecvr="";
 			if((overdueafternotrepay!=0||baddebt!=0)){
-				overduecvr=(overdueafternotrepay+baddebt)/shouldorder*100+"%";//逾期率
+				overduecvr=(new DecimalFormat("0.00").format((overdueafternotrepay+baddebt)*1.0/shouldorder*100))+"%";//逾期率
 			}else{
 				overduecvr="0";
 			}
 			int derateaccon = homepageTongjiMapper.derateaccon(companyId,startTimestampsfor, endTimestampsfor);//线上减免已还清
 			int derateaccunder = homepageTongjiMapper.derateaccunder(companyId,startTimestampsfor, endTimestampsfor);//线下减免已还清
 			int deratebank = homepageTongjiMapper.deratebank(companyId,startTimestampsfor, endTimestampsfor);//银行扣款已还清
-			String recovery=(overdueafterrepay+derateaccon+derateaccunder+deratebank)/(overdueafternotrepay)*100+"%";//回收率
-			
+			String recovery=null;
+			if(overdueafternotrepay!=0){
+				recovery=(new DecimalFormat("#0.00").format((overdueafterrepay+derateaccon+derateaccunder+deratebank)*1.0/(overdueafternotrepay)*100))+"%";//回收率
+			}else{
+				recovery="0.00%";
+			}
 			
 			homepageTongji.setShouldtime(list.get(i));//应还日期
 			homepageTongji.setShouldorder(shouldorder);//应还订单

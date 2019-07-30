@@ -47,17 +47,26 @@ public class Orders {
 	
 	private String assessor;//审核员
 	
+	private String repaymentMoney;//还款金额
+	
+	private Integer howManyTimesBorMoney;//第几次借款----
+	
+	private Integer deferrTime;//延期次数
+	
+	private BigDecimal deferrMoney;//延期金额
+	
+	private String deferAfterReturntime;//延期后应还时间
+	
 	private Orderdetails orderdetails;//对应订单明细表
 	
 	private User user;//对应用户对象
 	
-	private String repaymentMoney;//还款金额
+	private BigDecimal realityBorrowMoney;//实际借款金额（元）
 	
-	private String howManyTimesBorMoney;//第几次借款----
+	private BigDecimal interestSum;//期内总利息（元）
 	
-	private Integer deferrTime;//延期次数
+	private String overdueNumberOfDays;//逾期天数
 	
-	private String deferAfterReturntime;//延期后应还时间
 	
 	
 	private Integer adoptcount;//放款通过数
@@ -118,107 +127,6 @@ public class Orders {
 	private Integer chenggNum;
 	
 	private Integer chenggData;
-	
-	
-	
-
-	public Integer getChenggData() {
-		return chenggData;
-	}
-
-	public void setChenggData(Integer chenggData) {
-		this.chenggData = chenggData;
-	}
-
-	public Integer getChenggNum() {
-		return chenggNum;
-	}
-
-	public void setChenggNum(Integer chenggNum) {
-		this.chenggNum = chenggNum;
-	}
-
-	public Integer getCollection_count() {
-		return collection_count;
-	}
-
-	public void setCollection_count(Integer collection_count) {
-		this.collection_count = collection_count;
-	}
-
-	public BigDecimal getInterestPenaltySum() {
-		return interestPenaltySum;
-	}
-
-	public void setInterestPenaltySum(BigDecimal interestPenaltySum) {
-		this.interestPenaltySum = interestPenaltySum;
-	}
-
-	public BigDecimal getGesamtbetragderDarlehen() {
-		return GesamtbetragderDarlehen;
-	}
-
-	public void setGesamtbetragderDarlehen(BigDecimal gesamtbetragderDarlehen) {
-		GesamtbetragderDarlehen = gesamtbetragderDarlehen;
-	}
-
-	public Integer getZahlderGesamtdarlehen() {
-		return ZahlderGesamtdarlehen;
-	}
-
-	public void setZahlderGesamtdarlehen(Integer zahlderGesamtdarlehen) {
-		ZahlderGesamtdarlehen = zahlderGesamtdarlehen;
-	}
-
-	public BigDecimal getGesamtbetragderRvckzahlung() {
-		return GesamtbetragderRvckzahlung;
-	}
-
-	public void setGesamtbetragderRvckzahlung(BigDecimal gesamtbetragderRvckzahlung) {
-		GesamtbetragderRvckzahlung = gesamtbetragderRvckzahlung;
-	}
-
-	public Integer getGesamtbetragderNum() {
-		return GesamtbetragderNum;
-	}
-
-	public void setGesamtbetragderNum(Integer gesamtbetragderNum) {
-		GesamtbetragderNum = gesamtbetragderNum;
-	}
-
-	public BigDecimal getGesamtbetraguberfalligerBetrag() {
-		return GesamtbetraguberfalligerBetrag;
-	}
-
-	public void setGesamtbetraguberfalligerBetrag(
-			BigDecimal gesamtbetraguberfalligerBetrag) {
-		GesamtbetraguberfalligerBetrag = gesamtbetraguberfalligerBetrag;
-	}
-
-	public Integer getGesamtbetraguberfallNum() {
-		return GesamtbetraguberfallNum;
-	}
-
-	public void setGesamtbetraguberfallNum(Integer gesamtbetraguberfallNum) {
-		GesamtbetraguberfallNum = gesamtbetraguberfallNum;
-	}
-
-	public BigDecimal getGesamtbetragderVerbindlichkeiten() {
-		return GesamtbetragderVerbindlichkeiten;
-	}
-
-	public void setGesamtbetragderVerbindlichkeiten(
-			BigDecimal gesamtbetragderVerbindlichkeiten) {
-		GesamtbetragderVerbindlichkeiten = gesamtbetragderVerbindlichkeiten;
-	}
-
-	public Integer getGesamtbetragdererNum() {
-		return GesamtbetragdererNum;
-	}
-
-	public void setGesamtbetragdererNum(Integer gesamtbetragdererNum) {
-		GesamtbetragdererNum = gesamtbetragdererNum;
-	}
 
 	public Integer getId() {
 		return id;
@@ -412,6 +320,38 @@ public class Orders {
 		this.repaymentMoney = repaymentMoney;
 	}
 
+	public Integer getHowManyTimesBorMoney() {
+		return howManyTimesBorMoney;
+	}
+
+	public void setHowManyTimesBorMoney(Integer howManyTimesBorMoney) {
+		this.howManyTimesBorMoney = howManyTimesBorMoney;
+	}
+
+	public Integer getDeferrTime() {
+		return deferrTime;
+	}
+
+	public void setDeferrTime(Integer deferrTime) {
+		this.deferrTime = deferrTime;
+	}
+
+	public BigDecimal getDeferrMoney() {
+		return deferrMoney;
+	}
+
+	public void setDeferrMoney(BigDecimal deferrMoney) {
+		this.deferrMoney = deferrMoney;
+	}
+
+	public String getDeferAfterReturntime() {
+		return deferAfterReturntime;
+	}
+
+	public void setDeferAfterReturntime(String deferAfterReturntime) {
+		this.deferAfterReturntime = deferAfterReturntime;
+	}
+
 	public Integer getAdoptcount() {
 		return adoptcount;
 	}
@@ -548,28 +488,124 @@ public class Orders {
 		this.operator_time = operator_time;
 	}
 
-	public String getHowManyTimesBorMoney() {
-		return howManyTimesBorMoney;
+	public BigDecimal getGesamtbetragderDarlehen() {
+		return GesamtbetragderDarlehen;
 	}
 
-	public void setHowManyTimesBorMoney(String howManyTimesBorMoney) {
-		this.howManyTimesBorMoney = howManyTimesBorMoney;
+	public void setGesamtbetragderDarlehen(BigDecimal gesamtbetragderDarlehen) {
+		GesamtbetragderDarlehen = gesamtbetragderDarlehen;
 	}
 
-	public Integer getDeferrTime() {
-		return deferrTime;
+	public Integer getZahlderGesamtdarlehen() {
+		return ZahlderGesamtdarlehen;
 	}
 
-	public void setDeferrTime(Integer deferrTime) {
-		this.deferrTime = deferrTime;
+	public void setZahlderGesamtdarlehen(Integer zahlderGesamtdarlehen) {
+		ZahlderGesamtdarlehen = zahlderGesamtdarlehen;
 	}
 
-	public String getDeferAfterReturntime() {
-		return deferAfterReturntime;
+	public BigDecimal getGesamtbetragderRvckzahlung() {
+		return GesamtbetragderRvckzahlung;
 	}
 
-	public void setDeferAfterReturntime(String deferAfterReturntime) {
-		this.deferAfterReturntime = deferAfterReturntime;
+	public void setGesamtbetragderRvckzahlung(BigDecimal gesamtbetragderRvckzahlung) {
+		GesamtbetragderRvckzahlung = gesamtbetragderRvckzahlung;
 	}
-	
+
+	public Integer getGesamtbetragderNum() {
+		return GesamtbetragderNum;
+	}
+
+	public void setGesamtbetragderNum(Integer gesamtbetragderNum) {
+		GesamtbetragderNum = gesamtbetragderNum;
+	}
+
+	public BigDecimal getGesamtbetraguberfalligerBetrag() {
+		return GesamtbetraguberfalligerBetrag;
+	}
+
+	public void setGesamtbetraguberfalligerBetrag(BigDecimal gesamtbetraguberfalligerBetrag) {
+		GesamtbetraguberfalligerBetrag = gesamtbetraguberfalligerBetrag;
+	}
+
+	public Integer getGesamtbetraguberfallNum() {
+		return GesamtbetraguberfallNum;
+	}
+
+	public void setGesamtbetraguberfallNum(Integer gesamtbetraguberfallNum) {
+		GesamtbetraguberfallNum = gesamtbetraguberfallNum;
+	}
+
+	public BigDecimal getGesamtbetragderVerbindlichkeiten() {
+		return GesamtbetragderVerbindlichkeiten;
+	}
+
+	public void setGesamtbetragderVerbindlichkeiten(BigDecimal gesamtbetragderVerbindlichkeiten) {
+		GesamtbetragderVerbindlichkeiten = gesamtbetragderVerbindlichkeiten;
+	}
+
+	public Integer getGesamtbetragdererNum() {
+		return GesamtbetragdererNum;
+	}
+
+	public void setGesamtbetragdererNum(Integer gesamtbetragdererNum) {
+		GesamtbetragdererNum = gesamtbetragdererNum;
+	}
+
+	public Integer getCollection_count() {
+		return collection_count;
+	}
+
+	public void setCollection_count(Integer collection_count) {
+		this.collection_count = collection_count;
+	}
+
+	public BigDecimal getInterestPenaltySum() {
+		return interestPenaltySum;
+	}
+
+	public void setInterestPenaltySum(BigDecimal interestPenaltySum) {
+		this.interestPenaltySum = interestPenaltySum;
+	}
+
+	public Integer getChenggNum() {
+		return chenggNum;
+	}
+
+	public void setChenggNum(Integer chenggNum) {
+		this.chenggNum = chenggNum;
+	}
+
+	public Integer getChenggData() {
+		return chenggData;
+	}
+
+	public void setChenggData(Integer chenggData) {
+		this.chenggData = chenggData;
+	}
+
+	public BigDecimal getRealityBorrowMoney() {
+		return realityBorrowMoney;
+	}
+
+	public void setRealityBorrowMoney(BigDecimal realityBorrowMoney) {
+		this.realityBorrowMoney = realityBorrowMoney;
+	}
+
+	public BigDecimal getInterestSum() {
+		return interestSum;
+	}
+
+	public void setInterestSum(BigDecimal interestSum) {
+		this.interestSum = interestSum;
+	}
+
+	public String getOverdueNumberOfDays() {
+		return overdueNumberOfDays;
+	}
+
+	public void setOverdueNumberOfDays(String overdueNumberOfDays) {
+		this.overdueNumberOfDays = overdueNumberOfDays;
+	}
+
 }

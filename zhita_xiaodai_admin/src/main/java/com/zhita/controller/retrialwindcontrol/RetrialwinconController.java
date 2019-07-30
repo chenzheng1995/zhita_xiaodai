@@ -1,7 +1,6 @@
 package com.zhita.controller.retrialwindcontrol;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,28 +28,28 @@ public class RetrialwinconController {
     }
 	
 	//后台管理---(添加功能)先查询借款信息表的产品id和产品名称    公司表信息     供添加时选择
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllBorrow")
 	public Map<String,Object> queryAllBorrow(Integer companyId){
 		Map<String,Object> map=intDeferredsetService.queryAllBorrow(companyId);
 		return map;
-	}
+	}*/
 	
 	//后台管理----添加功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(RetrialWindControl record){
     	int num=intRetrialwinconService.insert(record);
     	return num;
-    }
+    }*/
 	
 	//后台管理---根据当前id查询当前对象现在
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public RetrialWindControl selectByPrimaryKey(Integer id){
     	RetrialWindControl retrialWindControl=intRetrialwinconService.selectByPrimaryKey(id);
     	return retrialWindControl;
-    }
+    }*/
 	
 	//后台管理---更新功能
 	@ResponseBody

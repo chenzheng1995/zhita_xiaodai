@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.Aboutus;
-import com.zhita.model.manage.Company;
 import com.zhita.service.manage.aboutus.IntAboutusService;
 import com.zhita.util.OssUtil;
 
@@ -32,20 +31,20 @@ public class AboutusController {
     }
 	
 	 //后台管理---添加功能（查询出所有公司）
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllCompany")
     public List<Company> queryAllCompany(){
     	List<Company> list=intAboutusService.queryAllCompany();
     	return list;
-    }
+    }*/
 	
 	//后台管理---添加功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/insert")
     public Map<String, Object> insert(Aboutus record,MultipartFile file) throws Exception{
 		Map<String, Object> map=intAboutusService.insert(record, file);
 		return map;
-    }
+    }*/
 	
 	@ResponseBody
 	@RequestMapping("/PictureUpload")
@@ -100,12 +99,12 @@ public class AboutusController {
     }
 	
 	 //后台管理---根据id查询当前对象信息
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public Aboutus selectByPrimaryKey(Integer id){
     	Aboutus aboutus=intAboutusService.selectByPrimaryKey(id);
     	return aboutus;
-    }
+    }*/
 	
 	 
     //后台管理---更新功能

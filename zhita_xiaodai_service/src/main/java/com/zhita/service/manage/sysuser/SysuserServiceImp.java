@@ -125,7 +125,7 @@ public class SysuserServiceImp implements IntSysuserService{
     	List<Company> listcompany=sysUserMapper.queryAllCompany();
 		List<Role> listrole=sysUserMapper.queryAllRole();
 		SysUser sysuser=sysUserMapper.selectByPrimaryKey(userid);
-		sysuser.setLogintime(Timestamps.stampToDate(sysuser.getLogintime()));
+/*		sysuser.setLogintime(Timestamps.stampToDate(sysuser.getLogintime()));*/
 		
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listcompany", listcompany);

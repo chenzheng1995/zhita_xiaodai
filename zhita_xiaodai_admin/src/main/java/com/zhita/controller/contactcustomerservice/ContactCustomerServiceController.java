@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.zhita.model.manage.Company;
 import com.zhita.model.manage.ContactCustomerService;
 import com.zhita.service.manage.contactcustomer.IntContactcustomerService;
 import com.zhita.util.OssUtil;
@@ -32,12 +31,12 @@ public class ContactCustomerServiceController {
     }
 	
     //后台管理---添加功能（查询出所有公司）
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/queryAllCompany")
     public List<Company> queryAllCompany(){
 		List<Company> list=intContactcustomerService.queryAllCompany();
 		return list;
-	}
+	}*/
 	
 
 	
@@ -102,12 +101,12 @@ public class ContactCustomerServiceController {
     }
 	
 	 //后台管理---根据id查询出当前对象信息
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public ContactCustomerService selectByPrimaryKey(Integer id){
     	ContactCustomerService contactCustomerService=intContactcustomerService.selectByPrimaryKey(id);
     	return contactCustomerService;
-    }
+    }*/
 	
 	//后台管理---修改功能
 	@ResponseBody

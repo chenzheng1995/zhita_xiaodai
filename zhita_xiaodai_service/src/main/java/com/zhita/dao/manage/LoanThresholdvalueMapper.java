@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.zhita.model.manage.LoanThresholdvalue;
 
@@ -31,4 +32,10 @@ public interface LoanThresholdvalueMapper {
     
     //后台管理----修改最大阀值
     int upamaxthresholdvalue(Integer maxthresholdvalue);
+    
+    //后台管理----查询放款渠道状态
+    List<String> queryStatus(Integer companyId);
+    
+    //后台管理----修改放款渠道状态
+    int upaloanstatus(String status,Integer companyId);
 }

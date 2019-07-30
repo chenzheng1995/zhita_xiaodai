@@ -1,6 +1,5 @@
 package com.zhita.controller.homepagetongji;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhita.model.manage.Orderdetails;
 import com.zhita.service.manage.homepagetongji.IntHomepagetongjiService;
 /**
  * 首页统计controller
@@ -38,10 +36,10 @@ public class HomepageTongjiController {
 	}
 	
 	//test
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/test")
 	public List<Orderdetails> test(){
 		List<Orderdetails> list=intHomepagetongjiService.test();
 		return list;
-	}
+	}*/
 }
