@@ -13,4 +13,8 @@ public interface OperatorService {
 
 	int updateOperatorJson(String url, int userId);
 
+	int getuserId(int userId);
+
+	void updatereqId(int userId, String reqId);
+
 }

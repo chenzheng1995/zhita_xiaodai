@@ -37,4 +37,16 @@ public class OperatorServiceimp implements OperatorService{
 		return number;
 	}
 
+	@Override
+	public int getuserId(int userId) {
+		int num = operatorMapper.getuserId(userId);
+		return num;
+	}
+
+	@Override
+	public void updatereqId(int userId, String reqId) {
+		operatorMapper.updatereqId(userId,reqId);
+		
+	}
+
 }

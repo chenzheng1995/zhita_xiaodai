@@ -20,8 +20,6 @@ import com.zhita.model.manage.Source;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
 import com.zhita.model.manage.UserLikeParameter;
-import com.zhita.util.DateListUtil;
-import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
@@ -243,6 +241,12 @@ public class UserServiceImp implements IntUserService{
 	public int getdelayTimes(int userId) {
 		int currentDelays = userMapper.getdelayTimes(userId);
 		return currentDelays;
+	}
+
+	@Override
+	public void updateshareOfState(int userId, String shareOfState) {
+		userMapper.updateshareOfState(userId, shareOfState);
+		
 	}
 
 

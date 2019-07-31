@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zhita.dao.manage.RoleMapper;
 import com.zhita.model.manage.Functions;
 import com.zhita.model.manage.Role;
-import com.zhita.model.manage.SecondFunction;
-import com.zhita.model.manage.ThirdFunction;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil2;
 
@@ -33,10 +31,10 @@ public class RoleServiceImp implements IntRoleService{
 		list=roleMapper.queryAll();
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -55,10 +53,10 @@ public class RoleServiceImp implements IntRoleService{
 		list=roleMapper.queryAllByLike(status);
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
-    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -70,7 +68,7 @@ public class RoleServiceImp implements IntRoleService{
 	//admin------角色——添加功能（先查询出所有的权限）
 	@Override
 	public List<Functions> queryAllFunctions() {
-		List<Functions> listfunction=new ArrayList<>();//最终返回的权限集合
+		/*List<Functions> listfunction=new ArrayList<>();//最终返回的权限集合
 		List<Functions> list=roleMapper.queryAllFunctions();//当前的function对象里面只有firstlevelmenu  status有值
 		for (int i = 0; i < list.size(); i++) {
 			
@@ -99,7 +97,9 @@ public class RoleServiceImp implements IntRoleService{
 			functionto.setSecondfunctionlist(listsecond);//二级菜单集合  添加
 			listfunction.add(functionto);
 		}
-		return listfunction;
+		return listfunction;*/
+		List<Functions> list=roleMapper.queryAllfun();//查询权限表所有信息
+		return list;
 	}
 	//admin------角色——添加功能
 	@Transactional
@@ -118,7 +118,7 @@ public class RoleServiceImp implements IntRoleService{
 	//admin------角色——查看权限功能
 	@Override
 	public List<Functions> queryFunctionsByRoleid(Integer roleid) {
-		List<Functions> listfunction=new ArrayList<>();//最终返回的权限集合
+		/*List<Functions> listfunction=new ArrayList<>();//最终返回的权限集合
 		List<Functions> list=roleMapper.queryFunctionByRoleid(roleid);//当前的function对象里面只有firstlevelmenu  status有值
 		for (int i = 0; i < list.size(); i++) {
 			
@@ -147,7 +147,9 @@ public class RoleServiceImp implements IntRoleService{
 			functionto.setSecondfunctionlist(listsecond);//二级菜单集合  添加
 			listfunction.add(functionto);
 		}
-		return listfunction;
+		return listfunction;*/
+		List<Functions> list=roleMapper.queryAllfunByRoleid(roleid);
+		return list;
 	}
 	
 	//admin-----角色——编辑功能（通过角色id查询角色对象）
@@ -155,7 +157,7 @@ public class RoleServiceImp implements IntRoleService{
 	public Map<String, Object> editByRoleid(Integer roleid) {
 		Role role=roleMapper.selectByPrimaryKey(roleid);//当前角色id的角色对象----
 
-		List<Functions> listfunction=new ArrayList<>();//最终返回的权限集合----
+		/*List<Functions> listfunction=new ArrayList<>();//最终返回的权限集合----
 		List<Functions> list=roleMapper.queryAllFunctions();//当前的function对象里面只有firstlevelmenu  status有值
 		for (int i = 0; i < list.size(); i++) {
 			
@@ -183,9 +185,11 @@ public class RoleServiceImp implements IntRoleService{
 			}
 			functionto.setSecondfunctionlist(listsecond);//二级菜单集合  添加
 			listfunction.add(functionto);
-		}
-
-		List<Functions> listfunctionByRoleid=new ArrayList<>();//通过角色id最终返回的权限集合---
+		}*/
+		
+		List<Functions> listfunction=roleMapper.queryAllfun();//查询权限表所有信息
+		List<Functions> listfunctionByRoleid=roleMapper.queryAllfunByRoleid(roleid);
+		/*List<Functions> listfunctionByRoleid=new ArrayList<>();//通过角色id最终返回的权限集合---
 		List<Functions> list1=roleMapper.queryFunctionByRoleid(roleid);//当前的function对象里面只有firstlevelmenu  status有值
 		for (int i = 0; i < list1.size(); i++) {
 			
@@ -213,7 +217,7 @@ public class RoleServiceImp implements IntRoleService{
 			}
 			functionto.setSecondfunctionlist(listsecond);//二级菜单集合  添加
 			listfunctionByRoleid.add(functionto);
-		}
+		}*/
 		
 		HashMap<String, Object> map=new HashMap<>();
     	map.put("role",role);

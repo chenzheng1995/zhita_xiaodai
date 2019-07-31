@@ -32,7 +32,7 @@ public interface UserAttestationMapper {
 	int updateUserAttestation(@Param("name")String name,@Param("gender") String gender,@Param("nationality") String nationality,@Param("birth_year") String birth_year,
 			@Param("birth_month")String birth_month,@Param("birth_day")String birth_day,@Param("address") String address,@Param("issued_by") String issued_by,
 			@Param("valid_date_start")String valid_date_start,@Param("valid_date_end") String valid_date_end,@Param("frontsidePath")String frontsidePath,
-			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number);
+			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number,@Param("homeAddressLongitude") String homeAddressLongitude,@Param("homeAddressLatitude") String homeAddressLatitude,@Param("detailAddress") String detailAddress,@Param("headossPath") String headossPath,@Param("nationalEmblemossPath") String nationalEmblemossPath,@Param("authenticationSteps") String authenticationSteps);
 
 	Map<String, Object> selectUserAttestationService(int userId);
 
@@ -43,6 +43,17 @@ public interface UserAttestationMapper {
 	int setlinkman(@Param("linkmanOneRelation")String linkmanOneRelation,@Param("linkmanOneName") String linkmanOneName,@Param("linkmanOnePhone") String linkmanOnePhone,
 			@Param("linkmanTwoRelation")String linkmanTwoRelation,@Param("linkmanTwoName")String linkmanTwoName,@Param("linkmanTwoPhone") String linkmanTwoPhone,@Param("userId") int userId);
 
-	void updateAttestationStatus(@Param("attestationStatus")String attestationStatus,@Param("userId") int userId);
+	void updateAttestationStatus(@Param("attestationStatus")String attestationStatus,@Param("userId") int userId,@Param("authenticationSteps")String authenticationSteps);
+
+	int updateAuthenticationSteps(@Param("userId")int userId,@Param("authenticationSteps") String authenticationSteps);
+
+	String getauthenticationSteps(int userId);
+
+	int insertUserAttestation(@Param("name")String name,@Param("gender") String gender,@Param("nationality") String nationality,@Param("birth_year") String birth_year,
+			@Param("birth_month")String birth_month,@Param("birth_day")String birth_day,@Param("address") String address,@Param("issued_by") String issued_by,
+			@Param("valid_date_start")String valid_date_start,@Param("valid_date_end") String valid_date_end,@Param("frontsidePath")String frontsidePath,
+			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number,@Param("homeAddressLongitude") String homeAddressLongitude,@Param("homeAddressLatitude") String homeAddressLatitude,@Param("detailAddress") String detailAddress,@Param("authenticationSteps") String authenticationSteps);
+
+	String getshareOfState(int userId);
 
 }

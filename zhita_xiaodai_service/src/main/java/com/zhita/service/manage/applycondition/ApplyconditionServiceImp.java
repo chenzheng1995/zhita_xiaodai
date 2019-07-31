@@ -1,6 +1,7 @@
 package com.zhita.service.manage.applycondition;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,4 +47,10 @@ public class ApplyconditionServiceImp implements IntApplyconditionService{
     	int num=applyConditionMapper.updateByPrimaryKey(record);
     	return num;
     }
+
+	@Override
+	public Map<String, Object> getApplycondition(int companyId) {
+		Map<String, Object> map2 =  applyConditionMapper.getApplycondition(companyId);
+		return map2;
+	}
 }

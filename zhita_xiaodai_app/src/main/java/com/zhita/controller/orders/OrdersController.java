@@ -448,7 +448,6 @@ public class OrdersController {
    
    
    
-   
    public static int compare_date(String DATE1, String DATE2) {//比较时间大小
  DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
  try {
