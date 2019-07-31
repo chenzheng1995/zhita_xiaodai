@@ -436,7 +436,7 @@ public class OrderServiceImp implements IntOrderService{
 		if((userLikeParameter.getApplytimestart()!=null&&!"".equals(userLikeParameter.getApplytimestart()))&&(userLikeParameter.getApplytimeend()!=null&&!"".equals(userLikeParameter.getApplytimeend()))){
 			try {
 				userLikeParameter.setApplytimestart(Timestamps.dateToStamp(userLikeParameter.getApplytimestart()));
-				userLikeParameter.setApplytimeend(Timestamps.dateToStamp(userLikeParameter.getApplytimeend()));
+				userLikeParameter.setApplytimeend((Long.parseLong(Timestamps.dateToStamp(userLikeParameter.getApplytimeend()))+86400000)+"");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -480,7 +480,7 @@ public class OrderServiceImp implements IntOrderService{
 		if((userLikeParameter.getApplytimestart()!=null&&!"".equals(userLikeParameter.getApplytimestart()))&&(userLikeParameter.getApplytimeend()!=null&&!"".equals(userLikeParameter.getApplytimeend()))){
 			try {
 				userLikeParameter.setApplytimestart(Timestamps.dateToStamp(userLikeParameter.getApplytimestart()));
-				userLikeParameter.setApplytimeend(Timestamps.dateToStamp(userLikeParameter.getApplytimeend()));
+				userLikeParameter.setApplytimeend((Long.parseLong(Timestamps.dateToStamp(userLikeParameter.getApplytimeend()))+86400000)+"");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -541,7 +541,7 @@ public class OrderServiceImp implements IntOrderService{
 		if((userLikeParameter.getApplytimestart()!=null&&!"".equals(userLikeParameter.getApplytimestart()))&&(userLikeParameter.getApplytimeend()!=null&&!"".equals(userLikeParameter.getApplytimeend()))){
 			try {
 				userLikeParameter.setApplytimestart(Timestamps.dateToStamp(userLikeParameter.getApplytimestart()));
-				userLikeParameter.setApplytimeend(Timestamps.dateToStamp(userLikeParameter.getApplytimeend()));
+				userLikeParameter.setApplytimeend((Long.parseLong(Timestamps.dateToStamp(userLikeParameter.getApplytimeend()))+86400000)+"");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

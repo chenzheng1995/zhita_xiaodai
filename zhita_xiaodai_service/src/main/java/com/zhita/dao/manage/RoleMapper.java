@@ -18,6 +18,9 @@ public interface RoleMapper {
     //admin------角色——添加功能（通过一级菜单进行分组  查询出functions表一共有几个模块的一级菜单）
     List<Functions> queryAllFunctions();
     
+    //admin-----角色——添加功能（查询权限表所有信息）
+    List<Functions> queryAllfun();
+    
     //admin------角色——添加功能
     int insert(Role record);
     
@@ -51,4 +54,7 @@ public interface RoleMapper {
     
     //admin------角色——查看权限功能（通过一级菜单进行分组  查询出functions表一共有几个模块的一级菜单）
     List<Functions> queryFunctionByRoleid(Integer roleid);
+    
+    //admin-----角色——添加功能（根据角色id查询该角色的权限信息）
+    List<Functions> queryAllfunByRoleid(Integer roleid);
 }
