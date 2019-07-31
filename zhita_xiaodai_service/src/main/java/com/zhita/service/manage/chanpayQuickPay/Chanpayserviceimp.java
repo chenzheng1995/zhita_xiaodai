@@ -126,6 +126,13 @@ public class Chanpayserviceimp implements Chanpayservice{
 	}
 	
 	
+
+	@Override
+	public Orders OneOrders(Orders or) {
+		return stdao.OneOrders(or);
+	}
+	
+	
 	
 	
 	

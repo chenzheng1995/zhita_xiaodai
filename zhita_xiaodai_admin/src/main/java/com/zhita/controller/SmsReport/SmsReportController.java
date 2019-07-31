@@ -102,4 +102,12 @@ public class SmsReportController {
 	
 	
 	
+	@ResponseBody
+	@RequestMapping("UserType")
+	public Map<String, Object> UserTypes(Integer companyId){
+		return serv.UserTypes(companyId);
+	}
+	
+	
+	
 }

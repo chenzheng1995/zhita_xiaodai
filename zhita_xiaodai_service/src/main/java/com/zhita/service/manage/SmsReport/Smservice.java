@@ -21,5 +21,8 @@ public interface Smservice {
 	
 	
 	Map<String, Object> AllCollection(String collection_time);
+	
+	
+	Map<String, Object> UserTypes(Integer companyId);
 
 }

@@ -524,6 +524,7 @@ public class ChanpayQuickCollection {
 					result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 							urlStr);
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+				System.out.println(result);
 				map.put("OriAuthTrxId", trxId);
 				map.put("code", "200");
 				map.put("ReturnChanpay", retu);
@@ -587,38 +588,50 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_sms")
-	public Map<String, Object> nmg_api_auth_sms(String OriAuthTrxId,String SmsCode) {
+	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> origMap = new HashMap<String, String>();
-		// 2.1 基本参数
-		origMap = setCommonMap(origMap);
-		origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
-		// 2.1 鉴权绑卡  业务参数
-		String trxId = Long.toString(System.currentTimeMillis());	
-		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OriAuthTrxId", OriAuthTrxId);// 原鉴权绑卡订单号
-		origMap.put("SmsCode", SmsCode);// 鉴权短信验证码
-		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
-		String result = "";
-		try {                                                                                                                                                                                             
-			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-						urlStr);
-			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-			
-			if(retu.getAcceptStatus().equals("S")){
-				chanser.UpdateChanpay(Integer.valueOf(OriAuthTrxId));
-				map.put("code", "200");
-				map.put("ReturnChanpay", retu);
-			}else{
-				map.put("code", "200");
-				map.put("ReturnChanpay", retu);
-			}
-			
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		System.out.println(oriAuthTrxId+"AAAAAAA"+SmsCode);
+		if(oriAuthTrxId != null && SmsCode != null && oriAuthTrxId != ""){
+			System.out.println("数据:"+oriAuthTrxId);
+			// 2.1 基本参数
+			origMap = setCommonMap(origMap);
+			origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
+			// 2.1 鉴权绑卡  业务参数
+			String trxId = Long.toString(System.currentTimeMillis());	
+			origMap.put("TrxId", trxId);// 订单号
+			origMap.put("OriAuthTrxId", oriAuthTrxId);// 原鉴权绑卡订单号
+			origMap.put("SmsCode", SmsCode);// 鉴权短信验证码
+			origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
+			String result = "";
+			try {                                                                                                                                                                                             
+				String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
+				Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
+					result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+							urlStr);
+				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+				System.out.println("AAA:"+result);
+				System.out.println(retu.getAcceptStatus()+"111111111111111");
+				String ssa = retu.getAcceptStatus();
+				if(ssa !="S"){
+					map.put("code", "0");
+					map.put("ReturnChanpay", retu);
+					map.put("desc", "认证失败");
+				}else{
+					chanser.UpdateChanpay(Integer.valueOf(oriAuthTrxId));
+					map.put("code", "200");
+					map.put("ReturnChanpay", retu);
+					map.put("desc", "认证成功");
+				}
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}else{
+			map.put("code", 0);
+			map.put("desc", "OriAuthTrxId，SmsCode不能为空");
+		}
+		
 		return map;
 	}
 	
@@ -892,10 +905,10 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_info_qry");// 用户鉴权绑卡信息查询接口名
 		// 2.2 业务参数
-		origMap.put("TrxId", "20170313100523171");// 商户网站唯一订单号
-		origMap.put("MerUserId", "0000001"); // 用户标识（测试时需要替换一个新的meruserid）
-		//origMap.put("CardBegin", "430000");// 卡号前6位
-		//origMap.put("CardEnd", "4700");// 卡号后4位
+		origMap.put("TrxId", "10086192541");// 商户网站唯一订单号
+		origMap.put("MerUserId", "35"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
 		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡）
 		String result = "";
 		try {
@@ -926,12 +939,12 @@ public class ChanpayQuickCollection {
 		// 2.2 业务参数
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
-		origMap.put("MerchantNo", "200001160097");// 子商户号
-		origMap.put("MerUserId", "0000001"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerchantNo", "200005640044");// 子商户号
+		origMap.put("MerUserId", "14"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", "436742");// 卡号前6位
-		origMap.put("CardEnd", "7269");// 卡号后4位
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -1201,7 +1214,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_zft_api_quick_payment();
+		test.nmg_api_auth_unbind();
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

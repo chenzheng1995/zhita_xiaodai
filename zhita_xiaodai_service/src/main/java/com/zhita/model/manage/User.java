@@ -42,7 +42,6 @@ public class User {
     
     private String shareOfState;//风控状态（0，审核未通过。1需要人工审核。2，审核通过）
     
-
     private Integer delayTimes;//延期次数
 
     private Integer riskControlPoints;//风控分数
@@ -60,13 +59,13 @@ public class User {
     private String account;//操作人名字
     
     private String rmModleName;//风控名字
-
     
     private Integer userNum;
     
     private BigDecimal UserMoney;
     
     private String idcard;
+    
 
 	public Integer getId() {
 		return id;
