@@ -60,16 +60,18 @@ class ZhimiRiskRequest {
 }
 
 public class ZhimiRiskDemo {
-    public String getzhimi() {
+    public String getzhimi(String fileContent,String linkmanOneName,String linkmanOnePhone,String linkmanTwoName,String linkmanTwoPhone) {
         for (int i = 0; i < 1; i++){
-            String fileContent = null;
-            try {
-                fileContent = IOUtils.toString(new FileInputStream("sample_data"), StandardCharsets.UTF_8);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            String fileContent = null;
+//            try {
+//                fileContent = IOUtils.toString(new FileInputStream("sample_data"), StandardCharsets.UTF_8);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        	
+        	
             JSONObject sampleObject = JSON.parseObject(String.valueOf(fileContent));
             JSONObject responseObject = sampleObject.getJSONObject("wd_api_mobilephone_getdatav2_response");
             JSONObject dataObject = responseObject.getJSONObject("data");
@@ -90,9 +92,9 @@ public class ZhimiRiskDemo {
             String phone_os = "android";
             String user_address = addr;
             List<EmergencyContact> e_contacts = new ArrayList<EmergencyContact>();
-            e_contacts.add(new EmergencyContact("张文豪", "18270683860"));
-            e_contacts.add(new EmergencyContact("吕文杰", "17764520865"));
-            
+            e_contacts.add(new EmergencyContact(linkmanOneName, linkmanOnePhone));
+            e_contacts.add(new EmergencyContact(linkmanTwoName, linkmanTwoPhone));
+
             
 //            String model_name = "dingkun_v1";
 //            String apply_time = df.format(t);
@@ -118,7 +120,7 @@ public class ZhimiRiskDemo {
 //                JSONObject contactItemObject = contactArray.getJSONObject(j);
 //                contact.add(new Contact(contactItemObject.getString("contact_name"), contactItemObject.getString("contact_phone"), contactItemObject.getString("update_time")));
 //            }
-            contact.add(new Contact("张靓雯","15013825354","2018-06-10 09:00:00"));
+            contact.add(new Contact(linkmanOneName,linkmanOnePhone,apply_time));
             ZhimiRiskRequest request = new ZhimiRiskRequest();
             request.setModel_name(model_name);
 //            request.setProduct(product);

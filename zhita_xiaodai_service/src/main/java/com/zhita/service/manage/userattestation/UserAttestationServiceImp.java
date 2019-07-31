@@ -104,6 +104,12 @@ public class UserAttestationServiceImp implements UserAttestationService{
 		return number;
 	}
 
+	@Override
+	public String getshareOfState(int userId) {
+		String shareOfState = userAttestationMapper.getshareOfState(userId);
+		return shareOfState;
+	}
+
 
 	
 	

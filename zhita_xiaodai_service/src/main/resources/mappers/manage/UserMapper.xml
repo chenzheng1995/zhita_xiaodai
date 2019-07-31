@@ -509,5 +509,11 @@
 	        	and u.operator =#{operatorid,jdbcType=INTEGER}
 	        </if>
   </select>
+  
+  
+     <!-- 更新分控状态 -->
+  <update id="updateshareOfState"> 
+  	update user set shareOfState=#{shareOfState} where id = #{userId}
+  </update>
 
 </mapper>

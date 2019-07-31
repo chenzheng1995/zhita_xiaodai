@@ -32,5 +32,7 @@ public interface IntUserService {
 
 	public int getdelayTimes(int userId);
 
+	public void updateshareOfState(int userId, String shareOfState);
+
 
 }

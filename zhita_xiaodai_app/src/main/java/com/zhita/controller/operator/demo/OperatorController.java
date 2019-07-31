@@ -60,15 +60,20 @@ public class OperatorController {
 
     	
    	 Map<String, Object> map = new HashMap<String, Object>();
-   	 int number = operatorService.setredIdAndPhone(reqId,userId,phone);
-        if (number == 1) {                  	
-            map.put("msg", "数据插入成功");
-            map.put("Code", "201");
-        } else {
-            map.put("msg", "数据插入失败");
-            map.put("Code", "405");
-        }
-        
+   	 int num = operatorService.getuserId(userId);
+   	 if(num==0) {
+   	   	 int number = operatorService.setredIdAndPhone(reqId,userId,phone);
+         if (number == 1) {                  	
+             map.put("msg", "数据插入成功");
+             map.put("Code", "201");
+         } else {
+             map.put("msg", "数据插入失败");
+             map.put("Code", "405");
+         }
+   	 }else{
+   		operatorService.updatereqId(userId,reqId);
+   	 }
+    
         H5ReportDemo h5ReportDemo = new H5ReportDemo();
         return h5ReportDemo.getH5Report(userId, phone, name, idNumber, reqId);
     }
@@ -142,14 +147,29 @@ public class OperatorController {
     
     
   }
+  
+//分控状态
+@RequestMapping("/getshareOfState")
+@ResponseBody
+@Transactional
+public Map<String, Object> getshareOfState(int userId){
+	Map<String, Object> map = new HashMap<>();
+	String shareOfState = intUserService.getshareOfState(userId);
+	map.put("shareOfState", shareOfState);
+	return map;
+	
+}
+  
     
-//    分控分数
+//   融360 分控分数
     @RequestMapping("/getScore")
     @ResponseBody
     @Transactional
     public Map<String, Object> getScore(int userId,String sourceName){
     	String shareOfState =null;
     	Map<String, Object> map = new HashMap<>();
+    	shareOfState ="6";
+    	intUserService.updateshareOfState(userId, shareOfState);
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
 		String idNumber = (String) userAttestation.get("idcard_number");
@@ -157,11 +177,12 @@ public class OperatorController {
         Map<String, Object> operator = operatorService.getOperator(userId);
         String phone = (String) operator.get("phone");
         String reqId = (String) operator.get("reqId");
+        String search_id = (String) operator.get("search_id");
     	RuleDemo ruleDemo = new RuleDemo();
     	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
     	
     	ScoreDemo scoreDemo = new ScoreDemo();
-    	String result = scoreDemo.getScore(userId, phone, name, idNumber, reqId);
+    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
     	  JSONObject jsonObject =null;
     	  jsonObject = JSONObject.parseObject(result);
           String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();

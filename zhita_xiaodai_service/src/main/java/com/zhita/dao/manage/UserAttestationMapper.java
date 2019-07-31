@@ -54,4 +54,6 @@ public interface UserAttestationMapper {
 			@Param("valid_date_start")String valid_date_start,@Param("valid_date_end") String valid_date_end,@Param("frontsidePath")String frontsidePath,
 			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number,@Param("homeAddressLongitude") String homeAddressLongitude,@Param("homeAddressLatitude") String homeAddressLatitude,@Param("detailAddress") String detailAddress,@Param("authenticationSteps") String authenticationSteps);
 
+	String getshareOfState(int userId);
+
 }
