@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
+import com.zhita.model.manage.Usershortmessage;
 
 public interface SmsMapper {
 	
@@ -29,5 +30,11 @@ public interface SmsMapper {
 	Integer SelectTimeSize(Shortmessage shor);
 	
 	
-	List<String> AllRegist(Integer companyId);
+	List<String> AllRegist(Usershortmessage companyId);
+	
+	
+	List<Usershortmessage> AllUsershortmessage(Integer companyId);
+	
+	
+	Integer AddUserShortmessage(Usershortmessage shor);
 }

@@ -13,6 +13,16 @@ public class Usershortmessage {
 	private String short_text;
 	
 	private Integer sys_userId;
+	
+	private Integer companyId;
+
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
 
 	public Integer getSys_userId() {
 		return sys_userId;

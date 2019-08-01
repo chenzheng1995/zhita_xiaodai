@@ -9,11 +9,12 @@
 				userId,
 				attestationStatus,
 				bankcardName,
+				bankcardTypeId,
 				tiedCardPhone,
 				deleted,
 				IDcardnumber,
 				cstmrnm
-				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
+				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{bankcardTypeId},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
 			</insert>
 			
 			

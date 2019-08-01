@@ -486,6 +486,7 @@ public class ChanpayQuickCollection {
 		System.out.println(MerUserId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(MerUserId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
+			System.out.println("银行卡:"+bankcardTypeId);
 		Bankcard bank = new Bankcard();
 		bank.setAttestationStatus("0");
 		bank.setUserId(Integer.valueOf(MerUserId));//登陆人ID
@@ -613,15 +614,17 @@ public class ChanpayQuickCollection {
 				System.out.println("AAA:"+result);
 				System.out.println(retu.getAcceptStatus()+"111111111111111");
 				String ssa = retu.getAcceptStatus();
+				String statu = retu.getRetMsg();
 				if(ssa !="S"){
-					map.put("code", "0");
-					map.put("ReturnChanpay", retu);
-					map.put("desc", "认证失败");
-				}else{
 					chanser.UpdateChanpay(Integer.valueOf(oriAuthTrxId));
 					map.put("code", "200");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证成功");
+					
+				}else{
+					map.put("code", "0");
+					map.put("ReturnChanpay", retu);
+					map.put("desc", "认证失败");
 				}
 				
 				} catch (Exception e) {
@@ -940,7 +943,7 @@ public class ChanpayQuickCollection {
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
 		origMap.put("MerchantNo", "200005640044");// 子商户号
-		origMap.put("MerUserId", "14"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", "17"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
 		origMap.put("CardBegin", "621483");// 卡号前6位
