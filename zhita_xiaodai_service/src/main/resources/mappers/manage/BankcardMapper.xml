@@ -144,4 +144,8 @@
 		select attestationStatus,bankcardTypeId,bankcardName,cstmrnm from bankcard where userid=#{userId} and attestationStatus ='1'
 	</select>
 
+  	<select id="getattestationStatus" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select attestationStatus from bankcard where userid=#{userId}
+	</select>
+
 </mapper>

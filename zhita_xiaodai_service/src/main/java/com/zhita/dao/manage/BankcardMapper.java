@@ -19,4 +19,6 @@ public interface BankcardMapper {
 
 	Map<String, Object> getbankcard(int userId);
 
+	Map<String, Object> getattestationStatus(int userId);
+
 }
