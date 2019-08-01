@@ -15,6 +15,16 @@ public class Usershortmessage {
 	private Integer sys_userId;
 	
 	private Integer companyId;
+	
+	private String phone;
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
 	public Integer getCompanyId() {
 		return companyId;

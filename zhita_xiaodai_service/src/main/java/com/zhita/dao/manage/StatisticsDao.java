@@ -92,4 +92,7 @@ public interface StatisticsDao {
 	
 	List<Bankdeduction> SelectBankKoukuan(Bankdeduction ban);
 	
+	
+	Integer DeleteChan(Integer userId);
+	
 }

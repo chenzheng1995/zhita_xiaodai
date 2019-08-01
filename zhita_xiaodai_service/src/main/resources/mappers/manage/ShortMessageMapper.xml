@@ -67,14 +67,8 @@
 			
 			
 			
-			<select id="AllUsershortmessage" parameterType="com.zhita.model.manage.User" resultType="java.lang.String">
-				select phone from user 
-				<where>
-				companyId = #{companyId}
-					<if test="registeClient != null and registeClient != ''">
-						and registeClient = #{registeClient}
-					</if>
-				</where>
+			<select id="AllUsershortmessage" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Usershortmessage">
+				select * from user where companyId = #{companyId}
 			</select>
 			
 			

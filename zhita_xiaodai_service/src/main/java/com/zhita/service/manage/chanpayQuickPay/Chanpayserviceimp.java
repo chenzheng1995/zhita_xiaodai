@@ -131,6 +131,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Orders OneOrders(Orders or) {
 		return stdao.OneOrders(or);
 	}
+
+	@Override
+	public Integer DeleteChan(Integer userId) {
+		return stdao.DeleteChan(userId);
+	}
 	
 	
 	

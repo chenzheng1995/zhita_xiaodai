@@ -223,7 +223,9 @@ public class Smserviceimp implements Smservice{
 	public Map<String, Object> UserTypes(Usershortmessage companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> phones = sdao.AllRegist(companyId);
+		Integer phonNum = phones.size();
 		map.put("phones", phones);
+		map.put("phonNum", phonNum);
 		return map;
 	}
 
@@ -240,23 +242,53 @@ public class Smserviceimp implements Smservice{
 	@Override
 	public Map<String, Object> AddUserShortMessage(Usershortmessage shor) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		shor.setSend_time(sim.format(new Date()));
-		Integer addId = sdao.AddUserShortmessage(shor);
-		if(addId != null){
-			map.put("code", 200);
-			map.put("desc", "成功");
+		System.out.println(shor.getPhone());
+		if(shor.getPhone() == null){
+			map.put("code", "0");
+			map.put("desc", "手机号不能为空");
+		}else if(shor.getShort_text() == null){
+			map.put("code", "0");
+			map.put("desc", "内容不能为空");
 		}else{
-			map.put("code", 200);
-			map.put("desc", "成功");
-		}
+			SmsSendRequest smsSingleRequest = new SmsSendRequest(account, password, shor.getShort_text(), shor.getPhone(),report);
+
+	        String requestJson = JSON.toJSONString(smsSingleRequest);
+
+	        System.out.println("before request string is: " + requestJson);
+
+	        String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
+
+	        System.out.println("response after request result is :" + response);
+
+	        SmsSendResponse smsSingleResponse = JSON.parseObject(response, SmsSendResponse.class);
+
+	        System.out.println("response  toString is :" + smsSingleResponse);
+	        
+	        
+	        if(smsSingleResponse.getErrorMsg().equals("")){
+	        	SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    		shor.setSend_time(sim.format(new Date()));
+	    		Integer addId = sdao.AddUserShortmessage(shor);
+	    		if(addId != null){
+	    			map.put("code", 200);
+	    			map.put("desc", "成功");
+	    		}else{
+	    			map.put("code", 200);
+	    			map.put("desc", "成功");
+	    		}
+	        }else{
+	        	map.put("code", "0");
+	        	map.put("desc", "数据异常");
+	        	
+	        }
+	}
+	
 		return map;
 	}
 	
-	
-	
-	
-	
-	
-	
 }
+	
+	
+	
+	
+	

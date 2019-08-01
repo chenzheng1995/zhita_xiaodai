@@ -112,12 +112,10 @@ public class SmsReportController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("UserType")
-	public Map<String, Object> UserTypes(Usershortmessage compan){
+	@RequestMapping("UserTypeShortMessage")
+	public Map<String, Object> UserTypesShortMessage(Usershortmessage compan){
 		return serv.UserTypes(compan);
 	}
-	
-	
 	
 	
 	
@@ -127,15 +125,15 @@ public class SmsReportController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("AllShortMessage")
-	public Map<String, Object> AllShortMessage(Integer companyId){
+	@RequestMapping("AllUserShortMessage")
+	public Map<String, Object> AllUserShortMessage(Integer companyId){
 		return serv.AllUserShortMessage(companyId);
 	}
 	
 	
 	
 	/**
-	 * 
+	 * 添加短信
 	 * @param usershort
 	 * @return
 	 */

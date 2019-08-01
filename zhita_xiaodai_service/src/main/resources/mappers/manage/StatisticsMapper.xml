@@ -249,4 +249,9 @@
 				from user u,orders o,orderdetails ord,bankdeduction ban where o.id = ban.orderId and o.userId = u.id and o.id = ord.orderId
 				and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
 			</select>
+			
+			
+			<delete id="DeleteChan" parameterType="java.lang.Integer">
+				delete from bankcard where userId = #{userId}
+			</delete>
 </mapper>
