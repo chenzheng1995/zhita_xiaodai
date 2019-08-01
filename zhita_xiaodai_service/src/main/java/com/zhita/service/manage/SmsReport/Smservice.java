@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
+import com.zhita.model.manage.Usershortmessage;
 
 public interface Smservice {
 	
@@ -23,6 +24,11 @@ public interface Smservice {
 	Map<String, Object> AllCollection(String collection_time);
 	
 	
-	Map<String, Object> UserTypes(Integer companyId);
+	Map<String, Object> UserTypes(Usershortmessage companyId);
 
+
+	Map<String, Object> AllUserShortMessage(Usershortmessage companyId);
+	
+	
+	Map<String, Object> AddUserShortMessage(Usershortmessage shor);
 }

@@ -54,7 +54,7 @@
 			</select>
 			
 			
-			<select id="AllRegist" parameterType="com.zhita.model.manage.User" resultType="java.lang.String">
+			<select id="AllRegist" parameterType="com.zhita.model.manage.Usershortmessage" resultType="java.lang.String">
 				select phone from user 
 				<where>
 				companyId = #{companyId}
@@ -67,20 +67,27 @@
 			
 			
 			
-			<select id="AllUsershortmessage" parameterType="com.zhita.model.manage.User" resultType="java.lang.String">
-				select phone from user 
-				<where>
-				companyId = #{companyId}
-					<if test="registeClient != null and registeClient != ''">
-						and registeClient = #{registeClient}
-					</if>
-				</where>
+			<select id="AllUsershortmessage" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Usershortmessage">
+				select * from Usershortmessage where companyId = #{companyId}
+				limit #{page},#{pagesize}
+			</select>
+			
+			
+			<select id="UserPage" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select count(id) from Usershortmessage where companyId = #{companyId}
 			</select>
 			
 			
 			
 			
 			<insert id="AddUserShortmessage" parameterType="com.zhita.model.manage.Usershortmessage">
-			
+				INSERT INTO `usershortmessage`(
+					send_time,
+					user_type,
+					usernum,
+					short_text,
+					sys_userId,
+					companyId
+				)VALUES(#{send_time},#{user_type},#{usernum},#{short_text},#{sys_userId},#{companyId})
 			</insert>
 </mapper>

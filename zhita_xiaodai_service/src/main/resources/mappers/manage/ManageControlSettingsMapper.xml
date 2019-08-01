@@ -150,6 +150,6 @@
   
   
     <select id="getManconsettings" parameterType="java.lang.Integer" resultType="java.util.Map">
-select atrntlFractionalSegment,roatnptFractionalSegment,airappFractionalSegment from manage_control_settings where id = #{manageControlId}
+select atrntlFractionalSegment,roatnptFractionalSegment,airappFractionalSegment,rmModleName from manage_control_settings where id = #{manageControlId}
   </select>
 </mapper>

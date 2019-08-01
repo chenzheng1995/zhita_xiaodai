@@ -7,19 +7,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.ReturnChanpay;
 import com.zhita.model.manage.ShortReturn;
@@ -72,13 +69,15 @@ public class ChanpaySend extends BaseParameter{
 		Bankcard ban = chanser.SelectBank(ba);
 		System.out.println("数据:"+ban.getTiedCardPhone() + ban.getBankcardName() + ban.getCstmrnm() + ban.getBankcardTypeName());
 		
-		
 		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
 				&& ban.getTiedCardPhone() != "" && ban.getBankcardName() != "" && ban.getCstmrnm() != "" && ban.getBankcardTypeName() != ""){
 		
     	Calendar now = Calendar.getInstance(); 
     	String year = now.get(Calendar.YEAR)+""; //年
     	String month = now.get(Calendar.MONTH) + 1 + "";//月
+    	if(Integer.parseInt(month)<10) {
+    		month = "0"+Integer.parseInt(month);
+    	}
     	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
     	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
     	String minute = now.get(Calendar.MINUTE)+"";//分

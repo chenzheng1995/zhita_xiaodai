@@ -13,6 +13,57 @@ public class Usershortmessage {
 	private String short_text;
 	
 	private Integer sys_userId;
+	
+	private Integer companyId;
+	
+	
+	private String phone;
+	
+	private Integer page=0;
+	
+	private Integer pagesize=10;
+	
+	private String registeClient;
+
+	public String getRegisteClient() {
+		return registeClient;
+	}
+
+	public void setRegisteClient(String registeClient) {
+		this.registeClient = registeClient;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getPagesize() {
+		return pagesize;
+	}
+
+	public void setPagesize(Integer pagesize) {
+		this.pagesize = pagesize;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
 
 	public Integer getSys_userId() {
 		return sys_userId;

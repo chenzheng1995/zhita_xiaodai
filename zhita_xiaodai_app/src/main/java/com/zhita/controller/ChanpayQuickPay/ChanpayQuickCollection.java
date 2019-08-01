@@ -486,6 +486,14 @@ public class ChanpayQuickCollection {
 		System.out.println(MerUserId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(MerUserId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
+			System.out.println("银行卡:"+bankcardTypeId);
+			Integer id = chanser.SelectUserId(Integer.valueOf(MerUserId));
+			if(id != null){
+				map.put("code", "0");
+				map.put("desc", "已绑卡");
+			}else{
+				
+			
 		Bankcard bank = new Bankcard();
 		bank.setAttestationStatus("0");
 		bank.setUserId(Integer.valueOf(MerUserId));//登陆人ID
@@ -537,9 +545,11 @@ public class ChanpayQuickCollection {
 			map.put("code", "0");
 			map.put("ReturnChanpay", "数据异常");
 		}
+		
 		}else{
 			map.put("code", "0");
 			map.put("ReturnChanpay", "此卡已绑定");
+		}
 		}
 		}else{
 			map.put("code", "0");
@@ -611,17 +621,22 @@ public class ChanpayQuickCollection {
 							urlStr);
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 				System.out.println("AAA:"+result);
+				String statu = retu.getAppRetMsg();
 				System.out.println(retu.getAcceptStatus()+"111111111111111");
 				String ssa = retu.getAcceptStatus();
-				if(ssa !="S"){
-					map.put("code", "0");
-					map.put("ReturnChanpay", retu);
-					map.put("desc", "认证失败");
-				}else{
+				System.out.println("S返回:"+ssa.equals("S"));
+				if(ssa.equals("S") ){
 					chanser.UpdateChanpay(Integer.valueOf(oriAuthTrxId));
 					map.put("code", "200");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证成功");
+					
+				}else{
+					
+					
+					map.put("code", "0");
+					map.put("ReturnChanpay", retu);
+					map.put("desc", "认证失败");
 				}
 				
 				} catch (Exception e) {
@@ -930,9 +945,11 @@ public class ChanpayQuickCollection {
 	 * 
 	 * 用户鉴权解绑 nmg_api_auth_unbind  普通方式
 	 */
-
-	private void nmg_api_auth_unbind() {
+	@ResponseBody
+	@RequestMapping("nmg_api_auth_unbind")
+	private void nmg_api_auth_unbind(String CardBegin,String CardEnd,String MerUserId) {
 		Map<String, String> origMap = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		// 2.1 基本参数
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_unbind");// 用户鉴权解绑接口名
@@ -940,13 +957,33 @@ public class ChanpayQuickCollection {
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
 		origMap.put("MerchantNo", "200005640044");// 子商户号
-		origMap.put("MerUserId", "14"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", MerUserId); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", "621483");// 卡号前6位
-		origMap.put("CardEnd", "4138");// 卡号后4位
+		origMap.put("CardBegin", CardBegin);// 卡号前6位
+		origMap.put("CardEnd", CardEnd);// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
-		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
+		String result = null;
+		try {
+			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
+			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
+				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+						urlStr);
+			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+			Integer deleteId = chanser.DeleteChan(Integer.valueOf(MerUserId));
+			if(deleteId != null){
+				map.put("ReturnChanpay", retu);
+				map.put("code", 200);
+				map.put("desc", "以解除");
+			}else{
+				map.put("ReturnChanpay", retu);
+				map.put("code", 0);
+				map.put("desc", "数据库删除失败");
+			}
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+		}
 	}
 
 	/**
@@ -1214,7 +1251,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_unbind();
+//		test.nmg_api_auth_unbind();
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

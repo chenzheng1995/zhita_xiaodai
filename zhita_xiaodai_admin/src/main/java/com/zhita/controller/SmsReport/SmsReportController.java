@@ -1,12 +1,15 @@
 package com.zhita.controller.SmsReport;
 
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
+import com.zhita.model.manage.Usershortmessage;
 import com.zhita.service.manage.SmsReport.Smservice;
 
 
@@ -102,12 +105,43 @@ public class SmsReportController {
 	
 	
 	
+	
+	/**
+	 * 根据用户的注册客户端查询手机号
+	 * @param companyId
+	 * @return
+	 */
 	@ResponseBody
-	@RequestMapping("UserType")
-	public Map<String, Object> UserTypes(Integer companyId){
-		return serv.UserTypes(companyId);
+	@RequestMapping("UserTypeShortMessage")
+	public Map<String, Object> UserTypesShortMessage(Usershortmessage compan){
+		return serv.UserTypes(compan);
 	}
 	
+	
+	
+	/**
+	 * 查询发送记录
+	 * @param companyId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AllUserShortMessage")
+	public Map<String, Object> AllUserShortMessage(Usershortmessage companyId){
+		return serv.AllUserShortMessage(companyId);
+	}
+	
+	
+	
+	/**
+	 * 添加短信
+	 * @param usershort
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("AddUserShort")
+	public Map<String, Object> AddUserShort(Usershortmessage usershort){
+		return serv.AddUserShortMessage(usershort);
+	}
 	
 	
 }

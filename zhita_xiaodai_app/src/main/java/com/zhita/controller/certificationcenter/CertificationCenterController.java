@@ -139,7 +139,7 @@ public class CertificationCenterController {
 		   }
 		   
 		   
-		   Map<String, Object> map3 = operatorService.getOperator(userId);
+		   Map<String, Object> map3 = bankcardMapper.getattestationStatus(userId);
 		   if(map3==null) {
 			   bankcard ="0";
 		   }else {

@@ -737,7 +737,7 @@ public class ChanpayGatewayDemo {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_info_qry");// 用户鉴权绑卡信息查询接口名
 		// 2.2 业务参数
-		origMap.put("TrxId", "20170313100523171");// 商户网站唯一订单号
+		origMap.put("TrxId", "20190313100523171");// 商户网站唯一订单号
 		origMap.put("MerUserId", "0000001"); // 用户标识（测试时需要替换一个新的meruserid）
 		//origMap.put("CardBegin", "430000");// 卡号前6位
 		//origMap.put("CardEnd", "4700");// 卡号后4位
@@ -762,8 +762,8 @@ public class ChanpayGatewayDemo {
 		origMap.put("MerUserId", "0000001"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", "436742");// 卡号前6位
-		origMap.put("CardEnd", "7269");// 卡号后4位
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -913,7 +913,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_sms(); //2.4 支付请求---API
+		test.nmg_api_auth_unbind(); //2.4 支付请求---API
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

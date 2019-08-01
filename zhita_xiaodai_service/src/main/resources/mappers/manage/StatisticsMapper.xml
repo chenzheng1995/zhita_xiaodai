@@ -9,11 +9,12 @@
 				userId,
 				attestationStatus,
 				bankcardName,
+				bankcardTypeId,
 				tiedCardPhone,
 				deleted,
 				IDcardnumber,
 				cstmrnm
-				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
+				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{bankcardTypeId},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
 			</insert>
 			
 			
@@ -247,5 +248,15 @@
 				select ban.deduction_time,u.name,ord.realityBorrowMoney,ord.interestPenaltySum,ban.deductionproportion,ban.deduction_money
 				from user u,orders o,orderdetails ord,bankdeduction ban where o.id = ban.orderId and o.userId = u.id and o.id = ord.orderId
 				and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
+			</select>
+			
+			
+			<delete id="DeleteChan" parameterType="java.lang.Integer">
+				delete from bankcard where userId = #{userId}
+			</delete>
+			
+			
+			<select id="SelectUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select id from bankcard where userId = #{userId}
 			</select>
 </mapper>

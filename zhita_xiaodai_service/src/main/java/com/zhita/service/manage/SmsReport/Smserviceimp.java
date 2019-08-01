@@ -7,13 +7,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.zhita.dao.manage.SmsMapper;
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
 import com.zhita.model.manage.SmsSendResponse;
+import com.zhita.model.manage.Usershortmessage;
 import com.zhita.util.ChuangLanSmsUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.Timestamps;
@@ -210,11 +213,6 @@ public class Smserviceimp implements Smservice{
 
 	@Override
 	public Map<String, Object> AllCollection(String collection_time) {
-//		try {
-//			collection_time = Timestamps.dateToStamp(collection_time);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Shortmessage> shor = sdao.AllController(collection_time);
 		map.put("Shortmessage", shor);
@@ -222,17 +220,78 @@ public class Smserviceimp implements Smservice{
 	}
 
 	@Override
-	public Map<String, Object> UserTypes(Integer companyId) {
+	public Map<String, Object> UserTypes(Usershortmessage companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> phones = sdao.AllRegist(companyId);
+		Integer phonNum = phones.size();
 		map.put("phones", phones);
+		map.put("phonNum", phonNum);
+		return map;
+	}
+
+	
+	@Override
+	public Map<String, Object> AllUserShortMessage(Usershortmessage usershortmessage) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer totalCount = sdao.UserPage(usershortmessage.getCompanyId());
+		PageUtil pages = new PageUtil(usershortmessage.getPage(), totalCount);
+		usershortmessage.setPage(pages.getPage());
+		List<Usershortmessage> usershort = sdao.AllUsershortmessage(usershortmessage);
+		map.put("Usershortmessage", usershort);
+		return map;
+	}
+
+	
+	@Override
+	public Map<String, Object> AddUserShortMessage(Usershortmessage shor) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(shor.getPhone());
+		if(shor.getPhone() == null){
+			map.put("code", "0");
+			map.put("desc", "手机号不能为空");
+		}else if(shor.getShort_text() == null){
+			map.put("code", "0");
+			map.put("desc", "内容不能为空");
+		}else{
+			SmsSendRequest smsSingleRequest = new SmsSendRequest(account, password, shor.getShort_text(), shor.getPhone(),report);
+
+	        String requestJson = JSON.toJSONString(smsSingleRequest);
+
+	        System.out.println("before request string is: " + requestJson);
+
+	        String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
+
+	        System.out.println("response after request result is :" + response);
+
+	        SmsSendResponse smsSingleResponse = JSON.parseObject(response, SmsSendResponse.class);
+
+	        System.out.println("response  toString is :" + smsSingleResponse);
+	        
+	        
+	        if(smsSingleResponse.getErrorMsg().equals("")){
+	        	SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    		shor.setSend_time(sim.format(new Date()));
+	    		Integer addId = sdao.AddUserShortmessage(shor);
+	    		if(addId != null){
+	    			map.put("code", 200);
+	    			map.put("desc", "成功");
+	    		}else{
+	    			map.put("code", 200);
+	    			map.put("desc", "成功");
+	    		}
+	        }else{
+	        	map.put("code", "0");
+	        	map.put("desc", "数据异常");
+	        	
+	        }
+	}
+	
 		return map;
 	}
 	
-	
-	
-	
-	
-	
-	
 }
+	
+	
+	
+	
+	
