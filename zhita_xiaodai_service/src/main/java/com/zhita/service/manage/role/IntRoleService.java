@@ -27,4 +27,7 @@ public interface IntRoleService {
     
     //admin----角色——更新保存功能
     public  int updateByPrimaryKey(Role record);
+    
+    //admin----角色——修改状态
+    public int updateStatus(Integer id,String status);
 }

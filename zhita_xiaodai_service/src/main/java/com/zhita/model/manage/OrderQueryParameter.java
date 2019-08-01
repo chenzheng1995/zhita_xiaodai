@@ -13,6 +13,7 @@ public class OrderQueryParameter {
 	private String registeendtime;//注册结束时间
 	private Integer sourcename;//渠道名字id
 	private Integer userid;//用户id
+	private String registeClient;//注册客户端
 	
 	
 	//不需要用的字段
@@ -131,5 +132,10 @@ public class OrderQueryParameter {
 	public void setIdcard(String idcard) {
 		this.idcard = idcard;
 	}
-	
+	public String getRegisteClient() {
+		return registeClient;
+	}
+	public void setRegisteClient(String registeClient) {
+		this.registeClient = registeClient;
+	}
 }

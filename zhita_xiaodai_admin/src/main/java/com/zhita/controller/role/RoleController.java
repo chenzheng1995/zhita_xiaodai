@@ -79,4 +79,12 @@ public class RoleController {
 		int num=intRoleService.updateByPrimaryKey(record);
 		return num;
 	}
+	
+	//admin----角色——修改状态
+	@ResponseBody
+	@RequestMapping("/updateStatus")
+	public int updateStatus(Integer id,String status){
+		int num=intRoleService.updateStatus(id, status);
+		return num;
+	}
 }

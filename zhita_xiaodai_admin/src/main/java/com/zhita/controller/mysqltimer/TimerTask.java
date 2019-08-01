@@ -23,7 +23,7 @@ public class TimerTask {
      */
 	  //                   秒分时日 月周
 	 //每日0点  将各个渠道的历史数据存入历史表
-      @Scheduled(cron = "0 35 16 * * ?")
+      @Scheduled(cron = "0 0 0 * * ?")
       public void test1() throws ParseException
       {
           System.out.println("开始做定时任务");
@@ -33,7 +33,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务     控制逾期
-      @Scheduled(cron = "0 35 16 * * ?")
+      @Scheduled(cron = "0 0 0 * * ?")
       public void test2() throws ParseException
       {
           System.out.println("开始做定时任务");
@@ -43,7 +43,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务   控制逾期等级
-      @Scheduled(cron = "0 35 16 * * ?")
+      @Scheduled(cron = "0 0 0 * * ?")
       public void test3() throws ParseException
       {
           System.out.println("开始做定时任务");
@@ -53,7 +53,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务   控制黑名单
-      @Scheduled(cron = "0 35 16 * * ?")
+      @Scheduled(cron = "0 0 0 * * ?")
       public void test4() throws ParseException
       {
           System.out.println("开始做定时任务");

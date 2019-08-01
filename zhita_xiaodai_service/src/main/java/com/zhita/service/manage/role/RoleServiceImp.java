@@ -261,4 +261,15 @@ public class RoleServiceImp implements IntRoleService{
 		return num;
 	}
 	
+	//admin----角色——修改状态
+    public int updateStatus(Integer id,String status){
+    	int num=0;
+		if(status.equals("1")){
+			num=roleMapper.upaStatusOpen(id);
+		}else{
+			num=roleMapper.upaStatusClose(id);
+			roleMapper.delfunction(id);
+		}
+		return num;
+    }
 }

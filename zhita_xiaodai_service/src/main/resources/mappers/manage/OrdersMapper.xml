@@ -541,6 +541,9 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="idcard != null and idcard!='' ">
            and uat.idcard_number like "%"#{idcard,jdbcType=VARCHAR}"%"
         </if>
+        <if test="registeClient != null and registeClient !='' ">
+	       and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+	    </if>
         <if test="registestarttime != null and registestarttime!='' and registeendtime and registeendtime!='' ">
            and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
         </if>
@@ -563,6 +566,9 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="idcard != null and idcard!='' ">
            and uat.idcard_number like "%"#{idcard,jdbcType=VARCHAR}"%"
         </if>
+        <if test="registeClient != null and registeClient !='' ">
+	       and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+	    </if>
         <if test="registestarttime != null and registestarttime!='' and registeendtime and registeendtime!='' ">
            and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
         </if>
@@ -658,8 +664,11 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
         <if test="phone != null and phone!='' ">
-           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+           and u.phone = #{phone,jdbcType=VARCHAR}
         </if>
+        <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+		</if>
         <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
            and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
         </if>
@@ -682,8 +691,11 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
         <if test="phone != null and phone!='' ">
-           and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+           and u.phone = #{phone,jdbcType=VARCHAR}
         </if>
+         <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 		</if>
         <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
            and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
         </if>

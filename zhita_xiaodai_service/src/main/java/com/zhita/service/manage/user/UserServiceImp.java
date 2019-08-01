@@ -21,7 +21,9 @@ import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
 import com.zhita.model.manage.UserLikeParameter;
 import com.zhita.util.PageUtil2;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
+import com.zhita.util.TuoMinUtil;
 
 @Service
 public class UserServiceImp implements IntUserService{
@@ -32,6 +34,8 @@ public class UserServiceImp implements IntUserService{
 	
 	//后台管理----用户列表(公司id，page,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
 	public Map<String, Object> queryUserList(UserLikeParameter userLikeParameter){
+		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
+		TuoMinUtil tm = new TuoMinUtil();//脱敏工具类
 		if((userLikeParameter.getRegisteTimeStart()!=null&&!"".equals(userLikeParameter.getRegisteTimeStart()))&&(userLikeParameter.getRegisteTimeEnd()!=null&&!"".equals(userLikeParameter.getRegisteTimeEnd()))){
 				try {
 					userLikeParameter.setRegisteTimeStart(Timestamps.dateToStamp(userLikeParameter.getRegisteTimeStart()));
@@ -40,6 +44,9 @@ public class UserServiceImp implements IntUserService{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+		}
+		if(userLikeParameter.getPhone()!=null&&!"".equals(userLikeParameter.getPhone())){
+			userLikeParameter.setPhone(pd.encryption(userLikeParameter.getPhone()));
 		}
 		int page=userLikeParameter.getPage();//页面传进来的当前页
 		int totalCount=userMapper.queryUserListcount(userLikeParameter);//查询总条数
@@ -61,6 +68,7 @@ public class UserServiceImp implements IntUserService{
     	userLikeParameter.setPagesize(pageUtil.getPageSize());
     	List<User> list=userMapper.queryUserList(userLikeParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getPhone())));//将手机号进行脱敏
     		list.get(i).setRegistetime(Timestamps.stampToDate(list.get(i).getRegistetime()));
 		}
 		Map<String,Object> map=new HashMap<>();
@@ -87,6 +95,8 @@ public class UserServiceImp implements IntUserService{
 	
 	//后台管理----用户认证信息——借款信息    订单 查询（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间     渠道id  用户id）
   	public Map<String,Object> queryAllOrdersByUserid(OrderQueryParameter orderQueryParameter){
+  		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
+		TuoMinUtil tm = new TuoMinUtil();//脱敏工具类
 		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
 			try {
 				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
@@ -96,7 +106,9 @@ public class UserServiceImp implements IntUserService{
 				e.printStackTrace();
 			}
 		}
-		
+		if(orderQueryParameter.getPhone()!=null&&!"".equals(orderQueryParameter.getPhone())){
+			orderQueryParameter.setPhone(pd.encryption(orderQueryParameter.getPhone()));
+		}
 		int page=orderQueryParameter.getPage();//页面传进来的当前页
 		int companyId=orderQueryParameter.getCompanyid();//公司id
 		int totalCount=ordersMapper.queryAllOrdersByUseridcount(orderQueryParameter);//查询总条数
@@ -118,6 +130,7 @@ public class UserServiceImp implements IntUserService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));//将手机号进行脱敏
     		list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
     		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
@@ -145,6 +158,8 @@ public class UserServiceImp implements IntUserService{
   	
 	//后台管理----订单 查询（公司id  page，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）——黑名单用户  机审判定黑名单
   	public Map<String,Object> queryAllOrdersByUserid1(OrderQueryParameter orderQueryParameter){
+		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
+		TuoMinUtil tm = new TuoMinUtil();//脱敏工具类
 		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
 			try {
 				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
@@ -153,6 +168,9 @@ public class UserServiceImp implements IntUserService{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		if(orderQueryParameter.getPhone()!=null&&!"".equals(orderQueryParameter.getPhone())){
+			orderQueryParameter.setPhone(pd.encryption(orderQueryParameter.getPhone()));
 		}
 		int page=orderQueryParameter.getPage();//页面传进来的当前页
 		int companyId=orderQueryParameter.getCompanyid();//公司id
@@ -175,6 +193,7 @@ public class UserServiceImp implements IntUserService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllOrdersByUserid1(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));//将手机号进行脱敏
     		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));;
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
     		/*List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
