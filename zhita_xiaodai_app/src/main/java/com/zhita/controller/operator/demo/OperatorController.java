@@ -168,8 +168,8 @@ public Map<String, Object> getshareOfState(int userId){
     public Map<String, Object> getScore(int userId,String sourceName){
     	String shareOfState =null;
     	Map<String, Object> map = new HashMap<>();
-    	shareOfState ="6";
-    	intUserService.updateshareOfState(userId, shareOfState);
+//    	shareOfState ="6";
+//    	intUserService.updateshareOfState(userId, shareOfState);
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
 		String idNumber = (String) userAttestation.get("idcard_number");
