@@ -109,6 +109,55 @@ public class Bankdeduction {
 	
 	private BigDecimal brankMoney;//银行扣款金额
 	
+	private BigDecimal ChengMoney;//成功扣款总金额
+	
+	private String account;
+	
+	private BigDecimal realityBorrowMoney;//实际借款金额
+	
+	private BigDecimal interestPenaltySum;//逾期总罚息
+	
+	private BigDecimal collection_money;//含逾应还总金额
+
+	public BigDecimal getCollection_money() {
+		return collection_money;
+	}
+
+	public void setCollection_money(BigDecimal collection_money) {
+		this.collection_money = collection_money;
+	}
+
+	public BigDecimal getRealityBorrowMoney() {
+		return realityBorrowMoney;
+	}
+
+	public void setRealityBorrowMoney(BigDecimal realityBorrowMoney) {
+		this.realityBorrowMoney = realityBorrowMoney;
+	}
+
+	public BigDecimal getInterestPenaltySum() {
+		return interestPenaltySum;
+	}
+
+	public void setInterestPenaltySum(BigDecimal interestPenaltySum) {
+		this.interestPenaltySum = interestPenaltySum;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public BigDecimal getChengMoney() {
+		return ChengMoney;
+	}
+
+	public void setChengMoney(BigDecimal chengMoney) {
+		ChengMoney = chengMoney;
+	}
 
 	public Integer getBranKnum() {
 		return branKnum;

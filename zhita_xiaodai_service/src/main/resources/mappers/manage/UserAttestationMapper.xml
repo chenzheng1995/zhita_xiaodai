@@ -520,4 +520,8 @@
 		select authenticationSteps from user_attestation where userId = #{userId}
 	</select>
 	
+
+	
+	
+	
 </mapper>

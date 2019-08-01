@@ -166,5 +166,14 @@
     where userId = #{userId}
   </update>
 	
+		<select id="getuserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(userId) from operator where userId = #{userId}
+	</select>
+  
+  		  <update id="updatereqId" parameterType="java.util.Map">
+    update operator
+    set reqId = #{reqId}
+    where userId = #{userId}
+  </update>
   
 </mapper>

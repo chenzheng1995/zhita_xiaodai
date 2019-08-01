@@ -67,7 +67,7 @@ public class Orders {
 	
 	private String overdueNumberOfDays;//逾期天数
 	
-	
+	private BigDecimal surplus_money;
 	
 	private Integer adoptcount;//放款通过数
 	
@@ -127,6 +127,24 @@ public class Orders {
 	private Integer chenggNum;
 	
 	private Integer chenggData;
+	
+	private String TransAmt;
+
+	public String getTransAmt() {
+		return TransAmt;
+	}
+
+	public void setTransAmt(String transAmt) {
+		TransAmt = transAmt;
+	}
+
+	public BigDecimal getSurplus_money() {
+		return surplus_money;
+	}
+
+	public void setSurplus_money(BigDecimal surplus_money) {
+		this.surplus_money = surplus_money;
+	}
 
 	public Integer getId() {
 		return id;

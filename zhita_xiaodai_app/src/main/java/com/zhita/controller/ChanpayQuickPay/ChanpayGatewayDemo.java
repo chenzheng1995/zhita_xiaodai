@@ -46,6 +46,7 @@ public class ChanpayGatewayDemo {
 	
 	
 	
+	
 
 	/**
 	 * 建立请求，以模拟远程HTTP的POST请求方式构造并获取钱包的处理结果
@@ -511,10 +512,10 @@ public class ChanpayGatewayDemo {
 		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
 		//System.out.println(this.encrypt("621483011*******", MERCHANT_PUBLIC_KEY, charset));
 		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-		origMap.put("IDNo", this.encrypt("420621199905157177", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
 		//System.out.println(this.encrypt("13010*********", MERCHANT_PUBLIC_KEY, charset));
-		origMap.put("CstmrNm", this.encrypt("东先生", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-		origMap.put("MobNo", this.encrypt("13487139666", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 		//信用卡
 //		origMap.put("CardCvn2", "004");// cvv2码
 //		origMap.put("CardExprDt", "09/21");// 有效期
@@ -558,8 +559,8 @@ public class ChanpayGatewayDemo {
 		// 2.1 鉴权绑卡  业务参数
 		String trxId = "201756796897";
 		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OriAuthTrxId", "1501123356102");// 原鉴权绑卡订单号
-		origMap.put("SmsCode", "499426");// 鉴权短信验证码
+		origMap.put("OriAuthTrxId", "1564537783023");// 原鉴权绑卡订单号
+		origMap.put("SmsCode", "381801");// 鉴权短信验证码
 		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -912,7 +913,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_zft_api_quick_payment(); //2.4 支付请求---API
+		test.nmg_api_auth_sms(); //2.4 支付请求---API
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

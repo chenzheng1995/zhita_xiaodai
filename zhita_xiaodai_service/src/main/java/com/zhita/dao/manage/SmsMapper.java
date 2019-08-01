@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
 
@@ -26,4 +27,7 @@ public interface SmsMapper {
 	
 	
 	Integer SelectTimeSize(Shortmessage shor);
+	
+	
+	List<String> AllRegist(Integer companyId);
 }

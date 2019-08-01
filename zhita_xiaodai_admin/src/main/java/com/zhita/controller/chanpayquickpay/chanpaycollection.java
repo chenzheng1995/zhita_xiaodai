@@ -3,19 +3,19 @@ package com.zhita.controller.chanpayquickpay;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.service.manage.Statistic.Statisticsservice;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 
@@ -44,38 +44,76 @@ public class chanpaycollection{
 	 */
 	@ResponseBody
 	@RequestMapping("SendBank")
-	public Map<String, Object> MouthBank(String bank){
+	public Map<String, Object> MouthBank(@Param("orderIds")String orderIds,@Param("companyId")Integer companyId,@Param("deductionproportion")Integer deductionproportion,@Param("sys_userId")Integer sys_userId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Orderdetails> orde = JSON.parseArray(bank, Orderdetails.class);
-		for(int i=0;i<orde.size();i++){
-			Bankcard ba = new Bankcard();
-			ba.setCompanyId(orde.get(i).getCompanyId());
-			ba.setUserId(orde.get(i).getUserId());
-			Bankcard ban = chanser.SelectBank(ba);//获取当前用户的银行卡信息
-			String LiceneceNo = ster.IDnumber(orde.get(i).getUserId());
-			MouthBankName mou = ster.SendBankcomm(ban.getBankcardTypeName(), orde.get(i).getBankcardName(), orde.get(i).getTrueName(), orde.get(i).getTransAmt(), 
-					LiceneceNo, orde.get(i).getPhone(), orde.get(i).getSys_userId(),
-					orde.get(i).getDeductionproportion(), orde.get(i).getOrderNumber(), orde.get(i).getOrderId(), orde.get(i).getUserId());//扣款接口
-			NumberFormat numberFormat = NumberFormat.getInstance();
-			numberFormat.setMaximumFractionDigits(2);
-			String data = (numberFormat.format((float) orde.get(i).getDeductionproportion() / (float) 100));
-			BigDecimal da = new BigDecimal(data);
-			orde.get(i).setTransAmt(String.valueOf(orde.get(i).getSurplus_money().multiply(da)));
-			String as = mou.getOriginalRetCode();
-			Bankdeduction bas = new Bankdeduction();
-			bas.setOrderId(orde.get(i).getOrderId());
-			bas.setDeduction_time(mou.getTime());
-			bas.setUserId(orde.get(i).getUserId());
-			if(as != "000000"){
-				bas.setDeductionstatus("扣款成功");
+		System.out.println("OrderIds:"+orderIds);
+		if(orderIds != null && companyId != null && deductionproportion != null && sys_userId != null){
+			String[] orderId = orderIds.split(",");//订单ID
+			System.out.println(orderId.length);
+			if(orderId.length != 0){
+				for(int i=0;i<orderId.length;i++){
+					Orders ords= new Orders();
+					ords.setId(Integer.valueOf(orderId[i]));
+					ords.setCompanyId(companyId);
+					Orders o = chanser.OneOrders(ords);
+					Bankcard ba = new Bankcard();
+					ba.setCompanyId(o.getCompanyId());
+					ba.setUserId(o.getUserId());
+					Bankcard ban = chanser.SelectBank(ba);//获取当前用户的银行卡信息
+					
+					
+					
+					String LiceneceNo = ster.IDnumber(o.getUserId());//身份证信息
+					
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					numberFormat.setMaximumFractionDigits(2);
+					String data = (numberFormat.format((float) deductionproportion / (float) 100));//算出扣款比例
+					BigDecimal da = new BigDecimal(data);
+					if(o.getSurplus_money()!=null){//剩余金额不等于空    修改订单状态      剩余金额=  剩余金额 - 扣款金额
+						
+						o.setTransAmt(String.valueOf(o.getSurplus_money().multiply(da)));//扣款金额
+						o.setSurplus_money(o.getSurplus_money().subtract(o.getSurplus_money().multiply(da)));
+						ster.UpdateOrderSurp(o);
+					}else{//剩余金额不等于空    修改订单状态   剩余金额=   实借金额 - 扣款金额
+						o.setSurplus_money(o.getRealityBorrowMoney().subtract(o.getSurplus_money().multiply(da)));
+						ster.UpdateOrderSurp(o);
+					}
+					
+					
+					
+					MouthBankName mou = ster.SendBankcomm(ban.getBankcardTypeName(), ban.getBankcardName(), ban.getCstmrnm(), o.getTransAmt(), 
+							LiceneceNo, ban.getTiedCardPhone(), sys_userId,
+							deductionproportion, o.getOrderNumber(), o.getId(), o.getUserId());//扣款接口
+					
+					String as = mou.getOriginalRetCode();
+					Bankdeduction bas = new Bankdeduction();
+					bas.setOrderId(o.getId());
+					bas.setDeduction_time(mou.getTime());
+					bas.setUserId(o.getUserId());
+					if(as != "000000"){
+						bas.setDeductionstatus("扣款成功");
+						
+					}else{
+						bas.setDeductionstatus("扣款失败");
+					}
+					ster.UpdateBank(bas);
+					map.put("code", "200");
+					map.put("desc", "已扣款");
+				}
 			}else{
-				bas.setDeductionstatus("扣款失败");
+				map.put("code", "400");
+				map.put("desc", "数据异常");
 			}
-			ster.UpdateBank(bas);
 			
+			
+		}else{
+			map.put("code", "0");
+			map.put("desc", "数据不能空");
 		}
-		map.put("code", "200");
-		map.put("desc", "已扣款");
+		
+			
+		
+		
 		return map;
 	}
 	
@@ -113,7 +151,7 @@ public class chanpaycollection{
 	/**
 	 * orderNumber
 	 * companyId
-	 * 一键扣款详情
+	 * 扣款清单
 	 * @return
 	 */
 	@ResponseBody

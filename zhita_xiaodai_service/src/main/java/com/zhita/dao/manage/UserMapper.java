@@ -118,4 +118,6 @@ public interface UserMapper {
 	 */
 	int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter);
 
+	void updateshareOfState(@Param("userId")int userId,@Param("shareOfState") String shareOfState);
+
 }

@@ -75,7 +75,21 @@ public interface StatisticsDao {
 	BigDecimal ChenggMoney(Bankdeduction ban);
 	
 	
-	
 	List<Bankdeduction> Deails(Bankdeduction ban);
+	
+	
+	Orders OneOrders(Orders ord);
+	
+	
+	Integer UpdateOrderSuperl(Orders ord);
+	
+	
+	List<Bankdeduction> AllBan(Bankdeduction ban);
+	
+	
+	BigDecimal SelectChengMoney(Bankdeduction ban);
+	
+	
+	List<Bankdeduction> SelectBankKoukuan(Bankdeduction ban);
 	
 }

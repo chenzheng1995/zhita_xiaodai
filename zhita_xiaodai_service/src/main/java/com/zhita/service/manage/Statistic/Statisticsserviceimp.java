@@ -2,6 +2,7 @@ package com.zhita.service.manage.Statistic;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +21,9 @@ import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.util.PageUtil;
+import com.zhita.util.Timestamps;
 
 
 @Service
@@ -94,9 +97,31 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		Integer totalCount = sdao.OrderCollectionNum(order.getCompanyId());
 		PageUtil pages = new PageUtil(order.getPage(),totalCount);
 		order.setPage(pages.getPage());
+			
+			System.out.println(order.getDeferAfterReturntimeStatu_time()+order.getDeferAfterReturntimeEnd_time());
+			if(order.getOrderCreateTimeStatu_time() != null && order.getOrderCreateTimeEnd_time()!= "" && order.getOrderCreateTimeStatu_time() != "" && order.getOrderCreateTimeEnd_time()!= null){
+				try {
+					order.setOrderCreateTimeStatu_time(Timestamps.dateToStamp1(order.getOrderCreateTimeStatu_time()));
+					order.setOrderCreateTimeEnd_time(Timestamps.dateToStamp1(order.getOrderCreateTimeEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}else if(order.getDeferAfterReturntimeStatu_time() != null && order.getDeferAfterReturntimeStatu_time() != "" && order.getDeferAfterReturntimeEnd_time() != null && order.getDeferAfterReturntimeEnd_time() != ""){
+				try {
+					order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+					order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		
+			
 		List<Orderdetails> ordeBank = sdao.AllBanl(order);
 		for(int i=0;i<ordeBank.size();i++){
 			ordeBank.get(i).setOrder_money(ordeBank.get(i).getRealityBorrowMoney().add(ordeBank.get(i).getInterestPenaltySum()));
+			ordeBank.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeBank.get(i).getOrderCreateTime()));
+			ordeBank.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeBank.get(i).getDeferAfterReturntime()));
 		}
 		map.put("Orderdetails", ordeBank);
 		map.put("PageUtil", pages);
@@ -121,12 +146,11 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		ban.setPage(pages.getPage());
 		List<Bankdeduction> bans = sdao.AllBank(ban);
 		for(int i=0;i<bans.size();i++){
-			bans.get(i).setChengNum(sdao.ChenggNum(bans.get(i)));
-			bans.get(i).setShiNum(bans.get(i).getUserNum()-bans.get(i).getChengNum());
-			bans.get(i).setDeduction_money(sdao.ChenggMoney(bans.get(i)));
-			NumberFormat numberFormat = NumberFormat.getInstance();
-			numberFormat.setMaximumFractionDigits(2);
-			bans.get(i).setCdata(numberFormat.format(((float) bans.get(i).getChengNum() / (float) bans.get(i).getChengNum()) * 100));
+			bans.get(i).setCompanyId(ban.getCompanyId());
+			bans.get(i).setChengNum(sdao.ChenggNum(bans.get(i)));//已选扣款用户总数
+			bans.get(i).setShiNum(bans.get(i).getUserNum()-bans.get(i).getChengNum());//扣款失败用户数
+			bans.get(i).setDeduction_money(sdao.ChenggMoney(bans.get(i)));//扣款金额
+			bans.get(i).setChengMoney(sdao.SelectChengMoney(bans.get(i)));
 		}
 		map.put("Bankdeduction", bans);
 		map.put("pageutil", pages);
@@ -136,14 +160,25 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	@Override
 	public Map<String, Object> AllBankdetail(Bankdeduction bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		return null;
+		List<Bankdeduction> b = sdao.AllBan(bank);
+		map.put("Bankdeduction", b);
+		return map;
 	}
 
 	@Override
 	public Map<String, Object> AllDetails(Bankdeduction bank) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Bankdeduction> bans = sdao.SelectBankKoukuan(bank);
+		for(int i=0;i<bans.size();i++){
+			bans.get(i).setCollection_money(bans.get(i).getRealityBorrowMoney().add(bans.get(i).getInterestPenaltySum()));
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("Bankdeduction", bans);
+		return map;
+	}
+
+	@Override
+	public Integer UpdateOrderSurp(Orders o) {
+		return sdao.UpdateOrderSuperl(o);
 	}
 		
 		

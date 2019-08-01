@@ -12,7 +12,7 @@ import com.zhita.controller.operator.RiskApiClient;
  */
 public class ScoreDemo {
 
-	public String getScore(int userId,String phone, String name, String idNumber,String reqId){
+	public String getScore(String search_id,String phone, String name, String idNumber,String reqId){
 
         RiskApiClient riskClient = new RiskApiClient();
         //公共参数
@@ -28,7 +28,7 @@ public class ScoreDemo {
          * (TODO)注意：为用户ID与黑名单不同，需要传入抓取运营商回调接口抓取成功时的search_id
          * (TODO) 具体见接入文档 3.2 节notifyUrl 报告回调 http://192.168.1.46:4999/web/#/22?page_id=92
          */
-        riskClient.setUserId(userId+"");
+        riskClient.setUserId(search_id);
 
         String ruleResult = riskClient.execute("/api/entry/risk/open/v1/score/pdscorev5");
         System.out.println("规则集合返回："+ruleResult);

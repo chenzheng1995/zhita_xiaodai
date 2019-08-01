@@ -243,5 +243,11 @@ public class UserServiceImp implements IntUserService{
 		return currentDelays;
 	}
 
+	@Override
+	public void updateshareOfState(int userId, String shareOfState) {
+		userMapper.updateshareOfState(userId, shareOfState);
+		
+	}
+
 
 }

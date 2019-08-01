@@ -7,6 +7,7 @@ import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeduction;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 
 public interface Statisticsservice {
 	
@@ -33,4 +34,7 @@ public interface Statisticsservice {
 	
 	
 	Map<String, Object> AllDetails(Bankdeduction bank);
+	
+	
+	Integer UpdateOrderSurp(Orders o);
 }

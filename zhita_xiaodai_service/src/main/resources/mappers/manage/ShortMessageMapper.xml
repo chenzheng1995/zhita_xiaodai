@@ -52,4 +52,35 @@
 			<select id="SelectTimeSize" parameterType="com.zhita.model.manage.Shortmessage" resultType="java.lang.Integer">
 				select count(id) from shortmessage where DATE_FORMAT(send_time,'%Y-%m-%d')=#{send_time} and companyid = #{companyid}
 			</select>
+			
+			
+			<select id="AllRegist" parameterType="com.zhita.model.manage.User" resultType="java.lang.String">
+				select phone from user 
+				<where>
+				companyId = #{companyId}
+					<if test="registeClient != null and registeClient != ''">
+						and registeClient = #{registeClient}
+					</if>
+				</where>
+			</select>
+			
+			
+			
+			
+			<select id="AllUsershortmessage" parameterType="com.zhita.model.manage.User" resultType="java.lang.String">
+				select phone from user 
+				<where>
+				companyId = #{companyId}
+					<if test="registeClient != null and registeClient != ''">
+						and registeClient = #{registeClient}
+					</if>
+				</where>
+			</select>
+			
+			
+			
+			
+			<insert id="AddUserShortmessage" parameterType="com.zhita.model.manage.Usershortmessage">
+			
+			</insert>
 </mapper>

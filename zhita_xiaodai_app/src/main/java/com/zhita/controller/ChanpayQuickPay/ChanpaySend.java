@@ -70,6 +70,12 @@ public class ChanpaySend extends BaseParameter{
 		ba.setCompanyId(companyId);
 		ba.setUserId(userId);
 		Bankcard ban = chanser.SelectBank(ba);
+		System.out.println("数据:"+ban.getTiedCardPhone() + ban.getBankcardName() + ban.getCstmrnm() + ban.getBankcardTypeName());
+		
+		
+		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
+				&& ban.getTiedCardPhone() != "" && ban.getBankcardName() != "" && ban.getCstmrnm() != "" && ban.getBankcardTypeName() != ""){
+		
     	Calendar now = Calendar.getInstance(); 
     	String year = now.get(Calendar.YEAR)+""; //年
     	String month = now.get(Calendar.MONTH) + 1 + "";//月
@@ -77,7 +83,7 @@ public class ChanpaySend extends BaseParameter{
     	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
     	String minute = now.get(Calendar.MINUTE)+"";//分
     	String second = now.get(Calendar.SECOND)+"";//秒
-    	String afterFour = ba.getTiedCardPhone().substring(ba.getTiedCardPhone().length()-4); 
+    	String afterFour = ban.getTiedCardPhone().substring(ban.getTiedCardPhone().length()-4); 
     	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
     	
     	
@@ -89,11 +95,11 @@ public class ChanpaySend extends BaseParameter{
 		map.put("OutTradeNo", orderNumber); // 商户网站唯一订单号
 		map.put("CorpAcctNo", "");  //可空
 		map.put("BusinessType", "0"); // 业务类型：0对私 1对公
-		map.put("BankCommonName", ba.getBankcardTypeName()); // 通用银行名称
+		map.put("BankCommonName", ban.getBankcardTypeName()); // 通用银行名称
 		map.put("BankCode", "");//对公必填
 		map.put("AccountType", "00"); // 账户类型
-		map.put("AcctNo", ChanPayUtil.encrypt(ba.getBankcardName(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
-		map.put("AcctName", ChanPayUtil.encrypt(ba.getCstmrnm(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
+		map.put("AcctNo", ChanPayUtil.encrypt(ban.getBankcardName(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
+		map.put("AcctName", ChanPayUtil.encrypt(ban.getCstmrnm(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
 		map.put("TransAmt", TransAmt);
 		map.put("CorpPushUrl", "http://172.20.11.16");		
 		map.put("PostScript", "放款");
@@ -113,6 +119,10 @@ public class ChanpaySend extends BaseParameter{
 		map1.put("code", 200);
 		}else{
 			map1.put("msg", "userId,TransAmt,companyId,lifeOfLoan不能为空");
+			map1.put("code", 0);
+		}
+		}else{
+			map1.put("msg", "数据异常");
 			map1.put("code", 0);
 		}
 		

@@ -126,8 +126,8 @@
 					<if test="orderNumber != null and orderNumber != ''">
 						and o.orderNumber = #{orderNumber}
 					</if>
-					<if test="name != '' and name != null">
-						AND u.name like CONCAT(CONCAT('%',#{name}),'%') 
+					<if test="trueName != '' and trueName != null">
+						AND usea.trueName like CONCAT(CONCAT('%',#{trueName}),'%') 
 					</if>
 					<if test="phone != null and phone != ''">
 						AND u.phone like CONCAT(CONCAT('%',#{phone}),'%') 
@@ -148,6 +148,7 @@
 						AND o.overdueGrade = #{overdueGrade}
 					</if>
 				</where>
+				GROUP BY ord.orderId
 				limit #{page},#{pagesize}
 			</select>
 			
@@ -178,7 +179,7 @@
 			
 			
 			
-			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard">
+			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankdeduction">
 				select ban.deduction_time,sy.account,ban.deductionproportion,sum(ban.id) as userNum
 				from sys_user sy,bankdeduction ban 
 				<where>
@@ -198,7 +199,7 @@
 			
 			
 			<select id="ChenggMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
-				select sum(deduction_money) from bankdeduction where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} and deductionstatus = "扣款成功"
+				select sum(deduction_money) from bankdeduction where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} 
 			</select>
 			
 			
@@ -212,5 +213,39 @@
 			<select id="Deails" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
 				select ban.deduction_time,u.name,ord.surplus_money,ban.deductionproportion,ban.deduction_money from bankdeduction ban,user u,orders o,orderdetails ord
 				where o.userId = u.id and o.id = ord.orderId and o.id = ban.orderId and o.companyId = #{companyId} and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
+			</select>
+			
+			
+			
+			<select id="OneOrders" parameterType="com.zhita.model.manage.Orders" resultType="com.zhita.model.manage.Orders">
+				select o.*,ord.surplus_money,ord.realityBorrowMoney from orders o,orderdetails ord where o.id = ord.orderId
+				and o.companyId = #{companyId} and o.id = #{id} 
+			</select>
+			
+			
+			<update id="UpdateOrderSuperl" parameterType="com.zhita.model.manage.Orders">
+				update orderdetails set surplus_money = #{surplus_money} where id = #{id}
+			</update>
+			
+			<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.lang.Integer">
+				select count(ban.id) from bankdeduction ban,sys_user sy where sy.userId = ban.sys_userId and sy.companyId = #{companyId}
+			</select>
+			
+			
+			<select id="AllBan" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+				select deduction_time,deductionproportion,deduction_money from bankdeduction where orderId = #{orderId}
+			</select>
+			
+			
+			<select id="SelectChengMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
+				SELECT sum(ban.deduction_money) FROM bankdeduction ban,sys_user sy WHERE ( datediff ( deduction_time , #{deduction_time} ) = 0 ) and
+				sy.userId = ban.sys_userId and sy.companyId = #{companyId} and deductionstatus = "扣款成功"
+			</select>
+			
+			
+			<select id="SelectBankKoukuan" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+				select ban.deduction_time,u.name,ord.realityBorrowMoney,ord.interestPenaltySum,ban.deductionproportion,ban.deduction_money
+				from user u,orders o,orderdetails ord,bankdeduction ban where o.id = ban.orderId and o.userId = u.id and o.id = ord.orderId
+				and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
 			</select>
 </mapper>

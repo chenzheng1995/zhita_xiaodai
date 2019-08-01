@@ -29,5 +29,9 @@ public interface OperatorMapper {
 
 	int updateOperatorJson(@Param("url")String url,@Param("userId") int userId);
 
+	int getuserId(int userId);
+
+	void updatereqId(@Param("userId")int userId,@Param("reqId") String reqId);
+
 
 }

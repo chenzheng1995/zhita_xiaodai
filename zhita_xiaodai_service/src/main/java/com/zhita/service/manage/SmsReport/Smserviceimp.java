@@ -7,10 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.zhita.dao.manage.SmsMapper;
 import com.zhita.model.manage.Shortmessage;
@@ -222,5 +220,19 @@ public class Smserviceimp implements Smservice{
 		map.put("Shortmessage", shor);
 		return map;
 	}
+
+	@Override
+	public Map<String, Object> UserTypes(Integer companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<String> phones = sdao.AllRegist(companyId);
+		map.put("phones", phones);
+		return map;
+	}
+	
+	
+	
+	
+	
+	
 	
 }

@@ -43,5 +43,6 @@ public interface Chanpayservice {
 	Bankcard SelectBank(Bankcard bankcard);
 	
 	
+	Orders OneOrders(Orders or);
 
 }

@@ -39,6 +39,8 @@ public interface UserAttestationService {
 			String frontsidePath, String backsidePath, int userId, String idcard_number, String homeAddressLongitude,
 			String homeAddressLatitude, String detailAddress, String nationalEmblemossPath);
 
+	String getshareOfState(int userId);
+
 
 
 
