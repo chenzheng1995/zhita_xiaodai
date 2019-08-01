@@ -934,7 +934,8 @@ public class ChanpayQuickCollection {
 	 * 
 	 * 用户鉴权解绑 nmg_api_auth_unbind  普通方式
 	 */
-	
+	@ResponseBody
+	@RequestMapping("nmg_api_auth_unbind")
 	private void nmg_api_auth_unbind(String CardBegin,String CardEnd,String MerUserId) {
 		Map<String, String> origMap = new HashMap<String, String>();
 		Map<String, Object> map = new HashMap<String, Object>();
