@@ -621,20 +621,22 @@ public class ChanpayQuickCollection {
 							urlStr);
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 				System.out.println("AAA:"+result);
+				String statu = retu.getAppRetMsg();
 				System.out.println(retu.getAcceptStatus()+"111111111111111");
 				String ssa = retu.getAcceptStatus();
-				if(ssa !="S"){
-					
-					map.put("code", "0");
-					map.put("ReturnChanpay", retu);
-					map.put("desc", "认证失败");
-					
-				}else{
-					
+				System.out.println("S返回:"+ssa.equals("S"));
+				if(ssa.equals("S") ){
 					chanser.UpdateChanpay(Integer.valueOf(oriAuthTrxId));
 					map.put("code", "200");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证成功");
+					
+				}else{
+					
+					
+					map.put("code", "0");
+					map.put("ReturnChanpay", retu);
+					map.put("desc", "认证失败");
 				}
 				
 				} catch (Exception e) {

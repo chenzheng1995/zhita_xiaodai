@@ -16,6 +16,7 @@ public class Usershortmessage {
 	
 	private Integer companyId;
 	
+	
 	private String phone;
 	
 	private Integer page=0;
