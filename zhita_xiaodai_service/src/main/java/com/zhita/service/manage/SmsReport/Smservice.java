@@ -27,7 +27,7 @@ public interface Smservice {
 	Map<String, Object> UserTypes(Usershortmessage companyId);
 
 
-	Map<String, Object> AllUserShortMessage(Integer companyId);
+	Map<String, Object> AllUserShortMessage(Usershortmessage companyId);
 	
 	
 	Map<String, Object> AddUserShortMessage(Usershortmessage shor);

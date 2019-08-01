@@ -231,9 +231,12 @@ public class Smserviceimp implements Smservice{
 
 	
 	@Override
-	public Map<String, Object> AllUserShortMessage(Integer companyId) {
+	public Map<String, Object> AllUserShortMessage(Usershortmessage usershortmessage) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Usershortmessage> usershort = sdao.AllUsershortmessage(companyId);
+		Integer totalCount = sdao.UserPage(usershortmessage.getCompanyId());
+		PageUtil pages = new PageUtil(usershortmessage.getPage(), totalCount);
+		usershortmessage.setPage(pages.getPage());
+		List<Usershortmessage> usershort = sdao.AllUsershortmessage(usershortmessage);
 		map.put("Usershortmessage", usershort);
 		return map;
 	}

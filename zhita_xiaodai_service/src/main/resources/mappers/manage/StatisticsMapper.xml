@@ -254,4 +254,9 @@
 			<delete id="DeleteChan" parameterType="java.lang.Integer">
 				delete from bankcard where userId = #{userId}
 			</delete>
+			
+			
+			<select id="SelectUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select id from bankcard where userId = #{userId}
+			</select>
 </mapper>

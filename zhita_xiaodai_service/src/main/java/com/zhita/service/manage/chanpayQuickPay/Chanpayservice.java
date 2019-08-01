@@ -47,5 +47,8 @@ public interface Chanpayservice {
 	
 	
 	Integer DeleteChan(Integer userId);
+	
+	
+	Integer SelectUserId(Integer userId);
 
 }

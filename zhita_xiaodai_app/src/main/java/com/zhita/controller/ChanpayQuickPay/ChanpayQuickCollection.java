@@ -487,6 +487,13 @@ public class ChanpayQuickCollection {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(MerUserId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
 			System.out.println("银行卡:"+bankcardTypeId);
+			Integer id = chanser.SelectUserId(Integer.valueOf(MerUserId));
+			if(id != null){
+				map.put("code", "0");
+				map.put("desc", "已绑卡");
+			}else{
+				
+			
 		Bankcard bank = new Bankcard();
 		bank.setAttestationStatus("0");
 		bank.setUserId(Integer.valueOf(MerUserId));//登陆人ID
@@ -538,9 +545,11 @@ public class ChanpayQuickCollection {
 			map.put("code", "0");
 			map.put("ReturnChanpay", "数据异常");
 		}
+		
 		}else{
 			map.put("code", "0");
 			map.put("ReturnChanpay", "此卡已绑定");
+		}
 		}
 		}else{
 			map.put("code", "0");

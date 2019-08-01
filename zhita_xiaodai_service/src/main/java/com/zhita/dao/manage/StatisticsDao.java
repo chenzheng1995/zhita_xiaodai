@@ -95,4 +95,6 @@ public interface StatisticsDao {
 	
 	Integer DeleteChan(Integer userId);
 	
+	
+	Integer SelectUserId(Integer userId);
 }

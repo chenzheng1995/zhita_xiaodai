@@ -15,7 +15,7 @@ import com.zhita.service.manage.SmsReport.Smservice;
 
 //短信发送
 @Controller
-@RequestMapping("UserType")
+@RequestMapping("sms")
 public class SmsReportController {
 	
 	
@@ -126,7 +126,7 @@ public class SmsReportController {
 	 */
 	@ResponseBody
 	@RequestMapping("AllUserShortMessage")
-	public Map<String, Object> AllUserShortMessage(Integer companyId){
+	public Map<String, Object> AllUserShortMessage(Usershortmessage companyId){
 		return serv.AllUserShortMessage(companyId);
 	}
 	

@@ -17,6 +17,36 @@ public class Usershortmessage {
 	private Integer companyId;
 	
 	private String phone;
+	
+	private Integer page=0;
+	
+	private Integer pagesize=10;
+	
+	private String registeClient;
+
+	public String getRegisteClient() {
+		return registeClient;
+	}
+
+	public void setRegisteClient(String registeClient) {
+		this.registeClient = registeClient;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getPagesize() {
+		return pagesize;
+	}
+
+	public void setPagesize(Integer pagesize) {
+		this.pagesize = pagesize;
+	}
 
 	public String getPhone() {
 		return phone;

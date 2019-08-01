@@ -68,7 +68,13 @@
 			
 			
 			<select id="AllUsershortmessage" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Usershortmessage">
-				select * from user where companyId = #{companyId}
+				select * from Usershortmessage where companyId = #{companyId}
+				limit #{page},#{pagesize}
+			</select>
+			
+			
+			<select id="UserPage" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select count(id) from Usershortmessage where companyId = #{companyId}
 			</select>
 			
 			

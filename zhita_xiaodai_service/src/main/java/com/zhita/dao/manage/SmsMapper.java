@@ -33,8 +33,11 @@ public interface SmsMapper {
 	List<String> AllRegist(Usershortmessage companyId);
 	
 	
-	List<Usershortmessage> AllUsershortmessage(Integer companyId);
+	List<Usershortmessage> AllUsershortmessage(Usershortmessage companyId);
 	
 	
 	Integer AddUserShortmessage(Usershortmessage shor);
+	
+	
+	Integer UserPage(Integer companyId);
 }
