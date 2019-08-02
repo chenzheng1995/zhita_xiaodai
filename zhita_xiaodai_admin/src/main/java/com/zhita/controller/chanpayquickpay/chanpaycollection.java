@@ -18,6 +18,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.service.manage.Statistic.Statisticsservice;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
+import com.zhita.util.Timestamps;
 
 
 @Controller
@@ -88,7 +89,11 @@ public class chanpaycollection{
 					String as = mou.getOriginalRetCode();
 					Bankdeductions bas = new Bankdeductions();
 					bas.setOrderId(o.getId());
-					bas.setDeduction_time(mou.getTime());
+					try {
+						bas.setDeduction_time(Timestamps.dateToStamp1(mou.getTime()));
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 					bas.setUserId(o.getUserId());
 					if(as != "000000"){
 						bas.setDeductionstatus("扣款成功");
