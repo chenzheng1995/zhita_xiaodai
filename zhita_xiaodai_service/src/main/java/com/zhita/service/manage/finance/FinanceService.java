@@ -3,7 +3,7 @@ package com.zhita.service.manage.finance;
 import java.util.Map;
 
 import com.zhita.model.manage.Accountadjustment;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
@@ -46,19 +46,19 @@ public interface FinanceService {
 	Map<String, Object> AddUnderthe(Offlinetransfer unde);
 	
 	
-	Map<String, Object> SelectBankDeductOrders(Bankdeduction bank);
+	Map<String, Object> SelectBankDeductOrders(Bankdeductions bank);
 	
 	
 	Map<String, Object> AllBank(Integer orderId);
 	
 	
-	Map<String, Object> AddBank(Bankdeduction banl);
+	Map<String, Object> AddBank(Bankdeductions banl);
 	
 	
-	Map<String, Object> AllDelayStatis(Bankdeduction banl);
+	Map<String, Object> AllDelayStatis(Bankdeductions banl);
 	
 	
-	Map<String, Object> Financialover(Bankdeduction banl);
+	Map<String, Object> Financialover(Bankdeductions banl);
 	
 	
 	Map<String, Object> AddOffJianmian(Offlinjianmian off);

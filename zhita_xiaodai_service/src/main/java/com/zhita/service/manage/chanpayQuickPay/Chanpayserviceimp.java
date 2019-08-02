@@ -1,6 +1,7 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,16 +92,27 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateDefeOrders(Orders ord) {
+		Integer day = stdao.SelectDefeDay(ord.getCompanyId());//获取延期天数
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date=new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DAY_OF_MONTH, +day);
+		date = calendar.getTime();
+		System.out.println(sdf.format(date));
+		ord.setShouldReturnTime(sdf.format(date));
 		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
 		Integer num = stdao.SelectUserdelayTimes(ord);
 		Integer delaytimes = num+1;
 		ord.setChenggNum(delaytimes);
+		stdao.DefeOrder(ord);
 		return stdao.UpdateUser(ord);
 	}
 
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		pay.setOrderId(stdao.SelectOrderId(pay.getOrderNumber()));
 		pay.setRemittanceTime(sim.format(new Date()));
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
@@ -112,6 +124,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Integer AddDeferred(Deferred defe) {
 		defe.setDeleted("0");
 		defe.setOrderid(stdao.SelectOrderId(defe.getOrderNumber()));
+		defe.setDeferBeforeReturntime(stdao.SelectDefeBefore(defe.getOrderid()));
 		return stdao.AddDeferred(defe);
 	}
 

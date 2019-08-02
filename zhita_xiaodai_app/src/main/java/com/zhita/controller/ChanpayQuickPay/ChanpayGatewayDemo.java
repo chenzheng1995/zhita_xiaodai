@@ -507,7 +507,7 @@ public class ChanpayGatewayDemo {
 		String trxId = Long.toString(System.currentTimeMillis());	
 		origMap.put("TrxId", trxId);// 订单号
 		origMap.put("ExpiredTime", "90m");// 订单有效期
-		origMap.put("MerUserId", "0000011");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", "21");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
 		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
 		//System.out.println(this.encrypt("621483011*******", MERCHANT_PUBLIC_KEY, charset));
@@ -557,10 +557,10 @@ public class ChanpayGatewayDemo {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
 		// 2.1 鉴权绑卡  业务参数
-		String trxId = "201756796897";
+		String trxId = "201656796897";
 		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OriAuthTrxId", "1564537783023");// 原鉴权绑卡订单号
-		origMap.put("SmsCode", "381801");// 鉴权短信验证码
+		origMap.put("OriAuthTrxId", "1564713608264");// 原鉴权绑卡订单号
+		origMap.put("SmsCode", "868752");// 鉴权短信验证码
 		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -758,8 +758,8 @@ public class ChanpayGatewayDemo {
 		// 2.2 业务参数
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
-		origMap.put("MerchantNo", "200001160097");// 子商户号
-		origMap.put("MerUserId", "0000001"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerchantNo", "200005640044");// 子商户号
+		origMap.put("MerUserId", "21"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
 		origMap.put("CardBegin", "621483");// 卡号前6位
@@ -913,7 +913,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_unbind(); //2.4 支付请求---API
+		test.nmg_api_auth_sms(); //2.4 支付请求---API
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

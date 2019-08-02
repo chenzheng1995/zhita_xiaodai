@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Accountadjustment;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
@@ -240,7 +240,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("BankDeduction")
-	public Map<String, Object> BankDeduction(Bankdeduction bank){
+	public Map<String, Object> BankDeduction(Bankdeductions bank){
 		return fianser.SelectBankDeductOrders(bank);
 	}
 	
@@ -269,7 +269,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("AddBank")
-	public Map<String, Object> AddBank(Bankdeduction orderId){
+	public Map<String, Object> AddBank(Bankdeductions orderId){
 		return fianser.AddBank(orderId);
 	}
 	
@@ -284,7 +284,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("DelayStatistics")
-	public Map<String, Object> DelayStatistics(Bankdeduction bank){
+	public Map<String, Object> DelayStatistics(Bankdeductions bank){
 		return fianser.AllDelayStatis(bank);
 	}
 	
@@ -305,7 +305,7 @@ public class FinanceController {
 	 */
 	@ResponseBody
 	@RequestMapping("financialoverview")
-	public Map<String, Object> Financialove(Bankdeduction banl){
+	public Map<String, Object> Financialove(Bankdeductions banl){
 		return fianser.Financialover(banl);
 	}
 	

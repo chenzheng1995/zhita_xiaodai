@@ -82,8 +82,6 @@ public class ChanpaySend extends BaseParameter{
     	String afterFour = ban.getTiedCardPhone().substring(ban.getTiedCardPhone().length()-4); 
     	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
     	
-    	
-    	
 		if(userId != null && TransAmt != null && companyId != null && lifeOfLoan != 0){
 		
 		Map<String, String> map = this.requestBaseParameter();

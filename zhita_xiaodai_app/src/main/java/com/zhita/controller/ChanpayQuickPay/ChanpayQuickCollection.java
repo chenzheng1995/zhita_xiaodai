@@ -512,15 +512,15 @@ public class ChanpayQuickCollection {
 			origMap = setCommonMap(origMap);
 			// 2.1 鉴权绑卡 api 业务参数
 			origMap.put("Service", "nmg_biz_api_auth_req");// 鉴权绑卡的接口名(商户采集方式)
-			origMap.put("TrxId", trxId.toString());// 订单号
+			origMap.put("TrxId", "2019080140563215451");// 订单号
 			origMap.put("ExpiredTime", "90m");// 订单有效期
-			origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
+			origMap.put("MerUserId", "21");// 用户标识（测试时需要替换一个新的meruserid）
 			origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-			origMap.put("BkAcctNo", this.encrypt(BkAcctNo, MERCHANT_PUBLIC_KEY, charset));// 卡号
+			origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
 			origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-			origMap.put("IDNo", this.encrypt(IDNo, MERCHANT_PUBLIC_KEY, charset));// 证件号
-			origMap.put("CstmrNm", this.encrypt(CstmrNm, MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-			origMap.put("MobNo", this.encrypt(MobNo, MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+			origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+			origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+			origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 			
 			origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知url
 			origMap.put("SmsFlag", "1");
@@ -690,8 +690,10 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+			repay.setStatu(retu.getAppRetMsg());
 			chanser.AddRepayment(repay);
 			map.put("ReturnChanpay", retu);
+			map.put("TrxId", TrxId);
 			map.put("code", 200);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -711,7 +713,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_quick_payment_smsconfirm")
-	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode) {
+	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
@@ -730,7 +732,7 @@ public class ChanpayQuickCollection {
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			Orders ord = new Orders();
-			ord.setOrderNumber(OriPayTrxId);
+			ord.setOrderNumber(OrderNumber);
 			chanser.UpdateOrders(ord);
 			map.put("code", "200");
 			map.put("ReturnChanpay", retu);
@@ -1157,6 +1159,7 @@ public class ChanpayQuickCollection {
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			chanser.AddDeferred(defe);
 			map.put("ReturnChanpay", retu);
+			map.put("TrxId", TrxId);
 			map.put("code", 200);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1197,7 +1200,6 @@ public class ChanpayQuickCollection {
 			Orders ord = new Orders();
 			ord.setId(Integer.valueOf(OriPayTrxId));
 			ord.setUserId(userId);
-			chanser.UpdateOrders(ord);
 			map.put("code", "200");
 			map.put("ReturnChanpay", retu);
 			} catch (Exception e) {
@@ -1251,7 +1253,6 @@ public class ChanpayQuickCollection {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-//		test.nmg_api_auth_unbind();
 //		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
 //		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

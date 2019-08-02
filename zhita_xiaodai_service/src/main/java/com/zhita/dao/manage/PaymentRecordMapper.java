@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.zhita.model.manage.Accountadjustment;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
 import com.zhita.model.manage.Loan_setting;
@@ -78,25 +78,25 @@ public interface PaymentRecordMapper {
     List<Undertheline> AllUnderthe(Orderdetails order);
     
     
-    Integer BankDeduOrderNum(Bankdeduction bank);
+    Integer BankDeduOrderNum(Bankdeductions bank);
     
     
-    List<Orderdetails> BankDeduOrder(Bankdeduction bank);
+    List<Orderdetails> BankDeduOrder(Bankdeductions bank);
     
     
-    List<Bankdeduction> BanAll(Integer orderId);
+    List<Bankdeductions> BanAll(Integer orderId);
     
     
-    Integer DelayTatolCount(Bankdeduction bank);
+    Integer DelayTatolCount(Bankdeductions bank);
     
     
-    List<Bankdeduction> DelayStatisc(Bankdeduction bank);
+    List<Bankdeductions> DelayStatisc(Bankdeductions bank);
     
     
-    Bankdeduction OneBank(Bankdeduction banl);
+    Bankdeductions OneBank(Bankdeductions banl);
     
     
-    BigDecimal YanMoney(Bankdeduction banl);
+    BigDecimal YanMoney(Bankdeductions banl);
     
     
     List<Integer> Sys_userIds(Integer companyId);
@@ -117,7 +117,7 @@ public interface PaymentRecordMapper {
     Integer UpdateOrderType(Integer orderId);
     
     
-    Bankdeduction SelectBank(Bankdeduction ban);
+    Bankdeductions SelectBank(Bankdeductions ban);
     
     
     Deferred_settings OneCompanyDeferr(Integer companyId);

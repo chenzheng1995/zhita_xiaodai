@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Accountadjustment;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
 import com.zhita.model.manage.Loan_setting;
@@ -47,22 +47,22 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
-		try {
-			System.out.println(payrecord.getStart_time()+"+++"+payrecord.getEnd_time());
-			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
-			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
-			System.out.println(payrecord.getStart_time()+"++++"+payrecord.getEnd_time());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+//		try {
+//			System.out.println(payrecord.getStart_time()+"+++"+payrecord.getEnd_time());
+//			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+//			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
+//			System.out.println(payrecord.getStart_time()+"++++"+payrecord.getEnd_time());
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
 		Integer totalCount = padao.TotalCountPayment(payrecord);
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("放款");
 		List<Payment_record> payments = padao.PaymentAll(payrecord);
-		for(int i=0;i<payments.size();i++){
-			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
-		}
+//		for(int i=0;i<payments.size();i++){
+//			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
+//		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("PaymentRecord", payments);
 		return map;
@@ -322,7 +322,7 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> SelectBankDeductOrders(Bankdeduction bank) {
+	public Map<String, Object> SelectBankDeductOrders(Bankdeductions bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			bank.setStartu_time(Timestamps.dateToStamp1(bank.getStartu_time()));
@@ -355,7 +355,7 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> AllBank(Integer orderId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(orderId != null){
-			List<Bankdeduction> banls = padao.BanAll(orderId);
+			List<Bankdeductions> banls = padao.BanAll(orderId);
 			map.put("bankde", banls);
 		}else{
 			map.put("bankde", "无数据");
@@ -367,7 +367,7 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> AddBank(Bankdeduction banl) {
+	public Map<String, Object> AddBank(Bankdeductions banl) {
 		
 		return null;
 	}
@@ -376,7 +376,7 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> AllDelayStatis(Bankdeduction banl) {
+	public Map<String, Object> AllDelayStatis(Bankdeductions banl) {
 		try {
 			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
 			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
@@ -394,10 +394,10 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		
-		List<Bankdeduction> banks = padao.DelayStatisc(banl);
+		List<Bankdeductions> banks = padao.DelayStatisc(banl);
 		for (int i = 0; i < banks.size(); i++) {
 			banks.get(i).setDeferAfterReturntime(Timestamps.stampToDate(banks.get(i).getDeferAfterReturntime()));
-			Bankdeduction ban = padao.SelectBank(banks.get(i));
+			Bankdeductions ban = padao.SelectBank(banks.get(i));
 			banks.get(i).setBranKnum(ban.getBranKnum());
 			banks.get(i).setBrankMoney(ban.getBrankMoney());
 		}
@@ -409,14 +409,14 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> Financialover(Bankdeduction banl) {
+	public Map<String, Object> Financialover(Bankdeductions banl) {
 		try {
 			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
 			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		Bankdeduction bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
+		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		bank.setDeferredamount(padao.YanMoney(banl));
 		bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
 		bank.setDeductionstatus(""+bank.getRealreturn()+","+0+","+bank.getPaymentamount()+"");//实还笔数    实还金额

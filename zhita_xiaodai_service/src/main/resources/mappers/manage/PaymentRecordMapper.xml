@@ -213,7 +213,7 @@
   
   
   		  <select id="PaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-		  	select ra.remittanceTime,thir.loanSource,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber
+		  	select ra.orderId,ra.remittanceTime,thir.loanSource,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber
 		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
 		  	 LEFT JOIN user u ON o.userId = u.id
 		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -330,17 +330,19 @@
   			
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
   			 		select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
-  			 		o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,
-  			 		ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
-  			 		ord.interestPenaltySum,o.realtime 
-  			 		from drainage_of_platform d left join user u on d.id = u.drainageOfPlatformId
-  			 		left join orders o on o.userId = u.id
-  			 		left join orderdetails ord on o.id = ord.orderId
-  			 		left join deferred defe on defe.orderid = o.id
-  			 		left join deferred_settings defeset on defeset.companyId = o.companyId
+					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname, 
+					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum, 
+					ord.interestPenaltySum,o.realtime 
+  			 		from orders o left join user u on o.userId = u.id
+					left join orderdetails ord on o.id = ord.orderId
+					left join payment_record pay ON pay.orderId = o.id
+					left join deferred defe on defe.orderid = o.id 
+					left join deferred_settings defeset on defeset.companyId = o.companyId 
+					left join drainage_of_platform d on d.id = u.drainageOfPlatformId 
   			 		<where>
-  			 			AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
-  			 			AND d.companyId = #{companyId}
+  			 			pay.orderId =#{orderId} 
+  			 			AND o.companyId = #{companyId}
+						and pay.orderId = o.id
   			 		</where>
   			 </select>
   

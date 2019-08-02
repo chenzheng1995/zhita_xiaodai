@@ -18,7 +18,7 @@ import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -50,7 +50,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	public MouthBankName SendBankcomm(String BankCommonName,String AcctNo,String AcctName,String TransAmt,String LiceneceNo,
 			String Phone,Integer sys_userId,Integer deductionproportion,String orderNumber,Integer orderId,Integer userId) {
 			Map<String, String> map = this.requestBaseParameter();
-			Bankdeduction ban = new Bankdeduction();
+			Bankdeductions ban = new Bankdeductions();
 			ban.setSys_userId(sys_userId);
 			ban.setDeductionproportion(deductionproportion);
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -134,7 +134,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	}
 
 	@Override
-	public Integer UpdateBank(Bankdeduction ban) {
+	public Integer UpdateBank(Bankdeductions ban) {
 		return sdao.UpdateBank(ban);
 	}
 
@@ -144,7 +144,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		Integer totalCount = sdao.SelectTotalCount(ban);
 		PageUtil pages = new PageUtil(ban.getPage(), totalCount);
 		ban.setPage(pages.getPage());
-		List<Bankdeduction> bans = sdao.AllBank(ban);
+		List<Bankdeductions> bans = sdao.AllBank(ban);
 		for(int i=0;i<bans.size();i++){
 			bans.get(i).setCompanyId(ban.getCompanyId());
 			bans.get(i).setChengNum(sdao.ChenggNum(bans.get(i)));//已选扣款用户总数
@@ -158,16 +158,16 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	}
 
 	@Override
-	public Map<String, Object> AllBankdetail(Bankdeduction bank) {
+	public Map<String, Object> AllBankdetail(Bankdeductions bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Bankdeduction> b = sdao.AllBan(bank);
+		List<Bankdeductions> b = sdao.AllBan(bank);
 		map.put("Bankdeduction", b);
 		return map;
 	}
 
 	@Override
-	public Map<String, Object> AllDetails(Bankdeduction bank) {
-		List<Bankdeduction> bans = sdao.SelectBankKoukuan(bank);
+	public Map<String, Object> AllDetails(Bankdeductions bank) {
+		List<Bankdeductions> bans = sdao.SelectBankKoukuan(bank);
 		for(int i=0;i<bans.size();i++){
 			bans.get(i).setCollection_money(bans.get(i).getRealityBorrowMoney().add(bans.get(i).getInterestPenaltySum()));
 		}

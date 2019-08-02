@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -86,7 +86,7 @@ public class chanpaycollection{
 							deductionproportion, o.getOrderNumber(), o.getId(), o.getUserId());//扣款接口
 					
 					String as = mou.getOriginalRetCode();
-					Bankdeduction bas = new Bankdeduction();
+					Bankdeductions bas = new Bankdeductions();
 					bas.setOrderId(o.getId());
 					bas.setDeduction_time(mou.getTime());
 					bas.setUserId(o.getUserId());
@@ -143,7 +143,7 @@ public class chanpaycollection{
 	 */
 	@ResponseBody
 	@RequestMapping("AllBankDetails")
-	public Map<String, Object> AllBankDetail(Bankdeduction bank){
+	public Map<String, Object> AllBankDetail(Bankdeductions bank){
 		return ster.AllBankdetail(bank);
 	}
 	
@@ -156,7 +156,7 @@ public class chanpaycollection{
 	 */
 	@ResponseBody
 	@RequestMapping("AllDetails")
-	public Map<String, Object> AllDetails(Bankdeduction bank){
+	public Map<String, Object> AllDetails(Bankdeductions bank){
 		return ster.AllDetails(bank);
 	}
 	

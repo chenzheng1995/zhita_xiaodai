@@ -4,7 +4,7 @@ package com.zhita.service.manage.Statistic;
 import java.util.Map;
 
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -24,16 +24,16 @@ public interface Statisticsservice {
 	String IDnumber(Integer userId);
 	
 	
-	Integer UpdateBank(Bankdeduction ban);
+	Integer UpdateBank(Bankdeductions ban);
 	
 	
 	Map<String, Object> AllBankdeduData(Bankcard ban);
 	
 	
-	Map<String, Object> AllBankdetail(Bankdeduction bank);
+	Map<String, Object> AllBankdetail(Bankdeductions bank);
 	
 	
-	Map<String, Object> AllDetails(Bankdeduction bank);
+	Map<String, Object> AllDetails(Bankdeductions bank);
 	
 	
 	Integer UpdateOrderSurp(Orders o);
