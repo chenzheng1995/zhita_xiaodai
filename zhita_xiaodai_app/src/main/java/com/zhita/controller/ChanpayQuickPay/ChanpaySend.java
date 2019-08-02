@@ -75,6 +75,9 @@ public class ChanpaySend extends BaseParameter{
     	Calendar now = Calendar.getInstance(); 
     	String year = now.get(Calendar.YEAR)+""; //年
     	String month = now.get(Calendar.MONTH) + 1 + "";//月
+    	if(Integer.parseInt(month)<10) {
+    		month = "0"+Integer.parseInt(month);
+    	}
     	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
     	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
     	String minute = now.get(Calendar.MINUTE)+"";//分

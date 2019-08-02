@@ -21,4 +21,6 @@ public interface IntThirdpartyintService {
     
     //后台管理---编辑保存功能
     public int updateByPrimaryKey(ThirdpartyInterface record);
+
+	public String getOperatorsAuthentication(int companyId);
 }

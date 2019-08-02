@@ -20,6 +20,7 @@
       <arg column="canBorrowLines" jdbcType="DECIMAL" />
       <arg column="shareOfState" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="delayTimes" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="operatorsAuthentication" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -214,7 +215,7 @@
 	
 				  	<!--APP 插入用户信息 -->
 	<insert id="insertUser1" parameterType="java.util.Map">
-		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket)
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication)
 		values (#{newPhone},
 		#{registrationTime},
 		#{loginStatus},
@@ -222,7 +223,8 @@
 		#{registeClient},
 		#{registrationTime},
 		#{merchantId},
-		#{useMarket})
+		#{useMarket},
+		#{operatorsAuthentication})
 	</insert>
 	
 	
@@ -254,14 +256,17 @@
 	</update>
 	<!-- 后台管理           用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)-->
 	<select id="queryUserList" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
-		select u.id,u.name,u.phone,u.registeTime,u.shareOfState,uat.attestationStatus userattestationstatus,b.attestationStatus bankattestationstatus,o.attestationStatus operaattestationstatus from  
+		select u.id,u.name,u.phone,u.registeTime,u.shareOfState,u.registeClient,uat.attestationStatus userattestationstatus,b.attestationStatus bankattestationstatus,o.attestationStatus operaattestationstatus from  
 		user u LEFT JOIN user_attestation uat on uat.userId=u.id LEFT JOIN bankcard b on b.userId=u.id LEFT JOIN operator o on o.userId=u.id
 		where companyId=#{companyId,jdbcType=INTEGER} and u.ifBlacklist=0
 	        <if test="name != null and name!='' ">
 	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
 	        </if>
-	        <if test="phone != null and phone!='' ">
+	        <if test="phone != null and phone !='' ">
 	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+	        </if>
+	        <if test="registeClient != null and registeClient !='' ">
+	        	and u.registeClient = #{registeClient,jdbcType=VARCHAR}
 	        </if>
 	        <if test="registeTimeStart != null and registeTimeStart!='' and registeTimeEnd != null and registeTimeEnd!='' ">
 	           and u.registeTime between #{registeTimeStart,jdbcType=VARCHAR} and #{registeTimeEnd,jdbcType=VARCHAR}
@@ -287,6 +292,9 @@
 	        </if>
 	        <if test="phone != null and phone!='' ">
 	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+	        </if>
+	        <if test="registeClient != null and registeClient !='' ">
+	        	and u.registeClient = #{registeClient,jdbcType=VARCHAR}
 	        </if>
 	        <if test="registeTimeStart != null and registeTimeStart!='' and registeTimeEnd != null and registeTimeEnd!='' ">
 	           and u.registeTime between #{registeTimeStart,jdbcType=VARCHAR} and #{registeTimeEnd,jdbcType=VARCHAR}
@@ -386,18 +394,21 @@
      <include refid="Base_Column_List" />
      from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
      where u.companyId=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2)
-     		<if test="applynumber != null and applynumber !='' ">
-	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
-	        </if>
-      		<if test="name != null and name!='' ">
-	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
-	        </if>
-	        <if test="phone != null and phone!='' ">
-	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
-	        </if>
-	        <if test="applytimestart != null and applytimestart !='' and applytimeend != null and applytimeend !='' ">
-	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
-	        </if>
+		<if test="applynumber != null and applynumber !='' ">
+	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
+	    </if>
+      	<if test="name != null and name!='' ">
+	        and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+	    </if>
+	    <if test="phone != null and phone !='' ">
+	        and u.phone = #{phone,jdbcType=VARCHAR}
+	    </if>
+	    <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 		</if>
+	    <if test="applytimestart != null and applytimestart !='' and applytimeend != null and applytimeend !='' ">
+	        and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
+	    </if>
      order by u.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
    <!-- 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
@@ -405,17 +416,20 @@
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
      where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2)
      	<if test="applynumber != null and applynumber !='' ">
-	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
-	        </if>
-      		<if test="name != null and name!='' ">
-	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
-	        </if>
-	        <if test="phone != null and phone!='' ">
-	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
-	        </if>
-	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
-	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
-	        </if>
+	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
+	    </if>
+      	<if test="name != null and name !='' ">
+	        and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+	    </if>
+	    <if test="phone != null and phone !='' ">
+	        and u.phone = #{phone,jdbcType=VARCHAR}
+	    </if>
+	     <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 		</if>
+	    <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
+	        and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
+	    </if>
   </select>
   
   <!-- 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束） -->
@@ -431,8 +445,11 @@
 	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
 	        </if>
 	        <if test="phone != null and phone!='' ">
-	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+	        	and u.phone = #{phone,jdbcType=VARCHAR}
 	        </if>
+	        <if test="registeClient != null and registeClient !='' ">
+				and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+			</if>
 	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	        </if>
@@ -449,8 +466,11 @@
 	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
 	        </if>
 	        <if test="phone != null and phone!='' ">
-	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+	        	and u.phone = #{phone,jdbcType=VARCHAR}
 	        </if>
+	        <if test="registeClient != null and registeClient !='' ">
+				and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 			</if>
 	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	        </if>
@@ -479,8 +499,11 @@
 	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
 	        </if>
 	        <if test="phone != null and phone!='' ">
-	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+	        	and u.phone = #{phone,jdbcType=VARCHAR}
 	        </if>
+	       	<if test="registeClient != null and registeClient !='' ">
+				and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 			</if>
 	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	        </if>
@@ -500,8 +523,11 @@
 	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
 	        </if>
 	        <if test="phone != null and phone!='' ">
-	        	and u.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+	        	and u.phone = #{phone,jdbcType=VARCHAR}
 	        </if>
+	       	<if test="registeClient != null and registeClient !='' ">
+				and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 			</if>
 	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	        </if>

@@ -16,6 +16,7 @@ public class UserLikeParameter {
 	private String applytimestart;//申请时间开始
 	private String applytimeend;//申请时间结束
 	private Integer operatorid;//审核员id
+	private String registeClient;//注册客户端
 	
 	public Integer getCompanyId() {
 		return companyId;
@@ -101,6 +102,11 @@ public class UserLikeParameter {
 	public void setOperatorid(Integer operatorid) {
 		this.operatorid = operatorid;
 	}
-
+	public String getRegisteClient() {
+		return registeClient;
+	}
+	public void setRegisteClient(String registeClient) {
+		this.registeClient = registeClient;
+	}
 	
 }

@@ -62,4 +62,10 @@ public class ThirdpartyintServiceImp implements IntThirdpartyintService{
     	int num=thirdpartyInterfaceMapper.updateByPrimaryKey(record);
     	return num;
     }
+
+	@Override
+	public String getOperatorsAuthentication(int companyId) {
+		String operatorsAuthentication = thirdpartyInterfaceMapper.getOperatorsAuthentication(companyId);
+		return operatorsAuthentication;
+	}
 }

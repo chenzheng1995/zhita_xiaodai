@@ -37,7 +37,6 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 			String shouldReturnTime = Timestamps.stampToDate(list.get(i).getShouldReturnTime());//应还时间（String类型）
 			try {
 				if(sdf.parse(date).getTime()>sdf.parse(shouldReturnTime).getTime()){//转成long类型比较
-					System.out.println("当前时间大于应还时间");//test完成要删除
 					Integer orderid = list.get(i).getId();
 					projecttimerMapper.updateover(orderid);//修改订单状态为逾期
 					

@@ -57,4 +57,13 @@ public interface RoleMapper {
     
     //admin-----角色——添加功能（根据角色id查询该角色的权限信息）
     List<Functions> queryAllfunByRoleid(Integer roleid);
+    
+    //admin----角色——修改状态为开启
+    int upaStatusOpen(Integer id);
+    
+    //admin----角色——修改状态为关闭
+    int upaStatusClose(Integer id);
+    
+    //admin-----角色——将该角色的所有权限删除
+    int delfunction(Integer roleid);
 }

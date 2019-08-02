@@ -215,6 +215,8 @@ public class OrdersController {
 		   Map<String, Object> map  = new HashMap<String, Object>();		
 		   Map<String, Object> map1  = intOrderService.getRepayment(userId,companyId);
 		   int orderId = (int) map1.get("id");
+		   String orderNumber = (String) map1.get("orderNumber");
+		   map1.put("orderNumber",orderNumber);
 		   String orderStatus = (String) map1.get("orderStatus");
 		   String shouldReturnTime = (String) map1.get("shouldReturnTime");//应还时间
 		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

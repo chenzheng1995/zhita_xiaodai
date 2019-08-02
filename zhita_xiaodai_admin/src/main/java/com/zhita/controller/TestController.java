@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.zhita.model.manage.OverdueSettings;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
+import com.zhita.util.PhoneDeal;
+import com.zhita.util.TuoMinUtil;
 
 
 
@@ -146,9 +148,10 @@ public class TestController {
 				
 			}
 		}*/
-		BigDecimal a=new BigDecimal(3000);
-		BigDecimal b=new BigDecimal(0.4);
-	 BigDecimal interestPenaltySum = a.multiply(b).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
-	 System.out.println(interestPenaltySum);
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
+		//System.out.println(tm.mobileEncrypt(p.decryption("6376462xx82")));
+		System.out.println(p.decryption("6376362xx82"));
+		System.out.println(p.encryption("188715526523365"));
 	}
 }

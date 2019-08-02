@@ -66,6 +66,8 @@ public class User {
     
     private String idcard;
     
+    private String operatorsAuthentication;//运营商名字
+    
 
 	public Integer getId() {
 		return id;
@@ -313,6 +315,14 @@ public class User {
 
 	public void setDelayTimes(Integer delayTimes) {
 		this.delayTimes = delayTimes;
+	}
+	
+	public String getOperatorsAuthentication() {
+		return operatorsAuthentication;
+	}
+
+	public void setOperatorsAuthentication(String operatorsAuthentication) {
+		this.operatorsAuthentication = operatorsAuthentication;
 	}
 
 }
