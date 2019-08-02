@@ -100,7 +100,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 		calendar.add(Calendar.DAY_OF_MONTH, +day);
 		date = calendar.getTime();
 		System.out.println(sdf.format(date));
-		ord.setShouldReturnTime(sdf.format(date));
+		try {
+			ord.setShouldReturnTime(Timestamps.dateToStamp1(sdf.format(date)));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
 		Integer num = stdao.SelectUserdelayTimes(ord);
 		Integer delaytimes = num+1;

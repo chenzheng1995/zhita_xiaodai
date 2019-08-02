@@ -209,6 +209,8 @@
 			</select>
 			
 			
+			
+			
 			<select id="ChenggMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
 				select sum(deduction_money) from bankdeductions where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} 
 			</select>
@@ -221,7 +223,7 @@
 			
 			
 			
-			<select id="Deails" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+			<select id="Deails" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
 				select ban.deduction_time,u.name,ord.surplus_money,ban.deductionproportion,ban.deduction_money from bankdeductions ban,user u,orders o,orderdetails ord
 				where o.userId = u.id and o.id = ord.orderId and o.id = ban.orderId and o.companyId = #{companyId} and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
 			</select>
@@ -243,7 +245,7 @@
 			</select>
 			
 			
-			<select id="AllBan" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeduction">
+			<select id="AllBan" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
 				select deduction_time,deductionproportion,deduction_money from bankdeductions where orderId = #{orderId}
 			</select>
 			

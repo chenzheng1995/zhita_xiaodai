@@ -665,8 +665,8 @@
   			
   			
   			
-  			<select id="BankDeduOrderNum" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.lang.Integer">
-  				select count(o.id) from bankdeduction b,orders o,user u,deferred defe
+  			<select id="BankDeduOrderNum" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">
+  				select count(o.id) from bankdeductions b,orders o,user u,deferred defe
   				<where>
   					AND defe.orderId = o.id
   					AND o.id = b.orderId
@@ -700,7 +700,7 @@
   			
   			
   			
-  			<select id="BankDeduOrder" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Orderdetails">
+  			<select id="BankDeduOrder" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Orderdetails">
   				select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 				o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
 				col.promise_money,col.promise_money,
@@ -709,7 +709,7 @@
 				 LEFT JOIN collection col ON o.id = col.orderId
 				 LEFT JOIN collection_member colme ON	colme.collectionMemberId = col.collectionMemberId
 				 LEFT JOIN user u ON o.userId = u.id
-				 LEFT JOIN bankdeduction banl on banl.orderId = o.orderId
+				 LEFT JOIN bankdeductions banl on banl.orderId = o.orderId
 				 LEFT JOIN deferred defe on defe.orderId = o.id
   				<where>
   					AND o.companyId = #{companyId}
@@ -742,15 +742,15 @@
   			
   			
   			
-  			<select id="BanAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Bankdeduction">
-  				select * from bankdeduction where orderId = #{orderId}
+  			<select id="BanAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Bankdeductions">
+  				select * from bankdeductions where orderId = #{orderId}
   			</select>
   			
   			
   			
   			
   			
-  			<select id="DelayTatolCount" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  			<select id="DelayTatolCount" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(id) from deferred 
   				<where>
   					<if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
@@ -762,7 +762,7 @@
   			
   			
   			
-  			<select id="DelayStatisc" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  			<select id="DelayStatisc" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select d.deferAfterReturntime,count(d.orderid) as orderNum,o.companyId,
   				sum(d.interestOnArrears) as interestOnArrearsSum from deferred d left join orders o on o.id = d.orderid
   				<where>
@@ -778,7 +778,7 @@
   			
   			
   			
-  			<select id="OneBank" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+  			<select id="OneBank" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(o.id) as realborrowing,sum(ord.realityBorrowMoney) as realexpenditure,count(o.id) as realreturn,sum(ord.makeLoans) as paymentamount,
   				sum(ord.interestPenaltySum) as overdueamount from orders o,orderdetails ord 
   				 <where>
@@ -792,7 +792,7 @@
   			
   			
   			
-  			<select id="YanMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
+  			<select id="YanMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
   				select sum(d.interestOnArrears) as deferredamount from deferred d,orders o 
   				<where>
   					AND o.id = d.orderid
@@ -819,8 +819,8 @@
   			</update>
   			
   			
-  			<select id="SelectBank" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
-  				select count(ban.id) as branKnum,sum(ban.deduction_money) as brankMoney from bankdeduction ban,orders o
+  			<select id="SelectBank" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(ban.id) as branKnum,sum(ban.deduction_money) as brankMoney from bankdeductions ban,orders o
   				where o.companyId = #{companyId} and ban.deduction_time = #{deduction_time}
   			</select>
   			
