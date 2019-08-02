@@ -130,4 +130,9 @@
    <select id="queryrepayment" resultType="com.zhita.model.manage.RepaymentSetting">
   	select * from repayment_setting where companyId=#{arg0} and deleted=0;
   </select>
+  
+     <select id="getOperatorsAuthentication" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select operatorsAuthentication from thirdparty_interface where companyId=#{companyId}
+  </select>
+  
 </mapper>

@@ -40,7 +40,7 @@ public Integer findphone(String newPhone, int companyId);
    public int updateLoginStatus(Integer userId);
 
 public int insertUser1(String newPhone, String loginStatus, int companyId, String registeClient,
-		String registrationTime, int merchantId, String useMarket);
+		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication);
 
 public int getId(String newPhone, int companyId);
 

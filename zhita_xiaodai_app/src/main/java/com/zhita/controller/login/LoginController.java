@@ -9,6 +9,7 @@ import java.util.Date;
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.manage.source.IntSourceService;
+import com.zhita.service.manage.thirdpartyint.IntThirdpartyintService;
 import com.zhita.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class LoginController {
     
     @Autowired
     IntSourceService intSourceService;
+    
+    @Autowired
+    IntThirdpartyintService intThirdpartyintService;
 
 
     private String getIpAddress(HttpServletRequest request) {
@@ -131,8 +135,9 @@ public class LoginController {
                 String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
                 Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
                 if (id == null) {
+                	String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
                     int merchantId = intSourceService.getsourceId(sourceName);
-                    int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
+                    int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication);
                     if (number == 1) {
                         id = loginService.getId(newPhone, companyId); //获取该用户的id
                         map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
@@ -254,8 +259,9 @@ public class LoginController {
             Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
             if (id == null) {
             	String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
+            	String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
             	 int merchantId = intSourceService.getsourceId(sourceName);
-            	 int num = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
+            	 int num = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication);
             	 if (num == 1) {
                      id = loginService.getId(newPhone, companyId); //获取该用户的id
                      map.put("msg", "用户登录成功，数据插入成功");

@@ -38,4 +38,6 @@ public interface ThirdpartyInterfaceMapper {
     
    //后台管理---查询还款渠道设置表所有信息
     List<RepaymentSetting> queryrepayment(Integer companyId);
+
+	String getOperatorsAuthentication(int companyId);
 }

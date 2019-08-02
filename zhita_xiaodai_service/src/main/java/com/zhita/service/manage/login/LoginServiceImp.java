@@ -98,8 +98,8 @@ public class LoginServiceImp implements IntLoginService{
 
 	@Override
 	public int insertUser1(String newPhone, String loginStatus, int companyId, String registeClient,
-			String registrationTime, int merchantId, String useMarket) {
-		 int number = userMapper.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket);
+			String registrationTime, int merchantId, String useMarket,String operatorsAuthentication) {
+		 int number = userMapper.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication);
 		return number;
 	}
 
