@@ -84,4 +84,10 @@ public interface IntSourceService {
 	//后台管理----已借款人数
 	public int queryorderpass(Integer sourceid,String starttime,String endtime);
 
+	public List<String> getstateAndDeleted(int companyId, String sourceName);
+
+	public List<String> getDeleted(int companyId, String sourceName);
+
+
+
 }

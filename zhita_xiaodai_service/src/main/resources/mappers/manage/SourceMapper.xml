@@ -12,7 +12,7 @@
     <result column="discount" property="discount" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
-    <result column="manageControlId" property="manageControlId" jdbcType="VARCHAR" />
+    <result column="manageControlId" property="manageControlId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId, s.deleted,
@@ -273,4 +273,16 @@
   <select id="queryNum" resultType="java.lang.Integer">
   	select count(*) from user where companyId=#{arg0} and sourceId=#{arg1} and applytime>=#{arg2} and applytime &lt;#{arg3}
   </select>
+  
+  
+      <!-- 根据渠道名获取state-->
+    <select id="getstateAndDeleted" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select status from source where companyId=#{companyId} and sourceName = #{sourceName}
+	</select>
+	
+	
+	    <!-- 根据渠道名获取deleted -->
+    <select id="getDeleted" parameterType="java.util.Map" resultType="java.lang.String">
+  select deleted from source where companyId=#{companyId} and sourceName = #{sourceName}
+ </select>
 </mapper>
