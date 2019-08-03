@@ -154,11 +154,16 @@ public class OperatorController {
 @Transactional
 public Map<String, Object> getshareOfState(int userId){
 	Map<String, Object> map = new HashMap<>();
+	String timStamp = System.currentTimeMillis()+"";//当前时间戳
+	String applynumber = "SQ"+userId+timStamp;//申请编号
+	intUserService.setuser(userId,timStamp,applynumber);
 	String shareOfState = intUserService.getshareOfState(userId);
 	map.put("shareOfState", shareOfState);
 	return map;
 	
 }
+
+
   
     
 ////   分控分数

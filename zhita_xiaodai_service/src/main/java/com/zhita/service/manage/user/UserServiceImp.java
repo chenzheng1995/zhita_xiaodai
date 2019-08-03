@@ -268,5 +268,11 @@ public class UserServiceImp implements IntUserService{
 		
 	}
 
+	@Override
+	public void setuser(int userId, String timStamp, String applynumber) {
+		userMapper.setuser(userId,timStamp,applynumber);
+		
+	}
+
 
 }
