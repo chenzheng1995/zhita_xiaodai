@@ -73,8 +73,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateOrders(Orders ord) {
-		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
-		Integer id = stdao.UpdateOrders(ord);
+		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));//根据编号查询订单ID
+		Integer id = stdao.UpdateOrders(ord);//
 		if(id != null){
 			Integer delaytimes = 0;
 			ord.setChenggNum(delaytimes);

@@ -762,8 +762,8 @@ public class ChanpayGatewayDemo {
 		origMap.put("MerUserId", "21"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", "621483");// 卡号前6位
-		origMap.put("CardEnd", "4138");// 卡号后4位
+		origMap.put("CardBegin", "621700");// 卡号前6位
+		origMap.put("CardEnd", "6842");// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}

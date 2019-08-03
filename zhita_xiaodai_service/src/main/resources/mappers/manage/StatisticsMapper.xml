@@ -38,14 +38,15 @@
 			
 			<insert id="AddRepay" parameterType="com.zhita.model.manage.Repayment">
 				INSERT INTO `repayment`(
-					orderid,
+					orderId,
 					repaymentMoney,
 					repaymentDate,
 					thirdparty_id,
+					collectionMemberId,
 					pipelinenumber,
-					paymentbtiao,
-					statu					
-				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{pipelinenumber},#{paymentbtiao},#{statu})
+					statu,
+					reoaybtai
+				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{collectionMemberId},#{pipelinenumber},#{statu},#{reoaybtai})
 			</insert>
 			
 			<select id="SelectDefeDay" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -274,6 +275,6 @@
 			
 			
 			<select id="SelectDefeBefore" parameterType="java.lang.Integer" resultType="java.lang.String">
-				select shouldReturnTime from orders where orderId = #{orderId}
+				select shouldReturnTime from orders where id = #{orderId}
 			</select>
 </mapper>
