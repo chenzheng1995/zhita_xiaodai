@@ -92,24 +92,9 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateDefeOrders(Orders ord) {
-		Integer day = stdao.SelectDefeDay(ord.getCompanyId());//获取延期天数
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date=new Date();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.add(Calendar.DAY_OF_MONTH, +day);
-		date = calendar.getTime();
-		System.out.println(sdf.format(date));
-		try {
-			ord.setShouldReturnTime(Timestamps.dateToStamp1(sdf.format(date)));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
 		Integer num = stdao.SelectUserdelayTimes(ord);
 		Integer delaytimes = num+1;
 		ord.setChenggNum(delaytimes);
-		stdao.DefeOrder(ord);
 		return stdao.UpdateUser(ord);
 	}
 
@@ -128,7 +113,6 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Integer AddDeferred(Deferred defe) {
 		defe.setDeleted("0");
 		defe.setOrderid(stdao.SelectOrderId(defe.getOrderNumber()));
-		defe.setDeferBeforeReturntime(stdao.SelectDefeBefore(defe.getOrderid()));
 		return stdao.AddDeferred(defe);
 	}
 
