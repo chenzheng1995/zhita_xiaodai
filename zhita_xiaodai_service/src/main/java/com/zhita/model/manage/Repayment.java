@@ -51,7 +51,16 @@ public class Repayment {
 	
 	private String statu;
 	
+	private String reoaybtai;
 	
+	public String getReoaybtai() {
+		return reoaybtai;
+	}
+
+	public void setReoaybtai(String reoaybtai) {
+		this.reoaybtai = reoaybtai;
+	}
+
 	public String getStatu() {
 		return statu;
 	}

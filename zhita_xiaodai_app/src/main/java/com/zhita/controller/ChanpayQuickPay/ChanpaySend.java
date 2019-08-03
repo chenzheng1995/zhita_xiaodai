@@ -102,18 +102,25 @@ public class ChanpaySend extends BaseParameter{
 		map.put("PostScript", "放款");
 		String rea = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
 				BaseConstant.MERCHANT_PRIVATE_KEY);
-		ReturnChanpay returnchanpay = JSON.parseObject(rea, ReturnChanpay.class);
+		ReturnSend returnchanpay = JSON.parseObject(rea, ReturnSend.class);
 		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.add(Calendar.DATE, +1);
 		date = calendar.getTime();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMdd");
-		map1.put("End_time", sim.format(date));
-		map1.put("ReturnChanpay", returnchanpay);
-		map1.put("lifeOfLoan", lifeOfLoan);
-		map1.put("OrderNumber", orderNumber);
-		map1.put("code", 200);
+		String statu = returnchanpay.getAcceptStatus();
+		if(statu.equals("S")){
+			map1.put("End_time", sim.format(date));
+			map1.put("ReturnChanpay", returnchanpay);
+			map1.put("lifeOfLoan", lifeOfLoan);
+			map1.put("OrderNumber", orderNumber);
+			map1.put("code", 200);
+		}else{
+			map1.put("ReturnChanpay", returnchanpay);
+			map1.put("code", 0);
+		}
+		
 		}else{
 			map1.put("msg", "userId,TransAmt,companyId,lifeOfLoan不能为空");
 			map1.put("code", 0);

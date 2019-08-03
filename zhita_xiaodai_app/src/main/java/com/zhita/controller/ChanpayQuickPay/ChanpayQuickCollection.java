@@ -669,7 +669,7 @@ public class ChanpayQuickCollection {
 		// 2.1 基本参数 
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
-		Repayment repay = new Repayment();
+		Repayment repay = new Repayment();//还账记录表
 		repay.setOrderNumber(TrxId);
 		repay.setPipelinenumber(TrxId);
 		 BigDecimal bd=new BigDecimal(TrxAmt);   
@@ -691,12 +691,21 @@ public class ChanpayQuickCollection {
 			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
-			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-			repay.setStatu(retu.getAppRetMsg());
+			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
+			
+			String sa = retu.getAcceptStatus();
+			if(sa.equals("S")){
+				repay.setStatu("成功");
+				map.put("ReturnChanpay", retu);
+				map.put("TrxId", TrxId);
+				map.put("code", 200);
+			}else{
+				repay.setStatu("失败");
+				map.put("ReturnChanpay", retu);
+				map.put("TrxId", TrxId);
+				map.put("code", 0);
+			}
 			chanser.AddRepayment(repay);
-			map.put("ReturnChanpay", retu);
-			map.put("TrxId", TrxId);
-			map.put("code", 200);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -733,11 +742,18 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+			String as = retu.getStatus();
 			Orders ord = new Orders();
 			ord.setOrderNumber(OrderNumber);
-			chanser.UpdateOrders(ord);
-			map.put("code", "200");
-			map.put("ReturnChanpay", retu);
+			if(as.equals("S")){
+				chanser.UpdateOrders(ord);
+				map.put("code", "200");
+				map.put("ReturnChanpay", retu);
+			}else{
+				map.put("code", "0");
+				map.put("ReturnChanpay", retu);
+			}
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1119,7 +1135,8 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Defenmg_biz_api_quick_payment")
-	private Map<String, Object> Defenmg_biz_api_quick_payment(String TrxId,String OrdrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,String deferBeforeReturntime,Integer postponeDate,String deferAfterReturntime) {
+	private Map<String, Object> Defenmg_biz_api_quick_payment(String TrxId,String OrdrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,
+			String deferBeforeReturntime,Integer postponeDate,String deferAfterReturntime) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		if(TrxId != null && OrdrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 		Map<String, String> origMap = new HashMap<String, String>();
@@ -1151,11 +1168,19 @@ public class ChanpayQuickCollection {
 			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
-			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
+			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
 			chanser.AddDeferred(defe);
-			map.put("ReturnChanpay", retu);
-			map.put("TrxId", TrxId);
-			map.put("code", 200);
+			String sa = retu.getAcceptStatus();
+			if(sa.equals("S")){
+				map.put("ReturnChanpay", retu);
+				map.put("TrxId", TrxId);
+				map.put("code", 200);
+			}else{
+				map.put("ReturnChanpay", retu);
+				map.put("TrxId", TrxId);
+				map.put("code", 0);
+			}
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
