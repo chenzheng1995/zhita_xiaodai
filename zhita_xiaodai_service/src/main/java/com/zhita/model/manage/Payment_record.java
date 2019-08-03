@@ -49,8 +49,16 @@ public class Payment_record {
 	
 	private String paymentbtiao;
 	
+	private String thname;
 	
-	
+	public String getThname() {
+		return thname;
+	}
+
+	public void setThname(String thname) {
+		this.thname = thname;
+	}
+
 	public String getPaymentbtiao() {
 		return paymentbtiao;
 	}

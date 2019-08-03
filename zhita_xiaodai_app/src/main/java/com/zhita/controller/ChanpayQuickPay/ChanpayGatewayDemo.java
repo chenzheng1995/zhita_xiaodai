@@ -557,10 +557,10 @@ public class ChanpayGatewayDemo {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
 		// 2.1 鉴权绑卡  业务参数
-		String trxId = "201656796897";
+		String trxId = "201956796897";
 		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OriAuthTrxId", "1564713608264");// 原鉴权绑卡订单号
-		origMap.put("SmsCode", "868752");// 鉴权短信验证码
+		origMap.put("OriAuthTrxId", "1564804580716");// 原鉴权绑卡订单号
+		origMap.put("SmsCode", "807192");// 鉴权短信验证码
 		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -913,9 +913,9 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_sms(); //2.4 支付请求---API
-//		test.nmg_api_quick_payment_smsconfirm(); //2.5 支付确认---API
-//		test.nmg_zft_api_quick_payment(); //2.6 支付请求（直付通）
+		test.nmg_api_auth_unbind(); //2.4 支付请求---API
+//		test.nmg_biz_api_auth_req(); //2.5 支付确认---API
+//		test.nmg_api_auth_sms(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端
 //		test.nmg_nquick_onekeypay();  //2.8 支付请求---畅捷前端
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
