@@ -1,5 +1,6 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -92,9 +93,28 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateDefeOrders(Orders ord) {
+		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
+		Integer lifeOfLoan = stdao.SelectDefeDay(ord.getCompanyId());//获取延期天数
+		String beforeTime = stdao.SelectDefeBefore(ord.getId());
+		Date date = null;
+		try {
+			date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//取时间 
+	      Calendar calendar  =   Calendar.getInstance();		 
+		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+		    calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
+		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");  
+		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		    String afterTime = sdf1.format(date);//延期后应还时间
+			ord.setShouldReturnTime(afterTime);
+		
 		Integer num = stdao.SelectUserdelayTimes(ord);
 		Integer delaytimes = num+1;
 		ord.setChenggNum(delaytimes);
+		stdao.DefeOrder(ord);
 		return stdao.UpdateUser(ord);
 	}
 
