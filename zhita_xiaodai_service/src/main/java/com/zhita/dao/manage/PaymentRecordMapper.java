@@ -133,4 +133,10 @@ public interface PaymentRecordMapper {
     
     
     List<Offlinedelay> Allofflinedelay(Offlinedelay of);
+    
+    
+    Bankdeductions DefeRRe(Bankdeductions ban);
+    
+    
+    List<Bankdeductions> BankdeduCtionsData(Bankdeductions banl);
 }

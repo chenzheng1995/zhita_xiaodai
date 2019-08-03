@@ -26,7 +26,7 @@
 			
 			
 			<update id="UpdateStatu" parameterType="java.lang.Integer">
-				update bankcard set attestationStatus = "1" where id = #{id}
+				update bankcard set attestationStatus = "1" where userId = #{id}
 			</update>
 			
 			

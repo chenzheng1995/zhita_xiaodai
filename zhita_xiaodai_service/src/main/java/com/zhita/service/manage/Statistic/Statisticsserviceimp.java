@@ -50,7 +50,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			Bankdeductions ban = new Bankdeductions();
 			ban.setSys_userId(sys_userId);
 			ban.setDeductionproportion(deductionproportion);
-			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			ban.setDeduction_time(sim.format(new Date()));
 			String time = sim.format(new Date());
 			ban.setOrderId(orderId);

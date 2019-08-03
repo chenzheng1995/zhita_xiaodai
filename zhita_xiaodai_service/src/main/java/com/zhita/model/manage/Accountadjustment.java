@@ -25,7 +25,7 @@ public class Accountadjustment {
 	
 	private String phone;//手机号
 	
-	private String repaymentSource;//还款渠道
+	private Integer rename_id;//还款渠道
 	
 	private Integer overdueNumberOfDays;
 	
@@ -39,6 +39,16 @@ public class Accountadjustment {
 	
 	private Integer sys_uerId;
 	
+	private String thname;
+	
+	public String getThname() {
+		return thname;
+	}
+
+	public void setThname(String thname) {
+		this.thname = thname;
+	}
+
 	public String getAmou_time() {
 		return amou_time;
 	}
@@ -159,12 +169,13 @@ public class Accountadjustment {
 		this.phone = phone;
 	}
 
-	public String getRepaymentSource() {
-		return repaymentSource;
+
+	public Integer getRename_id() {
+		return rename_id;
 	}
 
-	public void setRepaymentSource(String repaymentSource) {
-		this.repaymentSource = repaymentSource;
+	public void setRename_id(Integer rename_id) {
+		this.rename_id = rename_id;
 	}
 
 	public String getStatu() {
