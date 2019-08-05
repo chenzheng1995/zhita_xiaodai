@@ -17,6 +17,57 @@ public class Offlinjianmian {
 	private String remarks;//备注
 	
 	private String sedn_time;
+	
+	private String account;
+	
+	private String orderNumber;
+	
+	private String name;
+	
+	private String phone;
+	
+	private String makeLoans;
+	
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getMakeLoans() {
+		return makeLoans;
+	}
+
+	public void setMakeLoans(String makeLoans) {
+		this.makeLoans = makeLoans;
+	}
 
 	public String getSedn_time() {
 		return sedn_time;
