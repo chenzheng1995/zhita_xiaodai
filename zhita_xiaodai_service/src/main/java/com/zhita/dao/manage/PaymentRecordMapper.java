@@ -75,7 +75,7 @@ public interface PaymentRecordMapper {
     Integer SelectUnderthTotalCount(Orderdetails order);
 
     
-    List<Undertheline> AllUnderthe(Orderdetails order);
+    List<Offlinetransfer> AllUnderthe(Orderdetails order);
     
     
     Integer BankDeduOrderNum(Bankdeductions bank);

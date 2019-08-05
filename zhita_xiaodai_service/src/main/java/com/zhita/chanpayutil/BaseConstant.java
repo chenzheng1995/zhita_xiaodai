@@ -33,18 +33,17 @@ public class BaseConstant {
 	/**
 	 * 畅捷支付平台公钥
 	 */
-	
 	//生产环境
 	public static final String MERCHANT_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDPq3oXX5aFeBQGf3Ag/86zNu0VICXmkof85r+DDL46w3vHcTnkEWVbp9DaDurcF7DMctzJngO0u9OG1cb4mn+Pn/uNC1fp7S4JH4xtwST6jFgHtXcTG9uewWFYWKw/8b3zf4fXyRuI/2ekeLSstftqnMQdenVP7XCxMuEnnmM1RwIDAQAB";//生产环境公钥
-	                                                
-	
+		                                                
+		
 	/**
 	 * 商户私钥
 	 */
-	
+		
 	//生产环境 测试商户号私钥
-	public static final String MERCHANT_PRIVATE_KEY= "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANB5cQ5pf+QHF9Z2+DjrAXstdxQHJDHyrni1PHijKVn5VHy/+ONiEUwSd5nx1d/W+mtYKxyc6HiN+5lgWSB5DFimyYCiOInh3tGQtN+pN/AtE0dhMh4J9NXad0XEetLPRgmZ795O/sZZTnA3yo54NBquT19ijYfrvi0JVf3BY9glAgMBAAECgYBFdSCox5eXlpFnn+2lsQ6mRoiVAKgbiBp/FwsVum7NjleK1L8MqyDOMpzsinlSgaKfXxnGB7UgbVW1TTeErS/iQ06zx3r4CNMDeIG1lYwiUUuguIDMedIJxzSNXfk65Bhps37lm129AE/VnIecpKxzelaUuzyGEoFWYGevwc/lQQJBAPO0mGUxOR/0eDzqsf7ehE+Iq9tEr+aztPVacrLsEBAwqOjUEYABvEasJiBVj4tECnbgGxXeZAwyQAJ5YmgseLUCQQDa/dgviW/4UMrY+cQnzXVSZewISKg/bv+nW1rsbnk+NNwdVBxR09j7ifxg9DnQNk1Edardpu3z7ipHDTC+z7exAkAM5llOue1JKLqYlt+3GvYr85MNNzSMZKTGe/QoTmCHStwV/uuyN+VMZF5cRcskVwSqyDAG10+6aYqD1wMDep8lAkBQBoVS0cmOF5AY/CTXWrht1PsNB+gbzic0dCjkz3YU6mIpgYwbxuu69/C3SWg7EyznQIyhFRhNlJH0hvhyMhvxAkEAuf7DNrgmOJjRPcmAXfkbaZUf+F4iK+szpggOZ9XvKAhJ+JGd+3894Y/05uYYRhECmSlPv55CBAPwd8VUsSb/1w==";
-	
+	public static final String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALmnE/9rQUoiSGubWg1B7nomyBMJ1xvLqAbiSa91dYAERUig2dG9xsSSjdvcPuN0ghoOCfPRp++NsjQ9YTzrp3Mla7DwNcWsr9Q3J5De9LKR2BaOs8GH6tlGMrNTZeciKASEYftH3B1a7lCmNUNzsQwB5stmZBQZUOs4oHPo4pTjAgMBAAECgYA5iW1qMHxolF1rdBchmrhlBRXmyJrxE1n84C7EARwsU6aBTtCS70Tl8SGj7QtUhOw5VPaCqQxp8rky9X7oWYRoZQHuub6jvvgmCBQXoBDeUaaO4JQ+7KDYP1OpR+e0s0D0fTzL2yujChkF5LyngF2tdwi2272foAaIQgqVLFo9MQJBAOPwNqane7bXiWCuyKgcEeIA8iKGNSXZqTiF+Yf1cW/CaudXdVyV1kFdnlEqAws9fwOEbtSmr2qhdgEUjMxHVQkCQQDQgix8oqAmxmUGqwAMSfIKCUY8xc+ghd1UxmrsnPtpzVjNG/QKaa4D0pC1Li/YmX2u9tAd+oFpTF/LqH+iN2GLAkA20D1UNlJ51bsjlOSMCLQENVYFF2EQiRc4kH9BQrTUu1wZ5d5DNYUgkvLPcdrpiRBSODauzKbCbbGC8P4q4byBAkEApFrnzDq4eLgL7EygVg93nVegKMlYF1VNmMRqhiZbuxNlexActpSE2XiCHn7QsjCTNHZSqD7NAX51SGiCaxCybwJBALZSXAWzQxinkGJXYvTyvktanGqAkHzn1pSf+XbGYtokryVANhuf+YTMm/lYedq8w9um8byZhGl53ph33xn+U0Y=";
+		
 	
 	
 	/**

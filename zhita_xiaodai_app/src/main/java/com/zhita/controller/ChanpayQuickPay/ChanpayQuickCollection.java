@@ -1295,7 +1295,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
 		
-		test.nmg_api_auth_unbind("621483", "4138", "21");
+		test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询
 //		test.nmg_api_refund_trade_file(); //2.12 退款对账单

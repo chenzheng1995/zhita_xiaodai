@@ -31,10 +31,10 @@
 			    AND o.orderStatus = "1"
 				AND o.companyId = #{companyId}
 				<if test="name != '' and name != null">
-					AND u.name like CONCAT('%',#{name}),'%') 
+					AND u.name like CONCAT('%',#{name},'%') 
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone like CONCAT(CONCAT('%',#{phone}),'%') 
+					AND u.phone like CONCAT(CONCAT('%',#{phone},'%') 
 				</if>
 				<if test="id != null and id != ''">
 					AND o.id = #{id}
@@ -47,7 +47,7 @@
 		
 		
 		<select id="DefeSet" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Deferred">
-			select defe.deferBeforeReturntime,defe.interestOnArrears,deset.onceDeferredDay,defe.deferAfterReturntime from 
+			select MAX(defe.id),defe.deferBeforeReturntime,defe.interestOnArrears,deset.onceDeferredDay,defe.deferAfterReturntime from 
 			deferred defe,deferred_settings deset,orders o where o.companyId = deset.companyId and o.id = defe.orderid
 			and o.id = #{orderId}
 		</select>
@@ -253,6 +253,7 @@
 			 left join user u on u.id = o.userId
 			 left join deferred defe on defe.orderId = o.id
 			<where>
+				AND orderStatus = "1"
 				<if test="name != null and name != ''">
 					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
@@ -262,14 +263,9 @@
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')    
 				</if>
-				<if test="collectionMemberId != null and collectionMemberId != ''">
-					AND col.collectionMemberId = #{collectionMemberId}
-				</if>
+				AND col.collectionMemberId = #{collectionMemberId}
 				AND o.companyId = #{companyId} 
-				AND col.orderId not in 
-				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
-					#{orderid}
-				</foreach>
+				AND col.collectionStatus =""
 			</where>
 				group by o.id
 				limit #{page},#{pagesize}
@@ -304,7 +300,8 @@
 		
 		
 		<select id="AllCountNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
-			SELECT COUNT(c.collectionId) from collection c,collection_member com where c.collectionMemberId = com.collectionMemberId and com.companyId = #{companyId}
+			SELECT COUNT(c.collectionId) from collection c,collection_member com where c.collectionMemberId = com.collectionMemberId 
+			and com.companyId = #{companyId} and c.collectionMemberId = #{collectionMemberId}
 		</select>
 		
 		

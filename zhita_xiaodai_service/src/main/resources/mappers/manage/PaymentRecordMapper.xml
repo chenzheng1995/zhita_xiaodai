@@ -412,7 +412,7 @@
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
 					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
-						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
+						AND a.amou_time between #{accounttimestart_time} and #{accounttimeent_time}
 					</if>
 					<if test="name != null and name != ''">
 						AND u.name LIKE concat('%',#{name},'%') 
@@ -459,7 +459,7 @@
 						AND re.id = #{rename_id}
 					</if>
 					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
-						AND a.accounttime between #{accounttimestart_time} and #{accounttimeent_time}
+						AND a.amou_time between #{accounttimestart_time} and #{accounttimeent_time}
 					</if>
   				</where>
   				order by o.id desc
@@ -551,7 +551,7 @@
   			
   			<insert id="AddUndertheline" parameterType="com.zhita.model.manage.Offlinetransfer">
 	  			 INSERT INTO `offlinetransfer`(
-	  				 		orderId,
+	  				 		sys_userId,
 	  				 		projectname,
 	  				 		state,
 	  				 		channel,
@@ -561,7 +561,7 @@
 	  				 		offinetransfertime
 	  				 )
 	  				 VALUES
-	  				 (#{orderId},#{projectname},#{state},#{channel},#{number},#{money},#{remarks},#{offinetransfertime})
+	  				 (#{sys_userId},#{projectname},#{state},#{channel},#{number},#{money},#{remarks},#{offinetransfertime})
   			</insert>
   			
   			
@@ -582,12 +582,12 @@
   			
   			
   			<select id="AllUnderthe" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Offlinetransfer">
-  				select of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.thname,of.state
+  				select of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.name as thname,of.state
   				 from Offlinetransfer of,sys_user sy,repayment_setting th
   				<where>
   					th.id = of.channel
   					AND of.sys_userId = sy.userId
-  					AND o.companyId = #{companyId}
+  					AND sy.companyId = #{companyId}
   					<if test="number != null and number != ''">
   						AND of.number = #{number}
   					</if>
@@ -595,7 +595,6 @@
 						AND of.offinetransfertime between #{start_time} and #{end_time}
 					</if>
   				</where> 
-  				group by o.id
   				limit #{page},#{pagesize}
   			</select>
   			
@@ -869,16 +868,15 @@
   			
   			
   			<select id="Allofflinedelay" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
-  				select of.operating_time,sy.account,of.orderId,u.name,u.phone,ur.idcard_number,defe.deferAfterReturntime,ord.overdueNumberOfDays,of.extensionfee,
-  				of.remarks,of.delay_time
-  				from offlinedelay of,sys_user sy,user u,orders o,deferred defe,orderdetails ord,user_attestation ur
+  				select of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,of.extensionfee,of.remarks,
+				of.delay_time
+  				from offlinedelay of,orders o,orderdetails ord,user u,user_attestation usa,sys_user us
   				<where>
-  					of.orderId = o.id
-  					and o.userId = u.id
-  					and ur.userId = u.id
-  					and sy.userId =  of.sys_userId
-  					and o.id = ord.orderId
-  					and defe.orderId = of.orderId
+  					of.sys_userId = us.userId 
+  					AND u.id = o.userId 
+  					AND o.id = of.orderId 
+  					AND usa.userId = u.id
+					AND ord.orderId = o.id
   					and o.companyId = #{companyId}
   					<if test="orderId != null and orderId != ''">
   						and of.orderId = #{orderId}

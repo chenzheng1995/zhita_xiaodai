@@ -111,8 +111,8 @@
 			
 			
 			<select id="SelectBanl" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankcard">
-				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm from bankcard ban,bankcard_type baty 
-				where ban.bankcardTypeId = baty.id and baty.companyId = #{companyId} and ban.userId = #{userId}
+				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm from bankcard ban,bankcard_type baty,user u 
+				where ban.bankcardTypeId = baty.id and baty.companyId = #{companyId} and u.id = ban.userId and  ban.userId = #{userId}
 			</select>
 			
 			

@@ -179,14 +179,13 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		try {
-			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			ordetail.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
-			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
 			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
+			ordetail.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -277,9 +276,9 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
 		ordetail.setPage(pages.getPage());
 		ordetail.setIds(padao.Sys_userIds(ordetail.getCompanyId()));
-		List<Undertheline> under = padao.AllUnderthe(ordetail);
+		List<Offlinetransfer> under = padao.AllUnderthe(ordetail);
 		for (int i = 0; i < under.size(); i++) {
-			under.get(i).setUnderthe_time(Timestamps.stampToDate(under.get(i).getUnderthe_time()));
+			under.get(i).setOffinetransfertime(Timestamps.stampToDate(under.get(i).getOffinetransfertime()));
 		}
 		map.put("Undertheline", under);
 		return map;
