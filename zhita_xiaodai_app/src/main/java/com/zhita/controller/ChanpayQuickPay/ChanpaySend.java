@@ -144,11 +144,16 @@ public class ChanpaySend extends BaseParameter{
 	 * @param OriOutTradeNo
 	 * @param BeginDate
 	 * @param EndDate
+	 * orderNumber  订单编号
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("Mingxi")
-	public Map<String, Object> SendMing(String orderNumber,String BeginDate,String EndDate,int lifeOfLoan,String sourceName,String registeClient,Integer HowManyTimesBorMoney,
+	public Map<String, Object> SendMing(String orderNumber,int lifeOfLoan,String sourceName,String registeClient,
 			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,
 			BigDecimal shouldTotalAmount) {
 		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
@@ -180,18 +185,21 @@ public class ChanpaySend extends BaseParameter{
 		String staring = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
 				BaseConstant.MERCHANT_PRIVATE_KEY);
 		System.out.println("返回:"+staring);
+		System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
 		Jiaoyi sreturn = JSON.parseObject(staring,Jiaoyi.class);
+		System.out.println("111111");
 		pay.setPipelinenumber(orderNumber);
 		pay.setDeleted("0");
 		pay.setPaymentmoney(finalLine);
-		String code = sreturn.getAppRetMsg();
 		String statu = sreturn.getAcceptStatus();
-		if(code.equals("S")){
+		System.out.println("222");
+		if(statu.equals("S")){
+			System.out.println("支付成功");
 			pay.setStatus("支付成功");
 			pay.setPipelinenumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){
-				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+HowManyTimesBorMoney+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
+				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
 				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 		    	if(num==1) {
 		    		int orderId = intOrderService.getOrderId(orderNumber);
@@ -204,13 +212,14 @@ public class ChanpaySend extends BaseParameter{
 			    		map1.put("code", 200);
 			    		map1.put("msg","插入成功");
 			    	}else {
-						map1.put("code",405);
+						map1.put("code",405); 
 						map1.put("msg", "插入失败");
 					}
 		    	}
 			}
 			
-		}else if(code.equals("F") && statu.equals("交易失败")){
+		}else{
+			System.out.println("支付失败");
 			pay.setStatus("支付失败");
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", sreturn);

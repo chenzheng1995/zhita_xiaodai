@@ -394,22 +394,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-		}else if(){
-			
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		
-		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
-			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
-			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
-			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
-			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
-			order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
-			order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
 		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -466,7 +459,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
+		
 		
 		
 		
@@ -496,17 +497,34 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		try{
-			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
-			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
-			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
-			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
-			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
-			order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
-			order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
-		}catch(Exception e){
-			
+		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		Integer totalCount = postloanorder.HuaiZhangOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);

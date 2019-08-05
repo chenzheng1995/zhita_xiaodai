@@ -582,7 +582,7 @@
   			
   			
   			<select id="AllUnderthe" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Offlinetransfer">
-  				select of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.name as thname,of.state
+  				select of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.name as thname,of.state,of.money
   				 from Offlinetransfer of,sys_user sy,repayment_setting th
   				<where>
   					th.id = of.channel
@@ -622,7 +622,7 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
-  				GROUP BY u.finance_id
+  				Group by u.fina_id
   				limit #{page},#{pagesize}
   			</select>
   			
@@ -631,16 +631,12 @@
   			
   			<select id="XiaTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
   				select count(u.id)
-  				 from Undertheline u left join sys_user sy on u.finance_id=sy.userId
+  				 from offlinjianmian u left join sys_user sy on u.fina_id=sy.userId
   				 left join orders o on u.orderId = o.id
   				 left join user ua on ua.id = o.userId
   				 left join orderdetails ord on o.id = ord.orderId 
   				<where>
   					AND o.companyId = #{companyId}
-  					AND u.finance_id = sy.userId
-  					AND o.id = u.orderId
-					AND o.id = ord.orderId
-					AND o.companyId = sy.companyId
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
   					</if>
@@ -651,10 +647,10 @@
   						AND ua.name LIKE concat('%',#{name},'%') 
   					</if>
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-						AND u.underthe_time between #{start_time} and #{end_time}
+						AND u.sedn_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
-  				GROUP BY u.finance_id
+  				GROUP BY u.fina_id
   			</select>
   			
   			

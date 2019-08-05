@@ -213,6 +213,16 @@ public class Orderdetails {
     
     private String number;
     
+    private String registeClient;
+    
+	public String getRegisteClient() {
+		return registeClient;
+	}
+
+	public void setRegisteClient(String registeClient) {
+		this.registeClient = registeClient;
+	}
+
 	public String getNumber() {
 		return number;
 	}
