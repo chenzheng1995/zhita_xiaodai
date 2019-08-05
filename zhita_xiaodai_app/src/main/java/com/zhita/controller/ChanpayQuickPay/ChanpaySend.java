@@ -186,7 +186,7 @@ public class ChanpaySend extends BaseParameter{
 		pay.setPaymentmoney(finalLine);
 		String code = sreturn.getAppRetMsg();
 		String statu = sreturn.getAcceptStatus();
-		if(code.equals("S") && statu.equals("交易成功")){
+		if(code.equals("S")){
 			pay.setStatus("支付成功");
 			pay.setPipelinenumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
@@ -215,9 +215,6 @@ public class ChanpaySend extends BaseParameter{
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", sreturn);
 			map1.put("code", 0);
-		}else{
-			map1.put("ShortReturn", sreturn);
-			map1.put("code", 405);
 		}
 		return map1;
 	}
