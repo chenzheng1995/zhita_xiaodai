@@ -87,5 +87,9 @@ public interface SourceMapper {
 	
 	//后台管理---渠道统计模块——申请人数字段
 	int queryNum(Integer companyId,Integer sourceid,String starttime,String endtime);
+
+	List<String> getstateAndDeleted(@Param("companyId")int companyId,@Param("sourceName") String sourceName);
+
+	List<String> getDeleted(@Param("companyId")int companyId,@Param("sourceName") String sourceName);
     
 }

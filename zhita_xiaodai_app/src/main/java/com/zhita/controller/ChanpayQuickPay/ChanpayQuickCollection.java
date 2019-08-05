@@ -1153,9 +1153,7 @@ public class ChanpayQuickCollection {
 		defe.setDeferBeforeReturntime(deferBeforeReturntime);
 		defe.setPostponeDate(postponeDate);
 		defe.setDeferAfterReturntime(deferAfterReturntime);
-		
-		
-		
+
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 		origMap.put("OrdrName", OrdrName);// 商品名称
 		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）

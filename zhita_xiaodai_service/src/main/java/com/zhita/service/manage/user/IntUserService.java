@@ -34,5 +34,7 @@ public interface IntUserService {
 
 	public void updateshareOfState(int userId, String shareOfState);
 
+	public void setuser(int userId, String timStamp, String applynumber);
+
 
 }

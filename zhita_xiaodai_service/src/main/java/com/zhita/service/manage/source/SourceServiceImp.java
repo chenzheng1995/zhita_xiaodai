@@ -469,4 +469,16 @@ public class SourceServiceImp implements IntSourceService{
 		int count=sourceMapper.queryorderpass(sourceid, starttime, endtime);
 		return count;
 	}
+
+	@Override
+	public List<String> getstateAndDeleted(int companyId, String sourceName) {
+		List<String> list = sourceMapper.getstateAndDeleted(companyId,sourceName);
+		return list;
+	}
+
+	@Override
+	public List<String> getDeleted(int companyId, String sourceName) {
+		List<String> list1 = sourceMapper.getDeleted(companyId,sourceName);
+		return list1;
+	}
 }

@@ -120,4 +120,6 @@ public interface UserMapper {
 
 	void updateshareOfState(@Param("userId")int userId,@Param("shareOfState") String shareOfState);
 
+	void setuser(@Param("userId")int userId,@Param("timStamp") String timStamp,@Param("applynumber") String applynumber);
+
 }

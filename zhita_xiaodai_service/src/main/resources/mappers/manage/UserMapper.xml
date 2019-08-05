@@ -542,4 +542,10 @@
   	update user set shareOfState=#{shareOfState} where id = #{userId}
   </update>
 
+
+  <update id="setuser" parameterType="java.util.Map"> 
+  	update user set applynumber=#{applynumber},applytime=#{timStamp} where id = #{userId}
+  </update>
+
+
 </mapper>
