@@ -98,7 +98,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 		String beforeTime = stdao.SelectDefeBefore(ord.getId());
 		Date date = null;
 		try {
-			date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);
+			date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeTime);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,7 +106,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 	      Calendar calendar  =   Calendar.getInstance();		 
 		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
 		    calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
-		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");  
+		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		    String afterTime = sdf1.format(date);//延期后应还时间
 		Integer num = stdao.SelectUserdelayTimes(ord);
