@@ -109,10 +109,13 @@ public class Chanpayserviceimp implements Chanpayservice{
 		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");  
 		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		    String afterTime = sdf1.format(date);//延期后应还时间
-			ord.setShouldReturnTime(afterTime);
-		
 		Integer num = stdao.SelectUserdelayTimes(ord);
 		Integer delaytimes = num+1;
+		try {
+			ord.setShouldReturnTime(Timestamps.dateToStamp1(afterTime));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		ord.setChenggNum(delaytimes);
 		stdao.DefeOrder(ord);
 		return stdao.UpdateUser(ord);
