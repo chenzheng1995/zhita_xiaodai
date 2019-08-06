@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
@@ -45,11 +46,14 @@ public interface UserMapper {
 	//后台管理---添加黑名单(修改当前用户的黑名单状态)
 	int upaBlacklistStatus(Integer userid);
 	
+	//后台管理---通过用户id查询该用户姓名，手机号，身份证号
+	BlacklistUser queryByUserid(Integer userid);
+	
 	//后台管理---解除黑名单(修改当前用户的黑名单状态)
 	int upaBlacklistStatus1(Integer userid);
 	
 	//后台管理---添加黑名单（将当前用户存进黑名单里）
-	int addBlacklist(Integer companyId,Integer userId,Integer operator,String operationTime);
+	int addBlacklist(Integer companyId,Integer userId,Integer operator,String operationTime,String blackType);
 	
 	//后台管理---解除黑名单（修改当前用在户黑名单表里的假删除状态）
 	int upaBlacklist(Integer userId);

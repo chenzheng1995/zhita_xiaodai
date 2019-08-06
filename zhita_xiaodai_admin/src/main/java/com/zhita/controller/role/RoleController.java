@@ -87,4 +87,12 @@ public class RoleController {
 		int num=intRoleService.updateStatus(id, status);
 		return num;
 	}
+	
+	//admin-----角色——修改假删除状态
+	@ResponseBody
+	@RequestMapping("/upaFalseDel")
+    public int upaFalseDel(Integer roleid){
+    	int num=intRoleService.upaFalseDel(roleid);
+    	return num;
+    }
 }

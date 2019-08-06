@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.Company;
-import com.zhita.model.manage.FaceRecognition;
 import com.zhita.model.manage.Role;
 import com.zhita.model.manage.SysUser;
 
@@ -55,6 +54,9 @@ public interface SysUserMapper {
  /*   //admin-----登录——查询该用户   账号是否存在
     SysUser queryByAccount(String account);*/
     
+    //admin---系统用户——修改假删除状态
+    int upaFalseDel(Integer id);
+    
     //admin----登录——查询该用户   账号密码是否正确
     SysUser queryByAccountAndPwd(String account,String pwd);
     
@@ -81,6 +83,8 @@ public interface SysUserMapper {
     
     //admin---登录——退出登录
     int updateLoginStatus(Integer userId);
+    
+   
     
 
 }

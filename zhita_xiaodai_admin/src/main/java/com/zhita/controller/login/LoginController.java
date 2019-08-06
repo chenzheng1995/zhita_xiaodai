@@ -1,6 +1,7 @@
 package com.zhita.controller.login;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +55,7 @@ public class LoginController {
 				String loginstatus="1";
 				String logintime = System.currentTimeMillis()+"";  //获取当前时间戳
 				int num=intLoginService.updateByAccountAndPwd(loginstatus, logintime, account, pwd);
+				List<Integer> list1=intLoginService.queryFunctionsByAccountAndPwd(account, pwd);//查询当前用户所拥有的权限
 				if(num==1){
 					map.put("msg", "用户登录成功,登录状态修改成功");
 					request.getSession().setAttribute("userid", sysUser.getUserid());
@@ -64,6 +66,7 @@ public class LoginController {
 					map.put("userid", sysUser.getUserid());
 					map.put("account", sysUser.getAccount());
 					map.put("companyid", sysUser.getCompanyid());
+					map.put("functionIdList", list1);//当前登录用户所拥有的的所有权限
 					
 				}else{
 					map.put("msg", "用户登录失败，登录状态修改失败");

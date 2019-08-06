@@ -29,11 +29,11 @@
 	</select>
 	<!-- 后台管理       今日回款笔数  （线下回款）-->
 	<select id="queryToDayRepaymentoff" resultType="java.lang.Integer">
-		select count(off.id) from offlinetransfer off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} and off.offinetransfertime>=#{arg1} and off.offinetransfertime &lt;#{arg2}
+		select count(off.id) from offlinjianmian off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} and off.sedn_time>=#{arg1} and off.sedn_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理       今日回款笔数  （银行卡回款）-->
 	<select id="queryToDayRepaymentbank" resultType="java.lang.Integer">
-		select count(b.id) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deductions_time>=#{arg1} and b.deductions_time &lt;#{arg2}
+		select count(b.id) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理      今日逾期已还笔数 -->
 	<select id="queryToDayOverdue" resultType="com.zhita.model.manage.Orders">
@@ -57,11 +57,11 @@
 	</select>
 	<!-- 后台管理    今日回款总金额（减免后已还总金额）（线下） -->
 	<select id="queryToDayDefferoff" resultType="java.math.BigDecimal">
-		select sum(off.money) from offlinetransfer off inner join orders o on off.orderid=o.id where o.companyid=#{arg0} and off.offinetransfertime>=#{arg1} and off.offinetransfertime &lt;#{arg2}
+		select sum(off.offusermoney) from offlinjianmian off inner join orders o on off.orderid=o.id where o.companyid=#{arg0} and off.sedn_time>=#{arg1} and off.sedn_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理         今日回款总金额（银行扣款金额） -->
 	<select id="queryToDayBank" resultType="java.math.BigDecimal">
-		select sum(b.deductions_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0} and b.deductions_time>=#{arg1} and b.deductions_time &lt;#{arg2}
+		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
 	</select>
 	<!--后台管理     今日逾期已还金额     （用户实还金额）-->
 	<select id="queryToDayOverueTotalmoney" resultType="java.math.BigDecimal">
@@ -73,7 +73,7 @@
 	</select>
 	<!--后台管理     今日逾期已还金额     （线下减免已还）-->
 	<select id="queryToDayOverueTotalmoneyoff" resultType="java.math.BigDecimal">
-		select sum(off.money) from offlinetransfer off inner join orders o on off.orderid=o.id where o.companyId=#{companyId} and off.offinetransfertime>=#{startTime} and off.offinetransfertime &lt;#{endTime} and o.shouldReturnTime &lt;#{startTime}
+		select sum(off.offusermoney) from offlinjianmian off inner join orders o on off.orderid=o.id where o.companyId=#{companyId} and off.sedn_time>=#{startTime} and off.sedn_time &lt;#{endTime} and o.shouldReturnTime &lt;#{startTime}
 	</select>
 	
 	<!-- ==============累计数据================== -->
@@ -97,7 +97,7 @@
 	
 	<!-- 后台管理      回款总笔数（线下减免已还清 笔数）-->
 	<select id="querySumRepaymentoff" resultType="java.lang.Integer">
-		select count(off.id) from  offlinetransfer off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} 
+		select count(off.id) from  offlinjianmian off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} 
 	</select>
 	
 	<!-- 后台管理     回款总笔数（ 银行卡已还清笔数） -->
@@ -127,11 +127,11 @@
 	</select>
 	<!-- 后台管理    累计回款总金额（减免后已还总金额）（线下） -->
 	<select id="querydeffermoneyoff" resultType="java.math.BigDecimal">
-		select sum(off.money) from offlinetransfer off inner join orders o on off.orderid=o.id where o.companyid=#{arg0}
+		select sum(off.offusermoney) from offlinjianmian off inner join orders o on off.orderid=o.id where o.companyid=#{arg0}
 	</select>
 	<!-- 后台管理       累计回款总金额（银行扣款金额） -->
 	<select id="querydeffermoneybank" resultType="java.math.BigDecimal">
-		select sum(b.deductions_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0}
+		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0}
 	</select>
 	<!--后台管理      累计应收总金额  -->
 	<select id="queryshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
@@ -227,11 +227,11 @@
 	</select>
 	<!-- 后台管理        减免金额（线下减免） -->
 	<select id="deratemoneyunder" resultType="java.math.BigDecimal">
-		select sum(off.money) from orders o inner join offlinetransfer off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(off.offusermoney) from orders o inner join offlinjianmian off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        银行扣款金额-->
 	<select id="bankMoney" resultType="java.math.BigDecimal">
-		select sum(b.deductions_money) from orders o inner join bankdeductions b on o.id=b.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(b.deduction_money) from orders o inner join bankdeductions b on o.id=b.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理          线上减免已还清订单 -->
 	<select id="derateaccon" resultType="java.lang.Integer">
@@ -239,7 +239,7 @@
 	</select>
 	<!-- 后台管理          线下减免已还清订单 -->
 	<select id="derateaccunder" resultType="java.lang.Integer">
-		select count(o.id) from orders o inner join offlinetransfer off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2} and orderStatus=0
+		select count(o.id) from orders o inner join offlinjianmian off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2} and orderStatus=0
 	</select>
 	<!-- 后台管理         银行扣款已还清订单-->
 	<select id="deratebank" resultType="java.lang.Integer">

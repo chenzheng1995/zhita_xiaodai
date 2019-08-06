@@ -25,7 +25,7 @@ public interface IntBlacklistuserService {
      public int updateByPrimaryKey(BlacklistUser record);
      
      //后台管理---更新假删除状态
-     public int upaFalseDel(Integer id);
+     public int upaFalseDel(Integer id,Integer userid);
      
      /**
       * 批量导入Excel

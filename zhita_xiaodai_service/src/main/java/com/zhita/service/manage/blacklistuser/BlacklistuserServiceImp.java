@@ -9,10 +9,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.dao.manage.BlacklistUserMapper;
 import com.zhita.dao.manage.SysUserMapper;
+import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Company;
 import com.zhita.util.ExcelUtils;
@@ -26,6 +28,8 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	private BlacklistUserMapper blacklistUserMapper;
 	@Autowired
 	private SysUserMapper syUserMapper;
+	@Autowired
+	private UserMapper userMapper;
 	
 	//后台管理---查询列表
     public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
@@ -67,6 +71,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     //后台管理---添加操作
     public int insert(BlacklistUser record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
+    	record.setBlackType("3");//黑名单类型（3：手工录入）
     	int num=blacklistUserMapper.insert(record);
     	return num;
     }
@@ -85,8 +90,10 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     }
     
     //后台管理---更新假删除状态
-    public int upaFalseDel(Integer id){
+    @Transactional
+    public int upaFalseDel(Integer id,Integer userid){
     	int num=blacklistUserMapper.upaFalseDel(id);
+    	userMapper.upaBlacklistStatus1(userid);
     	return num;
     }
     
@@ -143,6 +150,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	            vo.setIdcard(String.valueOf(lo.get(2)));
 	            vo.setOperator(operator);
 	            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
+	            vo.setBlackType("3");//黑名单类型（3：手工录入）
 	 
 	            if(j == null)
 	            {

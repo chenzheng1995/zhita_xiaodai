@@ -169,4 +169,10 @@ public class SysuserServiceImp implements IntSysuserService{
 		}
 		return num;
 	}
+	
+    //admin---系统用户——修改假删除状态
+    public int upaFalseDel(Integer id){
+    	int num=sysUserMapper.upaFalseDel(id);
+    	return num;
+    }
 }

@@ -113,13 +113,21 @@
   <select id="queryAll" resultType="com.zhita.model.manage.Role">
   	select 
   	<include refid="Base_Column_List" />
-  	from role 
+  	from role where deleted=0
   </select>
   <!-- admin   角色     模糊查询（角色状态） -->
   <select id="queryAllByLike" parameterType="java.lang.String" resultType="com.zhita.model.manage.Role">
   	select 
   	<include refid="Base_Column_List" />
-  	from role where status=#{arg0}
+  	from role where status=#{arg0} and deleted=0
+  </select>
+  <!-- admin      角色     修改假删除状态 -->
+  <update id="upaFalseDel" parameterType="java.lang.Integer">
+  	update role set deleted=1 where roleid=#{arg0}
+  </update>
+  <!-- admin     角色     通过角色id查询有哪些用户拥有该角色 -->
+  <select id="querysysid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select userid from sysuser_role where roleid=#{arg0}
   </select>
    <!-- admin   角色      查看权限功能（通过一级菜单查询二级菜单和三级菜单） -->
   <select id="queryFunctionByFirstmenuAndRoleid" resultType="com.zhita.model.manage.SecondFunction">
@@ -143,8 +151,12 @@
   <update id="upaStatusClose">
   	update role set status=2 where roleid=#{arg0}
   </update>
-  <!-- admin     角色——将该角色的所有权限删除 -->
+  <!-- admin     角色     将该角色的所有权限删除 -->
   <delete id="delfunction">
   	delete from role_function where roleid=#{arg0}
+  </delete>
+  <!--admin     角色       将拥有该角色的用户解除关系  -->
+  <delete id="delsysuser">
+  	delete from sysuser_role where roleid=#{arg0}
   </delete>
 </mapper>

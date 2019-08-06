@@ -44,7 +44,7 @@ public class BlacklistuserController {
     	return num;
     }
 	
-	//后台管理---根据id查询当前对象信息
+/*	//后台管理---根据id查询当前对象信息
 	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public BlacklistUser selectByPrimaryKey(Integer id){
@@ -58,13 +58,13 @@ public class BlacklistuserController {
     public int updateByPrimaryKey(BlacklistUser record){
     	int num=intBlacklistuserService.updateByPrimaryKey(record);
     	return num;
-    }
+    }*/
 	
 	//后台管理---更新假删除状态
 	@ResponseBody
 	@RequestMapping("/upaFalseDel")
-    public int upaFalseDel(Integer id){
-    	int num=intBlacklistuserService.upaFalseDel(id);
+    public int upaFalseDel(Integer id,Integer userid){
+    	int num=intBlacklistuserService.upaFalseDel(id,userid);
     	return num;
     }
 	

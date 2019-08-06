@@ -11,7 +11,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    b.id, b.companyId, b.name,b.phone, b.idcard, b.userId,su.account,b.operationtime,b.deleted
+    b.id, b.companyId, b.name,b.phone, b.idcard, b.userId,su.account,b.operationtime,b.deleted,b.blackType
   </sql>
   <!-- 后台管理       根据id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -27,10 +27,10 @@
   <!-- 后台管理    添加操作 -->
   <insert id="insert" parameterType="com.zhita.model.manage.BlacklistUser" >
     insert into blacklist_user (companyId, name, 
-      phone, idcard, userId,operator,operationtime)
+      phone, idcard, userId,operator,operationtime,blackType)
     values (#{companyid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{userid,jdbcType=INTEGER}, 
-      #{operator,jdbcType=VARCHAR},#{operationtime,jdbcType=VARCHAR})
+      #{operator,jdbcType=VARCHAR},#{operationtime,jdbcType=VARCHAR},#{blackType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.BlacklistUser" >
     insert into blacklist_user
@@ -130,6 +130,9 @@
         </if>
         <if test="idcard != null and idcard!='' ">
            and b.idcard like "%"#{idcard}"%"
+        </if>
+        <if test="blackType !=null and blackType!='' ">
+        	and b.blackType=#{blackType}
         </if>
   </select>
   <!-- 后台管理       更新假删除状态 -->
