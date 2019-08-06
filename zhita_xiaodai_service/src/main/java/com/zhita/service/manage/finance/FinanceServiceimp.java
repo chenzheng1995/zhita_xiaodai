@@ -47,22 +47,24 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
-//		try {
-//			System.out.println(payrecord.getStart_time()+"+++"+payrecord.getEnd_time());
-//			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
-//			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
-//			System.out.println(payrecord.getStart_time()+"++++"+payrecord.getEnd_time());
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
+		
+		
+		if(payrecord.getStart_time()!=null && payrecord.getStart_time()!="" && payrecord.getEnd_time()!=null && payrecord.getEnd_time()!=""){
+			try {
+				payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+				payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 		Integer totalCount = padao.TotalCountPayment(payrecord);
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("放款");
 		List<Payment_record> payments = padao.PaymentAll(payrecord);
-//		for(int i=0;i<payments.size();i++){
-//			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
-//		}
+		for(int i=0;i<payments.size();i++){
+			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("PaymentRecord", payments);
 		return map;

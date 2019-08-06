@@ -509,13 +509,13 @@ public class ChanpayGatewayDemo {
 		origMap.put("ExpiredTime", "90m");// 订单有效期
 		origMap.put("MerUserId", "21");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("BkAcctNo", this.encrypt("6217281722000276926", MERCHANT_PUBLIC_KEY, charset));// 卡号
 		//System.out.println(this.encrypt("621483011*******", MERCHANT_PUBLIC_KEY, charset));
 		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("IDNo", this.encrypt("441402199404121035", MERCHANT_PUBLIC_KEY, charset));// 证件号
 		//System.out.println(this.encrypt("13010*********", MERCHANT_PUBLIC_KEY, charset));
-		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("CstmrNm", this.encrypt("李真纯", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("15219990556", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 		//信用卡
 //		origMap.put("CardCvn2", "004");// cvv2码
 //		origMap.put("CardExprDt", "09/21");// 有效期
@@ -559,8 +559,8 @@ public class ChanpayGatewayDemo {
 		// 2.1 鉴权绑卡  业务参数
 		String trxId = "201956796897";
 		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OriAuthTrxId", "1564804580716");// 原鉴权绑卡订单号
-		origMap.put("SmsCode", "807192");// 鉴权短信验证码
+		origMap.put("OriAuthTrxId", "1565001976996");// 原鉴权绑卡订单号
+		origMap.put("SmsCode", "061296");// 鉴权短信验证码
 		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -583,16 +583,17 @@ public class ChanpayGatewayDemo {
 
 		//origMap.put("TrxId", "201703131045234230112");// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
-		origMap.put("MerUserId", "0000001");// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("SellerId", "200001160097");// 子账户号
-		origMap.put("SubMerchantNo", "");// 子商户号
+		origMap.put("MerUserId", "25");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("SellerId", "200005640044");// 子账户号
+		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-		origMap.put("CardBegin", "430000");// 卡号前6位
-		origMap.put("CardEnd", "7200");// 卡号后4位
-		origMap.put("TrxAmt", "0.01");// 交易金额
+		origMap.put("CardBegin", "622848");// 卡号前6位
+		origMap.put("CardEnd", "6971");// 卡号后4位
+		origMap.put("TrxAmt", "8.00");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
 		origMap.put("SmsFlag", "1");
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
+		System.out.println("订单号:"+trxId);
 	}
 
 	
@@ -611,8 +612,8 @@ public class ChanpayGatewayDemo {
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 订单号
 		//origMap.put("TrxId", "101149785980144593760");// 订单号
-		origMap.put("OriPayTrxId", "1501123506844");// 原有支付请求订单号
-		origMap.put("SmsCode", "695535");// 短信验证码
+		origMap.put("OriPayTrxId", "20190806094030911727479");// 原有支付请求订单号
+		origMap.put("SmsCode", "694689");// 短信验证码
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
 
@@ -913,7 +914,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_unbind(); //2.4 支付请求---API
+		test.nmg_api_quick_payment_smsconfirm(); //2.4 支付请求---API
 //		test.nmg_biz_api_auth_req(); //2.5 支付确认---API
 //		test.nmg_api_auth_sms(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

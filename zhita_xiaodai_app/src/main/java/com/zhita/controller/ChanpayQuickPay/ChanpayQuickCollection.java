@@ -657,8 +657,8 @@ public class ChanpayQuickCollection {
 	
 	
 	/**
-	 * 
-	 * 2.4 支付请求接口 api nmg_biz_api_quick_payment
+	 * 20190805201545678123132
+	 * 2.4 支付请求接口 api nmg_biz_api_quick_payment6217000360005556842
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_biz_api_quick_payment")
@@ -734,11 +734,10 @@ public class ChanpayQuickCollection {
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 		origMap.put("OriPayTrxId", OriPayTrxId);// 原有支付请求订单号
 		origMap.put("SmsCode", SmsCode);// 短信验证码
-		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
+//		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
@@ -1115,7 +1114,7 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_everyday_trade_file");// 请求的接口名称
 		// 2.11 日支付对账文件
-		origMap.put("TransDate", "20170710");// 交易日期
+		origMap.put("TransDate", "20190805");// 交易日期
 //		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		
 		Object obj = this.gatewayPosts(origMap, charset, MERCHANT_PRIVATE_KEY);
@@ -1212,13 +1211,10 @@ public class ChanpayQuickCollection {
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 		origMap.put("OriPayTrxId", OriPayTrxId);// 原有支付请求订单号
 		origMap.put("SmsCode", SmsCode);// 短信验证码
-		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-						urlStr);
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			Orders ord = new Orders();
 			ord.setOrderNumber(OriPayTrxId);
@@ -1292,8 +1288,8 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
-		
-		test.nmg_api_auth_unbind("621700", "6842", "17");
+		test.nmg_api_everyday_trade_file();
+	//	test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询
 //		test.nmg_api_refund_trade_file(); //2.12 退款对账单
