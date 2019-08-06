@@ -1,5 +1,7 @@
 package com.zhita.dao.manage;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.Xtest;
 
 public interface XtestMapper {
@@ -18,6 +20,8 @@ public interface XtestMapper {
 	int settest(String name);
 
 	String gettest(int id);
+
+	void updatetest(@Param("name")String name,@Param("date") String date);
 
 
 }

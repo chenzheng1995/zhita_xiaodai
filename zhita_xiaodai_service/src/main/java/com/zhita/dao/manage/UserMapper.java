@@ -122,4 +122,6 @@ public interface UserMapper {
 
 	void setuser(@Param("userId")int userId,@Param("timStamp") String timStamp,@Param("applynumber") String applynumber);
 
+	void updatename(@Param("name")String name,@Param("userId") int userId);
+
 }

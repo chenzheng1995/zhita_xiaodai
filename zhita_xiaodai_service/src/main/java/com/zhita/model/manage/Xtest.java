@@ -4,6 +4,8 @@ public class Xtest {
     private Integer id;
 
     private String name;
+    
+    private String updateTime;
 
     public Xtest(Integer id, String name) {
         this.id = id;
@@ -28,6 +30,14 @@ public class Xtest {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+    
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
     }
 
 	@Override

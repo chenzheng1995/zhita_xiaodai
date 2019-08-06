@@ -88,6 +88,8 @@ public interface IntSourceService {
 
 	public List<String> getDeleted(int companyId, String sourceName);
 
+	public int queryByLike1(String source, int companyId);
+
 
 
 }

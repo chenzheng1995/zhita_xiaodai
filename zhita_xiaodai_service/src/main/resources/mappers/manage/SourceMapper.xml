@@ -276,7 +276,7 @@
   
   
       <!-- 根据渠道名获取state-->
-    <select id="getstateAndDeleted" parameterType="java.lang.Integer" resultType="java.lang.String">
+    <select id="getstateAndDeleted" parameterType="java.util.Map" resultType="java.lang.String">
 		select status from source where companyId=#{companyId} and sourceName = #{sourceName}
 	</select>
 	
@@ -285,4 +285,9 @@
     <select id="getDeleted" parameterType="java.util.Map" resultType="java.lang.String">
   select deleted from source where companyId=#{companyId} and sourceName = #{sourceName}
  </select>
+ 
+     <select id="queryByLike1" parameterType="java.util.Map" resultType="java.lang.Integer">
+  select id from source where companyId=#{companyId} and sourceName = #{source}
+ </select>
+ 
 </mapper>

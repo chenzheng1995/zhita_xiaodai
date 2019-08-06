@@ -547,5 +547,7 @@
   	update user set applynumber=#{applynumber},applytime=#{timStamp} where id = #{userId}
   </update>
 
-
+  <update id="updatename" parameterType="java.util.Map"> 
+  	update user set name=#{name} where id = #{userId}
+  </update>
 </mapper>

@@ -6,4 +6,6 @@ public interface TestService {
 
 	String gettest(int id);
 
+	void updatetest(String string, String date);
+
 }

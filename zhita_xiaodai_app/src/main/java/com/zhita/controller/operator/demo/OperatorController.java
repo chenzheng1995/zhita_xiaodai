@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.zhita.model.manage.ManageControlSettings;
@@ -96,16 +97,32 @@ public class OperatorController {
         
     	H5ReportQueryDemo h5ReportQueryDemo = new H5ReportQueryDemo();
     	String url = h5ReportQueryDemo.getH5ReportQuery(userId,phone,name,idNumber,reqId,search_id);
-      	int  number = operatorService.updateOperatorJson(url,userId);
-         if (number == 1) {                  	
-             map.put("msg", "认证成功");
-             map.put("Code", "200");
-         } else {
-             map.put("msg", "认证成功失败");
-             map.put("Code", "401");
-         }
+    	JSONObject sampleObject = JSON.parseObject(url);
+    	String error = sampleObject.getString("error");
+		int  number = operatorService.updateOperatorJson(url,userId);
+		if(number==1) {
+			map.put("msg", "数据更新成功");
+		}else {
+			map.put("msg", "数据更新失败");
+		}
+    	if (error.equals("200")) {                 	
+                map.put("msg", "认证成功");
+                map.put("Code", "200");
+		}else {
+	    	if(error.equals("30000")) {
+	    		if(url.indexOf("205")!=-1) {
+	    			  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+	    	          map.put("Code", "300");
+	    		}
+	    	}else {
+	            map.put("msg", "认证失败");
+	            map.put("Code", "401");
+			}
 
-
+        }
+//		  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+//        map.put("Code", "300");	
+    	
 		return map;
     	
     }
@@ -301,7 +318,15 @@ public Map<String, Object> getshareOfState(int userId){
    	
    }
 
-
+public static void main(String[] args) {
+	String url = "205";
+	if(url.indexOf("205")!=-1) {
+		System.out.println("存在包含关系，因为返回的值不等于-1");
+	}else{
+		            
+		            System.out.println("不存在包含关系，因为返回的值等于-1");
+		        }
+}
     
     
     public static  int getAge(Date birthDay) throws Exception {

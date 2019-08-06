@@ -481,4 +481,10 @@ public class SourceServiceImp implements IntSourceService{
 		List<String> list1 = sourceMapper.getDeleted(companyId,sourceName);
 		return list1;
 	}
+
+	@Override
+	public int queryByLike1(String source, int companyId) {
+		int sourceId = sourceMapper.queryByLike1(source,companyId);
+		return sourceId;
+	}
 }
