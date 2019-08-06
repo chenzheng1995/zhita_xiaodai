@@ -121,8 +121,12 @@ public class Chanpayserviceimp implements Chanpayservice{
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			pay.setRemittanceTime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		pay.setOrderId(stdao.SelectOrderId(pay.getOrderNumber()));
-		pay.setRemittanceTime(sim.format(new Date()));
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
 		pay.setPaymentbtiao("畅捷支付");

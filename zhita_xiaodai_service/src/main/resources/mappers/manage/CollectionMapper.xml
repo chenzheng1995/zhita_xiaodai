@@ -34,7 +34,7 @@
 					AND u.name like CONCAT('%',#{name},'%') 
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone like CONCAT(CONCAT('%',#{phone},'%') 
+					AND u.phone like CONCAT('%',#{phone},'%') 
 				</if>
 				<if test="id != null and id != ''">
 					AND o.id = #{id}
@@ -82,7 +82,7 @@
 			<where>
 				    o.id = ord.orderId 
 				and col.orderId = o.id
-				AND o.companyId = #{companyId}
+				and o.companyId = #{companyId}
 				and u.id = o.userId 
 				and colme.collectionMemberId = col.collectionMemberId
 				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
@@ -119,6 +119,9 @@
 					AND col.collectionMemberId = #{collectionMemberId}
 				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND col.collectionTime between #{start_time} and #{end_time}
+				</if>
+				<if test="deferBeforeReturntime != null and deferBeforeReturntime != '' and deferAfterReturntime != null and deferAfterReturntime != ''">
 					AND col.collectionTime between #{start_time} and #{end_time}
 				</if>
 			</where>

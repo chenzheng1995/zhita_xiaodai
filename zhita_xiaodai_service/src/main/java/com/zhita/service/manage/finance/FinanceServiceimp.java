@@ -449,7 +449,12 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> AddOffJianmian(Offlinjianmian off) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		off.setSedn_time(sim.format(new Date()));
+		try {
+			off.setSedn_time(Timestamps.dateToStamp(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		Integer addId = padao.AddOffJianMian(off);
 		if(addId != null){
 			map.put("code", 200);

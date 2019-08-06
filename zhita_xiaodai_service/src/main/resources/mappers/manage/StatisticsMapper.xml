@@ -192,15 +192,16 @@
 			
 			
 			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankdeductions">
-				select ban.deduction_time,sy.account,ban.deductionproportion,sum(ban.id) as userNum
+				select ban.deduction_time,sy.account,ban.deductionproportion,count(ban.id) as userNum,ban.sys_userId
 				from sys_user sy,bankdeductions ban 
 				<where>
 				 ban.sys_userId = sy.userId 
-				 and companyId = #{companyId}
+				 and sy.companyId = #{companyId}
 				 <if test="statu_time != null and statu_time != '' and end_time != null and end_time != ''">
 				 	and ban.deduction_time between #{statu_time} and #{end_time}
 				 </if>
 				 </where>
+				 group by sy.userId
 				 limit #{page},#{pagesize}
 			</select>
 			

@@ -509,13 +509,13 @@ public class ChanpayGatewayDemo {
 		origMap.put("ExpiredTime", "90m");// 订单有效期
 		origMap.put("MerUserId", "21");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-		origMap.put("BkAcctNo", this.encrypt("6217281722000276926", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("BkAcctNo", this.encrypt("6217000360005556842", MERCHANT_PUBLIC_KEY, charset));// 卡号
 		//System.out.println(this.encrypt("621483011*******", MERCHANT_PUBLIC_KEY, charset));
 		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-		origMap.put("IDNo", this.encrypt("441402199404121035", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("IDNo", this.encrypt("142727199807191015", MERCHANT_PUBLIC_KEY, charset));// 证件号
 		//System.out.println(this.encrypt("13010*********", MERCHANT_PUBLIC_KEY, charset));
-		origMap.put("CstmrNm", this.encrypt("李真纯", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-		origMap.put("MobNo", this.encrypt("15219990556", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("CstmrNm", this.encrypt("刘晓云", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("18235980719", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 		//信用卡
 //		origMap.put("CardCvn2", "004");// cvv2码
 //		origMap.put("CardExprDt", "09/21");// 有效期
@@ -914,7 +914,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_quick_payment_smsconfirm(); //2.4 支付请求---API
+		test.nmg_api_auth_unbind(); //2.4 支付请求---API
 //		test.nmg_biz_api_auth_req(); //2.5 支付确认---API
 //		test.nmg_api_auth_sms(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端

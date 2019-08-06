@@ -137,6 +137,15 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Map<String, Object> AllBankdeduData(Bankcard ban) {
+		System.out.println();
+		if(ban.getStatu_time()!=null && ban.getStatu_time()!="" && ban.getEnd_time()!=null && ban.getEnd_time()!=""){
+			try {
+				ban.setStatu_time(Timestamps.dateToStamp1(ban.getStatu_time()));
+				ban.setEnd_time(Timestamps.dateToStamp1(ban.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = sdao.SelectTotalCount(ban);
 		PageUtil pages = new PageUtil(ban.getPage(), totalCount);
@@ -148,6 +157,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			bans.get(i).setShiNum(bans.get(i).getUserNum()-bans.get(i).getChengNum());//扣款失败用户数
 			bans.get(i).setDeduction_money(sdao.ChenggMoney(bans.get(i)));//扣款金额
 			bans.get(i).setChengMoney(sdao.SelectChengMoney(bans.get(i)));
+			bans.get(i).setDeduction_time(Timestamps.stampToDate(bans.get(i).getDeduction_time()));
 		}
 		map.put("Bankdeduction", bans);
 		map.put("pageutil", pages);
