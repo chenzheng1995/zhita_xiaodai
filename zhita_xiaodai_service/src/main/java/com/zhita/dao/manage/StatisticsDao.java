@@ -106,4 +106,6 @@ public interface StatisticsDao {
 	
 	
 	String SelectDefeBefore(Integer orderId);
+	
+	
 }

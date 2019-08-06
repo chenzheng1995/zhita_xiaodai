@@ -181,6 +181,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Integer SelectUserId(Integer userId) {
 		return stdao.SelectUserId(userId);
 	}
+
+	@Override
+	public Integer deleteBank(Integer userId) {
+		return stdao.DeleteChan(userId);
+	}
 	
 	
 	
