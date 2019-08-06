@@ -71,7 +71,7 @@ public interface UserMapper {
 
 	void updateScore(@Param("score")int score,@Param("userId") int userId,@Param("shareOfState") String shareOfState);
 
-	int getRiskControlPoints(int userId);
+	Integer getRiskControlPoints(int userId);
 
 
 	String getshareOfState(int userId);

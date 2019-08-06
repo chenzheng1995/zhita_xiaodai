@@ -15,6 +15,7 @@ import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collection_member;
+import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.util.PageUtil;
@@ -345,7 +346,7 @@ public class Collectionserviceimp implements Collectionservice{
 				// TODO: handle exception
 			}
 			col.setDeleted("0");
-			Integer addId = collmapp.AddCollectionAs(col);
+			Integer addId = collmapp.UpdateCollection(col);
 			if(addId != null){
 				map.put("code", 200);
 				map.put("desc", "设置成功");
@@ -424,6 +425,22 @@ public class Collectionserviceimp implements Collectionservice{
 		}else{
 			map.put("code", "0");
 			map.put("desc", "数据异常");
+		}
+		return map;
+	}
+
+
+
+	@Override
+	public Map<String, Object> AddCollOrders(Collectiondetails col) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer addId = collmapp.AddCollectiondet(col);
+		if(addId != null){
+			map.put("code", 200);
+			map.put("desc", "添加成功");
+		}else{
+			map.put("code", 0);
+			map.put("desc", "添加失败");
 		}
 		return map;
 	}

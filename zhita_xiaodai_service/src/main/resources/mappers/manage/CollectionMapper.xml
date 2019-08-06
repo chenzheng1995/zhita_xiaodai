@@ -247,7 +247,7 @@
 		
 		
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
-			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
+			select col.collectionId,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
 			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus
 			from collection col,orders o,orderdetails ord,collection_member colme,user u 
@@ -386,6 +386,7 @@
 				and o.id = col.orderId 
 				and col.collectionMemberId = colme.collectionMemberId
 				and col.deleted = "0"
+				and col.usertype is not null
 				<if test="name != null and name != ''">
 					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
@@ -491,5 +492,22 @@
 			update orders set orderStatus = "4" where id = #{orderId}
 		</update>
 		
+		
+		<update id="UpdateCollection" parameterType="com.zhita.model.manage.Collection">
+			update collection set usertype = #{usertype},promise_money = #{promise_money}, collectionStatus = #{collectionStatus} where collectionId = #{collectionId}
+		</update>
+		
+		
+		<insert id="AddCollOrders" parameterType="com.zhita.model.manage.Collectiondetails">
+			INSERT INTO `collectiondetails`(
+			collection_time,
+			user_type,
+			collectionmoney,
+			collectionMemberId,
+			orderId
+			)
+			VALUES
+			{#{collection_time},#{user_type},#{collectionmoney},#{collectionMemberId},#{orderId}}
+		</insert>
 		
 </mapper>

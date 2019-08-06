@@ -215,6 +215,16 @@ public class Orderdetails {
     
     private String registeClient;
     
+    private Integer collectionId;
+    
+	public Integer getCollectionId() {
+		return collectionId;
+	}
+
+	public void setCollectionId(Integer collectionId) {
+		this.collectionId = collectionId;
+	}
+
 	public String getRegisteClient() {
 		return registeClient;
 	}

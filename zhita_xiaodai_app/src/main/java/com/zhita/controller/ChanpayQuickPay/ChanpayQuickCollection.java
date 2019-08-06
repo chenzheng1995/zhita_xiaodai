@@ -717,7 +717,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_quick_payment_smsconfirm")
-	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber) {
+	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber,Integer userId) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
@@ -731,7 +731,7 @@ public class ChanpayQuickCollection {
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			String as = retu.getAcceptStatus();

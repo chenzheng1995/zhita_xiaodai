@@ -115,4 +115,10 @@ public interface CollectionMapper {
 	
 	
 	Integer AllCountNum(Collection coll);
+	
+	
+	Integer UpdateCollection(Collection col);
+	
+	
+	Integer AddCollectiondet(Collectiondetails coll);
 }

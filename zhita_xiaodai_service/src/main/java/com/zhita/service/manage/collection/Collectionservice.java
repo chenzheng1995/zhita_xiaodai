@@ -2,7 +2,9 @@ package com.zhita.service.manage.collection;
 
 
 import java.util.Map;
+
 import com.zhita.model.manage.Collection;
+import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Orderdetails;
 
 public interface Collectionservice {
@@ -36,6 +38,9 @@ public interface Collectionservice {
 
 	
 	Map<String, Object> JieShuCollection(Integer orderId);
+	
+	
+	Map<String, Object> AddCollOrders(Collectiondetails col);
 	
 	
 	Map<String, Object> allBeoverdueConnection(Collection col);

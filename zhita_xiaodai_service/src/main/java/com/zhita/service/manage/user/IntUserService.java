@@ -26,7 +26,7 @@ public interface IntUserService {
 
 	public void updateScore(int score, int userId, String shareOfState);
 
-	public int getRiskControlPoints(int userId);
+	public Integer getRiskControlPoints(int userId);
 
 	public String getshareOfState(int userId);
 

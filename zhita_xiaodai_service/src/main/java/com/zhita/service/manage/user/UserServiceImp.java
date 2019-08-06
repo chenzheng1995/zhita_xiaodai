@@ -245,8 +245,8 @@ public class UserServiceImp implements IntUserService{
 	}
 
 	@Override
-	public int getRiskControlPoints(int userId) {
-		 int riskControlPoints = userMapper.getRiskControlPoints(userId);
+	public Integer getRiskControlPoints(int userId) {
+		 Integer riskControlPoints = userMapper.getRiskControlPoints(userId);
 		return riskControlPoints;
 	}
 
