@@ -74,4 +74,12 @@ public class SysuserController {
 		int num=intSysuserService.updateByPrimaryKey(record);
 		return num;
 	}
+	
+	//admin---系统用户——修改假删除状态
+	@ResponseBody
+	@RequestMapping("/upaFalseDel")
+    public int upaFalseDel(Integer id){
+    	int num=intSysuserService.upaFalseDel(id);
+    	return num;
+    }
 }

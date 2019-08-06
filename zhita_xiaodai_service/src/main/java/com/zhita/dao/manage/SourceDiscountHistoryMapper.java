@@ -21,7 +21,7 @@ public interface SourceDiscountHistoryMapper {
     int updateByPrimaryKey(TongjiSorce record);
     
     //后台管理  ----- 查询当前渠道在历史表的时间
-    List<String> queryDate(String sourceName);
+    List<String> queryDate(Integer sourceName);
     
     //后台管理----通过渠道名字查询当前渠道在历史表的信息
     List<TongjiSorce> queryAllBySourceName(String sourceName);

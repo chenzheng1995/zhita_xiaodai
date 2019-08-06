@@ -29,6 +29,7 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     
     //后台管理---添加功能
     public int insert(HomepageViewpager record) {
+    	record.setUpdatetime(System.currentTimeMillis()+"");//获取当前时间戳
 	     return homepageViewpagerMapper.insert(record);
     }
     

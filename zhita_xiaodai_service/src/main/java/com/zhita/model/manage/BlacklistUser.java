@@ -19,6 +19,8 @@ public class BlacklistUser {
     private String account;//操作人
     
     private String operationtime;//操作时间
+    
+    private String blackType;//黑名单类型（1：逾期自动判定；2：重复用户；3：手工录入；4：第三方黑名单；）'
 
     private String deleted;//假删除（1：删除；0：没删除）
 
@@ -70,14 +72,6 @@ public class BlacklistUser {
 		this.userid = userid;
 	}
 
-	public String getAccount() {
-		return account;
-	}
-
-	public void setAccount(String account) {
-		this.account = account;
-	}
-
 	public Integer getOperator() {
 		return operator;
 	}
@@ -86,12 +80,28 @@ public class BlacklistUser {
 		this.operator = operator;
 	}
 
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
 	public String getOperationtime() {
 		return operationtime;
 	}
 
 	public void setOperationtime(String operationtime) {
 		this.operationtime = operationtime;
+	}
+
+	public String getBlackType() {
+		return blackType;
+	}
+
+	public void setBlackType(String blackType) {
+		this.blackType = blackType;
 	}
 
 	public String getDeleted() {

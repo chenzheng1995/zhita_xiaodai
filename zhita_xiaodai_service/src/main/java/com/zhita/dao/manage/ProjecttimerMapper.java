@@ -48,4 +48,7 @@ public interface ProjecttimerMapper{
 	//后台管理---查询黑名单分界线的值
 	int queryblackline();
 	
+	//后台管理---添加黑名单（将当前用户存进黑名单里）
+	int addBlacklist(Integer companyId,Integer userId,String blackType);
+	
 }

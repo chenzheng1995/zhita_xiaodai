@@ -30,4 +30,8 @@ public interface IntRoleService {
     
     //admin----角色——修改状态
     public int updateStatus(Integer id,String status);
+    
+    //admin-----角色——修改假删除状态
+    public int upaFalseDel(Integer roleid);
+    
 }

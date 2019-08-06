@@ -12,17 +12,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zhita.dao.manage.BlacklistUserMapper;
 import com.zhita.dao.manage.ProjecttimerMapper;
+import com.zhita.dao.manage.UserMapper;
+import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.OverdueClass;
 import com.zhita.model.manage.OverdueSettings;
 import com.zhita.util.DateListUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 
 @Service
 public class ProjecttimerServiceImp implements IntProjecttimerService{
 	@Autowired
 	private ProjecttimerMapper projecttimerMapper;
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private BlacklistUserMapper blacklistUserMapper;
 	
 	//后台管理----查询订单表     所有逾期中的订单(定时任务     控制逾期)
 	@Transactional
@@ -85,6 +93,7 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 	
 	//后台管理----控制逾期超过30天，打入黑名单（定时任务）
 	public void addblack(){
+		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
 		Integer companyId = 3;
 		List<Orders> list = projecttimerMapper.queryAlloverdue(companyId);
 		int blackline=projecttimerMapper.queryblackline();//黑名单分界线值
@@ -92,6 +101,16 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 			Integer overdueNumberOfDays = Integer.parseInt(list.get(i).getOverdueNumberOfDays());//逾期天数
 			if(overdueNumberOfDays>=blackline){
 				projecttimerMapper.upaBlacklistStatus(list.get(i).getUserId());//添加黑名单(修改当前用户的黑名单状态)
+				String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
+				String blackType="1";//黑名单类型（1：逾期自动判定）
+				BlacklistUser blacklistUser=userMapper.queryByUserid(list.get(i).getUserId());
+				blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
+				blacklistUser.setCompanyid(companyId);
+				blacklistUser.setOperationtime(operationTime);
+				blacklistUser.setBlackType(blackType);
+				blacklistUser.setUserid(list.get(i).getUserId());
+				blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+				//projecttimerMapper.addBlacklist(companyId, list.get(i).getUserId(), blackType);
 			}
 		}
 	}

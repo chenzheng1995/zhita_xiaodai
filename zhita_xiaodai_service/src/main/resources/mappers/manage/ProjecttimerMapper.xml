@@ -43,4 +43,9 @@
 	<select id="queryblackline" resultType="java.lang.Integer">
 		select demarcationline from black_demarcation_line
 	</select>
+	
+	<!--后台管理      添加黑名单（将当前用户存进黑名单里）  -->
+	<insert id="addBlacklist">
+		insert into blacklist_user(companyId,userId,blackType) values(#{arg0},#{arg1},#{arg2})
+	</insert>
 </mapper>

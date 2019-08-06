@@ -34,10 +34,10 @@
     u.applynumber,u.applytime,u.operator,u.operationTime,s.sourcename,mcs.rmModleName,su.account
   </sql>
    <sql id="Base_Column_List1">
-    u.phone,ut.id, ut.userId, ut.trueName, ut.idcard_number,ut.homeAddressLongitude, 
+    u.phone,ut.id, ut.userId, ut.trueName, ut.idcard_number idcardNumber,ut.homeAddressLongitude, 
     ut.homeAddressLatitude, ut.detailAddress, ut.headUrl, ut.nationalEmblemUrl, ut.linkmanOneRelation, 
     ut.linkmanOneName, ut.linkmanOnePhone, ut.linkmanTwoRelation, ut.linkmanTwoName, ut.linkmanTwoPhone, 
-    ut.faceBizToken, ut.idCardBizToken, ut.sign, ut.gender, ut.nationality, ut.birth_year, ut.birth_month, 
+    ut.faceBizToken, ut.idCardBizToken, ut.sign, ut.gender, ut.nationality, ut.birth_year birthYear, ut.birth_month, 
     ut.birth_day, ut.address, ut.issued_by,ut.valid_date_start, ut.valid_date_end
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -319,13 +319,16 @@
 	</update>
 	<!--后台管理      添加黑名单（将当前用户存进黑名单里）  -->
 	<insert id="addBlacklist">
-		insert into blacklist_user(companyId,userId,operator,operationTime) values(#{arg0},#{arg1},#{arg2},#{arg3})
+		insert into blacklist_user(companyId,userId,operator,operationTime,blackType) values(#{arg0},#{arg1},#{arg2},#{arg3},#{arg4})
 	</insert>
 	<!-- 后台管理      解除黑名单（修改当前用在户黑名单表里的假删除状态） -->
 	<update id="upaBlacklist" parameterType="java.lang.Integer">
 		update blacklist_user set deleted=1 where userid=#{arg0}
 	</update>
-	
+	<!--后台管理       通过用户id查询该用户姓名，手机号，身份证号  -->
+	<select id="queryByUserid" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BlacklistUser">
+		select u.name,u.phone,uat.idcard_number from user u left join user_attestation uat on u.id=uat.userid where u.id=#{arg0}
+	</select>
 	
 			<!--APP 修改密码-->
 	<update id="updatePwd" parameterType="java.util.Map" >

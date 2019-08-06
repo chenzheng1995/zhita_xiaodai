@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.RoleMapper;
+import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.Functions;
 import com.zhita.model.manage.Role;
 import com.zhita.util.ListPageUtil;
@@ -20,6 +21,8 @@ import com.zhita.util.PageUtil2;
 public class RoleServiceImp implements IntRoleService{
 	@Autowired
 	private RoleMapper roleMapper;
+	@Autowired
+	private SysUserMapper sysUserMapper;
 	
 	//admin------角色——列表展示
 	@Override
@@ -31,7 +34,7 @@ public class RoleServiceImp implements IntRoleService{
 		list=roleMapper.queryAll();
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
@@ -53,7 +56,7 @@ public class RoleServiceImp implements IntRoleService{
 		list=roleMapper.queryAllByLike(status);
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
@@ -263,13 +266,28 @@ public class RoleServiceImp implements IntRoleService{
 	
 	//admin----角色——修改状态
     public int updateStatus(Integer id,String status){
+    	List<Integer> sysidlist=roleMapper.querysysid(id);
     	int num=0;
 		if(status.equals("1")){
 			num=roleMapper.upaStatusOpen(id);
+			for (int i = 0; i < sysidlist.size(); i++) {
+				sysUserMapper.upaStatusOpen(sysidlist.get(i));
+			}
 		}else{
 			num=roleMapper.upaStatusClose(id);
-			roleMapper.delfunction(id);
+			for (int i = 0; i < sysidlist.size(); i++) {
+				sysUserMapper.upaStatusClose(sysidlist.get(i));
+			}
 		}
 		return num;
     }
+    
+    //admin-----角色——修改假删除状态
+    public int upaFalseDel(Integer roleid){
+    	int num=roleMapper.upaFalseDel(roleid);
+    	roleMapper.delfunction(roleid);
+    	roleMapper.delsysuser(roleid);
+    	return num;
+    }
+    
 }
