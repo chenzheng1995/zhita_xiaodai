@@ -63,7 +63,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 			// TODO: handle exception
 		}
 		repay.setPaymentbtiao("畅捷支付");
-		repay.setOrderid(stdao.SelectOrderId(repay.getOrderNumber()));
+		Orders o = stdao.SelectOrderId(repay.getOrderNumber());
+		repay.setOrderid(o.getId());
 		System.out.println(repay.getOrderid());
 		return stdao.AddRepay(repay);
 	}
@@ -74,7 +75,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateOrders(Orders ord) {
-		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));//根据编号查询订单ID
+		ord = stdao.SelectOrderId(ord.getOrderNumber());//根据编号查询订单ID
 		Integer id = stdao.UpdateOrders(ord);//
 		if(id != null){
 			Integer delaytimes = 0;
@@ -93,12 +94,14 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateDefeOrders(Orders ord) {
-		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
+		Integer num = stdao.SelectUserdelayTimes(ord.getUserId());
+		ord = stdao.SelectOrderId(ord.getOrderNumber());
 		Integer lifeOfLoan = stdao.SelectDefeDay(ord.getCompanyId());//获取延期天数
 		String beforeTime = stdao.SelectDefeBefore(ord.getId());
 		Date date = null;
+		String sa = Timestamps.stampToDate(beforeTime);
 		try {
-			date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeTime);
+			date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sa);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -109,7 +112,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		    String afterTime = sdf1.format(date);//延期后应还时间
-		Integer num = stdao.SelectUserdelayTimes(ord);
+		
 		Integer delaytimes = num+1;
 		try {
 			ord.setShouldReturnTime(Timestamps.dateToStamp1(afterTime));
@@ -129,7 +132,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		pay.setOrderId(stdao.SelectOrderId(pay.getOrderNumber()));
+		Orders o = stdao.SelectOrderId(pay.getOrderNumber());
+		pay.setOrderId(o.getId());
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
 		pay.setPaymentbtiao("畅捷支付");
@@ -140,7 +144,14 @@ public class Chanpayserviceimp implements Chanpayservice{
 	@Override
 	public Integer AddDeferred(Deferred defe) {
 		defe.setDeleted("0");
-		defe.setOrderid(stdao.SelectOrderId(defe.getOrderNumber()));
+		Orders o = stdao.SelectOrderId(defe.getOrderNumber());
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			defe.setDeferredTime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		defe.setOrderid(o.getId());
 		return stdao.AddDeferred(defe);
 	}
 

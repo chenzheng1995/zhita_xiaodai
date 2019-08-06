@@ -30,13 +30,13 @@ public interface StatisticsDao {
 	Integer AddDeferred(Deferred defe);
 	
 	
-	Integer SelectUserdelayTimes(Orders ord);
+	Integer SelectUserdelayTimes(Integer userId);
 	
 	
 	Integer UpdateUser(Orders ord);
 	
 	
-	Integer SelectOrderId(String orderNumber);
+	Orders SelectOrderId(String orderNumber);
 	
 	
 	Integer AddPaymentRecord(Payment_record pay);

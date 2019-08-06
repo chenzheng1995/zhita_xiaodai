@@ -32,7 +32,7 @@
 			
 			
 			<update id="UpdateOrders" parameterType="com.zhita.model.manage.Orders">
-				update orders set orderStatus = "2" where id = #{id}
+				update orders set orderStatus = "3" where id = #{id}
 			</update>
 			
 			
@@ -69,7 +69,7 @@
 
 
 
-			<select id="SelectUserdelayTimes" parameterType="com.zhita.model.manage.Orders" resultType="java.lang.Integer">
+			<select id="SelectUserdelayTimes" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 				select delayTimes from user where id = #{userId}
 			</select>
 			
@@ -84,8 +84,8 @@
 			</update>
 			
 			
-			<select id="SelectOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
-				select id from orders where orderNumber = #{orderNumber}
+			<select id="SelectOrderId" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orders">
+				select id,companyId from orders where orderNumber = #{orderNumber}
 			</select>
 			
 			

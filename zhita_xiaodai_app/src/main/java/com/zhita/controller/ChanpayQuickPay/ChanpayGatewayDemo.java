@@ -914,7 +914,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_unbind(); //2.4 支付请求---API
+		test.nmg_biz_api_auth_req(); //2.4 支付请求---API
 //		test.nmg_biz_api_auth_req(); //2.5 支付确认---API
 //		test.nmg_api_auth_sms(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端
