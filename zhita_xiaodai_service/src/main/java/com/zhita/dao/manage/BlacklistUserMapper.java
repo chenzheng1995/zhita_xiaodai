@@ -46,4 +46,8 @@ public interface BlacklistUserMapper {
 	 * @return
 	 */
     int updateByPhone(BlacklistUser record);
+
+	int getid(@Param("phone")String phone,@Param("companyId") int companyId);
+
+	int getid1(@Param("idCard")String idCard,@Param("companyId") int companyId);
 }

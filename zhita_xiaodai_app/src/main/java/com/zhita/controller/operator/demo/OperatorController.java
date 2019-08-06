@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
+import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.manconsettings.IntManconsettingsServcie;
 import com.zhita.service.manage.operator.OperatorService;
 import com.zhita.service.manage.source.IntSourceService;
@@ -47,6 +48,9 @@ public class OperatorController {
 	
 	@Autowired 
 	IntApplyconditionService intApplyconditionService;
+	
+    @Autowired
+    IntBlacklistuserService intBlacklistuserService;
 	
     @RequestMapping("/getOperator")
     @ResponseBody
@@ -85,6 +89,7 @@ public class OperatorController {
     public Map<String, String> updateOperatorJson(int userId){
     	Map<String, String> map = new HashMap<>();
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
+		String attestationStatus =null;
 		String name = (String) userAttestation.get("trueName");
 		String idNumber = (String) userAttestation.get("idcard_number");
     
@@ -94,6 +99,11 @@ public class OperatorController {
         String reqId = (String) operator.get("reqId");
 
         
+        
+//        Map<String, Object> map2 = operatorService.getOperator(userId);
+//        String url = (String) map2.get("operatorJson");
+//        JSONObject sampleObject = JSON.parseObject(url);
+//    	String error = sampleObject.getString("error");
         
     	H5ReportQueryDemo h5ReportQueryDemo = new H5ReportQueryDemo();
     	String url = h5ReportQueryDemo.getH5ReportQuery(userId,phone,name,idNumber,reqId,search_id);
@@ -105,12 +115,16 @@ public class OperatorController {
 		}else {
 			map.put("msg", "数据更新失败");
 		}
-    	if (error.equals("200")) {                 	
+    	if (error.equals("200")) {     
+    		attestationStatus ="1";
+    		operatorService.updateAttestationStatus(attestationStatus,userId);
                 map.put("msg", "认证成功");
                 map.put("Code", "200");
 		}else {
 	    	if(error.equals("30000")) {
 	    		if(url.indexOf("205")!=-1) {
+	        		attestationStatus ="2";
+	        		operatorService.updateAttestationStatus(attestationStatus,userId);
 	    			  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 	    	          map.put("Code", "300");
 	    		}
@@ -123,6 +137,42 @@ public class OperatorController {
 //		  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 //        map.put("Code", "300");	
     	
+		return map;
+    	
+    }
+    
+    //判断用户是不是黑名单
+    @RequestMapping("/isBlacklist")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> isBlacklist(String phone,String idCard,int companyId){
+    	Map<String, Object> map = new HashMap<>();
+        map.put("msg", "不是黑名单 ");
+        map.put("code", "200");
+    	int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+    	int num2 = intBlacklistuserService.getid1(idCard,companyId);//判断身份证是否是黑名单
+    	if(num1==1) {
+            map.put("msg", "手机号黑名单 ");
+            map.put("code", "407");
+            return map;
+    	}    	
+    	if(num2==1) {
+            map.put("msg", "身份证黑名单 ");
+            map.put("code", "408");
+            return map;
+    	}
+		return map;
+    	
+    }
+    
+    
+    //判断用户是不是重复用户
+    @RequestMapping("/isRepeat")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> isRepeat(String idCard,int userId){
+    	Map<String, Object> map = new HashMap<>();
+
 		return map;
     	
     }
@@ -164,6 +214,8 @@ public class OperatorController {
     
     
   }
+  
+  
   
 //分控状态
 @RequestMapping("/getshareOfState")
@@ -318,15 +370,6 @@ public Map<String, Object> getshareOfState(int userId){
    	
    }
 
-public static void main(String[] args) {
-	String url = "205";
-	if(url.indexOf("205")!=-1) {
-		System.out.println("存在包含关系，因为返回的值不等于-1");
-	}else{
-		            
-		            System.out.println("不存在包含关系，因为返回的值等于-1");
-		        }
-}
     
     
     public static  int getAge(Date birthDay) throws Exception {

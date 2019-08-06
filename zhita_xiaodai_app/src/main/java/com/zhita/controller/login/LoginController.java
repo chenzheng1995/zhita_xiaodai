@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Date;
 
 import com.zhita.model.manage.User;
+import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.service.manage.thirdpartyint.IntThirdpartyintService;
@@ -31,6 +32,9 @@ public class LoginController {
     
     @Autowired
     IntThirdpartyintService intThirdpartyintService;
+    
+    @Autowired
+    IntBlacklistuserService intBlacklistuserService;
 
 
     private String getIpAddress(HttpServletRequest request) {
@@ -112,16 +116,25 @@ public class LoginController {
     public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient, String sourceName, String useMarket) {
         Map<String, Object> map = new HashMap<String, Object>();
         String loginStatus = "1";
+        PhoneDeal phoneDeal = new PhoneDeal();
+        String newPhone = phoneDeal.encryption(phone);
         if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(code)|| StringUtils.isEmpty(companyId)|| StringUtils.isEmpty(registeClient)|| StringUtils.isEmpty(sourceName)|| StringUtils.isEmpty(useMarket)) {
             map.put("msg", "phone,code,companyId,registrationType,sourceName和useMarket不能为空");
             return map;
         } else {
+        	Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+        	int num1 = intBlacklistuserService.getid(phone,companyId);
+        	if(num1==1&&id==null) {
+                map.put("msg", "手机号黑名单 ");
+                map.put("SCode", "407");
+                return map;
+        	}else {
+
 //			int num1 = sourceDadSonService.getSourceDadSon(sourceId,sonSourceName,company);
 //			if (num1 == 0) {
 //			sourceDadSonService.setSourceDadSon(sourceId,sonSourceName,company);
 //			}
-            PhoneDeal phoneDeal = new PhoneDeal();
-            String newPhone = phoneDeal.encryption(phone);
+
             RedisClientUtil redisClientUtil = new RedisClientUtil();
             String key = phone + "xiaodaiKey";
             String redisCode = redisClientUtil.get(key);
@@ -133,7 +146,6 @@ public class LoginController {
             if (redisCode.equals(code)) {
                 redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
                 String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
-                Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
                 if (id == null) {
                 	String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
                     int merchantId = intSourceService.getsourceId(sourceName);
@@ -178,7 +190,8 @@ public class LoginController {
                 map.put("SCode", "403");
                 return map;
             }
-
+    		
+    	}
             return map;
         }
 
@@ -258,6 +271,12 @@ public class LoginController {
             String newPhone = phoneDeal.encryption(phone);
             Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
             if (id == null) {
+            	int num1 = intBlacklistuserService.getid(phone,companyId);
+            	if(num1==1) {
+                    map.put("msg", "手机号黑名单 ");
+                    map.put("SCode", "407");
+                    return map;
+            	}else {
             	String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳
             	String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
             	 int merchantId = intSourceService.getsourceId(sourceName);
@@ -273,6 +292,7 @@ public class LoginController {
                      map.put("msg", "用户登录失败，用户数据插入失败");
                      map.put("SCode", "405");
                  }
+            	}
             } else {
                 MD5Util md5Util = new MD5Util();
                 String dataMd5Pwd = loginService.getMd5pwd(newPhone, companyId);

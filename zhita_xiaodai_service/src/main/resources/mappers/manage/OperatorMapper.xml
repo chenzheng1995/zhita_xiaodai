@@ -156,13 +156,12 @@
   </update>
   
 	<select id="getOperator" parameterType="java.lang.Integer" resultType="java.util.Map">
-		select phone,attestationStatus,reqId,search_id from operator where userId = #{userId}
+		select phone,attestationStatus,reqId,search_id,operatorJson from operator where userId = #{userId}
 	</select>
 	
 		  <update id="updateOperatorJson" parameterType="java.util.Map">
     update operator
-    set operatorJson = #{url},
-        attestationStatus ='1'
+    set operatorJson = #{url}
     where userId = #{userId}
   </update>
 	
@@ -175,5 +174,12 @@
     set reqId = #{reqId}
     where userId = #{userId}
   </update>
+  
+    		  <update id="updateAttestationStatus" parameterType="java.util.Map">
+    update operator
+    set attestationStatus = #{attestationStatus}
+    where userId = #{userId}
+  </update>
+  
   
 </mapper>

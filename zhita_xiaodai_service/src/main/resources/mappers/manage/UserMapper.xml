@@ -208,7 +208,7 @@
   
   	  	<!--判断用户名是否存在 -->
 	<select id="findphone" resultType="java.lang.Integer" parameterType="java.util.Map">
-       SELECT id FROM user where phone=#{newPhone} and companyId=#{companyId}
+       SELECT id FROM user where phone=#{newPhone} and companyId=#{companyId} and ifBlacklist = '0'
 	</select>
 	
 	
