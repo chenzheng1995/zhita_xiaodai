@@ -66,6 +66,10 @@ public class UserAttestation {
     private String authentime;//认证时间
     
     private String authenticationSteps;//认证步骤
+    
+    private Integer age;//年龄
+    
+    private String province;//省份
 
 	public Integer getId() {
 		return id;
@@ -329,6 +333,22 @@ public class UserAttestation {
 
 	public void setAuthenticationSteps(String authenticationSteps) {
 		this.authenticationSteps = authenticationSteps;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
 	}
    
 }

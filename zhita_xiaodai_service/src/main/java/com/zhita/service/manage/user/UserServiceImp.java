@@ -2,6 +2,7 @@ package com.zhita.service.manage.user;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zhita.dao.manage.BlacklistUserMapper;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.OrderQueryParameter;
@@ -31,6 +34,8 @@ public class UserServiceImp implements IntUserService{
 	private UserMapper userMapper;
 	@Autowired
 	private OrdersMapper ordersMapper;
+	@Autowired
+	private BlacklistUserMapper blacklistUserMapper;
 	
 	//后台管理----用户列表(公司id，page,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
 	public Map<String, Object> queryUserList(UserLikeParameter userLikeParameter){
@@ -80,16 +85,26 @@ public class UserServiceImp implements IntUserService{
 	
 	//后台管理---添加黑名单
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
-		int num=userMapper.upaBlacklistStatus(userId);
-		//String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
-		//int num=userMapper.addBlacklist(companyId, userId, operator, operationTime);
+		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
+		int num=userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
+		String blackType="3";//黑名单类型（3：手工录入）
+		BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+		blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
+		blacklistUser.setCompanyid(companyId);
+		blacklistUser.setOperator(operator);
+		blacklistUser.setOperationtime(operationTime);
+		blacklistUser.setBlackType(blackType);
+		blacklistUser.setUserid(userId);
+		blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+		//userMapper.addBlacklist(companyId, userId, operator, operationTime,blackType);
 		return num;
 	}
 	
 	//后台管理---解除黑名单
 	public int removeBlacklist(Integer companyId,Integer userId){
 		int num=userMapper.upaBlacklistStatus1(userId);
-		//int num=userMapper.upaBlacklist(userId);
+		userMapper.upaBlacklist(userId);
 		return num;
 	}
 	
@@ -226,7 +241,18 @@ public class UserServiceImp implements IntUserService{
   	
 	//后台管理---用户认证信息
 	public Map<String,Object> queryUserAttesta(Integer userid){
-		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息
+		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
+		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息对象
+		if(userAttestation!=null){
+			userAttestation.setPhone(pd.decryption(userAttestation.getPhone()));//解密手机号
+			Calendar date = Calendar.getInstance();
+			String dateyear = String.valueOf(date.get(Calendar.YEAR));//获取当前系统的年份
+			String idcardyear=userAttestation.getBirthYear();
+			int age=Integer.parseInt(dateyear)-Integer.parseInt(idcardyear);
+			userAttestation.setAge(age);//年龄
+			userAttestation.setProvince(userAttestation.getAddress().substring(0,3));//省份
+		}
+		
 		Bankcard bankcard=userMapper.queryBankcard(userid);//用户银行卡信息
 		Operator operator=userMapper.queryOperator(userid);//运营商信息
 		
@@ -245,8 +271,8 @@ public class UserServiceImp implements IntUserService{
 	}
 
 	@Override
-	public int getRiskControlPoints(int userId) {
-		 int riskControlPoints = userMapper.getRiskControlPoints(userId);
+	public Integer getRiskControlPoints(int userId) {
+		 Integer riskControlPoints = userMapper.getRiskControlPoints(userId);
 		return riskControlPoints;
 	}
 

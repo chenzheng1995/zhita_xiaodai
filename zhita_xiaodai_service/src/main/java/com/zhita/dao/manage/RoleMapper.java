@@ -46,6 +46,12 @@ public interface RoleMapper {
     //admin------角色——列表展示
     List<Role> queryAll();
     
+    //admin-----角色——修改假删除状态
+    int upaFalseDel(Integer roleid);
+    
+    //admin---角色——通过角色id查询有哪些用户拥有该角色
+    List<Integer> querysysid(Integer roleid);
+    
     //admin------角色——模糊查询（角色状态）
     List<Role> queryAllByLike(String status);
     
@@ -66,4 +72,7 @@ public interface RoleMapper {
     
     //admin-----角色——将该角色的所有权限删除
     int delfunction(Integer roleid);
+    
+    //admin---角色——将拥有该角色的用户解除关系
+    int delsysuser(Integer roleid);
 }

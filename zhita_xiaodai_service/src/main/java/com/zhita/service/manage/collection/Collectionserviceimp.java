@@ -15,6 +15,7 @@ import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Collection_member;
+import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.util.PageUtil;
@@ -263,11 +264,11 @@ public class Collectionserviceimp implements Collectionservice{
 			col.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
 			for(int i=0;i<orders.size();i++){
-				orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
 				if(orders.get(i).getRealityBorrowMoney() != null && orders.get(i).getInterestPenaltySum() != null){
 					orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()));
 				}else if(orders.get(i).getRealityBorrowMoney() != null && orders.get(i).getInterestPenaltySum() == null){
@@ -275,7 +276,8 @@ public class Collectionserviceimp implements Collectionservice{
 				}else{
 					orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
 				}
-				
+				Deferred des = collmapp.DefeSet(orders.get(i));
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
 			}
 			map.put("Orderdetails", orders);
 			map.put("PageUtil", pages);
@@ -344,7 +346,7 @@ public class Collectionserviceimp implements Collectionservice{
 				// TODO: handle exception
 			}
 			col.setDeleted("0");
-			Integer addId = collmapp.AddCollectionAs(col);
+			Integer addId = collmapp.UpdateCollection(col);
 			if(addId != null){
 				map.put("code", 200);
 				map.put("desc", "设置成功");
@@ -423,6 +425,22 @@ public class Collectionserviceimp implements Collectionservice{
 		}else{
 			map.put("code", "0");
 			map.put("desc", "数据异常");
+		}
+		return map;
+	}
+
+
+
+	@Override
+	public Map<String, Object> AddCollOrders(Collectiondetails col) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer addId = collmapp.AddCollectiondet(col);
+		if(addId != null){
+			map.put("code", 200);
+			map.put("desc", "添加成功");
+		}else{
+			map.put("code", 0);
+			map.put("desc", "添加失败");
 		}
 		return map;
 	}

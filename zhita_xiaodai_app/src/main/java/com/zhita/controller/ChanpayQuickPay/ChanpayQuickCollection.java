@@ -629,7 +629,7 @@ public class ChanpayQuickCollection {
 					
 				}else{
 					
-					
+					chanser.deleteBank(userId);
 					map.put("code", "0");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证失败");
@@ -717,7 +717,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_quick_payment_smsconfirm")
-	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber) {
+	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber,Integer userId) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
@@ -731,7 +731,7 @@ public class ChanpayQuickCollection {
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			String as = retu.getAcceptStatus();
@@ -959,7 +959,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_unbind")
-	private void nmg_api_auth_unbind(String CardBegin,String CardEnd,String MerUserId) {
+	private Map<String, Object> nmg_api_auth_unbind(String CardBegin,String CardEnd,String MerUserId) {
 		Map<String, String> origMap = new HashMap<String, String>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 2.1 基本参数
@@ -978,17 +978,15 @@ public class ChanpayQuickCollection {
 		String result = null;
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-			chanser.DeleteChan(Integer.valueOf(MerUserId));
-				map.put("ReturnChanpay", retu);
-				map.put("code", 200);
-				map.put("desc", "以解除");
+			//chanser.DeleteChan(Integer.valueOf(MerUserId));
+			map.put("ReturnChanpay", retu);
 			} catch (Exception e) {
 				e.printStackTrace();
 		}
+		return map;
 	}
 
 	/**

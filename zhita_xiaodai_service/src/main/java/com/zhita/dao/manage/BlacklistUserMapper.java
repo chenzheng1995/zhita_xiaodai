@@ -23,7 +23,7 @@ public interface BlacklistUserMapper {
     int updateByPrimaryKey(BlacklistUser record);
     
     //后台管理---查询列表
-    List<BlacklistUser> queryAll(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard);
+    List<BlacklistUser> queryAll(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard,@Param("blackType") String blackType);
     
     //后台管理---更新假删除状态
     int upaFalseDel(Integer id);

@@ -164,7 +164,13 @@ public class ChanpaySend extends BaseParameter{
 		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 	    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
-    	int riskmanagementFraction = intUserService.getRiskControlPoints(userId);//获取风控分数
+	    Map<String, String> map = this.requestBaseParameter();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+    	Integer riskmanagementFraction = 0;
+    	Integer a = intUserService.getRiskControlPoints(userId);//获取风控分数
+    	if(a != null){
+    		riskmanagementFraction=a;
+    	}
     	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
     	String borrowMoneyWay = "立即贷";//贷款方式
     	
@@ -175,9 +181,7 @@ public class ChanpaySend extends BaseParameter{
 		ba.setUserId(userId);
 		Bankcard ban = chanser.SelectBank(ba);
 		System.out.println("数据:"+ban.getTiedCardPhone() + ban.getBankcardName() + ban.getCstmrnm() + ban.getBankcardTypeName());
-	    
-		Map<String, String> map = this.requestBaseParameter();
-		Map<String, Object> map1 = new HashMap<String, Object>();
+		
 		Payment_record pay = new Payment_record();
 		map.put("TransCode", "C00000");
 		map.put("BusinessType", "0");
@@ -203,6 +207,7 @@ public class ChanpaySend extends BaseParameter{
 
 			pay.setStatus("支付成功");
 			pay.setPipelinenumber(orderNumber);
+			pay.setOrderNumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){
 				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
@@ -233,6 +238,7 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("ShortReturn", sreturn);
 			map1.put("code", 0);
 		}
+	
 		return map1;
 	}
 	

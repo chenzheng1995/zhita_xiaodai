@@ -10,7 +10,7 @@ import com.zhita.model.manage.Company;
 
 public interface IntBlacklistuserService {
 	 //后台管理---查询列表
-     public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard);
+     public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard,String blackType);
      
      //后台管理——添加功能（先查询出所有公司）
      public List<Company> queryAllCompany();
@@ -25,7 +25,7 @@ public interface IntBlacklistuserService {
      public int updateByPrimaryKey(BlacklistUser record);
      
      //后台管理---更新假删除状态
-     public int upaFalseDel(Integer id);
+     public int upaFalseDel(Integer id,Integer userid);
      
      /**
       * 批量导入Excel

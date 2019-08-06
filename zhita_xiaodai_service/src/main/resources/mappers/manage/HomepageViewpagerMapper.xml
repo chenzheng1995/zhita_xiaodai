@@ -25,8 +25,8 @@
   </delete>
   <!-- 后台管理    添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.HomepageViewpager" >
-    insert into homepage_viewpager (companyId, viewpagerPicture,sort)
-    values (#{companyid,jdbcType=INTEGER}, #{viewpagerpicture,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR})
+    insert into homepage_viewpager (companyId, viewpagerPicture,sort,updateTime)
+    values (#{companyid,jdbcType=INTEGER}, #{viewpagerpicture,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{updateTime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.HomepageViewpager" >
     insert into homepage_viewpager

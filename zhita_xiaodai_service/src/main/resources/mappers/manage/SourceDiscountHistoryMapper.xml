@@ -11,7 +11,7 @@
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, sourceName, date, uv, appnum, cvr, deleted
+    sdh.id, sdh.sourceName, sdh.date, sdh.uv, sdh.appnum registernumdis, sdh.cvr, sdh.deleted
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,7 +27,7 @@
   <insert id="insert" parameterType="com.zhita.model.manage.TongjiSorce" >
     insert into source_discount_history (sourceName, date, 
       uv, appnum, cvr)
-    values (#{sourcename,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, 
+    values (#{sourceid,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, 
       #{uv,jdbcType=INTEGER}, #{registernumdis,jdbcType=REAL}, #{cvr,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.SourceDiscountHistory" >
@@ -110,24 +110,24 @@
       uv = #{uv,jdbcType=INTEGER},
       appnum = #{registernumdis,jdbcType=REAL},
       cvr = #{cvr,jdbcType=VARCHAR}
-     where sourcename = #{sourcename,jdbcType=VARCHAR} and date=#{date1,jdbcType=VARCHAR}
+     where sourcename = #{sourceid,jdbcType=INTEGER} and date=#{date1,jdbcType=VARCHAR}
   </update>
   <!-- 后台管理            查询当前渠道在历史表的时间 -->
-  <select id="queryDate" parameterType="java.lang.String" resultType="java.lang.String">
+  <select id="queryDate" parameterType="java.lang.Integer" resultType="java.lang.String">
   	select date from source_discount_history where sourceName=#{arg0}
   </select>
   <!-- 后台管理         通过渠道名字查询当前渠道在历史表的信息 -->
   <select id="queryAllBySourceName" parameterType="java.lang.String" resultType="com.zhita.model.manage.TongjiSorce">
   	select 
   	<include refid="Base_Column_List" />
-    from source_discount_history
-    where sourceName=#{arg0}
+    from source_discount_history sdh inner join source s on sdh.sourceName=s.id
+    where s.sourceName=#{arg0}
   </select>
   <!-- 后台管理       通过渠道和时间查询是否有数据 -->
   <select id="queryBySourcenameAndDate" parameterType="java.lang.String" resultType="com.zhita.model.manage.TongjiSorce">
   	select 
     <include refid="Base_Column_List" />
-    from source_discount_history
-    where sourcename = #{arg0} and date>=#{arg1} and date &lt;#{arg2}
+    from source_discount_history sdh inner join source s on sdh.sourceName=s.id
+    where s.sourcename = #{arg0} and sdh.date>=#{arg1} and sdh.date &lt;#{arg2}
   </select>
 </mapper>

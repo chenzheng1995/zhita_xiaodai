@@ -25,4 +25,7 @@ public interface IntSysuserService {
     
     //admin----系统用户——编辑功能（修改保存）
     public int updateByPrimaryKey(SysUser record);
+    
+    //admin---系统用户——修改假删除状态
+    public int upaFalseDel(Integer id);
 }
