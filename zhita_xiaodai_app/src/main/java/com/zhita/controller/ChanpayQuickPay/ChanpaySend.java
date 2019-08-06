@@ -109,6 +109,11 @@ public class ChanpaySend extends BaseParameter{
 		calendar.add(Calendar.DATE, +1);
 		date = calendar.getTime();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMdd");
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		String statu = returnchanpay.getAcceptStatus();
 		if(statu.equals("S")){
 			map1.put("End_time", sim.format(date));

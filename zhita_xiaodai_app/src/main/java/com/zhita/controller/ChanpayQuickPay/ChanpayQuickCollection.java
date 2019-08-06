@@ -530,9 +530,7 @@ public class ChanpayQuickCollection {
 			String result = "";
 			try {
 				String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-				Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-					result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-							urlStr);
+				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,urlStr);
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 				System.out.println(result);
 				map.put("OriAuthTrxId", TrxId);
@@ -618,15 +616,10 @@ public class ChanpayQuickCollection {
 			String result = "";
 			try {                                                                                                                                                                                             
 				String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-				Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-					result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 							urlStr);
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-				System.out.println("AAA:"+result);
-				String statu = retu.getAppRetMsg();
-				System.out.println(retu.getAcceptStatus()+"111111111111111");
 				String ssa = retu.getAcceptStatus();
-				System.out.println("S返回:"+ssa.equals("S"));
 				if(ssa.equals("S") ){
 					chanser.UpdateChanpay(userId);
 					map.put("code", "200");
@@ -662,9 +655,9 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_biz_api_quick_payment")
-	private Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String OrdrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt) {
+	private Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt) {
 		Map<String, Object> map = new HashMap<String, Object>();	
-		if(TrxId != null && OrdrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
+		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数 
 		origMap = setCommonMap(origMap);
@@ -675,7 +668,7 @@ public class ChanpayQuickCollection {
 		 BigDecimal bd=new BigDecimal(TrxAmt);   
 		repay.setRepaymentMoney(bd);
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
-		origMap.put("OrdrName", OrdrName);// 商品名称
+		origMap.put("OrdrName", ordrName);// 商品名称
 		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200005640044");// 子账户号
 		origMap.put("SubMerchantNo", "200005640044");// 子商户号
@@ -688,7 +681,6 @@ public class ChanpayQuickCollection {
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
@@ -1167,9 +1159,7 @@ public class ChanpayQuickCollection {
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			Map<String, String> sPara = buildRequestPara(origMap, "RSA", MERCHANT_PRIVATE_KEY, charset);
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-						urlStr);
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,urlStr);
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
@@ -1201,7 +1191,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Defenmg_api_quick_payment_smsconfirm")
-	private Map<String, Object> Defenmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,Integer userId) {
+	private Map<String, Object> Defenmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,Integer userId,String orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
