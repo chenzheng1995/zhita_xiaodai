@@ -5,7 +5,7 @@ import java.util.List;
 
 
 //银行扣记录表
-public class Bankdeduction {
+public class Bankdeductions {
 	
 	private Integer id;//id
 	

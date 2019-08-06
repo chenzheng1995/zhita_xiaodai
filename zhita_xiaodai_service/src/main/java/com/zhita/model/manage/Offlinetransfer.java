@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 public class Offlinetransfer {
     private Integer id;
 
-    private Integer orderId;//订单id
+    private Integer sys_userId;//订单id
 
     private String projectname;//项目名
 
@@ -21,8 +21,28 @@ public class Offlinetransfer {
     private String remarks;//备注
 
     private String offinetransfertime;//时间
+    
+    private String thname;
+    
+    private String account;
 
-    public Integer getId() {
+    public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getThname() {
+		return thname;
+	}
+
+	public void setThname(String thname) {
+		this.thname = thname;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -30,15 +50,16 @@ public class Offlinetransfer {
         this.id = id;
     }
 
-    public Integer getOrderId() {
-        return orderId;
-    }
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
+    public Integer getSys_userId() {
+		return sys_userId;
+	}
 
-    public String getProjectname() {
+	public void setSys_userId(Integer sys_userId) {
+		this.sys_userId = sys_userId;
+	}
+
+	public String getProjectname() {
         return projectname;
     }
 

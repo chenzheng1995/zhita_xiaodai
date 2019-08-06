@@ -5,6 +5,7 @@
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="updateTime" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -71,4 +72,11 @@
     select name from xtest where id = #{id}
 
   </select>
+  
+    <update id="updatetest" parameterType="java.lang.String">
+    update xtest
+    set name = #{name},
+    updateTime = #{date}
+    where id = 10
+  </update>
 </mapper>

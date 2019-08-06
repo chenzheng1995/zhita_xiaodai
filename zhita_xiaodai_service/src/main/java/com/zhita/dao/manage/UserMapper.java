@@ -27,7 +27,7 @@ public interface UserMapper {
     Integer findphone(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
 	int insertUser1(@Param("newPhone")String newPhone,@Param("loginStatus")String loginStatus,@Param("companyId")int companyId,@Param("registeClient")String registeClient,
-			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket);
+			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication);
 
 	int getId(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
@@ -123,5 +123,9 @@ public interface UserMapper {
 	int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter);
 
 	void updateshareOfState(@Param("userId")int userId,@Param("shareOfState") String shareOfState);
+
+	void setuser(@Param("userId")int userId,@Param("timStamp") String timStamp,@Param("applynumber") String applynumber);
+
+	void updatename(@Param("name")String name,@Param("userId") int userId);
 
 }

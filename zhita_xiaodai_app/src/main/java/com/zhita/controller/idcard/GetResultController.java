@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.face.postDemo;
+import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 import com.zhita.util.Base64ToInputStream;
 import com.zhita.util.FolderUtil;
@@ -27,6 +28,9 @@ import com.zhita.util.PostAndGet;
 public class GetResultController {
     @Autowired
     UserAttestationService UserAttestationService;
+    
+    @Autowired
+    IntUserService intUserService;
 	
 //    @RequestMapping("/getresult")
 //    @ResponseBody
@@ -237,6 +241,7 @@ public class GetResultController {
 		frontsidePath = ossUtil.uploadFile(stream, path);
 		backsidePath = ossUtil.uploadFile(stream1, path1);
     	String authenticationSteps ="1";
+    	intUserService.updatename(name,userId);
     	 int number = UserAttestationService.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps);
     	 if(number==1) {
 	    		map.put("code", 200);

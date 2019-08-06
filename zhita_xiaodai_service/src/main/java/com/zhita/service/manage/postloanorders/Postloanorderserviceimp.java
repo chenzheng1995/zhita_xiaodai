@@ -101,14 +101,13 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
-			List<Integer> nodeid = postloanorder.SelectNodetId(order);//获取已分配订单ID
-			if(nodeid != null){
+			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
+			if(nodeid.size() != 0){
 				order.setIds(nodeid);
 			}else{
 				nodeid.add(0);
 				order.setIds(nodeid);
 			}
-			System.out.println(nodeid+"已分配订单数");
 			if(totalCount != null){
 				PageUtil pages = new PageUtil(order.getPage(), totalCount);
 				order.setPage(pages.getPage());
@@ -122,6 +121,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
 				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
 				ordeids.get(i).setRealtime(Timestamps.stampToDate1(ordeids.get(i).getRealtime()));
+				ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate1(ordeids.get(i).getOrderCreateTime()));
+				System.out.println("天数："+ordeids.get(i).getOnceDeferredDay());
 			}
 			map.put("Orderdetails", ordeids);
 		return map;
@@ -139,14 +140,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			// TODO: handle exception
 		}
 		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
-		List<Integer> nodeid = postloanorder.SelectNodetId(order);//获取已分配订单ID
-		if(nodeid != null){
-			order.setIds(nodeid);
-		}else{
-			nodeid.add(0);
-			System.out.println(nodeid.size());
-			order.setIds(nodeid);
-		}
 		
 		if(totalCount != null){
 			PageUtil pages = new PageUtil(order.getPage(), totalCount);
@@ -155,7 +148,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			PageUtil pages = new PageUtil(order.getPage(), 0);
 			order.setPage(pages.getPage());
 		}
-		List<Orderdetails> ordeids = postloanorder.AOrderDetails(order);//获取未逾期未分配订单
+		List<Orderdetails> ordeids = postloanorder.AOrderDetails(order);//获取未逾期已分配订单
 		for(int i=0;i<ordeids.size();i++){
 			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));
 			ordeids.get(i).setCollectionTime(Timestamps.stampToDate(ordeids.get(i).getCollectionTime()));
@@ -175,10 +168,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> CollectionRecovery(Orderdetails order) {
+		order.setShouldReturnTime(System.currentTimeMillis()+"");
 		try {
-			order.setShouldReturnTime(System.currentTimeMillis()+"");
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -193,6 +186,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Collection> cols = postloanorder.CollDateNum(order);
 		for(int i=0;i<cols.size();i++){
+			order.setCollectiondate(cols.get(i).getCollectiondate());
 			Integer OrderIdNum = postloanorder.OrderIdNum(order);//订单总数
 			order.setIds(coldao.SelectCollectionId(order.getCompanyId()));
 			List<Integer> OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
@@ -211,19 +205,18 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
 			order.setOverdue_phonestaus("已接通");
 			cols.get(i).setConnected(postloanorder.connectedNum(order));
-			order.setStatu("3");
+			order.setOrderStatus("3");
 			cols.get(i).setSameday(postloanorder.StatusOrders(order));
-			order.setStatu("0");
+			order.setOrderStatus("0");
 			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
-			if(cols.get(i).getPaymentmade() != 0){
+			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
 				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
 			}else{
 				cols.get(i).setPaymentmadeData("0");
 			}
-			
-			cols.get(i).setCollectiondate(Timestamps.stampToDate(cols.get(i).getCollectiondate()));
+			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
@@ -236,8 +229,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> OverdueUser(Orderdetails order) {
 		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
+			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -379,18 +372,37 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
-		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
-			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
-			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
-			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
-			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
-			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
-			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
+		
+		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
+		
 		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
 		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -423,22 +435,40 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> CollecOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			
-			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
-			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
-			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
-			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
-			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
-			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
-			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
-		}catch(Exception e){
-			
+		
+		
+		
+		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		
-		System.out.println(order.getStart_time()+"CCCCC"+order.getEnd_time());
-		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
+		
 		
 		
 		order.setShouldReturnTime(System.currentTimeMillis()+"");
@@ -467,17 +497,34 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		try{
-			order.setStart_time(Timestamps.dateToStamp(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
-			order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeStatu_time()));
-			order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferBeforeReturntimeEnd_time()));
-			order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeStatu_time()));
-			order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp(order.getDeferAfterReturntimeEnd_time()));
-			order.setRealtimeStatu_time(Timestamps.dateToStamp(order.getRealtimeStatu_time()));
-			order.setRealtimeEnd_time(Timestamps.dateToStamp(order.getRealtimeEnd_time()));
-		}catch(Exception e){
-			
+		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		Integer totalCount = postloanorder.HuaiZhangOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);

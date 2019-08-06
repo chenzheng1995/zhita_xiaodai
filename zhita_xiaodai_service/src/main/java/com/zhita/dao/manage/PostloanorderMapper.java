@@ -117,4 +117,7 @@ public interface PostloanorderMapper {
 	
 	
 	Integer UserOverdue(Overdue ov);
+	
+	
+	List<Integer> OvOrderId(Integer companyId);
 }

@@ -31,10 +31,10 @@
 			    AND o.orderStatus = "1"
 				AND o.companyId = #{companyId}
 				<if test="name != '' and name != null">
-					AND u.name like CONCAT('%',#{name}),'%') 
+					AND u.name like CONCAT('%',#{name},'%') 
 				</if>
 				<if test="phone != null and phone != ''">
-					AND u.phone like CONCAT(CONCAT('%',#{phone}),'%') 
+					AND u.phone like CONCAT('%',#{phone},'%') 
 				</if>
 				<if test="id != null and id != ''">
 					AND o.id = #{id}
@@ -47,7 +47,7 @@
 		
 		
 		<select id="DefeSet" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Deferred">
-			select defe.deferBeforeReturntime,defe.interestOnArrears,deset.onceDeferredDay,defe.deferAfterReturntime from 
+			select MAX(defe.id),defe.deferBeforeReturntime,defe.interestOnArrears,deset.onceDeferredDay,defe.deferAfterReturntime from 
 			deferred defe,deferred_settings deset,orders o where o.companyId = deset.companyId and o.id = defe.orderid
 			and o.id = #{orderId}
 		</select>
@@ -82,7 +82,7 @@
 			<where>
 				    o.id = ord.orderId 
 				and col.orderId = o.id
-				AND o.companyId = #{companyId}
+				and o.companyId = #{companyId}
 				and u.id = o.userId 
 				and colme.collectionMemberId = col.collectionMemberId
 				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
@@ -119,6 +119,9 @@
 					AND col.collectionMemberId = #{collectionMemberId}
 				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND col.collectionTime between #{start_time} and #{end_time}
+				</if>
+				<if test="deferBeforeReturntime != null and deferBeforeReturntime != '' and deferAfterReturntime != null and deferAfterReturntime != ''">
 					AND col.collectionTime between #{start_time} and #{end_time}
 				</if>
 			</where>
@@ -246,13 +249,14 @@
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,defe.deferBeforeReturntime,defe.deferAfterReturntime  
-			 from orders o left join orderdetails ord on o.id = ord.orderId
-			 left join collection col on col.orderId = o.id
-			 left join collection_member colme on col.collectionMemberId = colme.collectionMemberId
-			 left join user u on u.id = o.userId
-			 left join deferred defe on defe.orderId = o.id
+			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus
+			from collection col,orders o,orderdetails ord,collection_member colme,user u 
 			<where>
+				o.id = col.orderId 
+				and o.id = ord.orderId 
+				and col.collectionMemberId = colme.collectionMemberId 
+				and u.id = o.userId 
+				AND orderStatus = "1"
 				<if test="name != null and name != ''">
 					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
@@ -262,16 +266,11 @@
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')    
 				</if>
-				<if test="collectionMemberId != null and collectionMemberId != ''">
-					AND col.collectionMemberId = #{collectionMemberId}
-				</if>
+				AND col.collectionMemberId = #{collectionMemberId}
 				AND o.companyId = #{companyId} 
-				AND col.orderId not in 
-				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
-					#{orderid}
-				</foreach>
+				AND col.collectionStatus is null
 			</where>
-				group by o.id
+				group by col.orderId
 				limit #{page},#{pagesize}
 		</select>
 		
@@ -304,7 +303,8 @@
 		
 		
 		<select id="AllCountNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
-			SELECT COUNT(c.collectionId) from collection c,collection_member com where c.collectionMemberId = com.collectionMemberId and com.companyId = #{companyId}
+			SELECT COUNT(c.collectionId) from collection c,collection_member com where c.collectionMemberId = com.collectionMemberId 
+			and com.companyId = #{companyId} and c.collectionMemberId = #{collectionMemberId}
 		</select>
 		
 		
@@ -354,7 +354,7 @@
 		
 		
 		<select id="SelectId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-			select c.orderId from collection c,collection_member coml where coml.companyId = #{id} and collectionStatus != ''
+			select c.orderId from collection c,collection_member coml where coml.companyId = #{id} and collectionStatus is not null
 			group by orderId
 		</select>
 		

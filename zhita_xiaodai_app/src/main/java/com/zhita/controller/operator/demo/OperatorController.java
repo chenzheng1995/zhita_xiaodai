@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.zhita.model.manage.ManageControlSettings;
@@ -96,16 +97,32 @@ public class OperatorController {
         
     	H5ReportQueryDemo h5ReportQueryDemo = new H5ReportQueryDemo();
     	String url = h5ReportQueryDemo.getH5ReportQuery(userId,phone,name,idNumber,reqId,search_id);
-      	int  number = operatorService.updateOperatorJson(url,userId);
-         if (number == 1) {                  	
-             map.put("msg", "认证成功");
-             map.put("Code", "200");
-         } else {
-             map.put("msg", "认证成功失败");
-             map.put("Code", "401");
-         }
+    	JSONObject sampleObject = JSON.parseObject(url);
+    	String error = sampleObject.getString("error");
+		int  number = operatorService.updateOperatorJson(url,userId);
+		if(number==1) {
+			map.put("msg", "数据更新成功");
+		}else {
+			map.put("msg", "数据更新失败");
+		}
+    	if (error.equals("200")) {                 	
+                map.put("msg", "认证成功");
+                map.put("Code", "200");
+		}else {
+	    	if(error.equals("30000")) {
+	    		if(url.indexOf("205")!=-1) {
+	    			  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+	    	          map.put("Code", "300");
+	    		}
+	    	}else {
+	            map.put("msg", "认证失败");
+	            map.put("Code", "401");
+			}
 
-
+        }
+//		  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+//        map.put("Code", "300");	
+    	
 		return map;
     	
     }
@@ -154,138 +171,162 @@ public class OperatorController {
 @Transactional
 public Map<String, Object> getshareOfState(int userId){
 	Map<String, Object> map = new HashMap<>();
+	String timStamp = System.currentTimeMillis()+"";//当前时间戳
+	String applynumber = "SQ"+userId+timStamp;//申请编号
+	intUserService.setuser(userId,timStamp,applynumber);
 	String shareOfState = intUserService.getshareOfState(userId);
 	map.put("shareOfState", shareOfState);
 	return map;
 	
 }
+
+
   
     
-//   分控分数
-    @RequestMapping("/getScore")
-    @ResponseBody
-    @Transactional
-    public Map<String, Object> getScore(int userId,String sourceName){
-    	String shareOfState =null;
-    	Map<String, Object> map = new HashMap<>();
-//    	shareOfState ="6";
-//    	intUserService.updateshareOfState(userId, shareOfState);
-
-		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
-		String name = (String) userAttestation.get("trueName");
-		String idNumber = (String) userAttestation.get("idcard_number");
-    
-        Map<String, Object> operator = operatorService.getOperator(userId);
-        String phone = (String) operator.get("phone");
-        String reqId = (String) operator.get("reqId");
-        String search_id = (String) operator.get("search_id");
-        int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
-        Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);  
-        String rmModleName =(String) map1.get("rmModleName");
-        if(rmModleName.equals("融360")) {
-        	
-        }
-        
-
-    	RuleDemo ruleDemo = new RuleDemo();
-    	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
-    	
-    	ScoreDemo scoreDemo = new ScoreDemo();
-    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
-    	  JSONObject jsonObject =null;
-    	  jsonObject = JSONObject.parseObject(result);
-          String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
-          jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
-          int score = Integer.parseInt(jsonObject.get("score").toString());   
-           String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
-           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
-           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
-           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-           int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-           if(score<roatnptFractionalSegmentSmall) {
-        	   shareOfState ="0";
-        	   map.put("code", 200);
-        	   map.put("msg", "分数不够");
-           }
-           if(score>roatnptFractionalSegmentSmall&&score<roatnptFractionalSegmentBig) {
-        	   shareOfState ="1";
-        	   map.put("code", 200);
-        	   map.put("msg", "需要人工审核");
-           }
-           if(score>roatnptFractionalSegmentBig) {
-        	   shareOfState ="2";
-        	   map.put("code", 200);
-        	   map.put("msg", "分数够了");
-           }
-           intUserService.updateScore(score,userId,shareOfState);
-          map.put("score", score);
-          
-    	
-    	
-		return map;
-    	
-    }
-    
-    
-////  分控分数
-//   @RequestMapping("/getScore")
-//   @ResponseBody
-//   @Transactional
-//   public Map<String, Object> getScore(int userId,String sourceName){
-//   	String shareOfState =null;
-//   	Map<String, Object> map = new HashMap<>();
-////   	shareOfState ="6";
-////   	intUserService.updateshareOfState(userId, shareOfState);
+////   分控分数
+//    @RequestMapping("/getScore")
+//    @ResponseBody
+//    @Transactional
+//    public Map<String, Object> getScore(int userId,String sourceName){
+//    	String shareOfState =null;
+//    	int score =0;
+//    	int roatnptFractionalSegmentSmall =0;
+//    	int roatnptFractionalSegmentBig =0;
+//    	Map<String, Object> map = new HashMap<>();
+////    	shareOfState ="6";
+////    	intUserService.updateshareOfState(userId, shareOfState);
+//
 //		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 //		String name = (String) userAttestation.get("trueName");
 //		String idNumber = (String) userAttestation.get("idcard_number");
-//   
-//       Map<String, Object> operator = operatorService.getOperator(userId);
-//       String phone = (String) operator.get("phone");
-//       String reqId = (String) operator.get("reqId");
-//       String search_id = (String) operator.get("search_id");
-//   	RuleDemo ruleDemo = new RuleDemo();
-//   	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
-//   	
-//   	ScoreDemo scoreDemo = new ScoreDemo();
-//   	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
-//   	  JSONObject jsonObject =null;
-//   	  jsonObject = JSONObject.parseObject(result);
-//         String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
-//         jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
-//         int score = Integer.parseInt(jsonObject.get("score").toString());  
-//          int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
-//          Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);  
-//          String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
-//          String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
-//          String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
-//          int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-//          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-//          if(score<roatnptFractionalSegmentSmall) {
-//       	   shareOfState ="0";
-//       	   map.put("code", 200);
-//       	   map.put("msg", "分数不够");
-//          }
-//          if(score>roatnptFractionalSegmentSmall&&score<roatnptFractionalSegmentBig) {
-//       	   shareOfState ="1";
-//       	   map.put("code", 200);
-//       	   map.put("msg", "需要人工审核");
-//          }
-//          if(score>roatnptFractionalSegmentBig) {
-//       	   shareOfState ="2";
-//       	   map.put("code", 200);
-//       	   map.put("msg", "分数够了");
-//          }
-//          intUserService.updateScore(score,userId,shareOfState);
-//         map.put("score", score);
-//         
-//   	
-//   	
+//    
+//        Map<String, Object> operator = operatorService.getOperator(userId);
+//        String phone = (String) operator.get("phone");
+//        String reqId = (String) operator.get("reqId");
+//        String search_id = (String) operator.get("search_id");
+//        int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
+//        Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);  
+//        String rmModleName =(String) map1.get("rmModleName");
+//        if(rmModleName.equals("风控甲")) {
+//        	RuleDemo ruleDemo = new RuleDemo();
+//        	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
+//        	
+//        	ScoreDemo scoreDemo = new ScoreDemo();
+//        	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
+//        	  JSONObject jsonObject =null;
+//        	  jsonObject = JSONObject.parseObject(result);
+//              String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
+//              jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
+//               score = Integer.parseInt(jsonObject.get("score").toString());   
+//               String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+//               String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+//               String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+//               roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+//               roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+//        }
+//        
+//        if(rmModleName.equals("风控乙")) {
+//        	Map<String, Object> map2 = userAttestationService.getuserAttestation(userId);
+//        	String linkmanOneName = (String) map2.get("linkmanOneName");
+//        	String linkmanOnePhone = (String) map2.get("linkmanOnePhone");
+//        	String linkmanTwoName = (String) map2.get("linkmanTwoName");
+//        	String linkmanTwoPhone = (String) map2.get("linkmanTwoPhone");
+//        	ZhimiRiskDemo zhimiRiskDemo = new ZhimiRiskDemo();
+//        	zhimiRiskDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName, linkmanTwoPhone);
+//        }
+//
+//           if(score<roatnptFractionalSegmentSmall) {
+//        	   shareOfState ="0";
+//        	   map.put("code", 200);
+//        	   map.put("msg", "分数不够");
+//           }
+//           if(score>roatnptFractionalSegmentSmall&&score<roatnptFractionalSegmentBig) {
+//        	   shareOfState ="1";
+//        	   map.put("code", 200);
+//        	   map.put("msg", "需要人工审核");
+//           }
+//           if(score>roatnptFractionalSegmentBig) {
+//        	   shareOfState ="2";
+//        	   map.put("code", 200);
+//        	   map.put("msg", "分数够了");
+//           }
+//           intUserService.updateScore(score,userId,shareOfState);
+//          map.put("score", score);
+//          
+//    	
+//    	
 //		return map;
-//   	
-//   }
+//    	
+//    }
+    
+    
+//  分控分数
+   @RequestMapping("/getScore")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> getScore(int userId,String sourceName){
+   	String shareOfState =null;
+   	Map<String, Object> map = new HashMap<>();
+//   	shareOfState ="6";
+//   	intUserService.updateshareOfState(userId, shareOfState);
+		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
+		String name = (String) userAttestation.get("trueName");
+		String idNumber = (String) userAttestation.get("idcard_number");
+   
+       Map<String, Object> operator = operatorService.getOperator(userId);
+       String phone = (String) operator.get("phone");
+       String reqId = (String) operator.get("reqId");
+       String search_id = (String) operator.get("search_id");
+   	RuleDemo ruleDemo = new RuleDemo();
+   	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
+   	
+   	ScoreDemo scoreDemo = new ScoreDemo();
+   	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
+   	  JSONObject jsonObject =null;
+   	  jsonObject = JSONObject.parseObject(result);
+         String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
+         jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
+         int score = Integer.parseInt(jsonObject.get("score").toString());  
+          int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
+          Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);  
+          String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+          String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+          String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+          int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          if(score<roatnptFractionalSegmentSmall) {
+       	   shareOfState ="0";
+       	   map.put("code", 200);
+       	   map.put("msg", "分数不够");
+          }
+          if(score>roatnptFractionalSegmentSmall&&score<roatnptFractionalSegmentBig) {
+       	   shareOfState ="1";
+       	   map.put("code", 200);
+       	   map.put("msg", "需要人工审核");
+          }
+          if(score>roatnptFractionalSegmentBig) {
+       	   shareOfState ="2";
+       	   map.put("code", 200);
+       	   map.put("msg", "分数够了");
+          }
+          intUserService.updateScore(score,userId,shareOfState);
+         map.put("score", score);
+         
+   	
+   	
+		return map;
+   	
+   }
 
-
+public static void main(String[] args) {
+	String url = "205";
+	if(url.indexOf("205")!=-1) {
+		System.out.println("存在包含关系，因为返回的值不等于-1");
+	}else{
+		            
+		            System.out.println("不存在包含关系，因为返回的值等于-1");
+		        }
+}
     
     
     public static  int getAge(Date birthDay) throws Exception {

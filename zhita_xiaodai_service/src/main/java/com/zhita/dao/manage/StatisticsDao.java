@@ -3,7 +3,7 @@ package com.zhita.dao.manage;
 import java.math.BigDecimal;
 import java.util.List;
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -30,13 +30,13 @@ public interface StatisticsDao {
 	Integer AddDeferred(Deferred defe);
 	
 	
-	Integer SelectUserdelayTimes(Orders ord);
+	Integer SelectUserdelayTimes(Integer userId);
 	
 	
 	Integer UpdateUser(Orders ord);
 	
 	
-	Integer SelectOrderId(String orderNumber);
+	Orders SelectOrderId(String orderNumber);
 	
 	
 	Integer AddPaymentRecord(Payment_record pay);
@@ -57,25 +57,25 @@ public interface StatisticsDao {
 	String UserAll(Integer userId);
 	
 	
-	Integer Addbankdeduction(Bankdeduction ban);
+	Integer Addbankdeduction(Bankdeductions ban);
 	
 	
-	Integer UpdateBank(Bankdeduction ban);
+	Integer UpdateBank(Bankdeductions ban);
 	
 	
 	Integer SelectTotalCount(Bankcard ban);
 	
 	
-	List<Bankdeduction> AllBank(Bankcard ban);
+	List<Bankdeductions> AllBank(Bankcard ban);
 	
 	
-	Integer ChenggNum(Bankdeduction ban);
+	Integer ChenggNum(Bankdeductions ban);
 	
 	
-	BigDecimal ChenggMoney(Bankdeduction ban);
+	BigDecimal ChenggMoney(Bankdeductions ban);
 	
 	
-	List<Bankdeduction> Deails(Bankdeduction ban);
+	List<Bankdeductions> Deails(Bankdeductions ban);
 	
 	
 	Orders OneOrders(Orders ord);
@@ -84,17 +84,28 @@ public interface StatisticsDao {
 	Integer UpdateOrderSuperl(Orders ord);
 	
 	
-	List<Bankdeduction> AllBan(Bankdeduction ban);
+	List<Bankdeductions> AllBan(Bankdeductions ban);
 	
 	
-	BigDecimal SelectChengMoney(Bankdeduction ban);
+	BigDecimal SelectChengMoney(Bankdeductions ban);
 	
 	
-	List<Bankdeduction> SelectBankKoukuan(Bankdeduction ban);
+	List<Bankdeductions> SelectBankKoukuan(Bankdeductions ban);
 	
 	
 	Integer DeleteChan(Integer userId);
 	
 	
 	Integer SelectUserId(Integer userId);
+	
+	
+	Integer SelectDefeDay(Integer companyId);
+	
+	
+	Integer DefeOrder(Orders ord);
+	
+	
+	String SelectDefeBefore(Integer orderId);
+	
+	
 }

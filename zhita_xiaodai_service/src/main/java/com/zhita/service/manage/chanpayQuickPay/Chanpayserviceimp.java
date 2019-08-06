@@ -1,6 +1,8 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,14 +56,15 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer AddRepayment(Repayment repay) {
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			repay.setRepaymentDate(Timestamps.dateToStamp(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		repay.setPaymentbtiao("畅捷支付");
-		repay.setOrderid(stdao.SelectOrderId(repay.getOrderNumber()));
+		Orders o = stdao.SelectOrderId(repay.getOrderNumber());
+		repay.setOrderid(o.getId());
 		System.out.println(repay.getOrderid());
 		return stdao.AddRepay(repay);
 	}
@@ -72,8 +75,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateOrders(Orders ord) {
-		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
-		Integer id = stdao.UpdateOrders(ord);
+		ord = stdao.SelectOrderId(ord.getOrderNumber());//根据编号查询订单ID
+		Integer id = stdao.UpdateOrders(ord);//
 		if(id != null){
 			Integer delaytimes = 0;
 			ord.setChenggNum(delaytimes);
@@ -91,27 +94,64 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer UpdateDefeOrders(Orders ord) {
-		ord.setId(stdao.SelectOrderId(ord.getOrderNumber()));
-		Integer num = stdao.SelectUserdelayTimes(ord);
+		Integer num = stdao.SelectUserdelayTimes(ord.getUserId());
+		ord = stdao.SelectOrderId(ord.getOrderNumber());
+		Integer lifeOfLoan = stdao.SelectDefeDay(ord.getCompanyId());//获取延期天数
+		String beforeTime = stdao.SelectDefeBefore(ord.getId());
+		Date date = null;
+		String sa = Timestamps.stampToDate(beforeTime);
+		try {
+			date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sa);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//取时间 
+	      Calendar calendar  =   Calendar.getInstance();		 
+		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+		    calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
+		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		    String afterTime = sdf1.format(date);//延期后应还时间
+		
 		Integer delaytimes = num+1;
+		try {
+			ord.setShouldReturnTime(Timestamps.dateToStamp1(afterTime));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		ord.setChenggNum(delaytimes);
+		stdao.DefeOrder(ord);
 		return stdao.UpdateUser(ord);
 	}
 
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		pay.setRemittanceTime(sim.format(new Date()));
+		try {
+			pay.setRemittanceTime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Orders o = stdao.SelectOrderId(pay.getOrderNumber());
+		pay.setOrderId(o.getId());
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
 		pay.setPaymentbtiao("畅捷支付");
+		System.out.println("走接口");
 		return stdao.AddPaymentRecord(pay);
 	}
 
 	@Override
 	public Integer AddDeferred(Deferred defe) {
 		defe.setDeleted("0");
-		defe.setOrderid(stdao.SelectOrderId(defe.getOrderNumber()));
+		Orders o = stdao.SelectOrderId(defe.getOrderNumber());
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			defe.setDeferredTime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		defe.setOrderid(o.getId());
 		return stdao.AddDeferred(defe);
 	}
 
@@ -140,6 +180,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 	@Override
 	public Integer SelectUserId(Integer userId) {
 		return stdao.SelectUserId(userId);
+	}
+
+	@Override
+	public Integer deleteBank(Integer userId) {
+		return stdao.DeleteChan(userId);
 	}
 	
 	

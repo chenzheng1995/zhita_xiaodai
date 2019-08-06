@@ -26,26 +26,32 @@
 			
 			
 			<update id="UpdateStatu" parameterType="java.lang.Integer">
-				update bankcard set attestationStatus = "1" where id = #{id}
+				update bankcard set attestationStatus = "1" where userId = #{id}
 			</update>
 			
 			
 			
 			<update id="UpdateOrders" parameterType="com.zhita.model.manage.Orders">
-				update orders set orderStatus = "2" where id = #{id}
+				update orders set orderStatus = "3" where id = #{id}
 			</update>
 			
 			
 			<insert id="AddRepay" parameterType="com.zhita.model.manage.Repayment">
 				INSERT INTO `repayment`(
-					orderid,
+					orderId,
 					repaymentMoney,
 					repaymentDate,
 					thirdparty_id,
+					collectionMemberId,
 					pipelinenumber,
-					paymentbtiao					
-				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{pipelinenumber},#{paymentbtiao})
+					statu,
+					reoaybtai
+				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{collectionMemberId},#{pipelinenumber},#{statu},#{reoaybtai})
 			</insert>
+			
+			<select id="SelectDefeDay" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select onceDeferredDay from deferred_settings where companyId = #{companyId}
+			</select>
 			
 			
 			<insert id="AddDeferred" parameterType="com.zhita.model.manage.Deferred">
@@ -63,7 +69,7 @@
 
 
 
-			<select id="SelectUserdelayTimes" parameterType="com.zhita.model.manage.Orders" resultType="java.lang.Integer">
+			<select id="SelectUserdelayTimes" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 				select delayTimes from user where id = #{userId}
 			</select>
 			
@@ -73,8 +79,13 @@
 			</update>
 			
 			
-			<select id="SelectOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
-				select id from orders where orderNumber = #{orderNumber}
+			<update id="DefeOrder" parameterType="com.zhita.model.manage.Orders">
+				update orders set shouldReturnTime = #{shouldReturnTime} where id = #{id}
+			</update>
+			
+			
+			<select id="SelectOrderId" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orders">
+				select id,companyId from orders where orderNumber = #{orderNumber}
 			</select>
 			
 			
@@ -100,8 +111,8 @@
 			
 			
 			<select id="SelectBanl" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankcard">
-				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm from bankcard ban,bankcard_type baty 
-				where ban.bankcardTypeId = baty.id and baty.companyId = #{companyId} and ban.userId = #{userId}
+				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm from bankcard ban,bankcard_type baty,user u 
+				where ban.bankcardTypeId = baty.id and baty.companyId = #{companyId} and u.id = ban.userId and  ban.userId = #{userId}
 			</select>
 			
 			
@@ -160,8 +171,8 @@
 			
 			
 			
-			<insert id="Addbankdeduction" parameterType="com.zhita.model.manage.Bankdeduction">
-				INSERT INTO `bankdeduction`
+			<insert id="Addbankdeduction" parameterType="com.zhita.model.manage.Bankdeductions">
+				INSERT INTO `bankdeductions`
 				(
 				sys_userId,
 				deductionproportion,
@@ -174,45 +185,48 @@
 			</insert>
 			
 			
-			<update id="UpdateBank" parameterType="com.zhita.model.manage.Bankdeduction">
-				update Bankdeduction set deductionstatus = #{deductionstatus} where orderId = #{orderId} and deduction_time = #{deduction_time}
+			<update id="UpdateBank" parameterType="com.zhita.model.manage.Bankdeductions">
+				update Bankdeductions set deductionstatus = #{deductionstatus} where orderId = #{orderId} and deduction_time = #{deduction_time}
 			</update>
 			
 			
 			
-			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankdeduction">
-				select ban.deduction_time,sy.account,ban.deductionproportion,sum(ban.id) as userNum
-				from sys_user sy,bankdeduction ban 
+			<select id="AllBank" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankdeductions">
+				select ban.deduction_time,sy.account,ban.deductionproportion,count(ban.id) as userNum,ban.sys_userId
+				from sys_user sy,bankdeductions ban 
 				<where>
 				 ban.sys_userId = sy.userId 
-				 and companyId = #{companyId}
+				 and sy.companyId = #{companyId}
 				 <if test="statu_time != null and statu_time != '' and end_time != null and end_time != ''">
 				 	and ban.deduction_time between #{statu_time} and #{end_time}
 				 </if>
 				 </where>
+				 group by sy.userId
 				 limit #{page},#{pagesize}
 			</select>
 			
 			
-			<select id="ChenggNum" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.lang.Integer">
-				select count(id) from bankdeduction where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} and deductionstatus = "扣款成功"
+			<select id="ChenggNum" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">
+				select count(id) from bankdeductions where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} and deductionstatus = "扣款成功"
 			</select>
 			
 			
-			<select id="ChenggMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
-				select sum(deduction_money) from bankdeduction where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} 
+			
+			
+			<select id="ChenggMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
+				select sum(deduction_money) from bankdeductions where sys_userId = #{sys_userId} and deduction_time = #{deduction_time} 
 			</select>
 			
 			
-			<select id="Bankdeail" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
-				select ban.deduction_time,ban.deductionproportion,ban.deduction_money from bankdeduction ban,orders o
+			<select id="Bankdeail" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+				select ban.deduction_time,ban.deductionproportion,ban.deduction_money from bankdeductions ban,orders o
 				where ban.orderId = #{orderId} AND o.companyId = #{companyId}
 			</select>
 			
 			
 			
-			<select id="Deails" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
-				select ban.deduction_time,u.name,ord.surplus_money,ban.deductionproportion,ban.deduction_money from bankdeduction ban,user u,orders o,orderdetails ord
+			<select id="Deails" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+				select ban.deduction_time,u.name,ord.surplus_money,ban.deductionproportion,ban.deduction_money from bankdeductions ban,user u,orders o,orderdetails ord
 				where o.userId = u.id and o.id = ord.orderId and o.id = ban.orderId and o.companyId = #{companyId} and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
 			</select>
 			
@@ -228,25 +242,25 @@
 				update orderdetails set surplus_money = #{surplus_money} where id = #{id}
 			</update>
 			
-			<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.lang.Integer">
-				select count(ban.id) from bankdeduction ban,sys_user sy where sy.userId = ban.sys_userId and sy.companyId = #{companyId}
+			<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">
+				select count(ban.id) from bankdeductions ban,sys_user sy where sy.userId = ban.sys_userId and sy.companyId = #{companyId}
 			</select>
 			
 			
-			<select id="AllBan" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
-				select deduction_time,deductionproportion,deduction_money from bankdeduction where orderId = #{orderId}
+			<select id="AllBan" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+				select deduction_time,deductionproportion,deduction_money from bankdeductions where orderId = #{orderId}
 			</select>
 			
 			
-			<select id="SelectChengMoney" parameterType="com.zhita.model.manage.Bankdeduction" resultType="java.math.BigDecimal">
-				SELECT sum(ban.deduction_money) FROM bankdeduction ban,sys_user sy WHERE ( datediff ( deduction_time , #{deduction_time} ) = 0 ) and
+			<select id="SelectChengMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
+				SELECT sum(ban.deduction_money) FROM bankdeductions ban,sys_user sy WHERE ( datediff ( deduction_time , #{deduction_time} ) = 0 ) and
 				sy.userId = ban.sys_userId and sy.companyId = #{companyId} and deductionstatus = "扣款成功"
 			</select>
 			
 			
-			<select id="SelectBankKoukuan" parameterType="com.zhita.model.manage.Bankdeduction" resultType="com.zhita.model.manage.Bankdeduction">
+			<select id="SelectBankKoukuan" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
 				select ban.deduction_time,u.name,ord.realityBorrowMoney,ord.interestPenaltySum,ban.deductionproportion,ban.deduction_money
-				from user u,orders o,orderdetails ord,bankdeduction ban where o.id = ban.orderId and o.userId = u.id and o.id = ord.orderId
+				from user u,orders o,orderdetails ord,bankdeductions ban where o.id = ban.orderId and o.userId = u.id and o.id = ord.orderId
 				and ban.deduction_time = #{deduction_time} and ban.sys_userId = #{sys_userId}
 			</select>
 			
@@ -259,4 +273,10 @@
 			<select id="SelectUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 				select id from bankcard where userId = #{userId}
 			</select>
+			
+			
+			<select id="SelectDefeBefore" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select shouldReturnTime from orders where id = #{orderId}
+			</select>
+			
 </mapper>

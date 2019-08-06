@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Accountadjustment;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
 import com.zhita.model.manage.Loan_setting;
@@ -47,13 +47,15 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
-		try {
-			System.out.println(payrecord.getStart_time()+"+++"+payrecord.getEnd_time());
-			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
-			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
-			System.out.println(payrecord.getStart_time()+"++++"+payrecord.getEnd_time());
-		} catch (Exception e) {
-			// TODO: handle exception
+		
+		
+		if(payrecord.getStart_time()!=null && payrecord.getStart_time()!="" && payrecord.getEnd_time()!=null && payrecord.getEnd_time()!=""){
+			try {
+				payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+				payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		Integer totalCount = padao.TotalCountPayment(payrecord);
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
@@ -85,7 +87,7 @@ public class FinanceServiceimp implements FinanceService{
 		payrecord.setProfessionalWork("还款");
 		List<Payment_record> rapay = padao.RepaymentAll(payrecord);
 		for(int i = 0 ;i<rapay.size();i++){
-			rapay.get(i).setRemittanceTime(Timestamps.stampToDate(rapay.get(i).getRemittanceTime()));
+			rapay.get(i).setRepaymentDate(Timestamps.stampToDate(rapay.get(i).getRepaymentDate()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Repayment", rapay);
@@ -104,11 +106,12 @@ public class FinanceServiceimp implements FinanceService{
 		}else{
 			ordea.setRealityBorrowMoney(ordea.getInterestPenaltySum().add(ordea.getRealityBorrowMoney()));
 		}
+		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNum(ordea.getOrderId());
 		orderNumber.setDefeNum(defe.getId());
 		orderNumber.setDefeMoney(defe.getInterestOnArrears());
-		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));
+		ordea.setRegisteTime(Timestamps.stampToDate(ordea.getRegisteTime()));
 		ordea.setShouldReturnTime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
 		ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getDeferAfterReturntime()));
 		ordea.setDeferBeforeReturntime(Timestamps.stampToDate(ordea.getDeferBeforeReturntime()));
@@ -178,14 +181,13 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		try {
-			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			ordetail.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
-			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
 			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
+			ordetail.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -207,10 +209,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectNoMoney(Orderdetails ordetail) {
+		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		try {
-			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
 			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
@@ -238,8 +238,12 @@ public class FinanceServiceimp implements FinanceService{
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
 			ordetail.setAccounttime(System.currentTimeMillis()+"");
-			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
-			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		try {
+			
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
 			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
 		} catch (Exception e) {
@@ -274,9 +278,9 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
 		ordetail.setPage(pages.getPage());
 		ordetail.setIds(padao.Sys_userIds(ordetail.getCompanyId()));
-		List<Undertheline> under = padao.AllUnderthe(ordetail);
+		List<Offlinetransfer> under = padao.AllUnderthe(ordetail);
 		for (int i = 0; i < under.size(); i++) {
-			under.get(i).setUnderthe_time(Timestamps.stampToDate(under.get(i).getUnderthe_time()));
+			under.get(i).setOffinetransfertime(Timestamps.stampToDate(under.get(i).getOffinetransfertime()));
 		}
 		map.put("Undertheline", under);
 		return map;
@@ -309,7 +313,6 @@ public class FinanceServiceimp implements FinanceService{
 		Integer addId = padao.AddUndertheline(unde);
 		if(addId != null){
 			map.put("code", 200);
-			padao.UpdateOrderType(unde.getOrderId());
 			map.put("desc", "添加成功");
 		}else{
 			map.put("code", 0);
@@ -322,7 +325,7 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> SelectBankDeductOrders(Bankdeduction bank) {
+	public Map<String, Object> SelectBankDeductOrders(Bankdeductions bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			bank.setStartu_time(Timestamps.dateToStamp1(bank.getStartu_time()));
@@ -355,7 +358,7 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> AllBank(Integer orderId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(orderId != null){
-			List<Bankdeduction> banls = padao.BanAll(orderId);
+			List<Bankdeductions> banls = padao.BanAll(orderId);
 			map.put("bankde", banls);
 		}else{
 			map.put("bankde", "无数据");
@@ -367,7 +370,7 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> AddBank(Bankdeduction banl) {
+	public Map<String, Object> AddBank(Bankdeductions banl) {
 		
 		return null;
 	}
@@ -376,13 +379,16 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> AllDelayStatis(Bankdeduction banl) {
-		try {
-			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
-			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
+	public Map<String, Object> AllDelayStatis(Bankdeductions banl) {
+		if(banl.getStartu_time()!= null){
+			try {
+				banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+				banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = padao.DelayTatolCount(banl);
 		if(totalCount !=null){
@@ -394,12 +400,21 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		
-		List<Bankdeduction> banks = padao.DelayStatisc(banl);
+		List<Bankdeductions> banks = padao.BankdeduCtionsData(banl);
 		for (int i = 0; i < banks.size(); i++) {
-			banks.get(i).setDeferAfterReturntime(Timestamps.stampToDate(banks.get(i).getDeferAfterReturntime()));
-			Bankdeduction ban = padao.SelectBank(banks.get(i));
-			banks.get(i).setBranKnum(ban.getBranKnum());
-			banks.get(i).setBrankMoney(ban.getBrankMoney());
+			banks.get(i).setCompanyId(banl.getCompanyId());
+			String statu = banks.get(i).getDeduction_time()+" 00:00:01";
+			String end = banks.get(i).getDeduction_time()+" 23:59:59";
+			try {
+				banks.get(i).setStartu_time(Timestamps.dateToStamp1(statu));
+				banks.get(i).setEnd_time(Timestamps.dateToStamp1(end));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			Bankdeductions ban = padao.DefeRRe(banks.get(i));
+			banks.get(i).setOrderNum(ban.getOrderNum());
+			banks.get(i).setInterestOnArrearsSum(ban.getInterestOnArrearsSum());
+			banks.get(i).setDeduction_time(Timestamps.stampToDate1(banks.get(i).getDeduction_time()));
 		}
 		map.put("Bankdeduction", banks);
 		return map;
@@ -409,14 +424,14 @@ public class FinanceServiceimp implements FinanceService{
 
 
 	@Override
-	public Map<String, Object> Financialover(Bankdeduction banl) {
+	public Map<String, Object> Financialover(Bankdeductions banl) {
 		try {
 			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
 			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		Bankdeduction bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
+		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		bank.setDeferredamount(padao.YanMoney(banl));
 		bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
 		bank.setDeductionstatus(""+bank.getRealreturn()+","+0+","+bank.getPaymentamount()+"");//实还笔数    实还金额
@@ -434,7 +449,12 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> AddOffJianmian(Offlinjianmian off) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		off.setSedn_time(sim.format(new Date()));
+		try {
+			off.setSedn_time(Timestamps.dateToStamp(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		Integer addId = padao.AddOffJianMian(off);
 		if(addId != null){
 			map.put("code", 200);

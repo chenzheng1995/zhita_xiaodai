@@ -29,6 +29,8 @@ public class Orderdetails {
 	
 	private BigDecimal makeLoans;//放款金额(元)
 	
+	private String registeTime;
+	
 	private BigDecimal interestDay;//期内日均利息（0.06%）
 	
 	private BigDecimal interestSum;//期内总利息（元）
@@ -202,6 +204,56 @@ public class Orderdetails {
     private String bankcardName;//银行卡号
     
     private String idcard_number;
+    
+    private Integer riskControlPoints;
+    
+    private Integer delayTimes;
+
+    private String rename_id;
+    
+    private String number;
+    
+    private String registeClient;
+    
+	public String getRegisteClient() {
+		return registeClient;
+	}
+
+	public void setRegisteClient(String registeClient) {
+		this.registeClient = registeClient;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public String getRename_id() {
+		return rename_id;
+	}
+
+	public void setRename_id(String rename_id) {
+		this.rename_id = rename_id;
+	}
+
+	public Integer getDelayTimes() {
+		return delayTimes;
+	}
+
+	public void setDelayTimes(Integer delayTimes) {
+		this.delayTimes = delayTimes;
+	}
+
+	public Integer getRiskControlPoints() {
+		return riskControlPoints;
+	}
+
+	public void setRiskControlPoints(Integer riskControlPoints) {
+		this.riskControlPoints = riskControlPoints;
+	}
 
 	public String getIdcard_number() {
 		return idcard_number;
@@ -994,6 +1046,14 @@ public class Orderdetails {
 
 	public void setDeductionproportion(Integer deductionproportion) {
 		this.deductionproportion = deductionproportion;
+	}
+
+	public String getRegisteTime() {
+		return registeTime;
+	}
+
+	public void setRegisteTime(String registeTime) {
+		this.registeTime = registeTime;
 	}
     
 

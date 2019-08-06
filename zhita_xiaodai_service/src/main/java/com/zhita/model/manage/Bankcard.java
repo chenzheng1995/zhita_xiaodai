@@ -43,6 +43,24 @@ public class Bankcard {
 	private String statu_time;
 	
 	private String end_time;
+	
+	private String name;
+
+	public String getAuthentime() {
+		return authentime;
+	}
+
+	public void setAuthentime(String authentime) {
+		this.authentime = authentime;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public String getStatu_time() {
 		return statu_time;

@@ -87,7 +87,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://tg.mis8888.com/promote/"+templateName+"/index.html?code="+record.getSourcename());
+    	record.setLink("http://xcx.rong51dai.com/promote/"+templateName+"/index.html?code="+record.getSourcename());
     	
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
@@ -472,5 +472,23 @@ public class SourceServiceImp implements IntSourceService{
 	public int queryorderpass(Integer sourceid,String starttime,String endtime){
 		int count=sourceMapper.queryorderpass(sourceid, starttime, endtime);
 		return count;
+	}
+
+	@Override
+	public List<String> getstateAndDeleted(int companyId, String sourceName) {
+		List<String> list = sourceMapper.getstateAndDeleted(companyId,sourceName);
+		return list;
+	}
+
+	@Override
+	public List<String> getDeleted(int companyId, String sourceName) {
+		List<String> list1 = sourceMapper.getDeleted(companyId,sourceName);
+		return list1;
+	}
+
+	@Override
+	public int queryByLike1(String source, int companyId) {
+		int sourceId = sourceMapper.queryByLike1(source,companyId);
+		return sourceId;
 	}
 }

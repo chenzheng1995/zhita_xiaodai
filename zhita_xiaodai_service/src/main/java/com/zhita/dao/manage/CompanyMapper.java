@@ -14,4 +14,6 @@ public interface CompanyMapper {
     int updateByPrimaryKeySelective(Company record);
 
     int updateByPrimaryKey(Company record);
+
+	int getCompanyId(String company);
 }

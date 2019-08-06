@@ -20,6 +20,7 @@
       <arg column="canBorrowLines" jdbcType="DECIMAL" />
       <arg column="shareOfState" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="delayTimes" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="operatorsAuthentication" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -214,7 +215,7 @@
 	
 				  	<!--APP 插入用户信息 -->
 	<insert id="insertUser1" parameterType="java.util.Map">
-		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket)
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication)
 		values (#{newPhone},
 		#{registrationTime},
 		#{loginStatus},
@@ -222,7 +223,8 @@
 		#{registeClient},
 		#{registrationTime},
 		#{merchantId},
-		#{useMarket})
+		#{useMarket},
+		#{operatorsAuthentication})
 	</insert>
 	
 	
@@ -543,4 +545,12 @@
   	update user set shareOfState=#{shareOfState} where id = #{userId}
   </update>
 
+
+  <update id="setuser" parameterType="java.util.Map"> 
+  	update user set applynumber=#{applynumber},applytime=#{timStamp} where id = #{userId}
+  </update>
+
+  <update id="updatename" parameterType="java.util.Map"> 
+  	update user set name=#{name} where id = #{userId}
+  </update>
 </mapper>

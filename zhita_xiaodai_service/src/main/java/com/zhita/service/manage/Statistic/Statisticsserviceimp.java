@@ -1,24 +1,21 @@
 package com.zhita.service.manage.Statistic;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
-import com.zhita.model.manage.Bankdeduction;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -50,10 +47,10 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	public MouthBankName SendBankcomm(String BankCommonName,String AcctNo,String AcctName,String TransAmt,String LiceneceNo,
 			String Phone,Integer sys_userId,Integer deductionproportion,String orderNumber,Integer orderId,Integer userId) {
 			Map<String, String> map = this.requestBaseParameter();
-			Bankdeduction ban = new Bankdeduction();
+			Bankdeductions ban = new Bankdeductions();
 			ban.setSys_userId(sys_userId);
 			ban.setDeductionproportion(deductionproportion);
-			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			ban.setDeduction_time(sim.format(new Date()));
 			String time = sim.format(new Date());
 			ban.setOrderId(orderId);
@@ -134,23 +131,33 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	}
 
 	@Override
-	public Integer UpdateBank(Bankdeduction ban) {
+	public Integer UpdateBank(Bankdeductions ban) {
 		return sdao.UpdateBank(ban);
 	}
 
 	@Override
 	public Map<String, Object> AllBankdeduData(Bankcard ban) {
+		System.out.println();
+		if(ban.getStatu_time()!=null && ban.getStatu_time()!="" && ban.getEnd_time()!=null && ban.getEnd_time()!=""){
+			try {
+				ban.setStatu_time(Timestamps.dateToStamp1(ban.getStatu_time()));
+				ban.setEnd_time(Timestamps.dateToStamp1(ban.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = sdao.SelectTotalCount(ban);
 		PageUtil pages = new PageUtil(ban.getPage(), totalCount);
 		ban.setPage(pages.getPage());
-		List<Bankdeduction> bans = sdao.AllBank(ban);
+		List<Bankdeductions> bans = sdao.AllBank(ban);
 		for(int i=0;i<bans.size();i++){
 			bans.get(i).setCompanyId(ban.getCompanyId());
 			bans.get(i).setChengNum(sdao.ChenggNum(bans.get(i)));//已选扣款用户总数
 			bans.get(i).setShiNum(bans.get(i).getUserNum()-bans.get(i).getChengNum());//扣款失败用户数
 			bans.get(i).setDeduction_money(sdao.ChenggMoney(bans.get(i)));//扣款金额
 			bans.get(i).setChengMoney(sdao.SelectChengMoney(bans.get(i)));
+			bans.get(i).setDeduction_time(Timestamps.stampToDate(bans.get(i).getDeduction_time()));
 		}
 		map.put("Bankdeduction", bans);
 		map.put("pageutil", pages);
@@ -158,16 +165,16 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	}
 
 	@Override
-	public Map<String, Object> AllBankdetail(Bankdeduction bank) {
+	public Map<String, Object> AllBankdetail(Bankdeductions bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Bankdeduction> b = sdao.AllBan(bank);
+		List<Bankdeductions> b = sdao.AllBan(bank);
 		map.put("Bankdeduction", b);
 		return map;
 	}
 
 	@Override
-	public Map<String, Object> AllDetails(Bankdeduction bank) {
-		List<Bankdeduction> bans = sdao.SelectBankKoukuan(bank);
+	public Map<String, Object> AllDetails(Bankdeductions bank) {
+		List<Bankdeductions> bans = sdao.SelectBankKoukuan(bank);
 		for(int i=0;i<bans.size();i++){
 			bans.get(i).setCollection_money(bans.get(i).getRealityBorrowMoney().add(bans.get(i).getInterestPenaltySum()));
 		}
