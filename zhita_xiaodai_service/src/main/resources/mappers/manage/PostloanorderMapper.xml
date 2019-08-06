@@ -486,14 +486,17 @@
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
+			</if>
 			 </where>
 		</select>
 		
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
-			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName 
+			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,o.overdueGrade,
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName,u.registeClient 
 			from orders o LEFT JOIN user u on u.id = o.userId
 			LEFT JOIN orderdetails ord on o.id = ord.orderId
 			LEFT JOIN deferred defe on o.id = defe.orderid
@@ -527,6 +530,9 @@
 			</if>
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
 			</if>
 			 </where>
 			 GROUP BY o.id
@@ -570,6 +576,9 @@
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
+			</if>
 			</where>
 		</select>
 		
@@ -579,7 +588,7 @@
 		<select id="CollecOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
 			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName 
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName,u.registeClient,o.overdueGrade
 			from orders o LEFT JOIN user u on u.id = o.userId
 			LEFT JOIN orderdetails ord on o.id = ord.orderId
 			LEFT JOIN deferred defe on o.id = defe.orderid
@@ -616,6 +625,9 @@
 			</if>
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
 			</if>
 			</where>
 			GROUP BY o.id
@@ -665,6 +677,9 @@
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
+			</if>
 			</where>
 		</select>
 		
@@ -672,8 +687,8 @@
 		
 		<select id="HuaiZhangOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
-			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName 
+			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName,u.registeClient,o.overdueGrade
 			from orders o LEFT JOIN user u on u.id = o.userId
 			LEFT JOIN orderdetails ord on o.id = ord.orderId
 			LEFT JOIN deferred defe on o.id = defe.orderid
@@ -707,6 +722,9 @@
 			</if>
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
 			</if>
 			</where>
 			group by o.id
