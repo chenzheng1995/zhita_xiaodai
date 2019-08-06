@@ -36,5 +36,7 @@ public interface IntUserService {
 
 	public void setuser(int userId, String timStamp, String applynumber);
 
+	public void updatename(String name, int userId);
+
 
 }

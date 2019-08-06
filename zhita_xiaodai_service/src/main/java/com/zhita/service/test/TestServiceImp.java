@@ -26,4 +26,9 @@ public class TestServiceImp implements TestService{
 		return name;
 	}
 
+	@Override
+	public void updatetest(String name,String date) {
+		xtestMapper.updatetest(name,date);
+	}
+
 }

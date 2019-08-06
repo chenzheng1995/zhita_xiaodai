@@ -68,4 +68,9 @@
       deleted = #{deleted,jdbcType=VARCHAR}
     where companyId = #{companyid,jdbcType=INTEGER}
   </update>
+  
+    <select id="getCompanyId" parameterType="java.lang.String" resultType="java.lang.Integer" >
+select companyId  from company where company = #{company}
+  </select>
+  
 </mapper>

@@ -274,5 +274,11 @@ public class UserServiceImp implements IntUserService{
 		
 	}
 
+	@Override
+	public void updatename(String name, int userId) {
+		userMapper.updatename(name,userId);
+		
+	}
+
 
 }

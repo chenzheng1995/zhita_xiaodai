@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
+import com.zhita.service.test.TestService;
 import com.zhita.util.PhoneDeal;
 
 
@@ -21,6 +22,9 @@ import com.zhita.util.PhoneDeal;
 public class borrowMoneyMessageController {
 	@Autowired
 	IntBorrowmonmesService intBorrowmonmesService;
+	
+	@Autowired
+	TestService testService;
 	
 
     @RequestMapping("/getborrowMoneyMessage")
@@ -43,5 +47,26 @@ public class borrowMoneyMessageController {
         return map2;
 
     }
+    
+    @RequestMapping("/get")
+    @ResponseBody
+    @Transactional
+    public String get(String name) {
+
+        MyThread2 Thread = new MyThread2(name);   
+        String date = System.currentTimeMillis()+""; 
+        testService.updatetest(name,date);
+        if(name.equals("小红")) {
+            Thread.start();
+            return name;
+        }
+
+
+		return name;
+    }
+    
+    
+
+    
 
 }
