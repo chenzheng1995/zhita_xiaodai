@@ -56,7 +56,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer AddRepayment(Repayment repay) {
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			repay.setRepaymentDate(Timestamps.dateToStamp(sim.format(new Date())));
 		} catch (Exception e) {
