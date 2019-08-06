@@ -32,11 +32,11 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	private UserMapper userMapper;
 	
 	//后台管理---查询列表
-    public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
+    public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard,String blackType){
      	List<BlacklistUser> list=new ArrayList<>();
     	List<BlacklistUser> listto=new ArrayList<>();
     	PageUtil2 pageUtil=null;
-    	list=blacklistUserMapper.queryAll(companyId, name, phone, idcard);
+    	list=blacklistUserMapper.queryAll(companyId, name, phone, idcard,blackType);
     	
     	
     	if(list!=null && !list.isEmpty()){

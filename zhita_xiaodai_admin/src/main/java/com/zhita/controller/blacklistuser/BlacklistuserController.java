@@ -23,8 +23,8 @@ public class BlacklistuserController {
 	//后台管理---查询列表
 	@ResponseBody
 	@RequestMapping("/queryAll")
-    public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard){
-    	Map<String, Object> map=intBlacklistuserService.queryAll(page, companyId, name, phone, idcard);
+    public Map<String, Object> queryAll(Integer page,Integer companyId,String name,String phone,String idcard,String blackType){
+    	Map<String, Object> map=intBlacklistuserService.queryAll(page, companyId, name, phone, idcard,blackType);
     	return map;
     }
 	
