@@ -149,7 +149,7 @@
           #{idcard,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}
       </foreach>
     </insert>
-    <!--批量插入，通过手机号查询数据库表中是否有该白名单用户  -->
+    <!--批量插入，通过手机号查询数据库表中是否有该黑名单用户  -->
     <select id="queryByPhone"  parameterType="java.lang.String" resultType="com.zhita.model.manage.BlacklistUser">
     select 
     <include refid="Base_Column_List" />

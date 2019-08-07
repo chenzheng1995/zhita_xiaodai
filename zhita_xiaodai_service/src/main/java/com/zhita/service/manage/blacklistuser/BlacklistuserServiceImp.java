@@ -43,9 +43,6 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
-
-//    		pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
-
     		for (int i = 0; i < listto.size(); i++) {
     			listto.get(i).setOperationtime(Timestamps.stampToDate(listto.get(i).getOperationtime()));
     		}
@@ -53,7 +50,6 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
-
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -138,7 +134,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	            BlacklistUser j = null;
 	 
 	            try {
-	                j = blacklistUserMapper.queryByPhone(String.valueOf(lo.get(1)));//通过手机号查询表中是否有该白名单用户
+	                j = blacklistUserMapper.queryByPhone(String.valueOf(lo.get(1)));//通过手机号查询表中是否有该黑名单用户
 	            } catch (NumberFormatException e) {
 	                // TODO Auto-generated catch block
 	                System.out.println("数据库中无该条数据，新增");

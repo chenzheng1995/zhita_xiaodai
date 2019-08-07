@@ -327,7 +327,7 @@
 	</update>
 	<!--后台管理       通过用户id查询该用户姓名，手机号，身份证号  -->
 	<select id="queryByUserid" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BlacklistUser">
-		select u.name,u.phone,uat.idcard_number from user u left join user_attestation uat on u.id=uat.userid where u.id=#{arg0}
+		select u.name,u.phone,uat.idcard_number idcard from user u left join user_attestation uat on u.id=uat.userid where u.id=#{arg0}
 	</select>
 	
 			<!--APP 修改密码-->
