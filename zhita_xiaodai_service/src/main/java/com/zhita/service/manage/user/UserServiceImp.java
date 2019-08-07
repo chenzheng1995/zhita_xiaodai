@@ -306,5 +306,11 @@ public class UserServiceImp implements IntUserService{
 		
 	}
 
+	@Override
+	public void updateifBlacklist(int userId) {
+		userMapper.updateifBlacklist(userId);
+		
+	}
+
 
 }

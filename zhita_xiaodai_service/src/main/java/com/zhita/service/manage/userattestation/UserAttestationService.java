@@ -1,6 +1,9 @@
 package com.zhita.service.manage.userattestation;
 
+import java.util.List;
 import java.util.Map;
+
+
 
 public interface UserAttestationService {
 
@@ -40,6 +43,9 @@ public interface UserAttestationService {
 			String homeAddressLatitude, String detailAddress, String nationalEmblemossPath);
 
 	String getshareOfState(int userId);
+
+	List<Integer> getuserId(String idCard);
+
 
 
 

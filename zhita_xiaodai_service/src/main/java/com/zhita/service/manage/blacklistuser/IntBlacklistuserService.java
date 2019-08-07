@@ -33,4 +33,11 @@ public interface IntBlacklistuserService {
       * @return
       */
      String ajaxUploadExcel(MultipartFile excelFile,Integer companyId,Integer operator);
+
+	public int getid(String phone, int companyId);
+
+	public int getid1(String idCard, int companyId);
+
+	public void setBlacklistuser(String idCard, int userId, int companyId, String phone, String name, String date,
+			String blackType);
 }

@@ -165,4 +165,23 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	 
 	        return "1";
 	    }
+
+	@Override
+	public int getid(String phone, int companyId) {
+		int num1 = blacklistUserMapper.getid(phone,companyId);
+		return num1;
+	}
+
+	@Override
+	public int getid1(String idCard, int companyId) {
+		int num1 = blacklistUserMapper.getid1(idCard,companyId);
+		return num1;
+	}
+
+	@Override
+	public void setBlacklistuser(String idCard, int userId, int companyId, String phone, String name, String date,
+			String blackType) {
+		blacklistUserMapper.setBlacklistuser(idCard,userId,companyId,phone,name,date,blackType);
+		
+	}
 }

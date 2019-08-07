@@ -1,8 +1,10 @@
 package com.zhita.dao.manage;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+
 
 import com.zhita.model.manage.UserAttestation;
 
@@ -55,5 +57,7 @@ public interface UserAttestationMapper {
 			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number,@Param("homeAddressLongitude") String homeAddressLongitude,@Param("homeAddressLatitude") String homeAddressLatitude,@Param("detailAddress") String detailAddress,@Param("authenticationSteps") String authenticationSteps);
 
 	String getshareOfState(int userId);
+
+	List<Integer> getuserId(String idCard);
 
 }

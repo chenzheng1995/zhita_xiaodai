@@ -33,5 +33,9 @@ public interface OperatorMapper {
 
 	void updatereqId(@Param("userId")int userId,@Param("reqId") String reqId);
 
+	void updateAttestationStatus(@Param("attestationStatus")String attestationStatus,@Param("userId") int userId);
+
+	String getattestationStatus(int id);
+
 
 }

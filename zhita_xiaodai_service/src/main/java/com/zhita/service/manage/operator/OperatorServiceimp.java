@@ -49,4 +49,16 @@ public class OperatorServiceimp implements OperatorService{
 		
 	}
 
+	@Override
+	public void updateAttestationStatus(String attestationStatus, int userId) {
+		operatorMapper.updateAttestationStatus(attestationStatus,userId);
+		
+	}
+
+	@Override
+	public String getattestationStatus(int id) {
+		String attestationStatus = operatorMapper.getattestationStatus(id);
+		return attestationStatus;
+	}
+
 }
