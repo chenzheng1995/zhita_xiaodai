@@ -144,59 +144,60 @@ public class Smserviceimp implements Smservice{
 	@Override
 	public Map<String, Object> AllPhone(SmsSendRequest sm) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, +1); //得到前一天
-		Date date = calendar.getTime();
+		Date date = null;
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
-		String a = sim.format(date);
-		String b = sim.format(new Date());
+		String a = sim.format(new Date());
+		String c = a+" 00:00:01";
+		String d = a+" 23:59:59";
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> phones = null;
+		Date dete = null;
 		if(sm.getBiaoshi()==0){
 			try {
-				sm.setStatu_time(Timestamps.dateToStamp(b));
-				sm.setEnd_time(Timestamps.dateToStamp(a));
+				sm.setStatu_time(Timestamps.dateToStamp1(c));
+				sm.setEnd_time(Timestamps.dateToStamp1(d));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 1){
-			calendar.add(Calendar.DATE, 1); //得到前一天
-			date = calendar.getTime();
-			a = sim.format(date);
-			calendar.add(Calendar.DATE, 2); //得到前两天
-			date = calendar.getTime();
-			b = sim.format(date);
-			System.out.println("时间:"+a+"1111"+b);
+			    calendar.add(calendar.DATE, 1);//把日期往后增加n天.正数往后推,负数往前移动 
+			    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			    a = sim.format(date);//延期后应还时间
+			    System.out.println("a:"+a);
+			    String statu_time = a+" 00:00:01";
+			    String end_time = a+" 23:59:59";
+			    System.out.println(statu_time+"1"+end_time);
 			try {
-				sm.setStatu_time(Timestamps.dateToStamp(b));
-				sm.setEnd_time(Timestamps.dateToStamp(a));
+				sm.setStatu_time(Timestamps.dateToStamp1(statu_time));
+				sm.setEnd_time(Timestamps.dateToStamp1(end_time));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 2){
 			calendar.add(Calendar.DATE, 2);
-			date = calendar.getTime();
-			a = sim.format(date);
-			calendar.add(Calendar.DATE, 3); 
-			date = calendar.getTime();
-			b = sim.format(date);
-			System.out.println("时间:"+a+"1111"+b);
+			 date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			 a = sim.format(date);//延期后应还时间
+			 System.out.println("a:"+a);
+			 String statu_time = a+" 00:00:01";
+			 String end_time = a+" 23:59:59";
+			 System.out.println(statu_time+"1"+end_time);
 			try {
-				sm.setStatu_time(Timestamps.dateToStamp(b));
-				sm.setEnd_time(Timestamps.dateToStamp(a));
+				sm.setStatu_time(Timestamps.dateToStamp1(statu_time));
+				sm.setEnd_time(Timestamps.dateToStamp1(end_time));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 3){
-			calendar.add(Calendar.DATE, 4);
-			date = calendar.getTime();
-			a = sim.format(date);
-			calendar.add(Calendar.DATE, 5);
-			date = calendar.getTime();
-			b = sim.format(date);
-			System.out.println("时间:"+a+"1111"+b);
+			calendar.add(Calendar.DATE, 3);
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			 a = sim.format(date);//延期后应还时间
+			 System.out.println("a:"+a);
+			 String statu_time = a+" 00:00:01";
+			 String end_time = a+" 23:59:59";
+			 System.out.println(statu_time+"1"+end_time);
 			try {
-				sm.setStatu_time(Timestamps.dateToStamp(b));
-				sm.setEnd_time(Timestamps.dateToStamp(a));
+				sm.setStatu_time(Timestamps.dateToStamp1(statu_time));
+				sm.setEnd_time(Timestamps.dateToStamp1(statu_time));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}

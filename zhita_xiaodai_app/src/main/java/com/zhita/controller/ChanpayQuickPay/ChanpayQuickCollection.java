@@ -712,7 +712,6 @@ public class ChanpayQuickCollection {
 
 	
 	/**
-	 * 
 	 * 2.5 支付确认接口： api nmg_api_quick_payment_smsconfirm
 	 */
 	@ResponseBody
@@ -724,15 +723,13 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_quick_payment_smsconfirm");// 请求的接口名称
 		// 2.2 业务参数
-		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
+		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());//订单号
 		origMap.put("OriPayTrxId", OriPayTrxId);// 原有支付请求订单号
 		origMap.put("SmsCode", SmsCode);// 短信验证码
-//		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		String result = "";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-						urlStr);
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,urlStr);
 			ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 			String as = retu.getAcceptStatus();
 			Orders ord = new Orders();
@@ -750,8 +747,7 @@ public class ChanpayQuickCollection {
 				e.printStackTrace();
 			}
 			System.out.println(result);
-		//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
-		return map;
+			return map;
 	}
 
 	/**

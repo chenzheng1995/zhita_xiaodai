@@ -139,4 +139,16 @@ public interface PaymentRecordMapper {
     
     
     List<Bankdeductions> BankdeduCtionsData(Bankdeductions banl);
+    
+    
+    Bankdeductions OnDefe(Bankdeductions banl);
+    
+    
+    Bankdeductions Onrepayment(Bankdeductions banl);
+    
+    
+    Bankdeductions OneCollection(Bankdeductions banl);
+    
+    
+    Bankdeductions OneMoney(Bankdeductions banl);
 }

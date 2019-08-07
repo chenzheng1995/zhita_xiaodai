@@ -38,6 +38,8 @@ public class OperationalServiceimp implements OperationalService{
 	private PostloanorderMapper pdap;
 	
 	
+	
+	
 
 	@Override
 	public Map<String, Object> PlatformsNu(Orderdetails ordera) {
@@ -73,7 +75,7 @@ public class OperationalServiceimp implements OperationalService{
 			ordes.get(i).setGesamtbetragderVerbindlichkeiten(ord.getGesamtbetragderVerbindlichkeiten());
 			ordes.get(i).setGesamtbetragdererNum(ord.getGesamtbetragdererNum());
 			
-			ordes.get(i).setOrderCreateTime(Timestamps.stampToDate(ordes.get(i).getOrderCreateTime()));
+			ordes.get(i).setOrderCreateTime(Timestamps.stampToDate1(ordes.get(i).getOrderCreateTime()));
 		}
 		map.put("Orders", ordes);
 		map.put("PageUtil", pages);

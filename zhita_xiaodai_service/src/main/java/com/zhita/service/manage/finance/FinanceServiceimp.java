@@ -25,7 +25,9 @@ import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Undertheline;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
+import com.zhita.util.TuoMinUtil;
 
 
 
@@ -61,9 +63,13 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("放款");
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		List<Payment_record> payments = padao.PaymentAll(payrecord);
 		for(int i=0;i<payments.size();i++){
 			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
+			payments.get(i).setPhone(p.decryption(payments.get(i).getPhone()));
+			payments.get(i).setPhone(tm.mobileEncrypt(payments.get(i).getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("PaymentRecord", payments);
@@ -85,9 +91,13 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("还款");
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		List<Payment_record> rapay = padao.RepaymentAll(payrecord);
 		for(int i = 0 ;i<rapay.size();i++){
 			rapay.get(i).setRepaymentDate(Timestamps.stampToDate(rapay.get(i).getRepaymentDate()));
+			rapay.get(i).setPhone(p.decryption(rapay.get(i).getPhone()));
+			rapay.get(i).setPhone(tm.mobileEncrypt(rapay.get(i).getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Repayment", rapay);
@@ -338,6 +348,8 @@ public class FinanceServiceimp implements FinanceService{
 		Integer totalCount = padao.BankDeduOrderNum(bank);
 		PageUtil pages = new PageUtil(bank.getPage(), totalCount);
 		bank.setPage(pages.getPage());
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		List<Orderdetails> orders = padao.BankDeduOrder(bank);
 		for(int i=0;i<orders.size();i++){
 			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
@@ -346,6 +358,8 @@ public class FinanceServiceimp implements FinanceService{
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+			orders.get(i).setPhone(tm.mobileEncrypt(orders.get(i).getPhone()));
 		}
 		map.put("Orderdetails", orders);
 		return map;
@@ -431,12 +445,15 @@ public class FinanceServiceimp implements FinanceService{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
-		bank.setDeferredamount(padao.YanMoney(banl));
+		Bankdeductions bank = padao.OnDefe(banl);//查询实借金额笔数
+		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
+		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
+		Bankdeductions c = padao.OneMoney(banl);//查询延期费
+//		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
-		bank.setDeductionstatus(""+bank.getRealreturn()+","+0+","+bank.getPaymentamount()+"");//实还笔数    实还金额
-		bank.setOrderNumber(""+0+","+bank.getOverdueamount()+","+0+"");//实借笔数    实借金额
-		bank.setName(""+0+","+bank.getDeferredamount()+","+0+"");//实借笔数    实借金额
+		bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
+		bank.setOrderNumber(""+"/"+","+a.getOverdueamount()+","+0+"");//实借笔数    实借金额
+		bank.setName(""+"/"+","+c.getDeferredamount()+","+0+"");//实借笔数    实借金额
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Bankdeduction", bank);
 		return map;
@@ -486,7 +503,13 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		PageUtil pages = new PageUtil(ord.getPage(), a);
 		ord.setPage(pages.getPage());
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		List<Offlinjianmian> unders = padao.XiaOrder(ord);
+		for(int i=0;i<unders.size();i++){
+			unders.get(i).setPhone(p.decryption(unders.get(i).getPhone()));
+			unders.get(i).setPhone(tm.mobileEncrypt(unders.get(i).getPhone()));
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Undertheline", unders);
 		return map;

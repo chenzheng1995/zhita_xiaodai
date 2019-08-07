@@ -99,21 +99,19 @@ public class Chanpayserviceimp implements Chanpayservice{
 		Integer lifeOfLoan = stdao.SelectDefeDay(ord.getCompanyId());//获取延期天数
 		String beforeTime = stdao.SelectDefeBefore(ord.getId());
 		Date date = null;
-		String sa = Timestamps.stampToDate(beforeTime);
+		String sa = Timestamps.stampToDate(beforeTime);//把获取的应还时间转换成时间格式
 		try {
-			date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sa);
+			date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sa);//把字符串转换成Date
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}//取时间 
-	      Calendar calendar  =   Calendar.getInstance();		 
+	        Calendar calendar  =   Calendar.getInstance();		 
 		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
 		    calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
 		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		    String afterTime = sdf1.format(date);//延期后应还时间
-		
-		Integer delaytimes = num+1;
+		    Integer delaytimes = num+1;
 		try {
 			ord.setShouldReturnTime(Timestamps.dateToStamp1(afterTime));
 		} catch (Exception e) {
@@ -123,6 +121,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 		stdao.DefeOrder(ord);
 		return stdao.UpdateUser(ord);
 	}
+	
+	
 
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
