@@ -358,17 +358,12 @@
 			group by orderId
 		</select>
 		
-		<select id="OneCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select c.collectionStatus,c.collectionTime,c.promise_money,o.orderStatus from Collection c,orders o 
+		<select id="OneCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collectiondetails">
+			select col.collection_time,col.user_type,col.collectionmoney,col.orderId,col.collectionMemberId,o.orderStatus from collectiondetails col,orders o
 			<where>
-				AND c.orderId = o.id 
-				AND c.orderId = #{orderId} 
-				AND deleted = 0
-				<if test="collectionMemberId != null and collectionMemberId != ''">
-					AND c.collectionMemberId = #{collectionMemberId}
-				</if> 
+				orderId = #{orderId} 
+				AND o.id = col.orderId
 			</where>
-			
 		</select>
 				
 				
@@ -507,7 +502,7 @@
 			orderId
 			)
 			VALUES
-			{#{collection_time},#{user_type},#{collectionmoney},#{collectionMemberId},#{orderId}}
+			(#{collection_time},#{user_type},#{collectionmoney},#{collectionMemberId},#{orderId})
 		</insert>
 		
 </mapper>

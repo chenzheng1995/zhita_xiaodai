@@ -182,9 +182,9 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> Colldetails(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collection> cols = collmapp.OneCollection(order);
+		List<Collectiondetails> cols = collmapp.OneCollection(order);
 		for(int i=0;i<cols.size();i++){
-			cols.get(i).setCollectionTime(Timestamps.stampToDate(cols.get(i).getCollectionTime()));
+			cols.get(i).setCollection_time(Timestamps.stampToDate(cols.get(i).getCollection_time()));
 		}
 		map.put("Orderdetails", cols);
 		return map;
@@ -434,7 +434,13 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> AddCollOrders(Collectiondetails col) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Integer addId = collmapp.AddCollectiondet(col);
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			col.setCollection_time(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Integer addId = collmapp.AddCollOrders(col);
 		if(addId != null){
 			map.put("code", 200);
 			map.put("desc", "添加成功");

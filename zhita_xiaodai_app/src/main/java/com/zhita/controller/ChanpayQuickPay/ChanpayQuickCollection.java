@@ -717,7 +717,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_quick_payment_smsconfirm")
-	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber,Integer userId) {
+	private Map<String, Object> nmg_api_quick_payment_smsconfirm(String OriPayTrxId,String SmsCode,String OrderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数
@@ -1224,7 +1224,6 @@ public class ChanpayQuickCollection {
 				e.printStackTrace();
 			}
 			System.out.println(result);
-		//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		return map;
 	}
 	
