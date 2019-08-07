@@ -53,7 +53,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务   控制黑名单
-      @Scheduled(cron = "0 0 0 * * ?")
+      @Scheduled(cron = "0 54 15 * * ?")
       public void test4() throws ParseException
       {
           System.out.println("开始做定时任务");

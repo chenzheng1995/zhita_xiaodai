@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -49,6 +50,7 @@ public class RoleController {
 	}
 	
 	//admin------角色——添加功能
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/insert")
 	public int insert(Role record) {
@@ -73,6 +75,7 @@ public class RoleController {
 	}
 	
 	//admin----角色——更新保存功能
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
 	public int updateByPrimaryKey(Role record) {
@@ -81,6 +84,7 @@ public class RoleController {
 	}
 	
 	//admin----角色——修改状态
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateStatus")
 	public int updateStatus(Integer id,String status){
@@ -89,6 +93,7 @@ public class RoleController {
 	}
 	
 	//admin-----角色——修改假删除状态
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/upaFalseDel")
     public int upaFalseDel(Integer roleid){
