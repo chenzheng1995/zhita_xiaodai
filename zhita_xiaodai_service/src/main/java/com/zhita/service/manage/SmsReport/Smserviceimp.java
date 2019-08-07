@@ -159,12 +159,13 @@ public class Smserviceimp implements Smservice{
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 1){
-			calendar.add(Calendar.DATE, +1); //得到前一天
+			calendar.add(Calendar.DATE, 1); //得到前一天
 			date = calendar.getTime();
 			a = sim.format(date);
-			calendar.add(Calendar.DATE, +2); //得到前两天
+			calendar.add(Calendar.DATE, 2); //得到前两天
 			date = calendar.getTime();
 			b = sim.format(date);
+			System.out.println("时间:"+a+"1111"+b);
 			try {
 				sm.setStatu_time(Timestamps.dateToStamp(b));
 				sm.setEnd_time(Timestamps.dateToStamp(a));
@@ -172,12 +173,13 @@ public class Smserviceimp implements Smservice{
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 2){
-			calendar.add(Calendar.DATE, +2);
+			calendar.add(Calendar.DATE, 2);
 			date = calendar.getTime();
 			a = sim.format(date);
-			calendar.add(Calendar.DATE, +3); 
+			calendar.add(Calendar.DATE, 3); 
 			date = calendar.getTime();
 			b = sim.format(date);
+			System.out.println("时间:"+a+"1111"+b);
 			try {
 				sm.setStatu_time(Timestamps.dateToStamp(b));
 				sm.setEnd_time(Timestamps.dateToStamp(a));
@@ -185,12 +187,13 @@ public class Smserviceimp implements Smservice{
 				// TODO: handle exception
 			}
 		}else if(sm.getBiaoshi() == 3){
-			calendar.add(Calendar.DATE, +3);
+			calendar.add(Calendar.DATE, 4);
 			date = calendar.getTime();
 			a = sim.format(date);
-			calendar.add(Calendar.DATE, +4);
+			calendar.add(Calendar.DATE, 5);
 			date = calendar.getTime();
 			b = sim.format(date);
+			System.out.println("时间:"+a+"1111"+b);
 			try {
 				sm.setStatu_time(Timestamps.dateToStamp(b));
 				sm.setEnd_time(Timestamps.dateToStamp(a));

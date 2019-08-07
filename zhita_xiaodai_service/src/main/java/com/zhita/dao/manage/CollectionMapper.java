@@ -61,7 +61,7 @@ public interface CollectionMapper {
 	List<Integer> SelectId(Integer id);
 	
 	
-	List<Collection> OneCollection(Orderdetails order);
+	List<Collectiondetails> OneCollection(Orderdetails order);
 	
 	
 	
@@ -120,5 +120,5 @@ public interface CollectionMapper {
 	Integer UpdateCollection(Collection col);
 	
 	
-	Integer AddCollectiondet(Collectiondetails coll);
+	Integer AddCollOrders(Collectiondetails coll);
 }

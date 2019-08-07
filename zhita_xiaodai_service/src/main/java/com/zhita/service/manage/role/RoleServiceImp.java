@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.RoleMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -34,10 +33,12 @@ public class RoleServiceImp implements IntRoleService{
 		list=roleMapper.queryAll();
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -56,10 +57,12 @@ public class RoleServiceImp implements IntRoleService{
 		list=roleMapper.queryAllByLike(status);
     	
     	if(list!=null && !list.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(list,page,2);
+    		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
     	}
     	
 		HashMap<String,Object> map=new HashMap<>();
@@ -105,7 +108,6 @@ public class RoleServiceImp implements IntRoleService{
 		return list;
 	}
 	//admin------角色——添加功能
-	@Transactional
 	@Override
 	public int insert(Role record) {
 		int num=roleMapper.insert(record);
@@ -230,7 +232,6 @@ public class RoleServiceImp implements IntRoleService{
 	}
 	
 	//admin----角色——更新保存功能
-	@Transactional
 	@Override
 	public int updateByPrimaryKey(Role record) {
 		int num=roleMapper.updateByPrimaryKey(record);

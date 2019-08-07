@@ -149,9 +149,9 @@ public class TestController {
 		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		//System.out.println(tm.mobileEncrypt(p.decryption("6376462xx82")));
-		//System.out.println(p.decryption("90667926329"));
+		System.out.println(p.decryption("9x856724x63"));
 		//System.out.println(p.encryption("188715526523365"));
-		String province="山西省稷山县蔡村乡杨村第九居民组";
-		System.out.println(province.substring(0,3));
+		/*String province="山西省稷山县蔡村乡杨村第九居民组";
+		System.out.println(province.substring(0,3));*/
 	}
 }

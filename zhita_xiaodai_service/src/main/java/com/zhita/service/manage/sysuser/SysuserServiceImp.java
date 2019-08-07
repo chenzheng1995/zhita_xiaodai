@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.Company;
@@ -39,7 +38,6 @@ public class SysuserServiceImp implements IntSysuserService{
     		ListPageUtil listPageUtil=new ListPageUtil(list,page,10);
     		listto.addAll(listPageUtil.getData());
     		
-    	//	pageUtil=new PageUtil(listPageUtil.getCurrentPage(), listPageUtil.getPageSize());
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
@@ -91,7 +89,6 @@ public class SysuserServiceImp implements IntSysuserService{
 	}
 	
 	//admin------系统用户——添加功能
-	@Transactional
 	@Override
 	public int insert(SysUser record) {
 		int sum=sysUserMapper.insert(record);
@@ -107,7 +104,6 @@ public class SysuserServiceImp implements IntSysuserService{
 	}
 	
 	//admin-----系统用户——修改账号状态
-	@Transactional
 	@Override
 	public int updateStatus(Integer id,String status) {
 		int num=0;
@@ -135,7 +131,6 @@ public class SysuserServiceImp implements IntSysuserService{
     }
     
     //admin----系统用户——编辑功能（修改保存）
-	@Transactional
 	@Override
 	public int updateByPrimaryKey(SysUser record) {
 		int num=sysUserMapper.updateByPrimaryKey(record);

@@ -531,7 +531,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
     <include refid="Base_Column_List1" />
     from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
     left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1)
+    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0)
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
@@ -556,7 +556,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <select id="queryAllOrdersByUserid1count" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
   	 select count(*) from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
   	 left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1)
+     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0)
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
