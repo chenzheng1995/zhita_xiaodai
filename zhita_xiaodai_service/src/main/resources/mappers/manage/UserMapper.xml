@@ -553,4 +553,9 @@
   <update id="updatename" parameterType="java.util.Map"> 
   	update user set name=#{name} where id = #{userId}
   </update>
+  
+    <update id="updateifBlacklist" parameterType="java.lang.Integer"> 
+  	update user set ifBlacklist='1' where id = #{userId}
+  </update>
+  
 </mapper>

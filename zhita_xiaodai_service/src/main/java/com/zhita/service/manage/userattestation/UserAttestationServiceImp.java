@@ -1,9 +1,11 @@
 package com.zhita.service.manage.userattestation;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import com.zhita.dao.manage.UserAttestationMapper;
 
@@ -109,6 +111,14 @@ public class UserAttestationServiceImp implements UserAttestationService{
 		String shareOfState = userAttestationMapper.getshareOfState(userId);
 		return shareOfState;
 	}
+
+	@Override
+	public List<Integer> getuserId(String idCard) {
+		List<Integer> list = userAttestationMapper.getuserId(idCard);
+		return list;
+	}
+
+
 
 
 	

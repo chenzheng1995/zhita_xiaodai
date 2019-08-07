@@ -19,4 +19,6 @@ public interface OperatorService {
 
 	void updateAttestationStatus(String attestationStatus, int userId);
 
+	String getattestationStatus(int id);
+
 }

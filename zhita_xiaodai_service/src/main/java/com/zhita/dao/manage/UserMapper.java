@@ -128,4 +128,6 @@ public interface UserMapper {
 
 	void updatename(@Param("name")String name,@Param("userId") int userId);
 
+	void updateifBlacklist(int userId);
+
 }

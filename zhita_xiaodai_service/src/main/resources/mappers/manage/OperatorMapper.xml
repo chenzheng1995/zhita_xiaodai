@@ -182,4 +182,8 @@
   </update>
   
   
+  		<select id="getattestationStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select attestationStatus from operator where userId = #{id}
+	</select>
+  
 </mapper>

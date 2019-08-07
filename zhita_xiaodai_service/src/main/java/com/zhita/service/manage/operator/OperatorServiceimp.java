@@ -55,4 +55,10 @@ public class OperatorServiceimp implements OperatorService{
 		
 	}
 
+	@Override
+	public String getattestationStatus(int id) {
+		String attestationStatus = operatorMapper.getattestationStatus(id);
+		return attestationStatus;
+	}
+
 }

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
@@ -170,12 +172,36 @@ public class OperatorController {
     @RequestMapping("/isRepeat")
     @ResponseBody
     @Transactional
-    public Map<String, Object> isRepeat(String idCard,int userId){
+    public Map<String, Object> isRepeat(String idCard,int userId,int companyId,String phone){
     	Map<String, Object> map = new HashMap<>();
-
+        map.put("msg", "不是重复用户");
+        map.put("code", "200");
+    	List<Integer> list = userAttestationService.getuserId(idCard);
+    	for (int id : list) {
+			String attestationStatus = operatorService.getattestationStatus(id);
+			if(attestationStatus==null) {
+				attestationStatus="0";
+			}
+			if(userId!=id&&attestationStatus.equals("1")) {
+	            map.put("msg", "该用户是重复用户");
+	            map.put("code", "401");
+	            intUserService.updateifBlacklist(userId);
+	            Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);
+	            String name = (String) map1.get("trueName");
+	            String date = System.currentTimeMillis()+"";
+	            String blackType = "2";
+	            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,phone,name,date,blackType);
+				return map;
+			}
+		}
+    	
+    	
 		return map;
     	
     }
+    
+
+
     
     
     //判断用户是否年龄或者地域不允许借钱

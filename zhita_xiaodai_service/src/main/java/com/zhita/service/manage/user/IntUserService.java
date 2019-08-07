@@ -38,5 +38,7 @@ public interface IntUserService {
 
 	public void updatename(String name, int userId);
 
+	public void updateifBlacklist(int userId);
+
 
 }
