@@ -13,8 +13,9 @@
 				tiedCardPhone,
 				deleted,
 				IDcardnumber,
-				cstmrnm
-				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{bankcardTypeId},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm})
+				cstmrnm,
+				authentime
+				)VALUES(#{userId},#{attestationStatus},#{bankcardName},#{bankcardTypeId},#{tiedCardPhone},#{deleted},#{IDcardnumber},#{cstmrnm},#{authentime})
 			</insert>
 			
 			
@@ -85,7 +86,7 @@
 			
 			
 			<select id="SelectOrderId" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orders">
-				select id,companyId from orders where orderNumber = #{orderNumber}
+				select id,companyId,userId from orders where orderNumber = #{orderNumber}
 			</select>
 			
 			
@@ -239,7 +240,7 @@
 			
 			
 			<update id="UpdateOrderSuperl" parameterType="com.zhita.model.manage.Orders">
-				update orderdetails set surplus_money = #{surplus_money} where id = #{id}
+				update orderdetails set surplus_money = #{surplus_money},realityAccount = #{realityAccount} where id = #{id}
 			</update>
 			
 			<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">
@@ -282,7 +283,7 @@
 			
 			
 			<select id="DefeDefeAfertime" parameterType="java.lang.Integer" resultType="java.lang.String">
-				select deferAfterReturntime from deferred where orderid = #{orderId}
+				SELECT deferAfterReturntime from deferred where id = (SELECT max(id) FROM deferred WHERE orderid = #{orderId});
 			</select>
 			
 </mapper>

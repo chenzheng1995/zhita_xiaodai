@@ -1,5 +1,7 @@
 package com.zhita.service.manage.bankcard;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Orders;
+import com.zhita.util.Timestamps;
 
 
 @Service
@@ -27,6 +30,12 @@ public class BankcardServiceimp implements BankcardService{
 
 	@Override
 	public Map<String, Object> AddBankcard(Bankcard bank) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			bank.setAuthentime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Integer addId = sdao.AddBankcard(bank);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(addId != null){

@@ -25,7 +25,7 @@ public interface OrderdetailsMapper {
 
 	int setororderdetails(@Param("orderId")int orderId,@Param("finalLine") BigDecimal finalLine,@Param("averageDailyInterest") BigDecimal averageDailyInterest,
 			@Param("totalInterest")BigDecimal totalInterest,@Param("platformServiceFee") BigDecimal platformServiceFee,@Param("actualAmountReceived") BigDecimal actualAmountReceived,
-			@Param("registeClient")String registeClient,@Param("sourceName") String sourceName,@Param("shouldTotalAmount") BigDecimal shouldTotalAmount);
+			@Param("registeClient")String registeClient,@Param("sourceName") String sourceName,@Param("shouldTotalAmount") BigDecimal shouldTotalAmount,@Param("surplus_money") BigDecimal surplus_money);
 
 	Map<String, Object> getOrderdetails(String orderStatus);
 

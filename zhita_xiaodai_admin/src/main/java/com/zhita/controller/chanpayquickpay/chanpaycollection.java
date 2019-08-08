@@ -70,15 +70,13 @@ public class chanpaycollection{
 					numberFormat.setMaximumFractionDigits(2);
 					String data = (numberFormat.format((float) deductionproportion / (float) 100));//算出扣款比例
 					BigDecimal da = new BigDecimal(data);
-					if(o.getSurplus_money()!=null){//剩余金额不等于空    修改订单状态      剩余金额=  剩余金额 - 扣款金额
-						
-						o.setTransAmt(String.valueOf(o.getSurplus_money().multiply(da)));//扣款金额
-						o.setSurplus_money(o.getSurplus_money().subtract(o.getSurplus_money().multiply(da)));
-						ster.UpdateOrderSurp(o);
-					}else{//剩余金额不等于空    修改订单状态   剩余金额=   实借金额 - 扣款金额
-						o.setSurplus_money(o.getRealityBorrowMoney().subtract(o.getSurplus_money().multiply(da)));
-						ster.UpdateOrderSurp(o);
-					}
+					
+					
+					o.setTransAmt(String.valueOf(o.getSurplus_money().multiply(da)));//扣款金额
+					o.setSurplus_money(o.getSurplus_money().subtract(o.getSurplus_money().multiply(da)));
+					BigDecimal real = new BigDecimal(o.getTransAmt());
+					o.setRealityAccount(real);
+					ster.UpdateOrderSurp(o);
 					
 					
 					

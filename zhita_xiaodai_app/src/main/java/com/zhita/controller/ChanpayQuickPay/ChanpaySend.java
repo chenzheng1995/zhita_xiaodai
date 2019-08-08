@@ -214,8 +214,9 @@ public class ChanpaySend extends BaseParameter{
 				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 		    	if(num==1) {
 		    		int orderId = intOrderService.getOrderId(orderNumber);
-			    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
-			    			registeClient,sourceName,shouldTotalAmount);
+			    	BigDecimal surplus_money = finalLine;
+		    		num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
+			    			registeClient,sourceName,shouldTotalAmount,surplus_money);
 			    	pay.setOrderId(orderId);
 			    	chanser.UpdatePayment(pay);
 			    	if(num==1) {

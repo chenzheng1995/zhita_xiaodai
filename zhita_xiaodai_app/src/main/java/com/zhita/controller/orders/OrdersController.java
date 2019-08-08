@@ -170,8 +170,9 @@ public class OrdersController {
 	    	String borrowMoneyWay = "立即贷";//贷款方式
 	    	int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 	    	if(num==1) {
+	    		BigDecimal surplus_money = finalLine;
 	    		int orderId = intOrderService.getOrderId(orderNumber);
-		    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,registeClient,sourceName,shouldTotalAmount);
+		    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,registeClient,sourceName,shouldTotalAmount,surplus_money);
 		    	if(num==1) {
 		    		map.put("code", 200);
 		    		map.put("msg","插入成功");

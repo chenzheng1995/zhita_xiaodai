@@ -1,8 +1,6 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,12 @@ public class Chanpayserviceimp implements Chanpayservice{
 	 */
 	@Override
 	public Integer AddBankcard(Bankcard bank) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			bank.setAuthentime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return stdao.AddBankcard(bank);
 	}
 
@@ -98,9 +102,17 @@ public class Chanpayserviceimp implements Chanpayservice{
 		ord = stdao.SelectOrderId(ord.getOrderNumber());
 		ord.setShouldReturnTime(stdao.DefeDefeAfertime(ord.getId()));
 		Integer delaytimes = num+1;
+		System.out.println("数据:"+delaytimes);
 		ord.setChenggNum(delaytimes);
-		stdao.DefeOrder(ord);
-		return stdao.UpdateUser(ord);
+		Integer updateId = stdao.DefeOrder(ord);
+		System.out.println(updateId);
+		Integer a = null;
+		if(updateId!=null){
+			a=stdao.UpdateUser(ord);
+		}else{
+			a=0;
+		}
+		return a;
 	}
 	
 	
@@ -128,6 +140,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			defe.setDeferredTime(Timestamps.dateToStamp1(sim.format(new Date())));
+			defe.setDeferBeforeReturntime(Timestamps.dateToStamp2(defe.getDeferBeforeReturntime()));
+			defe.setDeferAfterReturntime(Timestamps.dateToStamp2(defe.getDeferAfterReturntime()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

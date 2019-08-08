@@ -32,7 +32,7 @@ public class BaseParameter {
 		// 2.1 基本参数
 		origMap.put(BaseConstant.SERVICE, service);// 
 		origMap.put(BaseConstant.VERSION, "1.0");
-		origMap.put(BaseConstant.PARTNER_ID, "200001160096"); //生产环境测试商户号
+		origMap.put(BaseConstant.PARTNER_ID, "200005640044"); //生产环境测试商户号
 		origMap.put(BaseConstant.TRADE_DATE, BaseConstant.DATE);
 		origMap.put(BaseConstant.TRADE_TIME, BaseConstant.TIME);
 		origMap.put(BaseConstant.INPUT_CHARSET, BaseConstant.CHARSET);// 字符集
