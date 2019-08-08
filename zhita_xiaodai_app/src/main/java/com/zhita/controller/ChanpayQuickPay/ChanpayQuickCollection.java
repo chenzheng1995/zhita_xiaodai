@@ -762,10 +762,6 @@ public class ChanpayQuickCollection {
 		// 2.1 基本参数
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_zft_api_quick_payment");// 支付接口名称
-		 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-		// 2.2 业务参数
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
-		String ssid = df.format(new Date());
 		
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
@@ -775,15 +771,15 @@ public class ChanpayQuickCollection {
 		origMap.put("ExpiredTime", "40m");// 订单有效期
 		
 		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
-		origMap.put("BkAcctNo", this.encrypt("6228481428190956971", MERCHANT_PUBLIC_KEY, charset));// 卡号
+		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
 		origMap.put("IDTp", "01");// 证件类型 （目前只支持身份证 01：身份证）
-		origMap.put("IDNo", this.encrypt("441402199404121035", MERCHANT_PUBLIC_KEY, charset));// 证件号
-		origMap.put("CstmrNm", this.encrypt("李真纯", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
-		origMap.put("MobNo", this.encrypt("15219990556", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
+		origMap.put("IDNo", this.encrypt("420621199905157170", MERCHANT_PUBLIC_KEY, charset));// 证件号
+		origMap.put("CstmrNm", this.encrypt("东新雨", MERCHANT_PUBLIC_KEY, charset));// 持卡人姓名
+		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 //		origMap.put("EnsureAmount", "1");//担保金额
-		origMap.put("TrxAmt", "0.01");// 交易金额
+		origMap.put("TrxAmt", "0.1");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
-		origMap.put("SmsFlag", "1");//短信发送标识
+		origMap.put("SmsFlag", "0");//短信发送标识
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		String result = "";
 		try {
@@ -1273,7 +1269,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
-		test.nmg_api_everyday_trade_file();
+		test.nmg_zft_api_quick_payment();
 	//	test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询

@@ -279,4 +279,10 @@
 				select shouldReturnTime from orders where id = #{orderId}
 			</select>
 			
+			
+			
+			<select id="DefeDefeAfertime" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select deferAfterReturntime from deferred where orderid = #{orderId}
+			</select>
+			
 </mapper>

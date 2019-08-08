@@ -108,4 +108,5 @@ public interface StatisticsDao {
 	String SelectDefeBefore(Integer orderId);
 	
 	
+	String DefeDefeAfertime(Integer orderId);
 }
