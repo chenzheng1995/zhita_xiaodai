@@ -664,6 +664,7 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
 		Repayment repay = new Repayment();//还账记录表
+		repay.setThirdparty_id(1);
 		repay.setOrderNumber(TrxId);
 		repay.setPipelinenumber(TrxId);
 		 BigDecimal bd=new BigDecimal(TrxAmt);   

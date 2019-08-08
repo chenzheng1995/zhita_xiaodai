@@ -791,6 +791,13 @@
   			
   			
   			
+  			<select id="BankDefeData" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select de.deferredTime,count(de.id) as orderNum,sum(de.interestOnArrears) as interestOnArrearsSum from deferred de,orders o
+  				where o.companyId = #{companyId} and de.orderId = o.id and de.deferredTime between #{startu_time} and #{end_time}
+  			</select>
+  			
+  			
+  			
   			<select id="DefeRRe" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(de.id) as orderNum,sum(de.interestOnArrears) as interestOnArrearsSum from deferred de,orders o
   				where o.id = de.orderId and o.companyId = #{companyId} and de.deferredTime between #{statu_time} and #{end_time}
@@ -940,5 +947,12 @@
   						and of.operating_time between #{statu_time} and #{end_time}
   					</if>
   				</where>
+  			</select>
+  			
+  			
+  			
+  			<select id="BankMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select sum(b.deduction_money) as deduction_money,count(b.id) as userNum from bankdeductions b,orders o where o.id = b.orderId
+  				and o.companyId = #{companyId} and b.deduction_time between #{startu_time} and #{end_time}
   			</select>
 </mapper>

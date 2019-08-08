@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.chainsaw.Main;
+
 import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.TongjiSorce;
@@ -188,4 +190,12 @@ public class DateListUtil {
         int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
         return days;
     }
+    
+    
+    public static void main(String[] args) {
+		List<String> times = DateListUtil.getDays("2019-01-01", "2019-01-05");
+		for(int i=0;i<times.size();i++){
+			System.out.println(times.get(i));
+		}
+	}
 }

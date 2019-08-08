@@ -138,7 +138,7 @@ public interface PaymentRecordMapper {
     Bankdeductions DefeRRe(Bankdeductions ban);
     
     
-    List<Bankdeductions> BankdeduCtionsData(Bankdeductions banl);
+    Bankdeductions BankdeduCtionsData(Bankdeductions banl);
     
     
     Bankdeductions OnDefe(Bankdeductions banl);
@@ -151,4 +151,7 @@ public interface PaymentRecordMapper {
     
     
     Bankdeductions OneMoney(Bankdeductions banl);
+    
+    
+    Bankdeductions BankMoney(Bankdeductions banl);
 }

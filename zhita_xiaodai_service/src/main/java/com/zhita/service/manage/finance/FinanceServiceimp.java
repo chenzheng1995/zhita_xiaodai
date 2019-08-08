@@ -1,6 +1,7 @@
 package com.zhita.service.manage.finance;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Undertheline;
+import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
@@ -391,45 +393,67 @@ public class FinanceServiceimp implements FinanceService{
 
 
 
-
+	//
 	@Override
 	public Map<String, Object> AllDelayStatis(Bankdeductions banl) {
-		if(banl.getStartu_time()!= null){
-			try {
-				banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
-				banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		Integer totalCount = padao.DelayTatolCount(banl);
-		if(totalCount !=null){
-			PageUtil pages = new PageUtil(banl.getPage(), totalCount);
-			banl.setPage(pages.getPage());
+		
+		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
+		
+		if(banl.getStartu_time()==null){
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			String stime = sim.format(new Date());
+			banl.setStartu_time(stime+" 00:00:00");
+			banl.setEnd_time(stime+" 23:59:59");
+				try {	
+					banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+					banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			
+				
+				Integer totalCount = padao.DelayTatolCount(banl);
+				if(totalCount !=null){
+					PageUtil pages = new PageUtil(banl.getPage(), totalCount);
+					banl.setPage(pages.getPage());
+				}else{
+					PageUtil pages = new PageUtil(banl.getPage(), 0);
+					banl.setPage(pages.getPage());
+				}
+				Bankdeductions bank = padao.BankdeduCtionsData(banl);
+				Bankdeductions b = padao.BankMoney(banl);
+				bank.setDeduction_money(b.getDeduction_money());
+				bank.setUserNum(b.getUserNum());
+				banks.add(bank);
 		}else{
-			PageUtil pages = new PageUtil(banl.getPage(), 0);
-			banl.setPage(pages.getPage());
-		}
-		
-		
-		List<Bankdeductions> banks = padao.BankdeduCtionsData(banl);
-		for (int i = 0; i < banks.size(); i++) {
-			banks.get(i).setCompanyId(banl.getCompanyId());
-			String statu = banks.get(i).getDeduction_time()+" 00:00:01";
-			String end = banks.get(i).getDeduction_time()+" 23:59:59";
-			try {
-				banks.get(i).setStartu_time(Timestamps.dateToStamp1(statu));
-				banks.get(i).setEnd_time(Timestamps.dateToStamp1(end));
-			} catch (Exception e) {
-				// TODO: handle exception
+			List<String> times =  DateListUtil.getDays(banl.getStartu_time(), banl.getEnd_time());
+			for(int i=0;i<times.size();i++){
+				banl.setStartu_time(times.get(i)+" 00:00:00");
+				banl.setEnd_time(times.get(i)+" 23:59:59");
+					try {	
+						banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+						banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					Integer totalCount = padao.DelayTatolCount(banl);
+					if(totalCount !=null){
+						PageUtil pages = new PageUtil(banl.getPage(), totalCount);
+						banl.setPage(pages.getPage());
+					}else{
+						PageUtil pages = new PageUtil(banl.getPage(), 0);
+						banl.setPage(pages.getPage());
+					}
+					Bankdeductions bank = padao.BankdeduCtionsData(banl);
+					Bankdeductions b = padao.BankMoney(banl);
+					bank.setDeduction_money(b.getDeduction_money());
+					bank.setUserNum(b.getUserNum());
+					banks.add(bank);
 			}
-			Bankdeductions ban = padao.DefeRRe(banks.get(i));
-			banks.get(i).setOrderNum(ban.getOrderNum());
-			banks.get(i).setInterestOnArrearsSum(ban.getInterestOnArrearsSum());
-			banks.get(i).setDeduction_time(Timestamps.stampToDate1(banks.get(i).getDeduction_time()));
 		}
+		
+			
 		map.put("Bankdeduction", banks);
 		return map;
 	}

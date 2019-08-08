@@ -118,6 +118,16 @@ public class Bankdeductions {
 	private BigDecimal interestPenaltySum;//逾期总罚息
 	
 	private BigDecimal collection_money;//含逾应还总金额
+	
+	private String deferredTime;
+
+	public String getDeferredTime() {
+		return deferredTime;
+	}
+
+	public void setDeferredTime(String deferredTime) {
+		this.deferredTime = deferredTime;
+	}
 
 	public BigDecimal getCollection_money() {
 		return collection_money;
