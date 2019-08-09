@@ -834,13 +834,14 @@
   			
   			
   			<select id="OneCollection" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select sum(ord.interestPenaltySum) as overdueamount from collection c,orders o,orderdetails ord where ord.orderId = o.id and o.id = c.orderId and o.companyId = #{companyId}
+  				select count(ord.orderId) as overdueNum,sum(ord.interestPenaltySum) as overdueamount from collection c,orders o,orderdetails ord 
+  				where ord.orderId = o.id and o.id = c.orderId and o.companyId = #{companyId}
   			</select>
   			
   			
   			
   			<select id="OneMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select sum(de.interestOnArrears) as deferredamount from deferred de,orders o where de.orderId = o.id and  o.companyId = #{companyId}
+  				select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de,orders o where de.orderId = o.id and  o.companyId = #{companyId}
   			</select>
   			
   			

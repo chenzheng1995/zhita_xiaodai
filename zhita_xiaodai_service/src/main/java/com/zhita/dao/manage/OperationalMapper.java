@@ -106,4 +106,19 @@ public interface OperationalMapper {
 	
 	List<OverdueClass> Overdue_class(Integer companyId);
 	
+	
+	Orders ReayMoney(Orderdetails ord);
+	
+	
+	Orders Gesamtb(Orderdetails ord);
+	
+	
+	Orders CollMoney(Orderdetails ord);
+	
+	
+	Orders HuaiMoney(Orderdetails ord);
+	
+	
+	Orders OrderHuan(Orderdetails ord);
+	
 }

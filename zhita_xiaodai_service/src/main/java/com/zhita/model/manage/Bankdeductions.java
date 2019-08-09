@@ -65,6 +65,10 @@ public class Bankdeductions {
 	
 	private BigDecimal paymentamount;//实还金额
 	
+	private Integer overdueNum;//逾期数
+	
+	private Integer defeNum;//延期数
+	
 	private BigDecimal overdueamount;//逾期金额
 	
 	private BigDecimal deferredamount;//延期金额
@@ -120,6 +124,22 @@ public class Bankdeductions {
 	private BigDecimal collection_money;//含逾应还总金额
 	
 	private String deferredTime;
+
+	public Integer getOverdueNum() {
+		return overdueNum;
+	}
+
+	public void setOverdueNum(Integer overdueNum) {
+		this.overdueNum = overdueNum;
+	}
+
+	public Integer getDefeNum() {
+		return defeNum;
+	}
+
+	public void setDefeNum(Integer defeNum) {
+		this.defeNum = defeNum;
+	}
 
 	public String getDeferredTime() {
 		return deferredTime;

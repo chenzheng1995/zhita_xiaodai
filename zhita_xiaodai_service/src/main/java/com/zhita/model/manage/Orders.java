@@ -103,6 +103,7 @@ public class Orders {
 	
 	private String operator_time;
 
+	private String remittanceTime;
 	
 	private BigDecimal GesamtbetragderDarlehen;//总放款金额
 	
@@ -129,6 +130,24 @@ public class Orders {
 	private Integer chenggData;
 	
 	private String TransAmt;
+	
+	private String collectionData;
+
+	public String getCollectionData() {
+		return collectionData;
+	}
+
+	public void setCollectionData(String collectionData) {
+		this.collectionData = collectionData;
+	}
+
+	public String getRemittanceTime() {
+		return remittanceTime;
+	}
+
+	public void setRemittanceTime(String remittanceTime) {
+		this.remittanceTime = remittanceTime;
+	}
 
 	public String getTransAmt() {
 		return TransAmt;
