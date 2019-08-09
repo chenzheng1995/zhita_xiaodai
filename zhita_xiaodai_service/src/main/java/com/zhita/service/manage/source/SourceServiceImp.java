@@ -239,6 +239,12 @@ public class SourceServiceImp implements IntSourceService{
     	return tongjisource;
     }
     
+    //后台管理---查询user表所有的注册时间
+  	public List<String> qeuryAllUserRegistetime(Integer companyId){
+  		List<String> list=sourceMapper.qeuryAllUserRegistetime(companyId);
+  		return list;
+  	}
+    
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
     @Transactional

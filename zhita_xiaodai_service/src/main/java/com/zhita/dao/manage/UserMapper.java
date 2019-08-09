@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Operator;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserAttestation;
 import com.zhita.model.manage.UserLikeParameter;
@@ -66,6 +67,9 @@ public interface UserMapper {
 	
 	//后台管理----查询当前用户在运营商表的信息
 	Operator queryOperator(Integer userid);
+	
+	//后台管理---根据用户id  查询该用户是否在订单表有未还清的订单
+	Orders qeuryorder(Integer userid);
 
 	int updatePwd(@Param("newPhone")String newPhone,@Param("md5Pwd") String md5Pwd,@Param("companyId") int companyId);
 

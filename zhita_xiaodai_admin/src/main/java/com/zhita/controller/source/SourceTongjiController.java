@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -149,7 +150,6 @@ public class SourceTongjiController {
 		listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourceid);
 		for (int i = 0; i < listsource.size(); i++) {
 			Integer sourceids=listsource.get(i).getSourceid();//渠道id
-			System.out.println(sourceids+"------------");
 			String sourcename=listsource.get(i).getSourcename();//渠道名
 			float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
@@ -185,7 +185,7 @@ public class SourceTongjiController {
 				}
 			}
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
-			Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
+			Integer applynum=intSourceService.queryNum(companyId, sourceids,startTimestamps, endTimestamps);//申请人数
 			listsource.get(i).setApplynum(applynum);//申请数
 			String cvr1=null;
 			if ((registernum < 0.000001) || (applynum == 0)) {
@@ -208,7 +208,7 @@ public class SourceTongjiController {
 		}
 		
 	  	if(listsource!=null && !listsource.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,2);
+    		ListPageUtil listPageUtil=new ListPageUtil(listsource,page,10);
     		listsourcepage.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
@@ -233,6 +233,16 @@ public class SourceTongjiController {
 		List<TongjiSorce> listsource = new ArrayList<>();
 		
 		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
+		List<String> listregistetimedate=new ArrayList<>();//(用来存时间戳转换后的时间)
+		List<String> listregistetime=intSourceService.qeuryAllUserRegistetime(companyId);
+		for (int i = 0; i < listregistetime.size(); i++) {
+			listregistetimedate.add(Timestamps.stampToDate1(listregistetime.get(i)));
+		}
+		HashSet h1 = new HashSet(listregistetimedate);
+		listregistetimedate.clear();
+		listregistetimedate.addAll(h1);
+		
+		listdate.retainAll(listregistetimedate);//两个集合的交集
 		
 		for (int i = 0; i < listdate.size(); i++) {
 			String date=listdate.get(i);
@@ -274,7 +284,7 @@ public class SourceTongjiController {
 						authencount=authencount+1;
 					}
 				}
-				tongjiSorce.setApplynum(authencount);//当前渠道的认证人数
+				tongjiSorce.setAuthencount(authencount);//当前渠道的认证人数
 				Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
 				tongjiSorce.setApplynum(applynum);//申请数
 				String cvr1=null;

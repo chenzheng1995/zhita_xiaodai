@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,7 @@ public class HomepageViewpagerController {
 	}
 	
 	//后台管理---添加功能
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(HomepageViewpager record){
@@ -108,6 +110,7 @@ public class HomepageViewpagerController {
     }
     
     //后台管理---编辑功能
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
     public int updateByPrimaryKey(HomepageViewpager record){
@@ -116,10 +119,20 @@ public class HomepageViewpagerController {
     }
 	
 	//后台管理---修改当前对象假删除状态
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateFalDel")
-    public int updateFalDel(Integer id){
-    	int num=intHomepageViewpageService.updateFalDel(id);
+    public int updateFalDel(Integer id,Integer sort){
+    	int num=intHomepageViewpageService.updateFalDel(id,sort);
     	return num;
     }
+	
+	//后台管理----修改排序功能
+	@Transactional
+	@ResponseBody
+	@RequestMapping("/upasort")
+	public int upasort(Integer id,Integer sort){
+		int num=intHomepageViewpageService.upasort(id, sort);
+		return num;
+	}
 }

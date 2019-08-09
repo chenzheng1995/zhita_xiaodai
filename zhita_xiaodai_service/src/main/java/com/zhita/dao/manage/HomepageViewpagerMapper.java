@@ -2,6 +2,8 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.HomepageViewpager;
 
 public interface HomepageViewpagerMapper {
@@ -23,6 +25,9 @@ public interface HomepageViewpagerMapper {
     //后台管理----查询首页轮播图所有信息
     List<HomepageViewpager> queryAll(Integer companyId);
     
+    //后台管理---修改排序字段
+    int upadateSort(Integer sort);
+    
     //后台管理---修改当前对象假删除状态
     int updateFalDel(Integer id);
     
@@ -30,4 +35,13 @@ public interface HomepageViewpagerMapper {
     String queryViewpagerpicture(Integer id);
 
 	List<HomepageViewpager> gethomepageViewpager(int companyId);
+	
+	//后台管理---通过id修改排序字段
+	int upasort(@Param("id") Integer id,@Param("sort") Integer sort);
+	
+	//后台管理---通过排序字段查询轮播图id
+	int selidbysort(Integer sort);
+	
+	//后台管理----查询轮播图表总条数
+	int queryAllCount(Integer companyId);
 }

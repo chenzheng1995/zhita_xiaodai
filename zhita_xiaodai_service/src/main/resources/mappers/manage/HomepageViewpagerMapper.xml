@@ -26,7 +26,7 @@
   <!-- 后台管理    添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.HomepageViewpager" >
     insert into homepage_viewpager (companyId, viewpagerPicture,sort,updateTime)
-    values (#{companyid,jdbcType=INTEGER}, #{viewpagerpicture,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{updateTime,jdbcType=VARCHAR})
+    values (#{companyid,jdbcType=INTEGER}, #{viewpagerpicture,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{updatetime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.HomepageViewpager" >
     insert into homepage_viewpager
@@ -95,10 +95,7 @@
   <!-- 后台管理       编辑功能 -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.HomepageViewpager" >
     update homepage_viewpager
-    set companyId = #{companyid,jdbcType=INTEGER},
-      viewpagerPicture = #{viewpagerpicture,jdbcType=VARCHAR},
-      isStick = #{isstick,jdbcType=VARCHAR},
-      sort = #{sort,jdbcType=VARCHAR},
+    set viewpagerPicture = #{viewpagerpicture,jdbcType=VARCHAR},
       updateTime = #{updatetime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -107,6 +104,7 @@
   	 select 
     <include refid="Base_Column_List" />
     from homepage_viewpager where companyId=#{arg0} and deleted=0
+    order by sort
   </select>
   <!-- 后台管理       修改当前对象假删除状态 -->
   <update id="updateFalDel" parameterType="java.lang.Integer">
@@ -116,8 +114,23 @@
   <select id="queryViewpagerpicture" parameterType="java.lang.Integer" resultType="java.lang.String">
   	select viewpagerpicture from homepage_viewpager where id=#{arg0}
   </select>
-  
-       <select id="gethomepageViewpager" resultType="com.zhita.model.manage.HomepageViewpager">
+  <!-- 后台管理        通过id修改排序字段 -->
+  <update id="upasort" parameterType="java.lang.Integer">
+  		update homepage_viewpager set sort=#{sort} where id=#{id}
+  </update>
+  <!-- 后台管理       通过排序字段查询轮播图id -->
+  <select id="selidbysort" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select id from homepage_viewpager where sort=#{arg0}
+  </select>
+  <!-- 后台管理        查询轮播图表总条数 -->
+  <select id="queryAllCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select count(*) from homepage_viewpager where companyid=#{arg0} and deleted=0;
+  </select>
+  <!-- 后台管理        修改排序字段 -->
+  <update id="upadateSort" parameterType="java.lang.Integer">
+  	update homepage_viewpager set sort = sort-1 where sort >#{arg0};
+  </update>
+ <select id="gethomepageViewpager" resultType="com.zhita.model.manage.HomepageViewpager">
   	select id,viewpagerPicture from homepage_viewpager where deleted='0'and companyId=#{companyId}
 </select>
 </mapper>

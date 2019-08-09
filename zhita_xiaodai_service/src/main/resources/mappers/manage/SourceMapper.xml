@@ -256,7 +256,10 @@
   <select id="querymancon" parameterType="java.lang.String" resultType="java.lang.String">
   	select airappFractionalSegment from manage_control_settings mcs inner join source s on mcs.id=s.manageControlId where s.sourceName=#{arg0}
   </select>
-  
+  <!-- 后台管理      查询user表所有的注册时间 -->
+  <select id="qeuryAllUserRegistetime" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select registetime from user where companyId=#{arg0}
+  </select>
   
     <select id="getmanageControlId" parameterType="java.lang.String" resultType="java.lang.Integer">
   	select manageControlId from source where sourceName =#{sourceName}
@@ -267,7 +270,7 @@
   </select>
   <!-- 后台管理     已借款人数 -->
   <select id="queryorderpass" resultType="java.lang.Integer">
-  	select count(*) from orders o inner join user u on o.userid=u.id where u.sourceid=#{arg0} and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
+  	select count(DISTINCT o.userid) from orders o inner join user u on o.userid=u.id where u.sourceid=#{arg0} and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}
   </select>
   <!-- 后台管理      渠道统计模块——申请人数字段 -->
   <select id="queryNum" resultType="java.lang.Integer">

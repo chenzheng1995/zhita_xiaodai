@@ -23,8 +23,11 @@ public interface IntHomepageViewpageService {
     public int updateByPrimaryKey(HomepageViewpager record);
     
     //后台管理---修改当前对象假删除状态
-    public int updateFalDel(Integer id);
+    public int updateFalDel(Integer id,Integer sort);
 
 	public List<HomepageViewpager> gethomepageViewpager(int companyId);
+	
+	//后台管理---通过id修改排序字段
+	public int upasort(Integer id,Integer sort);
 
 }

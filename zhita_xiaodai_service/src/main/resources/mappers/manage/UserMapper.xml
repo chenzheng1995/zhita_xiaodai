@@ -379,7 +379,10 @@
 	<select id="queryOperator" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Operator">
 		select * from operator where userid=#{arg0}
 	</select>
-
+	<!--后台管理       根据用户id  查询该用户是否在订单表有未还清的订单  -->
+	<select id="qeuryorder" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+		select id,orderNumber from orders where userid=#{arg0} and orderStatus=0
+	</select>
 
 	<select id="getshareOfState" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select shareOfState from user where id=#{userId}
