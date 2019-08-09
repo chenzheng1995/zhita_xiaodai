@@ -19,6 +19,7 @@ import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 
 
@@ -54,6 +55,7 @@ public class Collectionserviceimp implements Collectionservice{
 			
 			coll.setPage(pages.getPage());
 			pages.setTotalCount(totalCount);
+			PhoneDeal p = new PhoneDeal();
 			List<Orderdetails> orders = collmapp.Allorderdetails(coll);
 			for(int i=0;i<orders.size();i++){
 				if(orders.get(i).getMakeLoans()!= null && orders.get(i).getInterestPenaltySum() != null){
@@ -76,6 +78,7 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setCollectionTime(colla.getCollectionTime());
 					orders.get(i).setCollectionStatus(colla.getCollectionStatus());
 				}
+				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 				
 			}
 			map.put("Orderdetails", orders);
@@ -148,6 +151,7 @@ public class Collectionserviceimp implements Collectionservice{
 			List<Integer> ids = collmapp.OrderIdMa(order.getCompanyId());
 			pages = new PageUtil(order.getPage(), ids.size());
 			order.setPage(pages.getPage());
+			PhoneDeal p = new PhoneDeal();
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
@@ -168,6 +172,7 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
 					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
 				}
+				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
 		}else{
@@ -216,6 +221,7 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		PageUtil pages = new PageUtil(coll.getPage(), asa);
 		coll.setPage(pages.getPage());
+		PhoneDeal p = new PhoneDeal();
 		List<Collection> colles = collmapp.SelectSumOrder(coll);
 		for(int i=0;i<colles.size();i++){
 			colles.get(i).setCompanyId(coll.getCompanyId());
@@ -236,6 +242,7 @@ public class Collectionserviceimp implements Collectionservice{
 				colles.get(i).setCollNumdata("0");
 			}
 			colles.get(i).setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
+			colles.get(i).setPhone(p.decryption(colles.get(i).getPhone()));
 			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -262,6 +269,7 @@ public class Collectionserviceimp implements Collectionservice{
 			Integer totalCount = collmapp.AllCountNum(col);
 			PageUtil pages = new PageUtil(col.getPage(),totalCount-as);
 			col.setPage(pages.getPage());
+			PhoneDeal p = new PhoneDeal();
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
 			for(int i=0;i<orders.size();i++){
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
@@ -278,6 +286,7 @@ public class Collectionserviceimp implements Collectionservice{
 				}
 				Deferred des = collmapp.DefeSet(orders.get(i));
 				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
 			map.put("PageUtil", pages);
@@ -316,6 +325,7 @@ public class Collectionserviceimp implements Collectionservice{
 		
 		Integer totalCount = collmapp.CollectionWeiTotalcount(col);
 		PageUtil pages = new PageUtil(col.getPage(), totalCount);
+		PhoneDeal p = new PhoneDeal();
 		col.setPage(pages.getPage());
 		List<Orderdetails> orders = collmapp.WeiControllerOrdetialis(col);
 		for(int i=0;i<orders.size();i++){
@@ -326,6 +336,7 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 			orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
 			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
+			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 		}
 		map.put("Orderdetails", orders);
 		}else{
@@ -381,6 +392,7 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
 		coll.setPage(pages.getPage());
+		PhoneDeal p = new PhoneDeal();
 		List<Collection> colles = collmapp.Collectionmemberdetilas(coll);
 		for(int i=0;i<colles.size();i++){
 			colles.get(i).setCollectionTime(Timestamps.stampToDate(colles.get(i).getCollectionTime()));
@@ -401,6 +413,7 @@ public class Collectionserviceimp implements Collectionservice{
 			}else{
 				colles.get(i).setCollNumdata("0");
 			}
+			colles.get(i).setPhone(p.decryption(colles.get(i).getPhone()));
 			
 		}
 		map.put("Collections", colles);

@@ -339,28 +339,28 @@
 		</select>
 		
 		
-		<select id="Gesamtb" parameterType="com.zhita.model.manage.Orderdetails" resultMap="com.zhita.model.manage.Orders">
+		<select id="Gesamtb" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung,count(repay.id) as GesamtbetragderNum from repayment repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and repay.repaymentDate between #{start_time} and #{end_time}
 		</select>
 		
 		
 		
-		<select id="CollMoney" parameterType="com.zhita.model.manage.Orderdetails" resultMap="com.zhita.model.manage.Orders">
+		<select id="CollMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select sum(ord.makeLoans) as GesamtbetraguberfalligerBetrag,count(ord.orderId) as GesamtbetraguberfallNum from collection c,orders o,orderdetails ord
 			where c.orderId = o.id and c.orderId = ord.orderId and o.companyId = #{companyId} and o.orderStatus = "1" and c.collectionTime between #{start_time} and #{end_time}
 		</select>
 		
 		
 		
-		<select id="HuaiMoney" parameterType="com.zhita.model.manage.Orderdetails" resultMap="com.zhita.model.manage.Orders">
+		<select id="HuaiMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select sum(ord.makeLoans) as GesamtbetraguberfalligerBetrag,count(ord.orderId) as GesamtbetraguberfallNum from collection c,orders o,orderdetails ord
 			where c.orderId = o.id and c.orderId = ord.orderId and o.companyId = #{companyId} amd o.orderStatus = "4" and c.collectionTime between #{start_time} and #{end_time}
 		</select>
 		
 		
 		
-		<select id="OrderHuan" parameterType="com.zhita.model.manage.Orderdetails" resultMap="com.zhita.model.manage.Orders">
+		<select id="OrderHuan" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select repay.repaymentDate,count(repay.id) as GesamtbetragderNum,sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung from repayment repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and o.orderStatus = "3" and repay.repaymentDate between #{start_time} and #{end_time}
 		</select>
