@@ -182,6 +182,12 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Integer deleteBank(Integer userId) {
 		return stdao.DeleteChan(userId);
 	}
+
+	@Override
+	public void SelectId(String orderNumber) {
+	Orders	ord = stdao.SelectOrderId(orderNumber);//根据编号查询订单ID
+		System.out.println(ord.getCompanyId()+ord.getId()+ord.getUserId());
+	}
 	
 	
 	

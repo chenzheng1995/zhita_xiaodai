@@ -53,5 +53,8 @@ public interface Chanpayservice {
 	
 	
 	Integer deleteBank(Integer userId);
+	
+	
+	void SelectId(String orderNumber);
 
 }

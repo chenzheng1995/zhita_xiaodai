@@ -476,8 +476,8 @@ public class FinanceServiceimp implements FinanceService{
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
 		bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
-		bank.setOrderNumber(""+"/"+","+a.getOverdueamount()+","+0+"");//实借笔数    实借金额
-		bank.setName(""+"/"+","+c.getDeferredamount()+","+0+"");//实借笔数    实借金额
+		bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+","+0+"");//逾期数   逾期费
+		bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+","+0+"");//延期数    延期费
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Bankdeduction", bank);
 		return map;

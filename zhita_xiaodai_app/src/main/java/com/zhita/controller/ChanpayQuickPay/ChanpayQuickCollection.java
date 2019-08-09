@@ -1270,7 +1270,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
-		test.nmg_zft_api_quick_payment();
+		test.SelectCompany("");
 	//	test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询
@@ -1279,5 +1279,16 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_quick_payment_receiptconfirm();// 2.13 确认收货接口
 //		test.notifyVerify(); // 测试异步通知验签
 	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping("SelectCompanyId")
+	public void SelectCompany(String orderNumber){
+		chanser.SelectId(orderNumber);
+	}
+	
+	
+	
 	
 }
