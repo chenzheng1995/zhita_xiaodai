@@ -120,7 +120,7 @@
   </update>
   <!-- 后台管理       通过排序字段查询轮播图id -->
   <select id="selidbysort" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select id from homepage_viewpager where sort=#{arg0}
+  	select id from homepage_viewpager where sort=#{arg0} and deleted=0
   </select>
   <!-- 后台管理        查询轮播图表总条数 -->
   <select id="queryAllCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
