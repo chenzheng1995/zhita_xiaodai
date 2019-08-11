@@ -51,15 +51,19 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 					Date shoulddate = sdf.parse(shouldReturnTime);//应还时间（date类型）
 					Integer overdueNumberOfDays = DateListUtil.differentDaysByMillisecond(shoulddate,d);//逾期天数
 					
-					List<OverdueSettings> listover = projecttimerMapper.queryAllOversett(companyId);//查询逾期设置表所有信息
 					List<BigDecimal> list1 = new ArrayList<BigDecimal>();
+					BigDecimal interestPenaltySumfor=list.get(i).getInterestPenaltySum();//逾期总罚息
+					if(interestPenaltySumfor==null){
+						interestPenaltySumfor=new BigDecimal("0.00");
+					}
+					List<OverdueSettings> listover = projecttimerMapper.queryAllOversett(companyId);//查询逾期设置表所有信息
 					for (int j = 0; j < listover.size(); j++) {
 						if(overdueNumberOfDays<=listover.get(j).getOverduehowmanydaysage()){
 							list1.add(listover.get(j).getPenaltyinterestrates());
 						}
 					}
-					BigDecimal interestPenaltyDay = list1.get(0);//日均罚息（0.1%）
-					BigDecimal interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+					BigDecimal interestPenaltyDay = list1.get(0).divide(new BigDecimal("100"));//日均罚息（0.2）
+					BigDecimal interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).add(interestPenaltySumfor);
 					BigDecimal interestInAll = list.get(i).getInterestSum().add(interestPenaltySum);//总利息
 					
 					projecttimerMapper.upaorderdetail(overdueNumberOfDays, interestPenaltyDay, interestPenaltySum, interestInAll, list.get(i).getId());
