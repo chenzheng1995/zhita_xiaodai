@@ -1,5 +1,6 @@
 package com.zhita.model.manage;
 
+
 import java.math.BigDecimal;
 
 //调账表(线上调账表)
@@ -41,6 +42,16 @@ public class Accountadjustment {
 	
 	private String thname;
 	
+	private String pipelinenumber;
+	
+	public String getPipelinenumber() {
+		return pipelinenumber;
+	}
+
+	public void setPipelinenumber(String pipelinenumber) {
+		this.pipelinenumber = pipelinenumber;
+	}
+
 	public String getThname() {
 		return thname;
 	}

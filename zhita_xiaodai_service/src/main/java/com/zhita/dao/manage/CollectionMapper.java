@@ -121,4 +121,19 @@ public interface CollectionMapper {
 	
 	
 	Integer AddCollOrders(Collectiondetails coll);
+	
+	
+	Collection OneCollecti(Collection col);
+	
+	
+	Integer FenCol(Collection col);
+	
+	
+	Integer SelectcollectionStatuCC(Collection col);
+	
+	
+	Integer SelectcollectionStatusAs(Collection col);
+	
+	
+	Collection Collectionmem(Collection col);
 }

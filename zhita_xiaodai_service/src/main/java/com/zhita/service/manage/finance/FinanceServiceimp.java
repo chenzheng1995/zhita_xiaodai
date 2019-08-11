@@ -1,5 +1,6 @@
 package com.zhita.service.manage.finance;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -163,28 +164,34 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> OrderAccount(Orderdetails orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
 			Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
-			System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
-			ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
-			ordetails.setOrder_money(ordetails.getInterestSum().add(ordetails.getMakeLoans()));
-			if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() != null){
-				ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum().add(ordetails.getRealityBorrowMoney()));
-			}else if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() == null){
-				ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum());
+			if(ordetails!=null){
+				System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
+				ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
+				ordetails.setOrder_money(ordetails.getInterestSum().add(ordetails.getMakeLoans()));
+				if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() != null){
+					ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum().add(ordetails.getRealityBorrowMoney()));
+				}else if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() == null){
+					ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum());
+				}else{
+					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney());
+				}
+				
+				Deferred defe =  coldao.DefNum(ordetails.getOrderId());
+				orderNumber.setDefeNum(defe.getId());
+				orderNumber.setDefeMoney(defe.getInterestOnArrears());
+				Deferred de = padao.DeleteNumMoney(ordetails.getOrderId());
+				//ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
+				ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
+				ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));
+				ordetails.setDeferBeforeReturntime(Timestamps.stampToDate(ordetails.getDeferBeforeReturntime()));
+				map.put("aaa", ordetails.getInterestPenaltySum());
+				map.put("Orderdetails", ordetails);
+				map.put("Deferred", de);
 			}else{
-				ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney());
+				map.put("Orderdetails", "无数据");
+				map.put("Deferred", 0);
 			}
 			
-			Deferred defe =  coldao.DefNum(ordetails.getOrderId());
-			orderNumber.setDefeNum(defe.getId());
-			orderNumber.setDefeMoney(defe.getInterestOnArrears());
-			Deferred de = padao.DeleteNumMoney(ordetails.getOrderId());
-			//ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
-			ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
-			ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));
-			ordetails.setDeferBeforeReturntime(Timestamps.stampToDate(ordetails.getDeferBeforeReturntime()));
-			map.put("aaa", ordetails.getInterestPenaltySum());
-			map.put("Orderdetails", ordetails);
-			map.put("Deferred", de);
 		return map;
 	}
 
@@ -206,10 +213,14 @@ public class FinanceServiceimp implements FinanceService{
 		Integer totalCount = padao.AccountTotalCount(ordetail);
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
 		ordetail.setPage(pages.getPage());
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		List<Accountadjustment> accounts = padao.AllAccount(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
 			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
+			String ps = p.decryption(accounts.get(i).getPhone());
+			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -231,10 +242,14 @@ public class FinanceServiceimp implements FinanceService{
 		Integer totalCount = padao.AccountTotalCount(ordetail);
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
 		ordetail.setPage(pages.getPage());
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		List<Accountadjustment> accounts = padao.AllStatu(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
 			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
+			String ps = p.decryption(accounts.get(i).getPhone());
+			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -263,11 +278,15 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Integer totalCount = padao.AccountTotalCount(ordetail);
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		ordetail.setPage(pages.getPage());
 		List<Accountadjustment> accounts = padao.AllNotMoneyStatu(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
 			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
+			String ps = p.decryption(accounts.get(i).getPhone());
+			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -412,7 +431,7 @@ public class FinanceServiceimp implements FinanceService{
 					// TODO: handle exception
 				}
 			
-				
+				System.out.println("数据:"+stime);
 				Integer totalCount = padao.DelayTatolCount(banl);
 				if(totalCount !=null){
 					PageUtil pages = new PageUtil(banl.getPage(), totalCount);
@@ -421,39 +440,63 @@ public class FinanceServiceimp implements FinanceService{
 					PageUtil pages = new PageUtil(banl.getPage(), 0);
 					banl.setPage(pages.getPage());
 				}
+				
 				Bankdeductions bank = padao.BankdeduCtionsData(banl);
+				bank.setDeferredTime(stime);
 				Bankdeductions b = padao.BankMoney(banl);
+				if(bank.getDeferredamount()==null){
+					bank.setDeferredamount(new BigDecimal(0));
+				}
+				
+				if(b.getDeduction_money()==null){
+					b.setDeduction_money(new BigDecimal(0));
+				}
+				
+				
 				bank.setDeduction_money(b.getDeduction_money());
 				bank.setUserNum(b.getUserNum());
+				System.out.println(bank.getOrderNum()+"A"+bank.getDeferredamount()+"A"+bank.getDeduction_money()+"A"+bank.getUserNum());
 				banks.add(bank);
 		}else{
 			List<String> times =  DateListUtil.getDays(banl.getStartu_time(), banl.getEnd_time());
 			for(int i=0;i<times.size();i++){
 				banl.setStartu_time(times.get(i)+" 00:00:00");
 				banl.setEnd_time(times.get(i)+" 23:59:59");
-					try {	
-						banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
-						banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-					Integer totalCount = padao.DelayTatolCount(banl);
-					if(totalCount !=null){
-						PageUtil pages = new PageUtil(banl.getPage(), totalCount);
-						banl.setPage(pages.getPage());
-					}else{
-						PageUtil pages = new PageUtil(banl.getPage(), 0);
-						banl.setPage(pages.getPage());
-					}
-					Bankdeductions bank = padao.BankdeduCtionsData(banl);
-					Bankdeductions b = padao.BankMoney(banl);
-					bank.setDeduction_money(b.getDeduction_money());
-					bank.setUserNum(b.getUserNum());
-					banks.add(bank);
+				try {	
+					banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+					banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			
+				
+				Integer totalCount = padao.DelayTatolCount(banl);
+				
+				if(totalCount !=null){
+					PageUtil pages = new PageUtil(banl.getPage(), totalCount);
+					banl.setPage(pages.getPage());
+				}else{
+					PageUtil pages = new PageUtil(banl.getPage(), 0);
+					banl.setPage(pages.getPage());
+				}
+				
+				Bankdeductions bank = padao.BankdeduCtionsData(banl);
+				bank.setDeferredTime(times.get(i));
+				Bankdeductions b = padao.BankMoney(banl);
+				if(bank.getDeferredamount()==null){
+					bank.setDeferredamount(new BigDecimal(0));
+				}
+				
+				if(b.getDeduction_money()==null){
+					b.setDeduction_money(new BigDecimal(0));
+				}
+				
+				
+				bank.setDeduction_money(b.getDeduction_money());
+				bank.setUserNum(b.getUserNum());
+				banks.add(bank);
 			}
 		}
-		
-			
 		map.put("Bankdeduction", banks);
 		return map;
 	}

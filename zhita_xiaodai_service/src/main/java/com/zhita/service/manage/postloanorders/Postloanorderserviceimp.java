@@ -425,7 +425,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
-			order.setOrderId(orders.get(i).getOrderId());
+			order.setOrderId(orders.get(i).getId());
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			if(orders.get(i).getInterMoney() != null ){
 				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterMoney()));
@@ -436,6 +436,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+			System.out.println("事件:"+orders.get(i).getRealtime());
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		}
 		map.put("Orderdetails", orders);

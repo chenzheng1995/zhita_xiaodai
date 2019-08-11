@@ -104,13 +104,41 @@ public class OperationalServiceimp implements OperationalService{
 			Orders o = operdao.Gesamtb(ordera);//还款金额    还款数
 			Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 			Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
+			
+			
+			if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
+				
+				ord.setGesamtbetragderDarlehen(new BigDecimal(0));
+				System.out.println("数据输出:"+o.getGesamtbetragderRvckzahlung()+or.getGesamtbetraguberfalligerBetrag()+os.getAmountofbaddebts());
+			}
+			if(o.getGesamtbetragderRvckzahlung() == null){
+				
+				o.setGesamtbetragderRvckzahlung(new BigDecimal(0));
+				System.out.println(o.getGesamtbetragderRvckzahlung());
+				
+			}
+			if(or.getGesamtbetraguberfalligerBetrag() == null){
+				
+				or.setGesamtbetraguberfalligerBetrag(new BigDecimal(0));
+				System.out.println(or.getGesamtbetraguberfalligerBetrag());
+				
+			}
+			if(os.getAmountofbaddebts()==null){
+				
+				os.setAmountofbaddebts(new BigDecimal(0));
+				System.out.println(os.getAmountofbaddebts());
+			}
 			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
 			ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
-			ord.setGesamtbetraguberfalligerBetrag(os.getGesamtbetraguberfalligerBetrag());
-			ord.setGesamtbetraguberfallNum(os.getGesamtbetraguberfallNum());
-			ord.setRemittanceTime(Timestamps.stampToDate1(ord.getRemittanceTime()));
+			ord.setAmountofbaddebts(os.getAmountofbaddebts());
+			ord.setBaddebt(os.getBaddebt());
+			ord.setRemittanceTime(times);
+			System.out.println(ord.getGesamtbetragderDarlehen()+"总金额:"+ord.getGesamtbetragderDarlehen());
+			System.out.println(ord.getGesamtbetragderRvckzahlung()+"总还款金额"+o.getGesamtbetragderRvckzahlung());
+			System.out.println(ord.getGesamtbetraguberfalligerBetrag()+"总预期金额:"+or.getGesamtbetraguberfalligerBetrag());
+			System.out.println(ord.getAmountofbaddebts()+"坏账金额:"+os.getAmountofbaddebts());
 			ordes.add(ord);
 			map.put("PageUtil", pages);
 		}else{
@@ -131,13 +159,37 @@ public class OperationalServiceimp implements OperationalService{
 				Orders o = operdao.Gesamtb(ordera);//还款金额    还款数
 				Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 				Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
+				
+				
+				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
+					
+					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
+					System.out.println("数据输出:"+o.getGesamtbetragderRvckzahlung()+or.getGesamtbetraguberfalligerBetrag()+os.getAmountofbaddebts());
+				}
+				if(o.getGesamtbetragderRvckzahlung() == null){
+					
+					o.setGesamtbetragderRvckzahlung(new BigDecimal(0));
+					System.out.println(o.getGesamtbetragderRvckzahlung());
+					
+				}
+				if(or.getGesamtbetraguberfalligerBetrag() == null){
+					
+					or.setGesamtbetraguberfalligerBetrag(new BigDecimal(0));
+					System.out.println(or.getGesamtbetraguberfalligerBetrag());
+					
+				}
+				if(os.getAmountofbaddebts()==null){
+					
+					os.setAmountofbaddebts(new BigDecimal(0));
+					System.out.println(os.getAmountofbaddebts());
+				}
 				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
 				ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
-				ord.setGesamtbetraguberfalligerBetrag(os.getGesamtbetraguberfalligerBetrag());
-				ord.setGesamtbetraguberfallNum(os.getGesamtbetraguberfallNum());
-				ord.setRemittanceTime(Timestamps.stampToDate1(ord.getRemittanceTime()));
+				ord.setAmountofbaddebts(os.getAmountofbaddebts());
+				ord.setBaddebt(os.getBaddebt());
+				ord.setRemittanceTime(stime.get(i));
 				ordes.add(ord);
 				map.put("PageUtil", pages);
 			}
@@ -215,17 +267,41 @@ public class OperationalServiceimp implements OperationalService{
 			}
 			PageUtil pages = new PageUtil(order.getPage(), totalCount);	//参数page pagesize
 			order.setPage(pages.getPage());
-			
-			
 			Orders orders = operdao.OrderHuan(order);//还款数   
 			Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 			Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
-			orders.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
-			orders.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
-			orders.setZahlderGesamtdarlehen(orders.getZahlderGesamtdarlehen());
 			
+			
+			if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
+				
+				ord.setGesamtbetragderDarlehen(new BigDecimal(0));
+			}
+			if(orders.getGesamtbetragderRvckzahlung() == null){
+				
+				orders.setGesamtbetragderRvckzahlung(new BigDecimal(0));
+				
+			}
+			if(or.getGesamtbetraguberfalligerBetrag() == null){
+				
+				or.setGesamtbetraguberfalligerBetrag(new BigDecimal(0));
+				System.out.println(or.getGesamtbetraguberfalligerBetrag());
+				
+			}
+			ord.setRemittanceTime(stime);
+			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
+			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
+			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
+			if(orders.getGesamtbetraguberfallNum()==null){
+				orders.setGesamtbetraguberfallNum(0);
+			}
+			
+			if(orders.getGesamtbetragderNum()==null){
+				orders.setGesamtbetragderNum(0);
+			}
+			System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
 			NumberFormat numberFormat = NumberFormat.getInstance();
 			numberFormat.setMaximumFractionDigits(2);
+			System.out.println(orders.getGesamtbetraguberfallNum()+"AAA"+orders.getGesamtbetragderNum());
 			orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
 			orde.add(orders);
 			map.put("PageUtil", pages);
@@ -254,16 +330,39 @@ public class OperationalServiceimp implements OperationalService{
 				System.out.println("数量"+totalCount);
 				PageUtil pages = new PageUtil(order.getPage(), totalCount);	//参数page pagesize
 				order.setPage(pages.getPage());
-				
-				
-				
 				Orders orders = operdao.OrderHuan(order);//还款数   
 				Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 				Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
-				orders.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
-				orders.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
-				orders.setZahlderGesamtdarlehen(orders.getZahlderGesamtdarlehen());
+				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
+					
+					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
+				}
+				if(orders.getGesamtbetragderRvckzahlung() == null){
+					
+					orders.setGesamtbetragderRvckzahlung(new BigDecimal(0));
+					
+				}
+				if(or.getGesamtbetraguberfalligerBetrag() == null){
+					
+					or.setGesamtbetraguberfalligerBetrag(new BigDecimal(0));
+					System.out.println(or.getGesamtbetraguberfalligerBetrag());
+					
+				}
 				
+				
+				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
+				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
+				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
+				
+				System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
+				ord.setRemittanceTime(stime.get(i));
+				if(orders.getGesamtbetraguberfallNum()==null){
+					orders.setGesamtbetraguberfallNum(0);
+				}
+				
+				if(orders.getGesamtbetragderNum()==null){
+					orders.setGesamtbetragderNum(0);
+				}
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
 				orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));

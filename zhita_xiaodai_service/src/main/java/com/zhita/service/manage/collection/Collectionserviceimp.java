@@ -1,5 +1,7 @@
 package com.zhita.service.manage.collection;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -18,6 +21,7 @@ import com.zhita.model.manage.Collection_member;
 import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
@@ -199,54 +203,119 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> Collectionmemberdetails(Collection coll) {
-		try {
-			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
-			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		List<Collection> totalCount = collmapp.SelectSumOrderNum(coll);
-		try {
-			coll.setStart_time(Timestamps.dateToStamp(coll.getStart_time()));
-			coll.setEnd_time(Timestamps.dateToStamp(coll.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		Integer asa = null;
-		if(totalCount.size() != 0){
-			asa = totalCount.size();
-		}else{
-			asa = 0;
-		}
-		PageUtil pages = new PageUtil(coll.getPage(), asa);
-		coll.setPage(pages.getPage());
-		PhoneDeal p = new PhoneDeal();
-		List<Collection> colles = collmapp.SelectSumOrder(coll);
-		for(int i=0;i<colles.size();i++){
-			colles.get(i).setCompanyId(coll.getCompanyId());
-			colles.get(i).setOrderNum(collmapp.SelectOrderNum(colles.get(i)));//累计订单总数  参数  时间   公司ID
-			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
-			colles.get(i).setCollSum(collmapp.SelectCollectionNum(colles.get(i)));
-			colles.get(i).setCollectionStatus("承诺还款");
-			colles.get(i).setSameday(collmapp.SelectcollectionStatus(colles.get(i)));//承诺还款
-			colles.get(i).setCollectionStatus("电话无人接听");
-			colles.get(i).setPaymentmade(collmapp.SelectcollectionStatus(colles.get(i)));//未还清
-			colles.get(i).setCollectionStatus("态度恶劣");
-			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计坏账数
-			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
-				NumberFormat numberFormat = NumberFormat.getInstance();
-				numberFormat.setMaximumFractionDigits(2);
-				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
-			}else{
-				colles.get(i).setCollNumdata("0");
-			}
-			colles.get(i).setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
-			colles.get(i).setPhone(p.decryption(colles.get(i).getPhone()));
-			
-		}
+//		try {
+//			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+//			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		List<Collection> totalCount = collmapp.SelectSumOrderNum(coll);
+//		try {
+//			coll.setStart_time(Timestamps.dateToStamp(coll.getStart_time()));
+//			coll.setEnd_time(Timestamps.dateToStamp(coll.getEnd_time()));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		
+//		Integer asa = null;
+//		if(totalCount.size() != 0){
+//			asa = totalCount.size();
+//		}else{
+//			asa = 0;
+//		}
+//		PageUtil pages = new PageUtil(coll.getPage(), asa);
+//		coll.setPage(pages.getPage());
+//		PhoneDeal p = new PhoneDeal();
+//		List<Collection> colles = collmapp.SelectSumOrder(coll);
+//		for(int i=0;i<colles.size();i++){
+//			colles.get(i).setCompanyId(coll.getCompanyId());
+//			colles.get(i).setOrderNum(collmapp.SelectOrderNum(colles.get(i)));//累计订单总数  参数  时间   公司ID
+//			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
+//			colles.get(i).setCollSum(collmapp.SelectCollectionNum(colles.get(i)));
+//			colles.get(i).setCollectionStatus("承诺还款");
+//			colles.get(i).setSameday(collmapp.SelectcollectionStatus(colles.get(i)));//承诺还款
+//			colles.get(i).setCollectionStatus("电话无人接听");
+//			colles.get(i).setPaymentmade(collmapp.SelectcollectionStatus(colles.get(i)));//未还清
+//			colles.get(i).setCollectionStatus("态度恶劣");
+//			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计坏账数
+//			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
+//				NumberFormat numberFormat = NumberFormat.getInstance();
+//				numberFormat.setMaximumFractionDigits(2);
+//				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
+//			}else{
+//				colles.get(i).setCollNumdata("0");
+//			}
+//			colles.get(i).setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
+//			
+//		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("Collection", colles);
+		List<Collection> colles = new ArrayList<Collection>();
+		if(coll.getStart_time() == null){
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			String stime = sim.format(new Date());
+			coll.setStart_time(stime+" 00:00:00");
+			coll.setEnd_time(stime+" 23:59:59");
+			
+			try {
+				coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+				coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			Collection co = collmapp.OneCollecti(coll);
+			co.setCollection_count(collmapp.FenCol(coll));//分配订单数
+			coll.setCollectionStatus("承诺还款");
+			co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+			coll.setOrderStatus("2");
+			co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+			coll.setOrderStatus("4");
+			co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+			BigDecimal a=null;
+			if(co.getSameday()!=0){
+				a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
+				co.setDataCol(a);
+			}else{
+				a = new BigDecimal(0);
+				co.setDataCol(a);
+			}
+			
+			System.out.println(co.getDataCol());
+			co.setRealtime(stime);
+			colles.add(co);
+			map.put("Collection", colles);
+		}else{
+			List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
+			for(int i=0;i<stimes.size();i++){
+				coll.setStart_time(stimes.get(i)+" 00:00:00");
+				coll.setEnd_time(stimes.get(i)+" 23:59:59");
+				
+				try {
+					coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+					coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				Collection co = collmapp.OneCollecti(coll);
+				co.setCollection_count(collmapp.FenCol(coll));//分配订单数
+				coll.setCollectionStatus("承诺还款");
+				co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+				coll.setOrderStatus("2");
+				co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+				coll.setOrderStatus("4");
+				co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+				BigDecimal a=null;
+				if(co.getSameday()!=0){
+					a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
+					co.setDataCol(a);
+				}else{
+					a = new BigDecimal(0);
+					co.setDataCol(a);
+				}
+				co.setRealtime(stimes.get(i));
+				colles.add(co);
+				map.put("Collection", colles);
+			}
+		}
 		return map;
 	}
 
@@ -376,47 +445,146 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> CollectionmemberUser(Collection coll) {
-		try {
-			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
-			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+//		try {
+//			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+//			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		List<Collection> colleas = collmapp.SelectUserNum(coll);
+//		Integer totalCount = null ;		
+//		if(colleas.size() != 0){
+//			totalCount = colleas.size();
+//		}else{
+//			totalCount = 0;
+//		}
+//		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
+//		coll.setPage(pages.getPage());
+//		PhoneDeal p = new PhoneDeal();
+//		List<Collection> colles = collmapp.Collectionmemberdetilas(coll);
+//		for(int i=0;i<colles.size();i++){
+//			colles.get(i).setCollectionTime(Timestamps.stampToDate(colles.get(i).getCollectionTime()));
+//			colles.get(i).setCompanyId(coll.getCompanyId());
+//			colles.get(i).setOrderNum(collmapp.SelectUserCollectionNum(colles.get(i)));
+//			colles.get(i).setCollectionStatus("承诺还款");
+//			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计成功
+//			colles.get(i).setCollectionStatus("承诺还清一部分");
+//			colles.get(i).setSameday(collmapp.SelectUsercollectionStatus(colles.get(i)));//承诺还款
+//			colles.get(i).setCollectionStatus("电话无人接听");
+//			colles.get(i).setPaymentmade(collmapp.SelectUsercollectionStatus(colles.get(i)));//未还清
+//			colles.get(i).setCollectionStatus("态度恶劣");
+//			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计坏账数
+//			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
+//				NumberFormat numberFormat = NumberFormat.getInstance();
+//				numberFormat.setMaximumFractionDigits(2);
+//				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
+//			}else{
+//				colles.get(i).setCollNumdata("0");
+//			}
+//			
+//		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collection> colleas = collmapp.SelectUserNum(coll);
-		Integer totalCount = null ;		
-		if(colleas.size() != 0){
-			totalCount = colleas.size();
-		}else{
-			totalCount = 0;
-		}
-		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
-		coll.setPage(pages.getPage());
-		PhoneDeal p = new PhoneDeal();
-		List<Collection> colles = collmapp.Collectionmemberdetilas(coll);
-		for(int i=0;i<colles.size();i++){
-			colles.get(i).setCollectionTime(Timestamps.stampToDate(colles.get(i).getCollectionTime()));
-			colles.get(i).setCompanyId(coll.getCompanyId());
-			colles.get(i).setOrderNum(collmapp.SelectUserCollectionNum(colles.get(i)));
-			colles.get(i).setCollectionStatus("承诺还款");
-			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计成功
-			colles.get(i).setCollectionStatus("承诺还清一部分");
-			colles.get(i).setSameday(collmapp.SelectUsercollectionStatus(colles.get(i)));//承诺还款
-			colles.get(i).setCollectionStatus("电话无人接听");
-			colles.get(i).setPaymentmade(collmapp.SelectUsercollectionStatus(colles.get(i)));//未还清
-			colles.get(i).setCollectionStatus("态度恶劣");
-			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计坏账数
-			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
-				NumberFormat numberFormat = NumberFormat.getInstance();
-				numberFormat.setMaximumFractionDigits(2);
-				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
-			}else{
-				colles.get(i).setCollNumdata("0");
-			}
-			colles.get(i).setPhone(p.decryption(colles.get(i).getPhone()));
+		List<Collection> colles = new ArrayList<Collection>();
+		BigDecimal a=null;
+		Collection co = new Collection();
+		if(coll.getStart_time()==null){
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			String stime = sim.format(new Date());
+			coll.setStart_time(stime+" 00:00:00");
+			coll.setEnd_time(stime+" 23:59:59");
 			
+			try {
+				coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+				coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			co = collmapp.Collectionmem(coll);//催收员名称   催收数
+			if(co != null){
+				coll.setCollectionStatus("承诺还款");
+				System.out.println("CCC:"+collmapp.SelectcollectionStatuCC(coll));
+				co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+				coll.setOrderStatus("2");
+				co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+				coll.setOrderStatus("4");
+				co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+				
+				if(co.getSameday()!=0){
+					a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
+					co.setCollNumdata(String.valueOf(a));
+				}else{
+					a = new BigDecimal(0);
+					co.setCollNumdata(String.valueOf(a));
+				}
+				co.setRealtime(stime);
+				colles.add(co);
+				
+			}else{
+				Collection cosa = new Collection();
+				cosa.setRealtime(stime);
+				cosa.setSameday(0);
+				cosa.setPaymentmade(0);
+				cosa.setConnected(0);
+				a = new BigDecimal(0);
+				cosa.setCollNumdata("0");
+				cosa.setCollection_count(0);
+				colles.add(cosa);
+			}
+			
+			for(int i =0;i<colles.size();i++){
+				System.out.println(colles.get(i).getRealtime()+colles.get(i).getConnected()+colles.get(i).getPaymentmade());
+			}
+			map.put("Collections", colles);
+		}else{
+			List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
+			for (int i = 0; i < stimes.size(); i++) {
+				coll.setStart_time(stimes.get(i)+" 00:00:00");
+				coll.setEnd_time(stimes.get(i)+" 23:59:59");
+				
+				try {
+					coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+					coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				co = collmapp.Collectionmem(coll);//催收员名称   催收数
+				if(co != null){
+					coll.setCollectionStatus("承诺还款");
+					System.out.println("CCC:"+collmapp.SelectcollectionStatuCC(coll));
+					co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+					coll.setOrderStatus("2");
+					co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+					coll.setOrderStatus("4");
+					co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+					
+					if(co.getSameday()!=0){
+						a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
+						co.setCollNumdata(String.valueOf(a));
+					}else{
+						a = new BigDecimal(0);
+						co.setCollNumdata(String.valueOf(a));
+					}
+					co.setRealtime(stimes.get(i));
+					colles.add(coll);
+					
+				}else{
+					Collection cosa = new Collection();
+					cosa.setRealtime(stimes.get(i));
+					cosa.setReallyName("0");
+					cosa.setSameday(0);
+					cosa.setPaymentmade(0);
+					cosa.setConnected(0);
+					a = new BigDecimal(0);
+					cosa.setCollNumdata("0");
+					cosa.setCollection_count(0);
+					colles.add(cosa);
+				}
+				
+				map.put("Collections", colles);
 		}
-		map.put("Collections", colles);
+		}
+		
 		return map;
 	}
 

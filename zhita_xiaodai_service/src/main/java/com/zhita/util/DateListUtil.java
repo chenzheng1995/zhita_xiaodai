@@ -193,7 +193,7 @@ public class DateListUtil {
     
     
     public static void main(String[] args) {
-		List<String> times = DateListUtil.getDays("2019-01-01", "2019-01-05");
+		List<String> times = DateListUtil.getDays("2019-08-01 00:00:00", "2019-08-10 23:59:59");
 		for(int i=0;i<times.size();i++){
 			System.out.println(times.get(i));
 		}

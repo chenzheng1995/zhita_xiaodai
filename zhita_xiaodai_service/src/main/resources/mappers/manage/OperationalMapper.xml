@@ -354,8 +354,8 @@
 		
 		
 		<select id="HuaiMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select sum(ord.makeLoans) as GesamtbetraguberfalligerBetrag,count(ord.orderId) as GesamtbetraguberfallNum from collection c,orders o,orderdetails ord
-			where c.orderId = o.id and c.orderId = ord.orderId and o.companyId = #{companyId} amd o.orderStatus = "4" and c.collectionTime between #{start_time} and #{end_time}
+			select sum(ord.makeLoans) as Amountofbaddebts,count(ord.orderId) as Baddebt from collection c,orders o,orderdetails ord
+			where c.orderId = o.id and c.orderId = ord.orderId and o.companyId = #{companyId} and o.orderStatus = "4" and c.collectionTime between #{start_time} and #{end_time}
 		</select>
 		
 		

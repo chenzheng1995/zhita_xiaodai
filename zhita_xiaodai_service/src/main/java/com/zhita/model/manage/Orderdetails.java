@@ -217,6 +217,16 @@ public class Orderdetails {
     
     private Integer collectionId;
     
+    private String riskcontrolname;
+    
+	public String getRiskcontrolname() {
+		return riskcontrolname;
+	}
+
+	public void setRiskcontrolname(String riskcontrolname) {
+		this.riskcontrolname = riskcontrolname;
+	}
+
 	public Integer getCollectionId() {
 		return collectionId;
 	}

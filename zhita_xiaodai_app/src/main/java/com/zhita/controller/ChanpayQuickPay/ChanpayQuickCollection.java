@@ -688,7 +688,7 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
-			
+			repay.setPipelinenumber(retu.getTrxId());
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
 				repay.setStatu("成功");

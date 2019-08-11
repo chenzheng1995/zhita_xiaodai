@@ -505,4 +505,62 @@
 			(#{collection_time},#{user_type},#{collectionmoney},#{collectionMemberId},#{orderId})
 		</insert>
 		
+		
+		<select id="OneCollecti" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
+			select realtime,count(id) as orderNum from orders where orderStatus = "1"
+             and orderCreateTime between #{start_time} and #{end_time} and companyId = #{companyId}
+		</select>
+		
+		
+		<select id="FenCol" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(o.id) from orders o,collection c 
+			<where>
+			 c.orderId = o.id and o.companyId=#{companyId}
+			  and o.realtime between #{start_time} and #{end_time} 
+			<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND c.collectionMemberId = #{collectionMemberId}
+			</if>
+			</where>
+		</select>
+		
+		
+		<select id="SelectcollectionStatuCC" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(o.id) from collection c,orders o 
+			<where>
+			 o.realtime between #{start_time} and #{end_time} 
+			AND c.collectionStatus = #{collectionStatus} 
+			and o.companyId = #{companyId}
+			<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND c.collectionMemberId = #{collectionMemberId}
+			</if>
+			</where>
+		</select>
+		
+		
+		<select id="SelectcollectionStatusAs" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+			select count(o.id) from collection c,orders o 
+			<where>
+			 o.orderStatus = #{orderStatus}
+			and o.realtime between #{start_time} and #{end_time} 
+			and o.companyId = #{companyId}
+			<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND c.collectionMemberId = #{collectionMemberId}
+			</if>
+			</where>
+		</select>
+		
+		
+		
+		<select id="Collectionmem" parameterType="com.zhita.model.manage.Collectiondetails" resultType="com.zhita.model.manage.Collectiondetails">
+			select c.collectionMemberId,come.reallyName,count(c.orderId) as orderNum from collection_member come,collection c,orders o 
+			<where>
+			 o.id = c.orderId and c.collectionMemberId = come.collectionMemberId
+			and o.companyId = #{companyId} 
+			and c.collectionTime between #{start_time} and #{end_time}
+			<if test="collectionMemberId != null and collectionMemberId !=''">
+				and c.collectionMemberId = #{collectionMemberId}
+			</if>
+			</where>
+		</select>
+		
 </mapper>
