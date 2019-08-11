@@ -75,6 +75,15 @@ public class UserServiceImp implements IntUserService{
     	for (int i = 0; i <list.size(); i++) {
     		list.get(i).setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getPhone())));//将手机号进行脱敏
     		list.get(i).setRegistetime(Timestamps.stampToDate(list.get(i).getRegistetime()));
+    		if(list.get(i).getUserattestationstatus()==null||"".equals(list.get(i).getUserattestationstatus())){
+    			list.get(i).setUserattestationstatus("0");
+    		}
+    		if(list.get(i).getBankattestationstatus()==null||"".equals(list.get(i).getBankattestationstatus())){
+    			list.get(i).setBankattestationstatus("0");
+    		}
+    		if(list.get(i).getOperaattestationstatus()==null||"".equals(list.get(i).getOperaattestationstatus())){
+    			list.get(i).setOperaattestationstatus("0");
+    		}
 		}
 		Map<String,Object> map=new HashMap<>();
 		map.put("userlist", list);
@@ -86,19 +95,23 @@ public class UserServiceImp implements IntUserService{
 	//后台管理---添加黑名单
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
-		int num=userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
-		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
-		String blackType="3";//黑名单类型（3：手工录入）
-		BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
-		blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
-		blacklistUser.setCompanyid(companyId);
-		blacklistUser.setOperator(operator);
-		blacklistUser.setOperationtime(operationTime);
-		blacklistUser.setBlackType(blackType);
-		blacklistUser.setUserid(userId);
-		blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
-		//userMapper.addBlacklist(companyId, userId, operator, operationTime,blackType);
-		return num;
+		Orders orders=userMapper.qeuryorder(userId);
+		if(orders==null){
+			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
+			String blackType="3";//黑名单类型（3：手工录入）
+			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
+			blacklistUser.setCompanyid(companyId);
+			blacklistUser.setOperator(operator);
+			blacklistUser.setOperationtime(operationTime);
+			blacklistUser.setBlackType(blackType);
+			blacklistUser.setUserid(userId);
+			blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 	
 	//后台管理---解除黑名单

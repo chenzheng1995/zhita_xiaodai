@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,6 +27,7 @@ public class UserController {
 	}
 	
 	//后台管理---添加黑名单
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/insertBlacklist")
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
@@ -34,6 +36,7 @@ public class UserController {
 	}
 	
 	//后台管理---解除黑名单
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/removeBlacklist")
 	public int removeBlacklist(Integer companyId,Integer userId){

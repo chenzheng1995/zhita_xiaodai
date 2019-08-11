@@ -97,6 +97,16 @@ public class Collection {
 	
 	private String usertype;
 	
+	private BigDecimal dataCol;
+	
+	public BigDecimal getDataCol() {
+		return dataCol;
+	}
+
+	public void setDataCol(BigDecimal dataCol) {
+		this.dataCol = dataCol;
+	}
+
 	public String getUsertype() {
 		return usertype;
 	}
@@ -450,6 +460,8 @@ public class Collection {
 		this.orderNumber = orderNumber;
 	}
 
+	
+	
 
 	
 	

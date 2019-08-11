@@ -18,7 +18,9 @@ import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
+import com.zhita.util.TuoMinUtil;
 
 @Service
 public class Postloanorderserviceimp implements Postloanorderservice{
@@ -54,6 +56,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		details.setPage(pages.getPage());
 		details.setTotalCount(totalCount);
 		List<Orderdetails> orderdetils = postloanorder.allOrderdetails(details);
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		for(int i=0;i<orderdetils.size();i++){
 			orderdetils.get(i).setOrderCreateTime(Timestamps.stampToDate(orderdetils.get(i).getOrderCreateTime()));
 			orderdetils.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferBeforeReturntime()));
@@ -62,6 +66,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			Deferred defe =  coldao.DefNum(orderdetils.get(i).getOrderId());
 			orderdetils.get(i).setDefeNum(defe.getId());
 			orderdetils.get(i).setDefeMoney(defe.getInterestOnArrears());
+			
+			String op = p.decryption(orderdetils.get(i).getPhone());
+			orderdetils.get(i).setPhone(tm.mobileEncrypt(op));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orderdetils);
@@ -99,7 +106,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
 			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
 			if(nodeid.size() != 0){
@@ -122,6 +130,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
 				ordeids.get(i).setRealtime(Timestamps.stampToDate1(ordeids.get(i).getRealtime()));
 				ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate1(ordeids.get(i).getOrderCreateTime()));
+				String op = p.decryption(ordeids.get(i).getPhone());
+				ordeids.get(i).setPhone(tm.mobileEncrypt(op));
 				System.out.println("天数："+ordeids.get(i).getOnceDeferredDay());
 			}
 			map.put("Orderdetails", ordeids);
@@ -134,6 +144,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> CollectionOrderdet(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		try {
 			order.setShouldReturnTime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
@@ -157,6 +169,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
 			Deferred defe =  coldao.DefNum(ordeids.get(i).getOrderId());
 			ordeids.get(i).setDefeNum(defe.getId());
+			String op = p.decryption(ordeids.get(i).getPhone());
+			ordeids.get(i).setPhone(tm.mobileEncrypt(op));
 			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());
 		}
 		map.put("Orderdetails", ordeids);
@@ -411,7 +425,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
-			order.setOrderId(orders.get(i).getOrderId());
+			order.setOrderId(orders.get(i).getId());
 			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
 			if(orders.get(i).getInterMoney() != null ){
 				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterMoney()));
@@ -422,6 +436,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+			System.out.println("事件:"+orders.get(i).getRealtime());
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		}
 		map.put("Orderdetails", orders);

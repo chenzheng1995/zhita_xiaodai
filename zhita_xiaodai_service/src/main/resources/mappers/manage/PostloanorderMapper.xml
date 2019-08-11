@@ -460,7 +460,7 @@
 			<where>
 			 AND u.id = o.userId
 			 AND defe.orderId = o.id
-			 AND o.orderStatus = #{orderStatus} 
+			 AND o.orderStatus = "3"
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND u.name LIKE concat('%',#{name},'%') 
@@ -494,9 +494,9 @@
 		
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
+			select o.id,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
 			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,o.overdueGrade,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName,u.registeClient 
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName,u.registeClient
 			from orders o LEFT JOIN user u on u.id = o.userId
 			LEFT JOIN orderdetails ord on o.id = ord.orderId
 			LEFT JOIN deferred defe on o.id = defe.orderid
@@ -712,7 +712,7 @@
 			 	AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
 			 </if>
 			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-				AND o.orderCreateTime between #{start_time} and#{end_time}
+				AND o.orderCreateTime between #{start_time} and #{end_time}
 			</if>
 			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
 				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}

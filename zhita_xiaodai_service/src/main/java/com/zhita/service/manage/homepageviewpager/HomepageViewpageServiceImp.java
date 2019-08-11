@@ -29,6 +29,8 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     
     //后台管理---添加功能
     public int insert(HomepageViewpager record) {
+    	int count=homepageViewpagerMapper.queryAllCount(record.getCompanyid());
+    	record.setSort(count+1);
     	record.setUpdatetime(System.currentTimeMillis()+"");//获取当前时间戳
 	     return homepageViewpagerMapper.insert(record);
     }
@@ -53,8 +55,9 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     }
     
     //后台管理---修改当前对象假删除状态
-    public int updateFalDel(Integer id){
+    public int updateFalDel(Integer id,Integer sort){
     	int num=homepageViewpagerMapper.updateFalDel(id);
+    	homepageViewpagerMapper.upadateSort(sort);
     	return num;
     }
 
@@ -62,6 +65,14 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
 	public List<HomepageViewpager> gethomepageViewpager(int companyId) {
 		List<HomepageViewpager> list=homepageViewpagerMapper.gethomepageViewpager(companyId); //获取轮播图的所有数据   	
 		return list;
+	}
+	
+	//后台管理---通过id修改排序字段
+	public int upasort(Integer id,Integer sort){
+		Integer lastid=homepageViewpagerMapper.selidbysort(sort-1);
+		homepageViewpagerMapper.upasort(id, sort-1);
+		homepageViewpagerMapper.upasort(lastid, sort);
+		return 1;
 	}
 
 }

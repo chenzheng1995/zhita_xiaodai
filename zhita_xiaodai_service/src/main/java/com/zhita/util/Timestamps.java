@@ -100,13 +100,16 @@ public class Timestamps {
 	  }
 	  
 	 public static void main(String[] args) {
-		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		 String s = simpleDateFormat.format(new Date());
-		 try {
-			String a = dateToStamp(s);
-			System.out.println(a);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+//		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		 String s = simpleDateFormat.format(new Date());
+//		 try {
+//			String a = dateToStamp(s);
+//			System.out.println(a);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+		 String a = stampToDate("1564156799000");
+		 System.out.println(a);
+		 
 	} 
 }

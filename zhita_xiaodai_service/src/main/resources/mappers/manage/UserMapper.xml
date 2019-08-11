@@ -272,19 +272,19 @@
 	           and u.registeTime between #{registeTimeStart,jdbcType=VARCHAR} and #{registeTimeEnd,jdbcType=VARCHAR}
 	        </if>
 	        <if test="userattestationstatus !=null and userattestationstatus!='' ">
-	           and uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR}
+	           and (uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR} or uat.attestationStatus is null)
 	        </if>
 	         <if test="bankattestationstatus !=null and bankattestationstatus!='' ">
-	           and b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR}
+	           and (b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR} or b.attestationStatus is null)
 	        </if>
 	         <if test="operaattestationstatus !=null and operaattestationstatus!='' ">
-	           and o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR}
+	           and (o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR} or o.attestationStatus is null)
 	        </if>
-	     order by u.registeTime desc limit #{page},#{pagesize}
+	     group by u.id order by u.registeTime desc  limit #{page},#{pagesize}
 	</select>
 	<!-- 后台管理           用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)  查询数量-->
 	<select id="queryUserListcount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
-		select count(*) from  
+		select count(DISTINCT u.id) from  
 		user u LEFT JOIN user_attestation uat on uat.userId=u.id LEFT JOIN bankcard b on b.userId=u.id LEFT JOIN operator o on o.userId=u.id
 		where companyId=#{companyId,jdbcType=INTEGER} and u.ifBlacklist=0
 	        <if test="name != null and name!='' ">
@@ -300,13 +300,13 @@
 	           and u.registeTime between #{registeTimeStart,jdbcType=VARCHAR} and #{registeTimeEnd,jdbcType=VARCHAR}
 	        </if>
 	        <if test="userattestationstatus !=null and userattestationstatus!='' ">
-	           and uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR}
+	           and (uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR} or uat.attestationStatus is null)
 	        </if>
 	         <if test="bankattestationstatus !=null and bankattestationstatus!='' ">
-	           and b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR}
+	           and (b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR} or b.attestationStatus is null)
 	        </if>
 	         <if test="operaattestationstatus !=null and operaattestationstatus!='' ">
-	           and o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR}
+	           and (o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR} or o.attestationStatus is null)
 	        </if>
 	</select>
 	<!-- 后台管理         添加黑名单(修改当前用户的黑名单状态) -->
@@ -379,7 +379,10 @@
 	<select id="queryOperator" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Operator">
 		select * from operator where userid=#{arg0}
 	</select>
-
+	<!--后台管理       根据用户id  查询该用户是否在订单表有未还清的订单  -->
+	<select id="qeuryorder" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+		select id,orderNumber from orders where userid=#{arg0} and orderStatus=0
+	</select>
 
 	<select id="getshareOfState" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select shareOfState from user where id=#{userId}

@@ -20,6 +20,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -483,6 +484,7 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_req")
+	@Transactional
 	public Map<String, Object> nmg_biz_api_auth_req(Integer MerUserId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(MerUserId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
@@ -686,7 +688,7 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
-			
+			repay.setPipelinenumber(retu.getTrxId());
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
 				repay.setStatu("成功");
@@ -1270,7 +1272,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
-		test.nmg_zft_api_quick_payment();
+		test.SelectCompany("");
 	//	test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询
@@ -1279,5 +1281,16 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_quick_payment_receiptconfirm();// 2.13 确认收货接口
 //		test.notifyVerify(); // 测试异步通知验签
 	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping("SelectCompanyId")
+	public void SelectCompany(String orderNumber){
+		chanser.SelectId(orderNumber);
+	}
+	
+	
+	
 	
 }
