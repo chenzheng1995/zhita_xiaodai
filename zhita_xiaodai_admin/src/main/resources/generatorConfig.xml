@@ -67,6 +67,7 @@
        <!--  <table tableName="manage_login" domainObjectName="ManageLogin" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
         <!-- <table tableName="xtest" domainObjectName="Xtest" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
         <!-- <table tableName="user_attestation" domainObjectName="UserAttestation" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
-        <table tableName="operator" domainObjectName="Operator" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
+        <!-- <table tableName="operator" domainObjectName="Operator" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
+        <table tableName="zhimi_risk" domainObjectName="ZhimiRisk" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
     </context>
 </generatorConfiguration>

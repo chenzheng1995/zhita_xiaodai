@@ -1,5 +1,6 @@
 package com.zhita.service.manage.user;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.zhita.model.manage.OrderQueryParameter;
@@ -39,6 +40,12 @@ public interface IntUserService {
 	public void updatename(String name, int userId);
 
 	public void updateifBlacklist(int userId);
+
+	public String getphone(int id);
+
+	public void updateCanBorrowLines(BigDecimal finalLine, int userId);
+
+	public BigDecimal getcanBorrowLines(Integer userId);
 
 
 }

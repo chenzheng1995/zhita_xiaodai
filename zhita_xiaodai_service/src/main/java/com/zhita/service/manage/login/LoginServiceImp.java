@@ -145,6 +145,12 @@ public class LoginServiceImp implements IntLoginService{
 		return number;
 	}
 
+	@Override
+	public String getifBlacklist(String newPhone, int companyId) {
+		String ifBlacklist =userMapper.getifBlacklist(newPhone,companyId);
+		return ifBlacklist;
+	}
+
 
 	
 

@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
-
+import com.sun.org.apache.xml.internal.utils.IntVector;
+import com.zhita.dao.manage.ZhimiRiskMapper;
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
@@ -27,6 +28,8 @@ import com.zhita.service.manage.operator.OperatorService;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
+import com.zhita.util.PhoneDeal;
+import com.zhita.util.TuoMinUtil;
 
 
 
@@ -53,6 +56,9 @@ public class OperatorController {
 	
     @Autowired
     IntBlacklistuserService intBlacklistuserService;
+    
+    @Autowired
+    ZhimiRiskMapper zhimiRiskMapper;
 	
     @RequestMapping("/getOperator")
     @ResponseBody
@@ -147,22 +153,39 @@ public class OperatorController {
     @RequestMapping("/isBlacklist")
     @ResponseBody
     @Transactional
-    public Map<String, Object> isBlacklist(String phone,String idCard,int companyId){
+    public Map<String, Object> isBlacklist(String phone,String idCard,int companyId,int userId){
     	Map<String, Object> map = new HashMap<>();
         map.put("msg", "不是黑名单 ");
         map.put("code", "200");
-    	int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
-    	int num2 = intBlacklistuserService.getid1(idCard,companyId);//判断身份证是否是黑名单
-    	if(num1==1) {
-            map.put("msg", "手机号黑名单 ");
-            map.put("code", "407");
-            return map;
-    	}    	
-    	if(num2==1) {
-            map.put("msg", "身份证黑名单 ");
-            map.put("code", "408");
-            return map;
-    	}
+        if(idCard==null||idCard.isEmpty()) {
+        	int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+        	if(num1==1) {
+                map.put("msg", "手机号黑名单 ");
+                map.put("code", "407");
+                map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
+                intUserService.updateifBlacklist(userId);
+                return map;              
+        	}    
+        	
+        }else {
+        	int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+        	int num2 = intBlacklistuserService.getid1(idCard,companyId);//判断身份证是否是黑名单
+        	if(num1==1) {
+                map.put("msg", "手机号黑名单 ");
+                map.put("code", "407");
+                map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
+                intUserService.updateifBlacklist(userId);
+                return map;
+        	}    	
+        	if(num2==1) {
+                map.put("msg", "身份证黑名单 ");
+                map.put("code", "408");
+                map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
+                intUserService.updateifBlacklist(userId);
+                return map;
+        	}
+		}
+
 		return map;
     	
     }
@@ -174,27 +197,56 @@ public class OperatorController {
     @Transactional
     public Map<String, Object> isRepeat(String idCard,int userId,int companyId,String phone){
     	Map<String, Object> map = new HashMap<>();
+    	PhoneDeal pDeal = new PhoneDeal();
         map.put("msg", "不是重复用户");
         map.put("code", "200");
+        boolean a =false;
+        int id1 = 0;
     	List<Integer> list = userAttestationService.getuserId(idCard);
     	for (int id : list) {
 			String attestationStatus = operatorService.getattestationStatus(id);
 			if(attestationStatus==null) {
 				attestationStatus="0";
 			}
-			if(userId!=id&&attestationStatus.equals("1")) {
+			if(userId!=id&&(attestationStatus.equals("1")||attestationStatus.equals("2"))) {
+				a = true;
+				id1 = id;
+				String phone1 = intUserService.getphone(id);				
+				String newphone = pDeal.decryption(phone1);
+				TuoMinUtil tUtil = new TuoMinUtil();
+				String newphone1 = tUtil.mobileEncrypt(newphone);
 	            map.put("msg", "该用户是重复用户");
 	            map.put("code", "401");
+	            map.put("prompt", "您的身份证已被使用,使用者手机号码为"+newphone1+",如有疑问请联系客服。");
 	            intUserService.updateifBlacklist(userId);
 	            Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);
 	            String name = (String) map1.get("trueName");
 	            String date = System.currentTimeMillis()+"";
 	            String blackType = "2";
-	            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,phone,name,date,blackType);
-				return map;
+	            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,newphone,name,date,blackType);
+	            break;
 			}
 		}
     	
+    	if(a==true) {
+        	for (int id : list) {
+    			String attestationStatus = operatorService.getattestationStatus(id);
+    			if(attestationStatus==null) {
+    				attestationStatus="0";
+    			}
+    			if(id!=id1) {
+    				intUserService.updateifBlacklist(id);
+    	            Map<String, Object> map1 = userAttestationService.getuserAttestation(id);
+    	            String name = (String) map1.get("trueName");
+    	            phone = intUserService.getphone(id1);
+    	            String newphone = pDeal.decryption(phone);
+    	            String date = System.currentTimeMillis()+"";
+    	            String blackType = "2";
+    	            intBlacklistuserService.setBlacklistuser(idCard,id,companyId,newphone,name,date,blackType);	
+    			}
+        	
+        	}
+    	}
     	
 		return map;
     	
@@ -344,29 +396,71 @@ public Map<String, Object> getshareOfState(int userId){
    @Transactional
    public Map<String, Object> getScore(int userId,String sourceName){
    	String shareOfState =null;
+   	int score =0;
    	Map<String, Object> map = new HashMap<>();
 //   	shareOfState ="6";
 //   	intUserService.updateshareOfState(userId, shareOfState);
-		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
-		String name = (String) userAttestation.get("trueName");
-		String idNumber = (String) userAttestation.get("idcard_number");
-   
-       Map<String, Object> operator = operatorService.getOperator(userId);
-       String phone = (String) operator.get("phone");
-       String reqId = (String) operator.get("reqId");
-       String search_id = (String) operator.get("search_id");
-   	RuleDemo ruleDemo = new RuleDemo();
-   	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
-   	
-   	ScoreDemo scoreDemo = new ScoreDemo();
-   	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
+    int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
+    Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);
+           String rmModleName = (String) map1.get("rmModleName");
+     if ("风控甲".equals(rmModleName)) {
+    	 Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
+ 		String name = (String) userAttestation.get("trueName");
+ 		String idNumber = (String) userAttestation.get("idcard_number");
+    
+        Map<String, Object> operator = operatorService.getOperator(userId);
+        String phone = (String) operator.get("phone");
+        String reqId = (String) operator.get("reqId");
+        String search_id = (String) operator.get("search_id");
+    	RuleDemo ruleDemo = new RuleDemo();
+    	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
+    	
+    	ScoreDemo scoreDemo = new ScoreDemo();
+    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
+    	  JSONObject jsonObject =null;
+    	  jsonObject = JSONObject.parseObject(result);
+          String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
+          jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
+          score = Integer.parseInt(jsonObject.get("score").toString());
+	}
+     if("风控乙".equals(rmModleName)) {
+    	 String fileContent = operatorService.getoperatorJson(userId);
+    	 Map<String, Object> map2 = userAttestationService.getuserAttestation(userId);
+    	 String linkmanOneName = (String) map2.get("linkmanOneName");
+    	 String linkmanOnePhone = (String) map2.get("linkmanOnePhone");
+    	 String linkmanTwoName = (String) map2.get("linkmanTwoName");
+    	 String linkmanTwoPhone = (String) map2.get("linkmanTwoPhone");
+    	 ZhimiRiskDemo zDemo = new ZhimiRiskDemo();
+    	 String responseStr = zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName, linkmanTwoPhone);
    	  JSONObject jsonObject =null;
-   	  jsonObject = JSONObject.parseObject(result);
-         String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
-         jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
-         int score = Integer.parseInt(jsonObject.get("score").toString());  
-          int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
-          Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);  
+   	  jsonObject = JSONObject.parseObject(responseStr);
+   	     score =new Double(jsonObject.getDouble("score")).intValue();
+   	    String request_id = jsonObject.getString("request_id");
+   	    String history_apply = jsonObject.getString("history_apply");
+   	 jsonObject = JSONObject.parseObject(history_apply);
+   	 int mobile_1h_cnt = jsonObject.getInteger("mobile_1h_cnt");
+   	 int mobile_3h_cnt = jsonObject.getInteger("mobile_3h_cnt");
+   	int mobile_12h_cnt = jsonObject.getInteger("mobile_12h_cnt");
+   	int mobile_1d_cnt = jsonObject.getInteger("mobile_1d_cnt");
+   	int mobile_3d_cnt = jsonObject.getInteger("mobile_3d_cnt");
+   	int mobile_7d_cnt = jsonObject.getInteger("mobile_7d_cnt");
+   	int mobile_14d_cnt = jsonObject.getInteger("mobile_14d_cnt");
+   	int mobile_30d_cnt = jsonObject.getInteger("mobile_30d_cnt");
+   	int mobile_60d_cnt = jsonObject.getInteger("mobile_60d_cnt");
+   	int idcard_1h_cnt = jsonObject.getInteger("idcard_1h_cnt");
+   	int idcard_3h_cnt = jsonObject.getInteger("idcard_3h_cnt");
+   	int idcard_12h_cnt = jsonObject.getInteger("idcard_12h_cnt");
+   	int idcard_1d_cnt = jsonObject.getInteger("idcard_1d_cnt");
+   	int idcard_3d_cnt = jsonObject.getInteger("idcard_3d_cnt");
+   	int idcard_7d_cnt = jsonObject.getInteger("idcard_7d_cnt");
+   	int idcard_14d_cnt = jsonObject.getInteger("idcard_14d_cnt");
+   	int idcard_30d_cnt = jsonObject.getInteger("idcard_30d_cnt");
+   	int idcard_60d_cnt = jsonObject.getInteger("idcard_60d_cnt");
+   	zhimiRiskMapper.setzhimiRisk(userId,request_id,mobile_1h_cnt,mobile_3h_cnt,mobile_12h_cnt,mobile_1d_cnt,mobile_3d_cnt,mobile_7d_cnt,
+   			mobile_14d_cnt,mobile_30d_cnt,mobile_60d_cnt,idcard_1h_cnt,idcard_3h_cnt,idcard_12h_cnt,idcard_1d_cnt,idcard_3d_cnt,idcard_7d_cnt,
+   			idcard_14d_cnt,idcard_30d_cnt,idcard_60d_cnt);
+     }
+
           String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");

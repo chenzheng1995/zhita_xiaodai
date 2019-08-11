@@ -118,6 +118,6 @@
   </select>
   
        <select id="gethomepageViewpager" resultType="com.zhita.model.manage.HomepageViewpager">
-  	select id,viewpagerPicture from homepage_viewpager where deleted='0'and companyId=#{companyId}
+  	select id,viewpagerPicture from homepage_viewpager where deleted='0'and companyId=#{companyId} order by sort 
 </select>
 </mapper>

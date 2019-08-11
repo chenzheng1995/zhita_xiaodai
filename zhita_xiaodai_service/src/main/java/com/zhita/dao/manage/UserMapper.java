@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -129,5 +130,13 @@ public interface UserMapper {
 	void updatename(@Param("name")String name,@Param("userId") int userId);
 
 	void updateifBlacklist(int userId);
+
+	String getphone(int id);
+
+	void updateCanBorrowLines(@Param("finalLine")BigDecimal finalLine,@Param("userId") int userId);
+
+	BigDecimal getcanBorrowLines(Integer userId);
+
+	String getifBlacklist(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
 }
