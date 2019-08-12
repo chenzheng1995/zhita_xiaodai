@@ -325,5 +325,23 @@ public class UserServiceImp implements IntUserService{
 		
 	}
 
+	@Override
+	public String getphone(int id) {
+		String phone1 = userMapper.getphone(id);
+		return phone1;
+	}
+
+	@Override
+	public void updateCanBorrowLines(BigDecimal finalLine, int userId) {
+		userMapper.updateCanBorrowLines(finalLine,userId);
+		
+	}
+
+	@Override
+	public BigDecimal getcanBorrowLines(Integer userId) {
+		BigDecimal canBorrowlines = userMapper.getcanBorrowLines(userId);
+		return canBorrowlines;
+	}
+
 
 }

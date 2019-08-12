@@ -186,4 +186,9 @@
 		select attestationStatus from operator where userId = #{id}
 	</select>
   
+    		<select id="getoperatorJson" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select operatorJson from operator where userId = #{userId}
+	</select>
+  
+  
 </mapper>

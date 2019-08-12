@@ -49,4 +49,30 @@ public class notifyUrlDemo {
      
      return "success";
 }
+    
+    
+    
+    @RequestMapping(value = "/moxie", consumes = "multipart/form-data", method = RequestMethod.GET)
+    public String moxie(MultipartHttpServletRequest request) {
+	 String mxcode = request.getParameter("mxcode");
+     String taskId = request.getParameter("taskId");
+     String taskType = request.getParameter("taskType");
+     String account = request.getParameter("account");
+     String userId = request.getParameter("userId");
+     String message = request.getParameter("message");
+     String loginDone = request.getParameter("loginDone");
+     System.out.println("接收到的参数：mxcode为："+ mxcode + "taskId为：" + taskId+ "taskType为：" + taskType + "account为：" + account+ "userId为：" + userId + "message为：" + message+ "loginDone为：" + loginDone);
+//     
+//  	 Map<String, Object> map = new HashMap<String, Object>();
+//	 int number = operatorService.updateSearch_id(search_id,userId);
+//     if (number == 1) {                  	
+//         map.put("msg", "数据插入成功");
+//         map.put("Code", "200");
+//     } else {
+//         map.put("msg", "数据插入失败");
+//         map.put("Code", "405");
+//     }
+     
+     return "success";
+}
 }

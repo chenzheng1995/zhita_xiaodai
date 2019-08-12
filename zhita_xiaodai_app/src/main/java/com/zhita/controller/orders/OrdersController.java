@@ -97,6 +97,7 @@ public class OrdersController {
 				    	 int ordersId =  intOrderService.getOrdersId(userId,companyId);//获取最后一个借款订单的id
 				    	 BigDecimal lastLine = orderdetailsMapper.getlastLine(ordersId);//获取最后一次还款时的额度
 				    	 finalLine = lastLine.add(decimalIncreaseThequota);
+				    	 intUserService.updateCanBorrowLines(finalLine,userId);
 				    	 map.put("finalLine", finalLine);
 				    	 return map;
 				     }
@@ -213,7 +214,8 @@ public class OrdersController {
 	   @ResponseBody
 	   @Transactional
 	   public Map<String, Object> repayment(int userId,int companyId) {
-		   Map<String, Object> map  = new HashMap<String, Object>();		
+		   Map<String, Object> map  = new HashMap<String, Object>();	
+		   BigDecimal shouldReapyMoney =null;
 		   Map<String, Object> map1  = intOrderService.getRepayment(userId,companyId);
 		   int orderId = (int) map1.get("id");
 		   String orderNumber = (String) map1.get("orderNumber");
@@ -222,7 +224,7 @@ public class OrdersController {
 		   String shouldReturnTime = (String) map1.get("shouldReturnTime");//应还时间
 		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		   shouldReturnTime = sdf.format(new Date(Long.parseLong(shouldReturnTime))); // 时间戳转换日期
-		   BigDecimal shouldReapyMoney  = orderdetailsMapper.getShouldReapyMoney(orderId);//共需还钱
+		   shouldReapyMoney  = orderdetailsMapper.getShouldReapyMoney(orderId);//共需还钱
 		   
 		   
 		   
@@ -237,8 +239,8 @@ public class OrdersController {
    if(orderStatus.equals("1")) {//逾期后
 	   BigDecimal interestInAll = orderdetailsMapper.getinterestInAll(orderId);//总利息
 	   String overdueNumberOfDays = orderdetailsMapper.getoverdueNumberOfDays(orderId);//逾期天数
-	   BigDecimal overdueMoney = shouldReapyMoney.add(interestInAll);//逾期应还钱
-	   map.put("overdueMoney", overdueMoney);
+	   shouldReapyMoney = shouldReapyMoney.add(interestInAll);//逾期应还钱
+	   map.put("shouldReapyMoney", shouldReapyMoney);
 	   map.put("overdueNumberOfDays", overdueNumberOfDays);
 	   map.put("msg","已逾期");
 	   map.put("code",0);
@@ -382,7 +384,7 @@ public class OrdersController {
 		    	map.put("msg","不能延期");
 		    	map.put("code",0);
 		    }else {
-				if(currentDelays<=maximumCanDeferredTime) {
+				if(currentDelays<maximumCanDeferredTime) {
 					map.put("msg","可以延期");
 					map.put("code",1);
 				}else {

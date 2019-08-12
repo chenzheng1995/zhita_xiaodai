@@ -56,5 +56,7 @@ public String getMd5pwd(String newPhone, int companyId);
 
 public int setPwd(int userId, String md5Pwd);
 
+public String getifBlacklist(String newPhone, int companyId);
+
    
 }

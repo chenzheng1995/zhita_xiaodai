@@ -114,6 +114,11 @@
   <select id="queryViewpagerpicture" parameterType="java.lang.Integer" resultType="java.lang.String">
   	select viewpagerpicture from homepage_viewpager where id=#{arg0}
   </select>
+
+  
+<!--        <select id="gethomepageViewpager" resultType="com.zhita.model.manage.HomepageViewpager">
+  	select id,viewpagerPicture from homepage_viewpager where deleted='0'and companyId=#{companyId} order by sort  -->
+
   <!-- 后台管理        通过id修改排序字段 -->
   <update id="upasort" parameterType="java.lang.Integer">
   		update homepage_viewpager set sort=#{sort} where id=#{id}
@@ -132,5 +137,6 @@
   </update>
  <select id="gethomepageViewpager" resultType="com.zhita.model.manage.HomepageViewpager">
   	select id,viewpagerPicture from homepage_viewpager where deleted='0'and companyId=#{companyId}
+
 </select>
 </mapper>

@@ -37,5 +37,7 @@ public interface OperatorMapper {
 
 	String getattestationStatus(int id);
 
+	String getoperatorJson(int userId);
+
 
 }

@@ -61,4 +61,10 @@ public class OperatorServiceimp implements OperatorService{
 		return attestationStatus;
 	}
 
+	@Override
+	public String getoperatorJson(int userId) {
+		String fileContent = operatorMapper.getoperatorJson(userId);
+		return fileContent;
+	}
+
 }

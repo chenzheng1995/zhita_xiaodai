@@ -561,4 +561,21 @@
   	update user set ifBlacklist='1' where id = #{userId}
   </update>
   
+  		<select id="getphone" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select phone from user where id = #{id}
+	</select>	
+  
+      <update id="updateCanBorrowLines" parameterType="java.util.Map" > 
+  	update user set canBorrowLines=#{finalLine} where id = #{userId}
+  </update>
+  
+   		<select id="getcanBorrowLines" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select canBorrowLines from user where id = #{userId}
+	</select> 
+	
+	   		<select id="getifBlacklist" parameterType="java.util.Map" resultType="java.lang.String">
+		select ifBlacklist from user where phone = newPhone and companyId = #{companyId}
+	</select> 
+	
+  
 </mapper>

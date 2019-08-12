@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhita.dao.manage.ZhimiRiskMapper">
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.ZhimiRisk">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="request_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="mobile_1h_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_3h_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_12h_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_1d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_3d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_7d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_14d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_30d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="mobile_60d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_1h_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_3h_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_12h_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_1d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_3d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_7d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_14d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_30d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="idcard_60d_cnt" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, request_id, mobile_1h_cnt, mobile_3h_cnt, mobile_12h_cnt, mobile_1d_cnt, mobile_3d_cnt, 
+    mobile_7d_cnt, mobile_14d_cnt, mobile_30d_cnt, mobile_60d_cnt, idcard_1h_cnt, idcard_3h_cnt, 
+    idcard_12h_cnt, idcard_1d_cnt, idcard_3d_cnt, idcard_7d_cnt, idcard_14d_cnt, idcard_30d_cnt, 
+    idcard_60d_cnt
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zhimi_risk
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zhimi_risk
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.ZhimiRisk">
+    insert into zhimi_risk (id, request_id, mobile_1h_cnt, 
+      mobile_3h_cnt, mobile_12h_cnt, mobile_1d_cnt, 
+      mobile_3d_cnt, mobile_7d_cnt, mobile_14d_cnt, 
+      mobile_30d_cnt, mobile_60d_cnt, idcard_1h_cnt, 
+      idcard_3h_cnt, idcard_12h_cnt, idcard_1d_cnt, 
+      idcard_3d_cnt, idcard_7d_cnt, idcard_14d_cnt, 
+      idcard_30d_cnt, idcard_60d_cnt)
+    values (#{id,jdbcType=INTEGER}, #{requestId,jdbcType=VARCHAR}, #{mobile1hCnt,jdbcType=INTEGER}, 
+      #{mobile3hCnt,jdbcType=INTEGER}, #{mobile12hCnt,jdbcType=INTEGER}, #{mobile1dCnt,jdbcType=INTEGER}, 
+      #{mobile3dCnt,jdbcType=INTEGER}, #{mobile7dCnt,jdbcType=INTEGER}, #{mobile14dCnt,jdbcType=INTEGER}, 
+      #{mobile30dCnt,jdbcType=INTEGER}, #{mobile60dCnt,jdbcType=INTEGER}, #{idcard1hCnt,jdbcType=INTEGER}, 
+      #{idcard3hCnt,jdbcType=INTEGER}, #{idcard12hCnt,jdbcType=INTEGER}, #{idcard1dCnt,jdbcType=INTEGER}, 
+      #{idcard3dCnt,jdbcType=INTEGER}, #{idcard7dCnt,jdbcType=INTEGER}, #{idcard14dCnt,jdbcType=INTEGER}, 
+      #{idcard30dCnt,jdbcType=INTEGER}, #{idcard60dCnt,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.ZhimiRisk">
+    insert into zhimi_risk
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="requestId != null">
+        request_id,
+      </if>
+      <if test="mobile1hCnt != null">
+        mobile_1h_cnt,
+      </if>
+      <if test="mobile3hCnt != null">
+        mobile_3h_cnt,
+      </if>
+      <if test="mobile12hCnt != null">
+        mobile_12h_cnt,
+      </if>
+      <if test="mobile1dCnt != null">
+        mobile_1d_cnt,
+      </if>
+      <if test="mobile3dCnt != null">
+        mobile_3d_cnt,
+      </if>
+      <if test="mobile7dCnt != null">
+        mobile_7d_cnt,
+      </if>
+      <if test="mobile14dCnt != null">
+        mobile_14d_cnt,
+      </if>
+      <if test="mobile30dCnt != null">
+        mobile_30d_cnt,
+      </if>
+      <if test="mobile60dCnt != null">
+        mobile_60d_cnt,
+      </if>
+      <if test="idcard1hCnt != null">
+        idcard_1h_cnt,
+      </if>
+      <if test="idcard3hCnt != null">
+        idcard_3h_cnt,
+      </if>
+      <if test="idcard12hCnt != null">
+        idcard_12h_cnt,
+      </if>
+      <if test="idcard1dCnt != null">
+        idcard_1d_cnt,
+      </if>
+      <if test="idcard3dCnt != null">
+        idcard_3d_cnt,
+      </if>
+      <if test="idcard7dCnt != null">
+        idcard_7d_cnt,
+      </if>
+      <if test="idcard14dCnt != null">
+        idcard_14d_cnt,
+      </if>
+      <if test="idcard30dCnt != null">
+        idcard_30d_cnt,
+      </if>
+      <if test="idcard60dCnt != null">
+        idcard_60d_cnt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="requestId != null">
+        #{requestId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile1hCnt != null">
+        #{mobile1hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile3hCnt != null">
+        #{mobile3hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile12hCnt != null">
+        #{mobile12hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile1dCnt != null">
+        #{mobile1dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile3dCnt != null">
+        #{mobile3dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile7dCnt != null">
+        #{mobile7dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile14dCnt != null">
+        #{mobile14dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile30dCnt != null">
+        #{mobile30dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile60dCnt != null">
+        #{mobile60dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard1hCnt != null">
+        #{idcard1hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard3hCnt != null">
+        #{idcard3hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard12hCnt != null">
+        #{idcard12hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard1dCnt != null">
+        #{idcard1dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard3dCnt != null">
+        #{idcard3dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard7dCnt != null">
+        #{idcard7dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard14dCnt != null">
+        #{idcard14dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard30dCnt != null">
+        #{idcard30dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard60dCnt != null">
+        #{idcard60dCnt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.ZhimiRisk">
+    update zhimi_risk
+    <set>
+      <if test="requestId != null">
+        request_id = #{requestId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile1hCnt != null">
+        mobile_1h_cnt = #{mobile1hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile3hCnt != null">
+        mobile_3h_cnt = #{mobile3hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile12hCnt != null">
+        mobile_12h_cnt = #{mobile12hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile1dCnt != null">
+        mobile_1d_cnt = #{mobile1dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile3dCnt != null">
+        mobile_3d_cnt = #{mobile3dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile7dCnt != null">
+        mobile_7d_cnt = #{mobile7dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile14dCnt != null">
+        mobile_14d_cnt = #{mobile14dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile30dCnt != null">
+        mobile_30d_cnt = #{mobile30dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="mobile60dCnt != null">
+        mobile_60d_cnt = #{mobile60dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard1hCnt != null">
+        idcard_1h_cnt = #{idcard1hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard3hCnt != null">
+        idcard_3h_cnt = #{idcard3hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard12hCnt != null">
+        idcard_12h_cnt = #{idcard12hCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard1dCnt != null">
+        idcard_1d_cnt = #{idcard1dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard3dCnt != null">
+        idcard_3d_cnt = #{idcard3dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard7dCnt != null">
+        idcard_7d_cnt = #{idcard7dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard14dCnt != null">
+        idcard_14d_cnt = #{idcard14dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard30dCnt != null">
+        idcard_30d_cnt = #{idcard30dCnt,jdbcType=INTEGER},
+      </if>
+      <if test="idcard60dCnt != null">
+        idcard_60d_cnt = #{idcard60dCnt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.ZhimiRisk">
+    update zhimi_risk
+    set request_id = #{requestId,jdbcType=VARCHAR},
+      mobile_1h_cnt = #{mobile1hCnt,jdbcType=INTEGER},
+      mobile_3h_cnt = #{mobile3hCnt,jdbcType=INTEGER},
+      mobile_12h_cnt = #{mobile12hCnt,jdbcType=INTEGER},
+      mobile_1d_cnt = #{mobile1dCnt,jdbcType=INTEGER},
+      mobile_3d_cnt = #{mobile3dCnt,jdbcType=INTEGER},
+      mobile_7d_cnt = #{mobile7dCnt,jdbcType=INTEGER},
+      mobile_14d_cnt = #{mobile14dCnt,jdbcType=INTEGER},
+      mobile_30d_cnt = #{mobile30dCnt,jdbcType=INTEGER},
+      mobile_60d_cnt = #{mobile60dCnt,jdbcType=INTEGER},
+      idcard_1h_cnt = #{idcard1hCnt,jdbcType=INTEGER},
+      idcard_3h_cnt = #{idcard3hCnt,jdbcType=INTEGER},
+      idcard_12h_cnt = #{idcard12hCnt,jdbcType=INTEGER},
+      idcard_1d_cnt = #{idcard1dCnt,jdbcType=INTEGER},
+      idcard_3d_cnt = #{idcard3dCnt,jdbcType=INTEGER},
+      idcard_7d_cnt = #{idcard7dCnt,jdbcType=INTEGER},
+      idcard_14d_cnt = #{idcard14dCnt,jdbcType=INTEGER},
+      idcard_30d_cnt = #{idcard30dCnt,jdbcType=INTEGER},
+      idcard_60d_cnt = #{idcard60dCnt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  
+  
+     	<insert id="setzhimiRisk" parameterType="java.util.Map">
+		insert into zhimi_risk(request_id,mobile_1h_cnt,mobile_3h_cnt,mobile_12h_cnt,mobile_1d_cnt,mobile_3d_cnt,mobile_7d_cnt,mobile_14d_cnt,mobile_30d_cnt,mobile_60d_cnt,idcard_1h_cnt,idcard_3h_cnt,idcard_12h_cnt,idcard_1d_cnt,idcard_3d_cnt,idcard_7d_cnt,idcard_14d_cnt,idcard_30d_cnt,idcard_60d_cnt,userId) 
+		values(#{request_id},#{mobile_1h_cnt},#{mobile_3h_cnt},#{mobile_12h_cnt},#{mobile_1d_cnt},#{mobile_3d_cnt},#{mobile_7d_cnt},#{mobile_14d_cnt},#{mobile_30d_cnt},#{mobile_60d_cnt},#{idcard_1h_cnt},#{idcard_3h_cnt},#{idcard_12h_cnt},#{idcard_1d_cnt},#{idcard_3d_cnt},#{idcard_7d_cnt},#{idcard_14d_cnt},#{idcard_30d_cnt},#{idcard_60d_cnt},#{userId})
+	</insert>
+  
+</mapper>

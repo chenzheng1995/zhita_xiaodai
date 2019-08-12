@@ -211,16 +211,26 @@ public class Test {
 //		        caw.writeTo(fw);
 //		        fw.close();
 		
-		int i =0;
-		try {
-        String a = null;
-        a.length();
-		} catch (Exception e) {
-         i = 1;
-		}
-		System.out.println(i);
-		    }
-
-
+//		int i =0;
+//		try {
+//        String a = null;
+//        a.length();
+//		} catch (Exception e) {
+//         i = 1;
+//		}
+//		System.out.println(i);
+//		    }
+		String apiKey = "798270c15e2c4dcaa15af86d2a8fc0b3";
+		int userId =1;
+		String phone ="13486070402";
+		String idcard ="330225199507155112";
+		String name = "陈峥";
+    	PostAndGet postAndGet = new PostAndGet();
+    	
+//    	String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/?apiKey="+apiKey+"&phone="+phone+"&idcard="+idcard+"&name="+name+"&userId="+userId);
+    		String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+apiKey+"&userId="+userId);
+    	System.out.println(result);
+    	
+	}
 	}
 

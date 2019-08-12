@@ -11,6 +11,7 @@ import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.service.manage.thirdpartyint.IntThirdpartyintService;
+import com.zhita.service.manage.user.IntUserService;
 import com.zhita.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -122,11 +123,13 @@ public class LoginController {
             map.put("msg", "phone,code,companyId,registrationType,sourceName和useMarket不能为空");
             return map;
         } else {
+//        	String ifBlacklist =loginService.getifBlacklist(newPhone,companyId);
         	Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
         	int num1 = intBlacklistuserService.getid(phone,companyId);
-        	if(num1==1&&id==null) {
+        	if((num1==1||num1>1)&&id==null) {
                 map.put("msg", "手机号黑名单 ");
                 map.put("SCode", "407");
+                map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
                 return map;
         	}else {
 
@@ -275,6 +278,7 @@ public class LoginController {
             	if(num1==1) {
                     map.put("msg", "手机号黑名单 ");
                     map.put("SCode", "407");
+                    map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
                     return map;
             	}else {
             	String registrationTime = System.currentTimeMillis() + "";  //获取当前时间戳

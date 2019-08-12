@@ -21,4 +21,6 @@ public interface OperatorService {
 
 	String getattestationStatus(int id);
 
+	String getoperatorJson(int userId);
+
 }
