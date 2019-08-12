@@ -45,6 +45,20 @@ public class ManconsettingsServiceImp implements IntManconsettingsServcie{
     
     //后台管理---编辑保存功能
     public int updateByPrimaryKey(ManageControlSettings record){
+    	String roatnptfractionalsegment=record.getRoatnptfractionalsegment();//机审拒绝需人审分数段
+    	String[] strroat=roatnptfractionalsegment.split("-");
+    	String strStart=strroat[0];
+    	String strEnd=strroat[1];
+    	
+    	String atrntlfractionalsegment=record.getAtrntlfractionalsegment();//机审拒绝不放款分数段
+    	String[] stratr=atrntlfractionalsegment.split("-");
+    	String strStart1=stratr[0];
+    	record.setAtrntlfractionalsegment(strStart1+"-"+(Integer.parseInt(strStart)-1));//机审拒绝不放款分数段
+    	
+    	String airappfractionalsegment=record.getAirappfractionalsegment();//机审通过分数段
+    	String[] straitr=airappfractionalsegment.split("-");
+    	String strEnd1=straitr[1];
+    	record.setAirappfractionalsegment((Integer.parseInt(strEnd)+1+"-"+strEnd1));
     	int num=manageControlSettingsMapper.updateByPrimaryKey(record);
     	return num;
     }
