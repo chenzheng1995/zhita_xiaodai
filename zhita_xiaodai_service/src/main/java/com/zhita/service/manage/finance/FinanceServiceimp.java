@@ -52,8 +52,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
-		
-		
+		PhoneDeal p = new PhoneDeal();
+		payrecord.setPhone(p.encryption(payrecord.getPhone()));
 		if(payrecord.getStart_time()!=null && payrecord.getStart_time()!="" && payrecord.getEnd_time()!=null && payrecord.getEnd_time()!=""){
 			try {
 				payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
@@ -66,7 +66,6 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("放款");
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Payment_record> payments = padao.PaymentAll(payrecord);
 		for(int i=0;i<payments.size();i++){
@@ -84,6 +83,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Huankuan(Payment_record payrecord) {
+		PhoneDeal p = new PhoneDeal();
+		payrecord.setPhone(p.encryption(payrecord.getPhone()));
 		try {
 			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
 			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
@@ -94,7 +95,6 @@ public class FinanceServiceimp implements FinanceService{
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
 		payrecord.setProfessionalWork("还款");
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Payment_record> rapay = padao.RepaymentAll(payrecord);
 		for(int i = 0 ;i<rapay.size();i++){
@@ -113,6 +113,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> OrderPayment(Orderdetails orderNumber) {
 		orderNumber.setCompanyId(3);
+		PhoneDeal p = new PhoneDeal();
+		orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
 		if(ordea.getInterestSum() == null){
 			ordea.setRealityBorrowMoney(ordea.getRealityBorrowMoney());
@@ -138,6 +140,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Accountadjus(Accountadjustment acc) {
+		PhoneDeal p = new PhoneDeal();
+		acc.setPhone(p.encryption(acc.getPhone()));
 		try {
 			acc.setAmou_time(System.currentTimeMillis()+"");
 			acc.setAccounttime(Timestamps.dateToStamp1(acc.getAccounttime()));
@@ -163,7 +167,10 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> OrderAccount(Orderdetails orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
+			PhoneDeal p = new PhoneDeal();
+			orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
 			Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
+			System.out.println("手机号:"+orderNumber.getPhone());
 			if(ordetails!=null){
 				System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
 				ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
@@ -201,7 +208,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+		PhoneDeal p = new PhoneDeal();
+		ordetail.setPhone(p.encryption(ordetail.getPhone()));
 		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		try {
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
@@ -213,7 +221,6 @@ public class FinanceServiceimp implements FinanceService{
 		Integer totalCount = padao.AccountTotalCount(ordetail);
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
 		ordetail.setPage(pages.getPage());
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Accountadjustment> accounts = padao.AllAccount(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
@@ -233,6 +240,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectNoMoney(Orderdetails ordetail) {
 		ordetail.setAccounttime(System.currentTimeMillis()+"");
+		PhoneDeal p = new PhoneDeal();
+		ordetail.setPhone(p.encryption(ordetail.getPhone()));
 		try {
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
 			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
@@ -242,7 +251,6 @@ public class FinanceServiceimp implements FinanceService{
 		Integer totalCount = padao.AccountTotalCount(ordetail);
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
 		ordetail.setPage(pages.getPage());
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Accountadjustment> accounts = padao.AllStatu(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
@@ -261,6 +269,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectOkMoney(Orderdetails ordetail) {
+		PhoneDeal p = new PhoneDeal();
+		ordetail.setPhone(p.encryption(ordetail.getPhone()));
 		try {
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
@@ -278,7 +288,6 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Integer totalCount = padao.AccountTotalCount(ordetail);
 		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		ordetail.setPage(pages.getPage());
 		List<Accountadjustment> accounts = padao.AllNotMoneyStatu(ordetail);
@@ -298,6 +307,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Selectoffine(Orderdetails ordetail) {
+		PhoneDeal p = new PhoneDeal();
+		ordetail.setPhone(p.encryption(ordetail.getPhone()));
 		try {
 			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
@@ -338,6 +349,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AddUnderthe(Offlinetransfer unde) {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			unde.setOffinetransfertime(System.currentTimeMillis()+"");
@@ -361,6 +373,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectBankDeductOrders(Bankdeductions bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		bank.setPhone(p.encryption(bank.getPhone()));
 		try {
 			bank.setStartu_time(Timestamps.dateToStamp1(bank.getStartu_time()));
 			bank.setEnd_time(Timestamps.dateToStamp1(bank.getEnd_time()));
@@ -372,7 +386,6 @@ public class FinanceServiceimp implements FinanceService{
 		Integer totalCount = padao.BankDeduOrderNum(bank);
 		PageUtil pages = new PageUtil(bank.getPage(), totalCount);
 		bank.setPage(pages.getPage());
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Orderdetails> orders = padao.BankDeduOrder(bank);
 		for(int i=0;i<orders.size();i++){
@@ -419,7 +432,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AllDelayStatis(Bankdeductions banl) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+		PhoneDeal p = new PhoneDeal();
+		banl.setPhone(p.encryption(banl.getPhone()));
 		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
 		
 		if(banl.getStartu_time()==null){
@@ -509,6 +523,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Financialover(Bankdeductions banl) {
+		PhoneDeal p = new PhoneDeal();
+		banl.setPhone(p.encryption(banl.getPhone()));
 		try {
 			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
 			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
@@ -553,6 +569,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AddOffJianmian(Offlinjianmian off) {
+		PhoneDeal p = new PhoneDeal();
+		off.setPhone(p.encryption(off.getPhone()));
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -577,6 +595,8 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectXiaOrder(Orderdetails ord) {
+		PhoneDeal p = new PhoneDeal();
+		ord.setPhone(p.encryption(ord.getPhone()));
 		try {
 			ord.setStart_time(Timestamps.dateToStamp1(ord.getStart_time()));
 			ord.setEnd_time(Timestamps.dateToStamp1(ord.getEnd_time()));
@@ -592,7 +612,6 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		PageUtil pages = new PageUtil(ord.getPage(), a);
 		ord.setPage(pages.getPage());
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Offlinjianmian> unders = padao.XiaOrder(ord);
 		for(int i=0;i<unders.size();i++){
@@ -632,7 +651,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AddDelay(Offlinedelay off) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+		PhoneDeal p = new PhoneDeal();
+		off.setPhone(p.encryption(off.getPhone()));
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         ca.setTime(new Date()); //设置时间为当前时间
@@ -657,6 +677,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Delaylabor(Offlinedelay of) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		of.setPhone(p.encryption(of.getPhone()));
 		Integer totalCount = padao.OffTotalCount(of);
 		if(totalCount == null){
 			totalCount = 0;

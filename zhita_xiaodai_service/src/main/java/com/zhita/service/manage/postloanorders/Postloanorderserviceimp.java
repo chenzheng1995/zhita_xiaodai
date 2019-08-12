@@ -36,6 +36,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> allpostOrders(Orderdetails details) {
+		PhoneDeal p = new PhoneDeal();
+		details.setPhone(p.encryption(details.getPhone()));
 		try {
 			details.setReturntime(System.currentTimeMillis()+"");
 			details.setStart_time(Timestamps.dateToStamp(details.getStart_time()));
@@ -56,7 +58,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		details.setPage(pages.getPage());
 		details.setTotalCount(totalCount);
 		List<Orderdetails> orderdetils = postloanorder.allOrderdetails(details);
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		for(int i=0;i<orderdetils.size();i++){
 			orderdetils.get(i).setOrderCreateTime(Timestamps.stampToDate(orderdetils.get(i).getOrderCreateTime()));
@@ -80,6 +81,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	
 	@Override
 	public Map<String, Object> allpostOrdersBeoverdue(Orderdetails details) {
+		PhoneDeal p = new PhoneDeal();
+		details.setPhone(p.encryption(details.getPhone()));
 		try {
 			details.setReturntime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
@@ -100,13 +103,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> SelectCollection(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			order.setShouldReturnTime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
 			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
@@ -145,6 +149,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> CollectionOrderdet(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		TuoMinUtil tm = new TuoMinUtil();
 		try {
 			order.setShouldReturnTime(System.currentTimeMillis()+"");
@@ -183,6 +188,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> CollectionRecovery(Orderdetails order) {
 		order.setShouldReturnTime(System.currentTimeMillis()+"");
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		try {
 			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
@@ -242,6 +249,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> OverdueUser(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		try {
 			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
@@ -302,6 +311,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> MyOverdues(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		try {
 			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
 			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
@@ -336,6 +347,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> UpdateOverdue(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		Integer updateId = postloanorder.OverdueStatu(order);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(updateId != null){
@@ -353,6 +366,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> UpdateOrder(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println("数据:"+order.getOrderIds());
 		String []strs=order.getOrderIds().split(",");
@@ -386,7 +401,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
-		
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
 			try {
 				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
@@ -452,7 +468,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> CollecOrders(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		
 		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
 			try {
@@ -513,6 +530,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
 			try {

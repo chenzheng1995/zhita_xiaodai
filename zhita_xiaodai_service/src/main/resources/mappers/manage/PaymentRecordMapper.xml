@@ -819,27 +819,30 @@
   			
   			
   			<select id="OnDefe" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(pay.id) as realborrowing,sum(pay.paymentmoney) as realexpenditure from payment_record pay,orders o where o.id = pay.orderId and o.companyId = #{companyId} 
+  				select count(pay.id) as realborrowing,sum(pay.paymentmoney) as realexpenditure from payment_record pay,orders o where 
+  				o.id = pay.orderId and o.companyId = #{companyId} and pay.remittanceTime between #{start_time} and #{end_time}
   			</select>
   			
   			
   			
   			
   			<select id="Onrepayment" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(ray.id) as realborrowing,sum(ray.repaymentMoney) as realexpenditure from repayment ray,orders o where o.id = ray.orderId and o.companyId = #{companyId} 
+  				select count(ray.id) as realborrowing,sum(ray.repaymentMoney) as realexpenditure from repayment ray,orders o where o.id = ray.orderId 
+  				and o.companyId = #{companyId} and ray.repaymentDate between #{start_time} and #{end_time}
   			</select>
   			
   			
   			
   			<select id="OneCollection" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(ord.orderId) as overdueNum,sum(ord.interestPenaltySum) as overdueamount from collection c,orders o,orderdetails ord 
-  				where ord.orderId = o.id and o.id = c.orderId and o.companyId = #{companyId}
+  				where ord.orderId = o.id and o.id = c.orderId and o.companyId = #{companyId} and c.collectionTime between #{start_time} and #{end_time}
   			</select>
   			
   			
   			
   			<select id="OneMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de,orders o where de.orderId = o.id and  o.companyId = #{companyId}
+  				select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de,orders o where de.orderId = o.id and 
+  				 o.companyId = #{companyId} and de.deferAfterReturntime between #{start_time} and #{end_time}
   			</select>
   			
   			

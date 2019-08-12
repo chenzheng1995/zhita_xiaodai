@@ -42,6 +42,8 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> allBeoverdueConnection(Collection coll) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		coll.setPhone(p.encryption(coll.getPhone()));
 		coll.setRealtime(System.currentTimeMillis()+"");
 		List<Integer> collIds = collmapp.SelectCollectionId(coll.getCompanyId());//根据公司ID 查询催收员ID
 		if(collIds.size() != 0){
@@ -59,7 +61,6 @@ public class Collectionserviceimp implements Collectionservice{
 			
 			coll.setPage(pages.getPage());
 			pages.setTotalCount(totalCount);
-			PhoneDeal p = new PhoneDeal();
 			List<Orderdetails> orders = collmapp.Allorderdetails(coll);
 			for(int i=0;i<orders.size();i++){
 				if(orders.get(i).getMakeLoans()!= null && orders.get(i).getInterestPenaltySum() != null){
@@ -111,6 +112,8 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> UpdateColl(Collection col) {
+		PhoneDeal p = new PhoneDeal();
+		col.setPhone(p.encryption(col.getPhone()));
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Collection> cols = new ArrayList<Collection>();
 		String[] star = col.getOrderIds().split(",");
@@ -143,7 +146,8 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> BeoverdueYi(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+		PhoneDeal p = new PhoneDeal();
+		order.setPhone(p.encryption(order.getPhone()));
 		try {
 			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
@@ -155,7 +159,6 @@ public class Collectionserviceimp implements Collectionservice{
 			List<Integer> ids = collmapp.OrderIdMa(order.getCompanyId());
 			pages = new PageUtil(order.getPage(), ids.size());
 			order.setPage(pages.getPage());
-			PhoneDeal p = new PhoneDeal();
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
@@ -203,6 +206,8 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> Collectionmemberdetails(Collection coll) {
+		PhoneDeal p = new PhoneDeal();
+		coll.setPhone(p.encryption(coll.getPhone()));
 //		try {
 //			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
 //			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
@@ -324,6 +329,8 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> FenpeiWeiCollection(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		col.setPhone(p.encryption(col.getPhone()));
 		Integer as = 0;
 		if(col.getCompanyId() != null){
 				List<Integer> id = collmapp.SelectId(col.getCompanyId());
@@ -338,7 +345,6 @@ public class Collectionserviceimp implements Collectionservice{
 			Integer totalCount = collmapp.AllCountNum(col);
 			PageUtil pages = new PageUtil(col.getPage(),totalCount-as);
 			col.setPage(pages.getPage());
-			PhoneDeal p = new PhoneDeal();
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
 			for(int i=0;i<orders.size();i++){
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
@@ -367,6 +373,8 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> YiCollection(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		col.setPhone(p.encryption(col.getPhone()));
 		try {
 			col.setStart_time(Timestamps.dateToStamp1(col.getStart_time()));
 			col.setEnd_time(Timestamps.dateToStamp1(col.getEnd_time()));
@@ -376,7 +384,6 @@ public class Collectionserviceimp implements Collectionservice{
 		if(col.getCompanyId() != null){
 		Integer totalCount = collmapp.CollectionWeiTotalcount(col);
 		PageUtil pages = new PageUtil(col.getPage(), totalCount);
-		PhoneDeal p = new PhoneDeal();
 		col.setPage(pages.getPage());
 		List<Orderdetails> orders = collmapp.WeiControllerOrdetialis(col);
 		for(int i=0;i<orders.size();i++){
@@ -401,6 +408,8 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> AddColloetails(Collection col) {
+		PhoneDeal p = new PhoneDeal();
+		col.setPhone(p.encryption(col.getPhone()));
 		Map<String, Object> map = new HashMap<String, Object>();
 			try {
 				col.setCollectionTime(System.currentTimeMillis()+"");
@@ -427,6 +436,8 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> CollectionmemberUser(Collection coll) {
+		PhoneDeal p = new PhoneDeal();
+		coll.setPhone(p.encryption(coll.getPhone()));
 //		try {
 //			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
 //			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
@@ -590,6 +601,7 @@ public class Collectionserviceimp implements Collectionservice{
 
 	@Override
 	public Map<String, Object> AddCollOrders(Collectiondetails col) {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {

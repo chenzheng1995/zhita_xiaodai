@@ -41,6 +41,8 @@ public class Bankdeductions {
 	
 	private String startu_time;//延期后范围开始时间
 	
+	private String start_time;
+	
 	private String end_time;//延期后范围结束时间
 	
 	private String statu_timeOrder;//实借时间范围开始时间
@@ -124,6 +126,14 @@ public class Bankdeductions {
 	private BigDecimal collection_money;//含逾应还总金额
 	
 	private String deferredTime;
+
+	public String getStart_time() {
+		return start_time;
+	}
+
+	public void setStart_time(String start_time) {
+		this.start_time = start_time;
+	}
 
 	public Integer getOverdueNum() {
 		return overdueNum;

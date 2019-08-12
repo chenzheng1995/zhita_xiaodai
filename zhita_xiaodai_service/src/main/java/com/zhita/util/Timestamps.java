@@ -108,8 +108,14 @@ public class Timestamps {
 //		} catch (Exception e) {
 //			// TODO: handle exception
 //		}
-		 String a = stampToDate("1564156799000");
-		 System.out.println(a);
+		 try {
+			 String a = dateToStamp1("2019-08-01 00:00:00");
+			 String b = dateToStamp1("2019-08-01 23:59:59");
+			 System.out.println("时间:"+a+"AA"+b);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		 
 	} 
 }
