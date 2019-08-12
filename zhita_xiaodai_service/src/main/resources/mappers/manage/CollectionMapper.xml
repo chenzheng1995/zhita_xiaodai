@@ -561,6 +561,7 @@
 				and c.collectionMemberId = #{collectionMemberId}
 			</if>
 			</where>
+			group by c.collectionMenberId
 		</select>
 		
 </mapper>

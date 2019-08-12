@@ -517,10 +517,29 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
-		bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
-		bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
-		bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+","+0+"");//逾期数   逾期费
-		bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+","+0+"");//延期数    延期费
+		if(bank.getRealborrowing() != null && bank.getRealexpenditure() != null){
+			bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+		}else{
+			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+		}
+			
+		if(b.getRealreturn() != null && b.getPaymentamount() != null){
+			bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
+		}else{
+			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+		}
+			
+		if(a.getOverdueNum() != null && a.getOverdueamount() != null ){
+			bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+","+0+"");//逾期数   逾期费
+		}else{
+			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+		}
+			
+		if(c.getDefeNum() != null && c.getDeferredamount() != null ){
+			bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+","+0+"");//延期数    延期费
+		}else{
+			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Bankdeduction", bank);
 		return map;

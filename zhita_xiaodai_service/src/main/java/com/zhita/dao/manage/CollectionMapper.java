@@ -135,5 +135,5 @@ public interface CollectionMapper {
 	Integer SelectcollectionStatusAs(Collection col);
 	
 	
-	Collection Collectionmem(Collection col);
+	List<Collection> Collectionmem(Collection col);
 }
