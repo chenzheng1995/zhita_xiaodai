@@ -19,6 +19,7 @@ import com.zhita.model.manage.SmsSendResponse;
 import com.zhita.model.manage.Usershortmessage;
 import com.zhita.util.ChuangLanSmsUtil;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 
 
@@ -227,6 +228,10 @@ public class Smserviceimp implements Smservice{
 	public Map<String, Object> UserTypes(Usershortmessage companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> phones = sdao.AllRegist(companyId);
+		PhoneDeal p = new PhoneDeal();
+		for(int i=0;i<phones.size();i++){
+			phones.add(p.decryption(phones.get(i)));
+		}
 		Integer phonNum = phones.size();
 		map.put("phones", phones);
 		map.put("phonNum", phonNum);

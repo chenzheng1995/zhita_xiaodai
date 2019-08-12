@@ -503,7 +503,9 @@ public class Collectionserviceimp implements Collectionservice{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			List<Collection> co = collmapp.Collectionmem(coll);//催收员名称   催收数
+			List<Collection> co = new ArrayList<Collection>();
+			Collection ca = new Collection();
+			 co = collmapp.Collectionmem(coll);//催收员名称   催收数
 			for(int i=0;i<co.size();i++){
 				if(co.get(i) != null){
 					coll.setCollectionStatus("承诺还款");
@@ -524,13 +526,14 @@ public class Collectionserviceimp implements Collectionservice{
 					co.get(i).setRealtime(stime);
 					
 				}else{
-					co.get(i).setRealtime(stime);
-					co.get(i).setSameday(0);
-					co.get(i).setPaymentmade(0);
-					co.get(i).setConnected(0);
+					ca.setRealtime(stime);
+					ca.setSameday(0);
+					ca.setPaymentmade(0);
+					ca.setConnected(0);
 					a = new BigDecimal(0);
-					co.get(i).setCollNumdata("0");
-					co.get(i).setCollection_count(0);
+					ca.setCollNumdata("0");
+					ca.setCollection_count(0);
+					co.add(ca);
 				}
 				
 				map.put("Collections", co);
