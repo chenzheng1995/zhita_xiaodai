@@ -485,9 +485,7 @@ public class Collectionserviceimp implements Collectionservice{
 //			
 //		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collection> colles = new ArrayList<Collection>();
 		BigDecimal a=null;
-		Collection co = new Collection();
 		if(coll.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -500,42 +498,39 @@ public class Collectionserviceimp implements Collectionservice{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			co = collmapp.Collectionmem(coll);//催收员名称   催收数
-			if(co != null){
-				coll.setCollectionStatus("承诺还款");
-				System.out.println("CCC:"+collmapp.SelectcollectionStatuCC(coll));
-				co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
-				coll.setOrderStatus("2");
-				co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
-				coll.setOrderStatus("4");
-				co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
-				
-				if(co.getSameday()!=0){
-					a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
-					co.setCollNumdata(String.valueOf(a));
+			List<Collection> co = collmapp.Collectionmem(coll);//催收员名称   催收数
+			for(int i=0;i<co.size();i++){
+				if(co.get(i) != null){
+					coll.setCollectionStatus("承诺还款");
+					System.out.println("CCC:"+collmapp.SelectcollectionStatuCC(coll));
+					co.get(i).setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+					coll.setOrderStatus("2");
+					co.get(i).setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+					coll.setOrderStatus("4");
+					co.get(i).setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+					
+					if(co.get(i).getSameday()!=0){
+						a = new BigDecimal(((co.get(i).getSameday()*100)/(co.get(i).getOrderNum()*100)));
+						co.get(i).setCollNumdata(String.valueOf(a));
+					}else{
+						a = new BigDecimal(0);
+						co.get(i).setCollNumdata(String.valueOf(a));
+					}
+					co.get(i).setRealtime(stime);
+					
 				}else{
+					co.get(i).setRealtime(stime);
+					co.get(i).setSameday(0);
+					co.get(i).setPaymentmade(0);
+					co.get(i).setConnected(0);
 					a = new BigDecimal(0);
-					co.setCollNumdata(String.valueOf(a));
+					co.get(i).setCollNumdata("0");
+					co.get(i).setCollection_count(0);
 				}
-				co.setRealtime(stime);
-				colles.add(co);
 				
-			}else{
-				Collection cosa = new Collection();
-				cosa.setRealtime(stime);
-				cosa.setSameday(0);
-				cosa.setPaymentmade(0);
-				cosa.setConnected(0);
-				a = new BigDecimal(0);
-				cosa.setCollNumdata("0");
-				cosa.setCollection_count(0);
-				colles.add(cosa);
+				map.put("Collections", co);
 			}
 			
-			for(int i =0;i<colles.size();i++){
-				System.out.println(colles.get(i).getRealtime()+colles.get(i).getConnected()+colles.get(i).getPaymentmade());
-			}
-			map.put("Collections", colles);
 		}else{
 			List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
 			for (int i = 0; i < stimes.size(); i++) {
@@ -548,40 +543,39 @@ public class Collectionserviceimp implements Collectionservice{
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-				co = collmapp.Collectionmem(coll);//催收员名称   催收数
-				if(co != null){
-					coll.setCollectionStatus("承诺还款");
-					System.out.println("CCC:"+collmapp.SelectcollectionStatuCC(coll));
-					co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
-					coll.setOrderStatus("2");
-					co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
-					coll.setOrderStatus("4");
-					co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
-					
-					if(co.getSameday()!=0){
-						a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
-						co.setCollNumdata(String.valueOf(a));
+				List<Collection> as = collmapp.Collectionmem(coll);//催收员名称   催收数
+				for(int j = 0; j < as.size(); j++){
+					if(as.get(j) != null){
+						coll.setCollectionStatus("承诺还款");
+						as.get(j).setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+						coll.setOrderStatus("2");
+						as.get(j).setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+						coll.setOrderStatus("4");
+						as.get(j).setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+						
+						if(as.get(j).getSameday()!=0){
+							a = new BigDecimal(((as.get(j).getSameday()*100)/(as.get(j).getOrderNum()*100)));
+							as.get(j).setCollNumdata(String.valueOf(a));
+						}else{
+							a = new BigDecimal(0);
+							as.get(j).setCollNumdata(String.valueOf(a));
+						}
+						as.get(j).setRealtime(stimes.get(i));
+						
 					}else{
+						as.get(j).setRealtime(stimes.get(i));
+						as.get(j).setReallyName("0");
+						as.get(j).setSameday(0);
+						as.get(j).setPaymentmade(0);
+						as.get(j).setConnected(0);
 						a = new BigDecimal(0);
-						co.setCollNumdata(String.valueOf(a));
+						as.get(j).setCollNumdata("0");
+						as.get(j).setCollection_count(0);
 					}
-					co.setRealtime(stimes.get(i));
-					colles.add(coll);
-					
-				}else{
-					Collection cosa = new Collection();
-					cosa.setRealtime(stimes.get(i));
-					cosa.setReallyName("0");
-					cosa.setSameday(0);
-					cosa.setPaymentmade(0);
-					cosa.setConnected(0);
-					a = new BigDecimal(0);
-					cosa.setCollNumdata("0");
-					cosa.setCollection_count(0);
-					colles.add(cosa);
 				}
 				
-				map.put("Collections", colles);
+				
+				map.put("Collections", as);
 		}
 		}
 		
