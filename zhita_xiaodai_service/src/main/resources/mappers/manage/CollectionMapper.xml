@@ -331,9 +331,7 @@
 					AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
 				AND o.id  in 
-				<foreach collection="ids" item="orderid" open="(" separator="," close=")">
-					#{orderid}
-				</foreach>
+				(select c.orderId from collection c,orders o where o.id = c.orderId and o.companyId=#{companyId})
 			</where>
 		</select>
 		

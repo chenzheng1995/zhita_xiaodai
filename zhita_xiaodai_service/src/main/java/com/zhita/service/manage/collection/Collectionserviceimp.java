@@ -374,24 +374,6 @@ public class Collectionserviceimp implements Collectionservice{
 			// TODO: handle exception
 		}
 		if(col.getCompanyId() != null){
-		List<Integer> collIds = collmapp.SelectCollectionId(col.getCompanyId());//根据公司ID 查询催收员ID
-		List<Integer> CollectionMemberIds = collmapp.SelectCollectionMemberIds(collIds);//查询已分配催收员订单ID
-		List<Integer> coldetids = new ArrayList<Integer>();
-		for(int i=0;i<CollectionMemberIds.size();i++){
-			List<Integer> id = collmapp.SelectId(CollectionMemberIds.get(i));
-			if(id.size() != 0 && id != null){
-				coldetids.add(CollectionMemberIds.get(i));//查询已催收ID
-			}else{
-				coldetids.add(0);
-			}
-		}
-		if(coldetids.size() != 0){
-			col.setIds(coldetids);
-		}else{
-			coldetids.add(0);
-			col.setIds(coldetids);
-		}
-		
 		Integer totalCount = collmapp.CollectionWeiTotalcount(col);
 		PageUtil pages = new PageUtil(col.getPage(), totalCount);
 		PhoneDeal p = new PhoneDeal();
