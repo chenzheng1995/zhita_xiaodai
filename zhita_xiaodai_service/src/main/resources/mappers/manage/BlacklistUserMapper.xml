@@ -120,7 +120,7 @@
   <select id="queryAll" resultType="com.zhita.model.manage.BlacklistUser">
   	select 
     <include refid="Base_Column_List" />
-    from blacklist_user b inner join sys_user su on b.operator=su.userId
+    from blacklist_user b left join sys_user su on b.operator=su.userId
     where b.companyId=#{companyId} and b.deleted=0 and blackType!=1
     	<if test="name != null and name!='' ">
           and b.name like "%"#{name}"%"

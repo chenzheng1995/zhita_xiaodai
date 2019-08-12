@@ -271,14 +271,23 @@
 	        <if test="registeTimeStart != null and registeTimeStart!='' and registeTimeEnd != null and registeTimeEnd!='' ">
 	           and u.registeTime between #{registeTimeStart,jdbcType=VARCHAR} and #{registeTimeEnd,jdbcType=VARCHAR}
 	        </if>
-	        <if test="userattestationstatus !=null and userattestationstatus!='' ">
+	        <if test="userattestationstatus !=null and userattestationstatus !='' and userattestationstatus==0 ">
 	           and (uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR} or uat.attestationStatus is null)
 	        </if>
-	         <if test="bankattestationstatus !=null and bankattestationstatus!='' ">
+	        <if test="userattestationstatus !=null and userattestationstatus !='' and userattestationstatus==1 ">
+	           and uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="bankattestationstatus !=null and bankattestationstatus !='' and bankattestationstatus==0 ">
 	           and (b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR} or b.attestationStatus is null)
 	        </if>
-	         <if test="operaattestationstatus !=null and operaattestationstatus!='' ">
+	        <if test="bankattestationstatus !=null and bankattestationstatus !='' and bankattestationstatus==1 ">
+	           and b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==0 ">
 	           and (o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR} or o.attestationStatus is null)
+	        </if>
+	         <if test="(operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==1)|| (operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==2)">
+	           and o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR}
 	        </if>
 	     group by u.id order by u.registeTime desc  limit #{page},#{pagesize}
 	</select>
@@ -299,14 +308,23 @@
 	        <if test="registeTimeStart != null and registeTimeStart!='' and registeTimeEnd != null and registeTimeEnd!='' ">
 	           and u.registeTime between #{registeTimeStart,jdbcType=VARCHAR} and #{registeTimeEnd,jdbcType=VARCHAR}
 	        </if>
-	        <if test="userattestationstatus !=null and userattestationstatus!='' ">
+	        <if test="userattestationstatus !=null and userattestationstatus!='' and userattestationstatus==0 ">
 	           and (uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR} or uat.attestationStatus is null)
 	        </if>
-	         <if test="bankattestationstatus !=null and bankattestationstatus!='' ">
+	        <if test="userattestationstatus !=null and userattestationstatus !='' and userattestationstatus==1 ">
+	           and uat.attestationStatus=#{userattestationstatus,jdbcType=VARCHAR}
+	        </if>
+	         <if test="bankattestationstatus !=null and bankattestationstatus!='' and bankattestationstatus==0 ">
 	           and (b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR} or b.attestationStatus is null)
 	        </if>
-	         <if test="operaattestationstatus !=null and operaattestationstatus!='' ">
+	        <if test="bankattestationstatus !=null and bankattestationstatus !='' and bankattestationstatus==1 ">
+	           and b.attestationStatus=#{bankattestationstatus,jdbcType=VARCHAR}
+	        </if>
+	         <if test="operaattestationstatus !=null and operaattestationstatus!='' and operaattestationstatus==0 ">
 	           and (o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR} or o.attestationStatus is null)
+	        </if>
+	        <if test="(operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==1)|| (operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==2) ">
+	           and o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR}
 	        </if>
 	</select>
 	<!-- 后台管理         添加黑名单(修改当前用户的黑名单状态) -->
