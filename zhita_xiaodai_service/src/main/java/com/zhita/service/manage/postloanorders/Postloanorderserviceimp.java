@@ -66,7 +66,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			Deferred defe =  coldao.DefNum(orderdetils.get(i).getOrderId());
 			orderdetils.get(i).setDefeNum(defe.getId());
 			orderdetils.get(i).setDefeMoney(defe.getInterestOnArrears());
-			
+			orderdetils.get(i).setMakeLoans(coldao.SelectMakeLoan(orderdetils.get(i).getOrderId()));
 			String op = p.decryption(orderdetils.get(i).getPhone());
 			orderdetils.get(i).setPhone(tm.mobileEncrypt(op));
 		}
@@ -438,6 +438,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
 			System.out.println("事件:"+orders.get(i).getRealtime());
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
 		}
 		map.put("Orderdetails", orders);
 		map.put("PageUtil", pages);
@@ -501,6 +502,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
 		}
 		map.put("Orderdetails", orders);
 		return map;
@@ -554,6 +556,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
 		}
 		map.put("Orderdetails", orders);
 		return map;

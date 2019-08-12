@@ -312,6 +312,9 @@ public class FinanceServiceimp implements FinanceService{
 		List<Offlinetransfer> under = padao.AllUnderthe(ordetail);
 		for (int i = 0; i < under.size(); i++) {
 			under.get(i).setOffinetransfertime(Timestamps.stampToDate(under.get(i).getOffinetransfertime()));
+			if(under.get(i).getState().equals("支出")){
+				under.get(i).setThname(padao.LoanName(under.get(i).getChannel()));
+			}
 		}
 		map.put("Undertheline", under);
 		return map;

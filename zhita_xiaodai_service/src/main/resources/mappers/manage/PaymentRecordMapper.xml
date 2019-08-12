@@ -955,4 +955,9 @@
   				select sum(b.deduction_money) as deduction_money,count(b.id) as userNum from bankdeductions b,orders o where o.id = b.orderId
   				and o.companyId = #{companyId} and b.deduction_time between #{startu_time} and #{end_time}
   			</select>
+  			
+  			
+  			<select id="LoanName" parameterType="java.lang.Integer" resultType="java.lang.String">
+  				select name from loan_setting where id = #{channel}
+  			</select>
 </mapper>

@@ -154,4 +154,7 @@ public interface PaymentRecordMapper {
     
     
     Bankdeductions BankMoney(Bankdeductions banl);
+    
+    
+    String LoanName(Integer channel);
 }

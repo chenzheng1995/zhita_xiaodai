@@ -12,7 +12,7 @@ public class Offlinetransfer {
 
     private String state;//线下调账状态(收入  支出)
 
-    private String channel;//渠道
+    private Integer channel;//渠道
 
     private String number;//流水号
 
@@ -75,12 +75,12 @@ public class Offlinetransfer {
         this.state = state == null ? null : state.trim();
     }
 
-    public String getChannel() {
+    public Integer getChannel() {
         return channel;
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel == null ? null : channel.trim();
+    public void setChannel(Integer channel) {
+        this.channel = channel;
     }
 
     public String getNumber() {

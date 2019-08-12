@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -136,4 +137,7 @@ public interface CollectionMapper {
 	
 	
 	List<Collection> Collectionmem(Collection col);
+	
+	
+	BigDecimal SelectMakeLoan(Integer orderId);
 }

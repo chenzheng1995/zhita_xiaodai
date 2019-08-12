@@ -561,7 +561,11 @@
 				and c.collectionMemberId = #{collectionMemberId}
 			</if>
 			</where>
-			group by c.collectionMenberId
 		</select>
 		
+		
+		
+		<select id="SelectMakeLoan" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+			select sum(b.deduction_money) from bankdeductions b,orders o where b.orderId = o.id and b.orderId = #{orderId}
+		</select>
 </mapper>
