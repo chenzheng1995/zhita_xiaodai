@@ -1,19 +1,14 @@
 package com.zhita.service.manage.collection;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -43,7 +38,6 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> allBeoverdueConnection(Collection coll) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		coll.setPhone(p.encryption(coll.getPhone()));
 		coll.setRealtime(System.currentTimeMillis()+"");
 		List<Integer> collIds = collmapp.SelectCollectionId(coll.getCompanyId());//根据公司ID 查询催收员ID
 		if(collIds.size() != 0){
@@ -113,7 +107,10 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> UpdateColl(Collection col) {
 		PhoneDeal p = new PhoneDeal();
-		col.setPhone(p.encryption(col.getPhone()));
+		if(col.getPhone() != null){
+			col.setPhone(p.encryption(col.getPhone()));
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Collection> cols = new ArrayList<Collection>();
 		String[] star = col.getOrderIds().split(",");
@@ -147,7 +144,10 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> BeoverdueYi(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		order.setPhone(p.encryption(order.getPhone()));
+		if(order.getPhone() != null){
+			order.setPhone(p.encryption(order.getPhone()));
+		}
+		
 		try {
 			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
 			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
@@ -207,7 +207,10 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> Collectionmemberdetails(Collection coll) {
 		PhoneDeal p = new PhoneDeal();
-		coll.setPhone(p.encryption(coll.getPhone()));
+		if(coll.getPhone() != null){
+			coll.setPhone(p.encryption(coll.getPhone()));
+		}
+		
 //		try {
 //			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
 //			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
@@ -330,7 +333,10 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> FenpeiWeiCollection(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		col.setPhone(p.encryption(col.getPhone()));
+		if(col.getPhone() != null){
+			col.setPhone(p.encryption(col.getPhone()));
+		}
+		
 		Integer as = 0;
 		if(col.getCompanyId() != null){
 				List<Integer> id = collmapp.SelectId(col.getCompanyId());
@@ -374,7 +380,9 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> YiCollection(Collection col) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		col.setPhone(p.encryption(col.getPhone()));
+		if(col.getPhone() != null){
+			col.setPhone(p.encryption(col.getPhone()));
+		}
 		try {
 			col.setStart_time(Timestamps.dateToStamp1(col.getStart_time()));
 			col.setEnd_time(Timestamps.dateToStamp1(col.getEnd_time()));
@@ -409,7 +417,9 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> AddColloetails(Collection col) {
 		PhoneDeal p = new PhoneDeal();
-		col.setPhone(p.encryption(col.getPhone()));
+		if(col.getPhone() != null){
+			col.setPhone(p.encryption(col.getPhone()));
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 			try {
 				col.setCollectionTime(System.currentTimeMillis()+"");
@@ -437,7 +447,9 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Map<String, Object> CollectionmemberUser(Collection coll) {
 		PhoneDeal p = new PhoneDeal();
-		coll.setPhone(p.encryption(coll.getPhone()));
+		if(coll.getPhone() != null){
+			coll.setPhone(p.encryption(coll.getPhone()));
+		}
 //		try {
 //			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
 //			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));

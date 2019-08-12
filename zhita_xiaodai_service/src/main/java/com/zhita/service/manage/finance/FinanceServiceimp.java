@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Accountadjustment;
@@ -25,7 +24,6 @@ import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment_setting;
-import com.zhita.model.manage.Undertheline;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
@@ -53,7 +51,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
 		PhoneDeal p = new PhoneDeal();
-		payrecord.setPhone(p.encryption(payrecord.getPhone()));
+		if(payrecord.getPhone() != null){
+			payrecord.setPhone(p.encryption(payrecord.getPhone()));
+		}
 		if(payrecord.getStart_time()!=null && payrecord.getStart_time()!="" && payrecord.getEnd_time()!=null && payrecord.getEnd_time()!=""){
 			try {
 				payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
@@ -85,7 +85,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Huankuan(Payment_record payrecord) {
 		PhoneDeal p = new PhoneDeal();
-		payrecord.setPhone(p.encryption(payrecord.getPhone()));
+		if(payrecord.getPhone() != null){
+			payrecord.setPhone(p.encryption(payrecord.getPhone()));
+		}
 		try {
 			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
 			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
@@ -115,7 +117,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> OrderPayment(Orderdetails orderNumber) {
 		orderNumber.setCompanyId(3);
 		PhoneDeal p = new PhoneDeal();
-		orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+		if(orderNumber.getPhone() != null){
+			orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+		}
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
 		if(ordea.getInterestSum() == null){
 			ordea.setRealityBorrowMoney(ordea.getRealityBorrowMoney());
@@ -142,7 +146,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Accountadjus(Accountadjustment acc) {
 		PhoneDeal p = new PhoneDeal();
-		acc.setPhone(p.encryption(acc.getPhone()));
+		if(acc.getPhone() != null){
+			acc.setPhone(p.encryption(acc.getPhone()));
+		}
 		try {
 			acc.setAmou_time(System.currentTimeMillis()+"");
 			acc.setAccounttime(Timestamps.dateToStamp1(acc.getAccounttime()));
@@ -169,7 +175,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> OrderAccount(Orderdetails orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
 			PhoneDeal p = new PhoneDeal();
-			orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+			if(orderNumber.getPhone() != null){
+				orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+			}
 			Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
 			System.out.println("手机号:"+orderNumber.getPhone());
 			if(ordetails!=null){
@@ -210,7 +218,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		PhoneDeal p = new PhoneDeal();
-		ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		if(ordetail.getPhone() != null){
+			ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		}
 		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		try {
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
@@ -242,7 +252,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectNoMoney(Orderdetails ordetail) {
 		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		PhoneDeal p = new PhoneDeal();
-		ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		if(ordetail.getPhone() != null){
+			ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		}
 		try {
 			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
 			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
@@ -272,7 +284,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectOkMoney(Orderdetails ordetail) {
 		PhoneDeal p = new PhoneDeal();
-		ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		if(ordetail.getPhone() != null){
+			ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		}
 		try {
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
@@ -311,7 +325,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Selectoffine(Orderdetails ordetail) {
 		PhoneDeal p = new PhoneDeal();
-		ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		if(ordetail.getPhone() != null){
+			ordetail.setPhone(p.encryption(ordetail.getPhone()));
+		}
 		try {
 			ordetail.setStart_time(Timestamps.dateToStamp1(ordetail.getStart_time()));
 			ordetail.setEnd_time(Timestamps.dateToStamp1(ordetail.getEnd_time()));
@@ -377,7 +393,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectBankDeductOrders(Bankdeductions bank) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		bank.setPhone(p.encryption(bank.getPhone()));
+		if(bank.getPhone() != null){
+			bank.setPhone(p.encryption(bank.getPhone()));
+		}
 		try {
 			bank.setStartu_time(Timestamps.dateToStamp1(bank.getStartu_time()));
 			bank.setEnd_time(Timestamps.dateToStamp1(bank.getEnd_time()));
@@ -436,7 +454,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> AllDelayStatis(Bankdeductions banl) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		banl.setPhone(p.encryption(banl.getPhone()));
+		if(banl.getPhone() != null){
+			banl.setPhone(p.encryption(banl.getPhone()));
+		}
 		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
 		
 		if(banl.getStartu_time()==null){
@@ -527,7 +547,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> Financialover(Bankdeductions banl) {
 		PhoneDeal p = new PhoneDeal();
-		banl.setPhone(p.encryption(banl.getPhone()));
+		if(banl.getPhone() != null){
+			banl.setPhone(p.encryption(banl.getPhone()));
+		}
 		try {
 			banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
 			banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
@@ -573,7 +595,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> AddOffJianmian(Offlinjianmian off) {
 		PhoneDeal p = new PhoneDeal();
-		off.setPhone(p.encryption(off.getPhone()));
+		if(off.getPhone() != null){
+			off.setPhone(p.encryption(off.getPhone()));
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -599,7 +623,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> SelectXiaOrder(Orderdetails ord) {
 		PhoneDeal p = new PhoneDeal();
-		ord.setPhone(p.encryption(ord.getPhone()));
+		if(ord.getPhone() != null){
+			ord.setPhone(p.encryption(ord.getPhone()));
+		}
 		try {
 			ord.setStart_time(Timestamps.dateToStamp1(ord.getStart_time()));
 			ord.setEnd_time(Timestamps.dateToStamp1(ord.getEnd_time()));
@@ -655,7 +681,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> AddDelay(Offlinedelay off) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		off.setPhone(p.encryption(off.getPhone()));
+		if(off.getPhone() != null){
+			off.setPhone(p.encryption(off.getPhone()));
+		}
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         ca.setTime(new Date()); //设置时间为当前时间
@@ -681,7 +709,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> Delaylabor(Offlinedelay of) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		of.setPhone(p.encryption(of.getPhone()));
+		if(of.getPhone() != null){
+			of.setPhone(p.encryption(of.getPhone()));
+		}
 		Integer totalCount = padao.OffTotalCount(of);
 		if(totalCount == null){
 			totalCount = 0;
