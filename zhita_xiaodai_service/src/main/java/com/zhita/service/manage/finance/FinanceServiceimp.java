@@ -72,6 +72,7 @@ public class FinanceServiceimp implements FinanceService{
 			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
 			payments.get(i).setPhone(p.decryption(payments.get(i).getPhone()));
 			payments.get(i).setPhone(tm.mobileEncrypt(payments.get(i).getPhone()));
+		
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("PaymentRecord", payments);
@@ -258,6 +259,7 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
+			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -296,6 +298,7 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
+			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);

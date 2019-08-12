@@ -455,6 +455,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			System.out.println("事件:"+orders.get(i).getRealtime());
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
+			TuoMinUtil tm = new TuoMinUtil();
+			orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
 		}
 		map.put("Orderdetails", orders);
 		map.put("PageUtil", pages);
@@ -520,6 +522,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
 			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
+			TuoMinUtil tm = new TuoMinUtil();
+			orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
 		}
 		map.put("Orderdetails", orders);
 		return map;
