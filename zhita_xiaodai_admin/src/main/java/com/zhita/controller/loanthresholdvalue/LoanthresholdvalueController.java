@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,7 +25,6 @@ public class LoanthresholdvalueController {
 	}
 	
 	//修改最大阀值
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/upamaxthresholdvalue")
 	public int upamaxthresholdvalue(Integer maxthresholdvalue){
@@ -43,7 +41,6 @@ public class LoanthresholdvalueController {
 	}
 	
 	//放款渠道紧急开关——修改放款渠道状态
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/upaloanstatus")
     public int upaloanstatus(String status,Integer companyId){

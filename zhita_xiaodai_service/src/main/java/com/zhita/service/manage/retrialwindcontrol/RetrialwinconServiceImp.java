@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.RetrialWindControlMapper;
 import com.zhita.model.manage.RetrialWindControl;
@@ -34,6 +35,7 @@ public class RetrialwinconServiceImp implements IntRetrialwinconService{
     }
     
     //后台管理---更新功能
+    @Transactional
     public int updateByPrimaryKey(RetrialWindControl record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=retrialWindControlMapper.updateByPrimaryKey(record);

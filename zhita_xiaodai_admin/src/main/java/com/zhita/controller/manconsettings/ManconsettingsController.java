@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -35,7 +34,6 @@ public class ManconsettingsController {
     }
     
     //后台管理---添加功能
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(ManageControlSettings record){
@@ -52,7 +50,6 @@ public class ManconsettingsController {
     }
     
     //后台管理---编辑保存功能
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
     public int updateByPrimaryKey(ManageControlSettings record){

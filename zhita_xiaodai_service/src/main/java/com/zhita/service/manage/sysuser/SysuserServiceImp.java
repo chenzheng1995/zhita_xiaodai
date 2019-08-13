@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.Company;
@@ -90,6 +91,7 @@ public class SysuserServiceImp implements IntSysuserService{
 	
 	//admin------系统用户——添加功能
 	@Override
+	@Transactional
 	public int insert(SysUser record) {
 		int sum=sysUserMapper.insert(record);
 		
@@ -105,6 +107,7 @@ public class SysuserServiceImp implements IntSysuserService{
 	
 	//admin-----系统用户——修改账号状态
 	@Override
+	@Transactional
 	public int updateStatus(Integer id,String status) {
 		int num=0;
 		if(status.equals("1")){
@@ -132,6 +135,7 @@ public class SysuserServiceImp implements IntSysuserService{
     
     //admin----系统用户——编辑功能（修改保存）
 	@Override
+	@Transactional
 	public int updateByPrimaryKey(SysUser record) {
 		int num=sysUserMapper.updateByPrimaryKey(record);
 		
@@ -166,6 +170,7 @@ public class SysuserServiceImp implements IntSysuserService{
 	}
 	
     //admin---系统用户——修改假删除状态
+	@Transactional
     public int upaFalseDel(Integer id){
     	int num=sysUserMapper.upaFalseDel(id);
     	return num;

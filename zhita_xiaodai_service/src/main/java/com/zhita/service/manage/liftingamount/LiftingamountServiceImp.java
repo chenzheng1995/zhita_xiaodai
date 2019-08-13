@@ -1,12 +1,11 @@
 package com.zhita.service.manage.liftingamount;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.LiftingAmountMapper;
 import com.zhita.model.manage.LiftingAmount;
@@ -23,6 +22,7 @@ public class LiftingamountServiceImp implements IntLiftingamountServcie{
     }
     
     //后台管理---添加功能
+    @Transactional
     public int insert(LiftingAmount record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	liftingAmountMapper.insert(record);
@@ -37,6 +37,7 @@ public class LiftingamountServiceImp implements IntLiftingamountServcie{
     }
     
     //后台管理---更新保存
+    @Transactional
     public int updateByPrimaryKey(LiftingAmount record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=liftingAmountMapper.updateByPrimaryKey(record);
@@ -44,6 +45,7 @@ public class LiftingamountServiceImp implements IntLiftingamountServcie{
     }
     
     //后台管理---修改当前对象的假删除状态
+    @Transactional
 	 public int upaFalseDel(String operator,Integer id){
 		 String operationtime=System.currentTimeMillis()+"";
 		 int num=liftingAmountMapper.upaFalseDel(operator, operationtime, id);

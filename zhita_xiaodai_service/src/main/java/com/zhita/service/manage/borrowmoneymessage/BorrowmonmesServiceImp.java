@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BorrowmonmesServiceImp implements IntBorrowmonmesService{
@@ -46,6 +47,7 @@ public class BorrowmonmesServiceImp implements IntBorrowmonmesService{
     
     
     //后台管理----修改保存功能
+    @Transactional
     public int updateByPrimaryKey(BorrowMoneyMessage record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=borrowMoneyMessageMapper.updateByPrimaryKey(record);

@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,7 +108,6 @@ public class AboutusController {
 	
 	 
     //后台管理---更新功能
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
     public int updateByPrimaryKey(Aboutus record){

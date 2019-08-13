@@ -65,6 +65,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     }
     
     //后台管理---添加操作
+    @Transactional
     public int insert(BlacklistUser record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	record.setBlackType("3");//黑名单类型（3：手工录入）
@@ -96,6 +97,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     /**
      * 批量导入Excel
      */
+    @Transactional
     public String ajaxUploadExcel(MultipartFile file,Integer companyId,Integer operator){
 	       /* MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 	        MultipartFile file = multipartRequest.getFile("excelFile");*/

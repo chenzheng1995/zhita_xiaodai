@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.OverdueClassMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -38,6 +39,7 @@ public class OverdueclassServcieImp implements IntOverdueclassService{
     }
     
     //后台管理---添加功能
+    @Transactional
     public int insert(OverdueClass record){
     	overdueClassMapper.insert(record);
     	Integer id=record.getId();
@@ -51,17 +53,20 @@ public class OverdueclassServcieImp implements IntOverdueclassService{
     }
     
     //后台管理---修改保存功能
+    @Transactional
     public int updateByPrimaryKey(OverdueClass record){
     	int num=overdueClassMapper.updateByPrimaryKey(record);
     	return num;
     }
     
     //后台管理---修改黑名单分界线的值
+    @Transactional
     public int update(Integer blacklinevalue){
     	int num=overdueClassMapper.update(blacklinevalue);
     	return num;
     }
   //后台管理---修改假删除功能
+    @Transactional
     public int upaFalseDel(Integer id){
     	int num=overdueClassMapper.upaFalseDel(id);
     	return num;

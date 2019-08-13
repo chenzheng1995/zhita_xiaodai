@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -38,7 +37,6 @@ public class LiftingamountController {
     }
 	
 	//后台管理---添加功能
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(LiftingAmount record){
@@ -55,7 +53,6 @@ public class LiftingamountController {
     }
 	
 	//后台管理---更新保存
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
     public int updateByPrimaryKey(LiftingAmount record){
@@ -64,7 +61,6 @@ public class LiftingamountController {
     }
 	
 	//后台管理---修改当前对象的假删除状态
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/upaFalseDel")
 	public int upaFalseDel(String operator,Integer id){

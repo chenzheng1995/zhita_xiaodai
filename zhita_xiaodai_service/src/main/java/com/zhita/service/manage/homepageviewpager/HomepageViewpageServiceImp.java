@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.HomepageViewpagerMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -28,6 +29,7 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     }
     
     //后台管理---添加功能
+    @Transactional
     public int insert(HomepageViewpager record) {
     	int count=homepageViewpagerMapper.queryAllCount(record.getCompanyid());
     	record.setSort(count+1);
@@ -48,6 +50,7 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     }
     
     //后台管理---编辑功能
+    @Transactional
     public int updateByPrimaryKey(HomepageViewpager record){
     	record.setUpdatetime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=homepageViewpagerMapper.updateByPrimaryKey(record);
@@ -55,6 +58,7 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
     }
     
     //后台管理---修改当前对象假删除状态
+    @Transactional
     public int updateFalDel(Integer id,Integer sort){
     	int num=homepageViewpagerMapper.updateFalDel(id);
     	homepageViewpagerMapper.upadateSort(sort);
@@ -68,6 +72,7 @@ public class HomepageViewpageServiceImp implements IntHomepageViewpageService{
 	}
 	
 	//后台管理---通过id修改排序字段
+	@Transactional
 	public int upasort(Integer id,Integer sort){
 		Integer lastid=homepageViewpagerMapper.selidbysort(sort-1);
 		homepageViewpagerMapper.upasort(id, sort-1);

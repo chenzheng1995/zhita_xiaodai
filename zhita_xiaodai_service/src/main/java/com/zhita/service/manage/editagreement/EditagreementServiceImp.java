@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.EditAgreementMapper;
 import com.zhita.model.manage.AgreementType;
@@ -27,6 +28,7 @@ public class EditagreementServiceImp implements IntEditagreementService{
     }
     
     //后台管理----更新保存
+    @Transactional
     public  int updateByPrimaryKeyWithBLOBs(EditAgreement record){
     	int num=editAgreementMapper.updateByPrimaryKeyWithBLOBs(record);
     	return num;

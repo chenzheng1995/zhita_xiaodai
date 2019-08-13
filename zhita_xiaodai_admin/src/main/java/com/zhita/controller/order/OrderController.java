@@ -108,7 +108,7 @@ public class OrderController {
 	@ResponseBody
 	@RequestMapping("/updateShareOfStateNo")
 	public int updateShareOfStateNo(Integer sysuserid,Integer userid){
-		int num=intOrderService.updateShareOfState(sysuserid,userid);
+		int num=intOrderService.updateShareOfStateNo(sysuserid,userid);
 		return num;
 	}
 	
