@@ -109,8 +109,8 @@ public class Timestamps {
 //			// TODO: handle exception
 //		}
 		 try {
-			 String a = dateToStamp1("2019-08-01 00:00:00");
-			 String b = dateToStamp1("2019-08-01 23:59:59");
+			 String a = dateToStamp1("2019-08-12 06:00:00");
+			 String b = dateToStamp1("2019-08-12 23:59:59");
 			 System.out.println("时间:"+a+"AA"+b);
 		} catch (Exception e) {
 			// TODO: handle exception
