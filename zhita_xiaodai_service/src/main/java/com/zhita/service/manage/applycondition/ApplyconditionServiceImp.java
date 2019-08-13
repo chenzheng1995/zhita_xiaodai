@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.ApplyConditionMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -43,6 +44,7 @@ public class ApplyconditionServiceImp implements IntApplyconditionService{
     }
     
     //后台管理---编辑功能
+    @Transactional
     public int updateByPrimaryKey(ApplyCondition record){
     	int num=applyConditionMapper.updateByPrimaryKey(record);
     	return num;

@@ -76,6 +76,7 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 	}
 	
 	//后台管理----控制逾期等级（定时任务）
+	@Transactional
 	public void upaoverclass(){
 		Integer companyId = 3;
 		List<Orders> listord = projecttimerMapper.queryAlloverdue(companyId);
@@ -96,6 +97,7 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 	}
 	
 	//后台管理----控制逾期超过30天，打入黑名单（定时任务）
+	@Transactional
 	public void addblack(){
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
 		Integer companyId = 3;

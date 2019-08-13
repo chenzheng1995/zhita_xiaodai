@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.dao.manage.ThirdpartyInterfaceMapper;
@@ -46,6 +47,7 @@ public class ThirdpartyintServiceImp implements IntThirdpartyintService{
     }
     
     //后台管理---添加功能
+    @Transactional
     public int insert(ThirdpartyInterface record){
     	int num=thirdpartyInterfaceMapper.insert(record);
     	return num;
@@ -58,6 +60,7 @@ public class ThirdpartyintServiceImp implements IntThirdpartyintService{
     }
     
     //后台管理---编辑保存功能
+    @Transactional
     public int updateByPrimaryKey(ThirdpartyInterface record){
     	int num=thirdpartyInterfaceMapper.updateByPrimaryKey(record);
     	return num;

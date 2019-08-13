@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.OverdueSettingsMapper;
 import com.zhita.model.manage.OverdueSettings;
@@ -20,6 +21,7 @@ public class OverduesetServiceImp implements IntOverduesetService{
 	 }
 	 
 	 //后台管理---添加功能
+	 @Transactional
 	 public int insert(OverdueSettings record){
 		 record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
 		 overdueSettingsMapper.insert(record);
@@ -34,6 +36,7 @@ public class OverduesetServiceImp implements IntOverduesetService{
 	 }
 	 
 	 //后台管理---修改保存
+	 @Transactional
 	 public int updateByPrimaryKey(OverdueSettings record){
 		 record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
 		 int num=overdueSettingsMapper.updateByPrimaryKey(record);
@@ -41,6 +44,7 @@ public class OverduesetServiceImp implements IntOverduesetService{
 	 }
 	 
 	  //后台管理---修改当前对象的假删除状态
+	 @Transactional
 	  public int upaFalseDel(String operator,Integer id){
 		  String operationtime=System.currentTimeMillis()+"";
 		  int num=overdueSettingsMapper.upaFalseDel(operator, operationtime, id);

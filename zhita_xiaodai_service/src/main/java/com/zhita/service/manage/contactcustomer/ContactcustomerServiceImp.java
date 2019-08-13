@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.dao.manage.ContactCustomerServiceMapper;
@@ -138,6 +139,7 @@ public class ContactcustomerServiceImp implements IntContactcustomerService{
     }
     
     //后台管理---修改功能
+    @Transactional
     public int updateByPrimaryKey(ContactCustomerService record){
 		int num=contactCustomerServiceMapper.updateByPrimaryKey(record);
     	return num;

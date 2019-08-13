@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
@@ -539,6 +540,7 @@ public class OrderServiceImp implements IntOrderService{
 	/**
 	 * 人审通过按钮
 	 */
+	@Transactional
 	public int updateShareOfState(Integer sysuserid,Integer userid){
 		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 		int num=userMapper.updateShareOfState(sysuserid,operationTime,userid);
@@ -548,6 +550,7 @@ public class OrderServiceImp implements IntOrderService{
 	/**
 	 * 人审不通过按钮
 	 */
+	@Transactional
 	public int updateShareOfStateNo(Integer sysuserid,Integer userid){
 		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 		int num=userMapper.updateShareOfStateNo(sysuserid,operationTime,userid);

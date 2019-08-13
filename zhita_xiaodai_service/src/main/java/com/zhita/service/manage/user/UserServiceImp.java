@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.BlacklistUserMapper;
 import com.zhita.dao.manage.OrdersMapper;
@@ -93,6 +94,7 @@ public class UserServiceImp implements IntUserService{
 	}
 	
 	//后台管理---添加黑名单
+	@Transactional
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
 		Orders orders=userMapper.qeuryorder(userId);
@@ -115,6 +117,7 @@ public class UserServiceImp implements IntUserService{
 	}
 	
 	//后台管理---解除黑名单
+	@Transactional
 	public int removeBlacklist(Integer companyId,Integer userId){
 		int num=userMapper.upaBlacklistStatus1(userId);
 		userMapper.upaBlacklist(userId);

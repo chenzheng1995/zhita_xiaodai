@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -45,7 +44,6 @@ public class SysuserController {
 	}
 		
 	//admin------系统用户——添加功能
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/insert")
 	public int insert(SysUser record) {
@@ -54,7 +52,6 @@ public class SysuserController {
 	}
 	
 	//admin-----系统用户——修改账号状态
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateStatus")
 	public int updateStatus(Integer id,String status){
@@ -71,7 +68,6 @@ public class SysuserController {
 	}
 	
 	//admin----系统用户——编辑功能（修改保存）
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
 	public int updateByPrimaryKey(SysUser record){
@@ -80,7 +76,6 @@ public class SysuserController {
 	}
 	
 	//admin---系统用户——修改假删除状态
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/upaFalseDel")
     public int upaFalseDel(Integer id){
