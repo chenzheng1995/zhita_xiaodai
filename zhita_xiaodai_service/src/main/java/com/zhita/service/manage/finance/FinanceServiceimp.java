@@ -174,12 +174,18 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> OrderAccount(Orderdetails orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("身份证号:"+orderNumber.getIdcard_number());
+		System.out.println("手机号:"+orderNumber.getPhone());
 			PhoneDeal p = new PhoneDeal();
-			if(orderNumber.getPhone() != null){
-				orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+			if(orderNumber.getPhone() != null ||  orderNumber.getPhone()!=""){
+				if(orderNumber.getPhone().length()==11){
+					orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+				}
+				
 			}
+			
 			Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
-			System.out.println("手机号:"+orderNumber.getPhone());
+			
 			if(ordetails!=null){
 				System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
 				ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
