@@ -218,6 +218,23 @@
 		
 		
 		
+		<select id="OneCollectionData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
+			select count(o.id) as collection_count,sum(ora.makeLoans) as makeLoans,sum(ora.interestPenaltySum) as interestPenaltySum
+			from orders o,orderdetails ora,
+			<where>
+				ora.orderId = o.id
+				AND u.id = o.userId
+				AND o.orderStatus = "1"
+				AND o.companyId = #{companyId} 
+				AND o.orderCreateTime between #{start_time} and #{end_time}
+				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
+				    AND u.drainageOfPlatformId = #{drainageOfPlatformId}
+				</if>
+			</where>
+		</select>
+		
+		
+		
 		<select id="CollectionDataNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select 	count(o.orderCreateTime) from orderdetails ora,orders o,user u
 			<where>	
@@ -364,6 +381,29 @@
 			select repay.repaymentDate,count(repay.id) as GesamtbetragderNum,sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung from repayment repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and o.orderStatus = "3" and repay.repaymentDate between #{start_time} and #{end_time}
 		</select>
+		
+		
+		
+		
+		<select id="CollectionOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
+			select count(c.orderId) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and 
+			c.collectionTime = between #{start_time} and #{end_time} group by c.orderId
+		</select>
+		
+		
+		
+		<select id="CollectionNumSSA" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
+			select count(c.collectionId) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and
+			c.collectionTime = between #{start_time} and #{end_time} 
+		</select>
+		
+		
+		
+		<select id="OrderOKCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
+			select count(o.id) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and o.orderStatus= #{orderStatus}
+			and c.collectionTime = between #{start_time} and #{end_time} 
+		</select>
+		
 		
 		
 		
