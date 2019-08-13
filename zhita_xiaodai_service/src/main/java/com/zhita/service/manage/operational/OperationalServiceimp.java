@@ -292,18 +292,20 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
 			if(orders.getGesamtbetraguberfallNum()==null){
-				orders.setGesamtbetraguberfallNum(0);
+				ord.setGesamtbetraguberfallNum(0);
 			}
 			
 			if(orders.getGesamtbetragderNum()==null){
-				orders.setGesamtbetragderNum(0);
+				ord.setGesamtbetragderNum(0);
 			}
 			System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
 			NumberFormat numberFormat = NumberFormat.getInstance();
 			numberFormat.setMaximumFractionDigits(2);
 			System.out.println(orders.getGesamtbetraguberfallNum()+"AAA"+orders.getGesamtbetragderNum());
 			orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
-			orde.add(orders);
+			orde.add(ord);
+			System.out.println("时间:"+ord.getRemittanceTime());
+			map.put("Repayment", orde);
 			map.put("PageUtil", pages);
 		}else{
 			List<String> stime = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
@@ -348,31 +350,35 @@ public class OperationalServiceimp implements OperationalService{
 					System.out.println(or.getGesamtbetraguberfalligerBetrag());
 					
 				}
+				if(orders.getZahlderGesamtdarlehen() == null){
+					orders.setZahlderGesamtdarlehen(0);
+				}
 				
 				
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
 				
-				System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
 				ord.setRemittanceTime(stime.get(i));
+				System.out.println("时间:"+ord.getRemittanceTime());
 				if(orders.getGesamtbetraguberfallNum()==null){
-					orders.setGesamtbetraguberfallNum(0);
+					ord.setGesamtbetraguberfallNum(0);
 				}
 				
 				if(orders.getGesamtbetragderNum()==null){
-					orders.setGesamtbetragderNum(0);
+					ord.setGesamtbetragderNum(0);
 				}
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
 				orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
-				orde.add(orders);
+				orde.add(ord);
 				map.put("PageUtil", pages);
+				map.put("Repayment", orde);
 			}
 		}
-		
-		map.put("Repayment", orde);
 		return map;
+		
+		
 	}
 
 
