@@ -3,7 +3,6 @@ package com.zhita.service.manage.postloanorders;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -390,20 +389,22 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 					// TODO: handle exception
 				}
 				List<Collection> co = postloanorder.CollectionYIData(order);
+				for(int j=0;i<co.size();i++){
 				order.setOverdue_phonestaus("未接通");
-				co.setNotconnected(postloanorder.connectedNum(order));
+				co.get(j).setNotconnected(postloanorder.connectedNum(order));
 				order.setOverdue_phonestaus("已接通");
-				co.setConnected(postloanorder.connectedNum(order));
+				co.get(j).setConnected(postloanorder.connectedNum(order));
 				order.setOrderStatus("3");
-				co.setSameday(postloanorder.StatusOrders(order));//当天还款数
+				co.get(j).setSameday(postloanorder.StatusOrders(order));//当天还款数
 				order.setOrderStatus("0");
-				co.setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
-				if(co.getPaymentmade() != 0 && co.getCollection_count() != 0){
+				co.get(j).setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+				if(co.get(j).getPaymentmade() != 0 && co.get(j).getCollection_count() != 0){
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					numberFormat.setMaximumFractionDigits(2);
-					co.setPaymentmadeData(numberFormat.format((float) co.getPaymentmade() / (float) (co.getPaymentmade()+co.getSameday()) * 100));
+					co.get(j).setPaymentmadeData(numberFormat.format((float) co.get(j).getPaymentmade() / (float) (co.get(j).getPaymentmade()+co.get(j).getSameday()) * 100));
 				}else{
-					co.setPaymentmadeData("0");
+					co.get(j).setPaymentmadeData("0");
+				}
 				}
 				
 			}
