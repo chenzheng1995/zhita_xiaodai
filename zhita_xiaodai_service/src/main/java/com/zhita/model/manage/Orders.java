@@ -57,6 +57,8 @@ public class Orders {
 	
 	private String deferAfterReturntime;//延期后应还时间
 	
+	private Integer postponeDate;//每次延期天数
+	
 	private Orderdetails orderdetails;//对应订单明细表
 	
 	private User user;//对应用户对象
@@ -643,6 +645,14 @@ public class Orders {
 
 	public void setOverdueNumberOfDays(String overdueNumberOfDays) {
 		this.overdueNumberOfDays = overdueNumberOfDays;
+	}
+
+	public Integer getPostponeDate() {
+		return postponeDate;
+	}
+
+	public void setPostponeDate(Integer postponeDate) {
+		this.postponeDate = postponeDate;
 	}
 
 }

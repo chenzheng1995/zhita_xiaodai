@@ -59,6 +59,7 @@
 	      <result column="drainageOfPlatformId" property="drainageofplatformid" jdbcType="INTEGER" />
 	      <result column="ifBlacklist" property="ifblacklist" jdbcType="VARCHAR" />
 	      <result column="shareOfState" property="shareOfState" jdbcType="VARCHAR" />
+	      <result column="operationTime" property="operationTime" jdbcType="VARCHAR" />
 	      <result column="sourcename" property="sourcename" jdbcType="VARCHAR" />
 	      <result column="account" property="account" jdbcType="VARCHAR" />
 	      <result column="idcard_number" property="idcard" jdbcType="VARCHAR" />
@@ -76,7 +77,7 @@
     od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
     
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
-    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,u.shareOfState,
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,u.shareOfState,u.operationTime,
     
     s.sourcename,r.repaymentMoney,su.account
   </sql>
@@ -621,9 +622,9 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   	select o.id,o.orderNumber,d.interestOnArrears from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0}
   </select>
   <!-- 查询最后延期时间 -->
-  <select id="qeuryFinalDefertime" parameterType="java.lang.Integer" resultType="java.lang.String">
-  	select max(deferAfterReturntime) from deferred where orderid=#{arg0}
-  </select>
+  <select id="qeuryFinalDefertime" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+  	select max(deferAfterReturntime) deferAfterReturntime,postponeDate from deferred where orderid=#{arg0}
+  </select> 
   <!-- 后台管理      查询出sysuser表所有的name -->
   <select id="queryname" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.SysUser">
   	select userId,account from sys_user where companyId=#{arg0} and status=1

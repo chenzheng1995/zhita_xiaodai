@@ -114,7 +114,7 @@ public class AutheninforController {
     public int updateByPrimaryKey(AuthenField record){
 		int num=0;
 		num=intAutheninforService.updateByPrimaryKey(record.getId1(), record.getValue1());
-		num=intAutheninforService.updateByPrimaryKey(record.getId2(), record.getValue3());
+		num=intAutheninforService.updateByPrimaryKey(record.getId2(), record.getValue2());
 		num=intAutheninforService.updateByPrimaryKey(record.getId3(), record.getValue3());
 		num=intAutheninforService.updateByPrimaryKey(record.getId4(), record.getValue4());
 		return num;
