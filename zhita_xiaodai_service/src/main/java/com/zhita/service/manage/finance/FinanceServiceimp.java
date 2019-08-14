@@ -117,23 +117,33 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> OrderPayment(Orderdetails orderNumber) {
 		orderNumber.setCompanyId(3);
 		PhoneDeal p = new PhoneDeal();
-		if(orderNumber.getPhone() != null){
-			orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
-		}
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
 		if(ordea.getInterestSum() == null){
 			ordea.setRealityBorrowMoney(ordea.getRealityBorrowMoney());
 		}else{
 			ordea.setRealityBorrowMoney(ordea.getInterestPenaltySum().add(ordea.getRealityBorrowMoney()));
 		}
+		if(ordea.getDeferAfterReturntime()==null || ordea.getDeferAfterReturntime().equals("")){
+			ordea.setDeferAfterReturntime("/");
+		}else{
+			ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getDeferAfterReturntime()));
+		}
+		String phone = p.decryption(ordea.getPhone());
+		ordea.setPhone(phone);
+		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
+		ordea.setPhone(p.encryption(ordea.getPhone()));
 		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNum(ordea.getOrderId());
+		if(defe.getId()==0){
+			BigDecimal big = new BigDecimal(0);
+			defe.setInterestOnArrears(big);
+		}
+		System.out.println(defe.getInterestOnArrears());
 		orderNumber.setDefeNum(defe.getId());
 		orderNumber.setDefeMoney(defe.getInterestOnArrears());
 		ordea.setRegisteTime(Timestamps.stampToDate(ordea.getRegisteTime()));
 		ordea.setShouldReturnTime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
-		ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getDeferAfterReturntime()));
 		ordea.setDeferBeforeReturntime(Timestamps.stampToDate(ordea.getDeferBeforeReturntime()));
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", ordea);
@@ -177,7 +187,7 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println("身份证号:"+orderNumber.getIdcard_number());
 		System.out.println("手机号:"+orderNumber.getPhone());
 			PhoneDeal p = new PhoneDeal();
-			if(orderNumber.getPhone() != null ||  orderNumber.getPhone()!=""){
+			if(orderNumber.getPhone() != null){
 				if(orderNumber.getPhone().length()==11){
 					orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
 				}
@@ -187,28 +197,11 @@ public class FinanceServiceimp implements FinanceService{
 			Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
 			
 			if(ordetails!=null){
-				System.out.println(ordetails.getInterestSum()+""+ordetails.getMakeLoans()+""+ordetails.getOrderId());
-				ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
-				ordetails.setOrder_money(ordetails.getInterestSum().add(ordetails.getMakeLoans()));
-				if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() != null){
-					ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum().add(ordetails.getRealityBorrowMoney()));
-				}else if(ordetails.getInterestPenaltySum() != null && ordetails.getRealityBorrowMoney() == null){
-					ordetails.setRealityBorrowMoney(ordetails.getInterestPenaltySum());
-				}else{
-					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney());
-				}
-				
-				Deferred defe =  coldao.DefNum(ordetails.getOrderId());
-				orderNumber.setDefeNum(defe.getId());
-				orderNumber.setDefeMoney(defe.getInterestOnArrears());
-				Deferred de = padao.DeleteNumMoney(ordetails.getOrderId());
-				//ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));
-				ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
-				ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));
-				ordetails.setDeferBeforeReturntime(Timestamps.stampToDate(ordetails.getDeferBeforeReturntime()));
+				ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
+				ordetails.setDeferAfterReturntime(padao.DeferrAdefe(ordetails.getOrderId()));
+				ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));//延期后应还时间
 				map.put("aaa", ordetails.getInterestPenaltySum());
 				map.put("Orderdetails", ordetails);
-				map.put("Deferred", de);
 			}else{
 				map.put("Orderdetails", "无数据");
 				map.put("Deferred", 0);

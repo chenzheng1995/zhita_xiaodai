@@ -19,6 +19,8 @@ import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.order.IntOrderService;
@@ -61,7 +63,26 @@ public class ChanpaySend extends BaseParameter{
 	@ResponseBody
 	@RequestMapping("send")
 	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan){
+		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
+		String time = sin.format(new Date());
+		String start_time = time+" 00:00:00";
+		String end_time = time+" 23:59:59";
+		String a =  chanser.loanSetStatu(companyId);//放款状态  1  开启    2 关闭
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		if(a.equals("1")){
+		Orderdetails ord = new Orderdetails();
+		ord.setStart_time(start_time);
+		ord.setEnd_time(end_time);
+		ord.setCompanyId(companyId);
+		Integer maxmoney = chanser.loanMaxMoney(companyId);//获取限额
+		BigDecimal SumPaymoney = chanser.SumpayMoney(ord);//当天放款额度
+		BigDecimal maxMon = new BigDecimal(maxmoney);
+		Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
+		if(i == 1 || i == 0){
+			map1.put("msg", "今日放款已达限额,请明日再来");
+			map1.put("code", 0);
+		}else{
+			
 		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 		Bankcard ba = new Bankcard();
 		ba.setCompanyId(companyId);
@@ -134,6 +155,11 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("msg", "数据异常");
 			map1.put("code", 0);
 		}
+		}
+		}else{
+			map1.put("msg", "渠道关闭,请联系客服");
+			map1.put("code", 0);
+		}
 		
 		return map1;
 		
@@ -197,7 +223,7 @@ public class ChanpaySend extends BaseParameter{
 		System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
 		Jiaoyi sreturn = JSON.parseObject(staring,Jiaoyi.class);
 		System.out.println("111111");
-		pay.setPipelinenumber(orderNumber);
+		pay.setPipelinenumber(sreturn.getPartnerId());
 		pay.setDeleted("0");
 		pay.setPaymentmoney(finalLine);
 		String statu = sreturn.getAcceptStatus();
@@ -206,7 +232,8 @@ public class ChanpaySend extends BaseParameter{
 			System.out.println("支付成功");
 
 			pay.setStatus("支付成功");
-			pay.setPipelinenumber(orderNumber);
+			String pipelnen = "lsn_"+sreturn.getPartnerId();
+			pay.setPipelinenumber(pipelnen);
 			pay.setOrderNumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){

@@ -36,6 +36,9 @@ public interface OrderdetailsMapper {
 	String getoverdueNumberOfDays(int orderId);
 
 	BigDecimal interestPenaltySum(int id);
+	
+	
+	String loanSetStatu(Integer companyId);
 
 
 }
