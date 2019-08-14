@@ -23,5 +23,7 @@ public interface IntContactcustomerService {
     
     //后台管理---修改功能
     public int updateByPrimaryKey(ContactCustomerService record);
+
+	public Map<String, Object> getContactCustomer(int companyId);
     
 }

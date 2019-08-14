@@ -9,4 +9,6 @@ public interface IntUsthresholdvalueService {
 	
 	//修改最大阀值
 	public int upamaxthresholdvalue(Integer maxthresholdvalue);
+
+	public int getmaxthresholdvalue(int companyId);
 }

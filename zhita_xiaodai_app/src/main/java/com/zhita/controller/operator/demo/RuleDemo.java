@@ -33,9 +33,11 @@ public class RuleDemo {
     
     RiskApiClient riskClient = new RiskApiClient();
     //公共参数
-    riskClient.setAppId("app190628133950478882");                   //(TODO)替换值，写入机构ID
-    riskClient.setAppSecret("VASH4I83CDHA7JWE5DDJ8XRQEZ56IVIM");    //(TODO)替换值，写入机构密钥
-    riskClient.setOnline(false);                      //(TODO)替换值，默认为线上环境（true），需要使用方替换，也可不替换
+//    riskClient.setAppId("app190628133950478882");                   //(TODO)替换值，写入机构ID
+//    riskClient.setAppSecret("VASH4I83CDHA7JWE5DDJ8XRQEZ56IVIM");    //(TODO)替换值，写入机构密钥
+    riskClient.setAppId("app190812164735176026");                    //(TODO)替换值，写入机构ID
+    riskClient.setAppSecret("QKP43WQG8U261HHRLYX9IINB7VUUV5LT");      //(TODO)替换值，写入机构密钥
+    riskClient.setOnline(true);                      //(TODO)替换值，默认为线上环境（true），需要使用方替换，也可不替换
     //业务参数
     riskClient.setReqId(reqId);
     riskClient.setName(name);                       //(TODO)替换值，写入客户姓名

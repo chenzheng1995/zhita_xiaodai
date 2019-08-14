@@ -222,8 +222,12 @@ public class OperatorController {
 	            Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);
 	            String name = (String) map1.get("trueName");
 	            String date = System.currentTimeMillis()+"";
-	            String blackType = "2";
-	            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,newphone,name,date,blackType);
+	            
+	            int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+	            if(num1==0) {
+		            String blackType = "2";
+		            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,newphone,name,date,blackType);
+	            }
 	            break;
 			}
 		}
@@ -241,10 +245,12 @@ public class OperatorController {
     	            phone = intUserService.getphone(id1);
     	            String newphone = pDeal.decryption(phone);
     	            String date = System.currentTimeMillis()+"";
+    	            int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+    	            if(num1==0) {
     	            String blackType = "2";
     	            intBlacklistuserService.setBlacklistuser(idCard,id,companyId,newphone,name,date,blackType);	
     			}
-        	
+    			}
         	}
     	}
     	
@@ -282,11 +288,15 @@ public class OperatorController {
 		  return map;
 	  }
 	  
-	  if(address.indexOf(refuseApplyProvince)!=-1) {
-		  map.put("code", "406");
-		  map.put("msg", "地域不符合条件");
-		  return map;
-	  }
+	  String[] aString = refuseApplyProvince.split("/");
+      for (int i = 0; i < aString.length; i++) {
+    	  if(address.indexOf(aString[i])!=-1) {
+    		  map.put("code", "406");
+    		  map.put("msg", "地域不符合条件");
+    		  return map;
+    	  }
+      }
+
 	  
 	return map;
     

@@ -94,5 +94,11 @@ public class AboutusServiceImp implements IntAboutusService{
 		int num=aboutusMapper.updateByPrimaryKey(record);
 		return num;
     }
+
+	@Override
+	public Map<String, Object> getaboutus(int companyId) {
+		Map<String, Object> map =aboutusMapper.getaboutus(companyId);
+		return map;
+	}
     
 }

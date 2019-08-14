@@ -15,4 +15,6 @@ public interface IntLoanthresholdvalueService {
 	
 	//后台管理----修改放款渠道状态
     public int upaloanstatus(String status,Integer companyId);
+
+	public int getmaxthresholdvalue(int companyId);
 }

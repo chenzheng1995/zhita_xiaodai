@@ -58,5 +58,9 @@ public int setPwd(int userId, String md5Pwd);
 
 public String getifBlacklist(String newPhone, int companyId);
 
+public void updateifBlacklist1(String newPhone, int companyId);
+
+public long getnumber(long todayZeroTimestamps, long tomorrowZeroTimestamps, int companyId);
+
    
 }

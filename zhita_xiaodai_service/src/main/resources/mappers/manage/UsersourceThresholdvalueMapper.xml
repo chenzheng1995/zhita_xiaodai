@@ -75,4 +75,9 @@
   <update id="upamaxthresholdvalue">
   	update usersource_thresholdvalue set maxthresholdvalue=#{arg0}
   </update>
+  
+    <select id="getmaxthresholdvalue" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select maxthresholdvalue from usersource_thresholdvalue where companyId=#{companyId}
+  </select>
+  
 </mapper>

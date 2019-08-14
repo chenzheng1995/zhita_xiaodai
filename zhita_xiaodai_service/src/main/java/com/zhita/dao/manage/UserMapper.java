@@ -143,4 +143,8 @@ public interface UserMapper {
 
 	String getifBlacklist(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
+	void updateifBlacklist1(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
+
+	long getnumber(@Param("todayZeroTimestamps")long todayZeroTimestamps,@Param("tomorrowZeroTimestamps") long tomorrowZeroTimestamps,@Param("companyId") int companyId);
+
 }

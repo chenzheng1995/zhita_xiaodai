@@ -29,5 +29,7 @@ public interface UsersourceThresholdvalueMapper {
     
     //后台管理----修改最大阀值
     int upamaxthresholdvalue(Integer maxthresholdvalue);
+
+	int getmaxthresholdvalue(int companyId);
     
 }

@@ -38,4 +38,6 @@ public interface LoanThresholdvalueMapper {
     
     //后台管理----修改放款渠道状态
     int upaloanstatus(String status,Integer companyId);
+
+	int getmaxthresholdvalue(int companyId);
 }

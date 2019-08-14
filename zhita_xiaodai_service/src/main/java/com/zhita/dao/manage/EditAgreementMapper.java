@@ -25,4 +25,6 @@ public interface EditAgreementMapper {
     
     //后台管理----查询协议分类表所有的协议
     List<AgreementType> queryAll(Integer companyId);
+
+	String getagreementContent(int agreementId);
 }

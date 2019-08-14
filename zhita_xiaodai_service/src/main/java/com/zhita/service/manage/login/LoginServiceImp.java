@@ -151,6 +151,18 @@ public class LoginServiceImp implements IntLoginService{
 		return ifBlacklist;
 	}
 
+	@Override
+	public void updateifBlacklist1(String newPhone, int companyId) {
+		userMapper.updateifBlacklist1(newPhone, companyId);
+		
+	}
+
+	@Override
+	public long getnumber(long todayZeroTimestamps, long tomorrowZeroTimestamps, int companyId) {
+		long number1 = userMapper.getnumber(todayZeroTimestamps,tomorrowZeroTimestamps,companyId);
+		return number1;
+	}
+
 
 	
 

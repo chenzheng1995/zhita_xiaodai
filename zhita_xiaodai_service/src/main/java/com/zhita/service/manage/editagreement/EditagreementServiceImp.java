@@ -31,4 +31,10 @@ public class EditagreementServiceImp implements IntEditagreementService{
     	int num=editAgreementMapper.updateByPrimaryKeyWithBLOBs(record);
     	return num;
     }
+
+	@Override
+	public String getagreementContent(int agreementId) {
+		String agreementContent = editAgreementMapper.getagreementContent(agreementId);
+		return agreementContent;
+	}
 }

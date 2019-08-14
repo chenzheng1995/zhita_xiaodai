@@ -118,4 +118,9 @@
     <select id="queryQrcode" parameterType="java.lang.Integer" resultType="java.lang.String">
   	select qrcode from contact_customer_service where id=#{arg0}
   </select>
+  
+     <select id="getContactCustomer" parameterType="java.lang.Integer" resultType="java.util.Map">
+  	select advertisingmap,contactInformation,qrcode,remarks from contact_customer_service where companyId = #{companyId}
+  </select> 
+  
 </mapper>

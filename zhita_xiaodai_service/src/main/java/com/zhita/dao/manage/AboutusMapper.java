@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.Aboutus;
 
@@ -25,5 +26,7 @@ public interface AboutusMapper {
     
     //后台管理---根据id查询当前对象的logo字段
     String queryAppLogo(Integer id);
+
+	Map<String, Object> getaboutus(int companyId);
     
 }

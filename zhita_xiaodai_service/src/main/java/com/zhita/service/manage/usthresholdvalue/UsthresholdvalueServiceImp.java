@@ -69,4 +69,10 @@ public class UsthresholdvalueServiceImp implements IntUsthresholdvalueService{
 		int num=usersourceThresholdvalueMapper.upamaxthresholdvalue(maxthresholdvalue);
 		return num;
 	}
+
+	@Override
+	public int getmaxthresholdvalue(int companyId) {
+		int maxthresholdvalue = usersourceThresholdvalueMapper.getmaxthresholdvalue(companyId);
+		return maxthresholdvalue;
+	}
 }

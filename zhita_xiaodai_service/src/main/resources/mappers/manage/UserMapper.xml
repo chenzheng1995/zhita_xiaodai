@@ -208,7 +208,7 @@
   
   	  	<!--判断用户名是否存在 -->
 	<select id="findphone" resultType="java.lang.Integer" parameterType="java.util.Map">
-       SELECT id FROM user where phone=#{newPhone} and companyId=#{companyId} and ifBlacklist = '0'
+       SELECT id FROM user where phone=#{newPhone} and companyId=#{companyId}
 	</select>
 	
 	
@@ -592,8 +592,20 @@
 	</select> 
 	
 	   		<select id="getifBlacklist" parameterType="java.util.Map" resultType="java.lang.String">
-		select ifBlacklist from user where phone = newPhone and companyId = #{companyId}
+		select ifBlacklist from user where phone =#{newPhone}  and companyId = #{companyId}
 	</select> 
 	
+	
+	      <update id="updateifBlacklist1" parameterType="java.util.Map" > 
+  	update user set ifBlacklist=1 where phone= #{newPhone} and companyId = #{companyId}
+  </update>
+  
+  	   		<select id="getnumber" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(phone) from user where registeTime>=#{todayZeroTimestamps}
+		and registeTime &lt;
+		#{tomorrowZeroTimestamps} and companyId = #{companyId}
+	</select> 
+  
+
   
 </mapper>

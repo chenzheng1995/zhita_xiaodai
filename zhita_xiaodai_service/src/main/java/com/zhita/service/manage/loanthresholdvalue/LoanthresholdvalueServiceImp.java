@@ -106,4 +106,10 @@ public class LoanthresholdvalueServiceImp implements IntLoanthresholdvalueServic
     	int num= loanThresholdvalueMapper.upaloanstatus(status,companyId);
     	return num;
     }
+
+	@Override
+	public int getmaxthresholdvalue(int companyId) {
+		int maxthresholdvalue = loanThresholdvalueMapper.getmaxthresholdvalue(companyId);
+		return maxthresholdvalue;
+	}
 }
