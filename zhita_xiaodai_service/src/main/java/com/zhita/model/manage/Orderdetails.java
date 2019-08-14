@@ -223,7 +223,16 @@ public class Orderdetails {
     
     private Integer riskmanagementFraction;
     
+    private BigDecimal ShijiMoney;
     
+	public BigDecimal getShijiMoney() {
+		return ShijiMoney;
+	}
+
+	public void setShijiMoney(BigDecimal shijiMoney) {
+		ShijiMoney = shijiMoney;
+	}
+
 	public Integer getRiskmanagementFraction() {
 		return riskmanagementFraction;
 	}

@@ -38,7 +38,7 @@
 			
 			
 			<select id="AllPhone" parameterType="com.zhita.model.manage.SmsSendResponse" resultType="java.lang.String">
-				select u.phone from user u,orders o where o.orderStatus = "0" and o.userId = u.id and o.realtime between #{statu_time} and #{end_time} 
+				select u.phone from user u,orders o where o.orderStatus = "0" and o.userId = u.id and o.shouldReturnTime between #{statu_time} and #{end_time} 
 				and o.companyid = #{companyid}
 			</select>
 			

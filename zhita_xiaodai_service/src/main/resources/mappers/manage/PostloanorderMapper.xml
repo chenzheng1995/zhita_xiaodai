@@ -284,19 +284,16 @@
 		
 		
 		<select id="MyOrderdue" resultType="com.zhita.model.manage.Orderdetails" parameterType="com.zhita.model.manage.Orderdetails">
-			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
-			 defe.deferBeforeReturntime,defe.interestOnArrears,ord.realityAccount,defe.deferAfterReturntime,deset.onceDeferredDay, ovd.statu,
-			 ovd.overdue_phonestaus,o.orderStatus,ovd.overdue_id,ovd.overdue_phonestaus
-			 from orders o left join orderdetails ord on o.id = ord.orderId 
-			left join user u on u.id = o.userId
-			left join overdue ovd on ovd.orderId = o.id
-			left join deferred_settings deset on o.companyId = deset.companyId
-			left join collection_member colme on colme.collectionMemberId = ovd.collectionMemberId
-			left join deferred defe on defe.orderId = o.id
+			SELECT ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
+			ord.makeLoans,o.shouldReturnTime,ord.interestSum,defeset.onceDeferredDay,ov.overdue_phonestaus,ov.collectiondate
+			from orders o,orderdetails ord,deferred_settings defeset,overdue ov,user u
 			<where>
-				AND ovd.deled = '0'
-				AND o.companyId = #{companyId}
-				AND ovd.collectionMemberId = #{collectionMemberId}
+				o.id = ord.orderId
+				and o.companyId = defeset.companyId
+				and ov.orderId = o.id
+				and o.companyId = #{companyId}
+				and o.userId = u.id
+				and ov.collectionMemberId = #{collectionMemberId}
 			</where>
 			GROUP BY ord.orderId
 			limit #{page},#{pagesize}
@@ -332,7 +329,9 @@
 			and o.companyId = 3
 			and ov.overdue_phonestaus = #{overdue_phonestaus}
 			and ov.collectiondate BETWEEN #{start_time} and #{end_time}
-			
+			<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND ov.collectionMemberId = #{collectionMemberId}
+			</if>
 		</select>
 		
 		
@@ -363,6 +362,9 @@
 			o.id = ov.orderId
 			and o.companyId = #{companyId}
 			and o.orderStatus = #{orderStatus}
+			<if test="collectionMemberId != null and collectionMemberId != ''">
+				AND ov.collectionMemberId = #{collectionMemberId}
+			</if>
 			and ov.collectiondate BETWEEN #{start_time} and #{end_time}
 		</select>
 		
@@ -486,19 +488,15 @@
 		
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
-			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,o.orderStatus as collectionStatus,o.realtime,o.overdueGrade,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,so.sourceName as drainageOfPlatformName,u.registeClient
-			from orders o LEFT JOIN user u on u.id = o.userId
-			LEFT JOIN orderdetails ord on o.id = ord.orderId
-			LEFT JOIN deferred defe on o.id = defe.orderid
-			LEFT JOIN deferred_settings deset on o.companyId = deset.companyId
-			LEFT JOIN collection c on c.orderId = o.id
-			LEFT JOIN collection_member colme on colme.collectionMemberId = c.collectionMemberId
-			LEFT JOIN source so on so.id = u.sourceId
+			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
+			ord.makeLoans,o.shouldReturnTime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money
+			from orders o,user u,orderdetails ord,source sor
 			<where>
-				AND	o.companyId = #{companyId}
-			    AND o.orderStatus = "3"
+				o.id = ord.orderid
+				and o.userId = u.id
+				and o.orderStatus = #{orderStatus}
+				and sor.id = u.sourceId
+				and o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND name LIKE concat('%',#{name},'%')  
 			 </if>
@@ -527,7 +525,7 @@
 				AND u.registeClient = #{registeClient}
 			</if>
 			 </where>
-			 GROUP BY o.id
+			 GROUP BY ord.orderId
 			 limit #{page},#{pagesize}
 		</select>
 		
@@ -735,7 +733,7 @@
 		
 		
 		<update id="UserOverdue" parameterType="com.zhita.model.manage.Overdue">
-			update overdue set overdue_phonestaus = #{overdue_phonestaus},deled=1 where orderId =#{orderId} AND collectionMemberId = #{collectionMemberId}
+			update overdue set overdue_phonestaus = #{overdue_phonestaus} where orderId =#{orderId} AND collectionMemberId = #{collectionMemberId}
 		</update>
 		
 		
@@ -750,19 +748,31 @@
 		<select id="CollTimeData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
 			select count(id) as collection_count from orders where companyId = #{companyId} and id not in (select ov.orderId from overdue ov,orders o where 
 			o.companyId = #{companyId} and o.id = ov.orderId)
-			o.shouldReturnTime BETWEEN #{start_time} and #{end_time}
+			AND shouldReturnTime BETWEEN #{start_time} and #{end_time}
 		</select>
 		
 		
+		
+		
+<!-- 		<select id="CollectionYIData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select count(id) as collection_count,ov.collectionMemberId from orders where companyId = #{companyId} and id in 
+			(select ov.orderId from overdue ov,orders o where 
+			o.companyId = #{companyId} and o.id = ov.orderId)
+			o.shouldReturnTime BETWEEN #{start_time} and #{end_time}
+		</select> -->
 		
 		
 		<select id="CollectionYIData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(id) as collection_count from orders where companyId = #{companyId} and id in (select ov.orderId from overdue ov,orders o where 
-			o.companyId = #{companyId} and o.id = ov.orderId)
-			o.shouldReturnTime BETWEEN #{start_time} and #{end_time}
+			select com.reallyName,ov.collectionMemberId from overdue ov,collection_member com where ov.collectionMemberId = com.collectionMemberId
+			and com.companyId = 3 and ov.collectiondate BETWEEN #{start_time} and #{end_time}
 		</select>
 		
 		
+		<select id="CoMentLLection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
+			select count(ov.orderId) from overdue ov,collection_member com where com.companyId = 3 and ov.collectionMemberId = 1 
+			and ov.collectionMemberId = com.collectionMemberId
+			group by ov.orderId
+		</select>
 		
 		
 </mapper>

@@ -212,7 +212,7 @@ public class Smserviceimp implements Smservice{
 		Shortmessage shor = new Shortmessage();
 		shor.setPhonesa(phon);
 		shor.setCompanyid(sm.getCompanyid());
-		shor.setCollection_time(Timestamps.stampToDate1(sm.getStatu_time()));
+		shor.setSend_time(Timestamps.stampToDate1(sm.getStatu_time()));
 		shor.setPhonenum(phones.size());
 		List<Shortmessage> sho = new ArrayList<Shortmessage>();
 		shor.setShortmessagesize(sdao.SelectTimeSize(shor));
