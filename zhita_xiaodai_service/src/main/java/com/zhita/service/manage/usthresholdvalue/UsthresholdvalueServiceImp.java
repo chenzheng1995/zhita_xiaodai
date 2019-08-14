@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.UsersourceThresholdvalueMapper;
 import com.zhita.util.DateListUtil;
@@ -65,6 +66,7 @@ public class UsthresholdvalueServiceImp implements IntUsthresholdvalueService{
 	}
 	
 	//修改最大阀值
+	@Transactional
 	public int upamaxthresholdvalue(Integer maxthresholdvalue){
 		int num=usersourceThresholdvalueMapper.upamaxthresholdvalue(maxthresholdvalue);
 		return num;

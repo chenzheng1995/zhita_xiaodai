@@ -83,6 +83,7 @@ public class SourceServiceImp implements IntSourceService{
     }
     
     //后台管理---添加功能
+    @Transactional
     public int insert(Source record){
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
@@ -108,6 +109,7 @@ public class SourceServiceImp implements IntSourceService{
     }
     
     //后台管理---编辑功能
+    @Transactional
     public int updateByPrimaryKey(Source record) throws ParseException{
     	Integer companyId=record.getCompanyid();
     	String templateName = record.getName();
@@ -217,6 +219,7 @@ public class SourceServiceImp implements IntSourceService{
     }
     
     //后台管理---根据id  对当前对象的假删除状态进行修改
+    @Transactional
     public int updateFalDel(Integer id){
     	int num=sourceMapper.updateFalDel(id);
     	return num;

@@ -3,6 +3,8 @@ package com.zhita.dao.manage;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.core.annotation.Order;
+
 import com.zhita.model.manage.Drainage_of_platform;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -120,5 +122,17 @@ public interface OperationalMapper {
 	
 	
 	Orders OrderHuan(Orderdetails ord);
+	
+	
+	Orders OneCollectionData(Orderdetails ord);
+	
+	
+	Integer CollectionOrders(Orderdetails ord);
+	
+	
+	Integer CollectionNumSSA(Orderdetails ord);
+	
+	
+	Integer OrderOKCollection(Orderdetails ord);
 	
 }

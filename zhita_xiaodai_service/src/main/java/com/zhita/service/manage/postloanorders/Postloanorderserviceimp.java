@@ -2,6 +2,7 @@ package com.zhita.service.manage.postloanorders;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
+import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
@@ -37,7 +39,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> allpostOrders(Orderdetails details) {
 		PhoneDeal p = new PhoneDeal();
-		if(details.getPhone() != null){
+		if(details.getPhone().length() != 0){
 			details.setPhone(p.encryption(details.getPhone()));
 		}
 		try {
@@ -84,7 +86,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> allpostOrdersBeoverdue(Orderdetails details) {
 		PhoneDeal p = new PhoneDeal();
-		if(details.getPhone() != null){
+		if(details.getPhone().length() != 0){
 			details.setPhone(p.encryption(details.getPhone()));
 		}
 		try {
@@ -118,7 +120,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			// TODO: handle exception
 		}
 		TuoMinUtil tm = new TuoMinUtil();
-		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
+		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
 			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
 			if(nodeid.size() != 0){
 				order.setIds(nodeid);
@@ -159,32 +161,34 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		TuoMinUtil tm = new TuoMinUtil();
-		try {
-			order.setShouldReturnTime(System.currentTimeMillis()+"");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		Integer totalCount = postloanorder.WeiNum(order.getShouldReturnTime());
-		
-		if(totalCount != null){
-			PageUtil pages = new PageUtil(order.getPage(), totalCount);
-			order.setPage(pages.getPage());
-		}else{
-			PageUtil pages = new PageUtil(order.getPage(), 0);
-			order.setPage(pages.getPage());
-		}
+		System.out.println(order.getCompanyId());
+		System.out.println(order.getPage()+"CCCC");
+		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
+		System.out.println(totalCount);
+		PageUtil pages = new PageUtil(order.getPage(), totalCount);
+		order.setPage(pages.getPage());
 		List<Orderdetails> ordeids = postloanorder.AOrderDetails(order);//获取未逾期已分配订单
 		for(int i=0;i<ordeids.size();i++){
-			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));
-			ordeids.get(i).setCollectionTime(Timestamps.stampToDate(ordeids.get(i).getCollectionTime()));
-			ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
-			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
-			ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
-			Deferred defe =  coldao.DefNum(ordeids.get(i).getOrderId());
+			Orderdetails ord = new Orderdetails();
+			ord.setOrderId(ordeids.get(i).getId());
+			ord.setCompanyId(order.getCompanyId());
+			Deferred defe = postloanorder.OneDeferred(ord);//获取延期后应还时间 
+			if(defe.getDeferAfterReturntime()!=null){
+				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));//延期后应还时间
+			}else{
+				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
+			}
+			defe = coldao.DefNum(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
+			ordeids.get(i).setDeferAfterReturntime(defe.getDeferAfterReturntime());
 			ordeids.get(i).setDefeNum(defe.getId());
-			String op = p.decryption(ordeids.get(i).getPhone());
-			ordeids.get(i).setPhone(tm.mobileEncrypt(op));
 			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());
+			String jiephone = p.decryption(ordeids.get(i).getPhone());//解密手机号
+			ordeids.get(i).setPhone(tm.mobileEncrypt(jiephone));//脱敏
+			
+			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));//时间转译  订单时间
+			ordeids.get(i).setShouldReturnTime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));//延期前应还时间
+		
+			ordeids.get(i).setCollectiondate(Timestamps.stampToDate(ordeids.get(i).getCollectiondate()));//分配时间
 		}
 		map.put("Orderdetails", ordeids);
 		return map;
@@ -195,61 +199,123 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> CollectionRecovery(Orderdetails order) {
-		order.setShouldReturnTime(System.currentTimeMillis()+"");
-		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
-		}
-		try {
-			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		List<Collection> totalCount = postloanorder.DateNum(order);
-		Integer asa = null;
-		if(totalCount.size() != 0){
-			asa = totalCount.size();
-		}else{
-			asa = 0;
-		}
-		PageUtil pages = new PageUtil(order.getPage(), asa);
-		order.setPage(pages.getPage());
-		List<Collection> cols = postloanorder.CollDateNum(order);
-		for(int i=0;i<cols.size();i++){
-			order.setCollectiondate(cols.get(i).getCollectiondate());
-			Integer OrderIdNum = postloanorder.OrderIdNum(order);//订单总数
-			order.setIds(coldao.SelectCollectionId(order.getCompanyId()));
-			List<Integer> OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
-			if(OrderIdNum != null && OverIdNum.size() != 0){
-				cols.get(i).setDialNum(OrderIdNum-OverIdNum.size());
-			}else{
-				cols.get(i).setDialNum(OverIdNum.size());
+//		order.setShouldReturnTime(System.currentTimeMillis()+"");
+//		PhoneDeal p = new PhoneDeal();
+//		if(order.getPhone() != null){
+//			order.setPhone(p.encryption(order.getPhone()));
+//		}
+//		try {
+//			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+//			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		List<Collection> totalCount = postloanorder.DateNum(order);
+//		Integer asa = null;
+//		if(totalCount.size() != 0){
+//			asa = totalCount.size();
+//		}else{
+//			asa = 0;
+//		}
+//		PageUtil pages = new PageUtil(order.getPage(), asa);
+//		order.setPage(pages.getPage());
+//		List<Collection> cols = postloanorder.CollDateNum(order);
+//		for(int i=0;i<cols.size();i++){
+//			order.setCollectiondate(cols.get(i).getCollectiondate());
+//			Integer OrderIdNum = postloanorder.OrderIdNum(order);//订单总数
+//			order.setIds(coldao.SelectCollectionId(order.getCompanyId()));
+//			List<Integer> OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
+//			if(OrderIdNum != null && OverIdNum.size() != 0){
+//				cols.get(i).setDialNum(OrderIdNum-OverIdNum.size());
+//			}else{
+//				cols.get(i).setDialNum(OverIdNum.size());
+//			}
+//			
+//			try {
+//				order.setCollectionTime(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//			order.setOverdue_phonestaus("未接通");
+//			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
+//			order.setOverdue_phonestaus("已接通");
+//			cols.get(i).setConnected(postloanorder.connectedNum(order));
+//			order.setOrderStatus("3");
+//			cols.get(i).setSameday(postloanorder.StatusOrders(order));
+//			order.setOrderStatus("0");
+//			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
+//			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
+//				NumberFormat numberFormat = NumberFormat.getInstance();
+//				numberFormat.setMaximumFractionDigits(2);
+//				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
+//			}else{
+//				cols.get(i).setPaymentmadeData("0");
+//			}
+//			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
+//		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Collection> cols = new ArrayList<Collection>();
+		if(order.getStart_time()!=null){
+			List<String> stimes = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
+			for(int i=0;i<stimes.size();i++){
+				order.setStart_time(stimes.get(i)+" 00:00:00");
+				order.setEnd_time(stimes.get(i)+" 23:59:59");
+				try {
+					order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+					order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				Collection co = postloanorder.CollTimeData(order);//已分配总数    collection_count
+				co.setCollectiondate(stimes.get(i));//日期
+				order.setOverdue_phonestaus("未接通");
+				co.setNotconnected(postloanorder.connectedNum(order));
+				order.setOverdue_phonestaus("已接通");
+				co.setConnected(postloanorder.connectedNum(order));
+				order.setOrderStatus("3");
+				co.setSameday(postloanorder.StatusOrders(order));//当天还款数
+				order.setOrderStatus("0");
+				co.setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+				if(co.getPaymentmade() != 0 && co.getCollection_count() != 0){
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					numberFormat.setMaximumFractionDigits(2);
+					co.setPaymentmadeData(numberFormat.format((float) co.getPaymentmade() / (float) (co.getPaymentmade()+co.getSameday()) * 100));
+				}else{
+					co.setPaymentmadeData("0");
+				}
+				cols.add(co);
 			}
-			
+		}else{
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			String stimes = sim.format(new Date());
+			order.setStart_time(stimes+" 00:00:00");
+			order.setEnd_time(stimes+" 23:59:59");
 			try {
-				order.setCollectionTime(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+			Collection co = postloanorder.CollTimeData(order);//未分配总数    collection_count
+			co.setCollectiondate(stimes);//日期
 			order.setOverdue_phonestaus("未接通");
-			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
+			co.setNotconnected(postloanorder.connectedNum(order));//未接通
 			order.setOverdue_phonestaus("已接通");
-			cols.get(i).setConnected(postloanorder.connectedNum(order));
+			co.setConnected(postloanorder.connectedNum(order));//已接通
 			order.setOrderStatus("3");
-			cols.get(i).setSameday(postloanorder.StatusOrders(order));
+			co.setSameday(postloanorder.StatusOrders(order));//当天还款数
 			order.setOrderStatus("0");
-			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
-			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
+			co.setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+			if(co.getPaymentmade() != 0 && co.getCollection_count() != 0){
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
-				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
+				co.setPaymentmadeData(numberFormat.format((float) co.getPaymentmade() / (float) (co.getPaymentmade()+co.getSameday()) * 100));
 			}else{
-				cols.get(i).setPaymentmadeData("0");
+				co.setPaymentmadeData("0");
 			}
-			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
+			cols.add(co);
+			
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
  		return map;
 	}
@@ -259,61 +325,91 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> OverdueUser(Orderdetails order) {
-		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
-		}
-		try {
-			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
-			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		List<Collection> totalCount = postloanorder.MemberNum(order);
-		Integer asa = null;
-		if(totalCount.size() != 0){
-			asa = totalCount.size();
-		}else{
-			asa = 0;
-		}
-		PageUtil pages = new PageUtil(order.getPage(), asa);
-		order.setPage(pages.getPage());
-		List<Collection> cols = postloanorder.MemberName(order);
-		System.out.println(cols.size());
-		Calendar calendar = Calendar.getInstance();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		for(int i=0;i<cols.size();i++){
-			System.out.println("时间:"+cols.get(i).getCollectiondate());
-			//order.setCollectiondate(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
-			try {
-				calendar.add(Integer.valueOf(cols.get(i).getCollectiondate()), +1);
-				Date date = calendar.getTime();
-				order.setEnd_time(sim.format(date));
-				order.setStart_time(order.getCollectiondate());
-				order.setCollectiondate(cols.get(i).getCollectiondate());
-			} catch (Exception e) {
-				// TODO: handle exception
+//		PhoneDeal p = new PhoneDeal();
+//		try {
+//			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+//			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		List<Collection> totalCount = postloanorder.MemberNum(order);
+//		Integer asa = null;
+//		if(totalCount.size() != 0){
+//			asa = totalCount.size();
+//		}else{
+//			asa = 0;
+//		}
+//		PageUtil pages = new PageUtil(order.getPage(), asa);
+//		order.setPage(pages.getPage());
+//		List<Collection> cols = postloanorder.MemberName(order);
+//		System.out.println(cols.size());
+//		Calendar calendar = Calendar.getInstance();
+//		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		for(int i=0;i<cols.size();i++){
+//			System.out.println("时间:"+cols.get(i).getCollectiondate());
+//			//order.setCollectiondate(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
+//			try {
+//				calendar.add(Integer.valueOf(cols.get(i).getCollectiondate()), +1);
+//				Date date = calendar.getTime();
+//				order.setEnd_time(sim.format(date));
+//				order.setStart_time(order.getCollectiondate());
+//				order.setCollectiondate(cols.get(i).getCollectiondate());
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//			
+//			order.setCollectionMemberId(cols.get(i).getCollectionMemberId());
+//			order.setOverdue_phonestaus("未接通");
+//			cols.get(i).setNotconnected(postloanorder.Userphonestaus(order));
+//			order.setOverdue_phonestaus("已接通");
+//			cols.get(i).setConnected(postloanorder.Userphonestaus(order));
+//			order.setOrderStatus("0");
+//			cols.get(i).setSameday(postloanorder.UserOrderStatu(order));
+//			order.setOrderStatus("3");
+//			cols.get(i).setPaymentmade(postloanorder.UserOrderStatu(order));
+//			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
+//				NumberFormat numberFormat = NumberFormat.getInstance();
+//				numberFormat.setMaximumFractionDigits(2);
+//				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
+//			}else{
+//				cols.get(i).setPaymentmadeData("0");
+//			}
+//			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
+//		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Collection> cols = new ArrayList<Collection>();
+		if(order.getStart_time()!=null){
+			List<String> stimes = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
+			for(int i=0;i<stimes.size();i++){
+				order.setStart_time(stimes.get(i)+" 00:00:00");
+				order.setEnd_time(stimes.get(i)+" 23:59:59");
+				try {
+					order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+					order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				List<Collection> co = postloanorder.CollectionYIData(order);
+				order.setOverdue_phonestaus("未接通");
+				co.setNotconnected(postloanorder.connectedNum(order));
+				order.setOverdue_phonestaus("已接通");
+				co.setConnected(postloanorder.connectedNum(order));
+				order.setOrderStatus("3");
+				co.setSameday(postloanorder.StatusOrders(order));//当天还款数
+				order.setOrderStatus("0");
+				co.setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+				if(co.getPaymentmade() != 0 && co.getCollection_count() != 0){
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					numberFormat.setMaximumFractionDigits(2);
+					co.setPaymentmadeData(numberFormat.format((float) co.getPaymentmade() / (float) (co.getPaymentmade()+co.getSameday()) * 100));
+				}else{
+					co.setPaymentmadeData("0");
+				}
+				
 			}
 			
-			order.setCollectionMemberId(cols.get(i).getCollectionMemberId());
-			order.setOverdue_phonestaus("未接通");
-			cols.get(i).setNotconnected(postloanorder.Userphonestaus(order));
-			order.setOverdue_phonestaus("已接通");
-			cols.get(i).setConnected(postloanorder.Userphonestaus(order));
-			order.setOrderStatus("0");
-			cols.get(i).setSameday(postloanorder.UserOrderStatu(order));
-			order.setOrderStatus("3");
-			cols.get(i).setPaymentmade(postloanorder.UserOrderStatu(order));
-			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
-				NumberFormat numberFormat = NumberFormat.getInstance();
-				numberFormat.setMaximumFractionDigits(2);
-				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
-			}else{
-				cols.get(i).setPaymentmadeData("0");
-			}
-			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
+			
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Collection", cols);
 		return map;
 	}
@@ -379,7 +475,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> UpdateOrder(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
+		if(order.getPhone().length() != 0){
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -416,31 +512,42 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
+		System.out.println("手机号:"+order.getPhone()+"手机字段数:"+order.getPhone().length());
+		if(order.getPhone().length() != 0){
 			order.setPhone(p.encryption(order.getPhone()));
 		}
-		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+		
+		// && order.getStart_time()!=null && order.getEnd_time()!=null
+		System.out.println(order);
+		System.out.println("111："+order.getStart_time()+"222:"+order.getEnd_time());
+		if(order.getStart_time() != null && order.getEnd_time()!=null && !"".equals(order.getStart_time()) && !"".equals(order.getEnd_time())){
 			try {
 				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
 				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+		}
+		
+		if(!"".equals(order.getDeferBeforeReturntimeStatu_time()) && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && !"".equals(order.getDeferBeforeReturntimeEnd_time())){
 			try {
 				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
 				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+		}
+		
+		if(order.getDeferAfterReturntimeStatu_time()!=null && !"".equals(order.getDeferAfterReturntimeStatu_time()) && order.getDeferAfterReturntimeEnd_time()!=null && !"".equals(order.getDeferAfterReturntimeEnd_time())){
 			try {
 				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
 				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+		}
+		
+		if(order.getRealtimeStatu_time()!=null && !"".equals(order.getRealtimeStatu_time())  && order.getRealtimeEnd_time()!=null && !"".equals(order.getRealtimeEnd_time())){
 			try {
 				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
 				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
@@ -487,7 +594,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
+		if(order.getPhone() != null && order.getPhone().length()!=0){
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		
@@ -553,7 +660,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
+		if(order.getPhone().length() != 0){
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();

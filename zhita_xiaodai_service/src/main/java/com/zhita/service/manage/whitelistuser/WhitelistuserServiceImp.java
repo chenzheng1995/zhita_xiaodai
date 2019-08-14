@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.dao.manage.SysUserMapper;
@@ -70,6 +71,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     }
     
     //后台管理---添加操作
+    @Transactional
     public int insert(WhitelistUser record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=whitelistUserMapper.insert(record);
@@ -84,6 +86,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     }
     
     //后台管理---更新保存功能
+    @Transactional
     public int updateByPrimaryKey(WhitelistUser record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=whitelistUserMapper.updateByPrimaryKey(record);
@@ -91,6 +94,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     }
     
     //后台管理---更新假删除状态
+    @Transactional
     public int upaFalseDel(Integer id){
     	int num=whitelistUserMapper.upaFalseDel(id);
     	return num;
@@ -99,6 +103,7 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
     /**
      * 批量导入Excel
      */
+    @Transactional
     public String ajaxUploadExcel(MultipartFile file,Integer companyId,Integer operator){
 	       /* MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 	        MultipartFile file = multipartRequest.getFile("excelFile");*/

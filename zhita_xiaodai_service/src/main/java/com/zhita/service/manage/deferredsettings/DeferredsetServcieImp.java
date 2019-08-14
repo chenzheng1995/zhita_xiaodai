@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.DeferredSettingsMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -29,7 +30,6 @@ public class DeferredsetServcieImp implements IntDeferredsetService{
     		list.get(i).setOncedeferredday(borr.getLifeofloan());
     		list.get(i).setOncedeferredmoney(borr.getCanborrowlines().multiply(new BigDecimal(borr.getPlatformfeeratio())).divide(new BigDecimal(100)));
 		}
-    	
     	return list;
     }
     
@@ -58,6 +58,7 @@ public class DeferredsetServcieImp implements IntDeferredsetService{
     }
     
     //后台管理---修改保存功能
+    @Transactional
     public int updateByPrimaryKey(DeferredSettings record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=deferredSettingsMapper.updateByPrimaryKey(record);

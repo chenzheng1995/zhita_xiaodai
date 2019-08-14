@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
 
 import com.zhita.model.manage.Collection;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
 
@@ -29,7 +30,7 @@ public interface PostloanorderMapper {
 	List<Orderdetails> SelectOrderDetails(Orderdetails order);
 	
 	
-	Integer WeiNum(String shouldReturnTime);
+	Integer WeiNum(Integer companyId);
 	
 	
 	List<Integer> CollMemberId(Integer companyId);
@@ -120,4 +121,14 @@ public interface PostloanorderMapper {
 	
 	
 	List<Integer> OvOrderId(Integer companyId);
+	
+	
+	
+	Deferred OneDeferred(Orderdetails orde);
+	
+	
+	Collection CollTimeData(Orderdetails orde);
+	
+	
+	List<Collection> CollectionYIData(Orderdetails orde);
 }

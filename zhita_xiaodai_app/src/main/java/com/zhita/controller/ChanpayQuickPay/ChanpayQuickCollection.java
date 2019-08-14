@@ -688,7 +688,8 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
-			repay.setPipelinenumber(retu.getTrxId());
+			String pipelinenu = "rsn_"+retu.getTrxId();
+			repay.setPipelinenumber(pipelinenu);
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
 				repay.setStatu("成功");
@@ -701,6 +702,7 @@ public class ChanpayQuickCollection {
 				map.put("TrxId", TrxId);
 				map.put("code", 0);
 			}
+			repay.setPipelinenumber(TrxId);
 			chanser.AddRepayment(repay);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -726,7 +728,8 @@ public class ChanpayQuickCollection {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_quick_payment_smsconfirm");// 请求的接口名称
 		// 2.2 业务参数
-		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());//订单号
+		String trxId = ChanPayUtil.generateOutTradeNo();
+		origMap.put("TrxId", trxId);//订单号
 		origMap.put("OriPayTrxId", OriPayTrxId);// 原有支付请求订单号
 		origMap.put("SmsCode", SmsCode);// 短信验证码
 		String result = "";

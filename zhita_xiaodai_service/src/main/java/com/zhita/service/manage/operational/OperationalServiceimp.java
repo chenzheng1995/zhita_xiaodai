@@ -292,18 +292,20 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
 			if(orders.getGesamtbetraguberfallNum()==null){
-				orders.setGesamtbetraguberfallNum(0);
+				ord.setGesamtbetraguberfallNum(0);
 			}
 			
 			if(orders.getGesamtbetragderNum()==null){
-				orders.setGesamtbetragderNum(0);
+				ord.setGesamtbetragderNum(0);
 			}
 			System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
 			NumberFormat numberFormat = NumberFormat.getInstance();
 			numberFormat.setMaximumFractionDigits(2);
 			System.out.println(orders.getGesamtbetraguberfallNum()+"AAA"+orders.getGesamtbetragderNum());
 			orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
-			orde.add(orders);
+			orde.add(ord);
+			System.out.println("时间:"+ord.getRemittanceTime());
+			map.put("Repayment", orde);
 			map.put("PageUtil", pages);
 		}else{
 			List<String> stime = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
@@ -348,84 +350,135 @@ public class OperationalServiceimp implements OperationalService{
 					System.out.println(or.getGesamtbetraguberfalligerBetrag());
 					
 				}
+				if(orders.getZahlderGesamtdarlehen() == null){
+					orders.setZahlderGesamtdarlehen(0);
+				}
 				
 				
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
 				
-				System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
 				ord.setRemittanceTime(stime.get(i));
+				System.out.println("时间:"+ord.getRemittanceTime());
 				if(orders.getGesamtbetraguberfallNum()==null){
-					orders.setGesamtbetraguberfallNum(0);
+					ord.setGesamtbetraguberfallNum(0);
 				}
 				
 				if(orders.getGesamtbetragderNum()==null){
-					orders.setGesamtbetragderNum(0);
+					ord.setGesamtbetragderNum(0);
 				}
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
 				orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
-				orde.add(orders);
+				orde.add(ord);
 				map.put("PageUtil", pages);
+				map.put("Repayment", orde);
 			}
 		}
-		
-		map.put("Repayment", orde);
 		return map;
+		
+		
 	}
 
 
 
 	@Override
 	public Map<String, Object> CollectionData(Orderdetails orde) {
-		try {
-			orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
-			orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		Integer totalCount = operdao.CollectionDataNum(orde);
-		PageUtil pages = new PageUtil(orde.getPage(), totalCount);
-		orde.setPage(pages.getPage());
+//		try {
+//			orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
+//			orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		Integer totalCount = operdao.CollectionDataNum(orde);
+//		PageUtil pages = new PageUtil(orde.getPage(), totalCount);
+//		orde.setPage(pages.getPage());
+//		List<Orders> ordesa = operdao.CollectionDatas(orde);
+//		for(int i=0;i<ordesa.size();i++){
+//			if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() != null){
+//				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans().add(ordesa.get(i).getInterestPenaltySum()));
+//			}else if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() == null){
+//				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans());
+//			}else if(ordesa.get(i).getMakeLoans() == null && ordesa.get(i).getInterestPenaltySum() != null){
+//				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getInterestPenaltySum());
+//			}
+//			
+//			Orders or = new Orders();
+//			orde.setOrderCreateTime(ordesa.get(i).getOrderCreateTime());
+//			List<Integer> ordIds = operdao.Beoverdue(orde);
+//			
+//			or = operdao.Pressformoney(orde);
+//			ordesa.get(i).setPassrate(or.getPressformoney());//催收次数
+//			ordesa.get(i).setBeoverdue(ordIds.size());//催收笔数
+//			
+//			
+//			orde.setCollectionStatus("承诺还款");
+//			or = operdao.Pressformoney(orde);
+//			ordesa.get(i).setChenggNum(or.getPressformoney());//成功数
+//			
+//			
+//			
+//			if(ordesa.get(i).getChenggNum() != null && ordesa.get(i).getChenggNum() != 0){
+//				ordesa.get(i).setChenggData(ordesa.get(i).getBeoverdue()/ordesa.get(i).getChenggNum());//催收成功率
+//			}else{
+//				ordesa.get(i).setChenggData(0);;//催收成功率
+//			}
+//			
+//			orde.setCollectionStatus("态度恶劣");
+//			ordesa.get(i).setBaddebt(operdao.SelecNumberCollection(orde));//查询坏账数
+//			ordesa.get(i).setOrderCreateTime(Timestamps.stampToDate(ordesa.get(i).getOrderCreateTime()));
+//		}
+//		map.put("PageUtil", pages);
+//		map.put("Orderdetails", ordesa);
 		List<Orders> ordesa = operdao.CollectionDatas(orde);
-		for(int i=0;i<ordesa.size();i++){
-			if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() != null){
-				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans().add(ordesa.get(i).getInterestPenaltySum()));
-			}else if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() == null){
-				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans());
-			}else if(ordesa.get(i).getMakeLoans() == null && ordesa.get(i).getInterestPenaltySum() != null){
-				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getInterestPenaltySum());
+		if(orde.getStart_time()!=null){
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			String stime = sim.format(new Date());
+			orde.setStart_time(stime+" 00:00:00");
+			orde.setEnd_time(stime+" 23:59:59");
+			try {
+				orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
+				orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
 			}
-			
-			Orders or = new Orders();
-			orde.setOrderCreateTime(ordesa.get(i).getOrderCreateTime());
-			List<Integer> ordIds = operdao.Beoverdue(orde);
-			
-			or = operdao.Pressformoney(orde);
-			ordesa.get(i).setPassrate(or.getPressformoney());//催收次数
-			ordesa.get(i).setBeoverdue(ordIds.size());//催收笔数
-			
-			
-			orde.setCollectionStatus("承诺还款");
-			or = operdao.Pressformoney(orde);
-			ordesa.get(i).setChenggNum(or.getPressformoney());//成功数
-			
-			
-			
-			if(ordesa.get(i).getChenggNum() != null && ordesa.get(i).getChenggNum() != 0){
-				ordesa.get(i).setChenggData(ordesa.get(i).getBeoverdue()/ordesa.get(i).getChenggNum());//催收成功率
-			}else{
-				ordesa.get(i).setChenggData(0);;//催收成功率
+			Orders ord = operdao.OneCollectionData(orde);//获取逾期笔数   逾期金额    逾期罚息
+			ord.setPassrate(operdao.CollectionNumSSA(orde));//催收次数
+			ord.setBeoverdue(operdao.CollectionOrders(orde));//催收笔数
+			orde.setOrderStatus("4");
+			ord.setBaddebt(operdao.OrderOKCollection(orde));//查询坏账数
+			orde.setOrderStatus("3");
+			ord.setChenggNum(operdao.OrderOKCollection(orde));//成功数
+			ord.setOrderCreateTime(stime);
+			ordesa.add(ord);
+			map.put("Orderdetails", ordesa);
+		}else{
+			List<String> stimes = DateListUtil.getDays(orde.getStart_time(), orde.getEnd_time());
+			for(int i = 0;i<stimes.size();i++){
+				orde.setStart_time(stimes.get(i)+" 00:00:00");
+				orde.setEnd_time(stimes.get(i)+" 23:59:59");
+				try {
+					orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
+					orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				Orders ord = operdao.OneCollectionData(orde);//获取逾期笔数   逾期金额    逾期罚息
+				ord.setPassrate(operdao.CollectionNumSSA(orde));//催收次数
+				ord.setBeoverdue(operdao.CollectionOrders(orde));//催收笔数
+				orde.setOrderStatus("4");
+				ord.setBaddebt(operdao.OrderOKCollection(orde));//查询坏账数
+				orde.setOrderStatus("3");
+				ord.setChenggNum(operdao.OrderOKCollection(orde));//成功数
+				ord.setOrderCreateTime(stimes.get(i));
+				ordesa.add(ord);
+				map.put("Orderdetails", ordesa);
 			}
-			
-			orde.setCollectionStatus("态度恶劣");
-			ordesa.get(i).setBaddebt(operdao.SelecNumberCollection(orde));//查询坏账数
-			ordesa.get(i).setOrderCreateTime(Timestamps.stampToDate(ordesa.get(i).getOrderCreateTime()));
 		}
-		map.put("PageUtil", pages);
-		map.put("Orderdetails", ordesa);
+		
 		return map;
 	}
 

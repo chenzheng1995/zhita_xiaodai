@@ -3,6 +3,8 @@ package com.zhita.service.manage.role;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zhita.model.manage.Functions;
 import com.zhita.model.manage.Role;
 
@@ -32,6 +34,7 @@ public interface IntRoleService {
     public int updateStatus(Integer id,String status);
     
     //admin-----角色——修改假删除状态
+    @Transactional
     public int upaFalseDel(Integer roleid);
     
 }

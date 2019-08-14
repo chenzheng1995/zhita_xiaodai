@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.LoanThresholdvalueMapper;
 import com.zhita.util.DateListUtil;
@@ -69,6 +70,7 @@ public class LoanthresholdvalueServiceImp implements IntLoanthresholdvalueServic
 	}
 	
 	//修改最大阀值
+	@Transactional
 	public int upamaxthresholdvalue(Integer maxthresholdvalue){
 		int num=loanThresholdvalueMapper.upamaxthresholdvalue(maxthresholdvalue);
 		return num;
@@ -102,6 +104,7 @@ public class LoanthresholdvalueServiceImp implements IntLoanthresholdvalueServic
 	}
 	
 	//后台管理----修改放款渠道状态
+	@Transactional
     public int upaloanstatus(String status,Integer companyId){
     	int num= loanThresholdvalueMapper.upaloanstatus(status,companyId);
     	return num;

@@ -266,7 +266,6 @@
 				<if test="orderNumber != null and orderNumber != ''">
 					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')    
 				</if>
-				AND col.collectionMemberId = #{collectionMemberId}
 				AND o.companyId = #{companyId} 
 				AND col.collectionStatus is null
 			</where>

@@ -286,4 +286,20 @@
 				SELECT deferAfterReturntime from deferred where id = (SELECT max(id) FROM deferred WHERE orderid = #{orderId});
 			</select>
 			
+			
+			<select id="SelectLoanStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select status from loan_setting where companyId = #{companyId}
+			</select>
+			
+			
+			<select id="SelectMaxMoney" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select maxthresholdvalue from loan_thresholdvalue where companyId = #{companyId}
+			</select>
+			
+			
+			<select id="SumPayMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.math.BigDecimal">
+				select sum(pay.paymentmoney) from payment_record pay,orders o where o.id = pay.orderId and o.companyId = #{companyId}
+				 pay.remittanceTime between #{start_time} and #{end_time}
+			</select>
+			
 </mapper>

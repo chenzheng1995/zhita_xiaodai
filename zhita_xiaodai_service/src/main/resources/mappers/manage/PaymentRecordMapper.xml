@@ -329,16 +329,16 @@
   			
   			
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
+  			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,so.sourceName as drainageOfPlatformName,o.riskmanagementFraction,
 					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,u.riskControlPoints,u.delayTimes,
-					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
+					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,o.shouldReturnTime as deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
 					ord.interestPenaltySum,o.realtime 
   			 		from orders o left join user u on o.userId = u.id
 					left join orderdetails ord on o.id = ord.orderId
 					left join payment_record pay ON pay.orderId = o.id
 					left join deferred defe on defe.orderid = o.id 
 					left join deferred_settings defeset on defeset.companyId = o.companyId 
-					left join drainage_of_platform d on d.id = u.drainageOfPlatformId 
+					left join source so on so.id = u.sourceId
   			 		<where>
   			 			pay.orderId =#{orderId} 
   			 			AND o.companyId = #{companyId}
@@ -351,27 +351,24 @@
   
   
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.drainageOfPlatformName,o.riskmanagementFraction,
-					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,
-					o.borrowTimeLimit, ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferBeforeReturntime,defe.deferAfterReturntime,
-					ord.InterestSum,pay.pipelinenumber, ord.interestPenaltySum,o.realtime,ur.idcard_number from 
-					drainage_of_platform d,user u,orders o,orderdetails ord,deferred defe,deferred_settings defeset, payment_record pay,user_attestation ur 
+  					select o.orderStatus,ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,
+  					o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
+  					o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber
+					from source d,user u,orders o,orderdetails ord,user_attestation us,payment_record pay
   					<where>
   					 o.orderStatus not like "3" 
+  					 and pay.orderId = o.id
+  					 and us.userId = u.id
   					 AND o.userId = u.id  
   					 AND o.id = ord.orderId 
-  					 AND defe.orderid = o.id 
-  					 AND defeset.companyId = o.companyId 
-  					 AND pay.orderId = o.id 
-					AND ur.userId = u.id 
-					AND d.id = u.drainageOfPlatformId 
+					AND d.id = u.sourceId 
+					AND o.companyId = #{companyId}
   			 			<if test="phone != null and phone != ''">
   			 				AND u.phone = #{phone}
   			 			</if>
   			 			<if test="idcard_number != null and idcard_number != ''">
-  			 				AND ur.idcard_number = #{idcard_number}
+  			 				AND us.idcard_number = #{idcard_number}
   			 			</if>
-  			 			AND d.companyId = #{companyId}
   					</where>
   					group by ord.orderId
   			</select>
@@ -962,5 +959,10 @@
   			
   			<select id="LoanName" parameterType="java.lang.Integer" resultType="java.lang.String">
   				select name from loan_setting where id = #{channel}
+  			</select>
+  			
+  			
+  			<select id="DeferrAdefe" parameterType="java.lang.Integer" resultType="java.lang.String">
+  				select deferAfterReturntime from deferred where orderid = #{orderid}
   			</select>
 </mapper>

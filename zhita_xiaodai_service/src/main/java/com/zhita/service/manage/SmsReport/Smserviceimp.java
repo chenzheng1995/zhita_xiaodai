@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.dao.manage.SmsMapper;
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
@@ -152,7 +153,6 @@ public class Smserviceimp implements Smservice{
 		String d = a+" 23:59:59";
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> phones = null;
-		Date dete = null;
 		if(sm.getBiaoshi()==0){
 			try {
 				sm.setStatu_time(Timestamps.dateToStamp1(c));
@@ -203,9 +203,14 @@ public class Smserviceimp implements Smservice{
 				// TODO: handle exception
 			}
 		}
+		List<String> phon = new ArrayList<String>();
 		phones = sdao.AllPhone(sm);
+		PhoneDeal p = new PhoneDeal();
+		for(int i=0;i<phones.size();i++){
+			phon.add(p.decryption(phones.get(i)));
+		}
 		Shortmessage shor = new Shortmessage();
-		shor.setPhonesa(phones);
+		shor.setPhonesa(phon);
 		shor.setCompanyid(sm.getCompanyid());
 		shor.setCollection_time(Timestamps.stampToDate1(sm.getStatu_time()));
 		shor.setPhonenum(phones.size());
@@ -229,11 +234,14 @@ public class Smserviceimp implements Smservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> phones = sdao.AllRegist(companyId);
 		PhoneDeal p = new PhoneDeal();
-		for(int i=0;i<phones.size();i++){
-			phones.add(p.decryption(phones.get(i)));
+		String a = null;
+		List<String> phon = new ArrayList<String>();
+		for (int i = 0; i < phones.size(); i++) {
+			a=p.decryption(phones.get(i));
+			phon.add(a);
 		}
 		Integer phonNum = phones.size();
-		map.put("phones", phones);
+		map.put("phones", phon);
 		map.put("phonNum", phonNum);
 		return map;
 	}
@@ -262,6 +270,7 @@ public class Smserviceimp implements Smservice{
 			map.put("code", "0");
 			map.put("desc", "内容不能为空");
 		}else{
+			
 			SmsSendRequest smsSingleRequest = new SmsSendRequest(account, password, shor.getShort_text(), shor.getPhone(),report);
 
 	        String requestJson = JSON.toJSONString(smsSingleRequest);
@@ -280,6 +289,9 @@ public class Smserviceimp implements Smservice{
 	        if(smsSingleResponse.getErrorMsg().equals("")){
 	        	SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    		shor.setSend_time(sim.format(new Date()));
+	    		if(null == shor.getUser_type()  || shor.getUser_type().equals("")){
+					shor.setUser_type("全部");
+				}
 	    		Integer addId = sdao.AddUserShortmessage(shor);
 	    		if(addId != null){
 	    			map.put("code", 200);

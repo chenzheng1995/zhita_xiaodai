@@ -1,5 +1,6 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
@@ -187,6 +189,21 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public void SelectId(String orderNumber) {
 	Orders	ord = stdao.SelectOrderId(orderNumber);//根据编号查询订单ID
 		System.out.println(ord.getCompanyId()+ord.getId()+ord.getUserId());
+	}
+
+	@Override
+	public String loanSetStatu(Integer companyId) {
+		return stdao.SelectLoanStatus(companyId);
+	}
+
+	@Override
+	public Integer loanMaxMoney(Integer companyId) {
+		return stdao.SelectMaxMoney(companyId);
+	}
+
+	@Override
+	public BigDecimal SumpayMoney(Orderdetails ord) {
+		return stdao.SumPayMoney(ord);
 	}
 	
 	

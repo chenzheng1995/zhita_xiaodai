@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,7 +37,6 @@ public class BlacklistuserController {
 	}
 	
 	//后台管理---添加操作
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(BlacklistUser record){
@@ -63,7 +61,6 @@ public class BlacklistuserController {
     }*/
 	
 	//后台管理---更新假删除状态
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/upaFalseDel")
     public int upaFalseDel(Integer id,Integer userid){
@@ -76,7 +73,6 @@ public class BlacklistuserController {
 	 * @param excelFile
 	 * @return
 	 */
-	@Transactional
 	@ResponseBody
 	@RequestMapping("/importExc")
 	public String importExc(@RequestParam(value="excelFile",required = false) MultipartFile excelFile,Integer companyId,Integer operator) {

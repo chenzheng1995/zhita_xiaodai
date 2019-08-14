@@ -13,7 +13,7 @@
     <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id,productid, companyId, loanType, canBorrowlines, lifeOfLoan, averageDailyInterest, platformfeeRatio, 
+    id,productid, companyId, loanType, canBorrowlines, lifeOfLoan, averageDailyInterest, platformfeeRatio, borrowingScheme,
     operator, operationTime
   </sql>
   <!-- 后台管理         根据id查询当前对象信息 -->
@@ -138,6 +138,7 @@
       lifeOfLoan = #{lifeofloan,jdbcType=INTEGER},
       averageDailyInterest = #{averagedailyinterest,jdbcType=DECIMAL},
       platformfeeRatio = #{platformfeeratio,jdbcType=INTEGER},
+      borrowingScheme = #{borrowingscheme,jdbcType=VARCHAR},
       operator = #{operator,jdbcType=VARCHAR},
       operationTime = #{operationtime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

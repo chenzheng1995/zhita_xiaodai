@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
@@ -415,6 +416,10 @@ public class OrderServiceImp implements IntOrderService{
     		list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
     		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
+    		if(list.get(i).getUser().getOperationTime()==null||"".equals(list.get(i).getUser().getOperationTime())){
+    			list.get(i).getUser().setOperationTime(null);;
+    		}
+    		list.get(i).getUser().setOperationTime(Timestamps.stampToDate(list.get(i).getUser().getOperationTime()));//人审时间
     		
     		list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
     		
@@ -426,7 +431,9 @@ public class OrderServiceImp implements IntOrderService{
 					deferrMoney=deferrMoney.add(listdefer.get(j).getInterestOnArrears());
 				}
 				list.get(i).setDeferrMoney(deferrMoney);
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersMapper.qeuryFinalDefertime(list.get(i).getId())));//延期后还款时间
+				Orders os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
+				list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
 			}
 		}
     	 List<Source> listsource=ordersMapper.querysource(companyId);	
@@ -539,6 +546,7 @@ public class OrderServiceImp implements IntOrderService{
 	/**
 	 * 人审通过按钮
 	 */
+	@Transactional
 	public int updateShareOfState(Integer sysuserid,Integer userid){
 		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 		int num=userMapper.updateShareOfState(sysuserid,operationTime,userid);
@@ -548,6 +556,7 @@ public class OrderServiceImp implements IntOrderService{
 	/**
 	 * 人审不通过按钮
 	 */
+	@Transactional
 	public int updateShareOfStateNo(Integer sysuserid,Integer userid){
 		String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 		int num=userMapper.updateShareOfStateNo(sysuserid,operationTime,userid);

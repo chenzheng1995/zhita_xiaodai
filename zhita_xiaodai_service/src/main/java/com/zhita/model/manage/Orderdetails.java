@@ -219,6 +219,27 @@ public class Orderdetails {
     
     private String riskcontrolname;
     
+    private String sourceName;
+    
+    private Integer riskmanagementFraction;
+    
+    
+	public Integer getRiskmanagementFraction() {
+		return riskmanagementFraction;
+	}
+
+	public void setRiskmanagementFraction(Integer riskmanagementFraction) {
+		this.riskmanagementFraction = riskmanagementFraction;
+	}
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+	}
+
 	public String getRiskcontrolname() {
 		return riskcontrolname;
 	}

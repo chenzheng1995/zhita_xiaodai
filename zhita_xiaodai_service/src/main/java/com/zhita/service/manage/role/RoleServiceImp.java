@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.RoleMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -109,6 +110,7 @@ public class RoleServiceImp implements IntRoleService{
 	}
 	//admin------角色——添加功能
 	@Override
+	@Transactional
 	public int insert(Role record) {
 		int num=roleMapper.insert(record);
 		if(record.getListfunctionIdString()!=null&&!"".equals(record.getListfunctionIdString())){
@@ -233,6 +235,7 @@ public class RoleServiceImp implements IntRoleService{
 	
 	//admin----角色——更新保存功能
 	@Override
+	@Transactional
 	public int updateByPrimaryKey(Role record) {
 		int num=roleMapper.updateByPrimaryKey(record);
 		
@@ -266,6 +269,7 @@ public class RoleServiceImp implements IntRoleService{
 	}
 	
 	//admin----角色——修改状态
+	@Transactional
     public int updateStatus(Integer id,String status){
     	List<Integer> sysidlist=roleMapper.querysysid(id);
     	int num=0;
@@ -284,6 +288,7 @@ public class RoleServiceImp implements IntRoleService{
     }
     
     //admin-----角色——修改假删除状态
+	@Transactional
     public int upaFalseDel(Integer roleid){
     	int num=roleMapper.upaFalseDel(roleid);
     	roleMapper.delfunction(roleid);

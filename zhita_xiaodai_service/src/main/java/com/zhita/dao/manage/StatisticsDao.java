@@ -109,4 +109,13 @@ public interface StatisticsDao {
 	
 	
 	String DefeDefeAfertime(Integer orderId);
+	
+	
+	String SelectLoanStatus(Integer companyId);
+	
+	
+	Integer SelectMaxMoney(Integer companyId);
+	
+	
+	BigDecimal SumPayMoney(Orderdetails ord);
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.ManageControlSettingsMapper;
 import com.zhita.dao.manage.SysUserMapper;
@@ -32,6 +33,7 @@ public class ManconsettingsServiceImp implements IntManconsettingsServcie{
     }
     
     //后台管理---添加功能
+    @Transactional
     public int insert(ManageControlSettings record){
     	int num=manageControlSettingsMapper.insert(record);
     	return num;
@@ -44,6 +46,7 @@ public class ManconsettingsServiceImp implements IntManconsettingsServcie{
     }
     
     //后台管理---编辑保存功能
+    @Transactional
     public int updateByPrimaryKey(ManageControlSettings record){
     	String roatnptfractionalsegment=record.getRoatnptfractionalsegment();//机审拒绝需人审分数段
     	String[] strroat=roatnptfractionalsegment.split("-");
