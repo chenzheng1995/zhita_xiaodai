@@ -128,6 +128,13 @@
       operationTime = #{operationtime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 后台管理      修改单次延期天数    单次延期金额 -->
+  <update id="update">
+    update deferred_settings
+    set oncedeferredday = #{arg0},
+        oncedeferredmoney = #{arg1}
+    where productId = #{arg2}
+  </update>
   <!-- 后台管理        查询延期设置表所有信息 -->
   <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.DeferredSettings">
   	select 

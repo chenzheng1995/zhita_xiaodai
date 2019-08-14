@@ -19,6 +19,8 @@ public class BorrowMoneyMessage {
     private BigDecimal averagedailyinterest;//期限内日均利息
 
     private Integer platformfeeratio;//平台服务费比率
+    
+    private String borrowingscheme;//借款方案（1：先给服务费；2：后给服务费）
 
     private Integer operator;//操作人
 
@@ -88,6 +90,13 @@ public class BorrowMoneyMessage {
 		this.platformfeeratio = platformfeeratio;
 	}
 
+	public String getBorrowingscheme() {
+		return borrowingscheme;
+	}
+
+	public void setBorrowingscheme(String borrowingscheme) {
+		this.borrowingscheme = borrowingscheme;
+	}
 
 	public Integer getOperator() {
 		return operator;
@@ -104,5 +113,5 @@ public class BorrowMoneyMessage {
 	public void setOperationtime(String operationtime) {
 		this.operationtime = operationtime;
 	}
-
+	
 }

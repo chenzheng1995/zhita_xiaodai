@@ -30,7 +30,6 @@ public class DeferredsetServcieImp implements IntDeferredsetService{
     		list.get(i).setOncedeferredday(borr.getLifeofloan());
     		list.get(i).setOncedeferredmoney(borr.getCanborrowlines().multiply(new BigDecimal(borr.getPlatformfeeratio())).divide(new BigDecimal(100)));
 		}
-    	
     	return list;
     }
     

@@ -176,7 +176,9 @@ public class UserServiceImp implements IntUserService{
 					deferrMoney=deferrMoney.add(listdefer.get(j).getInterestOnArrears());
 				}
 				list.get(i).setDeferrMoney(deferrMoney);
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersMapper.qeuryFinalDefertime(list.get(i).getId())));//延期后还款时间
+				Orders os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
+				list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
 			}
 		}
     	 List<Source> listsource=ordersMapper.querysource(companyId);	
@@ -243,7 +245,9 @@ public class UserServiceImp implements IntUserService{
 					deferrMoney=deferrMoney.add(listdefer.get(j).getInterestOnArrears());
 				}
 				list.get(i).setDeferrMoney(deferrMoney);
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersMapper.qeuryFinalDefertime(list.get(i).getId())));//延期后还款时间
+				Orders os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
+				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
+				list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
 			}
     		
 		}

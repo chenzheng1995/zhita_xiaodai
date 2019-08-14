@@ -81,7 +81,7 @@ public interface OrdersMapper {
 	List<DeferredAndOrder> queryDefer(Integer orderid);
 	
 	//后台管理---查询最后延期时间
-	String qeuryFinalDefertime(Integer orderid);
+	Orders qeuryFinalDefertime(Integer orderid);
  
   	//后台管理--查询出sysuser表所有的信息
   	List<SysUser> queryname(Integer companyId);

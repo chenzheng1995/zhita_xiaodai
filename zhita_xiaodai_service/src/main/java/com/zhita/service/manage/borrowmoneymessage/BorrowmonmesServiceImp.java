@@ -1,6 +1,7 @@
 package com.zhita.service.manage.borrowmoneymessage;
 
 import com.zhita.dao.manage.BorrowMoneyMessageMapper;
+import com.zhita.dao.manage.DeferredSettingsMapper;
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.model.manage.BorrowMoneyMessage;
 import com.zhita.model.manage.Company;
@@ -19,6 +20,8 @@ public class BorrowmonmesServiceImp implements IntBorrowmonmesService{
 	private BorrowMoneyMessageMapper borrowMoneyMessageMapper;
 	@Autowired
 	private SysUserMapper sysUserMapper;
+	@Autowired
+	private DeferredSettingsMapper deferredSettingsMapper;
 	
 	//后台管理----查询借款信息表所有信息
     public List<BorrowMoneyMessage> queryAll(Integer companyId){
@@ -51,6 +54,7 @@ public class BorrowmonmesServiceImp implements IntBorrowmonmesService{
     public int updateByPrimaryKey(BorrowMoneyMessage record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	int num=borrowMoneyMessageMapper.updateByPrimaryKey(record);
+    	deferredSettingsMapper.update(record.getLifeofloan(),record.getCanborrowlines().multiply(new BigDecimal(record.getPlatformfeeratio())).divide(new BigDecimal(100)),record.getProductid());
     	return num;
     }
 

@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,9 @@ public interface DeferredSettingsMapper {
     
     //后台管理---修改保存功能
     int updateByPrimaryKey(DeferredSettings record);
+    
+    //后台管理---修改保存功能(修改单次延期天数    单次延期金额)
+    int update(Integer oncedeferredday,BigDecimal oncedeferredmoney,Integer productId);
     
     //后台管理---查询延期设置表所有信息
     List<DeferredSettings> queryAll(Integer companyId);
