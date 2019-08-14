@@ -22,14 +22,25 @@ import javax.imageio.ImageIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.dao.manage.CompanyMapper;
 import com.zhita.model.manage.Source;
+import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
+import com.zhita.service.manage.loanthresholdvalue.IntLoanthresholdvalueService;
+import com.zhita.service.manage.login.IntLoginService;
+import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.source.IntSourceService;
+import com.zhita.service.manage.thirdpartyint.IntThirdpartyintService;
+import com.zhita.service.manage.usthresholdvalue.IntUsthresholdvalueService;
 import com.zhita.util.FolderUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.RedisClientUtil;
+import com.zhita.util.SMSUtil;
+import com.zhita.util.Timestamps;
+import com.zhita.util.YunTongXunUtil;
 
 @Controller
 @RequestMapping("/promote")
@@ -40,6 +51,21 @@ public class PromoteController {
 	
 	@Autowired
 	CompanyMapper companyMapper;
+	
+	@Autowired
+	IntLoginService loginService;
+	
+	@Autowired
+	IntThirdpartyintService intThirdpartyintService;
+
+	@Autowired
+	IntBlacklistuserService intBlacklistuserService;
+	
+	@Autowired
+	IntOrderService intOrderService;
+	
+	@Autowired
+	IntUsthresholdvalueService intUsthresholdvalueService;
 	
 	//判断这个渠道有没有删除或禁用，如果删除或禁用了就不让用户显示推广页
 	@RequestMapping("/isPromotion")
@@ -58,7 +84,7 @@ public class PromoteController {
 			 return map;
 		 }
 		}
-		 map.put("msg","渠道被删除");
+		 map.put("msg","对不起，您的连接有误");
 		 map.put("code","300");
 	    List<String> list1 = intSourceService.getDeleted(companyId,sourceName);
 	    for (String string : list1) {
@@ -98,6 +124,27 @@ public class PromoteController {
     	return map;
 	
 	}
+	
+	
+    // 发送验证码
+    @RequestMapping("/sendH5ShortMessage")
+    @ResponseBody
+    public Map<String, String> sendH5ShortMessage(String phone, String company, String sessionId, String code) {
+        Map<String, String> map = new HashMap<>();
+        RedisClientUtil redis = new RedisClientUtil();
+        String serviceCode = redis.get(sessionId);
+        if (StringUtils.isEmpty(serviceCode)) {
+            map.put("msg", "会话过期请刷新页面");
+        } else if (!serviceCode.equals(code)) {
+            map.put("msg", "验证码错误");
+        } else {
+            YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+            String state = yunTongXunUtil.sendSMS(phone);
+            map.put("msg", state);
+            return map;
+        }
+        return map;
+    }
 	
 	
     @RequestMapping("/initializationH5")
@@ -210,5 +257,137 @@ public class PromoteController {
         }
         return null;
     }
+    
+    
+    
+ // 验证码登陆
+
+ 	/**
+ 	 * @param phone         手机号
+ 	 * @param code          验证码
+ 	 * @param company       公司名
+ 	 * @param registeClient 软件类型
+ 	 * @return
+ 	 */
+ 	@RequestMapping("/codelogin")
+ 	@ResponseBody
+ 	@Transactional
+ 	public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient,
+ 			String sourceName, String useMarket) {
+ 		Map<String, Object> map = new HashMap<String, Object>();
+ 		String loginStatus = "1";
+ 		PhoneDeal phoneDeal = new PhoneDeal();
+ 		String newPhone = phoneDeal.encryption(phone);
+ 		if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(code) || StringUtils.isEmpty(companyId)
+ 				|| StringUtils.isEmpty(registeClient) || StringUtils.isEmpty(sourceName)
+ 				|| StringUtils.isEmpty(useMarket)) {
+ 			map.put("msg", "phone,code,companyId,registrationType,sourceName和useMarket不能为空");
+ 			return map;
+ 		} else {
+			
+//         	String ifBlacklist =loginService.getifBlacklist(newPhone,companyId);
+ 			Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
+ 			int num1 = intBlacklistuserService.getid(phone, companyId);
+ 			if (num1 == 1 || num1 > 1) {
+ 				String ifBlacklist = loginService.getifBlacklist(newPhone, companyId);
+ 				if(ifBlacklist==null) {
+						map.put("msg", "手机号黑名单 ");
+						map.put("SCode", "407");
+						map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
+						return map;
+ 				}else {
+ 	 				if ("0".equals(ifBlacklist)) {
+ 	 					loginService.updateifBlacklist1(newPhone, companyId);
+ 	 				} else {
+ 	 					int userId = loginService.getId(newPhone, companyId);
+ 	 					int orderStatus = intOrderService.getorderStatus(userId, companyId);
+ 	 					if (orderStatus != 1) {
+ 	 						map.put("msg", "手机号黑名单 ");
+ 	 						map.put("SCode", "407");
+ 	 						map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
+ 	 						return map;
+ 	 					}
+ 	 				}
+				}
+
+ 			} else {
+
+// 			int num1 = sourceDadSonService.getSourceDadSon(sourceId,sonSourceName,company);
+// 			if (num1 == 0) {
+// 			sourceDadSonService.setSourceDadSon(sourceId,sonSourceName,company);
+// 			}
+
+ 				RedisClientUtil redisClientUtil = new RedisClientUtil();
+ 				String key = phone + "xiaodaiKey";
+ 				String redisCode = redisClientUtil.get(key);
+ 				if (redisCode == null) {
+ 					map.put("msg", "验证码已过期，请重新发送");
+ 					map.put("SCode", "402");
+ 					return map;
+ 				}
+ 				if (redisCode.equals(code)) {
+ 					redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
+ 					String registrationTime = System.currentTimeMillis() + ""; // 获取当前时间戳
+ 					if (id == null) {
+ 			 			Timestamps timestamps = new Timestamps();
+ 			 			long todayZeroTimestamps = timestamps.getTodayZeroTimestamps(); //今天0点的时间戳
+ 			 			long tomorrowZeroTimestamps = todayZeroTimestamps+86400000; //明天0点的时间戳
+ 			 			long number1 = loginService.getnumber(todayZeroTimestamps,tomorrowZeroTimestamps,companyId);//当天的注册数
+ 			 			int maxthresholdvalue = intUsthresholdvalueService.getmaxthresholdvalue(companyId);//最大可以注册的数量
+ 			 			if(number1>maxthresholdvalue) {
+ 								map.put("msg", "注册数达到上限 ");
+ 								map.put("SCode", "409");
+ 								return map;
+ 			 			}
+ 						String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
+ 						int merchantId = intSourceService.getsourceId(sourceName);
+ 						int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
+ 								registrationTime, merchantId, useMarket, operatorsAuthentication);
+ 						if (number == 1) {
+ 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+ 							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
+ 							map.put("SCode", "201");
+ 							map.put("loginStatus", loginStatus);
+ 							map.put("userId", id);
+ 							map.put("phone", phone);
+ 						} else {
+ 							map.put("msg", "用户登录失败，用户数据插入失败");
+ 							map.put("SCode", "405");
+ 						}
+ 					} else {
+ 						String loginTime = System.currentTimeMillis() + "";
+ 						int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);
+ 						if (num == 1) {
+ 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+ 							String pwd = loginService.getPwd(id);
+ 							if (pwd == null) {
+ 								map.put("msg", "用户登录成功，登录状态修改成功，让用户添加密码");
+ 								map.put("SCode", "201");
+ 								map.put("loginStatus", loginStatus);
+ 								map.put("userId", id);
+ 								map.put("phone", phone);
+ 							} else {
+ 								map.put("msg", "用户登录成功，登录状态修改成功");
+ 								map.put("SCode", "200");
+ 								map.put("loginStatus", loginStatus);
+ 								map.put("userId", id);
+ 								map.put("phone", phone);
+ 							}
+ 						} else {
+ 							map.put("msg", "用户登录失败，登录状态修改失败");
+ 							map.put("SCode", "406");
+ 						}
+ 					}
+ 				} else {
+ 					map.put("msg", "验证码错误");
+ 					map.put("SCode", "403");
+ 					return map;
+ 				}
+
+ 			}
+ 			return map;
+ 		}
+
+ 	}
 	
 }

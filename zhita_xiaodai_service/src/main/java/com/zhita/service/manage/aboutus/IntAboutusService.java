@@ -23,4 +23,6 @@ public interface IntAboutusService {
     
     //后台管理---更新功能
     public int updateByPrimaryKey(Aboutus record);
+
+	public Map<String, Object> getaboutus(int companyId);
 }

@@ -115,7 +115,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://tg.mis8888.com/promote/"+templateName+"/index.html?code="+record.getSourcename());
+    	record.setLink("http://xcx.rong51dai.com/promote/"+templateName+"/index.html?code="+record.getSourcename());
     	
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();

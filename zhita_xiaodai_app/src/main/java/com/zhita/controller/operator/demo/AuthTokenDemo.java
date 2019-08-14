@@ -21,9 +21,11 @@ public class AuthTokenDemo {
 
         TokenClient tokenClient = new TokenClient();
         //公共参数
-        tokenClient.setAppId("AfFGnpOE");                    //(TODO)替换值，写入机构ID
-        tokenClient.setAppSecret("Ku4aEJu9GaOHOyqPZE");      //(TODO)替换值，写入机构密钥
-        tokenClient.setOnline(false);                        //(TODO)替换值，默认为线上环境（true），需要使用方替换，也可不替换
+//        tokenClient.setAppId("AfFGnpOE");                    //(TODO)替换值，写入机构ID
+//        tokenClient.setAppSecret("Ku4aEJu9GaOHOyqPZE");      //(TODO)替换值，写入机构密钥
+        tokenClient.setAppId("app190812164735176026");                    //(TODO)替换值，写入机构ID
+        tokenClient.setAppSecret("QKP43WQG8U261HHRLYX9IINB7VUUV5LT");      //(TODO)替换值，写入机构密钥        
+        tokenClient.setOnline(true);                        //(TODO)替换值，默认为线上环境（true），需要使用方替换，也可不替换
         
 		return tokenClient.tokenBearer();
     }

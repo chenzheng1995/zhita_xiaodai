@@ -83,4 +83,11 @@
   <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.AgreementType">
   	select * from agreement_type where companyId=#{arg0}
   </select>
+
+  
+      <select id="getagreementContent" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select agreementContent from edit_agreement where agreementTypeid = #{agreementId}
+  </select>
+  
+  
 </mapper>

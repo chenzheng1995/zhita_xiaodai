@@ -104,7 +104,7 @@ public class ChanpaySend extends BaseParameter{
     	String minute = now.get(Calendar.MINUTE)+"";//分
     	String second = now.get(Calendar.SECOND)+"";//秒
     	String afterFour = ban.getTiedCardPhone().substring(ban.getTiedCardPhone().length()-4); 
-    	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
+    	String orderNumber ="DD_"+year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
     	
 		if(userId != null && TransAmt != null && companyId != null && lifeOfLoan != 0){
 		

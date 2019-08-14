@@ -145,5 +145,11 @@ public class ContactcustomerServiceImp implements IntContactcustomerService{
     	return num;
     
     }
+
+	@Override
+	public Map<String, Object> getContactCustomer(int companyId) {
+		Map<String, Object> map1 = contactCustomerServiceMapper.getContactCustomer(companyId);
+		return map1;
+	}
     
 }

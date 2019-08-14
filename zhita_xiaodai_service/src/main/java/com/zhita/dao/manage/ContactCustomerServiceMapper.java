@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.ContactCustomerService;
 
@@ -28,5 +29,7 @@ public interface ContactCustomerServiceMapper {
     
     //后台管理---根据id查询出当前对象的二维码字段
     String queryQrcode(Integer id);
+
+	Map<String, Object> getContactCustomer(int companyId);
     
 }

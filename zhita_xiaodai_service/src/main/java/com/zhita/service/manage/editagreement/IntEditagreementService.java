@@ -14,4 +14,6 @@ public interface IntEditagreementService {
     
     //后台管理----更新保存
     public  int updateByPrimaryKeyWithBLOBs(EditAgreement record);
+
+	public String getagreementContent(int agreementId);
 }

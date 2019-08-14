@@ -68,4 +68,9 @@
       agreementType = #{agreementtype,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+   <select id="getagreementId" resultType="java.lang.Integer" parameterType="java.util.Map" >
+select id from agreement_type where companyId = #{companyId} and agreementType = #{agreementName}
+  </select>
+  
 </mapper>
