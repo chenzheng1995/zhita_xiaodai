@@ -230,13 +230,14 @@ public class Test {
 ////    	String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/?apiKey="+apiKey+"&phone="+phone+"&idcard="+idcard+"&name="+name+"&userId="+userId);
 //    		String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+apiKey+"&userId="+userId);
 //    	System.out.println(result);
-		
+	/*	
 		String aString = "香港/北京/上海/重庆";
 		String[] bStrings = aString.split("/");
         for (int i = 0; i < bStrings.length; i++) {
             System.out.println(bStrings[i]);
-        }
+        }*/
     	
+		System.out.println(MD5Utils.getMD555555("123abc"));
 	}
 	}
 

@@ -506,4 +506,10 @@ public class SourceServiceImp implements IntSourceService{
 		String sourceName = sourceMapper.getsourceName(sourceId);
 		return sourceName;
 	}
+	
+	//后台管理----根据前端传过来的链接判断该链接是否存在source表
+	public int queryIfLink(String link){
+		int value=sourceMapper.queryIfLink(link);
+		return value;
+	}
 }

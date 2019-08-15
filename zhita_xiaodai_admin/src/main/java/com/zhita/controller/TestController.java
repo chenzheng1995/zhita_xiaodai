@@ -1,6 +1,9 @@
 package com.zhita.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,5 +157,14 @@ public class TestController {
 		/*String province="山西省稷山县蔡村乡杨村第九居民组";
 		System.out.println(province.substring(0,3));*/
 		System.out.println(Timestamps.stampToDate(null));
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//Date d = new Date();
+		//String date = sdf.format(d);//当天时间（年月日时分秒格式）
+		String date="2019-08-15 23:59:59";
+		String shouldReturnTime=Timestamps.stampToDate("1565884799000");
+		if(sdf.parse(date).getTime()>=sdf.parse(shouldReturnTime).getTime()){//转成long类型比较
+			System.out.println(date+"------");
+			System.out.println("当前时间大于应还时间");
+		}
 	}
 }

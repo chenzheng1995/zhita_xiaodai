@@ -95,6 +95,7 @@ public interface IntSourceService {
 
 	public String getsourceName(int sourceId);
 
-
+	//后台管理----根据前端传过来的链接判断该链接是否存在source表
+	public int queryIfLink(String link);
 
 }
