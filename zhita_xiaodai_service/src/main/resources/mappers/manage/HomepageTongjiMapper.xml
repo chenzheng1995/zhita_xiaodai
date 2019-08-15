@@ -183,7 +183,7 @@
 	<!-- =============回收率报表=============-->
 	<!--后台管理        查询订单表所有的应还时间  -->
 	<select id="queryAllShouldTime" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select shouldReturnTime from orders where companyid=3
+		select shouldReturnTime from orders where companyid=#{arg0}
 	</select>
 	<!-- 后台管理           应还订单 -->
 	<select id="shouldorder" resultType="java.lang.Integer">

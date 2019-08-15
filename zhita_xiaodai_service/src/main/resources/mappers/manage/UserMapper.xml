@@ -417,7 +417,7 @@
   	 select 
      <include refid="Base_Column_List" />
      from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
-     where u.companyId=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2)
+     where u.companyId=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2) and u.ifBlacklist=0
 		<if test="applynumber != null and applynumber !='' ">
 	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	    </if>
@@ -438,7 +438,7 @@
    <!-- 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
   <select id="queryAllUsercount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
-     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2)
+     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2) and u.ifBlacklist=0
      	<if test="applynumber != null and applynumber !='' ">
 	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	    </if>
@@ -461,7 +461,7 @@
   	 select 
      <include refid="Base_Column_List" />
      from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
-     where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1  
+     where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1  and u.ifBlacklist=0
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	        </if>
@@ -482,7 +482,7 @@
    <!-- 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
   <select id="queryAllUserPeoplecount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
-     where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1
+     where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1 and u.ifBlacklist=0 
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	        </if>
@@ -515,7 +515,7 @@
   	 select 
      <include refid="Base_Column_List2" />
      from user u inner join source s on u.sourceid=s.id inner join sys_user su on su.userId=u.operator inner join manage_control_settings mcs on s.manageControlId=mcs.id
-     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4)
+     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4) and u.ifBlacklist=0
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	        </if>
@@ -539,7 +539,7 @@
    <!-- 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）        查询数量-->
   <select id="queryAllUserPeopleYetcount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join sys_user su on su.userId=u.operator inner join manage_control_settings mcs on s.manageControlId=mcs.id
-     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4)
+     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4) and u.ifBlacklist=0
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
 	        </if>
