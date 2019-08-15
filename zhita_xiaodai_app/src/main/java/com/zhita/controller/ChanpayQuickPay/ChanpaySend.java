@@ -25,6 +25,7 @@ import com.zhita.model.manage.Payment_record;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
+import com.zhita.util.Timestamps;
 
 
 
@@ -71,9 +72,15 @@ public class ChanpaySend extends BaseParameter{
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		if(a.equals("1")){
 		Orderdetails ord = new Orderdetails();
-		ord.setStart_time(start_time);
-		ord.setEnd_time(end_time);
+		
+		
 		ord.setCompanyId(companyId);
+		try {
+			ord.setStart_time(Timestamps.dateToStamp1(start_time));
+			ord.setEnd_time(Timestamps.dateToStamp1(end_time));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Integer maxmoney = chanser.loanMaxMoney(companyId);//获取限额
 		BigDecimal SumPaymoney = chanser.SumpayMoney(ord);//当天放款额度
 		BigDecimal maxMon = new BigDecimal(maxmoney);
