@@ -118,5 +118,7 @@ public interface OrdersMapper {
 
 	String getshouldReturnTime(@Param("userId")int userId,@Param("companyId") int companyId);
 
+	String getorderNumber(int userId);
+
 
 }

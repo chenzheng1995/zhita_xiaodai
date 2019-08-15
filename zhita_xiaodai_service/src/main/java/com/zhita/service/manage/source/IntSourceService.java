@@ -93,6 +93,8 @@ public interface IntSourceService {
 
 	public int queryByLike1(String source, int companyId);
 
+	public String getsourceName(int sourceId);
+
 
 
 }

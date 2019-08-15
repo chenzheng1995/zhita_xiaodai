@@ -169,5 +169,11 @@ public class WhitelistuserServiceImp implements IntWhitelistuserService{
 	        return "1";
 	    }
 
+	@Override
+	public int getWhitelistuser(String newphone, String idcard_number) {
+		int number = whitelistUserMapper.getWhitelistuser(newphone,idcard_number);
+		return number;
+	}
+
 }
 

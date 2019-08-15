@@ -78,7 +78,9 @@ public class borrowMoneyMessageController {
  			   bankcard = (String) map3.get("attestationStatus");
  		   }
  		   
- 		  if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")) {
+ 		   String shareOfState = intUserService.getshareOfState(userId);
+ 		   
+ 		  if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&("2".equals(shareOfState)||"4".equals(shareOfState))) {
  			 canBorrowlines = intUserService.getcanBorrowLines(userId);
  		  }
         }

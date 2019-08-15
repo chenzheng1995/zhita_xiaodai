@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.dao.manage.AgreementTypeMapper;
@@ -22,7 +23,7 @@ public class EditAgreementController {
 	
     
     //获取协议
-    @RequestMapping("/geteditagreement")
+    @RequestMapping(value="/geteditagreement",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
     @ResponseBody
     @Transactional
     public String geteditagreement(int companyId,int num){
