@@ -25,9 +25,11 @@ import com.zhita.service.manage.applycondition.IntApplyconditionService;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.manconsettings.IntManconsettingsServcie;
 import com.zhita.service.manage.operator.OperatorService;
+import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
+import com.zhita.service.manage.whitelistuser.IntWhitelistuserService;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.TuoMinUtil;
 
@@ -58,7 +60,13 @@ public class OperatorController {
     IntBlacklistuserService intBlacklistuserService;
     
     @Autowired
+    IntOrderService intOrderService;
+    
+    @Autowired
     ZhimiRiskMapper zhimiRiskMapper;
+    
+    @Autowired
+    IntWhitelistuserService intWhitelistuserService;
 	
     @RequestMapping("/getOperator")
     @ResponseBody
@@ -310,11 +318,40 @@ public class OperatorController {
 @ResponseBody
 @Transactional
 public Map<String, Object> getshareOfState(int userId){
+	String shareOfState = intUserService.getshareOfState(userId);
+	if("0".equals(shareOfState)||("1".equals(shareOfState))||("3".equals(shareOfState))) {
+		int riskControlPoints = intUserService.getRiskControlPoints(userId);
+		int sourceId = intUserService.getsourceId(userId);
+		String sourceName = intSourceService.getsourceName(sourceId);
+		int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
+		 Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);
+		  String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+          String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+          String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+          int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          
+          if(riskControlPoints<roatnptFractionalSegmentSmall) {
+           String orderNumber = intOrderService.getorderNumber(userId);
+           if (orderNumber==null||!"3".equals(orderNumber)) {
+        	   shareOfState ="0";
+        	   intUserService.updateshareOfState(userId, shareOfState);
+		}
+          }
+          if(riskControlPoints>roatnptFractionalSegmentSmall&&riskControlPoints<roatnptFractionalSegmentBig) {
+       	   shareOfState ="1";
+       	intUserService.updateshareOfState(userId, shareOfState);
+          }
+          if(riskControlPoints>roatnptFractionalSegmentBig) {
+       	   shareOfState ="2";
+       	intUserService.updateshareOfState(userId, shareOfState);
+          }
+          
+	}
 	Map<String, Object> map = new HashMap<>();
 	String timStamp = System.currentTimeMillis()+"";//当前时间戳
 	String applynumber = "SQ"+userId+timStamp;//申请编号
 	intUserService.setuser(userId,timStamp,applynumber);
-	String shareOfState = intUserService.getshareOfState(userId);
 	map.put("shareOfState", shareOfState);
 	return map;
 	
@@ -410,6 +447,20 @@ public Map<String, Object> getshareOfState(int userId){
    	Map<String, Object> map = new HashMap<>();
 //   	shareOfState ="6";
 //   	intUserService.updateshareOfState(userId, shareOfState);
+   	String phone1 = intUserService.getphone(userId);
+   	PhoneDeal pDeal = new PhoneDeal();
+   	String newphone = pDeal.decryption(phone1);
+   	Map<String, Object> map3 =  userAttestationService.getuserAttestation(userId);
+   	String idcard_number =(String) map3.get("idcard_number");
+   	int number = intWhitelistuserService.getWhitelistuser(newphone,idcard_number);
+   	if(number!=0) {
+    	   shareOfState ="2";
+    	   intUserService.updateScore1(userId,shareOfState);
+    	   map.put("code", 200);
+    	   
+   		return map;
+   	}
+
     int manageControlId = intSourceService.getmanageControlId(sourceName);//风控id
     Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);
            String rmModleName = (String) map1.get("rmModleName");
@@ -422,8 +473,7 @@ public Map<String, Object> getshareOfState(int userId){
         String phone = (String) operator.get("phone");
         String reqId = (String) operator.get("reqId");
         String search_id = (String) operator.get("search_id");
-    	RuleDemo ruleDemo = new RuleDemo();
-    	ruleDemo.getRule(userId, phone, name, idNumber, reqId);
+
     	
     	ScoreDemo scoreDemo = new ScoreDemo();
     	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
@@ -476,6 +526,7 @@ public Map<String, Object> getshareOfState(int userId){
           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
           int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          
           if(score<roatnptFractionalSegmentSmall) {
        	   shareOfState ="0";
        	   map.put("code", 200);

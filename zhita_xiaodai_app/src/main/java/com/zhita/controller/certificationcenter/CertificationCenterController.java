@@ -148,9 +148,9 @@ public class CertificationCenterController {
 		   
 //		   int riskControlPoints = intUserService.getRiskControlPoints(userId);
 		   String shareOfState = intUserService.getshareOfState(userId);
-		   
+		   		   
 //		   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&(shareOfState.equals("2")||(shareOfState.equals("4")))) {
-			   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")) {
+			   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&("2".equals(shareOfState)||"4".equals(shareOfState))) {
 			   map1.put("code","200");
 			   map1.put("msg", "满足条件");
 		   }else {

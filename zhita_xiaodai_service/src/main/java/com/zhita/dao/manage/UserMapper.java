@@ -147,4 +147,8 @@ public interface UserMapper {
 
 	long getnumber(@Param("todayZeroTimestamps")long todayZeroTimestamps,@Param("tomorrowZeroTimestamps") long tomorrowZeroTimestamps,@Param("companyId") int companyId);
 
+	int getsourceId(int userId);
+
+	void updateScore1(@Param("userId")int userId,@Param("shareOfState") String shareOfState);
+
 }

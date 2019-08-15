@@ -500,4 +500,10 @@ public class SourceServiceImp implements IntSourceService{
 		int sourceId = sourceMapper.queryByLike1(source,companyId);
 		return sourceId;
 	}
+
+	@Override
+	public String getsourceName(int sourceId) {
+		String sourceName = sourceMapper.getsourceName(sourceId);
+		return sourceName;
+	}
 }

@@ -47,5 +47,9 @@ public interface IntUserService {
 
 	public BigDecimal getcanBorrowLines(Integer userId);
 
+	public int getsourceId(int userId);
+
+	public void updateScore1(int userId, String shareOfState);
+
 
 }

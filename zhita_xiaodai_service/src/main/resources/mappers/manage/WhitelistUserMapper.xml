@@ -170,4 +170,9 @@
       deleted=0
     where phone = #{phone,jdbcType=INTEGER}
   </update>
+  
+      <select id="getWhitelistuser"  parameterType="java.lang.String" resultType="java.lang.Integer">
+  select count(phone) from whitelist_user where phone = #{newphone} and idcard = #{idcard_number}
+  </select>
+  
 </mapper>

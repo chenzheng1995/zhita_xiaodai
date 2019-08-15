@@ -293,4 +293,8 @@
   select id from source where companyId=#{companyId} and sourceName = #{source}
  </select>
  
+      <select id="getsourceName" parameterType="java.lang.Integer" resultType="java.lang.String">
+  select sourceName from source where id = #{sourceId}
+ </select>
+ 
 </mapper>
