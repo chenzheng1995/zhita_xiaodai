@@ -96,5 +96,7 @@ public interface SourceMapper {
 	List<String> getDeleted(@Param("companyId")int companyId,@Param("sourceName") String sourceName);
 
 	int queryByLike1(@Param("source")String source,@Param("companyId") int companyId);
+
+	String getsourceName(int sourceId);
     
 }

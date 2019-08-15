@@ -350,5 +350,17 @@ public class UserServiceImp implements IntUserService{
 		return canBorrowlines;
 	}
 
+	@Override
+	public int getsourceId(int userId) {
+		int sourceId = userMapper.getsourceId(userId);
+		return sourceId;
+	}
+
+	@Override
+	public void updateScore1(int userId, String shareOfState) {
+		userMapper.updateScore1(userId,shareOfState);
+		
+	}
+
 
 }

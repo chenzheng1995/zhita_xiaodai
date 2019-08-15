@@ -81,13 +81,15 @@ public class OrdersController {
 		   if(borrowNumber>lastuserHowManyConsecutivePayments) {
 		    	 int ordersId =  intOrderService.getOrdersId(userId,companyId);//获取最后一个借款订单的id
 		    	 BigDecimal lastLine = orderdetailsMapper.getlastLine(ordersId);//获取最后一次还款时的额度
+		    	 intUserService.updateCanBorrowLines(finalLine,userId);
 		    	 map.put("finalLine", lastLine);
 		    	 return map;
 		   }
 		  		   
 		   if(firstline==null||borrowNumber<firstline) {
 			   finalLine = canBorrowlines;
-			   map.put("finalLine", finalLine);
+			   intUserService.updateCanBorrowLines(finalLine,userId);
+			   map.put("finalLine", finalLine);			   
 		   }else {
 			   for (LiftingAmount liftingAmount : list) {
 				     int userHowManyConsecutivePayments = liftingAmount.getUserhowmanyconsecutivepayments();//还款多少次之后提额

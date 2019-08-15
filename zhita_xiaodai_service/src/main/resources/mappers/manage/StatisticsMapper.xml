@@ -299,7 +299,7 @@
 			
 			<select id="SumPayMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.math.BigDecimal">
 				select sum(pay.paymentmoney) from payment_record pay,orders o where o.id = pay.orderId and o.companyId = #{companyId}
-				 pay.remittanceTime between #{start_time} and #{end_time}
+				and pay.remittanceTime between #{start_time} and #{end_time}
 			</select>
 			
 </mapper>

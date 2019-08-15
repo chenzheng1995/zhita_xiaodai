@@ -77,6 +77,10 @@ public interface IntOrderService {
 
 	public String getshouldReturnTime(int userId, int companyId);
 
+	public String getorderNumber(int userId);
+
+
+
 	
 
 }

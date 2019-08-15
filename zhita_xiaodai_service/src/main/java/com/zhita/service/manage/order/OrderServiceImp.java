@@ -619,4 +619,10 @@ public class OrderServiceImp implements IntOrderService{
 		return beforeTime;
 	}
 
+	@Override
+	public String getorderNumber(int userId) {
+		String orderNumber = ordersMapper.getorderNumber(userId);
+		return orderNumber;
+	}
+
 }

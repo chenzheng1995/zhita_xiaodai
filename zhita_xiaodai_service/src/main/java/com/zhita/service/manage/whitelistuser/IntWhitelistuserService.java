@@ -34,4 +34,6 @@ public interface IntWhitelistuserService {
      */
     String ajaxUploadExcel(MultipartFile excelFile,Integer companyId,Integer operator);
 
+	public int getWhitelistuser(String newphone, String idcard_number);
+
 }

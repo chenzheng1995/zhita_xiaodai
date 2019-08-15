@@ -7,12 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
@@ -20,11 +18,11 @@ import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Orderdetails;
-import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
+import com.zhita.util.Timestamps;
 
 
 
@@ -71,12 +69,21 @@ public class ChanpaySend extends BaseParameter{
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		if(a.equals("1")){
 		Orderdetails ord = new Orderdetails();
-		ord.setStart_time(start_time);
-		ord.setEnd_time(end_time);
+		
+		
 		ord.setCompanyId(companyId);
+		try {
+			ord.setStart_time(Timestamps.dateToStamp1(start_time));
+			ord.setEnd_time(Timestamps.dateToStamp1(end_time));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Integer maxmoney = chanser.loanMaxMoney(companyId);//获取限额
 		BigDecimal SumPaymoney = chanser.SumpayMoney(ord);//当天放款额度
 		BigDecimal maxMon = new BigDecimal(maxmoney);
+		if(SumPaymoney==null){
+			SumPaymoney = new BigDecimal(0);
+		}
 		Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
 		if(i == 1 || i == 0){
 			map1.put("msg", "今日放款已达限额,请明日再来");
