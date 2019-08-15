@@ -434,7 +434,7 @@ public class OperationalServiceimp implements OperationalService{
 //		map.put("PageUtil", pages);
 //		map.put("Orderdetails", ordesa);
 		List<Orders> ordesa = operdao.CollectionDatas(orde);
-		if(orde.getStart_time()!=null){
+		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
 			orde.setStart_time(stime+" 00:00:00");

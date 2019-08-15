@@ -131,4 +131,11 @@ public interface PostloanorderMapper {
 	
 	
 	List<Collection> CollectionYIData(Orderdetails orde);
+	
+	
+	Integer CoMentLLection(Orderdetails orde);
+	
+	
+	
+	
 }

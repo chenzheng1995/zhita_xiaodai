@@ -220,7 +220,7 @@
 		
 		<select id="OneCollectionData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select count(o.id) as collection_count,sum(ora.makeLoans) as makeLoans,sum(ora.interestPenaltySum) as interestPenaltySum
-			from orders o,orderdetails ora,
+			from orders o,orderdetails ora,user u
 			<where>
 				ora.orderId = o.id
 				AND u.id = o.userId

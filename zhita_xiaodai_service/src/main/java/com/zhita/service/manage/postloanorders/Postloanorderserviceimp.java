@@ -1,5 +1,7 @@
 package com.zhita.service.manage.postloanorders;
 
+import java.math.BigDecimal;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -282,6 +284,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				}else{
 					co.setPaymentmadeData("0");
 				}
+				System.out.println("数据:"+co.getCollection_count()+"日期:"+co.getCollectiondate()+"已接通:"+co.getConnected());
 				cols.add(co);
 			}
 		}else{
@@ -312,6 +315,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{
 				co.setPaymentmadeData("0");
 			}
+			System.out.println("数据:"+co.getCollection_count()+"日期:"+co.getCollectiondate()+"已接通:"+co.getConnected());
 			cols.add(co);
 			
 		}
@@ -376,7 +380,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 //			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
 //		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collection> cols = new ArrayList<Collection>();
+		List<List<Collection>> cols = new ArrayList<List<Collection>>();
 		if(order.getStart_time()!=null){
 			List<String> stimes = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
 			for(int i=0;i<stimes.size();i++){
@@ -388,8 +392,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-				List<Collection> co = postloanorder.CollectionYIData(order);
+				List<Collection> co = postloanorder.CollectionYIData(order);//获取逾前催收员名称  和  ID
 				for(int j=0;i<co.size();i++){
+				order.setCollectionMemberId(co.get(i).getCollectionMemberId());//把催收员ID set 进order的催收员ID
+				
+				co.get(j).setCollection_count(postloanorder.CoMentLLection(order));//获取催收员已分配订单数
+				
 				order.setOverdue_phonestaus("未接通");
 				co.get(j).setNotconnected(postloanorder.connectedNum(order));
 				order.setOverdue_phonestaus("已接通");
@@ -405,11 +413,49 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				}else{
 					co.get(j).setPaymentmadeData("0");
 				}
+				
 				}
+				cols.add(co);
 				
 			}
 			
 			
+		}else{
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			String stimes = sim.format(new Date());
+			order.setStart_time(stimes+" 00:00:00");
+			order.setEnd_time(stimes+" 23:59:59");
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			List<Collection> co = postloanorder.CollectionYIData(order);//获取逾前催收员名称  和  ID
+			for(int j=0;j<co.size();j++){
+			order.setCollectionMemberId(co.get(j).getCollectionMemberId());//把催收员ID set 进order的催收员ID
+			
+			co.get(j).setCollection_count(postloanorder.CoMentLLection(order));//获取催收员已分配订单数
+			
+			order.setOverdue_phonestaus("未接通");
+			co.get(j).setNotconnected(postloanorder.connectedNum(order));
+			order.setOverdue_phonestaus("已接通");
+			co.get(j).setConnected(postloanorder.connectedNum(order));
+			order.setOrderStatus("3");
+			co.get(j).setSameday(postloanorder.StatusOrders(order));//当天还款数
+			order.setOrderStatus("0");
+			co.get(j).setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+			
+			if(co.get(j).getPaymentmade() != 0 && co.get(j).getSameday() != 0){
+				NumberFormat numberFormat = NumberFormat.getInstance();
+				numberFormat.setMaximumFractionDigits(2);
+				co.get(j).setPaymentmadeData(numberFormat.format((float) co.get(j).getPaymentmade() / (float) (co.get(j).getPaymentmade()+co.get(j).getSameday()) * 100));
+			}else{
+				co.get(j).setPaymentmadeData("0");
+			}
+			
+			}
+			cols.add(co);
 		}
 		map.put("Collection", cols);
 		return map;
@@ -421,15 +467,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> MyOverdues(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
-		}
-		try {
-			order.setStart_time(Timestamps.dateToStamp(order.getStatu()));
-			order.setEnd_time(Timestamps.dateToStamp(order.getEnd_time()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 		Integer totalCount = postloanorder.MyOrderNum(order);
 		if(totalCount != null){
 			PageUtil pages = new PageUtil(order.getPage(), totalCount);
@@ -440,13 +477,26 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		List<Orderdetails> orders = postloanorder.MyOrderdue(order);
 		for(int i=0;i<orders.size();i++){
-			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
-			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
-			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));//实借订单
+			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));//逾前还款时间
+			Deferred de = postloanorder.OneDeferred(orders.get(i));
+			orders.get(i).setDeferAfterReturntime(de.getDeferAfterReturntime());
+			if(orders.get(i).getDeferAfterReturntime() != null){
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));//逾后还款时间
+			}else{
+				orders.get(i).setDeferAfterReturntime("/");//逾后还款时间
+			}
+			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectiondate()));//分配时间
 			Deferred defe =  coldao.DefNum(orders.get(i).getOrderId());
-			orders.get(i).setDefeNum(defe.getId());
-			orders.get(i).setDefeMoney(defe.getInterestOnArrears());
+			orders.get(i).setDefeNum(defe.getId());//延期次数
+			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+			if(defe.getInterestOnArrears() != null){
+				orders.get(i).setDefeMoney(defe.getInterestOnArrears());//延期金额
+			}else{
+				BigDecimal a = new BigDecimal(0);
+				orders.get(i).setDefeMoney(a);//延期金额
+			}
+			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orders);
@@ -513,14 +563,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
-		System.out.println("手机号:"+order.getPhone()+"手机字段数:"+order.getPhone().length());
-		if(order.getPhone().length() != 0){
+		if(order.getPhone() != null){
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		
-		// && order.getStart_time()!=null && order.getEnd_time()!=null
-		System.out.println(order);
-		System.out.println("111："+order.getStart_time()+"222:"+order.getEnd_time());
 		if(order.getStart_time() != null && order.getEnd_time()!=null && !"".equals(order.getStart_time()) && !"".equals(order.getEnd_time())){
 			try {
 				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
@@ -557,7 +603,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}
 		}
 		
-		System.out.println(order.getDeferAfterReturntimeEnd_time()+"CCC"+order.getDeferAfterReturntimeStatu_time());
 		order.setOrderStatus("3");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
@@ -565,22 +610,19 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
-			order.setOrderId(orders.get(i).getId());
-			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
-			if(orders.get(i).getInterMoney() != null ){
-				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterMoney()));
-			}else{
-				orders.get(i).setOrderSum_money(orders.get(i).getRealityBorrowMoney());
-			}
-			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
-			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
-			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
-			System.out.println("事件:"+orders.get(i).getRealtime());
-			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
-			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
-			TuoMinUtil tm = new TuoMinUtil();
-			orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
+		orders.get(i).setCompanyId(order.getCompanyId());
+		Deferred defe = postloanorder.OneDeferred(orders.get(i));
+		if(defe.getDeferBeforeReturntime()!=null){
+			orders.get(i).setDeferBeforeReturntime(defe.getDeferBeforeReturntime());
+		}else{
+			orders.get(i).setDeferBeforeReturntime("/");
+		}
+		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+		if(orders.get(i).getSurplus_money()!=null){
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
+		}else{
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
+		}
 		}
 		map.put("Orderdetails", orders);
 		map.put("PageUtil", pages);
@@ -632,24 +674,26 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		
 		
-		order.setShouldReturnTime(System.currentTimeMillis()+"");
-		Integer totalCount = postloanorder.CollecOrdersTotalCount(order);
+		order.setOrderStatus("1");
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
-		List<Orderdetails> orders = postloanorder.CollecOrders(order);
+		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
-			order.setOrderId(orders.get(i).getOrderId());
-			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
-			order.setOrderId(orders.get(i).getOrderId());
-			orders.get(i).setPhone_num(postloanorder.Phone_num(order));
-			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
-			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
-			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
-			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
-			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
-			TuoMinUtil tm = new TuoMinUtil();
-			orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
+		orders.get(i).setCompanyId(order.getCompanyId());
+		Deferred defe = postloanorder.OneDeferred(orders.get(i));
+		if(defe.getDeferBeforeReturntime()!=null){
+			orders.get(i).setDeferBeforeReturntime(defe.getDeferBeforeReturntime());
+		}else{
+			orders.get(i).setDeferBeforeReturntime("/");
+		}
+		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+		if(orders.get(i).getSurplus_money()!=null){
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
+		}else{
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
+		}
+		
 		}
 		map.put("Orderdetails", orders);
 		return map;
@@ -661,7 +705,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone().length() != 0){
+		if(order.getPhone() != null){
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -694,20 +738,25 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				// TODO: handle exception
 			}
 		}
-		Integer totalCount = postloanorder.HuaiZhangOrdersTotalCount(order);
+		order.setOrderStatus("4");
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
-		List<Orderdetails> orders = postloanorder.HuaiZhangOrders(order);
+		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
-			orders.get(i).setDefeNum(postloanorder.OrderDefeNum(order));
-			order.setOrderId(orders.get(i).getOrderId());
-			orders.get(i).setPhone_num(postloanorder.Phone_num(order));
-			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
-			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
-			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
-			orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
-			orders.get(i).setMakeLoans(coldao.SelectMakeLoan(orders.get(i).getOrderId()));
+		orders.get(i).setCompanyId(order.getCompanyId());
+		Deferred defe = postloanorder.OneDeferred(orders.get(i));
+		if(defe.getDeferBeforeReturntime()!=null){
+			orders.get(i).setDeferBeforeReturntime(defe.getDeferBeforeReturntime());
+		}else{
+			orders.get(i).setDeferBeforeReturntime("/");
+		}
+		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+		if(orders.get(i).getSurplus_money()!=null){
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
+		}else{
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
+		}
 		}
 		map.put("Orderdetails", orders);
 		return map;

@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -20,6 +22,7 @@ import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
+import com.zhita.util.TuoMinUtil;
 
 
 @Service
@@ -38,54 +41,25 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> allBeoverdueConnection(Collection coll) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		coll.setRealtime(System.currentTimeMillis()+"");
-		List<Integer> collIds = collmapp.SelectCollectionId(coll.getCompanyId());//根据公司ID 查询催收员ID
-		if(collIds.size() != 0){
-			 List<Integer> ids = collmapp.OrderIdMa(coll.getCompanyId());
-			if(ids != null && ids.size() != 0){
-				coll.setIds(ids); 
-			}else{
-				ids.add(0);
-				System.out.println(ids.size());
-				coll.setIds(ids); 
+		
+		Integer totalCount = collmapp.SelectTotalCount(coll);
+		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
+		TuoMinUtil tm = new TuoMinUtil();
+		coll.setPage(pages.getPage());
+		pages.setTotalCount(totalCount);
+		List<Orderdetails> orders = collmapp.Allorderdetails(coll);
+		for(int i=0;i<orders.size();i++){
+			String phon = tm.mobileEncrypt(p.decryption(orders.get(i).getPhone()));//脱敏
+			orders.get(i).setPhone(phon);//手机号解密 
+			orders.get(i).setCompanyId(coll.getCompanyId());
+			Deferred defe = podao.OneDeferred(orders.get(i));
+			orders.get(i).setDeferBeforeReturntime(defe.getDeferBeforeReturntime());
+			orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));
 			}
-					 
-			Integer totalCount = collmapp.SelectTotalCount(coll);
-			PageUtil pages = new PageUtil(coll.getPage(), totalCount);
-			
-			coll.setPage(pages.getPage());
-			pages.setTotalCount(totalCount);
-			List<Orderdetails> orders = collmapp.Allorderdetails(coll);
-			for(int i=0;i<orders.size();i++){
-				if(orders.get(i).getMakeLoans()!= null && orders.get(i).getInterestPenaltySum() != null){
-					orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
-				}else if(orders.get(i).getMakeLoans() == null){
-					orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
-				}else if(orders.get(i).getInterestPenaltySum() == null){
-					orders.get(i).setOrder_money(orders.get(i).getMakeLoans());
-				}
-				Deferred des = collmapp.DefeSet(orders.get(i));
-				Collection colla = collmapp.CollMen(orders.get(i));
-				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
-				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
-				if(des != null && colla != null){
-					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
-					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
-					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
-					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
-					orders.get(i).setReallyName(colla.getReallyName());
-					orders.get(i).setCollectionTime(colla.getCollectionTime());
-					orders.get(i).setCollectionStatus(colla.getCollectionStatus());
-				}
-				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
-				
-			}
-			map.put("Orderdetails", orders);
-			return map;
-		}
-		map.put("Orderdetails", 0);
+		map.put("Orderdetails", orders);
 		return map;
-	}
+		}
+		
 
 	
 	
@@ -337,19 +311,8 @@ public class Collectionserviceimp implements Collectionservice{
 			col.setPhone(p.encryption(col.getPhone()));
 		}
 		
-		Integer as = 0;
-		if(col.getCompanyId() != null){
-				List<Integer> id = collmapp.SelectId(col.getCompanyId());
-				if(id.size() != 0){
-					col.setIds(id);
-					as=id.size();
-				}else{
-					id.add(0);
-					col.setIds(id);
-				}
-			}
 			Integer totalCount = collmapp.AllCountNum(col);
-			PageUtil pages = new PageUtil(col.getPage(),totalCount-as);
+			PageUtil pages = new PageUtil(col.getPage(),totalCount);
 			col.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.FenpeiCollection(col);
 			for(int i=0;i<orders.size();i++){
@@ -365,8 +328,14 @@ public class Collectionserviceimp implements Collectionservice{
 				}else{
 					orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
 				}
+				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 				Deferred des = collmapp.DefeSet(orders.get(i));
-				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+				if(des!=null){
+					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+				}else{
+					orders.get(i).setDeferAfterReturntime("/");
+				}
+				
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
