@@ -209,6 +209,7 @@ public class FinanceServiceimp implements FinanceService{
 				ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
 				ordetails.setDeferAfterReturntime(padao.DeferrAdefe(ordetails.getOrderId()));
 				ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));//延期后应还时间
+				ordetails.setPhone(p.decryption(ordetails.getPhone()));
 				map.put("aaa", ordetails.getInterestPenaltySum());
 				map.put("Orderdetails", ordetails);
 			}else{
