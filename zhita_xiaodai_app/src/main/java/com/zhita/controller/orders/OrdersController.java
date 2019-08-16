@@ -239,9 +239,10 @@ public class OrdersController {
 	   
    }
    if(orderStatus.equals("1")) {//逾期后
-	   BigDecimal interestInAll = orderdetailsMapper.getinterestInAll(orderId);//总利息
+//	   BigDecimal interestInAll = orderdetailsMapper.getinterestInAll(orderId);//总利息
+	   BigDecimal interestPenaltySum = orderdetailsMapper.interestPenaltySum(userId);//逾期总罚息
 	   String overdueNumberOfDays = orderdetailsMapper.getoverdueNumberOfDays(orderId);//逾期天数
-	   shouldReapyMoney = shouldReapyMoney.add(interestInAll);//逾期应还钱
+	   shouldReapyMoney = shouldReapyMoney.add(interestPenaltySum);//逾期应还钱
 	   map.put("shouldReapyMoney", shouldReapyMoney);
 	   map.put("overdueNumberOfDays", overdueNumberOfDays);
 	   map.put("msg","已逾期");

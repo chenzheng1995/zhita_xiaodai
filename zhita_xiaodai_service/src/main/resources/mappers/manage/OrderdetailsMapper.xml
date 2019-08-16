@@ -230,7 +230,7 @@ select makeLoans from orderdetails where  orderId = #{ordersId}
  </select> 
  
    	<insert id="setororderdetails" parameterType="java.util.Map">
-		insert into orderdetails(orderId,realityBorrowMoney,makeLoans,interestDay,interestSum,technicalServiceMoney,realityAccount,registerClient,DrainageOfPlatform,shouldReapyMoney,surplus_money) values(#{orderId},#{finalLine},#{finalLine},#{averageDailyInterest},#{totalInterest},#{platformServiceFee},#{actualAmountReceived},#{registeClient},#{sourceName},#{shouldTotalAmount},#{surplus_money})
+		insert into orderdetails(orderId,realityBorrowMoney,makeLoans,interestDay,interestSum,technicalServiceMoney,realityAccount,registerClient,DrainageOfPlatform,shouldReapyMoney,surplus_money) values(#{orderId},#{finalLine},#{actualAmountReceived},#{averageDailyInterest},#{totalInterest},#{platformServiceFee},#{actualAmountReceived},#{registeClient},#{sourceName},#{shouldTotalAmount},#{surplus_money})
 	</insert>
 
 

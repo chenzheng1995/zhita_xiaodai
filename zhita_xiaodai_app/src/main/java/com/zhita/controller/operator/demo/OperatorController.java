@@ -1,6 +1,7 @@
 package com.zhita.controller.operator.demo;
 
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,6 +20,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.sun.org.apache.xml.internal.utils.IntVector;
+import com.zhita.controller.xinyan.action.OperatorAction;
+import com.zhita.dao.manage.ThreeElementsMapper;
 import com.zhita.dao.manage.ZhimiRiskMapper;
 import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
@@ -67,6 +70,9 @@ public class OperatorController {
     
     @Autowired
     IntWhitelistuserService intWhitelistuserService;
+    
+    @Autowired
+    ThreeElementsMapper threeElementsMapper;
 	
     @RequestMapping("/getOperator")
     @ResponseBody
@@ -435,6 +441,89 @@ public Map<String, Object> getshareOfState(int userId){
 //		return map;
 //    	
 //    }
+
+
+//做三要素认证
+@RequestMapping("/threeElements")
+@ResponseBody
+@Transactional
+public Map<String, Object> getthreeElements(int userId,String phone,int companyId) throws UnsupportedEncodingException{
+	Map<String, Object> map1 = new HashMap<>();
+	Map<String, Object> map = userAttestationService.getuserAttestation(userId);
+	String trueName = (String) map.get("trueName");
+	String idcard_number = (String) map.get("idcard_number");
+	OperatorAction operatorAction = new OperatorAction();
+	 Map<String, Object> map2 = operatorAction.certification(idcard_number, trueName, phone);
+	 String result =(String) map2.get("result");
+	 String trans_id = (String) map2.get("trans_id");
+	JSONObject jsonObject =null;
+	 jsonObject = JSONObject.parseObject(result);
+	 jsonObject = jsonObject.getJSONObject("data");
+	 String code = jsonObject.getString("code");
+	 if("0".equals(code)) {
+		 int certification_number =0;
+		 int num =  threeElementsMapper.getnum(userId);
+		 if(num==0) {
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+		 }
+		 if(num>0) {
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+		}		 
+		 map1.put("code","200");
+		 map1.put("msg","认证一致");
+
+	 }
+	 if("1".equals(code)) {
+		 int num =  threeElementsMapper.getnum(userId);
+		 if(num==0) {
+			 int certification_number = 1;
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+		 }
+		 if(num>0) {
+		 int certification_number = threeElementsMapper.getCertificationnumber(userId);
+		 certification_number = certification_number+1;
+		 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+		 if(certification_number>2) {
+			 String date = System.currentTimeMillis()+"";
+	            String blackType = "5";
+	            intBlacklistuserService.setBlacklistuser(idcard_number,userId,companyId,phone,trueName,date,blackType);
+		 }
+		 }
+		 map1.put("code","405");
+		 map1.put("msg","认证不一致");		 
+	 }
+	 if("2".equals(code)) {
+		 int certification_number =0;
+		 int num =  threeElementsMapper.getnum(userId);
+		 if(num==0) {
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+		 }
+		 if(num>0) {
+			 certification_number = threeElementsMapper.getCertificationnumber(userId);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+		}	
+	 
+		 map1.put("code","407");
+		 map1.put("msg","认证信息不存在");		 
+	 }
+	 if("9".equals(code)) {
+		 int certification_number =0;
+		 int num =  threeElementsMapper.getnum(userId);
+		 if(num==0) {
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+		 }
+		 if(num>0) {
+			 certification_number = threeElementsMapper.getCertificationnumber(userId);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+		}	
+		 map1.put("code","409");
+		 map1.put("msg","其他异常");		 
+	 }
+	
+	
+	return map1;
+	
+}
     
     
 //  分控分数
