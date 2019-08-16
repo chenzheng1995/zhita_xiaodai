@@ -251,7 +251,7 @@ public class SourceServiceImp implements IntSourceService{
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
     @Transactional
-    public void queryAllTongji() throws ParseException{
+    public void selAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
     	Integer companyId=3;
     	List<Source> list=sourceMapper.queryAll(companyId);//查询出当前公司下的所有渠道（所有渠道的集合list）
