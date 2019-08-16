@@ -98,5 +98,8 @@ public interface SourceMapper {
 	int queryByLike1(@Param("source")String source,@Param("companyId") int companyId);
 
 	String getsourceName(int sourceId);
+	
+	//后台管理----根据前端传过来的链接判断该链接是否存在source表
+	int queryIfLink(String link);
     
 }

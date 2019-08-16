@@ -70,7 +70,7 @@
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
     o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
     o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
-    o.overdueGrade, o.riskcontrolname,o.ifpeopleWhose,o.assessor,o.howManyTimesBorMoney,
+    o.overdueGrade,o.ifpeopleWhose,o.assessor,o.howManyTimesBorMoney,
     
     od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
     od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
@@ -79,7 +79,7 @@
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
     u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,u.shareOfState,u.operationTime,
     
-    s.sourcename,r.repaymentMoney,su.account
+    s.sourcename,r.repaymentMoney,su.account,mcs.rmModleName riskcontrolname
   </sql>
     <sql id="Base_Column_List2" >
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
@@ -484,6 +484,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 		select 
     	<include refid="Base_Column_List" />
    		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		left join manage_control_settings mcs on s.manageControlId=mcs.id
    		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
     	where o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
       	<if test="ordernumber != null and ordernumber!='' ">
@@ -508,6 +509,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <select id="queryAllOrdersByUseridcount" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
 		select count(*) 
 		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+		left join manage_control_settings mcs on s.manageControlId=mcs.id
    		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
     	where o.companyId=#{companyid,jdbcType=INTEGER} and u.id=#{userid,jdbcType=INTEGER}
       	<if test="ordernumber != null and ordernumber!='' ">
@@ -532,7 +534,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
     <include refid="Base_Column_List1" />
     from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
     left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0)
+    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0) and o.orderStatus=1
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
@@ -557,7 +559,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <select id="queryAllOrdersByUserid1count" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
   	 select count(*) from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
   	 left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0)
+     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0) and o.orderStatus=1
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
@@ -656,6 +658,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 		select 
     	<include refid="Base_Column_List" />
    		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		left join manage_control_settings mcs on s.manageControlId=mcs.id 
    		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
     	where o.companyId=#{companyid,jdbcType=INTEGER}
       	<if test="ordernumber != null and ordernumber!='' ">
@@ -682,7 +685,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <!-- 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） 查询数量-->
   <select id="queryAllordersByLikeCount" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
 		select count(*)
-   		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
+   		left join source s on s.id=u.sourceid left join manage_control_settings mcs on s.manageControlId=mcs.id 
    		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
     	where o.companyId=#{companyid,jdbcType=INTEGER}
       	<if test="ordernumber != null and ordernumber!='' ">

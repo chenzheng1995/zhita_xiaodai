@@ -230,6 +230,7 @@ public class Test {
 ////    	String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/?apiKey="+apiKey+"&phone="+phone+"&idcard="+idcard+"&name="+name+"&userId="+userId);
 //    		String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+apiKey+"&userId="+userId);
 //    	System.out.println(result);
+
 		
 //		String aString = "香港/北京/上海/重庆";
 //		String[] bStrings = aString.split("/");
@@ -250,7 +251,7 @@ public class Test {
 		String jsonString = pUtil.post("https://test.xinyan.com/operators/v2/authNormal", param);
 		System.out.println(jsonString);
 
-	
+
 	}
 	}
 

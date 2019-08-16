@@ -5,9 +5,11 @@ import java.util.Map;
 
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Repayment;
 
 public interface Statisticsservice {
 	
@@ -37,4 +39,35 @@ public interface Statisticsservice {
 	
 	
 	Integer UpdateOrderSurp(Orders o);
+	
+	
+	Integer SelectUserId(Integer MerUserId);
+	
+	
+	Integer SelectTrxId(Bankcard bank);
+	
+	
+	Integer AddBankcard(Bankcard bank);
+	
+	
+	Integer UpdateChanpay(Integer userId);
+	
+	
+	Integer deleteBank(Integer userId);
+	
+	
+	Integer AddRepayment(Repayment reapy);
+	
+	
+	Integer UpdateOrders(Orders ord);
+	
+	
+	Integer AddDeferred(Deferred defe);
+	
+	
+	Integer UpdateDefeOrders(Orders ord);
+	
+	
+	void SelectId(String orderNumber);
+	
 }

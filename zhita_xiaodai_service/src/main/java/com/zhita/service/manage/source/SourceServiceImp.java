@@ -88,7 +88,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://xcx.rong51dai.com/promote/"+templateName+"/index.html?code="+record.getSourcename());
+    	record.setLink("http://xcx.rong51dai.com/promote/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
@@ -115,7 +115,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://xcx.rong51dai.com/promote/"+templateName+"/index.html?code="+record.getSourcename());
+    	record.setLink("http://xcx.rong51dai.com/promote/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
@@ -251,7 +251,7 @@ public class SourceServiceImp implements IntSourceService{
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
     @Transactional
-    public void queryAllTongji() throws ParseException{
+    public void selAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
     	Integer companyId=3;
     	List<Source> list=sourceMapper.queryAll(companyId);//查询出当前公司下的所有渠道（所有渠道的集合list）
@@ -505,5 +505,11 @@ public class SourceServiceImp implements IntSourceService{
 	public String getsourceName(int sourceId) {
 		String sourceName = sourceMapper.getsourceName(sourceId);
 		return sourceName;
+	}
+	
+	//后台管理----根据前端传过来的链接判断该链接是否存在source表
+	public int queryIfLink(String link){
+		int value=sourceMapper.queryIfLink(link);
+		return value;
 	}
 }

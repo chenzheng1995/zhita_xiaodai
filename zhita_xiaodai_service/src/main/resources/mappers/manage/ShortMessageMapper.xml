@@ -19,7 +19,7 @@
 			
 			
 			<select id="DayShortMessage" parameterType="com.zhita.model.manage.Shortmessage" resultType="com.zhita.model.manage.Shortmessage">
-				select DATE_FORMAT(send_time,'%Y-%m-%d') as send_time,collection_time,sum(phonenum) as phonenum,sum(successnum) as successnum
+				select send_time,collection_time,sum(phonenum) as phonenum,sum(successnum) as successnum
 				from shortmessage where companyid = #{companyid}  
 				group by send_time
 				limit #{page},#{pagesize}

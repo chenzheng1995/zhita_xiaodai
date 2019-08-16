@@ -1,4 +1,4 @@
-package com.zhita.model.manage;
+﻿package com.zhita.model.manage;
 
 //渠道表
 public class Source {
@@ -27,6 +27,8 @@ public class Source {
     private String rmmodlename;//风控名字
 
     private String deleted;//假删除（删除：1，没删除：0）
+    
+    private String token;//认证码
 
 	public Integer getId() {
 		return id;
@@ -130,6 +132,14 @@ public class Source {
 
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayQuickPay;
 
 import java.math.BigDecimal;
 import java.text.ParseException;

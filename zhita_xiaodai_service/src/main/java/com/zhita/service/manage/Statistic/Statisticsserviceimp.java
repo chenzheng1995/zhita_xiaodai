@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
@@ -16,9 +18,11 @@ import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
+import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Repayment;
 import com.zhita.util.PageUtil;
 import com.zhita.util.Timestamps;
 
@@ -186,6 +190,131 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	@Override
 	public Integer UpdateOrderSurp(Orders o) {
 		return sdao.UpdateOrderSuperl(o);
+	}
+
+	@Override
+	public Integer SelectUserId(Integer userId) {
+		return sdao.SelectUserId(userId);
+	}
+
+	
+	/**
+	 * 查询银行卡ID
+	 */
+	@Override
+	public Integer SelectTrxId(Bankcard bank) {
+		return sdao.SelectTrxId(bank);
+	}
+	
+	
+	
+	/**
+	 * 添加银行卡
+	 */
+	@Override
+	public Integer AddBankcard(Bankcard bank) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			bank.setAuthentime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return sdao.AddBankcard(bank);
+	}
+	
+	
+
+	/**
+	 * 修改认证状态
+	 */
+	@Override
+	public Integer UpdateChanpay(Integer id) {
+		return sdao.UpdateStatu(id);
+	}
+
+	@Override
+	public Integer deleteBank(Integer userId) {
+		return sdao.DeleteChan(userId);
+	}
+
+	/**
+	 * 添加还款记录
+	 */
+	@Override
+	public Integer AddRepayment(Repayment repay) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			repay.setRepaymentDate(Timestamps.dateToStamp(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		repay.setPaymentbtiao("畅捷支付");
+		Orders o = sdao.SelectOrderId(repay.getOrderNumber());
+		repay.setOrderid(o.getId());
+		System.out.println(repay.getOrderid());
+		return sdao.AddRepay(repay);
+	}
+
+	/**
+	 * 修改订单状态
+	 */
+	@Override
+	public Integer UpdateOrders(Orders ord) {
+		ord = sdao.SelectOrderId(ord.getOrderNumber());//根据编号查询订单ID
+		Integer id = sdao.UpdateOrders(ord);//
+		if(id != null){
+			Integer delaytimes = 0;
+			ord.setChenggNum(delaytimes);
+			sdao.UpdateUser(ord);
+		}else{
+			return 0;
+		}
+		return 200;
+	}
+
+	@Override
+	public Integer AddDeferred(Deferred defe) {
+		defe.setDeleted("0");
+		Orders o = sdao.SelectOrderId(defe.getOrderNumber());
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			defe.setDeferredTime(Timestamps.dateToStamp1(sim.format(new Date())));
+			defe.setDeferBeforeReturntime(Timestamps.dateToStamp2(defe.getDeferBeforeReturntime()));
+			defe.setDeferAfterReturntime(Timestamps.dateToStamp2(defe.getDeferAfterReturntime()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		defe.setOrderid(o.getId());
+		return sdao.AddDeferred(defe);
+	}
+
+
+	/**
+	 * 修改延期状态
+	 */
+	@Override
+	public Integer UpdateDefeOrders(Orders ord) {
+		Integer num = sdao.SelectUserdelayTimes(ord.getUserId());
+		ord = sdao.SelectOrderId(ord.getOrderNumber());
+		ord.setShouldReturnTime(sdao.DefeDefeAfertime(ord.getId()));
+		Integer delaytimes = num+1;
+		System.out.println("数据:"+delaytimes);
+		ord.setChenggNum(delaytimes);
+		Integer updateId = sdao.DefeOrder(ord);
+		System.out.println(updateId);
+		Integer a = null;
+		if(updateId!=null){
+			a=sdao.UpdateUser(ord);
+		}else{
+			a=0;
+		}
+		return a;
+	}
+
+	@Override
+	public void SelectId(String orderNumber) {
+	Orders	ord = sdao.SelectOrderId(orderNumber);//根据编号查询订单ID
+		System.out.println(ord.getCompanyId()+ord.getId()+ord.getUserId());
 	}
 		
 		

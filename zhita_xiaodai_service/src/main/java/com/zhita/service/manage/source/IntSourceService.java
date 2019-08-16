@@ -41,7 +41,7 @@ public interface IntSourceService {
     
     //定时任务
     //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
-    public void queryAllTongji() throws ParseException;
+    public void selAllTongji() throws ParseException;
     
     //后台管理----通过渠道名字查询当前渠道在历史表的信息
     public List<TongjiSorce> queryAllBySourceName(String sourceName);
@@ -95,6 +95,7 @@ public interface IntSourceService {
 
 	public String getsourceName(int sourceId);
 
-
+	//后台管理----根据前端传过来的链接判断该链接是否存在source表
+	public int queryIfLink(String link);
 
 }

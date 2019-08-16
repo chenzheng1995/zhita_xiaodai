@@ -73,7 +73,7 @@ public class Smserviceimp implements Smservice{
 		        System.out.println("response  toString is :" + smsSingleResponse);
 		        
 		        Shortmessage shor = new Shortmessage();
-		        
+		        System.out.println(sm.getCollection_time());
 		        shor.setCollection_time(sm.getCollection_time());
 		        
 		        shor.setCompanyid(sm.getCompanyid());
@@ -87,6 +87,7 @@ public class Smserviceimp implements Smservice{
 		        if(smsSingleResponse.getErrorMsg().equals("")){
 		        	SimpleDateFormat def = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        	shor.setSend_time(def.format(new Date()));
+		        	System.out.println(shor.getSend_time());
 		        	sdao.AddSms(shor);
 		        	map.put("code", "200");
 		        	map.put("desc", "已发送,数据存储");
@@ -216,6 +217,7 @@ public class Smserviceimp implements Smservice{
 		shor.setPhonenum(phones.size());
 		List<Shortmessage> sho = new ArrayList<Shortmessage>();
 		shor.setShortmessagesize(sdao.SelectTimeSize(shor));
+		shor.setCollection_time(shor.getSend_time());
 		sho.add(shor);
 		map.put("Shortmessage", sho);
 		return map;
@@ -232,6 +234,7 @@ public class Smserviceimp implements Smservice{
 	@Override
 	public Map<String, Object> UserTypes(Usershortmessage companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(companyId.getRegisteClient());
 		List<String> phones = sdao.AllRegist(companyId);
 		PhoneDeal p = new PhoneDeal();
 		String a = null;

@@ -68,4 +68,18 @@ public class SourceController {
     	int num=intSourceService.updateFalDel(id);
     	return num;
     }
+	
+	//后台管理----根据前端传过来的链接判断该链接是否存在source表
+	@ResponseBody
+	@RequestMapping("/queryIfLink")
+	public int queryIfLink(String link){
+		int returnvalue=0;
+		int value=intSourceService.queryIfLink(link);
+		if(value==0){
+			returnvalue=0;
+		}else{
+			returnvalue=1;
+		}
+		return returnvalue;
+	}
 }

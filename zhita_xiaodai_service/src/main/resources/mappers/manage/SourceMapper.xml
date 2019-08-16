@@ -296,5 +296,8 @@
       <select id="getsourceName" parameterType="java.lang.Integer" resultType="java.lang.String">
   select sourceName from source where id = #{sourceId}
  </select>
- 
+ 	<!-- 后台管理         根据前端传过来的链接判断该链接是否存在source表 -->
+ 	<select id="queryIfLink" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		select count(*) from source where link = #{arg0} and deleted=0 
+	</select>
 </mapper>

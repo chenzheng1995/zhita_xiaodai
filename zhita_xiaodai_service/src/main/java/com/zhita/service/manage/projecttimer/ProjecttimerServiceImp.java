@@ -34,7 +34,7 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 	
 	//后台管理----查询订单表     所有逾期中的订单(定时任务     控制逾期)
 	@Transactional
-	public void queryAllover(){
+	public void selAllover(){
 		Integer companyId = 3;
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date d = new Date();

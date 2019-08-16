@@ -240,7 +240,7 @@
 					AND ra.remittanceTime between #{start_time} and #{end_time}
 				</if>
 		  	</where>
-		  	order by ra.id desc
+		  	group by ra.orderId 
 		  	limit #{page},#{pagesize}
 		  </select>
   
@@ -292,10 +292,10 @@
 			  	<where>
 			  		AND o.companyId = #{companyId}
 			  		<if test="orderNumber != null and orderNumber != ''">
-			  			AND o.orderNumber = #{orderNumber}
+			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 			  		</if>
 			  		<if test="pipelinenumber != null and pipelinenumber != ''">
-			  			AND ra.pipelinenumber = #{pipelinenumber}
+			  			AND ra.pipelinenumber LIKE concat('%',#{pipelinenumber},'%') 
 			  		</if>
 			  		<if test="name != null and name != ''">
 			  			AND u.name LIKE concat('%',#{name},'%') 
@@ -310,7 +310,7 @@
 						AND thir.id = #{thirdparty_id}
 					</if>
 			  	</where>
-			  	order by ra.id desc
+			  	group by o.id 
 		  		limit #{page},#{pagesize}
 			  </select>
 		  
@@ -439,7 +439,6 @@
   				<where>
   					a.orderId = o.id 
   					AND u.id = o.userId 
-  					AND re.id = a.rename_id
   					AND o.companyId = #{companyId}
   					AND o.orderStatus = "0"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
@@ -471,13 +470,12 @@
   			
   			<select id="AllStatu" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
   				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue,
-  				 a.amou_time,re.pipelinenumber from orders o,user u,accountadjustment a,repayment re,repayment_setting th  
+  				 a.amou_time,re.pipelinenumber from orders o,user u,accountadjustment a,repayment_setting th,repayment re  
   				<where>
   					a.orderId = o.id 
   					and u.id = o.userId 
-  					and re.orderId = a.orderId 
-  					and th.id = a.rename_id
   					and o.orderStatus = "3"
+  					and re.orderId = a.orderId
   					and o.companyId = #{companyId}
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
