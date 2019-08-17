@@ -7,10 +7,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
@@ -19,6 +21,7 @@ import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
@@ -47,6 +50,11 @@ public class ChanpaySend extends BaseParameter{
 		@Autowired
 	    OrderdetailsMapper orderdetailsMapper;
 		
+		
+		
+		@Autowired
+		IntBorrowmonmesService intBorrowmonmesService;
+		
 	
 	
 	/**
@@ -60,13 +68,27 @@ public class ChanpaySend extends BaseParameter{
 	 */
 	@ResponseBody
 	@RequestMapping("send")
-	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan){
+	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan,BigDecimal finalLine){
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
 		String time = sin.format(new Date());
 		String start_time = time+" 00:00:00";
 		String end_time = time+" 23:59:59";
 		String a =  chanser.loanSetStatu(companyId);//放款状态  1  开启    2 关闭
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
+		Integer id = chanser.SelectOrdersId(userId);
+		int platformfeeRatio =  ((int) map2.get("platformfeeRatio"));//平台服务费比率
+		BigDecimal pr = new BigDecimal(0);
+		pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
+		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
+		BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
+		BigDecimal acmoney = new BigDecimal(TransAmt);
+		Integer j = actualAmountReceived.compareTo(acmoney);
+		if(j==0 || j==1){//j = 0 证明 actualAmountReceived == acmoney j = 1 actualAmountReceived > acmoney
+			
+		if(id == null){
+			
+		
 		if(a.equals("1")){
 		Orderdetails ord = new Orderdetails();
 		
@@ -167,6 +189,14 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("msg", "渠道关闭,请联系客服");
 			map1.put("code", 0);
 		}
+		}else{
+			map1.put("msg", "您有订单未还清");
+			map1.put("code", 0);
+		}
+		}else{
+			map1.put("msg", "金额异常");
+			map1.put("code", 0);
+		}
 		
 		return map1;
 		
@@ -192,8 +222,8 @@ public class ChanpaySend extends BaseParameter{
 	@ResponseBody
 	@RequestMapping("Mingxi")
 	public Map<String, Object> SendMing(String orderNumber,int lifeOfLoan,String sourceName,String registeClient,
-			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,
-			BigDecimal shouldTotalAmount) {
+			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,
+			BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {
 		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 	    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳

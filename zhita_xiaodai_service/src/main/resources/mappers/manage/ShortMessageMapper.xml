@@ -90,4 +90,9 @@
 					companyId
 				)VALUES(#{send_time},#{user_type},#{usernum},#{short_text},#{sys_userId},#{companyId})
 			</insert>
+			
+			
+			<select id="SelectOrders" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select id from orders where userId = #{userId} and orderStatus != "3"
+			</select>
 </mapper>

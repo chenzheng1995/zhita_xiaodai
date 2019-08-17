@@ -115,7 +115,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			order.setPhone(p.encryption(order.getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+		String stime = sim.format(new Date());
 		try {
+			order.setStart_time(Timestamps.dateToStamp1(stime+" 00:00:00"));
+			order.setEnd_time(Timestamps.dateToStamp1(stime+" 23:59:59"));
 			order.setShouldReturnTime(System.currentTimeMillis()+"");
 		} catch (Exception e) {
 			// TODO: handle exception

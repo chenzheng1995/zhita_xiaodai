@@ -225,6 +225,16 @@ public class Orderdetails {
     
     private BigDecimal ShijiMoney;
     
+    private BigDecimal promise_money;
+    
+	public BigDecimal getPromise_money() {
+		return promise_money;
+	}
+
+	public void setPromise_money(BigDecimal promise_money) {
+		this.promise_money = promise_money;
+	}
+
 	public BigDecimal getShijiMoney() {
 		return ShijiMoney;
 	}

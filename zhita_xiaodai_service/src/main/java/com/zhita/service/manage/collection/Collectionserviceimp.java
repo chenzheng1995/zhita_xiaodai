@@ -7,17 +7,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
-import com.zhita.model.manage.Collection_member;
 import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Sys_user;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
@@ -39,9 +37,9 @@ public class Collectionserviceimp implements Collectionservice{
 	
 	@Override
 	public Map<String, Object> allBeoverdueConnection(Collection coll) {
+		System.out.println("订单编号:"+coll.getOrderNumber());
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
-		
 		Integer totalCount = collmapp.SelectTotalCount(coll);
 		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
 		TuoMinUtil tm = new TuoMinUtil();
@@ -51,10 +49,18 @@ public class Collectionserviceimp implements Collectionservice{
 		for(int i=0;i<orders.size();i++){
 			String phon = tm.mobileEncrypt(p.decryption(orders.get(i).getPhone()));//脱敏
 			orders.get(i).setPhone(phon);//手机号解密 
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setCompanyId(coll.getCompanyId());
-			Deferred defe = podao.OneDeferred(orders.get(i));
-			orders.get(i).setDeferBeforeReturntime(defe.getDeferBeforeReturntime());
-			orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));
+			Deferred defe = collmapp.DefeSet(orders.get(i));
+			if(defe!=null){
+				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferAfterReturntime()));
+				System.out.println(orders.get(i).getDeferAfterReturntime()+"AAA"+orders.get(i).getOverdueNumberOfDays());
+				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));
+			}else{
+				orders.get(i).setDeferAfterReturntime("/");
+			}
+			
 			}
 		map.put("Orderdetails", orders);
 		return map;
@@ -67,7 +73,7 @@ public class Collectionserviceimp implements Collectionservice{
 	public Map<String, Object> Collectionmember(Integer companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(companyId != null){
-			List<Collection_member> col = collmapp.CollectionAll(companyId);
+			List<Sys_user> col = collmapp.CollectionAll(companyId);
 			map.put("collection_member", col);
 		}else{
 			map.put("code", 0);
@@ -119,7 +125,10 @@ public class Collectionserviceimp implements Collectionservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
 		}
 		
 		try {
@@ -138,6 +147,7 @@ public class Collectionserviceimp implements Collectionservice{
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+				System.out.println("逾期天数:"+orders.get(i).getOverdueNumberOfDays());
 				if(orders.get(i).getMakeLoans() != null && orders.get(i).getInterestPenaltySum() != null){
 					orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
 				}else if(orders.get(i).getInterestPenaltySum() != null){
@@ -146,12 +156,20 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setOrder_money(orders.get(i).getMakeLoans());
 				}
 				
+				if(orders.get(i).getSurplus_money()==null){
+					
+					orders.get(i).setSurplus_money(new BigDecimal(0));
+				}
+				
 				Deferred des = collmapp.DefeSet(orders.get(i));
 				if(des != null ){
 					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
 					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
 					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
 					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+					System.out.println(des.getDeferAfterReturntime());
+				}else{
+					orders.get(i).setDeferAfterReturntime("/");
 				}
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
@@ -185,51 +203,6 @@ public class Collectionserviceimp implements Collectionservice{
 			coll.setPhone(p.encryption(coll.getPhone()));
 		}
 		
-//		try {
-//			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
-//			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		List<Collection> totalCount = collmapp.SelectSumOrderNum(coll);
-//		try {
-//			coll.setStart_time(Timestamps.dateToStamp(coll.getStart_time()));
-//			coll.setEnd_time(Timestamps.dateToStamp(coll.getEnd_time()));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		
-//		Integer asa = null;
-//		if(totalCount.size() != 0){
-//			asa = totalCount.size();
-//		}else{
-//			asa = 0;
-//		}
-//		PageUtil pages = new PageUtil(coll.getPage(), asa);
-//		coll.setPage(pages.getPage());
-//		PhoneDeal p = new PhoneDeal();
-//		List<Collection> colles = collmapp.SelectSumOrder(coll);
-//		for(int i=0;i<colles.size();i++){
-//			colles.get(i).setCompanyId(coll.getCompanyId());
-//			colles.get(i).setOrderNum(collmapp.SelectOrderNum(colles.get(i)));//累计订单总数  参数  时间   公司ID
-//			colles.get(i).setIds(collmapp.SelectCollectionId(coll.getCompanyId()));//根据公司ID 查询催收员ID
-//			colles.get(i).setCollSum(collmapp.SelectCollectionNum(colles.get(i)));
-//			colles.get(i).setCollectionStatus("承诺还款");
-//			colles.get(i).setSameday(collmapp.SelectcollectionStatus(colles.get(i)));//承诺还款
-//			colles.get(i).setCollectionStatus("电话无人接听");
-//			colles.get(i).setPaymentmade(collmapp.SelectcollectionStatus(colles.get(i)));//未还清
-//			colles.get(i).setCollectionStatus("态度恶劣");
-//			colles.get(i).setConnected(collmapp.SelectcollectionStatus(colles.get(i)));//累计坏账数
-//			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
-//				NumberFormat numberFormat = NumberFormat.getInstance();
-//				numberFormat.setMaximumFractionDigits(2);
-//				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
-//			}else{
-//				colles.get(i).setCollNumdata("0");
-//			}
-//			colles.get(i).setOrderCreateTime(Timestamps.stampToDate(colles.get(i).getOrderCreateTime()));
-//			
-//		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Collection> colles = new ArrayList<Collection>();
 		if(coll.getStart_time() == null){
@@ -263,7 +236,9 @@ public class Collectionserviceimp implements Collectionservice{
 			
 			System.out.println(co.getDataCol());
 			co.setRealtime(stime);
-			colles.add(co);
+			if(co!=null){
+				colles.add(co);
+			}
 			map.put("Collection", colles);
 		}else{
 			List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
@@ -294,7 +269,9 @@ public class Collectionserviceimp implements Collectionservice{
 					co.setDataCol(a);
 				}
 				co.setRealtime(stimes.get(i));
-				colles.add(co);
+				if(co != null){
+					colles.add(co);
+				}
 				map.put("Collection", colles);
 			}
 		}
@@ -308,7 +285,9 @@ public class Collectionserviceimp implements Collectionservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(col.getPhone() != null){
-			col.setPhone(p.encryption(col.getPhone()));
+			if(col.getPhone().length()!=0){
+				col.setPhone(p.encryption(col.getPhone()));
+			}
 		}
 		
 			Integer totalCount = collmapp.AllCountNum(col);
@@ -350,7 +329,9 @@ public class Collectionserviceimp implements Collectionservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(col.getPhone() != null){
-			col.setPhone(p.encryption(col.getPhone()));
+			if(col.getPhone().length()!=0){
+				col.setPhone(p.encryption(col.getPhone()));
+			}
 		}
 		try {
 			col.setStart_time(Timestamps.dateToStamp1(col.getStart_time()));
@@ -364,14 +345,25 @@ public class Collectionserviceimp implements Collectionservice{
 		col.setPage(pages.getPage());
 		List<Orderdetails> orders = collmapp.WeiControllerOrdetialis(col);
 		for(int i=0;i<orders.size();i++){
-			orders.get(i).setBorrowTimeLimit(Timestamps.stampToDate(orders.get(i).getBorrowTimeLimit()));
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
-			orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
+			if(orders.get(i).getSurplus_money()==null){
+				orders.get(i).setSurplus_money(new BigDecimal(0));
+			}
+			//orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
 			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
 			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+			BigDecimal des = collmapp.PrmoiseMoney(orders.get(i).getOrderId());
+			if(des != null){
+				orders.get(i).setPromise_money(des);
+			}else{
+				
+				orders.get(i).setPromise_money(new BigDecimal(0));
+			}
+			
+			
 		}
 		map.put("Orderdetails", orders);
 		}else{
@@ -460,6 +452,7 @@ public class Collectionserviceimp implements Collectionservice{
 //		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		BigDecimal a=null;
+		List<List<Collection>> cols = new ArrayList<List<Collection>>();
 		if(coll.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -472,9 +465,9 @@ public class Collectionserviceimp implements Collectionservice{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			List<Collection> co = new ArrayList<Collection>();
-			Collection ca = new Collection();
-			 co = collmapp.Collectionmem(coll);//催收员名称   催收数
+			
+			
+			List<Collection> co  = collmapp.Collectionmem(coll);//催收员名称   催收数
 			for(int i=0;i<co.size();i++){
 				if(co.get(i) != null){
 					coll.setCollectionStatus("承诺还款");
@@ -494,18 +487,13 @@ public class Collectionserviceimp implements Collectionservice{
 					}
 					co.get(i).setRealtime(stime);
 					
-				}else{
-					ca.setRealtime(stime);
-					ca.setSameday(0);
-					ca.setPaymentmade(0);
-					ca.setConnected(0);
-					a = new BigDecimal(0);
-					ca.setCollNumdata("0");
-					ca.setCollection_count(0);
-					co.add(ca);
+				}
+				if(co!=null){
+					cols.add(co);
 				}
 				
-				map.put("Collections", co);
+				
+				map.put("Collections", cols);
 			}
 			
 		}else{
@@ -539,19 +527,12 @@ public class Collectionserviceimp implements Collectionservice{
 						}
 						as.get(j).setRealtime(stimes.get(i));
 						
-					}else{
-						as.get(j).setRealtime(stimes.get(i));
-						as.get(j).setReallyName("0");
-						as.get(j).setSameday(0);
-						as.get(j).setPaymentmade(0);
-						as.get(j).setConnected(0);
-						a = new BigDecimal(0);
-						as.get(j).setCollNumdata("0");
-						as.get(j).setCollection_count(0);
 					}
 				}
 				
-				
+				if(as!=null){
+					cols.add(as);
+				}
 				map.put("Collections", as);
 		}
 		}
