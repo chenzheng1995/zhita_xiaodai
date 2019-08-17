@@ -24,6 +24,7 @@ public class ContactCustomerController {
 	    @Transactional
 	    public Map<String, Object> getContactCustomer(int companyId){
 	    	Map<String, Object> map = new HashMap<>();
+	    	map.put("Ncode","2000");
 	    	Map<String, Object> map1 = intContactcustomerService.getContactCustomer(companyId);
 	    	String advertisingmap = (String) map1.get("advertisingmap");//宣传图
 	    	String contactInformation = (String) map1.get("contactInformation");//联系方式

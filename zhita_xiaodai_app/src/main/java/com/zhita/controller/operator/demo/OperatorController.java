@@ -87,6 +87,7 @@ public class OperatorController {
 
     	
    	 Map<String, Object> map = new HashMap<String, Object>();
+   	map.put("Ncode","2000");
    	 int num = operatorService.getuserId(userId);
    	 if(num==0) {
    	   	 int number = operatorService.setredIdAndPhone(reqId,userId,phone);
@@ -110,6 +111,7 @@ public class OperatorController {
     @Transactional
     public Map<String, String> updateOperatorJson(int userId){
     	Map<String, String> map = new HashMap<>();
+    	map.put("Ncode","2000");
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String attestationStatus =null;
 		String name = (String) userAttestation.get("trueName");
@@ -169,6 +171,7 @@ public class OperatorController {
     @Transactional
     public Map<String, Object> isBlacklist(String phone,String idCard,int companyId,int userId){
     	Map<String, Object> map = new HashMap<>();
+    	map.put("Ncode","2000");
         map.put("msg", "不是黑名单 ");
         map.put("code", "200");
         if(idCard==null||idCard.isEmpty()) {
@@ -211,6 +214,7 @@ public class OperatorController {
     @Transactional
     public Map<String, Object> isRepeat(String idCard,int userId,int companyId,String phone){
     	Map<String, Object> map = new HashMap<>();
+    	map.put("Ncode","2000");
     	PhoneDeal pDeal = new PhoneDeal();
         map.put("msg", "不是重复用户");
         map.put("code", "200");
@@ -282,6 +286,7 @@ public class OperatorController {
   @Transactional
   public Map<String, Object> conditions(int userId,int companyId) throws ParseException, Exception{
 	  Map<String, Object> map = new HashMap<>();
+	  map.put("Ncode","2000");
 	  map.put("code", "200");
 	  map.put("msg", "符合条件");
 	  Map<String, Object> map1 =  userAttestationService.getuserAttestation(userId);
@@ -355,6 +360,7 @@ public Map<String, Object> getshareOfState(int userId){
           
 	}
 	Map<String, Object> map = new HashMap<>();
+	map.put("Ncode","2000");
 	String timStamp = System.currentTimeMillis()+"";//当前时间戳
 	String applynumber = "SQ"+userId+timStamp;//申请编号
 	intUserService.setuser(userId,timStamp,applynumber);
@@ -449,6 +455,7 @@ public Map<String, Object> getshareOfState(int userId){
 @Transactional
 public Map<String, Object> getthreeElements(int userId,String phone,int companyId) throws UnsupportedEncodingException{
 	Map<String, Object> map1 = new HashMap<>();
+	map1.put("Ncode","2000");
 	Map<String, Object> map = userAttestationService.getuserAttestation(userId);
 	String trueName = (String) map.get("trueName");
 	String idcard_number = (String) map.get("idcard_number");
@@ -530,12 +537,15 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
    @RequestMapping("/getScore")
    @ResponseBody
    @Transactional
-   public Map<String, Object> getScore(int userId,String sourceName){
+   public Map<String, Object> getScore(int userId){
    	String shareOfState =null;
    	int score =0;
    	Map<String, Object> map = new HashMap<>();
+   	map.put("Ncode","2000");
 //   	shareOfState ="6";
 //   	intUserService.updateshareOfState(userId, shareOfState);
+   	int sourceId = intUserService.getsourceId(userId);
+   	String sourceName = intSourceService.getsourceName(sourceId);
    	String phone1 = intUserService.getphone(userId);
    	PhoneDeal pDeal = new PhoneDeal();
    	String newphone = pDeal.decryption(phone1);

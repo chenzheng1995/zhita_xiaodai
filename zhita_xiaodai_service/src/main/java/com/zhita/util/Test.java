@@ -239,19 +239,21 @@ public class Test {
 //        }
     	
 		
-		PostUtil pUtil = new PostUtil();
-		String member_id ="8150735131";
-		String terminal_id ="8150735131";
-		String trans_id ="1";
-		String trade_date ="20190815120125";
-		String name ="陈峥";
-		String mobile ="13486070402";
-		String id_card ="330225199507155112";
-		String param = "{'member_id':'"+member_id+"','terminal_id':'"+terminal_id+"','trans_id':'"+trans_id+"','trade_date':'"+trade_date+"','name':'"+name+"','mobile':'"+mobile+"','id_card':'"+id_card+"'}";
-		String jsonString = pUtil.post("https://test.xinyan.com/operators/v2/authNormal", param);
-		System.out.println(jsonString);
+//		PostUtil pUtil = new PostUtil();
+//		String member_id ="8150735131";
+//		String terminal_id ="8150735131";
+//		String trans_id ="1";
+//		String trade_date ="20190815120125";
+//		String name ="陈峥";
+//		String mobile ="13486070402";
+//		String id_card ="330225199507155112";
+//		String param = "{'member_id':'"+member_id+"','terminal_id':'"+terminal_id+"','trans_id':'"+trans_id+"','trade_date':'"+trade_date+"','name':'"+name+"','mobile':'"+mobile+"','id_card':'"+id_card+"'}";
+//		String jsonString = pUtil.post("https://test.xinyan.com/operators/v2/authNormal", param);
+//		System.out.println(jsonString);
 
-
+		
+		int score = Integer.parseInt("0");
+		System.out.println(score);
 	}
 	}
 

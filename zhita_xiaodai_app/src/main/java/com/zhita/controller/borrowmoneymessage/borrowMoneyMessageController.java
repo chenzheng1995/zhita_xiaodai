@@ -49,6 +49,7 @@ public class borrowMoneyMessageController {
     public Map<String, Object> getborrowMoneyMessage(int companyId,Integer userId) {
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> map2 = new HashMap<String, Object>();
+        map2.put("Ncode","2000");
 		   String userAttestation =null;
 		   String Operator =null;
 		   String bankcard =null;

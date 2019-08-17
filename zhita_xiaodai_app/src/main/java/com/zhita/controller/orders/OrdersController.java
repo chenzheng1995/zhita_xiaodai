@@ -72,7 +72,8 @@ public class OrdersController {
 	    public Map<String, Object> getCanBorrowLines(int userId,int companyId) {
 		   BigDecimal finalLine = new BigDecimal(0);
 		   int num =0;
-		   Map<String, Object> map = new HashMap<String, Object>();		   
+		   Map<String, Object> map = new HashMap<String, Object>();	
+		   map.put("Ncode","2000");
 		   int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 		   BigDecimal canBorrowlines = intBorrowmonmesService.getCanBorrowlines(companyId); //初始额度
 		   ArrayList<LiftingAmount> list = intLiftingamountServcie.getintLiftingamount(companyId);
@@ -119,7 +120,8 @@ public class OrdersController {
 	    @ResponseBody
 	    @Transactional
 	    public Map<String, Object> borrowinginformation(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName) {  //finalLine是上面那个接口得到的额度
-	    	 Map<String, Object> map1 = new HashMap<String, Object>();		   
+	    	 Map<String, Object> map1 = new HashMap<String, Object>();	
+	    	 map1.put("Ncode","2000");
 	    	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
 	    	BigDecimal ll = new BigDecimal(0);
 	    	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//借款期限
@@ -155,7 +157,8 @@ public class OrdersController {
 	    @ResponseBody
 	    @Transactional
 	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName,int lifeOfLoan,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {  //finalLine是上面那个接口得到的额度
-	    	 Map<String, Object> map = new HashMap<String, Object>();		 
+	    	 Map<String, Object> map = new HashMap<String, Object>();		
+	    	 map.put("Ncode","2000");
 		    int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 		    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    	Calendar now = Calendar.getInstance(); 
@@ -217,6 +220,7 @@ public class OrdersController {
 	   @Transactional
 	   public Map<String, Object> repayment(int userId,int companyId) {
 		   Map<String, Object> map  = new HashMap<String, Object>();	
+		   map.put("Ncode","2000");
 		   BigDecimal shouldReapyMoney =null;
 		   Map<String, Object> map1  = intOrderService.getRepayment(userId,companyId);
 		   int orderId = (int) map1.get("id");
@@ -240,7 +244,7 @@ public class OrdersController {
    }
    if(orderStatus.equals("1")) {//逾期后
 //	   BigDecimal interestInAll = orderdetailsMapper.getinterestInAll(orderId);//总利息
-	   BigDecimal interestPenaltySum = orderdetailsMapper.interestPenaltySum(userId);//逾期总罚息
+	   BigDecimal interestPenaltySum = orderdetailsMapper.interestPenaltySum(orderId);//逾期总罚息
 	   String overdueNumberOfDays = orderdetailsMapper.getoverdueNumberOfDays(orderId);//逾期天数
 	   shouldReapyMoney = shouldReapyMoney.add(interestPenaltySum);//逾期应还钱
 	   map.put("shouldReapyMoney", shouldReapyMoney);
@@ -260,6 +264,7 @@ public class OrdersController {
 	   @Transactional
 	   public Map<String, Object> getrepayment(int userId,int companyId) {
 		   Map<String, Object> map  = new HashMap<String, Object>();		
+		   map.put("Ncode","2000");
 		   Map<String, Object> map1  = intOrderService.getRepayment(userId,companyId);
 		   String TrxId = (String) map1.get("orderNumber");//订单号
            Map<String, Object> map2 = bankcardMapper.getbankcard(userId);
@@ -285,7 +290,8 @@ public class OrdersController {
    @ResponseBody
    @Transactional
    public Map<String, Object> reimbursement(int userId,int companyId,String overdueState) {//shouldReapyMoney 应还总金额，从上个接口获取,overdueState 逾期状态
-	   Map<String, Object> map1  = new HashMap<String, Object>();	
+	   Map<String, Object> map1  = new HashMap<String, Object>();
+	   map1.put("Ncode","2000");
 	   BigDecimal shouldReapyMoney = null;
 	   if(overdueState.equals("0")) {//未逾期
 		   Map<String, Object> map  = intOrderService.getRepayment(userId,companyId);
@@ -339,6 +345,7 @@ public class OrdersController {
    @Transactional
    public Map<String, Object> whetherborrow (int userId,int companyId) {
 	   Map<String, Object> map  = new HashMap<String, Object>();
+	   map.put("Ncode","2000");
 	   int num = intOrderService.getorderStatus(userId,companyId);
 	   if(num==0) {
 		   map.put("code", "1");
@@ -359,6 +366,7 @@ public class OrdersController {
    @Transactional
    public Map<String, Object> whetherdelay (int userId,int companyId) throws ParseException {
 	   Map<String, Object> map  = new HashMap<String, Object>();
+	   map.put("Ncode","2000");
        String orderStatus = intOrderService.getorderStatus1(userId, companyId);
        if(orderStatus.equals("2")) {
     	   map.put("msg","不能延期");
@@ -409,6 +417,7 @@ public class OrdersController {
    public Map<String, Object> deferredpage (int userId,int companyId,BigDecimal finalLine) throws ParseException{
   	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
     Map<String, Object> map1  = new HashMap<String, Object>();
+    map1.put("Ncode","2000");
   	BigDecimal ll = new BigDecimal(0);
   	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//延期天数
   	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型

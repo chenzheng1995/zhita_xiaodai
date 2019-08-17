@@ -32,6 +32,7 @@ public class IdCardController {
     	JSONObject jsonObject =null;
     	String biz_token ="";
 		 Map<String, Object> map = new HashMap<String, Object>();
+		 map.put("Ncode","2000");
 	        if (StringUtils.isEmpty(userId)) {
 	            map.put("msg", "userId不能为空");
 	            return map;
@@ -103,6 +104,7 @@ public class IdCardController {
     @Transactional
 	public Map<String, Object> setAddress(String homeAddressLongitude,String homeAddressLatitude,String detailAddress,int userId){
     	 Map<String, Object> map = new HashMap<String, Object>();
+    	 map.put("Ncode","2000");
     	 int number = UserAttestationService.setAddress(homeAddressLongitude,homeAddressLatitude,detailAddress,userId);
          if (number == 1) {                  	
              map.put("msg", "数据插入成功");
@@ -122,6 +124,7 @@ public class IdCardController {
     @Transactional
 	public Map<String, Object> setlinkman(String linkmanOneRelation,String linkmanOneName,String linkmanOnePhone,String linkmanTwoRelation,String linkmanTwoName,String linkmanTwoPhone,int userId){
     	 Map<String, Object> map = new HashMap<String, Object>();
+    	 map.put("Ncode","2000");
     	 int number = UserAttestationService.setlinkman(linkmanOneRelation,linkmanOneName,linkmanOnePhone,linkmanTwoRelation,linkmanTwoName,linkmanTwoPhone,userId);
          if (number == 1) {                  	
              String attestationStatus = "1";

@@ -230,6 +230,7 @@ public class GetResultController {
     public Map<String, Object> setidcard(int userId,String name,String gender,String nationality,String birth_year,String birth_month,String birth_day,String address,String issued_by,
     		String valid_date_start,String valid_date_end,String idcard_number,String homeAddressLongitude,String homeAddressLatitude,String detailAddress,String head,String nationalEmblem) throws Exception{
     	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("Ncode","2000");
 		String frontsidePath = null;// 正面文件路径
 		String backsidePath = null;// 背面文件路径
 	    Base64ToInputStream base64ToInputStream = new Base64ToInputStream();
@@ -262,6 +263,7 @@ public class GetResultController {
     @Transactional
     public Map<String, Object> setface(int userId,String code){
     	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("Ncode","2000");
     	if("200".equals(code)) {
     		String authenticationSteps ="2";
     		int number = UserAttestationService.updateAuthenticationSteps(userId,authenticationSteps);
@@ -283,6 +285,7 @@ public class GetResultController {
     @Transactional
     public Map<String, Object> getidCardAndName (int userId){
  	   Map<String, Object> map  = new HashMap<String, Object>();
+ 	   map.put("Ncode","2000");
  	   Map<String, Object> map1 = UserAttestationService.getuserAttestation(userId);
  	   String name = (String) map1.get("trueName");
  	  String idcard_number = (String) map1.get("idcard_number");

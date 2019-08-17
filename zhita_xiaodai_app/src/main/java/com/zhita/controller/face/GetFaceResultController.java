@@ -26,6 +26,7 @@ public class GetFaceResultController {
     @Transactional
     public Map<String, Object> getfaceresult(int userId) throws Exception{
     	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("Ncode","2000");
     	Map<String, Object> userAttestation = UserAttestationService.getuserAttestation(userId); 
     	JSONObject jsonObject =null;
     	JSONObject jsonObject1 =null;
