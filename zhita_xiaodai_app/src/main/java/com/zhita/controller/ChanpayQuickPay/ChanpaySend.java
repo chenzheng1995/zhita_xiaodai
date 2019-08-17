@@ -1,4 +1,8 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayQuickPay;
+
+
+
+
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -7,12 +11,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
