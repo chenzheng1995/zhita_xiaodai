@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
+import com.zhita.util.DateListUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
@@ -152,14 +153,13 @@ public class TestController {
 		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		//System.out.println(tm.mobileEncrypt(p.decryption("6376462xx82")));
-		System.out.println(p.decryption("90667926x29"));
+		//System.out.println(p.decryption("90667926x29"));
 		//System.out.println(p.encryption("188715526523365"));
 		/*String province="山西省稷山县蔡村乡杨村第九居民组";
 		System.out.println(province.substring(0,3));*/
-		System.out.println(Timestamps.stampToDate(null));
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date d = new Date();
-		String date = sdf.format(d);//当天时间（年月日时分秒格式）
-		System.out.println(date+"-------------");
+		//System.out.println(Timestamps.stampToDate(null));
+		Integer a=1;
+		System.out.println(String.valueOf(a).equals("1"));
+		
 	}
 }
