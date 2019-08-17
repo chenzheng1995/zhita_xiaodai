@@ -24,8 +24,8 @@ public interface SourceDiscountHistoryMapper {
     List<String> queryDate(Integer sourceName);
     
     //后台管理----通过渠道名字查询当前渠道在历史表的信息
-    List<TongjiSorce> queryAllBySourceName(String sourceName);
+    List<TongjiSorce> queryAllBySourceName(Integer sourceName);
     
     //后台管理---通过渠道和时间查询是否有数据
-    TongjiSorce queryBySourcenameAndDate(String sourcename,String startdate,String enddate);
+    TongjiSorce queryBySourcenameAndDate(Integer sourcename,String startdate,String enddate);
 }

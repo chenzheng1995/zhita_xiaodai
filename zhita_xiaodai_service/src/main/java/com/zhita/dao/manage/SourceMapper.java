@@ -46,7 +46,7 @@ public interface SourceMapper {
     TongjiSorce queryAllSourceByUserDetail(Integer companyid,String StartTime,String EndTime,Integer sourceid);
     
     //后台管理---通过渠道名称查询出当前渠道的折扣率
-    String queryDiscount(String sourceName,Integer companyId);
+    String queryDiscount(Integer sourceName,Integer companyId);
 
 	int getsourceId(String sourceId);
     
@@ -54,7 +54,7 @@ public interface SourceMapper {
     List<String> queryTime(Integer companyId,String sourceName);
     
     //后台管理 ------查询统计申请数 
-    int queryApplicationNumber(Integer companyId,String sourceName,String startTime,String endTime);
+    int queryApplicationNumber(Integer companyId,Integer sourceName,String startTime,String endTime);
     
     //后台管理---根据渠道id查询渠道的折扣率
     String queryDiscountById(Integer sourceId);
@@ -101,5 +101,8 @@ public interface SourceMapper {
 	
 	//后台管理----根据前端传过来的链接判断该链接是否存在source表
 	int queryIfLink(String link);
+	
+	//后台管理----渠道方登录（用户名和密码）
+	//Source queryByAccAndPwd(String )
     
 }

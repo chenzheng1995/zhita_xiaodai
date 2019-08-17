@@ -132,10 +132,10 @@ public class SourceServiceImp implements IntSourceService{
 			String endTime1 = date;
 			String endTimestamps1 = (Long.parseLong(Timestamps.dateToStamp(endTime1))+86400000)+"";
 			
-			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(record.getSourcename(), startTimestamps1,endTimestamps1);//判断当前渠道今天在历史表是否存在数据
+			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(record.getId(), startTimestamps1,endTimestamps1);//判断当前渠道今天在历史表是否存在数据
 			
 			if(tongjisourceyes==null){//证明当前渠道当天在历史表没有数据
-				float appnum=sourceMapper.queryApplicationNumber(companyId, record.getSourcename(), startTimestamps1,endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
+				float appnum=sourceMapper.queryApplicationNumber(companyId, record.getId(), startTimestamps1,endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				int uv = 0;//uv
 				String cvr = null;//转化率
@@ -176,7 +176,7 @@ public class SourceServiceImp implements IntSourceService{
 				String endTime = date;
 				String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 				
-				float appnum=sourceMapper.queryApplicationNumber(companyId, record.getSourcename(), startTimestamps,endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+				float appnum=sourceMapper.queryApplicationNumber(companyId, record.getId(), startTimestamps,endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				int uv = 0;//uv
 				String cvr = null;//转化率
@@ -293,8 +293,8 @@ public class SourceServiceImp implements IntSourceService{
     					String startTimestamps = Timestamps.dateToStamp(startTime);
     					String endTime = intersectionlist.get(m);
     					String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
-    					float appnum = sourceMapper.queryApplicationNumber(companyId, sourceName, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
-    					String discount = sourceMapper.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+    					float appnum = sourceMapper.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+    					String discount = sourceMapper.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
     					int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
     					int uv = 0;//uv
     					String cvr = null;//转化率
@@ -344,13 +344,13 @@ public class SourceServiceImp implements IntSourceService{
 			String endTime1 = dateyes;
 			String endTimestamps1 = (Long.parseLong(Timestamps.dateToStamp(endTime1))+86400000)+"";
 			
-			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(sourceName, startTimestamps1,endTimestamps1);
+			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(sourceid, startTimestamps1,endTimestamps1);
 			if(tongjisourceyes!=null){
 				float appnumHistory=tongjisourceyes.getRegisternumdis();//历史表折扣后的注册人数
 				String startTimestamps2 = tongjisourceyes.getDate();//该时间为时间戳格式
 				
-				float appnum = sourceMapper.queryApplicationNumber(companyId, sourceName, startTimestamps2, endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
-				String discount = sourceMapper.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+				float appnum = sourceMapper.queryApplicationNumber(companyId, sourceid, startTimestamps2, endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
+				String discount = sourceMapper.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				int uv = 0;
 				String cvr = null;
@@ -390,19 +390,19 @@ public class SourceServiceImp implements IntSourceService{
     		
     
     //后台管理----通过渠道名字查询当前渠道在历史表的信息
-    public List<TongjiSorce> queryAllBySourceName(String sourceName){
+    public List<TongjiSorce> queryAllBySourceName(Integer sourceName){
     	List<TongjiSorce> list=sourceDiscountHistoryMapper.queryAllBySourceName(sourceName);
     	return list;
     }
     
     //后台管理 ------查询统计申请数 
-    public int queryApplicationNumber(Integer companyId,String sourceName,String startTime,String endTime){
+    public int queryApplicationNumber(Integer companyId,Integer sourceName,String startTime,String endTime){
     	int appnum=sourceMapper.queryApplicationNumber(companyId, sourceName, startTime, endTime);
     	return appnum;
     }
     
     //后台管理---通过渠道名称查询出当前渠道的折扣率
-    public String queryDiscount(String sourceName,Integer companyId){
+    public String queryDiscount(Integer sourceName,Integer companyId){
     	String discount=sourceMapper.queryDiscount(sourceName, companyId);
     	return discount;
     }
@@ -414,7 +414,7 @@ public class SourceServiceImp implements IntSourceService{
 	}
     
     //后台管理---通过渠道和时间查询在历史表是否有数据
-    public TongjiSorce queryBySourcenameAndDate(String sourcename,String startdate,String enddate){
+    public TongjiSorce queryBySourcenameAndDate(Integer sourcename,String startdate,String enddate){
     	TongjiSorce tongjiSorce=sourceDiscountHistoryMapper.queryBySourcenameAndDate(sourcename, startdate, enddate);
     	return tongjiSorce;
     }

@@ -201,8 +201,8 @@
    	group by t.sourceid
    </select>
    <!-- 后台管理        通过渠道名称查询出当前渠道的折扣率 -->
-   <select id="queryDiscount" resultType="java.lang.String">
-   	select discount from source where sourceName=#{arg0} and companyId=#{arg1}
+   <select id="queryDiscount" resultType="java.lang.Integer">
+   	select discount from source where id=#{arg0} and companyId=#{arg1}
    </select>
    <!--后台管理             查询某一天某个渠道的注册数量  -->
    <select id="queryAllSourceByUserDetail" resultType="com.zhita.model.manage.TongjiSorce">
@@ -226,7 +226,7 @@
    </select>
     <!--后台管理    查询统计申请数 -->
    <select id="queryApplicationNumber"  resultType="java.lang.Integer">
-		select count(u.id) from user u,source s where u.sourceId=s.id and u.companyId=#{arg0} and s.sourceName=#{arg1} and u.registeTime>=#{arg2} and u.registeTime &lt;#{arg3}
+		select count(u.id) from user u where u.companyId=#{arg0} and u.sourceid=#{arg1} and u.registeTime>=#{arg2} and u.registeTime &lt;#{arg3}
    </select>
     <!-- 后台管理      根据渠道id查询渠道的折扣率 -->
    <select id="queryDiscountById" parameterType="java.lang.Integer" resultType="java.lang.String">

@@ -44,20 +44,20 @@ public interface IntSourceService {
     public void selAllTongji() throws ParseException;
     
     //后台管理----通过渠道名字查询当前渠道在历史表的信息
-    public List<TongjiSorce> queryAllBySourceName(String sourceName);
+    public List<TongjiSorce> queryAllBySourceName(Integer sourceName);
     
     //后台管理 ------查询统计申请数 
-    public int queryApplicationNumber(Integer companyId,String sourceName,String startTime,String endTime);
+    public int queryApplicationNumber(Integer companyId,Integer sourceName,String startTime,String endTime);
     
     //后台管理---通过渠道名称查询出当前渠道的折扣率
-    public String queryDiscount(String sourceName,Integer companyId);
+    public String queryDiscount(Integer sourceName,Integer companyId);
 
 
 	public int getsourceId(String sourceName);
 
     
     //后台管理---通过渠道和时间查询在历史表是否有数据
-    public TongjiSorce queryBySourcenameAndDate(String sourcename,String startdate,String enddate);
+    public TongjiSorce queryBySourcenameAndDate(Integer sourcename,String startdate,String enddate);
     
     //后台管理---查询当前渠道下有多少用户是登录过得
     public int queryCount(Integer sourceid,String startTime,String endTime);

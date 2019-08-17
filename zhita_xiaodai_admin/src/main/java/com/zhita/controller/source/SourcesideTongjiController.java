@@ -44,14 +44,14 @@ public class SourcesideTongjiController {
 	 */
 	@ResponseBody
 	@RequestMapping("/queryAllTongji")
-	public Map<String, Object> queryAllTongji(Integer page,Integer companyId,String sourceName) throws ParseException{
+	public Map<String, Object> queryAllTongji(Integer page,Integer companyId,Integer sourceid,String sourceName) throws ParseException{
 		Map<String, Object> map = new HashMap<>();
 		
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourceto = new ArrayList<>(); 
 		
-		List<TongjiSorce> listHistory=intSourceService.queryAllBySourceName(sourceName);
+		List<TongjiSorce> listHistory=intSourceService.queryAllBySourceName(sourceid);
 		for (int i = 0; i < listHistory.size(); i++) {
 			listHistory.get(i).setDate(Timestamps.stampToDate1(listHistory.get(i).getDate()));//将历史表数据的日期都变为年月日格式
 		}
@@ -66,14 +66,14 @@ public class SourcesideTongjiController {
 		String endTime = date;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 		
-		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceName, startTimestamps,endTimestamps);//判断当前渠道今天在历史表是否存在数据
+		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceid, startTimestamps,endTimestamps);//判断当前渠道今天在历史表是否存在数据
 		
 		int uv = 0;
 		String cvr = null;
 		float disAppnum=0;//折扣申请数
 		if(tongjiSorcelist==null){
-			float appnum = intSourceService.queryApplicationNumber(companyId, sourceName, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
-			String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+			float appnum = intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				
 			if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
@@ -98,8 +98,8 @@ public class SourcesideTongjiController {
 		}else{
 			float appnumHistory=tongjiSorcelist.getRegisternumdis();//历史表折扣后的注册人数
 			String startTimestamps1=tongjiSorcelist.getDate();
-			float appnum = intSourceService.queryApplicationNumber(companyId, sourceName, startTimestamps1, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
-			String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+			float appnum = intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps1, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				
 			if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
@@ -145,7 +145,7 @@ public class SourcesideTongjiController {
 	
 	@ResponseBody
 	@RequestMapping("/queryAllTongjiByDate")
-	public TongjiSorce queryAllTongjiByDate(Integer companyId,String sourceName,String date) throws ParseException{
+	public TongjiSorce queryAllTongjiByDate(Integer companyId,Integer sourceid,String sourceName,String date) throws ParseException{
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		TongjiSorce tongjiSorce = new TongjiSorce();
 		
@@ -154,7 +154,7 @@ public class SourcesideTongjiController {
 		String endTime = date;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 		
-		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceName, startTimestamps,endTimestamps);
+		TongjiSorce tongjiSorcelist=intSourceService.queryBySourcenameAndDate(sourceid, startTimestamps,endTimestamps);
 		
 		Date d=new Date();
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
@@ -172,8 +172,8 @@ public class SourcesideTongjiController {
 			if(tongjiSorcelist!=null){//证明当天历史表有数据
 				float appnumHistory=tongjiSorcelist.getRegisternumdis();//历史表折扣后的注册人数
 				String startTimestamps1=tongjiSorcelist.getDate();
-				float appnum = intSourceService.queryApplicationNumber(companyId, sourceName,startTimestamps1,endTimestamps);// 得到申请数
-				String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率
+				float appnum = intSourceService.queryApplicationNumber(companyId, sourceid,startTimestamps1,endTimestamps);// 得到申请数
+				String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
 					
 				if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {
@@ -195,8 +195,8 @@ public class SourcesideTongjiController {
 					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
 				}
 			}else{//证明当天历史表没数据
-				float appnum = intSourceService.queryApplicationNumber(companyId, sourceName,startTimestamps,endTimestamps);// 得到申请数
-				String discount = intSourceService.queryDiscount(sourceName, companyId);// 得到折扣率
+				float appnum = intSourceService.queryApplicationNumber(companyId, sourceid,startTimestamps,endTimestamps);// 得到申请数
+				String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
 					
 				if (redisClientUtil.getSourceClick(companyId + sourceName + date + "daichaoKey") == null) {

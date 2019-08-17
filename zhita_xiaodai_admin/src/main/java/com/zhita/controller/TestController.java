@@ -1,9 +1,8 @@
 package com.zhita.controller;
 
-import java.text.DateFormat;
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
-import com.zhita.util.DateListUtil;
 import com.zhita.util.PhoneDeal;
-import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
 
@@ -158,8 +155,12 @@ public class TestController {
 		/*String province="山西省稷山县蔡村乡杨村第九居民组";
 		System.out.println(province.substring(0,3));*/
 		//System.out.println(Timestamps.stampToDate(null));
-		Integer a=1;
-		System.out.println(String.valueOf(a).equals("1"));
+		List<Integer> list1=new ArrayList<Integer>();
+		list1.add(2);
+		list1.add(5);
+		list1.add(15);
+		list1.add(20);
+		System.out.println(list1.get(0));
 		
 	}
 }

@@ -33,7 +33,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务     控制逾期
-      @Scheduled(cron = "0 0 18,0 * * ?")
+      @Scheduled(cron = "0 0 14,0 * * ?")
       public void test2() throws ParseException
       {
           System.out.println("开始做定时任务2");

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.controller.shiro.PhoneToken;
 import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
+import com.zhita.util.RedisClientUtil;
+import com.zhita.util.SMSUtil;
 /**
  * 
  * @author lhq
@@ -76,10 +80,10 @@ public class LoginController {
 		return map;
 	}
 	
-	//后台管理----登录验证  以及授权(手机号和验证码)__不用的接口
-	/*@ResponseBody
+	//后台管理----登录验证  以及授权(手机号和验证码)
+	@ResponseBody
 	@RequestMapping(value="/loginpc")
-	public Map<String, Object> loginpc(String phone,String code,HttpSession session){
+	public Map<String, Object> loginpc(String phone,String code,HttpSession session,HttpServletRequest request){
 		Map<String, Object> map = new HashMap<String, Object>();
 		int a=0;
 		
@@ -100,11 +104,13 @@ public class LoginController {
 	            	map.put("msg", "没有此手机号");
 	           }
 	        	System.out.println("最外层："+"a:"+a+"rediscode:"+redisCode+"code:"+code);
+	        	SysUser sysUser = intLoginService.queryByPhone(phone);// 判断该用户是否存在
 	        	if(a==1) {
 	        		if(redisCode==null||"".equals(redisCode)){
 	        			map.put("msg", "验证码过期，请重新发送");
 	        		}else{
 	        			if(redisCode.equals(code)) {
+	        				List<Integer> list1=intLoginService.queryFunctionsByPhone(phone);//查询当前用户所拥有的权限
 		                    String loginStatus="1";
 		                	String registrationTime = System.currentTimeMillis()+"";  //获取当前时间戳
 		                	
@@ -112,6 +118,16 @@ public class LoginController {
 							if (num == 1) {	
 								map.put("msg", "用户登录成功，登录状态修改成功");
 								map.put("loginStatus", loginStatus);
+								
+								request.getSession().setAttribute("userid", sysUser.getUserid());
+								//request.getSession().setAttribute("account", account);
+								//request.getSession().setAttribute("pwd", pwd);
+								subject.getSession().setTimeout(3600000);//以毫秒为单位    设置一小时之内没访问接口就要重新登录
+								map.put("loginStatus", loginStatus);
+								map.put("userid", sysUser.getUserid());
+								map.put("account", sysUser.getAccount());
+								map.put("companyid", sysUser.getCompanyid());
+								map.put("functionIdList", list1);//当前登录用户所拥有的的所有权限
 							} else {
 								map.put("msg", "用户登录失败，登录状态修改失败");
 							}
@@ -122,10 +138,10 @@ public class LoginController {
 	        	}
 		}
 		return map;
-	}*/
+	}
 	
 	//发送验证码
-	/*@ResponseBody
+	@ResponseBody
 	@RequestMapping("/sendSMS")
 	public Map<String, String> sendSMS(String phone,String companyName){
 		Map<String, String> map = new HashMap<>();
@@ -133,7 +149,7 @@ public class LoginController {
 		String state = smsUtil.sendSMS(phone, "json",companyName);
 	    map.put("msg",state);		
 		return map;	
-	}*/
+	}
 	
 	// 退出登录
 	@ResponseBody
@@ -153,4 +169,6 @@ public class LoginController {
 		}
 		return map;
 	}
+	
+	//渠道方登录（用户名密码登录）
 }
