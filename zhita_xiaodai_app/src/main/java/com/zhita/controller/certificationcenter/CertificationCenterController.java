@@ -53,6 +53,7 @@ public class CertificationCenterController {
 //		   ArrayList<AuthenticationInformation> CertificationCenter = IntAutheninforService.getCertificationCenter(companyId);
 		   Map<String, Object> map = userAttestationService.getuserAttestation(userId);
 		   Map<String, Object> map3  = new HashMap<String, Object>();
+		   map3.put("Ncode","2000");
 		   String userAttestation =null;
 		   String Operator =null;
 		   String bankcard =null;
@@ -125,6 +126,7 @@ public class CertificationCenterController {
 		   String bankcard =null;
 		   Map<String, Object> map = userAttestationService.getuserAttestation(userId);
 		   Map<String, Object> map1 = new HashMap<String, Object>();
+		   map1.put("Ncode","2000");
 		   if(map==null) {
 			   userAttestation ="0";
 		   }else {

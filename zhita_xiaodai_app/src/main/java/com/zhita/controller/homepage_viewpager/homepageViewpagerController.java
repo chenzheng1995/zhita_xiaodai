@@ -24,6 +24,7 @@ public class homepageViewpagerController {
 		@ResponseBody
 		public Map<String, Object> getqrcode(int companyId) {
 			HashMap<String,Object> map=new HashMap<>();
+			map.put("Ncode","2000");
 		    	List<HomepageViewpager> list=intHomepageViewpageService.gethomepageViewpager(companyId); //获取轮播图的所有数据   	
 		    	map.put("listshuff",list);
 

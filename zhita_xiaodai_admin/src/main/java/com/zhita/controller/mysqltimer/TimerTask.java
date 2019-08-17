@@ -26,19 +26,19 @@ public class TimerTask {
       @Scheduled(cron = "0 0 0 * * ?")
       public void test1() throws ParseException
       {
-          System.out.println("开始做定时任务");
-          intSourceService.queryAllTongji();
-          System.out.println("定时任务结束");
+          System.out.println("开始做定时任务1");
+          intSourceService.selAllTongji();
+          System.out.println("定时任务结束1");
       } 
       
       //                   秒分时日 月周
       //定时任务     控制逾期
-      @Scheduled(cron = "0 0 0 * * ?")
+      @Scheduled(cron = "0 0 14,0 * * ?")
       public void test2() throws ParseException
       {
-          System.out.println("开始做定时任务");
-          intProjecttimerService.queryAllover();
-          System.out.println("定时任务结束");
+          System.out.println("开始做定时任务2");
+          intProjecttimerService.selAllover();
+          System.out.println("定时任务结束2");
       } 
       
       //                   秒分时日 月周
@@ -46,9 +46,9 @@ public class TimerTask {
       @Scheduled(cron = "0 0 0 * * ?")
       public void test3() throws ParseException
       {
-          System.out.println("开始做定时任务");
+          System.out.println("开始做定时任务3");
           intProjecttimerService.upaoverclass();
-          System.out.println("定时任务结束");
+          System.out.println("定时任务结束3");
       } 
       
       //                   秒分时日 月周
@@ -56,8 +56,8 @@ public class TimerTask {
       @Scheduled(cron = "0 0 0 * * ?")
       public void test4() throws ParseException
       {
-          System.out.println("开始做定时任务");
+          System.out.println("开始做定时任务4");
           intProjecttimerService.addblack();
-          System.out.println("定时任务结束");
+          System.out.println("定时任务结束4");
       } 
 }

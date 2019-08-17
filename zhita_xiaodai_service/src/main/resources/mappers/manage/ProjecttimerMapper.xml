@@ -4,7 +4,7 @@
 	<!-- ==========================控制订单逾期======================= -->
 	<!-- 后台管理        查询订单表     所有逾期中的订单 -->
 	<select id="queryAllover" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
-		select o.id,o.orderNumber,o.shouldReturnTime,od.realityBorrowMoney,od.interestSum,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid 
+		select o.id,o.orderNumber,o.shouldReturnTime,od.realityBorrowMoney,od.interestSum,od.overdueNumberOfDays,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid 
 		where o.companyId=#{arg0} and (o.orderStatus=0||o.orderStatus=1||o.orderStatus=2)
 	</select>
 	<!--后台管理      修改订单状态为逾期  -->
@@ -13,7 +13,7 @@
 	</update>
 	<!-- 后台管理      查询逾期设置表所有信息 -->
 	<select id="queryAllOversett" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverdueSettings">
-	 	select id,productId,overdueHowmanydaysage,penaltyInterestRates,deleted from overdue_settings where companyId=#{arg0} and deleted=0
+	 	select id,productId,overdueHowmanydaysage,penaltyInterestRates,deleted from overdue_settings where companyId=#{arg0} and deleted=0 order by overdueHowmanydaysage
 	</select>
 	<!-- 后台管理         修改订单明细表信息（在明细表更新逾期天数，日均罚息，逾期总罚息，更新总利息） -->
 	<update id="upaorderdetail">

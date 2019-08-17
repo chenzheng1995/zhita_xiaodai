@@ -28,6 +28,7 @@ public class FaceController {
     	String biz_token ="";
     	JSONObject jsonObject =null;
 		 Map<String, Object> map = new HashMap<String, Object>();
+		 map.put("Ncode","2000");
 	        if (StringUtils.isEmpty(userId)) {
 	            map.put("msg", "userId不能为空");
 	            return map;

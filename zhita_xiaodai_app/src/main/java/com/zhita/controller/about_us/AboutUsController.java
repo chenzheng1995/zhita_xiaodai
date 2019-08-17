@@ -25,6 +25,7 @@ public class AboutUsController {
 	    @Transactional
 	    public Map<String, Object> getaboutus(int companyId){
 	    	Map<String, Object> map =intAboutusService.getaboutus(companyId);
+	    	map.put("Ncode","2000");
 			return map;
 
 	    }

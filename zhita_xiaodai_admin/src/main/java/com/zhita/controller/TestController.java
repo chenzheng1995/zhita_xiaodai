@@ -1,6 +1,8 @@
 package com.zhita.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.PhoneDeal;
-import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
 
@@ -149,10 +150,17 @@ public class TestController {
 		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
 		//System.out.println(tm.mobileEncrypt(p.decryption("6376462xx82")));
-		System.out.println(p.decryption("90667926x29"));
+		//System.out.println(p.decryption("90667926x29"));
 		//System.out.println(p.encryption("188715526523365"));
 		/*String province="山西省稷山县蔡村乡杨村第九居民组";
 		System.out.println(province.substring(0,3));*/
-		System.out.println(Timestamps.stampToDate(null));
+		//System.out.println(Timestamps.stampToDate(null));
+		List<Integer> list1=new ArrayList<Integer>();
+		list1.add(2);
+		list1.add(5);
+		list1.add(15);
+		list1.add(20);
+		System.out.println(list1.get(0));
+		
 	}
 }

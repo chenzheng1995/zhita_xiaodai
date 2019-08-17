@@ -230,13 +230,30 @@ public class Test {
 ////    	String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/?apiKey="+apiKey+"&phone="+phone+"&idcard="+idcard+"&name="+name+"&userId="+userId);
 //    		String result = postAndGet.sendGet("https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+apiKey+"&userId="+userId);
 //    	System.out.println(result);
+
 		
-		String aString = "香港/北京/上海/重庆";
-		String[] bStrings = aString.split("/");
-        for (int i = 0; i < bStrings.length; i++) {
-            System.out.println(bStrings[i]);
-        }
+//		String aString = "香港/北京/上海/重庆";
+//		String[] bStrings = aString.split("/");
+//        for (int i = 0; i < bStrings.length; i++) {
+//            System.out.println(bStrings[i]);
+//        }
     	
+		
+//		PostUtil pUtil = new PostUtil();
+//		String member_id ="8150735131";
+//		String terminal_id ="8150735131";
+//		String trans_id ="1";
+//		String trade_date ="20190815120125";
+//		String name ="陈峥";
+//		String mobile ="13486070402";
+//		String id_card ="330225199507155112";
+//		String param = "{'member_id':'"+member_id+"','terminal_id':'"+terminal_id+"','trans_id':'"+trans_id+"','trade_date':'"+trade_date+"','name':'"+name+"','mobile':'"+mobile+"','id_card':'"+id_card+"'}";
+//		String jsonString = pUtil.post("https://test.xinyan.com/operators/v2/authNormal", param);
+//		System.out.println(jsonString);
+
+		
+		int score = Integer.parseInt("0");
+		System.out.println(score);
 	}
 	}
 

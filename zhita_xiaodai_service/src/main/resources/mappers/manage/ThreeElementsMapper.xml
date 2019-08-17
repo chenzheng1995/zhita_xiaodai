@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhita.dao.manage.ThreeElementsMapper">
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.ThreeElements">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="certification_number" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="merchant_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, code, certification_number, merchant_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from three_elements
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from three_elements
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.ThreeElements">
+    insert into three_elements (id, userId, code, 
+      certification_number, merchant_code)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, 
+      #{certificationNumber,jdbcType=INTEGER}, #{merchantCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.ThreeElements">
+    insert into three_elements
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="certificationNumber != null">
+        certification_number,
+      </if>
+      <if test="merchantCode != null">
+        merchant_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="certificationNumber != null">
+        #{certificationNumber,jdbcType=INTEGER},
+      </if>
+      <if test="merchantCode != null">
+        #{merchantCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.ThreeElements">
+    update three_elements
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="certificationNumber != null">
+        certification_number = #{certificationNumber,jdbcType=INTEGER},
+      </if>
+      <if test="merchantCode != null">
+        merchant_code = #{merchantCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.ThreeElements">
+    update three_elements
+    set userId = #{userid,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      certification_number = #{certificationNumber,jdbcType=INTEGER},
+      merchant_code = #{merchantCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  		<select id="getnum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(id) from three_elements where userId=#{userId}
+	</select>
+  
+  
+  	<insert id="setThreeElements" parameterType="java.util.Map">
+		insert into user_attestation (userId,code,certification_number,merchant_code)
+		values (#{userId},
+		#{code},
+		#{certification_number},
+		#{trans_id}
+         )
+	</insert>
+  
+  		<update id="updateThreeElements" parameterType="java.util.Map">
+		update user_attestation
+		set code = #{code},
+		    certification_number = #{certification_number},
+		    merchant_code = #{trans_id}
+		where userId = #{userId}
+	</update>
+  
+    		<select id="getCertificationnumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select certification_number from three_elements where userId=#{userId}
+	</select>
+  
+</mapper>

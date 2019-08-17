@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.face.postDemo;
+import com.zhita.controller.operator.demo.ScoreDemo;
 import com.zhita.service.test.TestService;
 
 
@@ -55,11 +57,14 @@ public class TestController {
 	
 	}
 	public static void main(String[] args) {
-//		DateFormat format = new SimpleDateFormat("yyyy/M/d");
-//		System.out.println(format.format(new Date()));
-		postDemo postDemo = new postDemo();
-		String param = "{'account':'N7893961','password':'xap6Mikey','msg':'贷回家','phone':'13486070402','report':'true'}";
-		postDemo.post("http://smssh1.253.com/msg/send/json", param);
+    	ScoreDemo scoreDemo = new ScoreDemo();
+    	String result = scoreDemo.getScore("15659544720058296796","15835996762","刘晓云","142727199807191015","158359967621565954394246");
+    	  JSONObject jsonObject =null;
+    	  jsonObject = JSONObject.parseObject(result);
+          String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
+          jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
+          int score = Integer.parseInt(jsonObject.get("score").toString());
+          System.out.println(score);
 	}
 
 	

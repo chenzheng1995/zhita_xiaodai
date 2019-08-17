@@ -117,17 +117,16 @@
   	select date from source_discount_history where sourceName=#{arg0}
   </select>
   <!-- 后台管理         通过渠道名字查询当前渠道在历史表的信息 -->
-  <select id="queryAllBySourceName" parameterType="java.lang.String" resultType="com.zhita.model.manage.TongjiSorce">
+  <select id="queryAllBySourceName" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.TongjiSorce">
   	select 
   	<include refid="Base_Column_List" />
-    from source_discount_history sdh inner join source s on sdh.sourceName=s.id
-    where s.sourceName=#{arg0}
+    from source_discount_history sdh where sdh.sourceName=#{arg0}
   </select>
   <!-- 后台管理       通过渠道和时间查询是否有数据 -->
-  <select id="queryBySourcenameAndDate" parameterType="java.lang.String" resultType="com.zhita.model.manage.TongjiSorce">
+  <select id="queryBySourcenameAndDate" resultType="com.zhita.model.manage.TongjiSorce">
   	select 
     <include refid="Base_Column_List" />
-    from source_discount_history sdh inner join source s on sdh.sourceName=s.id
-    where s.sourcename = #{arg0} and sdh.date>=#{arg1} and sdh.date &lt;#{arg2}
+    from source_discount_history sdh
+    where sdh.sourcename = #{arg0} and sdh.date>=#{arg1} and sdh.date &lt;#{arg2}
   </select>
 </mapper>

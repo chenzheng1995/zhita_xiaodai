@@ -34,7 +34,7 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 	
 	//后台管理----查询订单表     所有逾期中的订单(定时任务     控制逾期)
 	@Transactional
-	public void queryAllover(){
+	public void selAllover(){
 		Integer companyId = 3;
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date d = new Date();
@@ -48,8 +48,11 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 					Integer orderid = list.get(i).getId();
 					projecttimerMapper.updateover(orderid);//修改订单状态为逾期
 					
-					Date shoulddate = sdf.parse(shouldReturnTime);//应还时间（date类型）
-					Integer overdueNumberOfDays = DateListUtil.differentDaysByMillisecond(shoulddate,d);//逾期天数
+					DateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+					String shouldReturnTime1 = Timestamps.stampToDate1(list.get(i).getShouldReturnTime());//应还时间（String类型）
+					Date shoulddate = sdf1.parse(shouldReturnTime1);//应还时间（date类型）
+					Date d1 = new Date();
+					Integer overdueNumberOfDays = DateListUtil.differentDaysByMillisecond(shoulddate,d1);//逾期天数
 					
 					List<BigDecimal> list1 = new ArrayList<BigDecimal>();
 					BigDecimal interestPenaltySumfor=list.get(i).getInterestPenaltySum();//逾期总罚息
@@ -62,8 +65,13 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 							list1.add(listover.get(j).getPenaltyinterestrates());
 						}
 					}
-					BigDecimal interestPenaltyDay = list1.get(0).divide(new BigDecimal("100"));//日均罚息（0.2）
-					BigDecimal interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).add(interestPenaltySumfor);
+					BigDecimal interestPenaltyDay = list1.get(0);//日均罚息（20%  存的就是20）
+					BigDecimal interestPenaltySum = new BigDecimal("0.00");//逾期总罚息
+					if(String.valueOf(overdueNumberOfDays).equals(list.get(i).getOverdueNumberOfDays())){
+						interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
+					}else{
+						interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP).add(interestPenaltySumfor);
+					}
 					BigDecimal interestInAll = list.get(i).getInterestSum().add(interestPenaltySum);//总利息
 					
 					projecttimerMapper.upaorderdetail(overdueNumberOfDays, interestPenaltyDay, interestPenaltySum, interestInAll, list.get(i).getId());

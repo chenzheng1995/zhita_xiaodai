@@ -52,4 +52,6 @@ public interface IntUserService {
 	public void updateScore1(int userId, String shareOfState);
 
 
+
+
 }
