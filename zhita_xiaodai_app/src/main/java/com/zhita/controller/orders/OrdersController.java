@@ -158,7 +158,7 @@ public class OrdersController {
 	    @Transactional
 	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName,int lifeOfLoan,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {  //finalLine是上面那个接口得到的额度
 	    	 Map<String, Object> map = new HashMap<String, Object>();		
-	    	 map.put("Ncode","2000");
+
 		    int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 		    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    	Calendar now = Calendar.getInstance(); 
@@ -180,10 +180,12 @@ public class OrdersController {
 	    		int orderId = intOrderService.getOrderId(orderNumber);
 		    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,registeClient,sourceName,shouldTotalAmount,surplus_money);
 		    	if(num==1) {
+			    	 map.put("Ncode","2000");
 		    		map.put("code", 200);
 		    		map.put("msg","插入成功");
 		    		map.put("orderNumber",orderNumber);
 		    	}else {
+			    	 map.put("Ncode","405");
 					map.put("code",405);
 					map.put("msg", "插入失败");
 				}

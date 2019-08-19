@@ -174,7 +174,7 @@ select count(id) from blacklist_user where phone = #{phone} and companyId = #{co
   </select>
   
       <select id="getid1" parameterType="java.util.Map" resultType="java.lang.Integer">
-select count(id) from blacklist_user where idcard = #{idCard} and companyId = #{companyId} deleted = '0'
+select count(id) from blacklist_user where idcard = #{idCard} and companyId = #{companyId} and deleted = '0'
   </select>
   
   
