@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.LogManager;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.istack.internal.logging.Logger;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.sun.org.apache.xml.internal.utils.IntVector;
 import com.zhita.controller.xinyan.action.OperatorAction;
@@ -340,7 +343,7 @@ public Map<String, Object> getshareOfState(int userId){
           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(roatnptFractionalSegment.indexOf("-")+1,roatnptFractionalSegment.length()));
           
           if(riskControlPoints<roatnptFractionalSegmentSmall) {
            String orderNumber = intOrderService.getorderNumber(userId);
@@ -538,19 +541,26 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
    @ResponseBody
    @Transactional
    public Map<String, Object> getScore(int userId){
+
+
+
    	String shareOfState =null;
    	int score =0;
    	Map<String, Object> map = new HashMap<>();
    	map.put("Ncode","2000");
 //   	shareOfState ="6";
 //   	intUserService.updateshareOfState(userId, shareOfState);
+	 Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
+	String name = (String) userAttestation.get("trueName");
+	String idNumber = (String) userAttestation.get("idcard_number");
    	int sourceId = intUserService.getsourceId(userId);
    	String sourceName = intSourceService.getsourceName(sourceId);
-   	String phone1 = intUserService.getphone(userId);
+   	String phone1 = operatorService.getphone(userId);
    	PhoneDeal pDeal = new PhoneDeal();
    	String newphone = pDeal.decryption(phone1);
    	Map<String, Object> map3 =  userAttestationService.getuserAttestation(userId);
    	String idcard_number =(String) map3.get("idcard_number");
+   	String address = (String) map3.get("address");
    	int number = intWhitelistuserService.getWhitelistuser(newphone,idcard_number);
    	if(number!=0) {
     	   shareOfState ="2";
@@ -564,9 +574,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
     Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);
            String rmModleName = (String) map1.get("rmModleName");
      if ("风控甲".equals(rmModleName)) {
-    	 Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
- 		String name = (String) userAttestation.get("trueName");
- 		String idNumber = (String) userAttestation.get("idcard_number");
+
     
         Map<String, Object> operator = operatorService.getOperator(userId);
         String phone = (String) operator.get("phone");
@@ -575,14 +583,18 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 
     	
     	ScoreDemo scoreDemo = new ScoreDemo();
-    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
+    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);  
+    	System.out.println("result-----------------------------"+result);
     	  JSONObject jsonObject =null;
     	  jsonObject = JSONObject.parseObject(result);
           String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
           jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
+         
+          System.out.println("search_id"+search_id+"phone"+phone+"name"+name+"idNumber"+idNumber+"reqId"+reqId+"tianji_api_tianjiscore_pdscorev5_response"+tianji_api_tianjiscore_pdscorev5_response);
           score = Integer.parseInt(jsonObject.get("score").toString());
 	}
      if("风控乙".equals(rmModleName)) {
+         System.out.println("rmModleName------------------------------------------"+1111111);
     	 String fileContent = operatorService.getoperatorJson(userId);
     	 Map<String, Object> map2 = userAttestationService.getuserAttestation(userId);
     	 String linkmanOneName = (String) map2.get("linkmanOneName");
@@ -590,7 +602,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
     	 String linkmanTwoName = (String) map2.get("linkmanTwoName");
     	 String linkmanTwoPhone = (String) map2.get("linkmanTwoPhone");
     	 ZhimiRiskDemo zDemo = new ZhimiRiskDemo();
-    	 String responseStr = zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName, linkmanTwoPhone);
+    	 String responseStr = zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName, linkmanTwoPhone,address,newphone,idcard_number,name);
    	  JSONObject jsonObject =null;
    	  jsonObject = JSONObject.parseObject(responseStr);
    	     score =new Double(jsonObject.getDouble("score")).intValue();
@@ -624,8 +636,10 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-          
+          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(roatnptFractionalSegment.indexOf("-")+1,roatnptFractionalSegment.length()));
+          System.out.println("roatnptFractionalSegmentSmall--------------------------------------------------"+roatnptFractionalSegmentSmall);
+          System.out.println("roatnptFractionalSegmentBig------------------------------------------"+roatnptFractionalSegmentBig);
+          System.out.println("score------------------------------------------"+score);
           if(score<roatnptFractionalSegmentSmall) {
        	   shareOfState ="0";
        	   map.put("code", 200);

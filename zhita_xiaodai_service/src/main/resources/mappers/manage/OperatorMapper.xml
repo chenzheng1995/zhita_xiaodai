@@ -190,5 +190,8 @@
 		select operatorJson from operator where userId = #{userId}
 	</select>
   
+      		<select id="getphone" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select phone from operator where userId = #{userId}
+	</select>
   
 </mapper>

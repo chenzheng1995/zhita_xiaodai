@@ -67,4 +67,10 @@ public class OperatorServiceimp implements OperatorService{
 		return fileContent;
 	}
 
+	@Override
+	public String getphone(int userId) {
+		String phone1 = operatorMapper.getphone(userId);
+		return phone1;
+	}
+
 }

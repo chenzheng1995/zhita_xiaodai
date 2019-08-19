@@ -383,14 +383,15 @@ public class OrdersController {
 		   df.format(new Date());// new Date()为获取当前系统时间
            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
            String sd = sdf.format(new Date(Long.parseLong(shouldReturnTime))); // 时间戳转换日期
+           Date date1 = sdf.parse(sd);
            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(df.format(new Date()));//取时间 
            Calendar calendar  =   Calendar.getInstance();		 
-		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+		    calendar.setTime(date1); //需要将date数据转移到Calender对象中操作
 		    calendar.add(calendar.DATE, overdueHowdayCanDeferred);//把日期往后增加n天.正数往后推,负数往前移动 
 		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
-		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		    sdf1.format(date);
-		    int num = compare_date(sdf1.format(date),sd);
+		    date1=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		    sdf1.format(date1);
+		    int num = compare_date(df.format(date),sdf1.format(date1));
 		    if(num==1) {
 		    	map.put("msg","不能延期");
 		    	map.put("code",0);
@@ -408,6 +409,55 @@ public class OrdersController {
 	return map;
          
    }
+   
+//   //判断用户是否可以延期
+//   @RequestMapping("/whetherdelay")
+//   @ResponseBody
+//   @Transactional
+//   public Map<String, Object> whetherdelay (int userId,int companyId) throws ParseException {
+//	   Map<String, Object> map  = new HashMap<String, Object>();
+//	   map.put("Ncode","2000");
+//       String orderStatus = intOrderService.getorderStatus1(userId, companyId);
+//       if(orderStatus.equals("2")) {
+//    	   map.put("msg","不能延期");
+//    	   map.put("code",0);
+//       }else {
+//    	   
+//    	   Map<String, Object> map1 = intDeferredsetService.getDeferredset(companyId); 
+//    	   int overdueHowdayCanDeferred = (int) map1.get("overdueHowdayCanDeferred");//逾期多少天前可延期
+//    	   int maximumCanDeferredTime = (int) map1.get("maximumCanDeferredTime");//最多可延期次数
+//    	   int currentDelays = intUserService.getdelayTimes(userId);//当前延期次数
+//		   Map<String, Object> map2  = intOrderService.getRepayment(userId,companyId);
+//		   String shouldReturnTime = (String) map2.get("shouldReturnTime");//应还时间
+//		   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+//		   df.format(new Date());// new Date()为获取当前系统时间
+//           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//           String sd = sdf.format(new Date(Long.parseLong(shouldReturnTime))); // 时间戳转换日期
+//           Date date = new SimpleDateFormat("yyyy-MM-dd").parse(df.format(new Date()));//取时间 
+//           Calendar calendar  =   Calendar.getInstance();		 
+//		    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+//		    calendar.add(calendar.DATE, overdueHowdayCanDeferred);//把日期往后增加n天.正数往后推,负数往前移动 
+//		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+//		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+//		    sdf1.format(date);
+//		    int num = compare_date(sdf1.format(date),sd);
+//		    if(num==1) {
+//		    	map.put("msg","不能延期");
+//		    	map.put("code",0);
+//		    }else {
+//				if(currentDelays<maximumCanDeferredTime) {
+//					map.put("msg","可以延期");
+//					map.put("code",1);
+//				}else {
+//					map.put("msg","不能延期");
+//					map.put("code",0);
+//				}
+//			}
+//	}
+//	   
+//	return map;
+//         
+//   }
    
    
  //延期页面

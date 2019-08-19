@@ -60,7 +60,7 @@ class ZhimiRiskRequest {
 }
 
 public class ZhimiRiskDemo {
-    public String getzhimi(String fileContent,String linkmanOneName,String linkmanOnePhone,String linkmanTwoName,String linkmanTwoPhone) {
+    public String getzhimi(String fileContent,String linkmanOneName,String linkmanOnePhone,String linkmanTwoName,String linkmanTwoPhone,String addr,String phone,String id_card,String real_name) {
         for (int i = 0; i < 1; i++){
 //            String fileContent = null;
 //            try {
@@ -72,15 +72,15 @@ public class ZhimiRiskDemo {
 //            }
         	
         	
-            JSONObject sampleObject = JSON.parseObject(String.valueOf(fileContent));
-            JSONObject responseObject = sampleObject.getJSONObject("wd_api_mobilephone_getdatav2_response");
-            JSONObject dataObject = responseObject.getJSONObject("data");
-            JSONArray dataListArray = dataObject.getJSONArray("data_list");
-            JSONObject userdataObject = dataListArray.getJSONObject(0).getJSONObject("userdata");
-            String addr = userdataObject.getString("addr");//地址
-            String phone = userdataObject.getString("phone");//电话
-            String id_card = userdataObject.getString("id_card");//身份证
-            String real_name = userdataObject.getString("real_name");//姓名
+//            JSONObject sampleObject = JSON.parseObject(String.valueOf(fileContent));
+//            JSONObject responseObject = sampleObject.getJSONObject("wd_api_mobilephone_getdatav2_response");
+//            JSONObject dataObject = responseObject.getJSONObject("data");
+//            JSONArray dataListArray = dataObject.getJSONArray("data_list");
+//            JSONObject userdataObject = dataListArray.getJSONObject(0).getJSONObject("userdata");
+//            String addr = userdataObject.getString("addr");//地址
+//            String phone = userdataObject.getString("phone");//电话
+//            String id_card = userdataObject.getString("id_card");//身份证
+//            String real_name = userdataObject.getString("real_name");//姓名
             Date t = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
