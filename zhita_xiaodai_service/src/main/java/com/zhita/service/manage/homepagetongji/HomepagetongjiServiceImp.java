@@ -212,7 +212,12 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int overdue1 = homepageTongjiMapper.overdue1(companyId);//逾后未还笔数
 		int baddebt = homepageTongjiMapper.baddebt1(companyId);//已坏账笔数
 		int shouorder = homepageTongjiMapper.shouorder(companyId);//应还订单
-		String overduecvr = (new DecimalFormat("#0.00").format((overdue1+baddebt)*1.0/shouorder*100))+"%";//逾期率
+		String overduecvr=null;
+		if(shouorder==0){
+			overduecvr="0.00%";
+		}else{
+			overduecvr = (new DecimalFormat("#0.00").format((overdue1+baddebt)*1.0/shouorder*100))+"%";//逾期率
+		}
 		
 		BigDecimal overshouldMoney = new BigDecimal("0.00");//逾期应收总金额
 		List<Orderdetails> listtail = homepageTongjiMapper.overshouldMoney(companyId);
