@@ -97,5 +97,8 @@ public interface IntSourceService {
 
 	//后台管理----根据前端传过来的链接判断该链接是否存在source表
 	public int queryIfLink(String link);
+	
+	//后台管理----渠道方登录（用户名和密码）
+	public Source queryByAccAndPwd(String account);
 
 }

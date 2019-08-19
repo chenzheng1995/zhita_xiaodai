@@ -134,9 +134,17 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
-		String orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
+		String orderrepaycvr=null;
+		if(sumloan==0){
+			orderrepaycvr="0.00%";
+		}else{
+			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
+		}
 		
 		BigDecimal payrecmoney = homepageTongjiMapper.querypayrecMoney(companyId);//累计放款总金额
+		if(payrecmoney==null){
+			payrecmoney=new BigDecimal("0.00");
+		}
 		
 		BigDecimal repaymoney = new BigDecimal("00");//累计回款总金额
 		BigDecimal repaymoneyreal = homepageTongjiMapper.queryrepayMoney(companyId);//累计回款总金额(实还金额)

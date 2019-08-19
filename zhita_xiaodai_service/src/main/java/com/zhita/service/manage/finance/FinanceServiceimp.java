@@ -1,6 +1,8 @@
 package com.zhita.service.manage.finance;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,19 +15,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
+import com.zhita.dao.manage.ThirdpricefindMapper;
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
+import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.PriceTongji;
 import com.zhita.model.manage.Repayment_setting;
+import com.zhita.model.manage.Thirdpricefind;
 import com.zhita.util.DateListUtil;
+import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
@@ -45,6 +53,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Autowired
 	private CollectionMapper coldao;
 	
+	
+	@Autowired
+	private ThirdpricefindMapper thirdpricefindMapper;
 	
 	
 
@@ -753,7 +764,109 @@ public class FinanceServiceimp implements FinanceService{
 		return map;
 	}
 
+	//后台管理---查询所有
+    public List<Thirdpricefind> queryall(Integer companyid){
+    	List<Thirdpricefind> list=thirdpricefindMapper.queryall(companyid);
+    	return list;
+    }
 
+    //后台管理----修改价格
+    public int updateprice(BigDecimal price,Integer id){
+    	int num=thirdpricefindMapper.updateprice(price, id);
+    	return num;
+    }
+    
+    //后台管理---费用统计
+    public Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime) throws ParseException{
+    	List<Thirdpricefind> listprice=thirdpricefindMapper.queryall(companyId);//第三方费用价格表
+		List<PriceTongji> listtongji=new ArrayList<>();
+		List<PriceTongji> listtongjito=new ArrayList<>();
+		PageUtil2 pageUtil=null;
+		Date d=new Date();
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		String startTime = null;//开始时间（年月日格式）
+		String endTime = null;//结束时间（年月日格式）
+		if((starttime!=null&&!"".equals(starttime))&&(endtime!=null&&!"".equals(endtime))){
+			startTime = starttime;
+			endTime = endtime;
+		}else{
+			startTime = date;
+			endTime = date;
+		}
+		
+		List<String> list=DateListUtil.getDays(startTime, endTime);
+		for (int i = 0; i < list.size(); i++) {
+			PriceTongji priceTongji=new PriceTongji();
+			
+			String startTimestamps = Timestamps.dateToStamp(startTime);
+			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+			
+			priceTongji.setDate(list.get(i));
+			
+			int verificationcode = thirdpricefindMapper.querycount(companyId, 1, startTimestamps, endTimestamps);//验证码数
+			BigDecimal vercodeprice = listprice.get(0).getPrice();//验证码单价
+			priceTongji.setVerificationcode(verificationcode);
+			priceTongji.setVerificationprice(BigDecimal.valueOf((int)verificationcode).multiply(vercodeprice));
+			
+			int idcard = thirdpricefindMapper.querycount(companyId, 2, startTimestamps, endTimestamps);//身份证数
+			BigDecimal idcardprice = listprice.get(1).getPrice();//身份证单价
+			priceTongji.setIdcard(idcard);
+			priceTongji.setIdcardprice(BigDecimal.valueOf((int)idcard).multiply(idcardprice));
+			
+			int faceid = thirdpricefindMapper.querycount(companyId, 3, startTimestamps, endTimestamps);//人脸数
+			BigDecimal faceidprice = listprice.get(2).getPrice();//人脸单价
+			priceTongji.setFaceid(faceid);
+			priceTongji.setFaceidprice(BigDecimal.valueOf((int)faceid).multiply(faceidprice));
+			
+			int threeelements = thirdpricefindMapper.querycount(companyId, 4, startTimestamps, endTimestamps);//三要素
+			BigDecimal threeelementsprice = listprice.get(3).getPrice();//三要素单价
+			priceTongji.setThreeelements(threeelements);
+			priceTongji.setThreeelementsprice(BigDecimal.valueOf((int)threeelements).multiply(threeelementsprice));
+			
+			int operator = thirdpricefindMapper.querycount(companyId, 5, startTimestamps, endTimestamps);//运营商数
+			BigDecimal operatorprice = listprice.get(4).getPrice();//运营商单价
+			priceTongji.setOperator(operator);
+			priceTongji.setOperatorprice(BigDecimal.valueOf((int)operator).multiply(operatorprice));
+			
+			int riskmanagementjia = thirdpricefindMapper.querycount(companyId, 6, startTimestamps, endTimestamps);//风控数（甲）
+			int riskmanagementyi = thirdpricefindMapper.querycount(companyId, 7, startTimestamps, endTimestamps);//风控数（乙）
+			int riskmanagementbing = thirdpricefindMapper.querycount(companyId, 8, startTimestamps, endTimestamps);//风控数（丙）
+			BigDecimal riskmanagementpricejia = listprice.get(5).getPrice();//风控单价（甲）
+			BigDecimal riskmanagementpriceyi = listprice.get(6).getPrice();//风控单价（乙）
+			BigDecimal riskmanagementpricebing = listprice.get(7).getPrice();//风控单价（丙）
+			priceTongji.setRiskmanagement(riskmanagementjia+riskmanagementyi+riskmanagementbing);
+			
+			BigDecimal pricejia=BigDecimal.valueOf((int)riskmanagementjia).multiply(riskmanagementpricejia);//风控甲费用
+			BigDecimal priceyi=BigDecimal.valueOf((int)riskmanagementyi).multiply(riskmanagementpriceyi);//风控甲费用
+			BigDecimal pricebing=BigDecimal.valueOf((int)riskmanagementbing).multiply(riskmanagementpricebing);//风控甲费用
+			priceTongji.setRiskmanagementprice(pricejia.add(priceyi).add(pricebing));
+			
+			int note = thirdpricefindMapper.querycount(companyId, 9, startTimestamps, endTimestamps);//群发短信数
+			BigDecimal noteprice = listprice.get(8).getPrice();//群发短信单价
+			priceTongji.setNote(note);
+			priceTongji.setNoteprice(BigDecimal.valueOf((int)note).multiply(noteprice));
+			
+			listtongji.add(priceTongji);
+		}
+		
+		if(listtongji!=null && !listtongji.isEmpty()){
+    		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
+    		listtongjito.addAll(listPageUtil.getData());
+    		
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1,10,0);
 
+    	}
+		
+	 	DateListUtil.ListSort4(listtongjito);//按照应还时间进行倒排序
+	 	
+		Map<String, Object> map=new HashMap<>();
+		map.put("listtongjito", listtongjito);
+		map.put("pageutil", pageUtil);
+		return map;
+    }
 
 }

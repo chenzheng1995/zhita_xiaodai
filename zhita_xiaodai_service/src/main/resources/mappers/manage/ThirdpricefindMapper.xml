@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.ThirdpricefindMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Thirdpricefind" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="thirdpartytype" property="thirdpartytype" jdbcType="VARCHAR" />
+    <result column="thirdpartyname" property="thirdpartyname" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, thirdpartytype, thirdpartyname, price, deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from thirdpricefind
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from thirdpricefind
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Thirdpricefind" >
+    insert into thirdpricefind (id, thirdpartytype, thirdpartyname, 
+      price, deleted)
+    values (#{id,jdbcType=INTEGER}, #{thirdpartytype,jdbcType=VARCHAR}, #{thirdpartyname,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{deleted,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Thirdpricefind" >
+    insert into thirdpricefind
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="thirdpartytype != null" >
+        thirdpartytype,
+      </if>
+      <if test="thirdpartyname != null" >
+        thirdpartyname,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="thirdpartytype != null" >
+        #{thirdpartytype,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdpartyname != null" >
+        #{thirdpartyname,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Thirdpricefind" >
+    update thirdpricefind
+    <set >
+      <if test="thirdpartytype != null" >
+        thirdpartytype = #{thirdpartytype,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdpartyname != null" >
+        thirdpartyname = #{thirdpartyname,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Thirdpricefind" >
+    update thirdpricefind
+    set thirdpartytype = #{thirdpartytype,jdbcType=VARCHAR},
+      thirdpartyname = #{thirdpartyname,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      deleted = #{deleted,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理        查询所有 -->
+  <select id="queryall" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Thirdpricefind">
+   	select 
+    <include refid="Base_Column_List" />
+    from thirdpricefind
+    where companyid = #{arg0} and deleted=0
+  </select>
+  <!-- 后台管理      修改价格 -->
+   <update id="updateprice">
+    update thirdpricefind  set price = #{arg0) where id = #{arg1}
+  </update>
+  <!-- 后台管理     查询数量 -->
+  <select id="querycount" resultType="java.lang.Integer">
+  	select count(*) from thirdcalltongji where companyid=#{arg0} and thirdtypeid=#{arg1} and date>=#{arg1} and date &lt;#{arg2} and deleted=0
+  </select>
+</mapper>

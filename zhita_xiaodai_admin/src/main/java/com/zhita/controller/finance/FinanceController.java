@@ -1,5 +1,8 @@
 package com.zhita.controller.finance;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,8 @@ import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.PriceTongji;
+import com.zhita.model.manage.Thirdpricefind;
 import com.zhita.service.manage.finance.FinanceService;
 
 
@@ -361,4 +366,27 @@ public class FinanceController {
 	public Map<String, Object> Delaylabor(Offlinedelay of){
 		return fianser.Delaylabor(of);
 	}
+	
+	//后台管理---查询所有
+	@ResponseBody
+	@RequestMapping("queryall")
+    public List<Thirdpricefind> queryall(Integer companyid){
+    	return fianser.queryall(companyid);
+    }
+    
+    //后台管理----修改价格
+	@ResponseBody
+	@RequestMapping("updateprice")
+    public int updateprice(BigDecimal price,Integer id){
+    	return fianser.updateprice(price, id);
+    }
+	
+	//后台管理---费用统计
+	@ResponseBody
+	@RequestMapping("pricetongji")
+	public Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime) throws ParseException{
+		Map<String, Object> map=fianser.pricetongji(companyId, page, starttime, endtime);
+		return map;
+	}
+
 }

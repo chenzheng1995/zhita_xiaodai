@@ -103,6 +103,6 @@ public interface SourceMapper {
 	int queryIfLink(String link);
 	
 	//后台管理----渠道方登录（用户名和密码）
-	//Source queryByAccAndPwd(String )
+	Source queryByAccAndPwd(String account);
     
 }

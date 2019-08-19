@@ -1,5 +1,8 @@
 package com.zhita.service.manage.finance;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import com.zhita.model.manage.Accountadjustment;
@@ -9,6 +12,8 @@ import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.PriceTongji;
+import com.zhita.model.manage.Thirdpricefind;
 
 public interface FinanceService {
 	
@@ -77,4 +82,13 @@ public interface FinanceService {
 	
 	
 	Map<String, Object> Delaylabor(Offlinedelay of);
+	
+	 //后台管理---查询所有
+    List<Thirdpricefind> queryall(Integer companyid);
+    
+    //后台管理----修改价格
+    int updateprice(BigDecimal price,Integer id);
+    
+    //后台管理---费用统计
+    Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime)throws ParseException;
 }
