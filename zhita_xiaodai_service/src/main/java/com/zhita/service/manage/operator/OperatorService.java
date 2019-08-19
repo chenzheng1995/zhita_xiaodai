@@ -23,4 +23,6 @@ public interface OperatorService {
 
 	String getoperatorJson(int userId);
 
+	String getphone(int userId);
+
 }

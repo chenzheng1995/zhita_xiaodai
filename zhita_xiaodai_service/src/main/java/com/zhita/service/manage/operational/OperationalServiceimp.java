@@ -205,43 +205,6 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> orde = new ArrayList<Orders>();
-//		try {
-//			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
-//			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		List<Integer> ids = coldao.SelectCollectionId(order.getCompanyId());
-
-//		List<Repayment> ords = operdao.SelectRepayment(order);//获取还款时间   还款笔数  还款总金额 
-//		for(int i=0;i<ords.size();i++){
-//			ords.get(i).setRepaymentDate(Timestamps.stampToDate(ords.get(i).getRepaymentDate()));
-//			Repayment re = operdao.SelectNodeRepayment(order);//获取已逾期笔数
-//			if(re == null){
-//				ords.get(i).setCollection_count(0);//逾期还款笔数
-//				BigDecimal a = new BigDecimal("0");
-//				ords.get(i).setCollection_money(a);//逾期还款金额
-//			}else{
-//				ords.get(i).setCollection_count(re.getCollection_count());//逾期还款笔数
-//				ords.get(i).setCollection_money(re.getCollection_money());//逾期还款金额
-//			}
-//			
-//			Orders o = new Orders();
-//			o.setOrderCreateTime(ords.get(i).getOrderCreateTime());
-//			Orders ord = operdao.GesamtbetragderDarlehen(o);
-//			
-//			ords.get(i).setCouNum(ord.getZahlderGesamtdarlehen());
-//			if(ords.get(i).getCollection_count() != 0 && ords.get(i).getCollection_count() != null){
-//				ords.get(i).setRepaymeny_collectiondata(ords.get(i).getRepayment_Count()/ords.get(i).getCollection_count());//还款率	
-//			}else{
-//				ords.get(i).setRepaymeny_collectiondata(0);//还款率	
-//			}
-//			ords.get(i).setOrderCreateTime(Timestamps.stampToDate1(ords.get(i).getOrderCreateTime()));
-//			
-//		}
-//		map.put("PageUtil", pages);
-//		map.put("Repayment", ords);
 		if(order.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -298,7 +261,14 @@ public class OperationalServiceimp implements OperationalService{
 			if(orders.getGesamtbetragderNum()==null){
 				ord.setGesamtbetragderNum(0);
 			}
+			
+			if(orders.getZahlderGesamtdarlehen() == null){
+				orders.setZahlderGesamtdarlehen(0);
+			}
 			System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
+			if(orders.getGesamtbetraguberfallNum() == null){
+				orders.setGesamtbetraguberfallNum(0);
+			}
 			NumberFormat numberFormat = NumberFormat.getInstance();
 			numberFormat.setMaximumFractionDigits(2);
 			System.out.println(orders.getGesamtbetraguberfallNum()+"AAA"+orders.getGesamtbetragderNum());
@@ -386,54 +356,7 @@ public class OperationalServiceimp implements OperationalService{
 	@Override
 	public Map<String, Object> CollectionData(Orderdetails orde) {
 		Map<String, Object> map = new HashMap<String, Object>();
-//		try {
-//			orde.setStart_time(Timestamps.dateToStamp1(orde.getStart_time()));
-//			orde.setEnd_time(Timestamps.dateToStamp1(orde.getEnd_time()));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		Integer totalCount = operdao.CollectionDataNum(orde);
-//		PageUtil pages = new PageUtil(orde.getPage(), totalCount);
-//		orde.setPage(pages.getPage());
-//		List<Orders> ordesa = operdao.CollectionDatas(orde);
-//		for(int i=0;i<ordesa.size();i++){
-//			if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() != null){
-//				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans().add(ordesa.get(i).getInterestPenaltySum()));
-//			}else if(ordesa.get(i).getMakeLoans() != null && ordesa.get(i).getInterestPenaltySum() == null){
-//				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getMakeLoans());
-//			}else if(ordesa.get(i).getMakeLoans() == null && ordesa.get(i).getInterestPenaltySum() != null){
-//				ordesa.get(i).setGesamtbetraguberfalligerBetrag(ordesa.get(i).getInterestPenaltySum());
-//			}
-//			
-//			Orders or = new Orders();
-//			orde.setOrderCreateTime(ordesa.get(i).getOrderCreateTime());
-//			List<Integer> ordIds = operdao.Beoverdue(orde);
-//			
-//			or = operdao.Pressformoney(orde);
-//			ordesa.get(i).setPassrate(or.getPressformoney());//催收次数
-//			ordesa.get(i).setBeoverdue(ordIds.size());//催收笔数
-//			
-//			
-//			orde.setCollectionStatus("承诺还款");
-//			or = operdao.Pressformoney(orde);
-//			ordesa.get(i).setChenggNum(or.getPressformoney());//成功数
-//			
-//			
-//			
-//			if(ordesa.get(i).getChenggNum() != null && ordesa.get(i).getChenggNum() != 0){
-//				ordesa.get(i).setChenggData(ordesa.get(i).getBeoverdue()/ordesa.get(i).getChenggNum());//催收成功率
-//			}else{
-//				ordesa.get(i).setChenggData(0);;//催收成功率
-//			}
-//			
-//			orde.setCollectionStatus("态度恶劣");
-//			ordesa.get(i).setBaddebt(operdao.SelecNumberCollection(orde));//查询坏账数
-//			ordesa.get(i).setOrderCreateTime(Timestamps.stampToDate(ordesa.get(i).getOrderCreateTime()));
-//		}
-//		map.put("PageUtil", pages);
-//		map.put("Orderdetails", ordesa);
-		List<Orders> ordesa = operdao.CollectionDatas(orde);
+		List<Orders> ordesa = new ArrayList<Orders>();
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -446,12 +369,36 @@ public class OperationalServiceimp implements OperationalService{
 				// TODO: handle exception
 			}
 			Orders ord = operdao.OneCollectionData(orde);//获取逾期笔数   逾期金额    逾期罚息
-			ord.setPassrate(operdao.CollectionNumSSA(orde));//催收次数
-			ord.setBeoverdue(operdao.CollectionOrders(orde));//催收笔数
+			if(ord.getMakeLoans()==null){
+				ord.setMakeLoans(new BigDecimal(0));
+			}
+			
+			if(ord.getInterestPenaltySum()==null){
+				ord.setInterestPenaltySum(new BigDecimal(0));
+			}
+			
+			Integer a = operdao.CollectionNumSSA(orde);
+			if(a==null){
+				a=0;
+			}
+			ord.setPassrate(a);//催收次数
+			Integer b = operdao.CollectionOrders(orde);
+			if(b==null){
+				b=0;
+			}
+			ord.setBeoverdue(b);//催收笔数
 			orde.setOrderStatus("4");
-			ord.setBaddebt(operdao.OrderOKCollection(orde));//查询坏账数
+			Integer c = operdao.OrderOKCollection(orde);
+			if(c==null){
+				c=0;
+			}
+			ord.setBaddebt(c);//查询坏账数
 			orde.setOrderStatus("3");
-			ord.setChenggNum(operdao.OrderOKCollection(orde));//成功数
+			Integer d = operdao.OrderOKCollection(orde);
+			if(d==null){
+				d=0;
+			}
+			ord.setChenggNum(d);//成功数
 			ord.setOrderCreateTime(stime);
 			ordesa.add(ord);
 			map.put("Orderdetails", ordesa);
@@ -467,12 +414,36 @@ public class OperationalServiceimp implements OperationalService{
 					// TODO: handle exception
 				}
 				Orders ord = operdao.OneCollectionData(orde);//获取逾期笔数   逾期金额    逾期罚息
-				ord.setPassrate(operdao.CollectionNumSSA(orde));//催收次数
-				ord.setBeoverdue(operdao.CollectionOrders(orde));//催收笔数
+				if(ord.getMakeLoans()==null){
+					ord.setMakeLoans(new BigDecimal(0));
+				}
+				
+				if(ord.getInterestPenaltySum()==null){
+					ord.setInterestPenaltySum(new BigDecimal(0));
+				}
+				
+				Integer a = operdao.CollectionNumSSA(orde);
+				if(a==null){
+					a=0;
+				}
+				ord.setPassrate(a);//催收次数
+				Integer b = operdao.CollectionOrders(orde);
+				if(b==null){
+					b=0;
+				}
+				ord.setBeoverdue(b);//催收笔数
 				orde.setOrderStatus("4");
-				ord.setBaddebt(operdao.OrderOKCollection(orde));//查询坏账数
+				Integer c = operdao.OrderOKCollection(orde);
+				if(c==null){
+					c=0;
+				}
+				ord.setBaddebt(c);//查询坏账数
 				orde.setOrderStatus("3");
-				ord.setChenggNum(operdao.OrderOKCollection(orde));//成功数
+				Integer d = operdao.OrderOKCollection(orde);
+				if(d==null){
+					d=0;
+				}
+				ord.setChenggNum(d);//成功数
 				ord.setOrderCreateTime(stimes.get(i));
 				ordesa.add(ord);
 				map.put("Orderdetails", ordesa);

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhita.dao.manage.PaymentRecordMapper" >
-  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Payment_record" >
+	 <resultMap id="BaseResultMap" type="com.zhita.model.manage.Payment_record" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="orderId" property="orderid" jdbcType="INTEGER" />
     <result column="remittanceTime" property="remittancetime" jdbcType="VARCHAR" />
@@ -174,11 +174,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  
-  
-  
-  
-		  <select id="TotalCountPayment" parameterType="com.zhita.model.manage.Payment_record" resultType="java.lang.Integer">
+  <select id="TotalCountPayment" parameterType="com.zhita.model.manage.Payment_record" resultType="java.lang.Integer">
 		  	select count(ra.id) from payment_record ra,user u,orders o,orderdetails ord,thirdparty_interface thir
 		  	<where>
 		  		AND ra.thirdparty_id = thir.id
@@ -313,10 +309,10 @@
 			  	group by o.id 
 		  		limit #{page},#{pagesize}
 			  </select>
-		  
-  			
-  			
-  			<select id="SelectThird" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Loan_setting">
+			  
+			  
+			  
+			  <select id="SelectThird" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Loan_setting">
   				select id,name from loan_setting where companyId = #{companyId}
   			</select>
   			
@@ -330,7 +326,7 @@
   			
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
   			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,so.sourceName as drainageOfPlatformName,o.riskmanagementFraction,
-					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,o.riskcontrolname,u.riskControlPoints,u.delayTimes,
+					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
 					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,o.shouldReturnTime as deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
 					ord.interestPenaltySum,o.realtime 
   			 		from orders o left join user u on o.userId = u.id
@@ -339,6 +335,7 @@
 					left join deferred defe on defe.orderid = o.id 
 					left join deferred_settings defeset on defeset.companyId = o.companyId 
 					left join source so on so.id = u.sourceId
+					left join manage_control_settings ma on ma.id=so.manageControlId
   			 		<where>
   			 			pay.orderId =#{orderId} 
   			 			AND o.companyId = #{companyId}
@@ -395,9 +392,6 @@
   				 VALUES
   				 (#{orderId},#{totalamount},#{amountmoney},#{remarks},#{accounttime},#{beoverdue},#{rename_id},#{amou_time},#{sys_uerId})
   			</insert>
-  			
-  			
-  			
   			
   			
   			<select id="AccountTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
@@ -466,8 +460,6 @@
   
   
   
-  			
-  			
   			<select id="AllStatu" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
   				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue,
   				 a.amou_time,re.pipelinenumber from orders o,user u,accountadjustment a,repayment_setting th,repayment re  
@@ -660,7 +652,6 @@
   			
   			
   			
-  			
   			<select id="BankDeduOrderNum" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">
   				select count(o.id) from bankdeductions b,orders o,user u,deferred defe
   				<where>
@@ -694,16 +685,14 @@
   			
   			
   			
-  			
-  			
   			<select id="BankDeduOrder" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Orderdetails">
   				select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
-				o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
+				o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
 				col.promise_money,col.promise_money,
 				col.collectionTime,col.collectionStatus,o.orderStatus,defe.deferBeforeReturntime,defe.deferAfterReturntime  
 				 from orders o LEFT JOIN orderdetails ord ON o.id = ord.orderId
-				 LEFT JOIN collection col ON o.id = col.orderId
-				 LEFT JOIN collection_member colme ON	colme.collectionMemberId = col.collectionMemberId
+				 LEFT JOIN collection col on o.id = col.orderId
+				 LEFT JOIN sys_user colme on colme.userId = col.collectionMemberId
 				 LEFT JOIN user u ON o.userId = u.id
 				 LEFT JOIN bankdeductions banl on banl.orderId = o.orderId
 				 LEFT JOIN deferred defe on defe.orderId = o.id
@@ -734,7 +723,6 @@
   				group by banl.orderId
   				limit #{page},#{pagesize}
   			</select>
-  			
   			
   			
   			
@@ -963,4 +951,10 @@
   			<select id="DeferrAdefe" parameterType="java.lang.Integer" resultType="java.lang.String">
   				select deferAfterReturntime from deferred where orderid = #{orderid}
   			</select>
+  			
+  			
+  			
+  			
+
+ 
 </mapper>

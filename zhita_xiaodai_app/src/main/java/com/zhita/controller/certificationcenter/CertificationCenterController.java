@@ -126,7 +126,7 @@ public class CertificationCenterController {
 		   String bankcard =null;
 		   Map<String, Object> map = userAttestationService.getuserAttestation(userId);
 		   Map<String, Object> map1 = new HashMap<String, Object>();
-		   map1.put("Ncode","2000");
+
 		   if(map==null) {
 			   userAttestation ="0";
 		   }else {
@@ -155,7 +155,9 @@ public class CertificationCenterController {
 			   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&("2".equals(shareOfState)||"4".equals(shareOfState))) {
 			   map1.put("code","200");
 			   map1.put("msg", "满足条件");
+			   map1.put("Ncode","2000");
 		   }else {
+			   map1.put("Ncode","400");
 			   map1.put("code","400");
 			   map1.put("msg", "不满足条件");
 		}

@@ -1,5 +1,9 @@
 package com.zhita.controller.ChanpayQuickPay;
 
+
+
+
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +23,7 @@ import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
@@ -47,6 +52,11 @@ public class ChanpaySend extends BaseParameter{
 		@Autowired
 	    OrderdetailsMapper orderdetailsMapper;
 		
+		
+		
+		@Autowired
+		IntBorrowmonmesService intBorrowmonmesService;
+		
 	
 	
 	/**
@@ -60,13 +70,29 @@ public class ChanpaySend extends BaseParameter{
 	 */
 	@ResponseBody
 	@RequestMapping("send")
-	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan){
+	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan,BigDecimal finalLine){
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
 		String time = sin.format(new Date());
 		String start_time = time+" 00:00:00";
 		String end_time = time+" 23:59:59";
 		String a =  chanser.loanSetStatu(companyId);//放款状态  1  开启    2 关闭
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
+		Integer id = chanser.SelectOrdersId(userId);
+		int platformfeeRatio =  ((int) map2.get("platformfeeRatio"));//平台服务费比率
+		Double pladata = platformfeeRatio*0.01;
+		BigDecimal pr = new BigDecimal(0);
+		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
+		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
+		BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
+		BigDecimal acmoney = new BigDecimal(TransAmt);
+		Integer j = actualAmountReceived.compareTo(acmoney);
+		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
+		if(j==0 || j==1){//j = 0 证明 actualAmountReceived == acmoney j = 1 actualAmountReceived > acmoney
+			
+		if(id == null){
+			
+		
 		if(a.equals("1")){
 		Orderdetails ord = new Orderdetails();
 		
@@ -167,6 +193,15 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("msg", "渠道关闭,请联系客服");
 			map1.put("code", 0);
 		}
+		}else{
+			map1.put("msg", "您有订单未还清");
+			map1.put("code", 0);
+		}
+		}else{
+			map1.put("msg", "金额异常");
+			map1.put("AAA", j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
+			map1.put("code", 0);
+		}
 		
 		return map1;
 		
@@ -192,8 +227,8 @@ public class ChanpaySend extends BaseParameter{
 	@ResponseBody
 	@RequestMapping("Mingxi")
 	public Map<String, Object> SendMing(String orderNumber,int lifeOfLoan,String sourceName,String registeClient,
-			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,
-			BigDecimal shouldTotalAmount) {
+			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,
+			BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {
 		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 	    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
 	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
@@ -285,7 +320,7 @@ public class ChanpaySend extends BaseParameter{
 	    Date date = new Date();//取时间 
 	    Calendar calendar  =   Calendar.getInstance();		 
 	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
-	    calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+	    calendar.add(Calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 	    System.out.println(sdf.format(date));

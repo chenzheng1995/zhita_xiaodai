@@ -39,5 +39,7 @@ public interface OperatorMapper {
 
 	String getoperatorJson(int userId);
 
+	String getphone(int userId);
+
 
 }

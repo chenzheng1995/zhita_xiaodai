@@ -118,4 +118,7 @@ public interface StatisticsDao {
 	
 	
 	BigDecimal SumPayMoney(Orderdetails ord);
+	
+	
+	Integer SelectOrders(Integer userId);
 }

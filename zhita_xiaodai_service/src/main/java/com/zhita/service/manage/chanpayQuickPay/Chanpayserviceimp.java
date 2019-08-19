@@ -205,6 +205,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public BigDecimal SumpayMoney(Orderdetails ord) {
 		return stdao.SumPayMoney(ord);
 	}
+
+	@Override
+	public Integer SelectOrdersId(Integer userId) {
+		return stdao.SelectOrders(userId);
+	}
 	
 	
 	

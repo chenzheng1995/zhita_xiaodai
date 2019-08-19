@@ -251,9 +251,10 @@ public class Test {
 //		String jsonString = pUtil.post("https://test.xinyan.com/operators/v2/authNormal", param);
 //		System.out.println(jsonString);
 
-		
-		int score = Integer.parseInt("0");
-		System.out.println(score);
+		String roatnptFractionalSegment = "302-800";
+        int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+        int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(roatnptFractionalSegment.indexOf("-")+1,roatnptFractionalSegment.length()));
+System.out.println(roatnptFractionalSegmentBig);
 	}
 	}
 

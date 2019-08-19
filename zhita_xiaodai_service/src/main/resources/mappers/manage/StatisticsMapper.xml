@@ -302,4 +302,8 @@
 				and pay.remittanceTime between #{start_time} and #{end_time}
 			</select>
 			
+			
+			<select id="SelectOrders" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select id from orders where userId = #{userId} and orderStatus != "3"
+			</select>
 </mapper>

@@ -90,4 +90,7 @@
 					companyId
 				)VALUES(#{send_time},#{user_type},#{usernum},#{short_text},#{sys_userId},#{companyId})
 			</insert>
+			
+			
+			
 </mapper>

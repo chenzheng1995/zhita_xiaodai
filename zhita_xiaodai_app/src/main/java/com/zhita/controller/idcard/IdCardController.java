@@ -32,7 +32,6 @@ public class IdCardController {
     	JSONObject jsonObject =null;
     	String biz_token ="";
 		 Map<String, Object> map = new HashMap<String, Object>();
-		 map.put("Ncode","2000");
 	        if (StringUtils.isEmpty(userId)) {
 	            map.put("msg", "userId不能为空");
 	            return map;
@@ -48,9 +47,11 @@ public class IdCardController {
 	         	System.out.println(sign);
 	         	int number = UserAttestationService.insertSign(sign,userId);
 	         	  if (number == 1) {
+	         		 map.put("Ncode","2000");
                       map.put("msg", "数据插入成功");
                       map.put("Code", "201");
                   } else {
+             		 map.put("Ncode","405");
                       map.put("msg", "数据插入失败");
                       map.put("Code", "405");
                   }
@@ -73,6 +74,7 @@ public class IdCardController {
 	          String biz_token_url = "https://openapi.faceid.com/lite_ocr/v1/do/"+jsonObject.get("biz_token").toString();
 		      UserAttestationService.updateBizToken(biz_token, userId);
 		      map.put("Code", "200");
+		      map.put("Ncode","2000");
 		      map.put("biz_token", biz_token_url);	      
 			} catch (Exception e) {
 			    error = jsonObject.get("error").toString();
@@ -89,6 +91,7 @@ public class IdCardController {
 			         biz_token = jsonObject.get("biz_token").toString();
 			         String  biz_token_url = "https://openapi.faceid.com/lite_ocr/v1/do/"+jsonObject.get("biz_token").toString();
 				    UserAttestationService.updateBizToken(biz_token, userId);
+				    map.put("Ncode","2000");
 				    map.put("Code", "200");
 				    map.put("biz_token", biz_token_url);	  
 		        }
@@ -104,12 +107,14 @@ public class IdCardController {
     @Transactional
 	public Map<String, Object> setAddress(String homeAddressLongitude,String homeAddressLatitude,String detailAddress,int userId){
     	 Map<String, Object> map = new HashMap<String, Object>();
-    	 map.put("Ncode","2000");
+
     	 int number = UserAttestationService.setAddress(homeAddressLongitude,homeAddressLatitude,detailAddress,userId);
-         if (number == 1) {                  	
+         if (number == 1) {      
+        	 map.put("Ncode","2000");
              map.put("msg", "数据插入成功");
              map.put("Code", "200");
          } else {
+        	 map.put("Ncode","405");
              map.put("msg", "数据插入失败");
              map.put("Code", "405");
          }
@@ -130,9 +135,11 @@ public class IdCardController {
              String attestationStatus = "1";
              String authenticationSteps ="3";
              UserAttestationService.updateAttestationStatus(attestationStatus,userId,authenticationSteps);
+        	 map.put("Ncode","2000");
              map.put("msg", "认证成功");
              map.put("Code", "200");
          } else {
+        	 map.put("Ncode","405");
              map.put("msg", "认证失败");
              map.put("Code", "405");
          }

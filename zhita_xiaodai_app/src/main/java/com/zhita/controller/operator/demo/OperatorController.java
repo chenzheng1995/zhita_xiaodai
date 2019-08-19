@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.LogManager;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.istack.internal.logging.Logger;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.sun.org.apache.xml.internal.utils.IntVector;
 import com.zhita.controller.xinyan.action.OperatorAction;
@@ -87,14 +90,16 @@ public class OperatorController {
 
     	
    	 Map<String, Object> map = new HashMap<String, Object>();
-   	map.put("Ncode","2000");
+   	
    	 int num = operatorService.getuserId(userId);
    	 if(num==0) {
    	   	 int number = operatorService.setredIdAndPhone(reqId,userId,phone);
-         if (number == 1) {                  	
+         if (number == 1) {            
+        	 map.put("Ncode","2000");
              map.put("msg", "数据插入成功");
              map.put("Code", "201");
          } else {
+        	 map.put("Ncode","405");
              map.put("msg", "数据插入失败");
              map.put("Code", "405");
          }
@@ -111,7 +116,7 @@ public class OperatorController {
     @Transactional
     public Map<String, String> updateOperatorJson(int userId){
     	Map<String, String> map = new HashMap<>();
-    	map.put("Ncode","2000");
+
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String attestationStatus =null;
 		String name = (String) userAttestation.get("trueName");
@@ -142,6 +147,7 @@ public class OperatorController {
     	if (error.equals("200")) {     
     		attestationStatus ="1";
     		operatorService.updateAttestationStatus(attestationStatus,userId);
+        	map.put("Ncode","2000");
                 map.put("msg", "认证成功");
                 map.put("Code", "200");
 		}else {
@@ -149,10 +155,12 @@ public class OperatorController {
 	    		if(url.indexOf("205")!=-1) {
 	        		attestationStatus ="2";
 	        		operatorService.updateAttestationStatus(attestationStatus,userId);
+	            	map.put("Ncode","300");
 	    			  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 	    	          map.put("Code", "300");
 	    		}
 	    	}else {
+	        	map.put("Ncode","401");
 	            map.put("msg", "认证失败");
 	            map.put("Code", "401");
 			}
@@ -177,6 +185,7 @@ public class OperatorController {
         if(idCard==null||idCard.isEmpty()) {
         	int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
         	if(num1==1) {
+        		map.put("Ncode","407");
                 map.put("msg", "手机号黑名单 ");
                 map.put("code", "407");
                 map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -188,6 +197,7 @@ public class OperatorController {
         	int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
         	int num2 = intBlacklistuserService.getid1(idCard,companyId);//判断身份证是否是黑名单
         	if(num1==1) {
+        		map.put("Ncode","407");
                 map.put("msg", "手机号黑名单 ");
                 map.put("code", "407");
                 map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -195,6 +205,7 @@ public class OperatorController {
                 return map;
         	}    	
         	if(num2==1) {
+        		map.put("Ncode","408");
                 map.put("msg", "身份证黑名单 ");
                 map.put("code", "408");
                 map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -233,6 +244,7 @@ public class OperatorController {
 				String newphone = pDeal.decryption(phone1);
 				TuoMinUtil tUtil = new TuoMinUtil();
 				String newphone1 = tUtil.mobileEncrypt(newphone);
+		    	map.put("Ncode","401");
 	            map.put("msg", "该用户是重复用户");
 	            map.put("code", "401");
 	            map.put("prompt", "您的身份证已被使用,使用者手机号码为"+newphone1+",如有疑问请联系客服。");
@@ -302,6 +314,7 @@ public class OperatorController {
 	  int maximumage =(int) map2.get("maximumage");
 	  String refuseApplyProvince = (String) map2.get("refuseApplyProvince");
 	  if(age<minimumage||age>maximumage) {
+		  map.put("Ncode","405");
 		  map.put("code", "405");
 		  map.put("msg", "年龄不符合条件");
 		  return map;
@@ -310,6 +323,7 @@ public class OperatorController {
 	  String[] aString = refuseApplyProvince.split("/");
       for (int i = 0; i < aString.length; i++) {
     	  if(address.indexOf(aString[i])!=-1) {
+    		  map.put("Ncode","406");
     		  map.put("code", "406");
     		  map.put("msg", "地域不符合条件");
     		  return map;
@@ -340,7 +354,7 @@ public Map<String, Object> getshareOfState(int userId){
           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
+          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(roatnptFractionalSegment.indexOf("-")+1,roatnptFractionalSegment.length()));
           
           if(riskControlPoints<roatnptFractionalSegmentSmall) {
            String orderNumber = intOrderService.getorderNumber(userId);
@@ -455,7 +469,7 @@ public Map<String, Object> getshareOfState(int userId){
 @Transactional
 public Map<String, Object> getthreeElements(int userId,String phone,int companyId) throws UnsupportedEncodingException{
 	Map<String, Object> map1 = new HashMap<>();
-	map1.put("Ncode","2000");
+
 	Map<String, Object> map = userAttestationService.getuserAttestation(userId);
 	String trueName = (String) map.get("trueName");
 	String idcard_number = (String) map.get("idcard_number");
@@ -476,6 +490,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		 if(num>0) {
 			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
 		}		 
+			map1.put("Ncode","2000");
 		 map1.put("code","200");
 		 map1.put("msg","认证一致");
 
@@ -496,6 +511,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	            intBlacklistuserService.setBlacklistuser(idcard_number,userId,companyId,phone,trueName,date,blackType);
 		 }
 		 }
+			map1.put("Ncode","405");
 		 map1.put("code","405");
 		 map1.put("msg","认证不一致");		 
 	 }
@@ -509,7 +525,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 			 certification_number = threeElementsMapper.getCertificationnumber(userId);
 			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
 		}	
-	 
+		 map1.put("Ncode","407");
 		 map1.put("code","407");
 		 map1.put("msg","认证信息不存在");		 
 	 }
@@ -523,6 +539,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 			 certification_number = threeElementsMapper.getCertificationnumber(userId);
 			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
 		}	
+		 map1.put("Ncode","409");
 		 map1.put("code","409");
 		 map1.put("msg","其他异常");		 
 	 }
@@ -538,19 +555,26 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
    @ResponseBody
    @Transactional
    public Map<String, Object> getScore(int userId){
+
+
+
    	String shareOfState =null;
    	int score =0;
    	Map<String, Object> map = new HashMap<>();
    	map.put("Ncode","2000");
 //   	shareOfState ="6";
 //   	intUserService.updateshareOfState(userId, shareOfState);
+	 Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
+	String name = (String) userAttestation.get("trueName");
+	String idNumber = (String) userAttestation.get("idcard_number");
    	int sourceId = intUserService.getsourceId(userId);
    	String sourceName = intSourceService.getsourceName(sourceId);
-   	String phone1 = intUserService.getphone(userId);
+   	String phone1 = operatorService.getphone(userId);
    	PhoneDeal pDeal = new PhoneDeal();
    	String newphone = pDeal.decryption(phone1);
    	Map<String, Object> map3 =  userAttestationService.getuserAttestation(userId);
    	String idcard_number =(String) map3.get("idcard_number");
+   	String address = (String) map3.get("address");
    	int number = intWhitelistuserService.getWhitelistuser(newphone,idcard_number);
    	if(number!=0) {
     	   shareOfState ="2";
@@ -564,9 +588,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
     Map<String, Object> map1 =  intManconsettingsServcie.getManconsettings(manageControlId);
            String rmModleName = (String) map1.get("rmModleName");
      if ("风控甲".equals(rmModleName)) {
-    	 Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
- 		String name = (String) userAttestation.get("trueName");
- 		String idNumber = (String) userAttestation.get("idcard_number");
+
     
         Map<String, Object> operator = operatorService.getOperator(userId);
         String phone = (String) operator.get("phone");
@@ -575,14 +597,18 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 
     	
     	ScoreDemo scoreDemo = new ScoreDemo();
-    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);
+    	String result = scoreDemo.getScore(search_id, phone, name, idNumber, reqId);  
+    	System.out.println("result-----------------------------"+result);
     	  JSONObject jsonObject =null;
     	  jsonObject = JSONObject.parseObject(result);
           String tianji_api_tianjiscore_pdscorev5_response =jsonObject.get("tianji_api_tianjiscore_pdscorev5_response").toString();
           jsonObject = JSONObject.parseObject(tianji_api_tianjiscore_pdscorev5_response);
+         
+          System.out.println("search_id"+search_id+"phone"+phone+"name"+name+"idNumber"+idNumber+"reqId"+reqId+"tianji_api_tianjiscore_pdscorev5_response"+tianji_api_tianjiscore_pdscorev5_response);
           score = Integer.parseInt(jsonObject.get("score").toString());
 	}
      if("风控乙".equals(rmModleName)) {
+         System.out.println("rmModleName------------------------------------------"+1111111);
     	 String fileContent = operatorService.getoperatorJson(userId);
     	 Map<String, Object> map2 = userAttestationService.getuserAttestation(userId);
     	 String linkmanOneName = (String) map2.get("linkmanOneName");
@@ -590,7 +616,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
     	 String linkmanTwoName = (String) map2.get("linkmanTwoName");
     	 String linkmanTwoPhone = (String) map2.get("linkmanTwoPhone");
     	 ZhimiRiskDemo zDemo = new ZhimiRiskDemo();
-    	 String responseStr = zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName, linkmanTwoPhone);
+    	 String responseStr = zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName, linkmanTwoPhone,address,newphone,idcard_number,name);
    	  JSONObject jsonObject =null;
    	  jsonObject = JSONObject.parseObject(responseStr);
    	     score =new Double(jsonObject.getDouble("score")).intValue();
@@ -624,8 +650,10 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
           String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
           String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
           int roatnptFractionalSegmentSmall =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(0,roatnptFractionalSegment.indexOf("-")));
-          
+          int roatnptFractionalSegmentBig =Integer.parseInt(roatnptFractionalSegment.substring(roatnptFractionalSegment.indexOf("-")+1,roatnptFractionalSegment.length()));
+          System.out.println("roatnptFractionalSegmentSmall--------------------------------------------------"+roatnptFractionalSegmentSmall);
+          System.out.println("roatnptFractionalSegmentBig------------------------------------------"+roatnptFractionalSegmentBig);
+          System.out.println("score------------------------------------------"+score);
           if(score<roatnptFractionalSegmentSmall) {
        	   shareOfState ="0";
        	   map.put("code", 200);

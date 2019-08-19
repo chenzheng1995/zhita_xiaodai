@@ -87,7 +87,7 @@ public class LoginController {
 	@ResponseBody
 	public Map<String, String> sendShortMessage(String phone, int companyId, String appNumber, String code) {
 		Map<String, String> map = new HashMap<>();
-		map.put("Ncode","2000");
+
 		DateFormat format = new SimpleDateFormat("yyyy/M/d");
 		String result = MD5Utils.getMD5(phone + appNumber + format.format(new Date()) + "@xiaodai");
 		if (result.length() == 31) {
@@ -96,10 +96,12 @@ public class LoginController {
 		if (result.equals(code)) {
 			YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
 			String state = yunTongXunUtil.sendSMS(phone);
+			map.put("Ncode","2000");
 			map.put("Code","200");
 			map.put("msg", state);
 			return map;
 		} else {
+			map.put("Ncode","405");
 			map.put("msg", "发送失败");
 			map.put("Code","405");
 			return map;
@@ -122,7 +124,7 @@ public class LoginController {
 	public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient,
 			String sourceName, String useMarket) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("Ncode","2000");
+
 		String loginStatus = "1";
 		PhoneDeal phoneDeal = new PhoneDeal();
 		String newPhone = phoneDeal.encryption(phone);
@@ -138,6 +140,7 @@ public class LoginController {
  			if (num1 == 1 || num1 > 1) {
  				String ifBlacklist = loginService.getifBlacklist(newPhone, companyId);
  				if(ifBlacklist==null) {
+ 					map.put("Ncode","407");
 						map.put("msg", "手机号黑名单 ");
 						map.put("code", "407");
 						map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -149,6 +152,7 @@ public class LoginController {
  	 					int userId = loginService.getId(newPhone, companyId);
  	 					int orderStatus = intOrderService.getorderStatus(userId, companyId);
  	 					if (orderStatus != 1) {
+ 	 						map.put("Ncode","407");
  	 						map.put("msg", "手机号黑名单 ");
  	 						map.put("code", "407");
  	 						map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -168,6 +172,7 @@ public class LoginController {
 				String key = phone + "xiaodaiKey";
 				String redisCode = redisClientUtil.get(key);
 				if (redisCode == null) {
+					map.put("Ncode","402");
 					map.put("msg", "验证码已过期，请重新发送");
 					map.put("code", "402");
 					return map;
@@ -182,12 +187,14 @@ public class LoginController {
 								registrationTime, merchantId, useMarket, operatorsAuthentication);
 						if (number == 1) {
 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+							map.put("Ncode","2000");
 							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
 							map.put("code", "201");
 							map.put("loginStatus", loginStatus);
 							map.put("userId", id);
 							map.put("phone", phone);
 						} else {
+							map.put("Ncode","405");
 							map.put("msg", "用户登录失败，用户数据插入失败");
 							map.put("code", "405");
 						}
@@ -198,12 +205,14 @@ public class LoginController {
 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
 							String pwd = loginService.getPwd(id);
 							if (pwd == null) {
+								map.put("Ncode","2000");
 								map.put("msg", "用户登录成功，登录状态修改成功，让用户添加密码");
 								map.put("code", "201");
 								map.put("loginStatus", loginStatus);
 								map.put("userId", id);
 								map.put("phone", phone);
 							} else {
+								map.put("Ncode","2000");
 								map.put("msg", "用户登录成功，登录状态修改成功");
 								map.put("code", "200");
 								map.put("loginStatus", loginStatus);
@@ -211,11 +220,13 @@ public class LoginController {
 								map.put("phone", phone);
 							}
 						} else {
+							map.put("Ncode","406");
 							map.put("msg", "用户登录失败，登录状态修改失败");
 							map.put("code", "406");
 						}
 					}
 				} else {
+					map.put("Ncode","403");
 					map.put("msg", "验证码错误");
 					map.put("code", "403");
 					return map;
@@ -241,8 +252,9 @@ public class LoginController {
 	public Map<String, Object> forgotpwd(String phone, String pwd, String code, int companyId, String sourceName,
 			String useMarket) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("Ncode","2000");
+
 		if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(pwd) || StringUtils.isEmpty(code)) {
+			map.put("Ncode","401");
 			map.put("msg", "phone,pwd或code不能为空");
 			map.put("code", "401");
 			return map;
@@ -253,6 +265,7 @@ public class LoginController {
 			String key = phone + "xiaodaiKey";
 			String redisCode = redisClientUtil.get(key);
 			if (redisCode == null) {
+				map.put("Ncode","402");
 				map.put("msg", "验证码已过期，请重新发送");
 				map.put("code", "402");
 				return map;
@@ -264,15 +277,18 @@ public class LoginController {
 				int number = loginService.updatePwd(newPhone, md5Pwd, companyId);
 				if (number == 1) {
 					int id = loginService.getId(newPhone, companyId); // 获取该用户的id
+					map.put("Ncode","2000");
 					map.put("msg", "密码修改成功");
 					map.put("userId", id);
 					map.put("phone", phone);
 					map.put("code", "200");
 				} else {
+					map.put("Ncode","405");
 					map.put("msg", "密码修改失败");
 					map.put("code", "405");
 				}
 			} else {
+				map.put("Ncode","403");
 				map.put("msg", "验证码输入错误");
 				map.put("code", "403");
 			}
@@ -293,7 +309,7 @@ public class LoginController {
 	public Map<String, Object> pwdLogin(String phone, String pwd, int companyId, String sourceName, String useMarket,
 			String registeClient) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("Ncode","2000");
+
 		String loginStatus = "1";
 		if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(pwd)) {
 			map.put("msg", "phone或pwd不能为空");
@@ -306,6 +322,7 @@ public class LoginController {
  			if (num1 == 1 || num1 > 1) {
  				String ifBlacklist = loginService.getifBlacklist(newPhone, companyId);
  				if(ifBlacklist==null) {
+ 					map.put("Ncode","407");
 						map.put("msg", "手机号黑名单 ");
 						map.put("code", "407");
 						map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -317,6 +334,7 @@ public class LoginController {
  	 					int userId = loginService.getId(newPhone, companyId);
  	 					int orderStatus = intOrderService.getorderStatus(userId, companyId);
  	 					if (orderStatus != 1) {
+ 	 						map.put("Ncode","407");
  	 						map.put("msg", "手机号黑名单 ");
  	 						map.put("code", "407");
  	 						map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
@@ -334,12 +352,14 @@ public class LoginController {
 							registrationTime, merchantId, useMarket, operatorsAuthentication);
 					if (num == 1) {
 						id = loginService.getId(newPhone, companyId); // 获取该用户的id
+						map.put("Ncode","2000");
 						map.put("msg", "用户登录成功，数据插入成功");
 						map.put("code", "201");
 						map.put("loginStatus", loginStatus);
 						map.put("userId", id);
 						map.put("phone", phone);
 					} else {
+						map.put("Ncode","405");
 						map.put("msg", "用户登录失败，用户数据插入失败");
 						map.put("code", "405");
 					}
@@ -352,16 +372,19 @@ public class LoginController {
 						int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);
 						if (num == 1) {
 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+							map.put("Ncode","2000");
 							map.put("msg", "用户登录成功，登录状态修改成功");
 							map.put("code", "200");
 							map.put("loginStatus", loginStatus);
 							map.put("userId", id);
 							map.put("phone", phone);
 						} else {
+							map.put("Ncode","406");
 							map.put("msg", "用户登录失败，登录状态修改失败");
 							map.put("code", "406");
 						}
 					} else {
+						map.put("Ncode","403");
 						map.put("msg", "密码错误");
 						map.put("code", "403");
 						return map;
@@ -379,7 +402,7 @@ public class LoginController {
 	@Transactional
 	public Map<String, Object> setPwd(String pwd, int userId, String sourceName, String useMarket) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("Ncode","2000");
+
 		if (StringUtils.isEmpty(pwd) || StringUtils.isEmpty(userId)) {
 			map.put("msg", "pwd或userId不能为空");
 			return map;
@@ -388,9 +411,11 @@ public class LoginController {
 			String md5Pwd = md5Util.EncoderByMd5(pwd);
 			int number = loginService.setPwd(userId, md5Pwd);
 			if (number == 1) {
+				map.put("Ncode","2000");
 				map.put("msg", "密码添加成功");
 				map.put("code", "200");
 			} else {
+				map.put("Ncode","400");
 				map.put("msg", "密码添加失败");
 				map.put("code", "400");
 			}
@@ -407,14 +432,16 @@ public class LoginController {
 	@Transactional
 	public Map<String, Object> getuser(String phone, int companyId, String sourceName, String useMarket) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("Ncode","2000");
+
 		PhoneDeal phoneDeal = new PhoneDeal();
 		String newPhone = phoneDeal.encryption(phone);
 		Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
 		if (id == null) {
+			map.put("Ncode","405");
 			map.put("msg", "用户名不存在,请先注册");
 			map.put("code", "405");
 		} else {
+			map.put("Ncode","2000");
 			map.put("msg", "用户存在");
 			map.put("code", "201");
 		}
@@ -432,7 +459,7 @@ public class LoginController {
 	@Transactional
 	public Map<String, String> appLogOut(int userId, String companyId) {
 		Map<String, String> map = new HashMap<>();
-		map.put("Ncode","2000");
+
 		if (StringUtils.isEmpty(userId)) {
 			map.put("msg", "userId不能为空");
 			return map;
@@ -440,10 +467,12 @@ public class LoginController {
 			String loginStatus = "0";
 			int number = loginService.updatelogOutStatus(loginStatus, userId, companyId);
 			if (number == 1) {
+				map.put("Ncode","2000");
 				map.put("msg", "用户退出成功，登录状态修改成功");
 				map.put("code", "200");
 				map.put("loginStatus", loginStatus);
 			} else {
+				map.put("Ncode","400");
 				map.put("msg", "用户退出失败，登录状态修改失败");
 				map.put("code", "400");
 			}

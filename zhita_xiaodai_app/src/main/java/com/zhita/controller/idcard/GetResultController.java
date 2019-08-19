@@ -230,7 +230,7 @@ public class GetResultController {
     public Map<String, Object> setidcard(int userId,String name,String gender,String nationality,String birth_year,String birth_month,String birth_day,String address,String issued_by,
     		String valid_date_start,String valid_date_end,String idcard_number,String homeAddressLongitude,String homeAddressLatitude,String detailAddress,String head,String nationalEmblem) throws Exception{
     	Map<String, Object> map = new HashMap<String, Object>();
-    	map.put("Ncode","2000");
+
 		String frontsidePath = null;// 正面文件路径
 		String backsidePath = null;// 背面文件路径
 	    Base64ToInputStream base64ToInputStream = new Base64ToInputStream();
@@ -245,9 +245,11 @@ public class GetResultController {
     	intUserService.updatename(name,userId);
     	 int number = UserAttestationService.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps);
     	 if(number==1) {
+    	    	map.put("Ncode","2000");
 	    		map.put("code", 200);
 	    		map.put("msg","插入成功");
 	    	}else {
+	        	map.put("Ncode","405");
 				map.put("code",405);
 				map.put("msg", "插入失败");
 			}
@@ -263,14 +265,16 @@ public class GetResultController {
     @Transactional
     public Map<String, Object> setface(int userId,String code){
     	Map<String, Object> map = new HashMap<String, Object>();
-    	map.put("Ncode","2000");
+
     	if("200".equals(code)) {
     		String authenticationSteps ="2";
     		int number = UserAttestationService.updateAuthenticationSteps(userId,authenticationSteps);
        	 if(number==1) {
+         	map.put("Ncode","200");
 	    		map.put("code", 200);
 	    		map.put("msg","插入成功");
 	    	}else {
+	    		map.put("Ncode","405");
 				map.put("code",405);
 				map.put("msg", "插入失败");
 			}
