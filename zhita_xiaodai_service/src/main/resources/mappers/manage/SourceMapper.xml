@@ -201,7 +201,7 @@
    	group by t.sourceid
    </select>
    <!-- 后台管理        通过渠道名称查询出当前渠道的折扣率 -->
-   <select id="queryDiscount" resultType="java.lang.Integer">
+   <select id="queryDiscount" resultType="java.lang.String">
    	select discount from source where id=#{arg0} and companyId=#{arg1}
    </select>
    <!--后台管理             查询某一天某个渠道的注册数量  -->
@@ -299,5 +299,9 @@
  	<!-- 后台管理         根据前端传过来的链接判断该链接是否存在source表 -->
  	<select id="queryIfLink" parameterType="java.lang.String" resultType="java.lang.Integer">
  		select count(*) from source where link = #{arg0} and deleted=0 
+	</select>
+	<!-- 后台管理       渠道方登录（用户名和密码） -->
+	<select id="queryByAccAndPwd" parameterType="java.lang.String" resultType="com.zhita.model.manage.Source">
+		select * from source where account=#{arg0} and status=1 and deleted=0
 	</select>
 </mapper>

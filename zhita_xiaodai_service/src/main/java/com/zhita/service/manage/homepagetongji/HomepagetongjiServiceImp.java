@@ -134,9 +134,17 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
-		String orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
+		String orderrepaycvr=null;
+		if(sumloan==0){
+			orderrepaycvr="0.00%";
+		}else{
+			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
+		}
 		
 		BigDecimal payrecmoney = homepageTongjiMapper.querypayrecMoney(companyId);//累计放款总金额
+		if(payrecmoney==null){
+			payrecmoney=new BigDecimal("0.00");
+		}
 		
 		BigDecimal repaymoney = new BigDecimal("00");//累计回款总金额
 		BigDecimal repaymoneyreal = homepageTongjiMapper.queryrepayMoney(companyId);//累计回款总金额(实还金额)
@@ -204,7 +212,12 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int overdue1 = homepageTongjiMapper.overdue1(companyId);//逾后未还笔数
 		int baddebt = homepageTongjiMapper.baddebt1(companyId);//已坏账笔数
 		int shouorder = homepageTongjiMapper.shouorder(companyId);//应还订单
-		String overduecvr = (new DecimalFormat("#0.00").format((overdue1+baddebt)*1.0/shouorder*100))+"%";//逾期率
+		String overduecvr=null;
+		if(shouorder==0){
+			overduecvr="0.00%";
+		}else{
+			overduecvr = (new DecimalFormat("#0.00").format((overdue1+baddebt)*1.0/shouorder*100))+"%";//逾期率
+		}
 		
 		BigDecimal overshouldMoney = new BigDecimal("0.00");//逾期应收总金额
 		List<Orderdetails> listtail = homepageTongjiMapper.overshouldMoney(companyId);

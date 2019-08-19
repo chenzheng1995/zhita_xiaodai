@@ -1,6 +1,7 @@
 package com.zhita.controller;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,6 +162,8 @@ public class TestController {
 		list1.add(15);
 		list1.add(20);
 		System.out.println(list1.get(0));
+		String orderrepaycvr = (new DecimalFormat("#0.00").format(0*1.0/1*100))+"%";
+		System.out.println(orderrepaycvr+"----");
 		
 	}
 }

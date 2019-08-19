@@ -512,4 +512,11 @@ public class SourceServiceImp implements IntSourceService{
 		int value=sourceMapper.queryIfLink(link);
 		return value;
 	}
+	
+	//后台管理----渠道方登录（用户名和密码）
+	public Source queryByAccAndPwd(String account){
+		Source source=sourceMapper.queryByAccAndPwd(account);
+		return source;
+		
+	}
 }

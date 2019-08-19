@@ -16,6 +16,7 @@ import org.apache.log4j.chainsaw.Main;
 
 import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.PriceTongji;
 import com.zhita.model.manage.TongjiSorce;
 
 public class DateListUtil {
@@ -164,6 +165,30 @@ public class DateListUtil {
                 try {
                     Date dt1 = format.parse(o1.getShouldtime());
                     Date dt2 = format.parse(o2.getShouldtime());
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+    
+    //将集合按照集合里对象的日期属性进行倒排序
+    public static void ListSort4(List<PriceTongji> list) {
+        Collections.sort(list, new Comparator<PriceTongji>() {
+            @Override
+            public int compare(PriceTongji o1, PriceTongji o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date dt1 = format.parse(o1.getDate());
+                    Date dt2 = format.parse(o2.getDate());
                     if (dt1.getTime() < dt2.getTime()) {
                         return 1;
                     } else if (dt1.getTime() > dt2.getTime()) {
