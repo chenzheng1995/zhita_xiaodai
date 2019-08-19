@@ -3,8 +3,8 @@
 <mapper namespace="com.zhita.dao.manage.CollectionMapper">
 	
 		<select id="OrderIdMa" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-			select c.orderId from collection c,collection_member com where 
-			com.companyId=#{companyId} and com.collectionMemberId = c.collectionMemberId
+			select c.orderId from collection c,sys_user com where 
+			com.companyId=#{companyId} and com.userId = c.collectionMemberId
 			group by c.orderId
 		</select> 
 		
@@ -32,8 +32,8 @@
 				<if test="phone != null and phone != ''">
 					AND u.phone like CONCAT('%',#{phone},'%') 
 				</if>
-				<if test="id != null and id != ''">
-					AND o.id = #{id}
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber like CONCAT('%',#{orderNumber},'%') 
 				</if>
 			</where>
 			group by ord.orderId 
@@ -50,13 +50,13 @@
 		
 		
 		<select id="CollMen" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select colme.reallyName,col.collectionTime,col.collectionStatus from collection col,collection_member colme,orders o
-			where o.id = col.orderId and col.collectionMemberId = colme.collectionMemberId and o.id =#{orderId}
+			select colme.account as reallyName,col.collectionTime,col.collectionStatus from collection col,sys_user colme,orders o
+			where o.id = col.orderId and col.collectionMemberId = colme.userId and o.id =#{orderId}
 		</select>
 		
 		
-		<select id="CollectionAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Collection_member">
-			select * from collection_member where companyId = #{companyId}
+		<select id="CollectionAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Sys_user">
+			select * from sys_user where companyId = #{companyId}
 		</select>
 		
 		
@@ -72,15 +72,15 @@
 		
 		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
-			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,
-			col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade
-			from orders o,orderdetails ord,collection col,user u,collection_member colme
+			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,
+			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade
+			from orders o,orderdetails ord,collection col,user u,sys_user colme
 			<where>
 				    o.id = ord.orderId 
 				and col.orderId = o.id
 				and o.companyId = #{companyId}
 				and u.id = o.userId 
-				and colme.collectionMemberId = col.collectionMemberId
+				and colme.userId = col.collectionMemberId
 				<if test="realityBorrowMoney != null and realityBorrowMoney != ''">
 					AND ord.realityBorrowMoney = #{realityBorrowMoney}
 				</if>
@@ -115,7 +115,7 @@
 					AND col.collectionMemberId = #{collectionMemberId}
 				</if>
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
-					AND col.collectionTime between #{start_time} and #{end_time}
+					AND o.orderCreateTime between #{start_time} and #{end_time}
 				</if>
 				<if test="deferBeforeReturntime != null and deferBeforeReturntime != '' and deferAfterReturntime != null and deferAfterReturntime != ''">
 					AND col.collectionTime between #{start_time} and #{end_time}
@@ -128,10 +128,10 @@
 		
 		
 		<select id="OneOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.reallyName,overdue.grade,
+			select o.borrowTimeLimit,orders.*,u.name,u.phone,c.collectionStatus,cmem.account as reallyName,overdue.grade,
 			c.collectionTime,o.orderNumber,o.id,o.borrowMoneyWay,defe.deferBeforeReturntime,defe.deferAfterReturntime 
 			from 
-			collection c left join collection_member cmem on c.collectionMemberId = cmem.collectionMemberId
+			collection c left join sys_user cmem on c.collectionMemberId = cmem.userId
 			left join orders o on o.id = c.orderId
 			left join overdue_class overdue on o.companyId = overdue.companyId
 			left join user u on u.id = o.userId
@@ -182,12 +182,12 @@
 		
 		
 		<select id="SelectReallyName" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
-			select colme.reallyName,c.collectionTime,count(c.collectionTime) as collection_count from 
-			collection c,collection_member colme
+			select colme.account as reallyName,c.collectionTime,count(c.collectionTime) as collection_count from 
+			collection c,sys_user colme
 			<where>
-				AND c.collectionMemberId = colme.collectionMemberId 
+				AND c.collectionMemberId = colme.userId 
 				<if test="start_time != null and statu_time != '' and end_time != null and end_time != ''">
-					AND collectionTime between #{statu_time} and#{end_time}
+					AND c.collectionTime between #{statu_time} and#{end_time}
 				</if>
 			</where>
 			GROUP BY c.collectionMemberId
@@ -221,10 +221,10 @@
 		
 		
 		<select id="Collectionmemberdetilas" resultType="com.zhita.model.manage.Collection" parameterType="com.zhita.model.manage.Collection">
-			SELECT cmember.reallyName,count(c.collectionId) as collection_count,c.collectionTime,c.collectionMemberId
-			from collection c,collection_member cmember
+			SELECT cmember.account as reallyName,count(c.collectionId) as collection_count,c.collectionTime,c.collectionMemberId
+			from collection c,sys_user cmember
 		 	<where>
-		 		AND c.collectionMemberId=cmember.collectionMemberId
+		 		AND c.collectionMemberId=cmember.userId
 				<if test="collectionMemberId != null and collectionMemberId != ''">
 					AND c.collectionMemberId = #{collectionMemberId}
 				</if>
@@ -244,13 +244,13 @@
 		
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select col.collectionId,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
-			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
+			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
 			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus
-			from collection col,orders o,orderdetails ord,collection_member colme,user u 
+			from collection col,orders o,orderdetails ord,sys_user colme,user u 
 			<where>
 				o.id = col.orderId 
 				and o.id = ord.orderId 
-				and col.collectionMemberId = colme.collectionMemberId 
+				and col.collectionMemberId = colme.userId 
 				and u.id = o.userId 
 				and col.collectionTime is null
 				and o.orderStatus = "1"
@@ -272,7 +272,7 @@
 		
 		<select id="CollectionTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(c.orderId) from 
-			collection c left join collection_member cmem on c.collectionMemberId = cmem.collectionMemberId
+			collection c left join sys_user cmem on c.collectionMemberId = cmem.userId
 			left join orderdetails orders on c.orderId = orders.orderId
 			left join orders o on o.id = c.orderId
 			left join overdue_class overdue on o.companyId = overdue.companyId
@@ -298,20 +298,20 @@
 		
 		
 		<select id="AllCountNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
-			SELECT COUNT(c.collectionId) from collection c,collection_member com where c.collectionMemberId = com.collectionMemberId 
+			SELECT COUNT(c.collectionId) from collection c,sys_user com where c.collectionMemberId = com.userId 
 			and com.companyId = #{companyId} and c.collectionTime is null
 		</select>
 		
 		
 		<select id="CollectionWeiTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(o.id) from collection 
-			c,collection_member cmem,orderdetails orders,orders o,user u,deferred defe
+			c,sys_user cmem,orderdetails orders,orders o,user u,deferred defe
 			<where>
 				AND o.id = orders.orderId
 				AND u.id = o.userId
 				AND o.id = defe.orderId
 				AND c.orderId = o.id
-				AND c.collectionMemberId = cmem.collectionMemberId
+				AND c.collectionMemberId = cmem.userId
 				AND o.companyId = #{companyId} 
 				<if test="name != null and name != ''">
 					AND u.name LIKE concat('%',#{name},'%')  
@@ -333,7 +333,7 @@
 		
 		
 		<select id="SelectCollectionId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-			select collectionMemberId from collection_member where companyId = #{companyId}
+			select userId from sys_user where companyId = #{companyId}
 		</select>
 		
 		
@@ -347,7 +347,7 @@
 		
 		
 		<select id="SelectId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-			select c.orderId from collection c,collection_member coml where coml.companyId = #{id} and collectionStatus is not null
+			select c.orderId from collection c,sys_user coml where coml.companyId = #{id} and coml.userId = c.collectionMemberId and collectionStatus is not null
 			group by orderId
 		</select>
 		
@@ -362,16 +362,16 @@
 				
 		<select id="WeiControllerOrdetialis" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
-			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
+			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
 			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade,o.shouldReturnTime
-			 from orders o ,orderdetails ord,collection_member colme,user u ,deferred_settings deset,overdue_class ov,collection col
+			 from orders o ,orderdetails ord,sys_user colme,user u ,deferred_settings deset,overdue_class ov,collection col
 			<where>
 				o.companyId = ov.companyId 
 				and  o.id = ord.orderId  
 				and deset.companyId = o.companyId 
 				and u.id = o.userId 
 				and o.id = col.orderId 
-				and col.collectionMemberId = colme.collectionMemberId
+				and col.collectionMemberId = colme.userId
 				and col.collectionTime is not null
 				<if test="name != null and name != ''">
 					AND u.name LIKE concat('%',#{name},'%')  
@@ -542,9 +542,10 @@
 		
 		
 		<select id="Collectionmem" parameterType="com.zhita.model.manage.Collectiondetails" resultType="com.zhita.model.manage.Collectiondetails">
-			select c.collectionMemberId,come.reallyName,count(c.orderId) as orderNum from collection_member come,collection c,orders o 
+			select c.collectionMemberId,come.account as reallyName,count(c.orderId) as orderNum from sys_user come,collection c,orders o 
 			<where>
-			 o.id = c.orderId and c.collectionMemberId = come.collectionMemberId
+			 o.id = c.orderId 
+			and c.collectionMemberId = come.userId
 			and o.companyId = #{companyId} 
 			and c.collectionTime between #{start_time} and #{end_time}
 			<if test="collectionMemberId != null and collectionMemberId !=''">
@@ -557,5 +558,11 @@
 		
 		<select id="SelectMakeLoan" parameterType="java.lang.String" resultType="java.math.BigDecimal">
 			select sum(b.deduction_money) from bankdeductions b,orders o where b.orderId = o.id and b.orderId = #{orderId}
+		</select>
+		
+		
+		
+		<select id="PrmoiseMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select sum(collectionmoney) from collectiondetails where orderId = #{orderId}
 		</select>
 </mapper>

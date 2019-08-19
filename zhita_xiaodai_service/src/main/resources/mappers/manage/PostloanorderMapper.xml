@@ -33,11 +33,9 @@
 		
 		<select id="allOrderdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select orde.*,o.orderCreateTime,u.name,u.phone,o.orderNumber,o.id,d.deferBeforeReturntime,d.interestOnArrears,d.postponeDate,d.deferAfterReturntime,
-			defer.onceDeferredDay,defer.onceDeferredMoney,o.realtime,o.borrowMoneyWay,o.borrowTimeLimit
+			defer.onceDeferredDay,defer.onceDeferredMoney,o.realtime,o.borrowMoneyWay,o.borrowTimeLimit,orde.overdueNumberOfDays
 			 from orders o left join user u on o.userid = u.id
 			 left join orderdetails orde on orde.orderId = o.id
-			 left join deferred d on d.orderid = o.id
-			 left join deferred_settings defer on defer.companyId = o.companyId
 			<where>
 			     AND o.orderStatus = "1"
 				AND o.companyId = #{companyId}
@@ -165,6 +163,7 @@
 				AND ord.orderId = o.id
  				AND o.orderStatus = "0"
 				AND o.companyId = #{companyId}
+				AND o.shouldReturnTime between #{start_time} and #{end_time}
 				AND o.id not in 
 				(select c.orderId from overdue c,orders o where o.id = c.orderId and o.companyId = #{companyId})
 			</where>
@@ -174,13 +173,13 @@
 		
 		
 		<select id="CollMemberId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-			select collectionMemberId from collection_member where companyId = #{companyId}
+			select userId from sys_user where companyId = #{companyId}
 		</select>
 		
 		
 		<select id="SelectNodetId" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select ov.orderId from overdue ov,collection_member come,orders o where 
-			come.companyId = #{companyId} and o.companyId = come.companyId group by ov.orderId
+			select ov.orderId from overdue ov,sys_user come,orders o where 
+			come.companyId = #{companyId} and o.companyId = come.userId group by ov.orderId
 		</select>
 		
 		
@@ -239,9 +238,9 @@
 		
 		
 		<select id="CollDateNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select ov.collectiondate,count(ov.overdue_id) as collection_count from overdue ov,collection_member c
+			select ov.collectiondate,count(ov.overdue_id) as collection_count from overdue ov,sys_user c
 			<where>
-				AND c.collectionMemberId = ov.collectionMemberId
+				AND c.userId = ov.collectionMemberId
 				AND c.companyId = #{companyId}
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND ov.collectiondate between #{start_time} and#{end_time}
@@ -255,11 +254,11 @@
 		
 		
 		<select id="MemberName" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select colme.collectionMemberId,colme.reallyName,ov.collectiondate,count(ov.collectiondate) as collection_count 
-			from overdue ov,collection_member colme
+			select colme.collectionMemberId,colme.account as reallyName,ov.collectiondate,count(ov.collectiondate) as collection_count 
+			from overdue ov,sys_user colme
 			<where>
 				AND colme.companyId = #{companyId}
-				AND ov.collectionMemberId = colme.collectionMemberId 
+				AND ov.collectionMemberId = colme.userId 
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND ov.collectiondate between #{start_time} and #{end_time}
 				</if>
@@ -270,11 +269,11 @@
 		
 		
 		<select id="MemberNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select colme.reallyName,ov.collectiondate,count(ov.collectiondate) as collection_count from 
-			overdue ov,collection_member colme
+			select colme.account as reallyName,ov.collectiondate,count(ov.collectiondate) as collection_count from 
+			overdue ov,sys_user colme
 			<where>
 				AND colme.companyId = #{companyId}
-				AND ov.collectionMemberId = colme.collectionMemberId 
+				AND ov.collectionMemberId = colme.userId 
 				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 					AND ov.collectiondate between #{start_time} and#{end_time}
 				</if>
@@ -344,9 +343,9 @@
 		
 		
 		<select id="OverIdNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(ov.orderId) from overdue ov,orders o,collection_member col
+			select count(ov.orderId) from overdue ov,orders o,sys_user col
 			<where>
-			and ov.collectionMemberId = col.collectionMemberId
+			and ov.collectionMemberId = col.userId
 			and o.id = ov.orderId
 			and o.companyId = col.companyId
 			<if test="collectiondate != null and collectiondate != ''">
@@ -372,12 +371,12 @@
 		
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
-			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.reallyName,ov.collectiondate,ov.overdue_phonestaus,
+			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,
 			ov.statu
-			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,collection_member clom	
+			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom	
 			<where>
 				o.id = ord.orderId 
-				and clom.collectionMemberId = ov.collectionMemberId
+				and clom.userId = ov.collectionMemberId
 				and o.id = ov.orderId
 				and o.userId = u.id
 				and o.companyId = deset.companyId
@@ -578,13 +577,13 @@
 		<select id="CollecOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
 			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime, 
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,so.sourceName as drainageOfPlatformName,u.registeClient,o.overdueGrade
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.account as reallyName,so.sourceName as drainageOfPlatformName,u.registeClient,o.overdueGrade
 			from orders o LEFT JOIN user u on u.id = o.userId
 			LEFT JOIN orderdetails ord on o.id = ord.orderId
 			LEFT JOIN deferred defe on o.id = defe.orderid
 			LEFT JOIN deferred_settings deset on o.companyId = deset.companyId
 			LEFT JOIN collection c on c.orderId = o.id
-			LEFT JOIN collection_member colme on colme.collectionMemberId = c.collectionMemberId
+			LEFT JOIN sys_user colme on colme.userId = c.collectionMemberId
 			LEFT JOIN source so on so.id = u.sourceId
 			<where>
 				AND	o.companyId = #{companyId}
@@ -678,13 +677,13 @@
 		<select id="HuaiZhangOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,ord.DrainageOfPlatform,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney, 
 			ord.makeLoans,defe.deferBeforeReturntime,deset.onceDeferredDay,defe.deferAfterReturntime,defe.interestOnArrears,c.collectionStatus,o.realtime,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.reallyName,drain.drainageOfPlatformName,u.registeClient,o.overdueGrade
+			ord.overdueNumberOfDays,ord.interestPenaltySum,ord.surplus_money,defe.interestOnArrears,colme.account as reallyName,drain.drainageOfPlatformName,u.registeClient,o.overdueGrade
 			from orders o LEFT JOIN user u on u.id = o.userId
 			LEFT JOIN orderdetails ord on o.id = ord.orderId
 			LEFT JOIN deferred defe on o.id = defe.orderid
 			LEFT JOIN deferred_settings deset on o.companyId = deset.companyId
 			LEFT JOIN collection c on c.orderId = o.id
-			LEFT JOIN collection_member colme on colme.collectionMemberId = c.collectionMemberId
+			LEFT JOIN sys_user colme on colme.userId = c.collectionMemberId
 			LEFT JOIN drainage_of_platform drain on drain.id = u.drainageOfPlatformId
 			<where>
 				AND	o.companyId = #{companyId}
@@ -739,7 +738,7 @@
 		
 		
 		<select id="OneDeferred" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Deferred">
-			select defe.deferAfterReturntime from deferred defe where defe.id = 
+			select * from deferred defe where defe.id = 
 			(select max(defe.id) from deferred defe,orders o where o.id = #{orderId} and o.companyId = #{companyId})
 		</select>
 		
@@ -763,14 +762,14 @@
 		
 		
 		<select id="CollectionYIData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select com.reallyName,ov.collectionMemberId from overdue ov,collection_member com where ov.collectionMemberId = com.collectionMemberId
+			select com.account as reallyName,ov.collectionMemberId from overdue ov,sys_user com where ov.collectionMemberId = com.userId
 			and com.companyId = 3 and ov.collectiondate BETWEEN #{start_time} and #{end_time}
 		</select>
 		
 		
 		<select id="CoMentLLection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(ov.orderId) from overdue ov,collection_member com where com.companyId = 3 and ov.collectionMemberId = 1 
-			and ov.collectionMemberId = com.collectionMemberId
+			select count(ov.orderId) from overdue ov,sys_user com where com.companyId = 3 and ov.collectionMemberId = 1 
+			and ov.collectionMemberId = com.userId
 			group by ov.orderId
 		</select>
 		

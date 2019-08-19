@@ -66,5 +66,8 @@ public interface Chanpayservice {
 	
 	
 	BigDecimal SumpayMoney(Orderdetails ord);
+	
+	
+	Integer SelectOrdersId(Integer userId);
 
 }

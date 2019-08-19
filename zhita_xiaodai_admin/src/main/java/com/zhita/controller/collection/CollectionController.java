@@ -37,6 +37,7 @@ public class CollectionController {
 	@ResponseBody
 	@RequestMapping("BeoverdueCollection")
 	public Map<String, Object> BeoverdueCollection(Collection coll){
+		System.out.println(coll.getOrderNumber());
 		return collservice.allBeoverdueConnection(coll);
 	}
 	

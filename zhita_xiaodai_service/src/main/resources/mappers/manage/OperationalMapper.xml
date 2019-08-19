@@ -21,7 +21,7 @@
 		
 		
 		<select id="ReayMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select pay.remittanceTime,sum(paymentmoney) as GesamtbetragderDarlehen,count(pay.id) as ZahlderGesamtdarlehen from payment_record pay,orders o
+			select sum(paymentmoney) as GesamtbetragderDarlehen,count(pay.id) as ZahlderGesamtdarlehen from payment_record pay,orders o
 			where pay.orderId = o.id and o.companyId = #{companyId} and pay.status = "支付成功" and pay.remittanceTime between #{start_time} and #{end_time}
 		</select>
 		
@@ -365,7 +365,7 @@
 		
 		<select id="CollMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select sum(ord.makeLoans) as GesamtbetraguberfalligerBetrag,count(ord.orderId) as GesamtbetraguberfallNum from collection c,orders o,orderdetails ord
-			where c.orderId = o.id and c.orderId = ord.orderId and o.companyId = #{companyId} and o.orderStatus = "1" and c.collectionTime between #{start_time} and #{end_time}
+			where c.orderId = o.id and c.orderId = ord.orderId and o.companyId = #{companyId} and o.orderStatus = "3" and c.collectionTime between #{start_time} and #{end_time}
 		</select>
 		
 		
@@ -378,7 +378,7 @@
 		
 		
 		<select id="OrderHuan" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select repay.repaymentDate,count(repay.id) as GesamtbetragderNum,sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung from repayment repay,orders o
+			select count(repay.id) as GesamtbetragderNum,sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung from repayment repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and o.orderStatus = "3" and repay.repaymentDate between #{start_time} and #{end_time}
 		</select>
 		

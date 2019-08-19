@@ -4,12 +4,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-
 import com.zhita.model.manage.Collection;
-import com.zhita.model.manage.Collection_member;
 import com.zhita.model.manage.Collectiondetails;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Sys_user;
 
 public interface CollectionMapper {
 	
@@ -23,7 +22,7 @@ public interface CollectionMapper {
 	List<Orderdetails> Allorderdetails(Collection coll);
 	
 	
-	List<Collection_member> CollectionAll(Integer companyId);
+	List<Sys_user> CollectionAll(Integer companyId);
 	
 	
 	Integer addCollection(List<Collection> list);
@@ -140,4 +139,7 @@ public interface CollectionMapper {
 	
 	
 	BigDecimal SelectMakeLoan(Integer orderId);
+	
+	
+	BigDecimal PrmoiseMoney(Integer orderId);
 }
