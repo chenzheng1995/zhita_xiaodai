@@ -80,12 +80,14 @@ public class ChanpaySend extends BaseParameter{
 		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
 		Integer id = chanser.SelectOrdersId(userId);
 		int platformfeeRatio =  ((int) map2.get("platformfeeRatio"));//平台服务费比率
+		Double pladata = platformfeeRatio*0.01;
 		BigDecimal pr = new BigDecimal(0);
-		pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
+		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
 		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
 		BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
 		BigDecimal acmoney = new BigDecimal(TransAmt);
 		Integer j = actualAmountReceived.compareTo(acmoney);
+		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 		if(j==0 || j==1){//j = 0 证明 actualAmountReceived == acmoney j = 1 actualAmountReceived > acmoney
 			
 		if(id == null){
@@ -197,6 +199,7 @@ public class ChanpaySend extends BaseParameter{
 		}
 		}else{
 			map1.put("msg", "金额异常");
+			map1.put("AAA", j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 			map1.put("code", 0);
 		}
 		
@@ -317,7 +320,7 @@ public class ChanpaySend extends BaseParameter{
 	    Date date = new Date();//取时间 
 	    Calendar calendar  =   Calendar.getInstance();		 
 	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
-	    calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+	    calendar.add(Calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
 	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 	    System.out.println(sdf.format(date));
