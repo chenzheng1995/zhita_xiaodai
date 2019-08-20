@@ -160,9 +160,10 @@ public class FinanceServiceimp implements FinanceService{
 		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
-		System.out.println("次数:"+defe.getDefeNum());
 		ordea.setDefeNum(defe.getDefeNum());
-		ordea.setOrder_money(ordea.getOrder_money().add(ordea.getInterestSum()));
+		System.out.println("次数:"+ordea.getDefeNum());
+		ordea.setOrder_money(padao.OrderMoneySum(ordea.getOrderId()).add(ordea.getInterestSum()));
+		System.out.println("次数:"+ordea.getDefeNum()+"金额:"+ordea.getOrder_money());
 		//interestSum  order_money  realityBorrowMoney
 		System.out.println(defe.getInterestOnArrears());
 		ordea.setDefeMoney(defe.getInterestOnArrears());

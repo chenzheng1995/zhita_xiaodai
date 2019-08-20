@@ -565,7 +565,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> YiHuanOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
 		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
 		}
 		
 		if(order.getStart_time() != null && order.getEnd_time()!=null && !"".equals(order.getStart_time()) && !"".equals(order.getEnd_time())){
@@ -638,8 +641,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		PhoneDeal p = new PhoneDeal();
-		if(order.getPhone() != null && order.getPhone().length()!=0){
-			order.setPhone(p.encryption(order.getPhone()));
+		if(order.getPhone() != null ){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
 		}
 		
 		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
@@ -707,7 +713,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
 		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){

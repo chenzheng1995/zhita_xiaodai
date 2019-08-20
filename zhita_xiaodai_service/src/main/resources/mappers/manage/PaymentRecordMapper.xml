@@ -343,6 +343,11 @@
   			 		</where>
   			 		group by ord.orderId
   			 </select>
+  			 
+  			 
+  			 <select id="OrderMoneySum" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+  			 	select realityBorrowMoney as order_money from orderdetails where orderId = #{orderId}
+  			 </select>
   
   
   
