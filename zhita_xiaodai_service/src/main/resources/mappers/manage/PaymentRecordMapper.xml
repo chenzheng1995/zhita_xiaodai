@@ -326,7 +326,7 @@
   			
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
   			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,so.sourceName as drainageOfPlatformName,o.riskmanagementFraction,
-					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
+					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityAccount as realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
 					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,o.shouldReturnTime as deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
 					ord.interestPenaltySum,o.realtime 
   			 		from orders o left join user u on o.userId = u.id
@@ -342,6 +342,11 @@
 						and pay.orderId = o.id
   			 		</where>
   			 		group by ord.orderId
+  			 </select>
+  			 
+  			 
+  			 <select id="OrderMoneySum" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+  			 	select realityBorrowMoney as order_money from orderdetails where orderId = #{orderId}
   			 </select>
   
   
@@ -802,8 +807,8 @@
   			
   			
   			<select id="OnDefe" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(pay.id) as realborrowing,sum(pay.paymentmoney) as realexpenditure from payment_record pay,orders o where 
-  				o.id = pay.orderId and o.companyId = #{companyId} and pay.remittanceTime between #{start_time} and #{end_time}
+  				select count(ord.orderId) as realborrowing,sum(ord.makeLoans) as realexpenditure from payment_record pay,orders o,orderdetails ord where 
+  				o.id = pay.orderId and o.companyId = 3 and ord.orderId = o.id and pay.remittanceTime between #{start_time} and #{end_time}
   			</select>
   			
   			
@@ -825,7 +830,7 @@
   			
   			<select id="OneMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de,orders o where de.orderId = o.id and 
-  				 o.companyId = #{companyId} and de.deferAfterReturntime between #{start_time} and #{end_time}
+  				 o.companyId = #{companyId} and de.deferredTime between #{start_time} and #{end_time}
   			</select>
   			
   			

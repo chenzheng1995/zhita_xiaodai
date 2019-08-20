@@ -142,7 +142,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> OrderPayment(Orderdetails orderNumber) {
-		orderNumber.setCompanyId(3);
+		orderNumber.setCompanyId(orderNumber.getCompanyId());
 		PhoneDeal p = new PhoneDeal();
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
 		if(ordea.getInterestSum() == null){
@@ -159,14 +159,13 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
 		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
-		Deferred defe =  coldao.DefNum(ordea.getOrderId());
-		if(defe.getId()==0){
-			BigDecimal big = new BigDecimal(0);
-			defe.setInterestOnArrears(big);
-		}
+		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
+		ordea.setDefeNum(defe.getDefeNum());
+		System.out.println("次数:"+ordea.getDefeNum());
+		ordea.setOrder_money(padao.OrderMoneySum(ordea.getOrderId()).add(ordea.getInterestSum()));
+		System.out.println("次数:"+ordea.getDefeNum()+"金额:"+ordea.getOrder_money());
+		//interestSum  order_money  realityBorrowMoney
 		System.out.println(defe.getInterestOnArrears());
-		ordea.setDefeNum(defe.getId());
-		System.out.println("延期次数:"+ordea.getDefeNum());
 		ordea.setDefeMoney(defe.getInterestOnArrears());
 		System.out.println("未解密:"+ordea.getPhone());
 		String paone = p.decryption(ordea.getPhone());
@@ -242,14 +241,14 @@ public class FinanceServiceimp implements FinanceService{
 				
 				
 				Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
-				Deferred defe = coldao.DefNum(ordetails.getOrderId());
+				Deferred defe = coldao.DefNuma(ordetails.getOrderId());
 				if(ordetails!=null){
 					ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
 					ordetails.setDeferAfterReturntime(padao.DeferrAdefe(ordetails.getOrderId()));
 					ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));//延期后应还时间
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
-					ordetails.setDefeNum(defe.getId());
+					ordetails.setDefeNum(defe.getDefeNum());
 					map.put("aaa", ordetails.getInterestPenaltySum());
 					map.put("Orderdetails", ordetails);
 				}else{
@@ -630,35 +629,77 @@ public class FinanceServiceimp implements FinanceService{
 				// TODO: handle exception
 			}
 		}
-		
+		System.out.println(banl.getStart_time()+"ccc"+banl.getEnd_time()
+				);
 		Bankdeductions bank = padao.OnDefe(banl);//查询实借金额笔数
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
 		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
-		if(bank.getRealborrowing() != null && bank.getRealexpenditure() != null){
-			bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+		if(bank!=null){
+			if(bank.getRealborrowing() != null){
+				if(bank.getRealborrowing() !=0){
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+				}else{
+					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+				}
+			}else{
+				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+			}
+		
 		}else{
 			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 		}
+		
+		
+		
+		if(b!=null){
+			if(b.getRealborrowing()!=null){
+				if(b.getRealborrowing() != 0){
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+0+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+				}else{
+					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+				}
+			}else{
+				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+			}
 			
-		if(b.getRealreturn() != null && b.getPaymentamount() != null){
-			bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
 		}else{
 			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 		}
-			
-		if(a.getOverdueNum() != null && a.getOverdueamount() != null ){
-			bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+		
+		
+		if(a!=null){
+			if(a.getOverdueNum() != null){
+				if(a.getOverdueNum() != 0){
+					bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+				}else{
+					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+				}
+			}else{
+				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+			}
+		
 		}else{
 			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
 		}
 			
-		if(c.getDefeNum() != null && c.getDeferredamount() != null ){
-			bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+		
+		if(c!=null){
+			if(c.getDefeNum() != null){
+				if(c.getDefeNum() != 0 ){
+					bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+				}else{
+					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+				}
+			}else{
+				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+			}
+			
 		}else{
 			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Bankdeduction", bank);
 		return map;

@@ -1,4 +1,4 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayQuickPay;
 
 import java.io.File;
 import java.io.FileNotFoundException;

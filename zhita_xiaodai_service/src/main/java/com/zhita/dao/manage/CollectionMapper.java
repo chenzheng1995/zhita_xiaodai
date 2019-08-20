@@ -105,7 +105,7 @@ public interface CollectionMapper {
 	Integer CollNum(Integer orderId);
 	
 	
-	Deferred DefNum(Integer orderId);
+	Deferred DefNuma(Integer orderId);
 	
 	
 	Integer UpdateCollectionDelete(Integer orderId);
