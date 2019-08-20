@@ -80,7 +80,7 @@ public class OperatorController {
     @RequestMapping("/getOperator")
     @ResponseBody
     @Transactional
-    public String getOperator(int userId,String phone){
+    public Map<String, Object> getOperator(int userId,String phone){
     	AuthTokenDemo authTokenDemo = new AuthTokenDemo();
     	authTokenDemo.toNotify();
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
@@ -108,7 +108,10 @@ public class OperatorController {
    	 }
     
         H5ReportDemo h5ReportDemo = new H5ReportDemo();
-        return h5ReportDemo.getH5Report(userId, phone, name, idNumber, reqId);
+        String redirectUrl =h5ReportDemo.getH5Report(userId, phone, name, idNumber, reqId);//运营商链接
+        map.put("redirectUrl",redirectUrl);
+        map.put("Ncode","2000");
+        return map;
     }
     	
     @RequestMapping("/updateOperatorJson")
@@ -493,6 +496,8 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 			map1.put("Ncode","2000");
 		 map1.put("code","200");
 		 map1.put("msg","认证一致");
+		
+		 
 
 	 }
 	 if("1".equals(code)) {
@@ -506,6 +511,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		 certification_number = certification_number+1;
 		 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
 		 if(certification_number>2) {
+			 intUserService.updateifBlacklist(userId);
 			 String date = System.currentTimeMillis()+"";
 	            String blackType = "5";
 	            intBlacklistuserService.setBlacklistuser(idcard_number,userId,companyId,phone,trueName,date,blackType);
@@ -513,7 +519,8 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		 }
 			map1.put("Ncode","405");
 		 map1.put("code","405");
-		 map1.put("msg","认证不一致");		 
+		 map1.put("msg","认证不一致");	
+		 map1.put("prompt","请使用本人手机号认证");
 	 }
 	 if("2".equals(code)) {
 		 int certification_number =0;
@@ -527,7 +534,8 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		}	
 		 map1.put("Ncode","407");
 		 map1.put("code","407");
-		 map1.put("msg","认证信息不存在");		 
+		 map1.put("msg","认证信息不存在");		
+		 map1.put("prompt","认证信息不存在，请重新认证");
 	 }
 	 if("9".equals(code)) {
 		 int certification_number =0;
@@ -541,7 +549,8 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		}	
 		 map1.put("Ncode","409");
 		 map1.put("code","409");
-		 map1.put("msg","其他异常");		 
+		 map1.put("msg","其他异常");	
+		 map1.put("prompt","未知错误，请联系客服");
 	 }
 	
 	

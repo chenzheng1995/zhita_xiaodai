@@ -99,7 +99,7 @@
   
   
   	<insert id="setThreeElements" parameterType="java.util.Map">
-		insert into user_attestation (userId,code,certification_number,merchant_code)
+		insert into three_elements (userId,code,certification_number,merchant_code)
 		values (#{userId},
 		#{code},
 		#{certification_number},
@@ -108,7 +108,7 @@
 	</insert>
   
   		<update id="updateThreeElements" parameterType="java.util.Map">
-		update user_attestation
+		update three_elements
 		set code = #{code},
 		    certification_number = #{certification_number},
 		    merchant_code = #{trans_id}
