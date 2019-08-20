@@ -463,7 +463,7 @@
 		
 		
 		
-		<select id="DefNum" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
+		<select id="DefNuma" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
 			select count(id) as DefeNum,sum(interestOnArrears) as interestOnArrears from deferred where orderId = #{orderId}
 		</select>
 		

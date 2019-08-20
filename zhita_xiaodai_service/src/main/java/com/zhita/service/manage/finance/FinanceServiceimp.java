@@ -142,7 +142,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> OrderPayment(Orderdetails orderNumber) {
-		orderNumber.setCompanyId(3);
+		orderNumber.setCompanyId(orderNumber.getCompanyId());
 		PhoneDeal p = new PhoneDeal();
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
 		if(ordea.getInterestSum() == null){
@@ -160,8 +160,11 @@ public class FinanceServiceimp implements FinanceService{
 		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
+		System.out.println("次数:"+defe.getDefeNum());
+		ordea.setDefeNum(defe.getDefeNum());
+		ordea.setOrder_money(ordea.getOrder_money().add(ordea.getInterestSum()));
+		//interestSum  order_money  realityBorrowMoney
 		System.out.println(defe.getInterestOnArrears());
-		System.out.println("延期次数:"+ordea.getDefeNum());
 		ordea.setDefeMoney(defe.getInterestOnArrears());
 		System.out.println("未解密:"+ordea.getPhone());
 		String paone = p.decryption(ordea.getPhone());
@@ -633,11 +636,16 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		if(bank!=null){
-		if(bank.getRealborrowing() !=0){
-			bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
-		}else{
-			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
-		}
+			if(bank.getRealborrowing() != null){
+				if(bank.getRealborrowing() !=0){
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+				}else{
+					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+				}
+			}else{
+				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+			}
+		
 		}else{
 			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 		}
@@ -645,33 +653,48 @@ public class FinanceServiceimp implements FinanceService{
 		
 		
 		if(b!=null){
-			if(b.getRealreturn() != 0){
-				bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
+			if(b.getRealborrowing()!=null){
+				if(b.getRealborrowing() != 0){
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+0+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+				}else{
+					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+				}
 			}else{
 				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 			}
+			
 		}else{
 			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 		}
 		
 		
 		if(a!=null){
-		if(a.getOverdueNum() != 0){
-			bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
-		}else{
-			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-		}
+			if(a.getOverdueNum() != null){
+				if(a.getOverdueNum() != 0){
+					bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+				}else{
+					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+				}
+			}else{
+				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+			}
+		
 		}else{
 			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
 		}
 			
 		
 		if(c!=null){
-			if(c.getDefeNum() != 0 ){
-				bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+			if(c.getDefeNum() != null){
+				if(c.getDefeNum() != 0 ){
+					bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+				}else{
+					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+				}
 			}else{
 				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 			}
+			
 		}else{
 			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 		}

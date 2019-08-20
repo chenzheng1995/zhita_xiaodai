@@ -326,7 +326,7 @@
   			
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
   			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,so.sourceName as drainageOfPlatformName,o.riskmanagementFraction,
-					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
+					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityAccount as realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
 					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,o.shouldReturnTime as deferBeforeReturntime,defe.deferAfterReturntime,ord.InterestSum,
 					ord.interestPenaltySum,o.realtime 
   			 		from orders o left join user u on o.userId = u.id
