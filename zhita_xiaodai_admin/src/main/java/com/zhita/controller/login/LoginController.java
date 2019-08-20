@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.controller.shiro.PhoneToken;
+import com.zhita.model.manage.Source;
 import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
+import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.SMSUtil;
 /**
@@ -33,6 +35,8 @@ import com.zhita.util.SMSUtil;
 public class LoginController {
 	@Autowired
 	private IntLoginService intLoginService;
+	@Autowired
+	private IntSourceService intSourceService;
 	
 	
 	
@@ -171,4 +175,30 @@ public class LoginController {
 	}
 	
 	//渠道方登录（用户名密码登录）
+	@ResponseBody
+	@RequestMapping("/queryByAccAndPwd")
+	public Map<String,Object> queryByAccAndPwd(String account,String pwd){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isEmpty(account) || StringUtils.isEmpty(pwd)) {
+			map.put("msg", "账号或密码不能为空");
+		}else {
+			 Source source = intSourceService.queryByAccAndPwd(account);// 判断该用户是否存在
+			 if(source==null) {
+				 map.put("msg", "账号不存在");
+			 }else {
+				 if(pwd.equals(source.getPwd())) {
+					 String sourcename=source.getSourcename();//渠道名
+					 Integer sourceid=source.getId();//渠道id
+					 Integer companyid=source.getCompanyid();//公司id
+					 map.put("loginStatus", "1");//1：返给前端1  代表登录成功        0：返给前端0   代表未登录
+					 map.put("sourceName", sourcename);
+					 map.put("sourceid", sourceid);
+					 map.put("companyid", companyid);
+				 }else{
+					 map.put("msg", "密码错误");
+				 }
+			 }
+		}
+		return map;
+	}
 }

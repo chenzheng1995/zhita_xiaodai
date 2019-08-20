@@ -37,7 +37,7 @@
   </select>
   <!--admin    角色——添加功能（查询权限表所有信息）  -->
   <select id="queryAllfun" resultType="com.zhita.model.manage.Functions">
-  	select functionId id,firstLevelMenu,secondLevelMenu,thirdLevelMenu,status from functions
+  	select functionId id,firstLevelMenu,secondLevelMenu,thirdLevelMenu,status from functions order by firstLevelMenu,secondLevelMenu,thirdLevelMenu
   </select>
   <!-- admin    角色     添加功能 -->
   <insert id="insert"  useGeneratedKeys="true" keyProperty="roleid" parameterType="com.zhita.model.manage.Role" >
@@ -141,7 +141,7 @@
   </select>
   <!--admin    角色——添加功能（根据角色id查询该角色的权限信息）  -->
   <select id="queryAllfunByRoleid" resultType="com.zhita.model.manage.Functions">
-  	select functionId id,firstLevelMenu,secondLevelMenu,thirdLevelMenu,status from functions where functionId in(select functionId from role_function where roleId=#{arg0})
+  	select functionId id,firstLevelMenu,secondLevelMenu,thirdLevelMenu,status from functions where functionId in(select functionId from role_function where roleId=#{arg0}) order by firstLevelMenu,secondLevelMenu,thirdLevelMenu
   </select>
   <!-- admin   角色——修改状态为开启 -->
   <update id="upaStatusOpen">

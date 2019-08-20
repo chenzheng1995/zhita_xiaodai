@@ -54,12 +54,19 @@ public class SourcesideTongjiController {
 		List<TongjiSorce> listHistory=intSourceService.queryAllBySourceName(sourceid);
 		for (int i = 0; i < listHistory.size(); i++) {
 			listHistory.get(i).setDate(Timestamps.stampToDate1(listHistory.get(i).getDate()));//将历史表数据的日期都变为年月日格式
+			listHistory.get(i).setSourcename(sourceName);
 		}
 		listsource.addAll(listHistory);
 		
 		Date d=new Date();
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
 		String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		for (int i = 0; i < listsource.size(); i++) {
+			if((date.equals(listsource.get(i).getDate()))==true){
+				listsource.remove(listsource.get(i));
+			}
+		}
 		
 		String startTime = date;
 		String startTimestamps = Timestamps.dateToStamp(startTime);
@@ -167,6 +174,7 @@ public class SourcesideTongjiController {
 			if(tongjiSorcelist!=null){
 				tongjiSorce=tongjiSorcelist;
 				tongjiSorce.setDate(Timestamps.stampToDate1(tongjiSorce.getDate()));
+				tongjiSorce.setSourcename(sourceName);
 			}
 		}else{//证明传进来的日期是今天
 			if(tongjiSorcelist!=null){//证明当天历史表有数据

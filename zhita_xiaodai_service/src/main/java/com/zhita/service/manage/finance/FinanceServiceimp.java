@@ -1,6 +1,8 @@
 package com.zhita.service.manage.finance;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,19 +15,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
+import com.zhita.dao.manage.ThirdpricefindMapper;
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
+import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.PriceTongji;
 import com.zhita.model.manage.Repayment_setting;
+import com.zhita.model.manage.Thirdpricefind;
 import com.zhita.util.DateListUtil;
+import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
@@ -45,6 +53,9 @@ public class FinanceServiceimp implements FinanceService{
 	@Autowired
 	private CollectionMapper coldao;
 	
+	
+	@Autowired
+	private ThirdpricefindMapper thirdpricefindMapper;
 	
 	
 
@@ -131,7 +142,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> OrderPayment(Orderdetails orderNumber) {
-		orderNumber.setCompanyId(3);
+		orderNumber.setCompanyId(orderNumber.getCompanyId());
 		PhoneDeal p = new PhoneDeal();
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
 		if(ordea.getInterestSum() == null){
@@ -148,14 +159,13 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
 		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
-		Deferred defe =  coldao.DefNum(ordea.getOrderId());
-		if(defe.getId()==0){
-			BigDecimal big = new BigDecimal(0);
-			defe.setInterestOnArrears(big);
-		}
+		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
+		ordea.setDefeNum(defe.getDefeNum());
+		System.out.println("次数:"+ordea.getDefeNum());
+		ordea.setOrder_money(padao.OrderMoneySum(ordea.getOrderId()).add(ordea.getInterestSum()));
+		System.out.println("次数:"+ordea.getDefeNum()+"金额:"+ordea.getOrder_money());
+		//interestSum  order_money  realityBorrowMoney
 		System.out.println(defe.getInterestOnArrears());
-		ordea.setDefeNum(defe.getId());
-		System.out.println("延期次数:"+ordea.getDefeNum());
 		ordea.setDefeMoney(defe.getInterestOnArrears());
 		System.out.println("未解密:"+ordea.getPhone());
 		String paone = p.decryption(ordea.getPhone());
@@ -231,14 +241,14 @@ public class FinanceServiceimp implements FinanceService{
 				
 				
 				Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
-				Deferred defe = coldao.DefNum(ordetails.getOrderId());
+				Deferred defe = coldao.DefNuma(ordetails.getOrderId());
 				if(ordetails!=null){
 					ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
 					ordetails.setDeferAfterReturntime(padao.DeferrAdefe(ordetails.getOrderId()));
 					ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));//延期后应还时间
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
-					ordetails.setDefeNum(defe.getId());
+					ordetails.setDefeNum(defe.getDefeNum());
 					map.put("aaa", ordetails.getInterestPenaltySum());
 					map.put("Orderdetails", ordetails);
 				}else{
@@ -619,35 +629,77 @@ public class FinanceServiceimp implements FinanceService{
 				// TODO: handle exception
 			}
 		}
-		
+		System.out.println(banl.getStart_time()+"ccc"+banl.getEnd_time()
+				);
 		Bankdeductions bank = padao.OnDefe(banl);//查询实借金额笔数
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
 		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
-		if(bank.getRealborrowing() != null && bank.getRealexpenditure() != null){
-			bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+		if(bank!=null){
+			if(bank.getRealborrowing() != null){
+				if(bank.getRealborrowing() !=0){
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+				}else{
+					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+				}
+			}else{
+				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+			}
+		
 		}else{
 			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 		}
+		
+		
+		
+		if(b!=null){
+			if(b.getRealborrowing()!=null){
+				if(b.getRealborrowing() != 0){
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+0+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+				}else{
+					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+				}
+			}else{
+				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+			}
 			
-		if(b.getRealreturn() != null && b.getPaymentamount() != null){
-			bank.setDeductionstatus(""+b.getRealreturn()+","+0+","+b.getPaymentamount()+"");//实还笔数    实还金额
 		}else{
 			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 		}
-			
-		if(a.getOverdueNum() != null && a.getOverdueamount() != null ){
-			bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+		
+		
+		if(a!=null){
+			if(a.getOverdueNum() != null){
+				if(a.getOverdueNum() != 0){
+					bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+				}else{
+					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+				}
+			}else{
+				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+			}
+		
 		}else{
 			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
 		}
 			
-		if(c.getDefeNum() != null && c.getDeferredamount() != null ){
-			bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+		
+		if(c!=null){
+			if(c.getDefeNum() != null){
+				if(c.getDefeNum() != 0 ){
+					bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+				}else{
+					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+				}
+			}else{
+				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+			}
+			
 		}else{
 			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Bankdeduction", bank);
 		return map;
@@ -796,7 +848,109 @@ public class FinanceServiceimp implements FinanceService{
 		return map;
 	}
 
+	//后台管理---查询所有
+    public List<Thirdpricefind> queryall(Integer companyid){
+    	List<Thirdpricefind> list=thirdpricefindMapper.queryall(companyid);
+    	return list;
+    }
 
+    //后台管理----修改价格
+    public int updateprice(BigDecimal price,Integer id){
+    	int num=thirdpricefindMapper.updateprice(price, id);
+    	return num;
+    }
+    
+    //后台管理---费用统计
+    public Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime) throws ParseException{
+    	List<Thirdpricefind> listprice=thirdpricefindMapper.queryall(companyId);//第三方费用价格表
+		List<PriceTongji> listtongji=new ArrayList<>();
+		List<PriceTongji> listtongjito=new ArrayList<>();
+		PageUtil2 pageUtil=null;
+		Date d=new Date();
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		String startTime = null;//开始时间（年月日格式）
+		String endTime = null;//结束时间（年月日格式）
+		if((starttime!=null&&!"".equals(starttime))&&(endtime!=null&&!"".equals(endtime))){
+			startTime = starttime;
+			endTime = endtime;
+		}else{
+			startTime = date;
+			endTime = date;
+		}
+		
+		List<String> list=DateListUtil.getDays(startTime, endTime);
+		for (int i = 0; i < list.size(); i++) {
+			PriceTongji priceTongji=new PriceTongji();
+			
+			String startTimestamps = Timestamps.dateToStamp(startTime);
+			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+			
+			priceTongji.setDate(list.get(i));
+			
+			int verificationcode = thirdpricefindMapper.querycount(companyId, 1, startTimestamps, endTimestamps);//验证码数
+			BigDecimal vercodeprice = listprice.get(0).getPrice();//验证码单价
+			priceTongji.setVerificationcode(verificationcode);
+			priceTongji.setVerificationprice(BigDecimal.valueOf((int)verificationcode).multiply(vercodeprice));
+			
+			int idcard = thirdpricefindMapper.querycount(companyId, 2, startTimestamps, endTimestamps);//身份证数
+			BigDecimal idcardprice = listprice.get(1).getPrice();//身份证单价
+			priceTongji.setIdcard(idcard);
+			priceTongji.setIdcardprice(BigDecimal.valueOf((int)idcard).multiply(idcardprice));
+			
+			int faceid = thirdpricefindMapper.querycount(companyId, 3, startTimestamps, endTimestamps);//人脸数
+			BigDecimal faceidprice = listprice.get(2).getPrice();//人脸单价
+			priceTongji.setFaceid(faceid);
+			priceTongji.setFaceidprice(BigDecimal.valueOf((int)faceid).multiply(faceidprice));
+			
+			int threeelements = thirdpricefindMapper.querycount(companyId, 4, startTimestamps, endTimestamps);//三要素
+			BigDecimal threeelementsprice = listprice.get(3).getPrice();//三要素单价
+			priceTongji.setThreeelements(threeelements);
+			priceTongji.setThreeelementsprice(BigDecimal.valueOf((int)threeelements).multiply(threeelementsprice));
+			
+			int operator = thirdpricefindMapper.querycount(companyId, 5, startTimestamps, endTimestamps);//运营商数
+			BigDecimal operatorprice = listprice.get(4).getPrice();//运营商单价
+			priceTongji.setOperator(operator);
+			priceTongji.setOperatorprice(BigDecimal.valueOf((int)operator).multiply(operatorprice));
+			
+			int riskmanagementjia = thirdpricefindMapper.querycount(companyId, 6, startTimestamps, endTimestamps);//风控数（甲）
+			int riskmanagementyi = thirdpricefindMapper.querycount(companyId, 7, startTimestamps, endTimestamps);//风控数（乙）
+			int riskmanagementbing = thirdpricefindMapper.querycount(companyId, 8, startTimestamps, endTimestamps);//风控数（丙）
+			BigDecimal riskmanagementpricejia = listprice.get(5).getPrice();//风控单价（甲）
+			BigDecimal riskmanagementpriceyi = listprice.get(6).getPrice();//风控单价（乙）
+			BigDecimal riskmanagementpricebing = listprice.get(7).getPrice();//风控单价（丙）
+			priceTongji.setRiskmanagement(riskmanagementjia+riskmanagementyi+riskmanagementbing);
+			
+			BigDecimal pricejia=BigDecimal.valueOf((int)riskmanagementjia).multiply(riskmanagementpricejia);//风控甲费用
+			BigDecimal priceyi=BigDecimal.valueOf((int)riskmanagementyi).multiply(riskmanagementpriceyi);//风控甲费用
+			BigDecimal pricebing=BigDecimal.valueOf((int)riskmanagementbing).multiply(riskmanagementpricebing);//风控甲费用
+			priceTongji.setRiskmanagementprice(pricejia.add(priceyi).add(pricebing));
+			
+			int note = thirdpricefindMapper.querycount(companyId, 9, startTimestamps, endTimestamps);//群发短信数
+			BigDecimal noteprice = listprice.get(8).getPrice();//群发短信单价
+			priceTongji.setNote(note);
+			priceTongji.setNoteprice(BigDecimal.valueOf((int)note).multiply(noteprice));
+			
+			listtongji.add(priceTongji);
+		}
+		
+		if(listtongji!=null && !listtongji.isEmpty()){
+    		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
+    		listtongjito.addAll(listPageUtil.getData());
+    		
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1,10,0);
 
+    	}
+		
+	 	DateListUtil.ListSort4(listtongjito);//按照应还时间进行倒排序
+	 	
+		Map<String, Object> map=new HashMap<>();
+		map.put("listtongjito", listtongjito);
+		map.put("pageutil", pageUtil);
+		return map;
+    }
 
 }

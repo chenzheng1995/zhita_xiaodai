@@ -1,4 +1,4 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayQuickPay;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -691,10 +691,10 @@ public class ChanpayQuickCollection {
 				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
-			String pipelinenu = "rsn_"+retu.getTrxId();
+			System.out.println("数据:"+retu.getTrxId());
+			String pipelinenu = "Rsn_"+retu.getTrxId();
 			repay.setPipelinenumber(pipelinenu);
 			String sa = retu.getAcceptStatus();
-			repay.setPipelinenumber(TrxId);
 			if(sa.equals("S")){
 				repay.setStatu("成功");
 				map.put("ReturnChanpay", retu);
