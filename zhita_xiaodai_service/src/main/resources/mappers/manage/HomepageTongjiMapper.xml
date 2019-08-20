@@ -172,7 +172,7 @@
 	</select>
 	<!-- 后台管理        应还订单 -->
 	<select id="shouorder" resultType="java.lang.Integer">
-		select count(id) from orders where companyId=#{arg0}
+		select count(id) from orders where companyId=#{arg0} and orderStatus!=3
 	</select>
 	<!--后台管理      逾期应收总金额-->
 	<select id="overshouldMoney" resultType="com.zhita.model.manage.Orderdetails">

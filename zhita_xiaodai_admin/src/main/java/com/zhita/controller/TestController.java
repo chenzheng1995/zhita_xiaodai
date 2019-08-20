@@ -1,9 +1,12 @@
 package com.zhita.controller;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
 
@@ -156,14 +161,20 @@ public class TestController {
 		/*String province="山西省稷山县蔡村乡杨村第九居民组";
 		System.out.println(province.substring(0,3));*/
 		//System.out.println(Timestamps.stampToDate(null));
-		List<Integer> list1=new ArrayList<Integer>();
-		list1.add(2);
-		list1.add(5);
-		list1.add(15);
-		list1.add(20);
-		System.out.println(list1.get(0));
-		String orderrepaycvr = (new DecimalFormat("#0.00").format(0*1.0/1*100))+"%";
-		System.out.println(orderrepaycvr+"----");
+		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Integer> list=new ArrayList<>();
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		int todayoverdue=0;//今日逾期已还笔数
+		for (int j = 0; j < list.size(); j++) {
+			if(list.get(j)>2){
+				todayoverdue++;
+			}
+		}
+		System.out.println(todayoverdue);
 		
 	}
 }

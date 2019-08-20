@@ -118,6 +118,13 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		}
 		todayoveruetotalmoney=todayoveruetotalmoneyreal.add(todayoveruetotalmoneyacc).add(todayoveruetotalmoneyoff);
 		
+		String orderrepaytodaycvr=null;//当日订单回款率
+		if(todayloan==0){
+			orderrepaytodaycvr="0.00%";
+		}else{
+			orderrepaytodaycvr = (new DecimalFormat("#0.00").format(todayrepayment*1.0/todayloan*100))+"%";//当日订单回款率
+		}
+		
 		/**
 		 * 累计数据
 		 */
@@ -205,6 +212,9 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		}
 		
 		BigDecimal overduemoney = homepageTongjiMapper.overdueshouldMoney(companyId);//逾前应收总金额
+		if(overduemoney==null){
+			overduemoney=new BigDecimal("0.00");
+		}
 		
 		/**
 		 * 已逾期数据
@@ -239,6 +249,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("todayloantotalmoney",todayloantotalmoney);//今日放款总金额
 		map.put("todayreturtoalmoney",todayreturtoalmoney );//今日回款总金额
 		map.put("todayoveruetotalmoney",todayoveruetotalmoney);//今日逾期已还金额
+		map.put("orderrepaytodaycvr", orderrepaytodaycvr);//当日订单回款率
 		
 		map.put("sumregiste",sumregiste);//累计注册用户
 		map.put("sumapply",sumapply);//累计申请用户总数

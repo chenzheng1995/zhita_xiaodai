@@ -25,6 +25,8 @@ public class Source {
     private Integer managecontrolid;//风控id
     
     private String rmmodlename;//风控名字
+    
+    private Integer todaymaxuv;//当日最大uv数
 
     private String deleted;//假删除（删除：1，没删除：0）
     
@@ -124,6 +126,14 @@ public class Source {
 
 	public void setRmmodlename(String rmmodlename) {
 		this.rmmodlename = rmmodlename;
+	}
+
+	public Integer getTodaymaxuv() {
+		return todaymaxuv;
+	}
+
+	public void setTodaymaxuv(Integer todaymaxuv) {
+		this.todaymaxuv = todaymaxuv;
 	}
 
 	public String getDeleted() {
