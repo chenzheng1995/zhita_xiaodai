@@ -155,7 +155,7 @@ public class LoginController {
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		String key = phone+"xiaodaiKey";
 		String redisCode = redisClientUtil.get(key);
-		if(phone == "15579022565"){
+		if(phone == "15579022565"||phone.equals("15579022565")){
 			SysUser sysUser = intLoginService.queryByPhone(phone);// 判断该用户是否存在
 			List<Integer> list1=intLoginService.queryFunctionsByPhone(phone);//查询当前用户所拥有的权限
             String loginStatus="1";
