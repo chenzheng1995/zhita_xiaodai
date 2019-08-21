@@ -151,4 +151,7 @@ public interface UserMapper {
 
 	void updateScore1(@Param("userId")int userId,@Param("shareOfState") String shareOfState);
 
+
+	String getifBlacklist2(int userId);
+
 }

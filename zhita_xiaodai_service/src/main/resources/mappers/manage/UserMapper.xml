@@ -616,5 +616,11 @@
 		set shareOfState = #{shareOfState}
 		where id = #{userId}
 	</update>	
+	
+	  	   		<select id="getifBlacklist2" parameterType="java.lang.Integer" resultType="java.lang.String">
+     select ifBlacklist from user where id = #{userId}
+	</select> 
+	
+	
   
 </mapper>

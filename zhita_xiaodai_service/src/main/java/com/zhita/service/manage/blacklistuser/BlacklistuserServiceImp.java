@@ -182,4 +182,5 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 		blacklistUserMapper.setBlacklistuser(idCard,userId,companyId,phone,name,date,blackType);
 		
 	}
+
 }

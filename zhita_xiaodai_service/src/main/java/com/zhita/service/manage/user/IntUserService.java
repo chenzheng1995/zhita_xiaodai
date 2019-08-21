@@ -51,6 +51,9 @@ public interface IntUserService {
 
 	public void updateScore1(int userId, String shareOfState);
 
+	public String getifBlacklist2(int userId);
+
+
 
 
 

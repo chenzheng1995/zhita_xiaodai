@@ -362,5 +362,11 @@ public class UserServiceImp implements IntUserService{
 		
 	}
 
+	@Override
+	public String getifBlacklist2(int userId) {
+		 String ifBlacklist = userMapper.getifBlacklist2(userId);
+		return ifBlacklist;
+	}
+
 
 }

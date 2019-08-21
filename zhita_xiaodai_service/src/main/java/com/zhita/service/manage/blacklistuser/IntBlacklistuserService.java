@@ -40,4 +40,6 @@ public interface IntBlacklistuserService {
 
 	public void setBlacklistuser(String idCard, int userId, int companyId, String phone, String name, String date,
 			String blackType);
+
+
 }

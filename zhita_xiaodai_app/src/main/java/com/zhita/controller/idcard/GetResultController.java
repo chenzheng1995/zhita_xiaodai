@@ -270,7 +270,7 @@ public class GetResultController {
     		String authenticationSteps ="2";
     		int number = UserAttestationService.updateAuthenticationSteps(userId,authenticationSteps);
        	 if(number==1) {
-         	map.put("Ncode","200");
+         	map.put("Ncode","2000");
 	    		map.put("code", 200);
 	    		map.put("msg","插入成功");
 	    	}else {

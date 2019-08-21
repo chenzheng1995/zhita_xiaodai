@@ -183,4 +183,7 @@ select count(id) from blacklist_user where idcard = #{idCard} and companyId = #{
       values(#{companyId},#{name},#{phone},#{idCard},#{userId},#{date},#{blackType})
 
     </insert>
+    
+    
+    
 </mapper>

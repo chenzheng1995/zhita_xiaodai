@@ -8,6 +8,7 @@
       <arg column="code" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="certification_number" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="merchant_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -93,17 +94,18 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  		<select id="getnum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		select count(id) from three_elements where userId=#{userId}
+  		<select id="getnum" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(id) from three_elements where userId=#{userId} and phone = #{phone}
 	</select>
   
   
   	<insert id="setThreeElements" parameterType="java.util.Map">
-		insert into three_elements (userId,code,certification_number,merchant_code)
+		insert into three_elements (userId,code,certification_number,merchant_code,phone)
 		values (#{userId},
 		#{code},
 		#{certification_number},
-		#{trans_id}
+		#{trans_id},
+		#{phone}
          )
 	</insert>
   
@@ -112,11 +114,16 @@
 		set code = #{code},
 		    certification_number = #{certification_number},
 		    merchant_code = #{trans_id}
-		where userId = #{userId}
+		where userId = #{userId} and phone = #{phone}
 	</update>
   
     		<select id="getCertificationnumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 		select certification_number from three_elements where userId=#{userId}
+	</select>
+  
+  
+      		<select id="getcode" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select code from three_elements where userId=#{userId}
 	</select>
   
 </mapper>

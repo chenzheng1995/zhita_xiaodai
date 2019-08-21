@@ -472,7 +472,22 @@ public Map<String, Object> getshareOfState(int userId){
 @Transactional
 public Map<String, Object> getthreeElements(int userId,String phone,int companyId) throws UnsupportedEncodingException{
 	Map<String, Object> map1 = new HashMap<>();
-
+    String code1 = threeElementsMapper.getcode(userId);
+    if("0".equals(code1)) {
+		map1.put("Ncode","2000");
+	 map1.put("code","200");
+	 map1.put("msg","认证一致");
+	 return map1;
+    }
+    
+    String ifBlacklist = intUserService.getifBlacklist2(userId);
+    if("1".equals(ifBlacklist)) {
+		map1.put("Ncode","402");
+	 map1.put("code","402");
+	 map1.put("msg","黑名单用户");
+	 return map1;
+    }
+    
 	Map<String, Object> map = userAttestationService.getuserAttestation(userId);
 	String trueName = (String) map.get("trueName");
 	String idcard_number = (String) map.get("idcard_number");
@@ -486,12 +501,12 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	 String code = jsonObject.getString("code");
 	 if("0".equals(code)) {
 		 int certification_number =0;
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
-			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		}		 
 			map1.put("Ncode","2000");
 		 map1.put("code","200");
@@ -501,15 +516,15 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 
 	 }
 	 if("1".equals(code)) {
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
 			 int certification_number = 1;
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
 		 int certification_number = threeElementsMapper.getCertificationnumber(userId);
 		 certification_number = certification_number+1;
-		 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+		 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		 if(certification_number>2) {
 			 intUserService.updateifBlacklist(userId);
 			 String date = System.currentTimeMillis()+"";
@@ -524,13 +539,13 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	 }
 	 if("2".equals(code)) {
 		 int certification_number =0;
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
 			 certification_number = threeElementsMapper.getCertificationnumber(userId);
-			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		}	
 		 map1.put("Ncode","407");
 		 map1.put("code","407");
@@ -539,13 +554,13 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	 }
 	 if("9".equals(code)) {
 		 int certification_number =0;
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
 			 certification_number = threeElementsMapper.getCertificationnumber(userId);
-			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		}	
 		 map1.put("Ncode","409");
 		 map1.put("code","409");
