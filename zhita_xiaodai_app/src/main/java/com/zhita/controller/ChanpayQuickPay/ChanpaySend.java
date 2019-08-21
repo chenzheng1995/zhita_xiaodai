@@ -113,6 +113,7 @@ public class ChanpaySend extends BaseParameter{
 		Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
 		if(i == 1 || i == 0){
 			map1.put("msg", "今日放款已达限额,请明日再来");
+			map1.put("Ncode", 2000);
 			map1.put("code", 0);
 		}else{
 			
@@ -122,7 +123,7 @@ public class ChanpaySend extends BaseParameter{
 		ba.setUserId(userId);
 		Bankcard ban = chanser.SelectBank(ba);
 		System.out.println("数据:"+ban.getTiedCardPhone() + ban.getBankcardName() + ban.getCstmrnm() + ban.getBankcardTypeName());
-		
+		map1.put("Ncode", 2000);
 		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
 				&& ban.getTiedCardPhone() != "" && ban.getBankcardName() != "" && ban.getCstmrnm() != "" && ban.getBankcardTypeName() != ""){
 		
@@ -175,7 +176,9 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("lifeOfLoan", lifeOfLoan);
 			map1.put("OrderNumber", orderNumber);
 			map1.put("code", 200);
+			map1.put("Ncode", 2000);
 		}else{
+			map1.put("Ncode", 2000);
 			map1.put("ReturnChanpay", returnchanpay);
 			map1.put("code", 0);
 		}
@@ -183,24 +186,29 @@ public class ChanpaySend extends BaseParameter{
 		}else{
 			map1.put("msg", "userId,TransAmt,companyId,lifeOfLoan不能为空");
 			map1.put("code", 0);
+			map1.put("Ncode", 2000);
 		}
 		}else{
 			map1.put("msg", "数据异常");
 			map1.put("code", 0);
+			map1.put("Ncode", 2000);
 		}
 		}
 		}else{
 			map1.put("msg", "渠道关闭,请联系客服");
 			map1.put("code", 0);
+			map1.put("Ncode", 2000);
 		}
 		}else{
 			map1.put("msg", "您有订单未还清");
 			map1.put("code", 0);
+			map1.put("Ncode", 2000);
 		}
 		}else{
 			map1.put("msg", "金额异常");
 			map1.put("AAA", j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 			map1.put("code", 0);
+			map1.put("Ncode", 2000);
 		}
 		
 		return map1;
@@ -279,6 +287,7 @@ public class ChanpaySend extends BaseParameter{
 			pay.setOrderNumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){
+				map1.put("Ncode", 2000);
 				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
 				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 		    	if(num==1) {
@@ -293,6 +302,7 @@ public class ChanpaySend extends BaseParameter{
 			    		map1.put("code", 200);
 			    		map1.put("msg","插入成功");
 			    	}else {
+			    		map1.put("Ncode", 2000);
 						map1.put("code",405); 
 						map1.put("msg", "插入失败");
 					}
@@ -302,7 +312,7 @@ public class ChanpaySend extends BaseParameter{
 
 		}else if(statu.equals("F")){
 
-
+			map1.put("Ncode", 2000);
 			pay.setStatus("支付失败");
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", sreturn);
