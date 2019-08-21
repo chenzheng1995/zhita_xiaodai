@@ -1,4 +1,4 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayQuickPay;
 
 
 
@@ -178,37 +178,38 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("code", 200);
 			map1.put("Ncode", 2000);
 		}else{
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 			map1.put("ReturnChanpay", returnchanpay);
+			map1.put("msg", returnchanpay);
 			map1.put("code", 0);
 		}
 		
 		}else{
 			map1.put("msg", "userId,TransAmt,companyId,lifeOfLoan不能为空");
 			map1.put("code", 0);
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 		}
 		}else{
 			map1.put("msg", "数据异常");
 			map1.put("code", 0);
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 		}
 		}
 		}else{
 			map1.put("msg", "渠道关闭,请联系客服");
 			map1.put("code", 0);
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 		}
 		}else{
 			map1.put("msg", "您有订单未还清");
 			map1.put("code", 0);
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 		}
 		}else{
 			map1.put("msg", "金额异常");
 			map1.put("AAA", j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 			map1.put("code", 0);
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 		}
 		
 		return map1;
@@ -287,7 +288,7 @@ public class ChanpaySend extends BaseParameter{
 			pay.setOrderNumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
 			if(addId != null){
-				map1.put("Ncode", 2000);
+				
 				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
 				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 		    	if(num==1) {
@@ -300,6 +301,7 @@ public class ChanpaySend extends BaseParameter{
 			    	if(num==1) {
 			    		map.put("ShortReturn", staring);
 			    		map1.put("code", 200);
+			    		map1.put("Ncode", 2000);
 			    		map1.put("msg","插入成功");
 			    	}else {
 			    		map1.put("Ncode", 2000);
@@ -312,11 +314,12 @@ public class ChanpaySend extends BaseParameter{
 
 		}else if(statu.equals("F")){
 
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 			pay.setStatus("支付失败");
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", sreturn);
 			map1.put("code", 0);
+			map1.put("msg", sreturn);
 		}
 	
 		return map1;

@@ -1,4 +1,4 @@
-package com.zhita.controller.ChanpayQuickPay;
+package com.zhita.controller.chanpayQuickPay;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -495,6 +495,7 @@ public class ChanpayQuickCollection {
 			System.out.println("银行卡:"+bankcardTypeId);
 			Integer id = servie.SelectUserId(MerUserId);
 			if(id != null){
+				map.put("Ncode", 0);
 				map.put("code", "0");
 				map.put("desc", "已绑卡");
 			}else{
@@ -538,22 +539,27 @@ public class ChanpayQuickCollection {
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 				String code = retu.getAcceptStatus();
 				if(code.equals("S")){
-					map.put("Ncode", 2000);
 					Integer a = servie.AddBankcard(bank);
 					if(a!=null){
 						map.put("OriAuthTrxId", TrxId);
 						map.put("code", "200");
+						map.put("Ncode", 2000);
 						map.put("desc", "插入成功");
 						map.put("ReturnChanpay", retu);
+						map.put("msg", retu);
 					}else{
 						map.put("OriAuthTrxId", TrxId);
 						map.put("code", "0");
+						map.put("Ncode", 0);
+						map.put("msg", retu);
 						map.put("desc", "插入失败");
 						map.put("ReturnChanpay", retu);
 					}
 				}else{
-					map.put("Ncode", 2000);
+					map.put("Ncode", 0);
+					map.put("code", 0);
 					map.put("ReturnChanpay", retu);
+					map.put("msg", retu);
 				}
 				
 				
@@ -567,12 +573,14 @@ public class ChanpayQuickCollection {
 			map.put("Ncode", 0);
 			map.put("code", "0");
 			map.put("ReturnChanpay", "此卡已绑定");
+			map.put("msg", "此卡已绑定");
 		}
 		}
 		}else{
 			map.put("Ncode", 0);
 			map.put("code", "0");
 			map.put("ReturnChanpay", "MerUserId,BkAcctNo,IDNo,CstmrNm,MobNo,bankcardTypeId不能未空");
+			map.put("msg", "MerUserId,BkAcctNo,IDNo,CstmrNm,MobNo,bankcardTypeId不能未空");
 		}
 		return map;
 	}
@@ -638,22 +646,23 @@ public class ChanpayQuickCollection {
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 				String ssa = retu.getAcceptStatus();
 				if(ssa.equals("S")){
-					map.put("Ncode", 2000);
+					
 				
 				Integer a = servie.UpdateChanpay(userId);
 				if(a!=null){
-					
+					map.put("Ncode", 2000);
 					map.put("code", "200");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证成功");
-					map.put("desc", "插入成功");
+					map.put("msg", retu);
 					
 				}else{
-					
+					map.put("Ncode", 0);
 					servie.deleteBank(userId);
 					map.put("code", "0");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证失败");
+					map.put("msg", retu);
 				}
 				
 				}else{
@@ -667,6 +676,7 @@ public class ChanpayQuickCollection {
 			map.put("code", 0);
 			map.put("Ncode", 0);
 			map.put("desc", "OriAuthTrxId，SmsCode不能为空");
+			map.put("msg", "OriAuthTrxId，SmsCode不能为空");
 		}
 		
 		return map;
@@ -717,20 +727,21 @@ public class ChanpayQuickCollection {
 			repay.setPipelinenumber(pipelinenu);
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
-				map.put("Ncode", 2000);
 				repay.setStatu("成功");
 				Integer a = servie.AddRepayment(repay);
 				if(a!=null){
+					map.put("Ncode", 2000);
 					map.put("ReturnChanpay", retu);
 					map.put("TrxId", TrxId);
 					map.put("code", 200);
-					map.put("desc", "插入成功");
+					map.put("msg", "插入成功");
 				}else{
 					repay.setStatu("失败");
 					map.put("ReturnChanpay", retu);
 					map.put("TrxId", TrxId);
+					map.put("Ncode", 0);
 					map.put("code", 0);
-					map.put("desc", "插入失败");
+					map.put("msg", "插入失败");
 					
 				}
 				
@@ -739,6 +750,7 @@ public class ChanpayQuickCollection {
 			}else{
 				map.put("Ncode", 2000);
 				map.put("ReturnChanpay", retu);
+				map.put("msg", retu);
 			}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -747,7 +759,8 @@ public class ChanpayQuickCollection {
 		}else{
 			map.put("ReturnChanpay", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 			map.put("code", 0);
-			map.put("Ncode", 2000);
+			map.put("Ncode", 0);
+			map.put("msg", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 		}
 		return map;
 	}
@@ -778,22 +791,26 @@ public class ChanpayQuickCollection {
 			Orders ord = new Orders();
 			ord.setOrderNumber(OrderNumber);
 			if(as.equals("S")){
-				map.put("Ncode", 2000);
+				
 				Integer a = servie.UpdateOrders(ord);
 				if(a!=null){
 					System.out.println(ord.getOrderNumber());
 					System.out.println(a);
+					map.put("Ncode", 2000);
 					map.put("code", "200");
 					map.put("ReturnChanpay", retu);
-					map.put("desc", "插入成功");
+					map.put("msg", "插入成功");
 				}else{
 					map.put("code", "0");
+					map.put("Ncode", 0);
 					map.put("ReturnChanpay", retu);
-					map.put("desc", "插入失败");
+					map.put("msg", "插入失败");
 				}
 			}else{
 				map.put("Ncode", 0);
+				map.put("code", 0);
 				map.put("ReturnChanpay", retu);
+				map.put("msg", retu);
 			}
 			
 			} catch (Exception e) {
@@ -1208,23 +1225,26 @@ public class ChanpayQuickCollection {
 			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
-				map.put("Ncode", 2000);
+				
 				Integer a = servie.AddDeferred(defe);
 			if(a != null){
 				map.put("ReturnChanpay", retu);
+				map.put("Ncode", 2000);
 				map.put("TrxId", TrxId);
-				map.put("desc", "插入成功");
+				map.put("msg", "插入成功");
 				map.put("code", 200);
 			}else{
 				map.put("ReturnChanpay", retu);
 				map.put("TrxId", TrxId);
-				map.put("desc", "插入失败");
+				map.put("Ncode", 0);
+				map.put("msg", "插入失败");
 				map.put("code", 0);
 			}
 			
 			}else{
-				map.put("Ncode", 2000);
+				map.put("Ncode", 0);
 				map.put("ReturnChanpay", retu);
+				map.put("msg", retu);
 			}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1232,8 +1252,9 @@ public class ChanpayQuickCollection {
 			System.out.println(result);
 		}else{
 			map.put("ReturnChanpay", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
-			map.put("Ncode", 2000);
+			map.put("Ncode", 0);
 			map.put("code", 0);
+			map.put("msg", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 		}
 		return map;
 	}
@@ -1266,22 +1287,27 @@ public class ChanpayQuickCollection {
 			ord.setUserId(userId);
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
-				map.put("Ncode", 2000);
+				
 			
 			Integer a = servie.UpdateDefeOrders(ord);
 			if(a != null){
-				
+				map.put("Ncode", 2000);
 				map.put("code", "200");
 				map.put("desc", "插入成功");
 				map.put("ReturnChanpay", retu);
+				map.put("msg", "插入成功");
 			}else{
 				map.put("code", "0");
 				map.put("desc", "插入失败");
 				map.put("ReturnChanpay", retu);
+				map.put("msg", "插入失败");
 			}
 			
 			}else{
-				
+				map.put("Ncode", "0");
+				map.put("code", "0");
+				map.put("ReturnChanpay", retu);
+				map.put("msg", "插入失败");
 			}
 			
 			} catch (Exception e) {
