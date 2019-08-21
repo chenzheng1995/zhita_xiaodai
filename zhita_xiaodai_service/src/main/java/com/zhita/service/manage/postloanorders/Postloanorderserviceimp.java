@@ -2,6 +2,7 @@ package com.zhita.service.manage.postloanorders;
 
 import java.math.BigDecimal;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -616,17 +617,42 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
-		if(defe.getDeferBeforeReturntime()!=null){
-			orders.get(i).setDeferBeforeReturntime(defe.getDeferBeforeReturntime());
+		
+		if(defe.getDeferAfterReturntime()!=null){
+			if(defe.getDeferAfterReturntime().length()!=0){
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
+			}
 		}else{
-			orders.get(i).setDeferBeforeReturntime("/");
+			orders.get(i).setDeferAfterReturntime("/");
 		}
+		
+		if(orders.get(i).getSurplus_money()==null){
+			orders.get(i).setSurplus_money(new BigDecimal(0));
+		}
+		orders.get(i).setMakeLoans(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));
 		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
 		if(orders.get(i).getSurplus_money()!=null){
 			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
 		}else{
 			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
 		}
+		BigDecimal a = postloanorder.ShijiMoney(orders.get(i).getOrderId());
+		if(a==null){
+			a=new BigDecimal(0);
+		}
+		orders.get(i).setRealityAccount(a);
+		orders.get(i).setOrderCreateTime(Timestamps.stampToDate1(orders.get(i).getOrderCreateTime()));
+		orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+		System.out.println("实还时间:"+orders.get(i).getRealtime());
+		if(orders.get(i).getRealtime() != null && !("").equals(orders.get(i).getRealtime())){
+			if(orders.get(i).getRealtime().length()!=0){
+				orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+			}
+		}else{
+			orders.get(i).setRealtime("/");
+		}
+		
+		System.out.println("渠道名:"+orders.get(i).getSourceName()+"手机号:"+orders.get(i).getPhone()+"订单时间:"+orders.get(i).getOrderCreateTime()+"实还时间:"+orders.get(i).getRealtime());
 		}
 		map.put("Orderdetails", orders);
 		map.put("PageUtil", pages);

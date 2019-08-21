@@ -302,7 +302,7 @@
 		
 		
 		<select id="AllDrainage" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Drainage_of_platform">
-			select id,drainageOfPlatformName from drainage_of_platform where companyId = #{companyId}
+			select * from source where companyId = #{companyId}
 		</select>
 		
 		

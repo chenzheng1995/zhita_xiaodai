@@ -267,7 +267,7 @@ public class ChanpaySend extends BaseParameter{
 		System.out.println("111111");
 		pay.setPipelinenumber(sreturn.getPartnerId());
 		pay.setDeleted("0");
-		pay.setPaymentmoney(finalLine);
+		pay.setPaymentmoney(actualAmountReceived);
 		String statu = sreturn.getAcceptStatus();
 
 		if(statu.equals("S")){

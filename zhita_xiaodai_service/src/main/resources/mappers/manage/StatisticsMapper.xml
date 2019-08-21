@@ -272,7 +272,7 @@
 			
 			
 			<select id="SelectUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-				select id from bankcard where userId = #{userId}
+				select id from bankcard where userId = #{userId} and attestationStatus = "1"
 			</select>
 			
 			

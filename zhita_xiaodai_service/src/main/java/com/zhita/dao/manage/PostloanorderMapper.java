@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -136,6 +137,6 @@ public interface PostloanorderMapper {
 	Integer CoMentLLection(Orderdetails orde);
 	
 	
-	
+	BigDecimal ShijiMoney(Integer orderId);
 	
 }

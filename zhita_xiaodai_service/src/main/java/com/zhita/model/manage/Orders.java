@@ -129,17 +129,18 @@ public class Orders {
 	
 	private Integer chenggNum;
 	
-	private Integer chenggData;
+	private Double chenggData;
 	
 	private String TransAmt;
 	
-	private String collectionData;
+	private Double collectionData;
 
-	public String getCollectionData() {
+
+	public Double getCollectionData() {
 		return collectionData;
 	}
 
-	public void setCollectionData(String collectionData) {
+	public void setCollectionData(Double collectionData) {
 		this.collectionData = collectionData;
 	}
 
@@ -615,11 +616,11 @@ public class Orders {
 		this.chenggNum = chenggNum;
 	}
 
-	public Integer getChenggData() {
+	public Double getChenggData() {
 		return chenggData;
 	}
 
-	public void setChenggData(Integer chenggData) {
+	public void setChenggData(Double chenggData) {
 		this.chenggData = chenggData;
 	}
 

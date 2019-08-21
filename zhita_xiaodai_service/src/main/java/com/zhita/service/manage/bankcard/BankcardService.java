@@ -13,6 +13,6 @@ public interface BankcardService {
 	Map<String, Object> AddOrders(Orders orde);
 
 
-
+	Map<String, Object> SelectBankCard(Integer companyId);
 
 }
