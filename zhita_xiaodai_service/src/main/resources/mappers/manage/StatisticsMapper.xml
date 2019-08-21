@@ -22,6 +22,7 @@
 			
 			<select id="SelectTrxId" parameterType="com.zhita.model.manage.Bankcard" resultType="java.lang.Integer">
 				select id from bankcard where userId = #{userId} AND bankcardName = #{bankcardName} AND tiedCardPhone = #{tiedCardPhone}
+				and attestationStatus = "1"
 			</select>
 			
 			
