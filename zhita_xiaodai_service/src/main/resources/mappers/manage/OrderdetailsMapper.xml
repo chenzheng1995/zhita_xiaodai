@@ -225,22 +225,23 @@
   </update>
   
            <!--获取OrdersId-->
- <select id="getlastLine" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-select makeLoans from orderdetails where  orderId = #{ordersId}
- </select> 
+	 <select id="getlastLine" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select makeLoans from orderdetails where  orderId = #{ordersId}
+	 </select> 
  
    	<insert id="setororderdetails" parameterType="java.util.Map">
 		insert into orderdetails(orderId,realityBorrowMoney,makeLoans,interestDay,interestSum,interestInAll,technicalServiceMoney,realityAccount,registerClient,DrainageOfPlatform,shouldReapyMoney,surplus_money) values(#{orderId},#{finalLine},#{actualAmountReceived},#{averageDailyInterest},#{totalInterest},#{totalInterest},#{platformServiceFee},#{actualAmountReceived},#{registeClient},#{sourceName},#{shouldTotalAmount},#{surplus_money})
 	</insert>
 
 
- <select id="getOrderdetails" parameterType="java.lang.Integer" resultType="java.util.Map">
-select shouldReapyMoney from orderdetails where  orderId = #{ordersId}
- </select> 
+	 <select id="getOrderdetails" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select shouldReapyMoney from orderdetails where  orderId = #{ordersId}
+	 </select> 
  
-  <select id="getShouldReapyMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-select shouldReapyMoney from orderdetails where  orderId = #{orderId}
- </select> 
+ 
+	 <select id="getShouldReapyMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select shouldReapyMoney from orderdetails where  orderId = #{orderId}
+	 </select> 
 
 
 

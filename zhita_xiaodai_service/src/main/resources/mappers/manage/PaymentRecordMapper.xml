@@ -237,6 +237,7 @@
 				</if>
 		  	</where>
 		  	group by ra.orderId 
+		  	order by ra.orderId desc
 		  	limit #{page},#{pagesize}
 		  </select>
   
@@ -307,6 +308,7 @@
 					</if>
 			  	</where>
 			  	group by o.id 
+			  	order by o.id desc
 		  		limit #{page},#{pagesize}
 			  </select>
 			  
@@ -459,7 +461,8 @@
 						AND a.amou_time between #{accounttimestart_time} and #{accounttimeent_time}
 					</if>
   				</where>
-  				group by o.id desc
+  				group by o.id 
+  				order by o.id desc
   				limit #{page},#{pagesize}
   			</select>
   
@@ -576,7 +579,7 @@
   			
   			
   			<select id="AllUnderthe" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Offlinetransfer">
-  				select of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.name as thname,of.state,of.money
+  				select of.id,of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.name as thname,of.state,of.money
   				 from Offlinetransfer of,sys_user sy,repayment_setting th
   				<where>
   					th.id = of.channel
@@ -589,6 +592,7 @@
 						AND of.offinetransfertime between #{start_time} and #{end_time}
 					</if>
   				</where> 
+  				order by of.id desc
   				limit #{page},#{pagesize}
   			</select>
   			
@@ -887,7 +891,7 @@
   			
   			
   			<select id="Allofflinedelay" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
-  				select of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,of.extensionfee,of.remarks,
+  				select of.id,of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,of.extensionfee,of.remarks,
 				of.delay_time,defe.deferAfterReturntime
   				from offlinedelay of,orders o,orderdetails ord,user u,user_attestation usa,sys_user us,deferred defe
   				<where>
@@ -911,6 +915,7 @@
   						and of.operating_time between #{statu_time} and #{end_time}
   					</if>
   				</where>
+  				order by of.id desc
   				limit #{page},#{pagesize}
   			</select>
   			

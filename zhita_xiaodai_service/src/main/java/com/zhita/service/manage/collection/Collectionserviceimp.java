@@ -54,7 +54,7 @@ public class Collectionserviceimp implements Collectionservice{
 			Deferred defe = collmapp.DefeSet(orders.get(i));
 			if(defe!=null){
 				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
-				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferAfterReturntime()));
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 				System.out.println(orders.get(i).getDeferAfterReturntime()+"AAA"+orders.get(i).getOverdueNumberOfDays());
 				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));
 			}else{
