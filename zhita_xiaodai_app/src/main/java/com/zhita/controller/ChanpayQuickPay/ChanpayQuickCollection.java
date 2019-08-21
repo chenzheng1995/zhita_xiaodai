@@ -564,13 +564,13 @@ public class ChanpayQuickCollection {
 			//this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		
 		}else{
-			map.put("Ncode", 2000);
+			map.put("Ncode", 0);
 			map.put("code", "0");
 			map.put("ReturnChanpay", "此卡已绑定");
 		}
 		}
 		}else{
-			map.put("Ncode", 2000);
+			map.put("Ncode", 0);
 			map.put("code", "0");
 			map.put("ReturnChanpay", "MerUserId,BkAcctNo,IDNo,CstmrNm,MobNo,bankcardTypeId不能未空");
 		}
@@ -665,7 +665,7 @@ public class ChanpayQuickCollection {
 				}
 		}else{
 			map.put("code", 0);
-			map.put("Ncode", 2000);
+			map.put("Ncode", 0);
 			map.put("desc", "OriAuthTrxId，SmsCode不能为空");
 		}
 		
@@ -1358,7 +1358,6 @@ public class ChanpayQuickCollection {
 	public void SelectCompany(String orderNumber){
 		servie.SelectId(orderNumber);
 	}
-	
 	
 	
 	
