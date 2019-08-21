@@ -119,4 +119,9 @@
 		select certification_number from three_elements where userId=#{userId}
 	</select>
   
+  
+      		<select id="getcode" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select code from three_elements where userId=#{userId}
+	</select>
+  
 </mapper>

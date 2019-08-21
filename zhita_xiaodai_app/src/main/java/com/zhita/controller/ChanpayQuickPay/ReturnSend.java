@@ -1,4 +1,4 @@
-package com.zhita.controller.chanpayQuickPay;
+package com.zhita.controller.ChanpayQuickPay;
 
 public class ReturnSend {
 	
