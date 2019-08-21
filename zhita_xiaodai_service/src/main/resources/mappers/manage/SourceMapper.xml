@@ -15,7 +15,7 @@
     <result column="manageControlId" property="manageControlId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId, s.deleted,
+    s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId,s.todaymaxuv, s.deleted,
     st.name,mcs.rmModleName
   </sql>
   <!-- 后台管理            根据id查询当前对象信息 -->
@@ -31,10 +31,10 @@
   </delete>
   <!-- 后台管理    添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.Source" >
-    insert into source (companyId, sourceName,account, pwd, 
+    insert into source (companyId, sourceName,account, pwd, todaymaxuv,
     link, discount, templateid,managecontrolid)
     values (#{companyid,jdbcType=INTEGER}, #{sourcename,jdbcType=VARCHAR}, 
-      #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},#{todaymaxuv,jdbcType=INTEGER}, #{link,jdbcType=VARCHAR}, 
       #{discount,jdbcType=VARCHAR}, #{templateid,jdbcType=INTEGER},#{managecontrolid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.Source" >
@@ -147,6 +147,7 @@
       link = #{link,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       discount = #{discount,jdbcType=VARCHAR},
+      todaymaxuv = #{todaymaxuv,jdbcType=INTEGER},
       templateid = #{templateid,jdbcType=VARCHAR},
       managecontrolid = #{managecontrolid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -177,6 +178,7 @@
       pwd = #{pwd,jdbcType=VARCHAR},
       link = #{link,jdbcType=VARCHAR},
       discount = #{discount,jdbcType=VARCHAR},
+      todaymaxuv = #{todaymaxuv,jdbcType=INTEGER},
       templateid = #{templateid,jdbcType=VARCHAR},
       managecontrolid = #{managecontrolid,jdbcType=VARCHAR},
       deleted = 0

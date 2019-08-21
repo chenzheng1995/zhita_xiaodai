@@ -25,8 +25,18 @@ public class Offlinetransfer {
     private String thname;
     
     private String account;
+    
+    private String name;
 
-    public String getAccount() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAccount() {
 		return account;
 	}
 

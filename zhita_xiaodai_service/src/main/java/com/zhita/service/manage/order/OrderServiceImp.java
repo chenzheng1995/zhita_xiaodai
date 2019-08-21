@@ -421,7 +421,7 @@ public class OrderServiceImp implements IntOrderService{
     		}
     		list.get(i).getUser().setOperationTime(Timestamps.stampToDate(list.get(i).getUser().getOperationTime()));//人审时间
     		
-    		list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
+    		//list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
     		
     		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
     		BigDecimal deferrMoney = new BigDecimal("0.00");//延期金额

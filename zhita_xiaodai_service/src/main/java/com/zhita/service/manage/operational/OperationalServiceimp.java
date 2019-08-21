@@ -8,8 +8,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.OperationalMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
@@ -18,6 +20,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.OverdueClass;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.Source;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.PageUtil;
 import com.zhita.util.Timestamps;
@@ -239,6 +242,7 @@ public class OperationalServiceimp implements OperationalService{
 				
 				ord.setGesamtbetragderDarlehen(new BigDecimal(0));
 			}
+			
 			if(orders.getGesamtbetragderRvckzahlung() == null){
 				
 				orders.setGesamtbetragderRvckzahlung(new BigDecimal(0));
@@ -254,25 +258,30 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
-			if(orders.getGesamtbetraguberfallNum()==null){
+			ord.setGesamtbetragderRvckzahlung(orders.getGesamtbetragderRvckzahlung());
+			if(ord.getGesamtbetraguberfallNum()==null){
 				ord.setGesamtbetraguberfallNum(0);
 			}
 			
-			if(orders.getGesamtbetragderNum()==null){
+			if(ord.getGesamtbetragderNum()==null){
 				ord.setGesamtbetragderNum(0);
 			}
 			
-			if(orders.getZahlderGesamtdarlehen() == null){
-				orders.setZahlderGesamtdarlehen(0);
+			if(ord.getZahlderGesamtdarlehen() == null){
+				ord.setZahlderGesamtdarlehen(0);
 			}
-			System.out.println(or.getGesamtbetraguberfalligerBetrag()+"A"+or.getGesamtbetraguberfallNum()+"A"+orders.getZahlderGesamtdarlehen());
-			if(orders.getGesamtbetraguberfallNum() == null){
-				orders.setGesamtbetraguberfallNum(0);
+			if(ord.getGesamtbetraguberfallNum() == null){
+				ord.setGesamtbetraguberfallNum(0);
 			}
-			NumberFormat numberFormat = NumberFormat.getInstance();
-			numberFormat.setMaximumFractionDigits(2);
+			
+			
 			System.out.println(orders.getGesamtbetraguberfallNum()+"AAA"+orders.getGesamtbetragderNum());
-			orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
+			if(ord.getGesamtbetraguberfallNum() !=null && orders.getGesamtbetragderNum()!=null){
+				ord.setCollectionData((double) ((ord.getGesamtbetraguberfallNum()*100)   / (ord.getGesamtbetragderNum()*100)));
+			}else{
+				ord.setCollectionData((double) 0);
+			}
+			System.out.println("催收率:"+ord.getCollectionData());
 			orde.add(ord);
 			System.out.println("时间:"+ord.getRemittanceTime());
 			map.put("Repayment", orde);
@@ -328,19 +337,22 @@ public class OperationalServiceimp implements OperationalService{
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
-				
+				ord.setGesamtbetragderRvckzahlung(orders.getGesamtbetragderRvckzahlung());
 				ord.setRemittanceTime(stime.get(i));
 				System.out.println("时间:"+ord.getRemittanceTime());
-				if(orders.getGesamtbetraguberfallNum()==null){
+				if(ord.getGesamtbetraguberfallNum()==null){
 					ord.setGesamtbetraguberfallNum(0);
 				}
 				
-				if(orders.getGesamtbetragderNum()==null){
+				if(ord.getGesamtbetragderNum()==null){
 					ord.setGesamtbetragderNum(0);
 				}
-				NumberFormat numberFormat = NumberFormat.getInstance();
-				numberFormat.setMaximumFractionDigits(2);
-				orders.setCollectionData(numberFormat.format(((float) orders.getGesamtbetraguberfallNum()  / (float)   orders.getGesamtbetragderNum()) * 100));
+				if(ord.getGesamtbetraguberfallNum() !=null && orders.getGesamtbetragderNum()!=null){
+					ord.setCollectionData((double) ((ord.getGesamtbetraguberfallNum()*100)   / (ord.getGesamtbetragderNum()*100)));
+				}else{
+					ord.setCollectionData((double) 0);
+				}
+				
 				orde.add(ord);
 				map.put("PageUtil", pages);
 				map.put("Repayment", orde);
@@ -398,8 +410,16 @@ public class OperationalServiceimp implements OperationalService{
 			if(d==null){
 				d=0;
 			}
+			
 			ord.setChenggNum(d);//成功数
+			if(ord.getChenggNum()!=0 && ord.getCollection_count() !=0){
+				ord.setChenggData((double) ((ord.getChenggNum()/ord.getCollection_count())*100));
+			}else{
+				ord.setChenggData((double)0);
+			}
+			
 			ord.setOrderCreateTime(stime);
+			System.out.println("催收率:"+ord.getChenggData());
 			ordesa.add(ord);
 			map.put("Orderdetails", ordesa);
 		}else{
@@ -488,7 +508,7 @@ public class OperationalServiceimp implements OperationalService{
 
 	@Override
 	public Map<String, Object> AllDrainageOf(Integer companyId) {
-		List<Drainage_of_platform> draina = operdao.AllDrainage(companyId);
+		List<Source> draina = operdao.AllDrainage(companyId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Drainage_of_platform", draina);
 		return map;

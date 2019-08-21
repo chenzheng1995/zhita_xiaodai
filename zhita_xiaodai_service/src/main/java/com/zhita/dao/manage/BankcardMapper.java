@@ -1,8 +1,10 @@
 package com.zhita.dao.manage;
 
+import java.util.List;
 import java.util.Map;
 
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.BankcardType;
 
 public interface BankcardMapper {
     int deleteByPrimaryKey(Integer id);
@@ -20,5 +22,7 @@ public interface BankcardMapper {
 	Map<String, Object> getbankcard(int userId);
 
 	Map<String, Object> getattestationStatus(int userId);
+	
+	List<BankcardType> getBankcardtype(Integer companyId);
 
 }

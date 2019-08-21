@@ -38,4 +38,15 @@ public class BankcardController {
 	
 	
 	
+	/**
+	 * 查询银行类型
+	 * @param companyId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("SelectBankCard")
+	public Map<String, Object> SelectBankCard(Integer companyId){
+		return bser.SelectBankCard(companyId);
+	}
+	
 }

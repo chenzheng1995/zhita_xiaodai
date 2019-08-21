@@ -166,7 +166,7 @@ public class UserServiceImp implements IntUserService{
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
     		list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
     		
-    		list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
+    		//list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
     		
     		List<DeferredAndOrder> listdefer=ordersMapper.queryDefer(list.get(i).getId());
     		BigDecimal deferrMoney = new BigDecimal("0.00");//延期金额

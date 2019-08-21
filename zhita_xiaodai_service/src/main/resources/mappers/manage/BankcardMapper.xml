@@ -147,5 +147,10 @@
   	<select id="getattestationStatus" parameterType="java.lang.Integer" resultType="java.util.Map">
 		select attestationStatus from bankcard where userid=#{userId}
 	</select>
+	
+	
+	<select id="getBankcardtype" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BankcardType">
+		select * from Bankcard_type where companyId = #{companyId}
+	</select>
 
 </mapper>

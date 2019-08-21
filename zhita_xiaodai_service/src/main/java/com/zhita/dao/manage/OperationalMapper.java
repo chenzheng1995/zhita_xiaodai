@@ -10,6 +10,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.OverdueClass;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.Source;
 
 public interface OperationalMapper {
 	
@@ -82,7 +83,7 @@ public interface OperationalMapper {
 
 	
 	
-	List<Drainage_of_platform> AllDrainage(Integer companyId);
+	List<Source> AllDrainage(Integer companyId);
 	
 	
 	Orders GesamtbetragderDarlehen(Orders orde);

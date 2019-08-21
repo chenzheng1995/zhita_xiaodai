@@ -488,7 +488,7 @@
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
-			ord.makeLoans,o.shouldReturnTime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money
+			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid
@@ -773,5 +773,9 @@
 			group by ov.orderId
 		</select>
 		
+		
+		<select id="ShijiMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select sum(repaymentMoney) as realityAccount  from repayment where orderId = #{orderId}
+		</select>
 		
 </mapper>
