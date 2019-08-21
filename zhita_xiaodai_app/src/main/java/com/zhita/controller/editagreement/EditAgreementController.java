@@ -1,5 +1,8 @@
 package com.zhita.controller.editagreement;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +26,11 @@ public class EditAgreementController {
 	
     
     //获取协议
-    @RequestMapping(value="/geteditagreement",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
+    @RequestMapping(value="/geteditagreement",method=RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     @Transactional
-    public String geteditagreement(int companyId,int num){
+    public Map<String, Object> geteditagreement(int companyId,int num){
+    	Map<String, Object> map = new HashMap<>();
     	String agreementName = null;
     	if(num==1) {
     		agreementName = "用户协议";
@@ -38,8 +42,11 @@ public class EditAgreementController {
     		agreementName = "延期协议";
     	}   	
         int agreementId =  agreementTypeMapper.getagreementId(companyId,agreementName);
-        String agreementContent = intEditagreementService.getagreementContent(agreementId);       
-		return agreementContent;
+        String agreementContent = intEditagreementService.getagreementContent(agreementId);   
+        map.put("agreementContent",agreementContent);
+        map.put("Ncode","2000");
+        
+		return map;
 
     }
 }
