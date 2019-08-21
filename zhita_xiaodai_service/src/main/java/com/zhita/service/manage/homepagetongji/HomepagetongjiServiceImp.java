@@ -377,6 +377,9 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			deratemoney=deratemoneyacc.add(deratemoneyoff);
 			
 			BigDecimal bankmoney = homepageTongjiMapper.bankMoney(companyId,startTimestampsfor, endTimestampsfor);//银行扣款金额
+			if(bankmoney==null){
+				bankmoney=new BigDecimal("0.00");
+			}
 			
 			if(shouldmoney==null){
 				shouldmoney=new BigDecimal("0.00");

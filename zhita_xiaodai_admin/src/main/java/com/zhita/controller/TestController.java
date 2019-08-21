@@ -175,6 +175,10 @@ public class TestController {
 			}
 		}
 		System.out.println(todayoverdue);
+		BigDecimal payrecmoney=new BigDecimal("50");
+		BigDecimal repaymoney=new BigDecimal("60");
+		BigDecimal realymoney = payrecmoney.subtract(repaymoney);//实际收益
+		System.out.println(realymoney+"----");
 		
 	}
 }

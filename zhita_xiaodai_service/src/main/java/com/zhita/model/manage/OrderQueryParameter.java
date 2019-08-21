@@ -14,6 +14,8 @@ public class OrderQueryParameter {
 	private Integer sourcename;//渠道名字id
 	private Integer userid;//用户id
 	private String registeClient;//注册客户端
+	private String orderstatus;//订单状态（已还：0；    未还：1）
+	private String clientstatus;//客户状态（老客户：0；  新客户：1）
 	
 	
 	//不需要用的字段
@@ -138,4 +140,17 @@ public class OrderQueryParameter {
 	public void setRegisteClient(String registeClient) {
 		this.registeClient = registeClient;
 	}
+	public String getOrderstatus() {
+		return orderstatus;
+	}
+	public void setOrderstatus(String orderstatus) {
+		this.orderstatus = orderstatus;
+	}
+	public String getClientstatus() {
+		return clientstatus;
+	}
+	public void setClientstatus(String clientstatus) {
+		this.clientstatus = clientstatus;
+	}
+	
 }

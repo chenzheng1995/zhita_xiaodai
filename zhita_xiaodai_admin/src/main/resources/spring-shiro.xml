@@ -11,7 +11,7 @@
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 	    <!-- 验证 -->        
      <!--    <property name="authenticator" ref="myModularRealmAuthenticator"/> -->
-        	<property name="realm" ref="realmPhone" />
+        	<property name="realm" ref="realmUser" />
 		   <!-- 多个验证策略 realmes -->
 		<!--    <property name="realms">
 	           <list>

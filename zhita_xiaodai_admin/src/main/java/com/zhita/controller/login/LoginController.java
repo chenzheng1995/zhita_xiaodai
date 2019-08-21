@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -100,7 +102,7 @@ public class LoginController {
 	
 	
 	//后台管理----登录验证  以及授权(用户名和密码)
-	/*@ResponseBody
+	@ResponseBody
 	@RequestMapping(value="/loginap")
 	public Map<String, Object> loginap(String account,String pwd,HttpSession session,HttpServletRequest request){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -141,7 +143,7 @@ public class LoginController {
 			}
 		}
 		return map;
-	}*/
+	}
 	
 	//后台管理----登录验证  以及授权(手机号和验证码)
 	@ResponseBody
