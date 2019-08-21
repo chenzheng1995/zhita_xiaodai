@@ -122,8 +122,8 @@
 	</select>
   
   
-      		<select id="getcode" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select code from three_elements where userId=#{userId}
+      		<select id="getcode" parameterType="java.util.Map" resultType="java.lang.String">
+		select code from three_elements where userId=#{userId} and phone=#{phone}
 	</select>
   
 </mapper>
