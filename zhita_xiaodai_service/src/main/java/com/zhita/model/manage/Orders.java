@@ -125,7 +125,7 @@ public class Orders {
 	
 	private Integer collection_count;
 	
-	private BigDecimal interestPenaltySum;
+	private BigDecimal interestPenaltySum;//逾期总罚息
 	
 	private Integer chenggNum;
 	
