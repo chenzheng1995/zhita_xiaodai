@@ -25,5 +25,5 @@ public interface ThreeElementsMapper {
 
 	int getCertificationnumber(int userId);
 
-	String getcode(int userId);
+	String getcode(@Param("userId")int userId,@Param("phone") String phone);
 }

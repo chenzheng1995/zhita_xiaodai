@@ -472,7 +472,7 @@ public Map<String, Object> getshareOfState(int userId){
 @Transactional
 public Map<String, Object> getthreeElements(int userId,String phone,int companyId) throws UnsupportedEncodingException{
 	Map<String, Object> map1 = new HashMap<>();
-    String code1 = threeElementsMapper.getcode(userId);
+    String code1 = threeElementsMapper.getcode(userId,phone);
     if("0".equals(code1)) {
 		map1.put("Ncode","2000");
 	 map1.put("code","200");
@@ -485,6 +485,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		map1.put("Ncode","402");
 	 map1.put("code","402");
 	 map1.put("msg","黑名单用户");
+	 map1.put("prompt","您暂时不符合我们的要求");
 	 return map1;
     }
     

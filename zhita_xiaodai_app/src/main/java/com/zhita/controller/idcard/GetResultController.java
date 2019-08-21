@@ -304,9 +304,12 @@ public class GetResultController {
     @RequestMapping("/getauthenticationSteps")
     @ResponseBody
     @Transactional
-    public String getauthenticationSteps(int userId){  	
+    public Map<String, Object> getauthenticationSteps(int userId){  
+    	Map<String, Object> map  = new HashMap<String, Object>();
     		String authenticationSteps = UserAttestationService.getauthenticationSteps(userId);
-		return authenticationSteps;
+    		map.put("authenticationSteps",authenticationSteps);
+    		map.put("Ncode","2000");
+		return map;
     }
     
 }
