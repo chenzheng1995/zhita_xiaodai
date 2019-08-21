@@ -117,8 +117,8 @@
 		where userId = #{userId} and phone = #{phone}
 	</update>
   
-    		<select id="getCertificationnumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		select certification_number from three_elements where userId=#{userId}
+    		<select id="getCertificationnumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select certification_number from three_elements where userId=#{userId} and  phone = #{phone}
 	</select>
   
   

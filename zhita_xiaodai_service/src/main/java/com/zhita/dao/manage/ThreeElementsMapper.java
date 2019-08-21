@@ -23,7 +23,7 @@ public interface ThreeElementsMapper {
 
 	void updateThreeElements(@Param("userId")int userId,@Param("code") String code,@Param("trans_id") String trans_id,@Param("certification_number") int certification_number,@Param("phone") String phone);
 
-	int getCertificationnumber(int userId);
+	int getCertificationnumber(@Param("userId")int userId,@Param("phone") String phone);
 
 	String getcode(@Param("userId")int userId,@Param("phone") String phone);
 }

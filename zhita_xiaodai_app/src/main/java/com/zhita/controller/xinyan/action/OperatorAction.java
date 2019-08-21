@@ -149,7 +149,8 @@ public class OperatorAction extends HttpServlet {
 		base64str=base64str.replaceAll("\r\n", "");//重要 避免出现换行空格符
 		/** rsa加密 **/
 //		String pfxpath = Config.getWebRoot() + "key\\" + Config.getConstants().get("pfx.name");// 商户私钥
-		String pfxpath = "D:\\dhj_xinyan_pri\\dhj_xinyan_pri.pfx";// 商户私钥
+		String pfxpath = "E:\\dhj_xinyan_pri\\dhj_xinyan_pri.pfx";// 商户私钥
+//		String pfxpath = "/cert/dhj_xinyan_pri.pfx";// 商户私钥
 		File pfxfile = new File(pfxpath);
 		if (!pfxfile.exists()) {
 
