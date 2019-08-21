@@ -501,12 +501,12 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	 String code = jsonObject.getString("code");
 	 if("0".equals(code)) {
 		 int certification_number =0;
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
-			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		}		 
 			map1.put("Ncode","2000");
 		 map1.put("code","200");
@@ -516,15 +516,15 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 
 	 }
 	 if("1".equals(code)) {
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
 			 int certification_number = 1;
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
 		 int certification_number = threeElementsMapper.getCertificationnumber(userId);
 		 certification_number = certification_number+1;
-		 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+		 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		 if(certification_number>2) {
 			 intUserService.updateifBlacklist(userId);
 			 String date = System.currentTimeMillis()+"";
@@ -539,13 +539,13 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	 }
 	 if("2".equals(code)) {
 		 int certification_number =0;
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
 			 certification_number = threeElementsMapper.getCertificationnumber(userId);
-			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		}	
 		 map1.put("Ncode","407");
 		 map1.put("code","407");
@@ -554,13 +554,13 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	 }
 	 if("9".equals(code)) {
 		 int certification_number =0;
-		 int num =  threeElementsMapper.getnum(userId);
+		 int num =  threeElementsMapper.getnum(userId,phone);
 		 if(num==0) {
-			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.setThreeElements(userId,code,trans_id,certification_number,phone);
 		 }
 		 if(num>0) {
 			 certification_number = threeElementsMapper.getCertificationnumber(userId);
-			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number);
+			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
 		}	
 		 map1.put("Ncode","409");
 		 map1.put("code","409");

@@ -10,13 +10,16 @@ public class ThreeElements {
     private Integer certificationNumber;
 
     private String merchantCode;
+    
+    private String phone;
 
-    public ThreeElements(Integer id, Integer userid, String code, Integer certificationNumber, String merchantCode) {
+    public ThreeElements(Integer id, Integer userid, String code, Integer certificationNumber, String merchantCode,String phone) {
         this.id = id;
         this.userid = userid;
         this.code = code;
         this.certificationNumber = certificationNumber;
         this.merchantCode = merchantCode;
+        this.phone = phone;
     }
 
     public ThreeElements() {
@@ -61,5 +64,14 @@ public class ThreeElements {
 
     public void setMerchantCode(String merchantCode) {
         this.merchantCode = merchantCode == null ? null : merchantCode.trim();
+    }
+    
+    
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
     }
 }

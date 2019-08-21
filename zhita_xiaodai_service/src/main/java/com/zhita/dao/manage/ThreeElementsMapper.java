@@ -17,11 +17,11 @@ public interface ThreeElementsMapper {
 
     int updateByPrimaryKey(ThreeElements record);
 
-	int getnum(int userId);
+	int getnum(@Param("userId")int userId,@Param("phone") String phone);
 
-	void setThreeElements(@Param("userId")int userId,@Param("code") String code,@Param("trans_id") String trans_id,@Param("certification_number") int certification_number);
+	void setThreeElements(@Param("userId")int userId,@Param("code") String code,@Param("trans_id") String trans_id,@Param("certification_number") int certification_number,@Param("phone") String phone);
 
-	void updateThreeElements(@Param("userId")int userId,@Param("code") String code,@Param("trans_id") String trans_id,@Param("certification_number") int certification_number);
+	void updateThreeElements(@Param("userId")int userId,@Param("code") String code,@Param("trans_id") String trans_id,@Param("certification_number") int certification_number,@Param("phone") String phone);
 
 	int getCertificationnumber(int userId);
 
