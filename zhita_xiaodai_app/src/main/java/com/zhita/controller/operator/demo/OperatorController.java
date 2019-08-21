@@ -9,24 +9,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.LogManager;
-
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.istack.internal.logging.Logger;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import com.sun.org.apache.xml.internal.utils.IntVector;
 import com.zhita.controller.xinyan.action.OperatorAction;
 import com.zhita.dao.manage.ThreeElementsMapper;
 import com.zhita.dao.manage.ZhimiRiskMapper;
-import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.manconsettings.IntManconsettingsServcie;
