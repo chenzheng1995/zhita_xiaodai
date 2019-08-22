@@ -345,24 +345,28 @@ public class LoginController {
 
  			}
 				if (id == null) {
-					String registrationTime = System.currentTimeMillis() + ""; // 获取当前时间戳
-					String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
-					int merchantId = intSourceService.getsourceId(sourceName);
-					int num = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
-							registrationTime, merchantId, useMarket, operatorsAuthentication);
-					if (num == 1) {
-						id = loginService.getId(newPhone, companyId); // 获取该用户的id
-						map.put("Ncode","2000");
-						map.put("msg", "用户登录成功，数据插入成功");
-						map.put("code", "201");
-						map.put("loginStatus", loginStatus);
-						map.put("userId", id);
-						map.put("phone", phone);
-					} else {
-						map.put("Ncode","405");
-						map.put("msg", "用户登录失败，用户数据插入失败");
-						map.put("code", "405");
-					}
+//					String registrationTime = System.currentTimeMillis() + ""; // 获取当前时间戳
+//					String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
+//					int merchantId = intSourceService.getsourceId(sourceName);
+//					int num = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
+//							registrationTime, merchantId, useMarket, operatorsAuthentication);
+//					if (num == 1) {
+//						id = loginService.getId(newPhone, companyId); // 获取该用户的id
+//						map.put("Ncode","2000");
+//						map.put("msg", "用户登录成功，数据插入成功");
+//						map.put("code", "201");
+//						map.put("loginStatus", loginStatus);
+//						map.put("userId", id);
+//						map.put("phone", phone);
+//					} else {
+//						map.put("Ncode","405");
+//						map.put("msg", "用户登录失败，用户数据插入失败");
+//						map.put("code", "405");
+//					}
+					map.put("Ncode","2000");
+					map.put("code", "201");
+					map.put("msg", "该用户还没注册");
+					
 				} else {
 					MD5Util md5Util = new MD5Util();
 					String dataMd5Pwd = loginService.getMd5pwd(newPhone, companyId);
