@@ -232,6 +232,7 @@ public class PromoteController {
         String fileName = format.format(new Date()) + UUID.randomUUID().toString() + ".JPG";// 文件原名称
         // 判断文件类型
         String path = "D://nginx-1.14.2/html/dist/H5Code/" + fileName;
+//        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;
         FolderUtil folderUtil = new FolderUtil();
         try {
             folderUtil.uploadImage(inputStream, path);
@@ -239,6 +240,7 @@ public class PromoteController {
             e.printStackTrace();
         }
         return "http://tg.rong51dai.com/H5Code/" + fileName;
+//        return "http://139.129.102.60:8081/H5Code/" + fileName;
     }
     
     private int getRandomCode() {
