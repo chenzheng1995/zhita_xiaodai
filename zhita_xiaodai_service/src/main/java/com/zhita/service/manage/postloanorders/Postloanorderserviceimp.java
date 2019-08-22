@@ -816,8 +816,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}else{
 			orders.get(i).setRealtime("/");
 		}
-		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
-		
 		
 		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
 		if(orders.get(i).getSurplus_money()!=null){
