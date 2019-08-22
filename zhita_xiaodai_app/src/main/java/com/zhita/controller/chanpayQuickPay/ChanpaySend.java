@@ -207,7 +207,6 @@ public class ChanpaySend extends BaseParameter{
 		}
 		}else{
 			map1.put("msg", "金额异常");
-			map1.put("AAA", j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 			map1.put("code", 0);
 			map1.put("Ncode", 0);
 		}

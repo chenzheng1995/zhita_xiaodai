@@ -156,7 +156,8 @@
 		
 		
 		<select id="SelectOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestSum
+			select o.id,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.interestPenaltySum,
+			ord.makeLoans,ord.interestSum,ord.InterestInAll,ord.realityAccount,ord.interestInAll
 			from orders o,user u,orderdetails ord
 			<where>
 				o.userId = u.id 
@@ -488,7 +489,8 @@
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
-			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay
+			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.orderStatus
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid

@@ -1356,7 +1356,7 @@ public class ChanpayQuickCollection {
 	
 	public static void main(String[] args) {
 		ChanpayQuickCollection test = new ChanpayQuickCollection();
-		
+		test.nmg_biz_api_auth_req(134, "6214835901884138", "420621199905157170", "东新雨", "13487139655", 1);
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
@@ -1367,7 +1367,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
-		test.SelectCompany("");
+	//	test.SelectCompany("");
 	//	test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询

@@ -250,8 +250,10 @@ public class FinanceServiceimp implements FinanceService{
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
 					ordetails.setDefeNum(defe.getDefeNum());
 					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestSum()));
+					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					map.put("aaa", ordetails.getInterestPenaltySum());
 					map.put("Orderdetails", ordetails);
+					
 				}else{
 					map.put("Orderdetails", "无数据");
 					map.put("Deferred", 0);
