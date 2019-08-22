@@ -109,13 +109,13 @@ public class Timestamps {
 //			// TODO: handle exception
 //		}
 		 try {
-			 String a = dateToStamp1("2019-08-12 06:00:00");
+			 String a = dateToStamp1("2019-08-21 14:36:59");
 			 String b = dateToStamp1("2019-08-12 23:59:59");
 			 System.out.println("时间:"+a+"AA"+b);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		 System.out.println(stampToDate("1566284969364"));
+		 System.out.println(stampToDate("1565336243000"));
 		
 		 
 	} 

@@ -21,6 +21,17 @@ public class Sys_user {
 	private String status;
 	
 	private String deleted;
+	
+	private String roleName;
+	
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 
 	public Integer getUserId() {
 		return userId;

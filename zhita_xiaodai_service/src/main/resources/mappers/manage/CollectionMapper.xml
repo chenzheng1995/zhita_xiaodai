@@ -55,8 +55,9 @@
 		</select>
 		
 		
-		<select id="CollectionAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Sys_user">
-			select * from sys_user where companyId = #{companyId} and 
+		<select id="CollectionAll" parameterType="com.zhita.model.manage.Sys_user" resultType="com.zhita.model.manage.Sys_user">
+			select * from sys_user where companyId = #{companyId} and userId in (select userId from sysuser_role where roleId in
+			 (select roleId from role where roleName like CONCAT('%',#{roleName},'%')  ))
 		</select>
 		
 		

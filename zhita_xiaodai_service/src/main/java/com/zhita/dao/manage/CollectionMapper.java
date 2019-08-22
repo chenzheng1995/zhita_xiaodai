@@ -22,7 +22,7 @@ public interface CollectionMapper {
 	List<Orderdetails> Allorderdetails(Collection coll);
 	
 	
-	List<Sys_user> CollectionAll(Integer companyId);
+	List<Sys_user> CollectionAll(Sys_user sys);
 	
 	
 	Integer addCollection(List<Collection> list);
