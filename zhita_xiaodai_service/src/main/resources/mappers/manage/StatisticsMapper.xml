@@ -92,7 +92,7 @@
 			
 			
 			<insert id="AddPaymentRecord" parameterType="com.zhita.model.manage.Payment_record">
-				INSERT INTO `Payment_record`
+				INSERT INTO `payment_record`
 				(
 				orderId,
 				remittanceTime,
@@ -108,7 +108,7 @@
 			
 			
 			<update id="UpdatePaymentrecord" parameterType="com.zhita.model.manage.Payment_record" >
-				update Payment_record set orderId = #{orderId} where pipelinenumber = #{pipelinenumber}
+				update payment_record set orderId = #{orderId} where pipelinenumber = #{pipelinenumber}
 			</update>
 			
 			
