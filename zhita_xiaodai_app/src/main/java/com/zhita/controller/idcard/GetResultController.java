@@ -263,9 +263,14 @@ public class GetResultController {
     @RequestMapping("/setface")
     @ResponseBody
     @Transactional
-    public Map<String, Object> setface(int userId,String code){
+    public Map<String, Object> setface(int userId,String code,String facePhoto,String idcard_number) throws Exception{
     	Map<String, Object> map = new HashMap<String, Object>();
-
+    	String facePhotoPath = null;// 人脸照
+	    Base64ToInputStream base64ToInputStream = new Base64ToInputStream();
+	    InputStream stream = base64ToInputStream.BaseToInputStream(facePhoto);
+		String path = "xiaodai_idcard/"+idcard_number+"facePhoto"+".jpg";
+		OssUtil ossUtil = new OssUtil();
+	    facePhotoPath = ossUtil.uploadFile(stream, path);
     	if("200".equals(code)) {
     		String authenticationSteps ="2";
     		int number = UserAttestationService.updateAuthenticationSteps(userId,authenticationSteps);

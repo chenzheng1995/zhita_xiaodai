@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.Lifecycle;
 import org.springframework.stereotype.Controller;
@@ -276,7 +277,6 @@ public class OrdersController {
 		   String AcctNo = (String) map2.get("bankcardName");//卡号
 		   String CardBegin = AcctNo.substring(0,6);//卡号前6位
 		   String CardEnd = AcctNo.substring(AcctNo.length()-4,AcctNo.length());//卡号前4位
-		   map.put("TrxId", TrxId);
 		   map.put("CardBegin", CardBegin);
 		   map.put("CardEnd", CardEnd);
 		   map.put("bankcardTypeName",bankcardTypeName);
@@ -286,6 +286,32 @@ public class OrdersController {
 		   
 	   }
 	   
+	   
+	   
+	   @RequestMapping("/getrepaymenttwo")
+	   @ResponseBody
+	   @Transactional
+	   public Map<String, Object> getrepaymenttwo(int userId,int companyId) {
+		   Map<String, Object> map  = new HashMap<String, Object>();		
+		   map.put("Ncode","2000");
+           Map<String, Object> map2 = bankcardMapper.getbankcard(userId);
+           if (map2==null) {
+			map.put("code","405");
+			map.put("msg","没有银行卡");
+		}else {
+	           int bankcardTypeId = (int) map2.get("bankcardTypeId");
+	           String bankcardTypeName = bankcardTypeMapper.getbankcardTypeName(bankcardTypeId);//银行卡类型
+			   String AcctNo = (String) map2.get("bankcardName");//卡号
+			   map.put("bankcardTypeName",bankcardTypeName);
+			   map.put("AcctNo",AcctNo);
+			   map.put("code","200");
+			   map.put("msg","成功");
+		}
+
+		return map;
+		   
+	   }
+	   	   
 
 //还款按钮
    @RequestMapping("/reimbursement")
