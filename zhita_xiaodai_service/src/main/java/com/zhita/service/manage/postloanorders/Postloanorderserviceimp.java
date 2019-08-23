@@ -635,7 +635,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		if(orders.get(i).getSurplus_money()==null){
 			orders.get(i).setSurplus_money(new BigDecimal(0));
 		}
-		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
+		orders.get(i).setOrder_money(ca.add(orders.get(i).getInterestPenaltySum()));//应还总金额
 		
 		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));
 		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
