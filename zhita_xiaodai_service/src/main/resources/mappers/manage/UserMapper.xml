@@ -38,7 +38,7 @@
     ut.homeAddressLatitude, ut.detailAddress, ut.headUrl, ut.nationalEmblemUrl, ut.linkmanOneRelation, 
     ut.linkmanOneName, ut.linkmanOnePhone, ut.linkmanTwoRelation, ut.linkmanTwoName, ut.linkmanTwoPhone, 
     ut.faceBizToken, ut.idCardBizToken, ut.sign, ut.gender, ut.nationality, ut.birth_year birthYear, ut.birth_month, 
-    ut.birth_day, ut.address, ut.issued_by,ut.valid_date_start, ut.valid_date_end
+    ut.birth_day, ut.address, ut.issued_by,ut.valid_date_start, ut.valid_date_end, ut.facePhoto
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

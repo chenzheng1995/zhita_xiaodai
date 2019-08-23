@@ -409,6 +409,8 @@ public class FinanceServiceimp implements FinanceService{
 			under.get(i).setOffinetransfertime(Timestamps.stampToDate(under.get(i).getOffinetransfertime()));
 			if(under.get(i).getState().equals("支出")){
 				under.get(i).setThname(padao.LoanName(under.get(i).getChannel()));
+			}else if(under.get(i).getState().equals("收入")){
+				under.get(i).setThname(padao.RepaymentName(under.get(i).getChannel()));
 			}
 		}
 		map.put("Undertheline", under);

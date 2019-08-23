@@ -579,11 +579,10 @@
   			
   			
   			<select id="AllUnderthe" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Offlinetransfer">
-  				select of.id,of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,th.name as thname,of.state,of.money
-  				 from Offlinetransfer of,sys_user sy,repayment_setting th
+  				select of.id,of.offinetransfertime,sy.account,of.projectname,of.remarks,of.number,of.state,of.money,of.channel
+  				 from Offlinetransfer of,sys_user sy
   				<where>
-  					th.id = of.channel
-  					AND of.sys_userId = sy.userId
+  					 of.sys_userId = sy.userId
   					AND sy.companyId = #{companyId}
   					<if test="repaymentnumber != null and repaymentnumber != ''">
   						AND of.number LIKE concat('%',#{repaymentnumber},'%')
@@ -964,7 +963,9 @@
   			
   			
   			
-  			
+  			<select id="RepaymentName" parameterType="java.lang.Integer" resultType="java.lang.String">
+  				select name from repayment_setting where id= #{channel}
+  			</select>
 
  
 </mapper>
