@@ -53,6 +53,26 @@ public class Repayment {
 	
 	private String reoaybtai;
 	
+	private String cardnumber;//银行卡号
+	
+	private Integer userId;
+	
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public String getCardnumber() {
+		return cardnumber;
+	}
+
+	public void setCardnumber(String cardnumber) {
+		this.cardnumber = cardnumber;
+	}
+
 	public String getReoaybtai() {
 		return reoaybtai;
 	}

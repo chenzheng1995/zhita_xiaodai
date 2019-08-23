@@ -79,6 +79,6 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
     </bean>  
 
-	   <import resource="spring-shiro.xml"/> 
+	 <!--   <import resource="spring-shiro.xml"/>  -->
 	   
 </beans>  

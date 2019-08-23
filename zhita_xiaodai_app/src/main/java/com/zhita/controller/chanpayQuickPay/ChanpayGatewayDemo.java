@@ -334,7 +334,7 @@ public class ChanpayGatewayDemo {
 	 *            私钥
 	 * @throws Exception 
 	 */
-	public void gatewayPost(Map<String, String> origMap, String charset, String MERCHANT_PRIVATE_KEY)  {
+	public String gatewayPost(Map<String, String> origMap, String charset, String MERCHANT_PRIVATE_KEY)  {
 		String result="";
 		try {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
@@ -345,7 +345,7 @@ public class ChanpayGatewayDemo {
 				e.printStackTrace();
 			}
 			System.out.println(result);
-		
+		return result;
 		
 	}
 	/**
@@ -558,10 +558,10 @@ public class ChanpayGatewayDemo {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
 		// 2.1 鉴权绑卡  业务参数
-		String trxId = "15657674630131592345";
+		String trxId = "15657674630a131592345";
 		origMap.put("TrxId", trxId);// 订单号
-		origMap.put("OriAuthTrxId", "1565767463013");// 原鉴权绑卡订单号
-		origMap.put("SmsCode", "794598");// 鉴权短信验证码
+		origMap.put("OriAuthTrxId", "20190823101120505431982");// 原鉴权绑卡订单号
+		origMap.put("SmsCode", "497776");// 鉴权短信验证码
 		origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
@@ -761,13 +761,13 @@ public class ChanpayGatewayDemo {
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
 		origMap.put("MerchantNo", "200005640044");// 子商户号
-		origMap.put("MerUserId", "101"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", "29"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", "623668");// 卡号前6位
-		origMap.put("CardEnd", "0813");// 卡号后4位
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
-		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
+		String as = this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
 
 	/**

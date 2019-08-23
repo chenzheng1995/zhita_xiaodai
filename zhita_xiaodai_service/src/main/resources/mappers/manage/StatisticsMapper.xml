@@ -45,10 +45,11 @@
 					repaymentDate,
 					thirdparty_id,
 					collectionMemberId,
+					cardnumber,
 					pipelinenumber,
 					statu,
 					reoaybtai
-				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{collectionMemberId},#{pipelinenumber},#{statu},#{reoaybtai})
+				)VALUES(#{orderid},#{repaymentMoney},#{repaymentDate},#{thirdparty_id},#{collectionMemberId},#{cardnumber},#{pipelinenumber},#{statu},#{reoaybtai})
 			</insert>
 			
 			<select id="SelectDefeDay" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -101,9 +102,10 @@
 				thirdparty_id,
 				paymentmoney,
 				paymentbtiao,
+				cardnumber,
 				pipelinenumber,
 				deleted
-				)VALUES(#{orderId},#{remittanceTime},#{professionalWork},#{status},#{thirdparty_id},#{paymentmoney},#{paymentbtiao},#{pipelinenumber},#{deleted})
+				)VALUES(#{orderId},#{remittanceTime},#{professionalWork},#{status},#{thirdparty_id},#{paymentmoney},#{paymentbtiao},#{cardnumber},#{pipelinenumber},#{deleted})
 			</insert>
 			
 			
@@ -306,5 +308,10 @@
 			
 			<select id="SelectOrders" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 				select id from orders where userId = #{userId} and orderStatus != "3"
+			</select>
+			
+			
+			<select id="Cardnumber" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select bankcardName from bankcard where userId= #{userId}
 			</select>
 </mapper>

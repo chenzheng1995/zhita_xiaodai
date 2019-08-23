@@ -204,13 +204,13 @@ public class ChanpaySend extends BaseParameter{
 		pay.setPipelinenumber(returnchanpay.getPartnerId());
 		pay.setDeleted("0");
 		pay.setPaymentmoney(actualAmountReceived);
-		
+		pay.setCardnumber(ban.getBankcardName());
 		
 		String statu = returnchanpay.getAcceptStatus();
 		if(statu.equals("S")){
 			
 			pay.setStatus("支付成功");
-			String pipelnen = "lsn_"+returnchanpay.getPartnerId();
+			String pipelnen = "lsn_"+returnchanpay.getTradeDate()+returnchanpay.getTradeTime();
 			pay.setPipelinenumber(pipelnen);
 			pay.setOrderNumber(orderNumber);
 			Integer addId = chanser.AddPayment_record(pay);
