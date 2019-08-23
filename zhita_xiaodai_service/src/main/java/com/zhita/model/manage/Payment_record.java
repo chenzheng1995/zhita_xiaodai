@@ -51,6 +51,16 @@ public class Payment_record {
 	
 	private String thname;
 	
+	private String cardnumber;//银行卡号
+	
+	public String getCardnumber() {
+		return cardnumber;
+	}
+
+	public void setCardnumber(String cardnumber) {
+		this.cardnumber = cardnumber;
+	}
+
 	public String getThname() {
 		return thname;
 	}
