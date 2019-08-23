@@ -157,28 +157,12 @@ public class TestController {
 		TuoMinUtil tm = new TuoMinUtil();
 		//System.out.println(tm.mobileEncrypt(p.decryption("6376462xx82")));
 		//System.out.println(p.decryption("90667926x29"));
-		//System.out.println(p.encryption("188715526523365"));
+		System.out.println(p.encryption("15652456230"));
 		/*String province="山西省稷山县蔡村乡杨村第九居民组";
 		System.out.println(province.substring(0,3));*/
 		//System.out.println(Timestamps.stampToDate(null));
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		List<Integer> list=new ArrayList<>();
-		list.add(1);
-		list.add(2);
-		list.add(3);
-		list.add(4);
-		list.add(5);
-		int todayoverdue=0;//今日逾期已还笔数
-		for (int j = 0; j < list.size(); j++) {
-			if(list.get(j)>2){
-				todayoverdue++;
-			}
-		}
-		System.out.println(todayoverdue);
-		BigDecimal payrecmoney=new BigDecimal("50");
-		BigDecimal repaymoney=new BigDecimal("60");
-		BigDecimal realymoney = payrecmoney.subtract(repaymoney);//实际收益
-		System.out.println(realymoney+"----");
+		
 		
 	}
 }
