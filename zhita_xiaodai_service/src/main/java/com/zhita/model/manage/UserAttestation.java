@@ -70,6 +70,8 @@ public class UserAttestation {
     private Integer age;//年龄
     
     private String province;//省份
+    
+    private String facePhoto;//人脸识别现拍的人脸照的url
 
 	public Integer getId() {
 		return id;
@@ -349,6 +351,14 @@ public class UserAttestation {
 
 	public void setProvince(String province) {
 		this.province = province;
+	}
+
+	public String getFacePhoto() {
+		return facePhoto;
+	}
+
+	public void setFacePhoto(String facePhoto) {
+		this.facePhoto = facePhoto;
 	}
    
 }
