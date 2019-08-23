@@ -55,9 +55,9 @@
   </select>
   <!-- admin    系统用户    添加功能 -->
   <insert id="insert" useGeneratedKeys="true" keyProperty="userid" parameterType="com.zhita.model.manage.SysUser" >
-    insert into sys_user (companyId, account,pwd, phone)
+    insert into sys_user (companyId, account, phone)
     values (#{companyid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
-      #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR})
+     #{phone,jdbcType=VARCHAR})
   </insert>
   <!-- admin    系统用户    添加功能（用户选择了角色，需要向中间表插入数据）-->
   <insert id="insertRole" parameterType="java.lang.Integer">
@@ -154,7 +154,6 @@
     update sys_user
     set companyId = #{companyid,jdbcType=VARCHAR},
       account = #{account,jdbcType=VARCHAR},
-      pwd = #{pwd,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR}
     where userId = #{userid,jdbcType=INTEGER}
   </update>
