@@ -124,4 +124,6 @@ public interface StatisticsDao {
 	
 	
 	String Cardnumber(Integer userId);
+	
+	
 }
