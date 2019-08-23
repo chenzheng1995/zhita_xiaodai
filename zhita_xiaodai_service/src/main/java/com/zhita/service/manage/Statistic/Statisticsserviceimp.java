@@ -243,6 +243,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	@Override
 	public Integer AddRepayment(Repayment repay) {
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		repay.setCardnumber(sdao.Cardnumber(repay.getUserId()));
 		try {
 			repay.setRepaymentDate(Timestamps.dateToStamp(sim.format(new Date())));
 		} catch (Exception e) {

@@ -121,4 +121,9 @@ public interface StatisticsDao {
 	
 	
 	Integer SelectOrders(Integer userId);
+	
+	
+	String Cardnumber(Integer userId);
+	
+	
 }

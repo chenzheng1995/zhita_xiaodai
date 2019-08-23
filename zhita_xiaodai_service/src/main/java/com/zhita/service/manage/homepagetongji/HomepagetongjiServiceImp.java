@@ -185,7 +185,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			BigDecimal queryshouldMoneyfor=listdetail.get(i).getShouldReapyMoney().add(listdetail.get(i).getInterestPenaltySum());
 			shouldMoney=shouldMoney.add(queryshouldMoneyfor);
 		}
-		BigDecimal realymoney = payrecmoney.subtract(repaymoney);//实际收益
+		BigDecimal realymoney = repaymoney.subtract(payrecmoney);//实际收益
 		
 		/**
 		 * 期限内数据

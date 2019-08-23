@@ -70,4 +70,6 @@ public interface Chanpayservice {
 	
 	Integer SelectOrdersId(Integer userId);
 
+	
+	String SelectBankName(Integer userId);
 }

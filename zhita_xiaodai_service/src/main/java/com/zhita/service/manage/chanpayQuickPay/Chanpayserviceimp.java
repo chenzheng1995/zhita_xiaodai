@@ -210,6 +210,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Integer SelectOrdersId(Integer userId) {
 		return stdao.SelectOrders(userId);
 	}
+
+	@Override
+	public String SelectBankName(Integer userId) {
+		return stdao.Cardnumber(userId);
+	}
 	
 	
 	

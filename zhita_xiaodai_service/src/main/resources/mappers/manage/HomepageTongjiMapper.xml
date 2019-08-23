@@ -135,7 +135,7 @@
 	</select>
 	<!--后台管理      累计应收总金额  -->
 	<select id="queryshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
-		select od.shouldReapyMoney,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0}
+		select od.shouldReapyMoney,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus!=3
 	</select>
 	
 	<!--  ============期限内数据===============-->
