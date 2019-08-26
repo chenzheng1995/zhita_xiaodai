@@ -46,6 +46,8 @@ public interface UserAttestationService {
 
 	List<Integer> getuserId(String idCard);
 
+	int updatefacePhoto(int userId, String facePhotoPath);
+
 
 
 

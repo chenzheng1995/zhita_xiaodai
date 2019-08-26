@@ -592,7 +592,7 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
    	Map<String, Object> map3 =  userAttestationService.getuserAttestation(userId);
    	String idcard_number =(String) map3.get("idcard_number");
    	String address = (String) map3.get("address");
-   	int number = intWhitelistuserService.getWhitelistuser(newphone,idcard_number);
+   	int number = intWhitelistuserService.getWhitelistuser(phone1,idcard_number);
    	if(number!=0) {
     	   shareOfState ="2";
     	   intUserService.updateScore1(userId,shareOfState);

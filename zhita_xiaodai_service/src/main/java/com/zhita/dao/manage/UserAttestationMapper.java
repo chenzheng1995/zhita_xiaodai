@@ -60,4 +60,6 @@ public interface UserAttestationMapper {
 
 	List<Integer> getuserId(String idCard);
 
+	int updatefacePhoto(@Param("userId")int userId,@Param("facePhotoPath") String facePhotoPath);
+
 }
