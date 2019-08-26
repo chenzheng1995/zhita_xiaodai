@@ -217,6 +217,7 @@ public class ChanpaySend extends BaseParameter{
 			try {
 				addId = chanser.AddPayment_record(pay);
 			} catch (Exception e) {
+				intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 				map1.put("code", "203");
 				map1.put("desc", "已放款,未保存");
 				map1.put("Ncode", 2000);
