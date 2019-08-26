@@ -65,6 +65,7 @@ public class OrdersController {
 	BankcardTypeMapper bankcardTypeMapper;
 	
 	
+	
 
 	//获取用户借款额度
 	   @RequestMapping("/getCanBorrowLines")
@@ -124,29 +125,60 @@ public class OrdersController {
 	    	 Map<String, Object> map1 = new HashMap<String, Object>();	
 	    	 map1.put("Ncode","2000");
 	    	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
-	    	BigDecimal ll = new BigDecimal(0);
-	    	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//借款期限
-	    	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
-	    	int platformfeeRatio =  ((int) map.get("platformfeeRatio"));//平台服务费比率
-	        BigDecimal pr = new BigDecimal(0);
-	        pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
-	        BigDecimal bd8 = new BigDecimal("100");
-	        pr = pr.divide(bd8);//平台服务费比率除以100之后
-	        BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费	        
-	    	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
-	    	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
-	    	BigDecimal shouldTotalAmount = (((finalLine.multiply(averageDailyInterest1)).multiply(ll)).add(finalLine)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内应还总金额
-	    	BigDecimal totalInterest =((finalLine.multiply(averageDailyInterest1)).multiply(ll)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内总利息
-	    	BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
-	    	map1.put("code", 200);
-	    	map1.put("lifeOfLoan", lifeOfLoan);
-	    	map1.put("averageDailyInterest1", averageDailyInterest1);
-	    	map1.put("finalLine", finalLine);
-	    	map1.put("platformServiceFee", platformServiceFee);
-	    	map1.put("shouldTotalAmount", shouldTotalAmount);
-	    	map1.put("actualAmountReceived", actualAmountReceived);
-	    	map1.put("totalInterest", totalInterest);
-	    	map1.put("averageDailyInterest", averageDailyInterest);
+	    	String borrowingScheme = (String) map.get("borrowingScheme");
+	    	if("1".equals(borrowingScheme)) {
+		    	BigDecimal ll = new BigDecimal(0);
+		    	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//借款期限
+		    	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
+		    	int platformfeeRatio =  ((int) map.get("platformfeeRatio"));//平台服务费比率
+		        BigDecimal pr = new BigDecimal(0);
+		        pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
+		        BigDecimal bd8 = new BigDecimal("100");
+		        pr = pr.divide(bd8);//平台服务费比率除以100之后
+		        BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费	        
+		    	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
+		    	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
+		    	BigDecimal shouldTotalAmount = (((finalLine.multiply(averageDailyInterest1)).multiply(ll)).add(finalLine)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内应还总金额
+		    	BigDecimal totalInterest =((finalLine.multiply(averageDailyInterest1)).multiply(ll)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内总利息
+		    	BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee).setScale(2,BigDecimal.ROUND_HALF_UP); //实际到账金额
+		    	map1.put("code", 200);
+		    	map1.put("lifeOfLoan", lifeOfLoan);
+		    	map1.put("averageDailyInterest1", averageDailyInterest1);
+		    	map1.put("finalLine", finalLine);
+		    	map1.put("platformServiceFee", platformServiceFee);
+		    	map1.put("shouldTotalAmount", shouldTotalAmount);
+		    	map1.put("actualAmountReceived", actualAmountReceived);
+		    	map1.put("totalInterest", totalInterest);
+		    	map1.put("averageDailyInterest", averageDailyInterest);
+		    	return map1;
+	    	}
+	    	
+	    	if("2".equals(borrowingScheme)) {
+		    	BigDecimal ll = new BigDecimal(0);
+		    	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//借款期限
+		    	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
+		    	int platformfeeRatio =  ((int) map.get("platformfeeRatio"));//平台服务费比率
+		        BigDecimal pr = new BigDecimal(0);
+		        pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
+		        BigDecimal bd8 = new BigDecimal("100");
+		        pr = pr.divide(bd8);//平台服务费比率除以100之后
+		        BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费	        
+		    	BigDecimal averageDailyInterest = (BigDecimal) map.get("averageDailyInterest");//贷款期限日均利息
+		    	BigDecimal averageDailyInterest1 = averageDailyInterest.divide(bd8);//贷款期限日均利息除以100之后
+		    	BigDecimal shouldTotalAmount = (((finalLine.multiply(averageDailyInterest1)).multiply(ll)).add(finalLine).add(platformServiceFee)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内应还总金额
+		    	BigDecimal totalInterest =((finalLine.multiply(averageDailyInterest1)).multiply(ll)).setScale(2,BigDecimal.ROUND_HALF_UP);//期限内总利息
+		    	BigDecimal actualAmountReceived = finalLine; //实际到账金额
+		    	map1.put("code", 200);
+		    	map1.put("lifeOfLoan", lifeOfLoan);
+		    	map1.put("averageDailyInterest1", averageDailyInterest1);
+		    	map1.put("finalLine", finalLine);
+		    	map1.put("platformServiceFee", platformServiceFee);
+		    	map1.put("shouldTotalAmount", shouldTotalAmount);
+		    	map1.put("actualAmountReceived", actualAmountReceived);
+		    	map1.put("totalInterest", totalInterest);
+		    	map1.put("averageDailyInterest", averageDailyInterest);
+	    	}
+
 			return map1;
 	    	
 	    	
@@ -277,6 +309,7 @@ public class OrdersController {
 		   String AcctNo = (String) map2.get("bankcardName");//卡号
 		   String CardBegin = AcctNo.substring(0,6);//卡号前6位
 		   String CardEnd = AcctNo.substring(AcctNo.length()-4,AcctNo.length());//卡号前4位
+		   map.put("TrxId", TrxId);
 		   map.put("CardBegin", CardBegin);
 		   map.put("CardEnd", CardEnd);
 		   map.put("bankcardTypeName",bankcardTypeName);

@@ -226,7 +226,7 @@
   
            <!--获取OrdersId-->
 	 <select id="getlastLine" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select makeLoans from orderdetails where  orderId = #{ordersId}
+		select realityBorrowMoney from orderdetails where  orderId = #{ordersId}
 	 </select> 
  
    	<insert id="setororderdetails" parameterType="java.util.Map">

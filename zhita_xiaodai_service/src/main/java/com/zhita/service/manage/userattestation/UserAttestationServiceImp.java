@@ -118,6 +118,12 @@ public class UserAttestationServiceImp implements UserAttestationService{
 		return list;
 	}
 
+	@Override
+	public int updatefacePhoto(int userId, String facePhotoPath) {
+		int num = userAttestationMapper.updatefacePhoto(userId,facePhotoPath);
+		return num;
+	}
+
 
 
 

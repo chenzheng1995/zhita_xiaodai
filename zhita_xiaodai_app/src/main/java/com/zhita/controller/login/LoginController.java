@@ -108,6 +108,23 @@ public class LoginController {
 		}
 
 	}
+	
+//	//生成token，用于用户一个账号只能用一个手机号登录
+//	/**
+//	 * @param phone         手机号
+//	 * @param code          验证码
+//	 * @param company       公司名
+//	 * @param registeClient 软件类型
+//	 * @return
+//	 */
+//	@RequestMapping("/loginToken")
+//	@ResponseBody
+//	public Map<String, String> loginToken(String phone, int companyId,String phoneModels) {
+//		Map<String, String> map = new HashMap<>();
+//
+//		
+//
+//	}
 
 	// 验证码登陆
 

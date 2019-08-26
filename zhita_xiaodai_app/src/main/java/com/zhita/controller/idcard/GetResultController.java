@@ -265,12 +265,6 @@ public class GetResultController {
     @Transactional
     public Map<String, Object> setface(int userId,String code,String facePhoto,String idcard_number) throws Exception{
     	Map<String, Object> map = new HashMap<String, Object>();
-    	String facePhotoPath = null;// 人脸照
-	    Base64ToInputStream base64ToInputStream = new Base64ToInputStream();
-	    InputStream stream = base64ToInputStream.BaseToInputStream(facePhoto);
-		String path = "xiaodai_idcard/"+idcard_number+"facePhoto"+".jpg";
-		OssUtil ossUtil = new OssUtil();
-	    facePhotoPath = ossUtil.uploadFile(stream, path);
     	if("200".equals(code)) {
     		String authenticationSteps ="2";
     		int number = UserAttestationService.updateAuthenticationSteps(userId,authenticationSteps);
@@ -284,6 +278,23 @@ public class GetResultController {
 				map.put("msg", "插入失败");
 			}
     	}
+    	String facePhotoPath = null;// 人脸照
+	    Base64ToInputStream base64ToInputStream = new Base64ToInputStream();
+	    InputStream stream = base64ToInputStream.BaseToInputStream(facePhoto);
+		String path = "xiaodai_idcard/"+idcard_number+"facePhoto"+".jpg";
+		OssUtil ossUtil = new OssUtil();
+	    facePhotoPath = ossUtil.uploadFile(stream, path);
+	    int num = UserAttestationService.updatefacePhoto(userId,facePhotoPath);
+	    if(num==1) {
+         	map.put("Ncode","2000");
+	    		map.put("code", 201);
+	    		map.put("msg","更新成功");
+	    	}else {
+	    		map.put("Ncode","406");
+				map.put("code",405);
+				map.put("msg", "更新失败");
+			}
+
 		return map;
     }
     
