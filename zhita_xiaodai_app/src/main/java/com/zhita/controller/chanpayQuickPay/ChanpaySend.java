@@ -213,7 +213,16 @@ public class ChanpaySend extends BaseParameter{
 			String pipelnen = "lsn_"+returnchanpay.getTradeDate()+returnchanpay.getTradeTime();
 			pay.setPipelinenumber(pipelnen);
 			pay.setOrderNumber(orderNumber);
-			Integer addId = chanser.AddPayment_record(pay);
+			Integer addId = null;
+			try {
+				addId = chanser.AddPayment_record(pay);
+			} catch (Exception e) {
+				map1.put("code", "203");
+				map1.put("desc", "已放款,未保存");
+				map1.put("Ncode", 2000);
+				return map1;
+			}
+			
 			if(addId != null){
 				
 				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
