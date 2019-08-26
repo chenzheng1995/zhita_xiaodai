@@ -108,7 +108,7 @@ public class ChanpaySend extends BaseParameter{
 		if(chanpaysenduserid.equals(String.valueOf(userId))){
 			map1.put("code", "205");
 			map1.put("Ncode", 0);
-			map1.put("msg", "您已有订单");
+			map1.put("msg", "系统错误,无法借款");
 			return map1;
 		}else{
 		
