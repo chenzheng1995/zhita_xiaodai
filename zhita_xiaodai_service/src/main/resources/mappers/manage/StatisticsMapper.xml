@@ -314,4 +314,9 @@
 			<select id="Cardnumber" parameterType="java.lang.Integer" resultType="java.lang.String">
 				select bankcardName from bankcard where userId= #{userId}
 			</select>
+			
+			
+			<select id="SelectBorrowing" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select borrowingScheme from borrow_money_message where companyId = #{companyId}
+			</select>
 </mapper>

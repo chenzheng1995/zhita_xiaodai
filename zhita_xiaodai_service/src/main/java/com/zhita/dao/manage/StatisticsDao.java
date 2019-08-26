@@ -126,4 +126,5 @@ public interface StatisticsDao {
 	String Cardnumber(Integer userId);
 	
 	
+	String SelectBorrowing(Integer companyId);
 }

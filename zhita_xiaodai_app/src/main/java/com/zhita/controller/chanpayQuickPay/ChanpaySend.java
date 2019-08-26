@@ -93,18 +93,24 @@ public class ChanpaySend extends BaseParameter{
 		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
 		Integer id = chanser.SelectOrdersId(userId);
 		String borrowingScheme = chanser.SelectBorrowing(companyId);
-		if(borrowingScheme.equals("1")){
-			
-		}
+		BigDecimal actualAmountReceived = null;
+		BigDecimal acmoney = null;
+		Integer j = null;
 		int platformfeeRatio =  ((int) map2.get("platformfeeRatio"));//平台服务费比率
 		Double pladata = platformfeeRatio*0.01;
 		BigDecimal pr = new BigDecimal(0);
 		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
 		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
-		BigDecimal actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
-		BigDecimal acmoney = new BigDecimal(TransAmt);
-		Integer j = actualAmountReceived.compareTo(acmoney);
+		
+		if(borrowingScheme.equals("1")){
+		actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
+		acmoney = new BigDecimal(TransAmt);
+		j = actualAmountReceived.compareTo(acmoney);
 		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
+		}else if(borrowingScheme.equals("2")){
+		BigDecimal sa = new BigDecimal(TransAmt);
+		j = shouldTotalAmount.compareTo(sa);
+		}
 		
 		String chanpaysenduserid = redis.get("ChanpaySenduserId");
 		if(chanpaysenduserid != null){
