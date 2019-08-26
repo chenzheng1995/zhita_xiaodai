@@ -92,6 +92,10 @@ public class ChanpaySend extends BaseParameter{
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
 		Integer id = chanser.SelectOrdersId(userId);
+		String borrowingScheme = chanser.SelectBorrowing(companyId);
+		if(borrowingScheme.equals("1")){
+			
+		}
 		int platformfeeRatio =  ((int) map2.get("platformfeeRatio"));//平台服务费比率
 		Double pladata = platformfeeRatio*0.01;
 		BigDecimal pr = new BigDecimal(0);

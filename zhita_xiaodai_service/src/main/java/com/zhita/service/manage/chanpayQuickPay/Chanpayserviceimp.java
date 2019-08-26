@@ -215,6 +215,12 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public String SelectBankName(Integer userId) {
 		return stdao.Cardnumber(userId);
 	}
+
+	@Override
+	public String SelectBorrowing(Integer companyId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

@@ -630,7 +630,7 @@ public class ChanpayGatewayDemo {
 		origMap = setCommonMap(origMap);
 		origMap.put("Service", "nmg_zft_api_quick_payment");// 支付接口名称
 		// 2.2 业务参数
-		origMap.put("TrxId", "1563984000000");// 订单号
+		origMap.put("TrxId", "DD_1563984000000CA");// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
 		origMap.put("MerUserId", "1");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200005640044");// 子账户号
@@ -761,11 +761,11 @@ public class ChanpayGatewayDemo {
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
 		origMap.put("MerchantNo", "200005640044");// 子商户号
-		origMap.put("MerUserId", "29"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", "155"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", "621483");// 卡号前6位
-		origMap.put("CardEnd", "4138");// 卡号后4位
+		origMap.put("CardBegin", "621700");// 卡号前6位
+		origMap.put("CardEnd", "6842");// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
 		String as = this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}

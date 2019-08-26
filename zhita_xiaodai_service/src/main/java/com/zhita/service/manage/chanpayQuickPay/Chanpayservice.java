@@ -72,4 +72,7 @@ public interface Chanpayservice {
 
 	
 	String SelectBankName(Integer userId);
+	
+	
+	String SelectBorrowing(Integer companyId);
 }
