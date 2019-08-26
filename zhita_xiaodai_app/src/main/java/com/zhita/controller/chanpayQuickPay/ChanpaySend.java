@@ -61,8 +61,7 @@ public class ChanpaySend extends BaseParameter{
 		IntBorrowmonmesService intBorrowmonmesService;
 		
 		
-		@Autowired
-		RedisClientUtil redis;
+		
 		
 	
 		
@@ -88,8 +87,7 @@ public class ChanpaySend extends BaseParameter{
 			BigDecimal shouldTotalAmount,BigDecimal totalInterest,BigDecimal averageDailyInterest){
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
 		String time = sin.format(new Date());
-		String start_time = time+" 00:00:00";
-		String end_time = time+" 23:59:59";
+		RedisClientUtil redis = new RedisClientUtil();
 		String a =  chanser.loanSetStatu(companyId);//放款状态  1  开启    2 关闭
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
@@ -105,7 +103,7 @@ public class ChanpaySend extends BaseParameter{
 		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 		
 		String chanpaysenduserid = redis.get("ChanpaySenduserId");
-		if(chanpaysenduserid.equals(String.valueOf(userId))){
+		if(chanpaysenduserid != null){
 			map1.put("code", "205");
 			map1.put("Ncode", 0);
 			map1.put("msg", "系统错误,无法借款");
@@ -123,8 +121,8 @@ public class ChanpaySend extends BaseParameter{
 		
 		ord.setCompanyId(companyId);
 		try {
-			ord.setStart_time(Timestamps.dateToStamp1(start_time));
-			ord.setEnd_time(Timestamps.dateToStamp1(end_time));
+			ord.setStart_time(Timestamps.dateToStamp1(time+" 00:00:00"));
+			ord.setEnd_time(Timestamps.dateToStamp1(time+" 23:59:59"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
