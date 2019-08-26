@@ -11,10 +11,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
@@ -27,6 +29,7 @@ import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
+import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 
 
@@ -56,6 +59,12 @@ public class ChanpaySend extends BaseParameter{
 		
 		@Autowired
 		IntBorrowmonmesService intBorrowmonmesService;
+		
+		
+		@Autowired
+		RedisClientUtil redis;
+		
+	
 		
 	
 	
@@ -95,7 +104,13 @@ public class ChanpaySend extends BaseParameter{
 		Integer j = actualAmountReceived.compareTo(acmoney);
 		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
 		
-		
+		String chanpaysenduserid = redis.get("ChanpaySenduserId");
+		if(chanpaysenduserid.equals(String.valueOf(userId))){
+			map1.put("code", "205");
+			map1.put("Ncode", 0);
+			map1.put("msg", "您已有订单");
+			return map1;
+		}else{
 		
 		if(j==0 || j==1){//j = 0 证明 actualAmountReceived == acmoney j = 1 actualAmountReceived > acmoney
 			
@@ -217,7 +232,7 @@ public class ChanpaySend extends BaseParameter{
 			try {
 				addId = chanser.AddPayment_record(pay);
 			} catch (Exception e) {
-				intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
+				redis.set("ChanpaySenduserId", String.valueOf(userId));
 				map1.put("code", "203");
 				map1.put("desc", "已放款,未保存");
 				map1.put("Ncode", 2000);
@@ -239,6 +254,7 @@ public class ChanpaySend extends BaseParameter{
 						map1.put("ShortReturn", returnchanpay);
 						map1.put("code", 200);
 						map1.put("Ncode", 2000);
+						redis.delkey("ChanpaySenduserId");
 			    		map1.put("msg","借款成功");
 			    		map1.put("desc","插入成功");
 			    	}else {
@@ -293,6 +309,7 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("msg", "金额异常");
 			map1.put("code", 401);
 			map1.put("Ncode", 0);
+		}
 		}
 		
 		return map1;
