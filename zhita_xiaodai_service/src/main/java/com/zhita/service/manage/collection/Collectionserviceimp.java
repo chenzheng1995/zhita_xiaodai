@@ -74,6 +74,7 @@ public class Collectionserviceimp implements Collectionservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(companyId != null){
 			Sys_user sy = new Sys_user();
+			sy.setCompanyId(companyId);
 			sy.setRoleName("催收");
 			List<Sys_user> col = collmapp.CollectionAll(sy);
 			map.put("collection_member", col);

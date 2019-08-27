@@ -186,8 +186,13 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{
 				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
 			}
-			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
+			
 			ordeids.get(i).setDeferAfterReturntime(defe.getDeferAfterReturntime());
+			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
+			ordeids.get(i).setDefeNum(defe.getDefeNum());//延期次数
+			if(defe.getInterestOnArrears() == null){
+				defe.setInterestOnArrears(new BigDecimal(0));
+			}
 			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());
 			String jiephone = p.decryption(ordeids.get(i).getPhone());//解密手机号
 			ordeids.get(i).setPhone(tm.mobileEncrypt(jiephone));//脱敏
@@ -623,7 +628,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
-		
+		TuoMinUtil tm = new TuoMinUtil();
 		if(defe.getDeferAfterReturntime()!=null){
 			if(defe.getDeferAfterReturntime().length()!=0){
 				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
@@ -657,7 +662,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}else{
 			orders.get(i).setRealtime("/");
 		}
-		
+		orders.get(i).setPhone(tm.mobileEncrypt(orders.get(i).getPhone()));
 		System.out.println("渠道名:"+orders.get(i).getSourceName()+"手机号:"+orders.get(i).getPhone()+"订单时间:"+orders.get(i).getOrderCreateTime()+"实还时间:"+orders.get(i).getRealtime());
 		}
 		map.put("Orderdetails", orders);

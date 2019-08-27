@@ -373,7 +373,7 @@
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
 			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,
-			ov.statu
+			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate
 			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom	
 			<where>
 				o.id = ord.orderId 
@@ -490,7 +490,7 @@
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
-			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.orderStatus
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid
