@@ -120,6 +120,8 @@ public class SourceServiceImp implements IntSourceService{
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
+		String company=sourceMapper.querycompany(companyId);
+		SimpleDateFormat sft1=new SimpleDateFormat("yyyy/MM/dd");
 		if((discount.equals(record.getDiscount())==false)){//等于false  说明折扣率被修改了
 			Date d=new Date();
 			SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
@@ -141,10 +143,10 @@ public class SourceServiceImp implements IntSourceService{
 				String cvr = null;//转化率
 				float disAppnum=0;//折扣申请数
 				
-				if (redisClientUtil.getSourceClick(companyId + record.getSourcename() + date + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + record.getSourcename() + date + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey"));
 				}
 				
 				if (appnum >= 30) {
@@ -182,10 +184,10 @@ public class SourceServiceImp implements IntSourceService{
 				String cvr = null;//转化率
 				float disAppnum=0;//折扣申请数
 				
-				if (redisClientUtil.getSourceClick(companyId + record.getSourcename() + date + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + record.getSourcename() + date + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey"));
 				}
 				
 				if (appnum >= 30) {
@@ -254,6 +256,8 @@ public class SourceServiceImp implements IntSourceService{
     public void selAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
     	Integer companyId=3;
+    	String company=sourceMapper.querycompany(companyId);
+		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
     	List<Source> list=sourceMapper.queryAll(companyId);//查询出当前公司下的所有渠道（所有渠道的集合list）
     	for (int i = 0; i < list.size(); i++) {
     		Integer sourceid=list.get(i).getId();//渠道id
@@ -300,10 +304,10 @@ public class SourceServiceImp implements IntSourceService{
     					String cvr = null;//转化率
     					float disAppnum=0;//折扣申请数
     					
-    					if (redisClientUtil.getSourceClick(companyId + sourceName + intersectionlist.get(m) + "daichaoKey") == null) {
+    					if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(intersectionlist.get(m)) + "daichaoKey") == null) {
     						uv = 0;
     					} else {
-    						uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName + intersectionlist.get(m) + "daichaoKey"));
+    						uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(intersectionlist.get(m)) + "daichaoKey"));
     					}
     					
     					if (appnum >= 30) {
@@ -356,10 +360,10 @@ public class SourceServiceImp implements IntSourceService{
 				String cvr = null;
 				float disAppnum=0;//折扣申请数
 					
-				if (redisClientUtil.getSourceClick(companyId + sourceName + dateyes + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(dateyes) + "daichaoKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(companyId + sourceName + dateyes + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(dateyes) + "daichaoKey"));
 				}
 				
 				if (appnum >= 30) {
@@ -517,6 +521,11 @@ public class SourceServiceImp implements IntSourceService{
 	public Source queryByAccAndPwd(String account){
 		Source source=sourceMapper.queryByAccAndPwd(account);
 		return source;
-		
+	}
+	
+	//后台管理---根据公司id查询公司名字
+	public String querycompany(Integer companyid){
+		String company=sourceMapper.querycompany(companyid);
+		return company;
 	}
 }
