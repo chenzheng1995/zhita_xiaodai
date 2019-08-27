@@ -145,7 +145,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			for (int i = 0; i < ordeids.size(); i++) {
 				ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
 				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
-				ordeids.get(i).setRealtime(Timestamps.stampToDate1(ordeids.get(i).getRealtime()));
+				ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
 				ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate1(ordeids.get(i).getOrderCreateTime()));
 				String op = p.decryption(ordeids.get(i).getPhone());
 				ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
