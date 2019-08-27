@@ -38,12 +38,14 @@ public class SourceTongjiController {
 	@ResponseBody
 	@RequestMapping("/queryByToday")
 	public Map<String,Object> queryByToday(Integer companyId,Integer page)throws ParseException{
+		String company=intSourceService.querycompany(companyId);
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourcepage = new ArrayList<>();//经过分页后的数据集合
 		PageUtil2 pageUtil=null;
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		Date date=new Date();//得到当天时间
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
 		String today=sf.format(date);//(当天时间——年月日格式)
 		
 		String startTime = today;
@@ -59,10 +61,10 @@ public class SourceTongjiController {
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
 			int uv=0;
 			String cvr=null;
-			if (redisClientUtil.getSourceClick(companyid + sourcename + today + "daichaoKey") == null) {
+			if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "daichaoKey") == null) {
 				uv = 0;
 			} else {
-				uv = Integer.parseInt(companyid + sourcename + today + "daichaoKey");
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "daichaoKey"));
 			}
 			listsource.get(i).setUv(uv);//uv
 			if ((registernum < 0.000001) || (uv == 0)) {
@@ -135,6 +137,8 @@ public class SourceTongjiController {
 	@ResponseBody
 	@RequestMapping("/queryByTimeslot")
 	public Map<String,Object> queryByTimeslot(Integer companyId,Integer page,String dateStart,String dateEnd,Integer sourceid) throws ParseException{
+		String company=intSourceService.querycompany(companyId);
+		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourcepage = new ArrayList<>();//经过分页后的数据集合
 		PageUtil2 pageUtil=null;
@@ -157,10 +161,10 @@ public class SourceTongjiController {
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {
 				int uvi=0;
-				if (redisClientUtil.getSourceClick(companyid + sourcename + listdate.get(j) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(j)) + "daichaoKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(companyid + sourcename + listdate.get(j) + "daichaoKey");
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(j)) + "daichaoKey"));
 				}
 				uv=uv+uvi;
 			}
@@ -228,6 +232,8 @@ public class SourceTongjiController {
 	@ResponseBody
 	@RequestMapping("/queryAllPageDetail")
 	public List<TongjiSorce> queryAllPageDetail(Integer companyId,Integer sourceid, String dateStart,String dateEnd) throws ParseException {
+		String company=intSourceService.querycompany(companyId);
+		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
 		List<TongjiSorce> listsource = new ArrayList<>();
@@ -258,10 +264,10 @@ public class SourceTongjiController {
 				String sourcename=tongjiSorce.getSourcename();//渠道名称
 				int uv=0;
 				String cvr=null;
-				if (redisClientUtil.getSourceClick(companyId + sourcename + listdate.get(i) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(i)) + "daichaoKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(companyId + sourcename + listdate.get(i) + "daichaoKey");
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(i)) + "daichaoKey"));
 				}
 				tongjiSorce.setUv(uv);
 				if ((registernum < 0.000001) || (uv == 0)) {

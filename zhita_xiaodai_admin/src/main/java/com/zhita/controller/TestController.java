@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mysql.fabric.xmlrpc.base.Array;
+import com.zhita.controller.chanpayquickpay.chanpaycollection;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.PhoneDeal;
@@ -86,6 +88,25 @@ public class TestController {
 			System.out.println("看到的数据脱敏");
 		}
 	}
+	
+	
+	public static String getShouldReturned(int day) {
+	    Date date = new Date();//取时间 
+	    Calendar calendar  =   Calendar.getInstance();		 
+	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+	    calendar.add(Calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
+	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+	    System.out.println(sdf.format(date));
+	    try {
+			date =sdf.parse(sdf.format(date));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String shouldReturned= (date.getTime()+86399000)+"";//应还日时间戳
+	    return shouldReturned;
+   }
 	
 	
 	public static void main(String[] args) throws ParseException {
@@ -163,6 +184,19 @@ public class TestController {
 		//System.out.println(Timestamps.stampToDate(null));
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		String shouldReturned = getShouldReturned(5-1);
+		System.out.println(shouldReturned+"----------");
 		
-	}
+		
+		 //Date date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);//取时间  
+	      Calendar calendar  =   Calendar.getInstance();		
+		    //calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+		   // calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
+		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		    Date date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		    String afterTime = sdf1.format(date);//延期后应还时间
+		    System.out.println(afterTime+"******");
+		
+		
+	}	
 }
