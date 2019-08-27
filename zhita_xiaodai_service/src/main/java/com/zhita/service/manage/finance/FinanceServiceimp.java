@@ -249,7 +249,7 @@ public class FinanceServiceimp implements FinanceService{
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
 					ordetails.setDefeNum(defe.getDefeNum());
-					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestSum()));
+					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestSum()));//放款金额 + 利息
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					map.put("aaa", ordetails.getInterestPenaltySum());
 					map.put("Orderdetails", ordetails);

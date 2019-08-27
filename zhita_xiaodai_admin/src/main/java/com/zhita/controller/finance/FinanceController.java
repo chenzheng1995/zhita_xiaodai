@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Offlinedelay;
@@ -17,7 +16,6 @@ import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
-import com.zhita.model.manage.PriceTongji;
 import com.zhita.model.manage.Thirdpricefind;
 import com.zhita.service.manage.finance.FinanceService;
 

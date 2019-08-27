@@ -277,7 +277,12 @@ public class OperationalServiceimp implements OperationalService{
 			
 			System.out.println(orders.getGesamtbetraguberfallNum()+"AAA"+orders.getGesamtbetragderNum());
 			if(ord.getGesamtbetraguberfallNum() !=null && orders.getGesamtbetragderNum()!=null){
-				ord.setCollectionData((double) ((ord.getGesamtbetraguberfallNum()/ord.getGesamtbetragderNum())*100));
+				if(ord.getGesamtbetragderNum() != 0){
+					ord.setCollectionData((double) ((ord.getGesamtbetraguberfallNum()/ord.getGesamtbetragderNum())*100));
+				}else{
+					ord.setCollectionData((double) 0);
+				}
+				
 			}else{
 				ord.setCollectionData((double) 0);
 			}
