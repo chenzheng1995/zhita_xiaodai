@@ -166,7 +166,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(order.getPhone() != null){
-			order.setPhone(p.encryption(order.getPhone()));
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
 		}
 		TuoMinUtil tm = new TuoMinUtil();
 		System.out.println(order.getCompanyId());
