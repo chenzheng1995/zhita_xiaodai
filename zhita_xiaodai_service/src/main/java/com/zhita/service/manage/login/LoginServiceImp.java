@@ -2,14 +2,12 @@ package com.zhita.service.manage.login;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.SysUser;
-import com.zhita.model.manage.User;
 
 @Service
 public class LoginServiceImp implements IntLoginService{
