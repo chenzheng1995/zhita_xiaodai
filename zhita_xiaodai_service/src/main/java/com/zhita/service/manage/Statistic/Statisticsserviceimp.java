@@ -261,7 +261,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	 */
 	@Override
 	public Integer UpdateOrders(Orders ord) {
-		ord = sdao.SelectOrderId(ord.getOrderNumber());//根据编号查询订单ID
 		Integer id = sdao.UpdateOrders(ord);//
 		if(id != null){
 			Integer delaytimes = 0;
@@ -316,6 +315,11 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	public void SelectId(String orderNumber) {
 	Orders	ord = sdao.SelectOrderId(orderNumber);//根据编号查询订单ID
 		System.out.println(ord.getCompanyId()+ord.getId()+ord.getUserId());
+	}
+
+	@Override
+	public Integer SelectReaymentOrderId(String orderNumber) {
+		return sdao.SelectRepaymentOrderId(orderNumber);
 	}
 		
 		

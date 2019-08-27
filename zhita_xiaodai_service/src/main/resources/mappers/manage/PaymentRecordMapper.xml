@@ -355,12 +355,16 @@
   
   
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  					select o.orderStatus,ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,
-  					o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
-  					o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum
-					from source d,user u,orders o,orderdetails ord,user_attestation us,payment_record pay
+  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,
+					 o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
+					 o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum
+					from orders o left JOIN user u on o.userId = u.id 
+					LEFT JOIN source d on d.id = u.sourceId
+					LEFT JOIN orderdetails ord on o.id = ord.orderid
+					LEFT JOIN user_attestation us on us.userId = u.id
+					LEFT JOIN payment_record pay on o.id = pay.orderId
   					<where>
-  					 o.orderStatus not like "3" 
+  					 o.orderStatus != "3"
   					 and pay.orderId = o.id
   					 and us.userId = u.id
   					 AND o.userId = u.id  
@@ -619,7 +623,7 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
-  				Group by u.fina_id
+  				Group by u.id
   				limit #{page},#{pagesize}
   			</select>
   			
@@ -854,8 +858,9 @@
   					orderId,
   					fina_id,
   					offusermoney,
-  					remarks
-  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks})
+  					remarks,
+  					sedn_time
+  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks},#{sedn_time})
   			</insert>
   			
   			
@@ -890,16 +895,15 @@
   			
   			
   			<select id="Allofflinedelay" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
-  				select of.id,of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,of.extensionfee,of.remarks,
-				of.delay_time,defe.deferAfterReturntime
-  				from offlinedelay of,orders o,orderdetails ord,user u,user_attestation usa,sys_user us,deferred defe
+  				select of.id,of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,
+  				of.extensionfee,of.remarks,of.delay_time
+  				from offlinedelay of,orders o,orderdetails ord,user u,user_attestation usa,sys_user us
   				<where>
   					of.sys_userId = us.userId 
   					AND u.id = o.userId 
   					AND o.id = of.orderId 
   					AND usa.userId = u.id
 					AND ord.orderId = o.id
-					AND defe.orderid = o.id
   					and o.companyId = #{companyId}
   					<if test="orderId != null and orderId != ''">
   						and of.orderId = #{orderId}
@@ -914,6 +918,7 @@
   						and of.operating_time between #{statu_time} and #{end_time}
   					</if>
   				</where>
+  				group by of.id
   				order by of.id desc
   				limit #{page},#{pagesize}
   			</select>
@@ -966,6 +971,20 @@
   			<select id="RepaymentName" parameterType="java.lang.Integer" resultType="java.lang.String">
   				select name from repayment_setting where id= #{channel}
   			</select>
+  			
+  			
+  			<update id="UpdateOrdermoney" parameterType="com.zhita.model.manage.Accountadjustment">
+  				update orderdetails set realityBorrowMoney = #{totalamount} where orderId = #{orderId}
+  			</update>
 
+
+			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
+				update orders set shouldReturnTime = #{delay_time} where orderId = #{orderId}
+			</select>
+			
+			
+			<update id="OrdersStatus" parameterType="com.zhita.model.manage.Offlinjianmian">
+				update orders set orderStatus = "3" where id = #{orderId}
+			</update>
  
 </mapper>
