@@ -175,4 +175,9 @@
   select count(phone) from whitelist_user where phone = #{newphone} and idcard = #{idcard_number} and deleted='0';
   </select>
   
+        <select id="getWhitelistuser1"  parameterType="java.lang.String" resultType="java.lang.Integer">
+  select count(phone) from whitelist_user where phone = #{phone} and idcard = #{idcard_number} and name=#{name} and deleted='0';
+  </select>
+  
+  
 </mapper>

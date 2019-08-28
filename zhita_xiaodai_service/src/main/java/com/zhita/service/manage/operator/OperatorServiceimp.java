@@ -20,8 +20,8 @@ public class OperatorServiceimp implements OperatorService{
 	}
 
 	@Override
-	public int setredIdAndPhone(String reqId, int userId, String phone) {
-		int number = operatorMapper.setredIdAndPhone(reqId,userId,phone);
+	public int setredIdAndPhone(String reqId, int userId, String phone,String authentime) {
+		int number = operatorMapper.setredIdAndPhone(reqId,userId,phone,authentime);
 		return number;
 	}
 
@@ -71,6 +71,12 @@ public class OperatorServiceimp implements OperatorService{
 	public String getphone(int userId) {
 		String phone1 = operatorMapper.getphone(userId);
 		return phone1;
+	}
+
+	@Override
+	public int setwhitelistuser(String attestationStatus, int userId, String authentime) {
+		int number = operatorMapper.setwhitelistuser(attestationStatus,userId,authentime);
+		return number;
 	}
 
 }

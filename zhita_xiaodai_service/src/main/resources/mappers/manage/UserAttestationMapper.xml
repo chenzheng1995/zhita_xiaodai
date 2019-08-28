@@ -443,7 +443,7 @@
 	
 	  				  	<!--APP 插入用户信息 -->
 	<insert id="insertUserAttestation" parameterType="java.util.Map">
-		insert into user_attestation (trueName,gender,nationality,birth_year,birth_month,birth_day,address,issued_by,valid_date_start,valid_date_end,headUrl,nationalEmblemUrl,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,userId)
+		insert into user_attestation (trueName,gender,nationality,birth_year,birth_month,birth_day,address,issued_by,valid_date_start,valid_date_end,headUrl,nationalEmblemUrl,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,userId,authentime)
 		values (#{name},
 		#{gender},
 		#{nationality},
@@ -461,7 +461,8 @@
 		#{homeAddressLatitude},
 		#{detailAddress},
 		#{authenticationSteps},
-		#{userId})
+		#{userId},
+		#{authentime})
 	</insert>
 	
 	

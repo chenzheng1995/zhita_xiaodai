@@ -386,5 +386,14 @@ public class FinanceController {
 		Map<String, Object> map=fianser.pricetongji(companyId, page, starttime, endtime);
 		return map;
 	}
+	
+	
+	
+	//查询线上调账记录
+	@ResponseBody
+	@RequestMapping("AllAccorders")
+	public Map<String, Object> AllAccorders(String orderNumber){
+		return fianser.SelectAccOrders(orderNumber);
+	}
 
 }

@@ -36,4 +36,6 @@ public interface IntWhitelistuserService {
 
 	public int getWhitelistuser(String newphone, String idcard_number);
 
+	public int getWhitelistuser1(String phone, String idcard_number, String name);
+
 }

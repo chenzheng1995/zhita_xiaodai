@@ -130,4 +130,7 @@ public interface StatisticsDao {
 	
 	
 	Integer SelectRepaymentOrderId(String orderNumber);
+	
+	
+	Integer UpdateRepaystatus(String pipelinenu);
 }

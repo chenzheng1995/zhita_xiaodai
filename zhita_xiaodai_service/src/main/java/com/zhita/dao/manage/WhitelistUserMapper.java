@@ -52,4 +52,6 @@ public interface WhitelistUserMapper {
     int updateByPhone(WhitelistUser record);
 
 	int getWhitelistuser(@Param("newphone")String newphone,@Param("idcard_number") String idcard_number);
+
+	int getWhitelistuser1(@Param("phone")String phone,@Param("idcard_number") String idcard_number,@Param("name") String name);
 }
