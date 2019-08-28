@@ -586,7 +586,9 @@ public Map<String, Object> getwhitelistuser(String phone,int userId,String name,
 	   	 if(num1==0) {
 	   		 String authentime =System.currentTimeMillis()+"";//认证时间
 	   	   	 int number = operatorService.setwhitelistuser(attestationStatus,userId,authentime);
-	         if (number == 1) {            
+	         if (number == 1) {
+	        	 String shareOfState = "2";
+	        	 intUserService.updateshareOfState(userId, shareOfState);
 	        	 map.put("Ncode","2000");
 	             map.put("msg", "数据插入成功");
 	             map.put("Code", "201");

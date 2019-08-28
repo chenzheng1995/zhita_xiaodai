@@ -475,7 +475,7 @@ select count(id) from orders where companyId = #{companyId} and userId = #{userI
  
          <!--获取OrdersId-->
  <select id="getOrdersId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-select id from orders where companyId = #{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+select id from orders where companyId = #{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
  </select> 
   
 
