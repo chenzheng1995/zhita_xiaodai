@@ -620,9 +620,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}
 		}
 		
-		order.setStatus1("2");
-		order.setStatus2("3");
-		order.setOrderStatus("3");
+		if(order.getStatus1()==null){
+			order.setStatus1("2");
+			order.setStatus2("3");
+		}else if(order.getStatus1().equals("2")){
+			order.setStatus2("2");
+		}else if(order.getStatus1().equals("3")){
+			order.setStatus2("3");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
