@@ -322,6 +322,6 @@
 			
 			
 			<select id="SelectRepaymentOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
-				select re.orderId from repayment re,orders o where o.id = re.orderId and o.orderNumber = #{orderNumber}
+				select re.orderId from repayment re,orders o where o.id = re.orderId and o.orderNumber = #{orderNumber} and statu = "成功"
 			</select>
 </mapper>

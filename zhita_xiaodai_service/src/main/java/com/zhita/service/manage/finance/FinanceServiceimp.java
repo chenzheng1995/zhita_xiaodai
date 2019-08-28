@@ -1,7 +1,6 @@
 package com.zhita.service.manage.finance;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
@@ -20,7 +18,6 @@ import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
-import com.zhita.model.manage.HomepageTongji;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;

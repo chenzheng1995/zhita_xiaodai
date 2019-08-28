@@ -887,83 +887,84 @@ public class ChanpayQuickCollection {
 	@ResponseBody
 	@RequestMapping("nmg_biz_api_quick_payment")
 	public Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt) {
-		Map<String, Object> map = new HashMap<String, Object>();	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
-			if(orderId != null){
+			if(orderId == null){
+			Map<String, String> origMap = new HashMap<String, String>();
+			// 2.1 基本参数 
+			origMap = setCommonMap(origMap);
+			origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
+			Repayment repay = new Repayment();//还账记录表
+			repay.setUserId(Integer.valueOf(MerUserId));
+			repay.setThirdparty_id(1);
+			repay.setOrderNumber(TrxId);
+			repay.setPipelinenumber(TrxId);
+			 BigDecimal bd=new BigDecimal(TrxAmt);   
+			repay.setRepaymentMoney(bd);
+			origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
+			origMap.put("OrdrName", ordrName);// 商品名称
+			origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
+			origMap.put("SellerId", "200005640044");// 子账户号
+			origMap.put("SubMerchantNo", "200005640044");// 子商户号
+			origMap.put("ExpiredTime", "40m");// 订单有效期
+			origMap.put("CardBegin", CardBegin);// 卡号前6位
+			origMap.put("CardEnd", CardEnd);// 卡号后4位
+			origMap.put("TrxAmt", TrxAmt);// 交易金额
+			origMap.put("TradeType", "11");// 交易类型
+			origMap.put("SmsFlag", "1");
+			String result = "";
+			try {
+				String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
+					result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+							urlStr);
+				ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
+				System.out.println("数据:"+retu.getTrxId());
+				String pipelinenu = "Rsn_"+retu.getTrxId();
+				repay.setPipelinenumber(pipelinenu);
+				String sa = retu.getAcceptStatus();
+				if(sa.equals("S")){
+					Integer a = servie.AddRepayment(repay);
+					if(a!=null){
+						map.put("Ncode", 2000);
+						map.put("ReturnChanpay", retu);
+						map.put("TrxId", TrxId);
+						map.put("code", 200);
+						map.put("msg", "插入成功");
+					}else{
+						repay.setStatu("失败");
+						map.put("ReturnChanpay", retu);
+						map.put("TrxId", TrxId);
+						map.put("Ncode", 0);
+						map.put("code", 0);
+						map.put("msg", "插入失败");
+						
+					}
+					
+				
+				
+				}else{
+					map.put("Ncode", 2000);
+					map.put("ReturnChanpay", retu);
+					map.put("msg", retu);
+				}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				System.out.println(result);
+			}else{
 				map.put("msg", "该订单已还");
 				map.put("Ncode", 2000);
 				map.put("code", 200);
 				return map;
 			}
-		Map<String, String> origMap = new HashMap<String, String>();
-		// 2.1 基本参数 
-		origMap = setCommonMap(origMap);
-		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
-		Repayment repay = new Repayment();//还账记录表
-		repay.setUserId(Integer.valueOf(MerUserId));
-		repay.setThirdparty_id(1);
-		repay.setOrderNumber(TrxId);
-		repay.setPipelinenumber(TrxId);
-		 BigDecimal bd=new BigDecimal(TrxAmt);   
-		repay.setRepaymentMoney(bd);
-		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
-		origMap.put("OrdrName", ordrName);// 商品名称
-		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
-		origMap.put("SellerId", "200005640044");// 子账户号
-		origMap.put("SubMerchantNo", "200005640044");// 子商户号
-		origMap.put("ExpiredTime", "40m");// 订单有效期
-		origMap.put("CardBegin", CardBegin);// 卡号前6位
-		origMap.put("CardEnd", CardEnd);// 卡号后4位
-		origMap.put("TrxAmt", TrxAmt);// 交易金额
-		origMap.put("TradeType", "11");// 交易类型
-		origMap.put("SmsFlag", "1");
-		String result = "";
-		try {
-			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-						urlStr);
-			ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
-			System.out.println("数据:"+retu.getTrxId());
-			String pipelinenu = "Rsn_"+retu.getTrxId();
-			repay.setPipelinenumber(pipelinenu);
-			String sa = retu.getAcceptStatus();
-			if(sa.equals("S")){
-				repay.setStatu("成功");
-				Integer a = servie.AddRepayment(repay);
-				if(a!=null){
-					map.put("Ncode", 2000);
-					map.put("ReturnChanpay", retu);
-					map.put("TrxId", TrxId);
-					map.put("code", 200);
-					map.put("msg", "插入成功");
-				}else{
-					repay.setStatu("失败");
-					map.put("ReturnChanpay", retu);
-					map.put("TrxId", TrxId);
-					map.put("Ncode", 0);
-					map.put("code", 0);
-					map.put("msg", "插入失败");
-					
-				}
-				
-			
-			
 			}else{
-				map.put("Ncode", 2000);
-				map.put("ReturnChanpay", retu);
-				map.put("msg", retu);
+				map.put("ReturnChanpay", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
+				map.put("code", 0);
+				map.put("Ncode", 0);
+				map.put("msg", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 			}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			System.out.println(result);
-		}else{
-			map.put("ReturnChanpay", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
-			map.put("code", 0);
-			map.put("Ncode", 0);
-			map.put("msg", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
-		}
 		return map;
 	}
 

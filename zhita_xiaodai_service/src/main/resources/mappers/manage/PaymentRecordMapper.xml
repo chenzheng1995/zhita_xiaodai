@@ -609,7 +609,8 @@
   					and o.companyId = sy.companyId
   					and o.id = u.orderId
   					and o.id = ord.orderId
-  					AND o.companyId = #{companyId}
+  					and o.companyId = #{companyId}
+  					and ua.id = o.userId
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
   					</if>
@@ -974,7 +975,7 @@
   			
   			
   			<update id="UpdateOrdermoney" parameterType="com.zhita.model.manage.Accountadjustment">
-  				update orderdetails set realityBorrowMoney = #{totalamount} where orderId = #{orderId}
+  				update orderdetails set shouldReapyMoney = #{totalamount} where orderId = #{orderId}
   			</update>
 
 
