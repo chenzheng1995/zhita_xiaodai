@@ -8,8 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -617,7 +620,20 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}
 		}
 		
+		List<Integer> ids = new ArrayList<Integer>();
 		order.setOrderStatus("3");
+		if(order.getTrueName()==null){
+			List<Integer> YihuanId = postloanorder.YiHuanOrderId(order);
+			List<Integer> defeId = postloanorder.DefeOrderId(order);
+			for(int i=0;i<defeId.size();i++){
+				YihuanId.add(defeId.get(i));
+			}
+		}else if(order.getTrueName().equals("")){//查询所有已还订单
+			List<Integer> YihuanId = postloanorder.YiHuanOrderId(order);
+		}else if(order.getTrueName().equals("")){//查询已延期订单
+			
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);

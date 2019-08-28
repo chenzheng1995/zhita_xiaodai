@@ -91,4 +91,7 @@ public interface FinanceService {
     
     //后台管理---费用统计
     Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime)throws ParseException;
+    
+    
+    Map<String, Object> SelectAccOrders(String orderNumber);
 }

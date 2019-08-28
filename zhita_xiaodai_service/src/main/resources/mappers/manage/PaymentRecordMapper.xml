@@ -209,7 +209,7 @@
   
   
   		  <select id="PaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,ord.realityBorrowMoney as paymentmoney,ra.pipelinenumber
+		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,re.paymentmoney,ra.pipelinenumber
 		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
 		  	 LEFT JOIN user u ON o.userId = u.id
 		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -435,11 +435,20 @@
   			
   			
   			
+  			<select id="SelectSumamountmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+  				select sum(amountmoney) from accountadjustment where orderId = #{orderId}
+  			</select>
+  			
+  			
+  			
+  			<select id="Maxtotalamount" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+  				select totalamount from accountadjustment where id = (select max(id) from accountadjustment where orderId = #{orderId} )
+  			</select>
   			
   			
   			
   			<select id="AllAccount" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.beoverdue,a.amou_time FROM	
+  				select o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.remarks,a.beoverdue,a.amou_time FROM	
   				repayment_setting re,user u,orders o,accountadjustment a
   				<where>
   					a.orderId = o.id 
@@ -609,7 +618,8 @@
   					and o.companyId = sy.companyId
   					and o.id = u.orderId
   					and o.id = ord.orderId
-  					AND o.companyId = #{companyId}
+  					and o.companyId = #{companyId}
+  					and ua.id = o.userId
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
   					</if>
@@ -974,7 +984,7 @@
   			
   			
   			<update id="UpdateOrdermoney" parameterType="com.zhita.model.manage.Accountadjustment">
-  				update orderdetails set realityBorrowMoney = #{totalamount} where orderId = #{orderId}
+  				update orderdetails set shouldReapyMoney = #{totalamount} where orderId = #{orderId}
   			</update>
 
 
@@ -986,5 +996,10 @@
 			<update id="OrdersStatus" parameterType="com.zhita.model.manage.Offlinjianmian">
 				update orders set orderStatus = "3" where id = #{orderId}
 			</update>
+			
+			
+			<select id="SelectAccOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Accountadjustment">
+				select a.* from accountadjustment a,orders o where o.orderNumber = #{orderNumber} and o.id = a.orderId
+			</select> 
  
 </mapper>

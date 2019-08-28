@@ -220,6 +220,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public String SelectBorrowing(Integer companyId) {
 		return stdao.SelectBorrowing(companyId);
 	}
+
+	@Override
+	public Integer UpdateRepayStatus(String pipelinenu) {
+		return stdao.UpdateRepaystatus(pipelinenu);
+	}
 	
 	
 	

@@ -61,10 +61,10 @@ public class SourceTongjiController {
 			Integer companyid=listsource.get(i).getCompanyid();//公司id
 			int uv=0;
 			String cvr=null;
-			if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "daichaoKey") == null) {
+			if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "xiaodaiKey") == null) {
 				uv = 0;
 			} else {
-				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "daichaoKey"));
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "xiaodaiKey"));
 			}
 			listsource.get(i).setUv(uv);//uv
 			if ((registernum < 0.000001) || (uv == 0)) {
@@ -138,7 +138,6 @@ public class SourceTongjiController {
 	@RequestMapping("/queryByTimeslot")
 	public Map<String,Object> queryByTimeslot(Integer companyId,Integer page,String dateStart,String dateEnd,Integer sourceid) throws ParseException{
 		String company=intSourceService.querycompany(companyId);
-		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
 		List<TongjiSorce> listsource = new ArrayList<>();
 		List<TongjiSorce> listsourcepage = new ArrayList<>();//经过分页后的数据集合
 		PageUtil2 pageUtil=null;
@@ -161,10 +160,10 @@ public class SourceTongjiController {
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {
 				int uvi=0;
-				if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(j)) + "daichaoKey") == null) {
-					uv = 0;
+				if (redisClientUtil.getSourceClick(company + sourcename + listdate.get(j).replace("-", "/") + "xiaodaiKey") == null) {
+					uvi = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(j)) + "daichaoKey"));
+					uvi = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + listdate.get(j).replace("-", "/") + "xiaodaiKey"));
 				}
 				uv=uv+uvi;
 			}
@@ -233,7 +232,6 @@ public class SourceTongjiController {
 	@RequestMapping("/queryAllPageDetail")
 	public List<TongjiSorce> queryAllPageDetail(Integer companyId,Integer sourceid, String dateStart,String dateEnd) throws ParseException {
 		String company=intSourceService.querycompany(companyId);
-		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
 		List<TongjiSorce> listsource = new ArrayList<>();
@@ -264,10 +262,10 @@ public class SourceTongjiController {
 				String sourcename=tongjiSorce.getSourcename();//渠道名称
 				int uv=0;
 				String cvr=null;
-				if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(i)) + "daichaoKey") == null) {
-					uv = 0;
-				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + sf1.format(listdate.get(i)) + "daichaoKey"));
+				if(redisClientUtil.getSourceClick(company+sourcename+listdate.get(i).replace("-", "/")+"xiaodaiKey")==null){
+					uv=0;
+				}else {
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + listdate.get(i).replace("-", "/") + "xiaodaiKey"));
 				}
 				tongjiSorce.setUv(uv);
 				if ((registernum < 0.000001) || (uv == 0)) {

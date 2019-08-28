@@ -25,6 +25,7 @@ import com.zhita.controller.chanpayquickpay.chanpaycollection;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
@@ -184,19 +185,19 @@ public class TestController {
 		//System.out.println(Timestamps.stampToDate(null));
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		String shouldReturned = getShouldReturned(5-1);
-		System.out.println(shouldReturned+"----------");
+		Date date=new Date();//得到当天时间
+		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
+		System.out.println(sf1.format(date));
 		
-		
-		 //Date date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);//取时间  
-	      Calendar calendar  =   Calendar.getInstance();		
-		    //calendar.setTime(date); //需要将date数据转移到Calender对象中操作
-		   // calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
-		    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-		    Date date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		    String afterTime = sdf1.format(date);//延期后应还时间
-		    System.out.println(afterTime+"******");
-		
+		String company="贷回家";
+		String sourcename="App";
+		List<String> listdate=new ArrayList<>();
+		listdate.add("2019-08-27");
+		RedisClientUtil r=new RedisClientUtil();
+		r.set("贷回家App2019/08/27xiaodaiKey", "34");
+		for (int j = 0; j < listdate.size(); j++) {
+			System.out.println(Integer.parseInt(r.getSourceClick(company + sourcename + listdate.get(j).replace("-", "/") + "xiaodaiKey")));
+		}
 		
 	}	
 }

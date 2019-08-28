@@ -175,4 +175,13 @@ public interface PaymentRecordMapper {
     
     
     Integer OrdersStatus(Offlinjianmian off);
+    
+    
+    BigDecimal SelectSumamountmoney(Integer orderId);
+    
+    
+    BigDecimal Maxtotalamount(Integer orderId);
+    
+    
+    List<Accountadjustment> SelectAccOrders(String orderNumber);
 }
