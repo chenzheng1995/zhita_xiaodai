@@ -237,9 +237,9 @@ public class SourceTongjiController {
 		List<TongjiSorce> listsource = new ArrayList<>();
 		
 		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
-		List<String> listregistetimedate=new ArrayList<>();//(用来存时间戳转换后的时间)
-		List<String> listregistetime=intSourceService.qeuryAllUserRegistetime(companyId);
-		for (int i = 0; i < listregistetime.size(); i++) {
+		//List<String> listregistetimedate=new ArrayList<>();//(用来存时间戳转换后的时间)
+		//List<String> listregistetime=intSourceService.qeuryAllUserRegistetime(companyId);
+		/*for (int i = 0; i < listregistetime.size(); i++) {
 			listregistetimedate.add(Timestamps.stampToDate1(listregistetime.get(i)));
 		}
 		HashSet h1 = new HashSet(listregistetimedate);
@@ -247,7 +247,7 @@ public class SourceTongjiController {
 		listregistetimedate.addAll(h1);
 		
 		listdate.retainAll(listregistetimedate);//两个集合的交集
-		
+*/		
 		for (int i = 0; i < listdate.size(); i++) {
 			String date=listdate.get(i);
 			String startTime = date;

@@ -9,7 +9,7 @@
     <result column="operationTime" property="operationtime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId,productid, howmanyDaysApart, operator, operationTime
+    id, companyId,productid, howmanyDaysApart, operator, operationTime,ifrestore
   </sql>
   <!-- 后台管理      添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.RetrialWindControl" >
@@ -74,7 +74,8 @@
    		 productid = #{productid,jdbcType=INTEGER},
       	 howmanyDaysApart = #{howmanydaysapart},
       	 operator = #{operator},
-      	 operationTime = #{operationtime}
+      	 operationTime = #{operationtime},
+      	 ifrestore = #{ifrestore}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

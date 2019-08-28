@@ -41,7 +41,7 @@ public interface HomepageTongjiMapper {
 	int queryToDayRepaymentbank(Integer companyId,String startTime,String endTime);
 	
 	//后台管理---今日逾期已还笔数***
-	List<Orders> queryToDayOverdue(Integer companyId,String startTime,String endTime);
+	int queryToDayOverdue(Integer companyId,String startTime,String endTime);
 	
 	//后台管理----今日放款总金额
 	BigDecimal queryToDayLoanTotalmoney(Integer companyId,String startTime,String endTime);

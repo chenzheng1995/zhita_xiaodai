@@ -620,20 +620,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}
 		}
 		
-		List<Integer> ids = new ArrayList<Integer>();
+		order.setStatus1("2");
+		order.setStatus2("3");
 		order.setOrderStatus("3");
-		if(order.getTrueName()==null){
-			List<Integer> YihuanId = postloanorder.YiHuanOrderId(order);
-			List<Integer> defeId = postloanorder.DefeOrderId(order);
-			for(int i=0;i<defeId.size();i++){
-				YihuanId.add(defeId.get(i));
-			}
-		}else if(order.getTrueName().equals("")){//查询所有已还订单
-			List<Integer> YihuanId = postloanorder.YiHuanOrderId(order);
-		}else if(order.getTrueName().equals("")){//查询已延期订单
-			
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);

@@ -21,7 +21,7 @@
 	</select>
 	<!-- 后台管理       今日回款笔数  （实还笔数）-->
 	<select id="queryToDayRepayment" resultType="java.lang.Integer">
-		select count(rp.id) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
+		select count(rp.id) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功" and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
 	</select>
 	<!-- 后台管理       今日回款笔数  （线上回款）-->
 	<select id="queryToDayRepaymentacc" resultType="java.lang.Integer">
@@ -36,8 +36,8 @@
 		select count(b.id) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理      今日逾期已还笔数 -->
-	<select id="queryToDayOverdue" resultType="com.zhita.model.manage.Orders">
-		select id,companyId,orderNumber,orderCreateTime,shouldReturnTime,realtime from orders where companyid=#{arg0} and realtime>=#{arg1} and realtime &lt;#{arg2} and orderStatus=3
+	<select id="queryToDayOverdue" resultType="java.lang.Integer">
+		select count(o.id) from orders o where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
 	</select>
 	<!--后台管理        今日放款总金额  -->
 	<select id="queryToDayLoanTotalmoney" resultType="java.math.BigDecimal">
@@ -45,7 +45,7 @@
 	</select>
 	<!-- 后台管理     今日回款总金额（实还金额） -->
 	<select id="queryToDayReturTotalmoney" resultType="java.math.BigDecimal">
-		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
+		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功" and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
 	</select>
 	<!-- 后台管理       今日回款总金额（延期费） -->
 	<select id="queryToDayDeffer" resultType="java.math.BigDecimal">
@@ -65,7 +65,7 @@
 	</select>
 	<!--后台管理     今日逾期已还金额     （用户实还金额）-->
 	<select id="queryToDayOverueTotalmoney" resultType="java.math.BigDecimal">
-		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{companyId} and rp.repaymentDate>=#{startTime} and rp.repaymentDate &lt;#{endTime} and o.shouldReturnTime &lt;#{startTime}
+		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{companyId} and rp.statu="成功" and rp.repaymentDate>=#{startTime} and rp.repaymentDate &lt;#{endTime} and o.shouldReturnTime &lt;#{startTime}
 	</select>
 	<!--后台管理     今日逾期已还金额     （线上减免已还）-->
 	<select id="queryToDayOverueTotalmoneyacc" resultType="java.math.BigDecimal">
@@ -107,7 +107,7 @@
 	
 	<!-- 后台管理     回款总笔数  （实还笔数）-->
 	<select id="querySumRepayment" resultType="java.lang.Integer">
-		select count(rp.id) from  repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} 
+		select count(rp.id) from  repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功"
 	</select>
 	<!--后台管理        累计放款总金额  -->
 	<select id="querypayrecMoney" resultType="java.math.BigDecimal">
@@ -115,7 +115,7 @@
 	</select>
 	<!--后台管理      累计回款总金额 （实还金额）-->
 	<select id="queryrepayMoney" resultType="java.math.BigDecimal">
-		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} 
+		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功"
 	</select>
 	<!-- 后台管理       累计回款总金额（延期费） -->
 	<select id="querydeffermoney" resultType="java.math.BigDecimal">
@@ -146,14 +146,15 @@
 	</select>
 	<!-- 后台管理       逾前实还金额      订单表所有还款订单-->
 	<select id="overduerealOrder" resultType="com.zhita.model.manage.Orders">
-		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,o.realtime from repayment r inner join orders o on r.orderid=o.id where o.companyId=#{arg0}
+		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,o.realtime from repayment r inner join orders o on r.orderid=o.id where o.companyId=#{arg0} and r.statu="成功"
 	</select>
 	<!-- 后台管理       逾前实还金额  -->
 	<select id="overduerealMoney" parameterType="java.util.List" resultType="java.math.BigDecimal">
 		select sum(repaymentMoney) from repayment where orderId in
 		  <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
                 #{item}       
-          </foreach>    
+          </foreach>   
+          and statu="成功" 
 	</select>
 	<!-- 后台管理       逾前应收总金额 -->
 	<select id="overdueshouldMoney" resultType="java.math.BigDecimal">
@@ -195,7 +196,7 @@
 	</select>
 	<!-- 后台管理      已还款订单 -->
 	<select id="overduerepay" resultType="com.zhita.model.manage.Orders">
-		select id,companyId,orderNumber,orderCreateTime,shouldReturnTime,realtime from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
+		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,r.repaymentDate realtime from orders o inner join repayment r on o.id=r.orderid where companyid=#{arg0} and r.statu="成功" and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
 	</select>
 	<!-- 后台管理          逾后未还 -->
 	<select id="overdueafternotrepay" resultType="java.lang.Integer">
@@ -211,7 +212,7 @@
 	</select>
 	<!-- 后台管理        实际还金额 -->
 	<select id="realymoney" resultType="java.math.BigDecimal">
-		select sum(r.repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(r.repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and r.statu="成功" and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        延期费 -->
 	<select id="deferredmoney" resultType="java.math.BigDecimal">

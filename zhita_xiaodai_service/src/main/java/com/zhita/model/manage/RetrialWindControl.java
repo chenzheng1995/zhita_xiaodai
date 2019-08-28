@@ -13,6 +13,8 @@ public class RetrialWindControl {
     private Integer operator;//操作人id
 
     private String operationtime;//操作时间
+    
+    private String ifrestore;//是否让用户的额度还原成初始额度（1：是；0：不是）
 
     public Integer getId() {
         return id;
@@ -61,4 +63,13 @@ public class RetrialWindControl {
     public void setOperationtime(String operationtime) {
         this.operationtime = operationtime == null ? null : operationtime.trim();
     }
+
+	public String getIfrestore() {
+		return ifrestore;
+	}
+
+	public void setIfrestore(String ifrestore) {
+		this.ifrestore = ifrestore;
+	}
+    
 }

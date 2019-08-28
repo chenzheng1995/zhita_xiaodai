@@ -521,12 +521,11 @@
   				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amou_time,
   				a.amountmoney,a.remarks,a.accounttime,a.beoverdue
   				,ord.overdueNumberOfDays from 
-  				 orderdetails ord,orders o,user u,accountadjustment a,repayment re,repayment_setting th
+  				 orderdetails ord,orders o,user u,accountadjustment a,repayment_setting th
   				<where>
   					o.id = ord.orderId
   					AND a.orderId = o.id 
   					AND u.id = o.userId
-	 				AND re.orderId = a.orderId 
 	 				AND th.id = a.rename_id
   					AND o.orderStatus = "1"
   					AND o.companyId = #{companyId}
@@ -989,7 +988,7 @@
 
 
 			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
-				update orders set shouldReturnTime = #{delay_time} where orderId = #{orderId}
+				update orders set shouldReturnTime = #{delay_time} where id = #{orderId}
 			</select>
 			
 			

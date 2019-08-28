@@ -63,21 +63,9 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int todayrepaymentbank = homepageTongjiMapper.queryToDayRepaymentbank(companyId, startTimestamps, endTimestamps);//今日回款笔数（银行卡回款）
 		todayrepayment=todayrepaymentreal+todayrepaymentacc+todayrepaymentoff+todayrepaymentbank;
 		
-		List<Orders> listorders = homepageTongjiMapper.queryToDayOverdue(companyId, startTimestamps, endTimestamps);//今日逾期已还笔数
 		int todayoverdue=0;//今日逾期已还笔数
-		for (int j = 0; j < listorders.size(); j++) {
-			try {
-					String realtime=Timestamps.stampToDate(listorders.get(j).getRealtime());//实还时间
-					String shouletime=Timestamps.stampToDate(listorders.get(j).getShouldReturnTime());//应还时间
-				
-					if(sdf.parse(realtime).getTime()>sdf.parse(shouletime).getTime()){//转成long类型比较
-						System.out.println("实际还款时间大于应还时间");
-						todayoverdue++;
-					}
-				} catch (ParseException e) {
-					e.printStackTrace();
-			}
-		}
+		todayoverdue = homepageTongjiMapper.queryToDayOverdue(companyId, startTimestamps, endTimestamps);//今日逾期已还笔数
+		
 		BigDecimal todayloantotalmoney = homepageTongjiMapper.queryToDayLoanTotalmoney(companyId, startTimestamps, endTimestamps);//今日放款总金额
 		
 		BigDecimal todayreturtoalmoney = new BigDecimal("0.00");//今日回款总金额
@@ -191,25 +179,6 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		 * 期限内数据
 		 */
 		int overdue = homepageTongjiMapper.overdue(companyId);//逾前未还笔数
-		List<Orders> listorderov = homepageTongjiMapper.overduerealOrder(companyId);
-		List<Integer> listorderid=new ArrayList<>();
-		for (int i = 0; i < listorderov.size(); i++) {
-				try {
-					String realtime=Timestamps.stampToDate(listorderov.get(i).getRealtime());//实还时间
-					String shouletime=Timestamps.stampToDate(listorderov.get(i).getShouldReturnTime());//应还时间
-				
-					if(sdf.parse(realtime).getTime()<sdf.parse(shouletime).getTime()){//转成long类型比较
-						System.out.println("实际还款时间小于应还时间");//代表是主动还款的
-						listorderid.add(listorderov.get(i).getId());
-					}
-				} catch (ParseException e) {
-					e.printStackTrace();
-			}
-		}
-		BigDecimal overduerealMoney=new BigDecimal("0.00");
-		if(listorderid!=null && !listorderid.isEmpty()){
-			overduerealMoney = homepageTongjiMapper.overduerealMoney(listorderid);//逾前实还金额
-		}
 		
 		BigDecimal overduemoney = homepageTongjiMapper.overdueshouldMoney(companyId);//逾前应收总金额
 		if(overduemoney==null){
@@ -263,7 +232,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("realymoney", realymoney);//实际收益
 		
 		map.put("overdue",overdue);//逾前未还笔数
-		map.put("overduerealMoney", overduerealMoney);//逾期实还金额
+		//map.put("overduerealMoney", overduerealMoney);//逾期实还金额
 		map.put("overduemoney", overduemoney);//逾前应收总金额
 		
 		map.put("overdue1", overdue1);//逾后未还笔数
@@ -393,7 +362,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			if(deratemoney==null){
 				deratemoney=new BigDecimal("0.00");
 			}
-			BigDecimal tobepaidmoney=shouldmoney.subtract(repaymentmoney).subtract(deferredmoney).subtract(deratemoney);//待还金额
+			BigDecimal tobepaidmoney=shouldmoney.subtract(repaymentmoney).subtract(deratemoney).subtract(bankmoney);//待还金额
 			String overduecvr="";
 			if((overdueafternotrepay!=0||baddebt!=0)){
 				overduecvr=(new DecimalFormat("0.00").format((overdueafternotrepay+baddebt)*1.0/shouldorder*100))+"%";//逾期率
@@ -405,7 +374,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			int deratebank = homepageTongjiMapper.deratebank(companyId,startTimestampsfor, endTimestampsfor);//银行扣款已还清
 			String recovery=null;
 			if(overdueafternotrepay!=0){
-				recovery=(new DecimalFormat("#0.00").format((overdueafterrepay+derateaccon+derateaccunder+deratebank)*1.0/(overdueafternotrepay)*100))+"%";//回收率
+				recovery=(new DecimalFormat("#0.00").format((overduerepay+overdueafterrepay)*1.0/(shouldorder)*100))+"%";//回收率
 			}else{
 				recovery="0.00%";
 			}
