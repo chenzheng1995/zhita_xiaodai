@@ -124,6 +124,12 @@ public class UserAttestationServiceImp implements UserAttestationService{
 		return num;
 	}
 
+	@Override
+	public String getidCard(int userId) {
+		String idCard = userAttestationMapper.getidCard(userId);
+		return idCard;
+	}
+
 
 
 

@@ -121,7 +121,6 @@ public class SourceServiceImp implements IntSourceService{
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
 		String company=sourceMapper.querycompany(companyId);
-		SimpleDateFormat sft1=new SimpleDateFormat("yyyy/MM/dd");
 		if((discount.equals(record.getDiscount())==false)){//等于false  说明折扣率被修改了
 			Date d=new Date();
 			SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
@@ -143,10 +142,10 @@ public class SourceServiceImp implements IntSourceService{
 				String cvr = null;//转化率
 				float disAppnum=0;//折扣申请数
 				
-				if (redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + record.getSourcename() + date.replace("-", "/") + "xiaodaiKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + record.getSourcename() + date.replace("-", "/") + "xiaodaiKey"));
 				}
 				
 				if (appnum >= 30) {
@@ -184,10 +183,10 @@ public class SourceServiceImp implements IntSourceService{
 				String cvr = null;//转化率
 				float disAppnum=0;//折扣申请数
 				
-				if (redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + record.getSourcename() + date.replace("-", "/") + "xiaodaiKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + record.getSourcename() + sft1.format(date) + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + record.getSourcename() + date.replace("-","/") + "xiaodaiKey"));
 				}
 				
 				if (appnum >= 30) {
@@ -257,7 +256,6 @@ public class SourceServiceImp implements IntSourceService{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
     	Integer companyId=3;
     	String company=sourceMapper.querycompany(companyId);
-		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
     	List<Source> list=sourceMapper.queryAll(companyId);//查询出当前公司下的所有渠道（所有渠道的集合list）
     	for (int i = 0; i < list.size(); i++) {
     		Integer sourceid=list.get(i).getId();//渠道id
@@ -304,10 +302,12 @@ public class SourceServiceImp implements IntSourceService{
     					String cvr = null;//转化率
     					float disAppnum=0;//折扣申请数
     					
-    					if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(intersectionlist.get(m)) + "daichaoKey") == null) {
-    						uv = 0;
-    					} else {
-    						uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(intersectionlist.get(m)) + "daichaoKey"));
+    					if(intersectionlist.get(m)!=null&&!"".equals(intersectionlist.get(m))){
+    						if (redisClientUtil.getSourceClick(company + sourceName + intersectionlist.get(m).replace("-", "/") + "xiaodaiKey") == null) {
+    							uv = 0;
+    						} else {
+    							uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + intersectionlist.get(m).replace("-", "/") + "xiaodaiKey"));
+    						}
     					}
     					
     					if (appnum >= 30) {
@@ -360,10 +360,10 @@ public class SourceServiceImp implements IntSourceService{
 				String cvr = null;
 				float disAppnum=0;//折扣申请数
 					
-				if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(dateyes) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + sourceName + dateyes.replace("-", "/") + "xiaodaiKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(dateyes) + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + dateyes.replace("-", "/") + "xiaodaiKey"));
 				}
 				
 				if (appnum >= 30) {

@@ -48,6 +48,8 @@ public interface UserAttestationService {
 
 	int updatefacePhoto(int userId, String facePhotoPath);
 
+	String getidCard(int userId);
+
 
 
 
