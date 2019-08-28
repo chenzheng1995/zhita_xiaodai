@@ -81,10 +81,10 @@ public class OrdersController {
 		   ArrayList<LiftingAmount> list = intLiftingamountServcie.getintLiftingamount(companyId);
 		   Integer firstline = intLiftingamountServcie.getFirstline(companyId);
 		   int lastuserHowManyConsecutivePayments = intLiftingamountServcie.getlastuserHowManyConsecutivePayments(companyId);//最后一个提额的次数
-		   if(borrowNumber>lastuserHowManyConsecutivePayments) {
+		   if(borrowNumber>lastuserHowManyConsecutivePayments||borrowNumber==lastuserHowManyConsecutivePayments) {
 		    	 int ordersId =  intOrderService.getOrdersId(userId,companyId);//获取最后一个借款订单的id
 		    	 BigDecimal lastLine = orderdetailsMapper.getlastLine(ordersId);//获取最后一次还款时的额度
-		    	 intUserService.updateCanBorrowLines(finalLine,userId);
+		    	 intUserService.updateCanBorrowLines(lastLine,userId);
 		    	 map.put("finalLine", lastLine);
 		    	 return map;
 		   }

@@ -521,7 +521,7 @@
 	</select>
 	
 		<select id="getuserId" parameterType="java.util.Map" resultType="java.lang.Integer">
-		select userId from user_attestation where idcard_number=#{idCard}
+		select userId from user_attestation,user where idcard_number=#{idCard} and ifBlacklist= '0' and user.id=user_attestation.userId
 	</select>
 	
 	
@@ -530,4 +530,12 @@
 		set facePhoto = #{facePhotoPath}
 		where userId = #{userId}
 	</update>
+	
+	
+	
+	
+			<select id="getidCard" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select idcard_number from user_attestation where userId = #{userId} 
+	</select>
+	
 </mapper>

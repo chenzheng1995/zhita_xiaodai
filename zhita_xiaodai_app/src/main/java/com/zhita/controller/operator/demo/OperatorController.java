@@ -218,7 +218,7 @@ public class OperatorController {
     @RequestMapping("/isRepeat")
     @ResponseBody
     @Transactional
-    public Map<String, Object> isRepeat(String idCard,int userId,int companyId,String phone){
+    public Map<String, Object> isRepeat(int userId,int companyId,String phone){
     	Map<String, Object> map = new HashMap<>();
     	map.put("Ncode","2000");
     	PhoneDeal pDeal = new PhoneDeal();
@@ -226,6 +226,7 @@ public class OperatorController {
         map.put("code", "200");
         boolean a =false;
         int id1 = 0;
+        String idCard = userAttestationService.getidCard(userId);
     	List<Integer> list = userAttestationService.getuserId(idCard);
     	for (int id : list) {
 			String attestationStatus = operatorService.getattestationStatus(id);
@@ -251,7 +252,7 @@ public class OperatorController {
 	            int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
 	            if(num1==0) {
 		            String blackType = "2";
-		            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,newphone,name,date,blackType);
+		            intBlacklistuserService.setBlacklistuser(idCard,userId,companyId,phone,name,date,blackType);
 	            }
 	            break;
 			}
@@ -270,7 +271,7 @@ public class OperatorController {
     	            phone = intUserService.getphone(id1);
     	            String newphone = pDeal.decryption(phone);
     	            String date = System.currentTimeMillis()+"";
-    	            int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+    	            int num1 = intBlacklistuserService.getid(newphone,companyId);//判断手机号是否是黑名单
     	            if(num1==0) {
     	            String blackType = "2";
     	            intBlacklistuserService.setBlacklistuser(idCard,id,companyId,newphone,name,date,blackType);	
@@ -521,8 +522,12 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		 if(certification_number>2) {
 			 intUserService.updateifBlacklist(userId);
 			 String date = System.currentTimeMillis()+"";
-	            String blackType = "5";
-	            intBlacklistuserService.setBlacklistuser(idcard_number,userId,companyId,phone,trueName,date,blackType);
+			  int num1 = intBlacklistuserService.getid(phone,companyId);//判断手机号是否是黑名单
+	            if(num1==0) {
+		            String blackType = "5";
+		            intBlacklistuserService.setBlacklistuser(idcard_number,userId,companyId,phone,trueName,date,blackType);
+			}
+
 		 }
 		 }
 			map1.put("Ncode","405");
@@ -586,13 +591,16 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	String idNumber = (String) userAttestation.get("idcard_number");
    	int sourceId = intUserService.getsourceId(userId);
    	String sourceName = intSourceService.getsourceName(sourceId);
-   	String phone1 = operatorService.getphone(userId);
+   	String phone1 = operatorService.getphone(userId);//运营商认证是输入的手机号
+   	String phone2 = intUserService.getphone(userId);//用户登录进来的手机号
+   	
    	PhoneDeal pDeal = new PhoneDeal();
    	String newphone = pDeal.decryption(phone1);
+   	String newphone2 = pDeal.decryption(phone2);
    	Map<String, Object> map3 =  userAttestationService.getuserAttestation(userId);
    	String idcard_number =(String) map3.get("idcard_number");
    	String address = (String) map3.get("address");
-   	int number = intWhitelistuserService.getWhitelistuser(phone1,idcard_number);
+   	int number = intWhitelistuserService.getWhitelistuser(newphone2,idcard_number);
    	if(number!=0) {
     	   shareOfState ="2";
     	   intUserService.updateScore1(userId,shareOfState);
