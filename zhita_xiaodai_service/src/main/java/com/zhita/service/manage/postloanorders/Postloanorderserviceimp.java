@@ -618,6 +618,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		order.setOrderStatus("3");
+		List<Integer> YihuanId = postloanorder.YiHuanOrderId(order);
+		List<Integer> defeId = postloanorder.DefeOrderId(order);
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);

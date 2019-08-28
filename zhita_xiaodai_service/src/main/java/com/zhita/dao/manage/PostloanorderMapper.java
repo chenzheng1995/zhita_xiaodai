@@ -2,11 +2,6 @@ package com.zhita.dao.manage;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
-
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
@@ -139,4 +134,9 @@ public interface PostloanorderMapper {
 	
 	BigDecimal ShijiMoney(Integer orderId);
 	
+	
+	List<Integer> YiHuanOrderId(Orderdetails order);
+	
+	
+	List<Integer> DefeOrderId(Orderdetails order);
 }

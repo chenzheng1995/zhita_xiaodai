@@ -209,7 +209,7 @@
   
   
   		  <select id="PaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,ord.realityBorrowMoney as paymentmoney,ra.pipelinenumber
+		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,re.paymentmoney,ra.pipelinenumber
 		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
 		  	 LEFT JOIN user u ON o.userId = u.id
 		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId

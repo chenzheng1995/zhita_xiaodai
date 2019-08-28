@@ -780,4 +780,15 @@
 			select sum(repaymentMoney) as realityAccount  from repayment where orderId = #{orderId}
 		</select>
 		
+		
+		
+		<select id="YiHuanOrderId" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select id from orders where companyId = #{companyId} and orderStatus = #{orderStatus}
+		</select>
+		
+		
+		<select id="DefeOrderId" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select de.orderid from deferred de,orders o where o.companyId = #{companyId} group by de.orderId
+		</select>
+		
 </mapper>
