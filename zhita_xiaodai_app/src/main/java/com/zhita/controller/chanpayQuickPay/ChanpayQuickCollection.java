@@ -889,6 +889,13 @@ public class ChanpayQuickCollection {
 	public Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt) {
 		Map<String, Object> map = new HashMap<String, Object>();	
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
+			Integer orderId = servie.SelectReaymentOrderId(TrxId);
+			if(orderId != null){
+				map.put("msg", "该订单已还");
+				map.put("Ncode", 2000);
+				map.put("code", 200);
+				return map;
+			}
 		Map<String, String> origMap = new HashMap<String, String>();
 		// 2.1 基本参数 
 		origMap = setCommonMap(origMap);

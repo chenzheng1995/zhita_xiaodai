@@ -70,4 +70,7 @@ public interface Statisticsservice {
 	
 	void SelectId(String orderNumber);
 	
+	
+	Integer SelectReaymentOrderId(String orderNumber);
+	
 }

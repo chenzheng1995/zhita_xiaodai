@@ -51,16 +51,30 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setPhone(phon);//手机号解密 
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setCompanyId(coll.getCompanyId());
-			Deferred defe = collmapp.DefeSet(orders.get(i));
-			if(defe!=null){
-				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
-				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getRealtime()));
-				System.out.println(orders.get(i).getDeferAfterReturntime()+"AAA"+orders.get(i).getOverdueNumberOfDays());
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));
+			
+			orders.get(i).setDeferAfterReturntime(orders.get(i).getOrderCreateTime());
+			BigDecimal cba = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
+			BigDecimal cbaS = null;
+			if(orders.get(i).getInterestSum()==null){
+				cbaS = new BigDecimal(0);
 			}else{
-				orders.get(i).setDeferAfterReturntime("/");
+				cbaS = orders.get(i).getInterestSum();
 			}
 			
+			orders.get(i).setOrder_money(cba.add(cbaS));
+			System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime()+"金额:"+orders.get(i).getOrder_money()
+					+"利息:"+orders.get(i).getRealityBorrowMoney()+"CC:"+orders.get(i).getInterestPenaltySum()+"BB:"+orders.get(i).getInterestSum());
+			//Deferred defe = collmapp.DefeSet(orders.get(i));
+//			if(defe!=null){
+//				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
+//				
+//				
+//				System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime());
+//				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));
+//			}else{
+//				orders.get(i).setDeferAfterReturntime("/");
+//			}
+//			
 			}
 		map.put("Orderdetails", orders);
 		return map;

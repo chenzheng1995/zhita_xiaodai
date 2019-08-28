@@ -1,6 +1,5 @@
 package com.zhita.model.manage;
 
-import io.protostuff.StringSerializer.STRING;
 
 public class Sys_user {
 	
@@ -14,6 +13,8 @@ public class Sys_user {
 	
 	private String phone;
 	
+	private String reallyName;
+	
 	private String loginState;
 	
 	private String loginTime;
@@ -24,6 +25,23 @@ public class Sys_user {
 	
 	private String roleName;
 	
+	private Integer id;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getReallyName() {
+		return reallyName;
+	}
+
+	public void setReallyName(String reallyName) {
+		this.reallyName = reallyName;
+	}
 
 	public String getRoleName() {
 		return roleName;

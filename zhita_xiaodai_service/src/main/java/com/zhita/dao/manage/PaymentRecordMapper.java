@@ -166,4 +166,13 @@ public interface PaymentRecordMapper {
     
     
     String RepaymentName(Integer channel);
+    
+    
+    Integer UpdateOrdermoney(Accountadjustment acc);
+    
+    
+    Integer UpdateOrderTime(Offlinedelay off);
+    
+    
+    Integer OrdersStatus(Offlinjianmian off);
 }

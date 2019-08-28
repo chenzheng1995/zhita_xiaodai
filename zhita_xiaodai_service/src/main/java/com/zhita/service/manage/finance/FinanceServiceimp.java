@@ -202,8 +202,15 @@ public class FinanceServiceimp implements FinanceService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer addId = padao.AddCAccount(acc);
 		if(addId != null){
-			map.put("code", 200);
-			map.put("desc", "添加成功");
+			Integer updateId = padao.UpdateOrdermoney(acc);
+			if(updateId != null){
+				map.put("code", 200);
+				map.put("desc", "成功");
+			}else{
+				map.put("code", 0);
+				map.put("desc", "失败");
+			}
+			
 		}else{
 			map.put("code", 0);
 			map.put("desc", "添加失败");
@@ -241,6 +248,13 @@ public class FinanceServiceimp implements FinanceService{
 				
 				
 				Orderdetails ordetails = padao.OrdeRepayment(orderNumber);
+				
+				if(ordetails==null){
+					map.put("Orderdetails", "没有该用户未还订单");
+					map.put("Deferred", 0);
+					return map;
+				}
+				System.out.println("实际到账金额"+ordetails.getRealityAccount());
 				Deferred defe = coldao.DefNuma(ordetails.getOrderId());
 				if(ordetails!=null){
 					ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
@@ -254,9 +268,6 @@ public class FinanceServiceimp implements FinanceService{
 					map.put("aaa", ordetails.getInterestPenaltySum());
 					map.put("Orderdetails", ordetails);
 					
-				}else{
-					map.put("Orderdetails", "无数据");
-					map.put("Deferred", 0);
 				}
 			}
 			}
@@ -442,6 +453,7 @@ public class FinanceServiceimp implements FinanceService{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		System.out.println(unde.getOffinetransfertime());
 		Integer addId = padao.AddUndertheline(unde);
 		if(addId != null){
 			map.put("code", 200);
@@ -726,11 +738,17 @@ public class FinanceServiceimp implements FinanceService{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
 		Integer addId = padao.AddOffJianMian(off);
 		if(addId != null){
-			map.put("code", 200);
-			map.put("desc", "操作成功");
+			Integer updateId = padao.OrdersStatus(off);
+			if(updateId != null){
+				map.put("code", 200);
+				map.put("desc", "操作成功");
+			}else{
+				map.put("code", 200);
+				map.put("desc", "操作失败");
+			}
+			
 		}else{
 			map.put("code", 0);
 			map.put("desc", "数据异常");
@@ -745,7 +763,10 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectXiaOrder(Orderdetails ord) {
 		PhoneDeal p = new PhoneDeal();
 		if(ord.getPhone() != null){
-			ord.setPhone(p.encryption(ord.getPhone()));
+			if(ord.getPhone().length()!=0){
+				ord.setPhone(p.encryption(ord.getPhone()));
+			}
+			
 		}
 		try {
 			ord.setStart_time(Timestamps.dateToStamp1(ord.getStart_time()));
@@ -767,6 +788,7 @@ public class FinanceServiceimp implements FinanceService{
 		for(int i=0;i<unders.size();i++){
 			unders.get(i).setPhone(p.decryption(unders.get(i).getPhone()));
 			unders.get(i).setPhone(tm.mobileEncrypt(unders.get(i).getPhone()));
+			unders.get(i).setSedn_time(Timestamps.stampToDate(unders.get(i).getSedn_time()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Undertheline", unders);
@@ -803,7 +825,9 @@ public class FinanceServiceimp implements FinanceService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(off.getPhone() != null){
+			if(off.getPhone().length()!=0){
 			off.setPhone(p.encryption(off.getPhone()));
+			}
 		}
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -814,8 +838,14 @@ public class FinanceServiceimp implements FinanceService{
         off.setDelay_time(dateFormat.format(date));
         Integer addId = padao.AddDelay(off);
 		if(addId != null){
-			map.put("code", 200);
-			map.put("desc", "已添加");
+			Integer updateid = padao.UpdateOrderTime(off);
+			if(updateid !=null){
+				map.put("code", 200);
+				map.put("desc", "已添加");
+			}else{
+				map.put("code", 200);
+				map.put("desc", "失败");
+			}
 		}else{
 			map.put("code", 0);
 			map.put("desc", "数据异常");

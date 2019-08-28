@@ -34,7 +34,7 @@
 			
 			
 			<update id="UpdateOrders" parameterType="com.zhita.model.manage.Orders">
-				update orders set orderStatus = "3" where id = #{id}
+				update orders set orderStatus = "3" where orderNumber = #{orderNumber}
 			</update>
 			
 			
@@ -318,5 +318,10 @@
 			
 			<select id="SelectBorrowing" parameterType="java.lang.Integer" resultType="java.lang.String">
 				select borrowingScheme from borrow_money_message where companyId = #{companyId}
+			</select>
+			
+			
+			<select id="SelectRepaymentOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+				select re.orderId from repayment re,orders o where o.id = re.orderId and o.orderNumber = #{orderNumber}
 			</select>
 </mapper>
