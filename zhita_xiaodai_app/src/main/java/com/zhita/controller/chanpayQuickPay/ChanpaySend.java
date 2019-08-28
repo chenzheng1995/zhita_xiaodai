@@ -146,7 +146,7 @@ public class ChanpaySend extends BaseParameter{
 		Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
 		if(i == 1 || i == 0){
 			map1.put("msg", "今日放款已达限额,请明日再来");
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 			map1.put("code", 0);
 		}else{
 			
@@ -255,7 +255,7 @@ public class ChanpaySend extends BaseParameter{
 					redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 					map1.put("code", "203");
 					map1.put("desc", "已放款,未保存");
-					map1.put("Ncode", 2000);
+					map1.put("Ncode", 0);
 					return map1;
 				}
 				
@@ -275,7 +275,7 @@ public class ChanpaySend extends BaseParameter{
 			    		map1.put("desc","插入成功");
 			    	}else {
 			    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
-			    		map1.put("Ncode", 2000);
+			    		map1.put("Ncode", 0);
 						map1.put("code",405); 
 						map1.put("msg","借款成功");
 						map1.put("desc", "插入失败");
@@ -333,7 +333,7 @@ public class ChanpaySend extends BaseParameter{
 			redis.set("ChanpaySenduserId", String.valueOf(userId));
 			map1.put("code", "203");
 			map1.put("desc", "已放款,未保存");
-			map1.put("Ncode", 2000);
+			map1.put("Ncode", 0);
 			return map1;
 		}
 		return map1;
