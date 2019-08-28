@@ -107,8 +107,9 @@ public class OrderController {
 	 */
 	@ResponseBody
 	@RequestMapping("/updateShareOfStateNo")
-	public int updateShareOfStateNo(Integer sysuserid,Integer userid){
+	public int updateShareOfStateNo(Integer companyId,Integer sysuserid,Integer userid){
 		int num=intOrderService.updateShareOfStateNo(sysuserid,userid);
+		intUserService.insertBlacklist(companyId, userid, sysuserid);//添加黑名单
 		return num;
 	}
 	

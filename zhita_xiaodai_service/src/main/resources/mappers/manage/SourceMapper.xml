@@ -236,7 +236,7 @@
   </select>
   <!--后台管理         查询当前渠道下有多少用户是登录过得  -->
   <select id="queryCount"  resultType="java.lang.Integer">
-  	select count(*) from user u where u.sourceid=#{arg0} and u.loginTime>=#{arg1} and u.loginTime &lt;#{arg2}
+  	select count(*) from user u where u.sourceid=#{sourceid} and u.loginTime>=#{startTime} and u.loginTime &lt;#{endTime} and u.registeTime>=#{startTime} and u.registeTime &lt;#{endTime}
   </select>
   <!-- 后台管理      当前渠道下所有的用户id -->
   <select id="queryUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">

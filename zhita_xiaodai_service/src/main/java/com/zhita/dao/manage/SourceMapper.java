@@ -60,7 +60,7 @@ public interface SourceMapper {
     String queryDiscountById(Integer sourceId);
     
     //后台管理---查询当前渠道下有多少用户是登录过得
-    int queryCount(Integer sourceid,String startTime,String endTime);
+    int queryCount(@Param("sourceid") Integer sourceid,@Param("startTime") String startTime,@Param("endTime") String endTime);
     
     //后台管理---当前渠道下所有的用户id
     List<Integer> queryUserid(Integer sourceid);

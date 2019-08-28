@@ -367,21 +367,21 @@ public class FinanceController {
 	
 	//后台管理---查询所有
 	@ResponseBody
-	@RequestMapping("queryall")
+	@RequestMapping("/queryall")
     public List<Thirdpricefind> queryall(Integer companyid){
     	return fianser.queryall(companyid);
     }
     
     //后台管理----修改价格
 	@ResponseBody
-	@RequestMapping("updateprice")
+	@RequestMapping("/updateprice")
     public int updateprice(BigDecimal price,Integer id){
     	return fianser.updateprice(price, id);
     }
 	
 	//后台管理---费用统计
 	@ResponseBody
-	@RequestMapping("pricetongji")
+	@RequestMapping("/pricetongji")
 	public Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime) throws ParseException{
 		Map<String, Object> map=fianser.pricetongji(companyId, page, starttime, endtime);
 		return map;
