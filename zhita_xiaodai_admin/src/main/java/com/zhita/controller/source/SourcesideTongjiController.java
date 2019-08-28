@@ -85,10 +85,10 @@ public class SourcesideTongjiController {
 			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				
-			if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(date) + "daichaoKey") == null) {
+			if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(d) + "xiaodaiKey") == null) {
 				uv = 0;
 			} else {
-				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(date) + "daichaoKey"));
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(d) + "xiaodaiKey"));
 			}
 			
 			if (appnum >= 30) {
@@ -111,10 +111,10 @@ public class SourcesideTongjiController {
 			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				
-			if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(date) + "daichaoKey") == null) {
+			if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(d) + "xiaodaiKey") == null) {
 				uv = 0;
 			} else {
-				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(date) + "daichaoKey"));
+				uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + sf1.format(d) + "xiaodaiKey"));
 			}
 			
 			if (appnum >= 30) {
@@ -156,7 +156,6 @@ public class SourcesideTongjiController {
 	@RequestMapping("/queryAllTongjiByDate")
 	public TongjiSorce queryAllTongjiByDate(Integer companyId,Integer sourceid,String sourceName,String date) throws ParseException{
 		String company=intSourceService.querycompany(companyId);
-		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
 		RedisClientUtil redisClientUtil=new RedisClientUtil();
 		TongjiSorce tongjiSorce = new TongjiSorce();
 		
@@ -188,10 +187,10 @@ public class SourcesideTongjiController {
 				String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
 					
-				if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(date) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + sourceName + date.replace("-", "/") + "xiaodaiKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName+ sf1.format(date) + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName+ date.replace("-", "/") + "xiaodaiKey"));
 				}
 				
 				if (appnum >= 30) {
@@ -211,10 +210,10 @@ public class SourcesideTongjiController {
 				String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
 					
-				if (redisClientUtil.getSourceClick(company + sourceName + sf1.format(date) + "daichaoKey") == null) {
+				if (redisClientUtil.getSourceClick(company + sourceName + date.replace("-", "/") + "xiaodaiKey") == null) {
 					uv = 0;
 				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName+ sf1.format(date) + "daichaoKey"));
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName+ date.replace("-", "/") + "xiaodaiKey"));
 				}
 				
 				if (appnum >= 30) {
