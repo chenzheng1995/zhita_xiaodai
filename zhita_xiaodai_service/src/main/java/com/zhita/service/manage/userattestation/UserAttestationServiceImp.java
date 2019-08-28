@@ -101,8 +101,8 @@ public class UserAttestationServiceImp implements UserAttestationService{
 			String birth_month, String birth_day, String address, String issued_by, String valid_date_start,
 			String valid_date_end, String frontsidePath, String backsidePath, int userId, String idcard_number,
 			String homeAddressLongitude, String homeAddressLatitude, String detailAddress,
-			 String authenticationSteps) {
-		 int number = userAttestationMapper.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps);
+			 String authenticationSteps,String authentime) {
+		 int number = userAttestationMapper.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,authentime);
 		return number;
 	}
 

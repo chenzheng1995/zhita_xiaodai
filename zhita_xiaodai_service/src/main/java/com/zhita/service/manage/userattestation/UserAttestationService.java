@@ -40,7 +40,7 @@ public interface UserAttestationService {
 	int insertUserAttestation(String name, String gender, String nationality, String birth_year, String birth_month,
 			String birth_day, String address, String issued_by, String valid_date_start, String valid_date_end,
 			String frontsidePath, String backsidePath, int userId, String idcard_number, String homeAddressLongitude,
-			String homeAddressLatitude, String detailAddress, String nationalEmblemossPath);
+			String homeAddressLatitude, String detailAddress, String nationalEmblemossPath, String authentime);
 
 	String getshareOfState(int userId);
 

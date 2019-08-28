@@ -85,7 +85,8 @@ public class OperatorController {
    	
    	 int num = operatorService.getuserId(userId);
    	 if(num==0) {
-   	   	 int number = operatorService.setredIdAndPhone(reqId,userId,phone);
+   		String authentime =System.currentTimeMillis()+"";//认证时间
+   	   	 int number = operatorService.setredIdAndPhone(reqId,userId,phone,authentime);
          if (number == 1) {            
         	 map.put("Ncode","2000");
              map.put("msg", "数据插入成功");
@@ -268,7 +269,7 @@ public class OperatorController {
     				intUserService.updateifBlacklist(id);
     	            Map<String, Object> map1 = userAttestationService.getuserAttestation(id);
     	            String name = (String) map1.get("trueName");
-    	            phone = intUserService.getphone(id1);
+    	            phone = intUserService.getphone(id);
     	            String newphone = pDeal.decryption(phone);
     	            String date = System.currentTimeMillis()+"";
     	            int num1 = intBlacklistuserService.getid(newphone,companyId);//判断手机号是否是黑名单
@@ -570,6 +571,41 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	return map1;
 	
 }
+
+
+//判断是否是白名单用户，如果是，风控直接通过
+@RequestMapping("/getwhitelistuser")
+@ResponseBody
+@Transactional
+public Map<String, Object> getwhitelistuser(String phone,int userId,String name,String idcard_number){
+	Map<String, Object> map = new HashMap<>();
+	String attestationStatus = "1";
+	int num =  intWhitelistuserService.getWhitelistuser1(phone,idcard_number,name);
+	 if(num>0) {
+		 int num1 = operatorService.getuserId(userId);
+	   	 if(num1==0) {
+	   		 String authentime =System.currentTimeMillis()+"";//认证时间
+	   	   	 int number = operatorService.setwhitelistuser(attestationStatus,userId,authentime);
+	         if (number == 1) {            
+	        	 map.put("Ncode","2000");
+	             map.put("msg", "数据插入成功");
+	             map.put("Code", "201");
+	         } else {
+	        	 map.put("Ncode","405");
+	             map.put("msg", "数据插入失败");
+	             map.put("Code", "405");
+	         }
+	 }
+
+	 }else {
+    	 map.put("Ncode","2000");
+         map.put("msg", "用户不是白名单");
+         map.put("Code", "202");
+	 }
+		
+		return map;
+}
+
     
     
 //  分控分数

@@ -144,8 +144,8 @@
   
     				  
 	<insert id="setredIdAndPhone" parameterType="java.util.Map">
-		insert into operator (reqId,phone,userId)
-		values (#{reqId},#{phone},#{userId})
+		insert into operator (reqId,phone,userId,authentime)
+		values (#{reqId},#{phone},#{userId},#{authentime})
 	</insert>
 	
 	
@@ -193,5 +193,11 @@
       		<select id="getphone" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select phone from operator where userId = #{userId}
 	</select>
+	
+		<insert id="setwhitelistuser" parameterType="java.util.Map">
+		insert into operator (attestationStatus,userId,authentime)
+		values (#{attestationStatus},#{userId},#{authentime})
+	</insert>
+	
   
 </mapper>
