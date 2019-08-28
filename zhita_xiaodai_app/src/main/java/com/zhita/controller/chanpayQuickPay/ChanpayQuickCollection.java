@@ -994,20 +994,26 @@ public class ChanpayQuickCollection {
 			Orders ord = new Orders();
 			ord.setOrderNumber(OrderNumber);
 			if(as.equals("S")){
-				
+				String pipelinenu = "Rsn_"+OriPayTrxId;
+				Integer updateId = chanpayservice.UpdateRepayStatus(pipelinenu);
+				if(updateId != null){
 				Integer a = servie.UpdateOrders(ord);
-				if(a!=null){
-					System.out.println(ord.getOrderNumber());
-					System.out.println(a);
-					map.put("Ncode", 2000);
-					map.put("code", "200");
-					map.put("ReturnChanpay", retu);
-					map.put("msg", "插入成功");
+					if(a!=null){
+						map.put("Ncode", 2000);
+						map.put("code", "200");
+						map.put("ReturnChanpay", retu);
+						map.put("msg", "插入成功");
+					}else{
+						map.put("code", "0");
+						map.put("Ncode", 0);
+						map.put("ReturnChanpay", retu);
+						map.put("msg", "插入失败");
+					}
 				}else{
 					map.put("code", "0");
 					map.put("Ncode", 0);
 					map.put("ReturnChanpay", retu);
-					map.put("msg", "插入失败");
+					map.put("msg", "还款状态修改失败,请联系客服");
 				}
 			}else{
 				map.put("Ncode", 0);

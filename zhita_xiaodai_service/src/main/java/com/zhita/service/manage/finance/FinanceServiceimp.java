@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.ThirdpricefindMapper;
@@ -303,6 +305,8 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
+			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
+			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -310,6 +314,9 @@ public class FinanceServiceimp implements FinanceService{
 	}
 
 
+	
+	
+	
 
 
 	@Override
@@ -984,5 +991,16 @@ public class FinanceServiceimp implements FinanceService{
 		map.put("pageutil", pageUtil);
 		return map;
     }
+
+
+
+
+	@Override
+	public Map<String, Object> SelectAccOrders(String orderNumber) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Accountadjustment> accs = padao.SelectAccOrders(orderNumber);
+		map.put("Accountadjustment", accs);
+		return map;
+	}
 
 }

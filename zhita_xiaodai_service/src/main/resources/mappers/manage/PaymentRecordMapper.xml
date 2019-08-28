@@ -435,11 +435,20 @@
   			
   			
   			
+  			<select id="SelectSumamountmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+  				select sum(amountmoney) from accountadjustment where orderId = #{orderId}
+  			</select>
+  			
+  			
+  			
+  			<select id="Maxtotalamount" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+  				select totalamount from accountadjustment where id = (select max(id) from accountadjustment where orderId = #{orderId} )
+  			</select>
   			
   			
   			
   			<select id="AllAccount" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.beoverdue,a.amou_time FROM	
+  				select o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.remarks,a.beoverdue,a.amou_time FROM	
   				repayment_setting re,user u,orders o,accountadjustment a
   				<where>
   					a.orderId = o.id 
@@ -987,5 +996,10 @@
 			<update id="OrdersStatus" parameterType="com.zhita.model.manage.Offlinjianmian">
 				update orders set orderStatus = "3" where id = #{orderId}
 			</update>
+			
+			
+			<select id="SelectAccOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Accountadjustment">
+				select a.* from accountadjustment a,orders o where o.orderNumber = #{orderNumber} and o.id = a.orderId
+			</select> 
  
 </mapper>
