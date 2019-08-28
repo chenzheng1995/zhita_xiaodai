@@ -18,7 +18,7 @@
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityAccount as realityBorrowMoney,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime
+			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum
 			from orders o,user u,orderdetails ord
 			<where>
 				ord.orderId not in (select c.orderId from collection c,orders o where o.id = c.orderId AND o.companyId = 3)
@@ -56,7 +56,7 @@
 		
 		
 		<select id="CollectionAll" parameterType="com.zhita.model.manage.Sys_user" resultType="com.zhita.model.manage.Sys_user">
-			select * from sys_user where companyId = #{companyId} and userId in (select userId from sysuser_role where roleId in
+			select account as reallyName,userId as id from sys_user where companyId = #{companyId} and userId in (select userId from sysuser_role where roleId in
 			 (select roleId from role where roleName like CONCAT('%',#{roleName},'%')  ))
 		</select>
 		
