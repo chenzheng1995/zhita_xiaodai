@@ -23,7 +23,7 @@ public interface OperatorMapper {
 
 	int updateSearch_id(@Param("search_id")String search_id,@Param("userId") String userId);
 
-	int setredIdAndPhone(@Param("reqId")String reqId,@Param("userId") int userId,@Param("phone") String phone);
+	int setredIdAndPhone(@Param("reqId")String reqId,@Param("userId") int userId,@Param("phone") String phone,@Param("authentime") String authentime);
 
 	Map<String, Object> getOperator(int userId);
 
@@ -40,6 +40,8 @@ public interface OperatorMapper {
 	String getoperatorJson(int userId);
 
 	String getphone(int userId);
+
+	int setwhitelistuser(@Param("attestationStatus")String attestationStatus,@Param("userId") int userId,@Param("authentime") String authentime);
 
 
 }

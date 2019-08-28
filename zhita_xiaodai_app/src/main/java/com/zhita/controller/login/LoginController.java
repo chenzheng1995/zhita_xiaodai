@@ -96,6 +96,9 @@ public class LoginController {
 		if (result.equals(code)) {
 			YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
 			String state = yunTongXunUtil.sendSMS(phone);
+			if("提交成功".equals(state)) {
+				
+			}
 			map.put("Ncode","2000");
 			map.put("Code","200");
 			map.put("msg", state);

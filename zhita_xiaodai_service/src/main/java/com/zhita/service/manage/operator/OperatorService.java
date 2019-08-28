@@ -5,7 +5,7 @@ import java.util.Map;
 public interface OperatorService {
 
 
-	int setredIdAndPhone(String reqId, int userId, String phone);
+	int setredIdAndPhone(String reqId, int userId, String phone, String authentime);
 
 	int updateSearch_id(String search_id, String userId);
 
@@ -24,5 +24,7 @@ public interface OperatorService {
 	String getoperatorJson(int userId);
 
 	String getphone(int userId);
+
+	int setwhitelistuser(String attestationStatus, int userId, String authentime);
 
 }

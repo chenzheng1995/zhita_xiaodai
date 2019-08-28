@@ -54,7 +54,7 @@ public interface UserAttestationMapper {
 	int insertUserAttestation(@Param("name")String name,@Param("gender") String gender,@Param("nationality") String nationality,@Param("birth_year") String birth_year,
 			@Param("birth_month")String birth_month,@Param("birth_day")String birth_day,@Param("address") String address,@Param("issued_by") String issued_by,
 			@Param("valid_date_start")String valid_date_start,@Param("valid_date_end") String valid_date_end,@Param("frontsidePath")String frontsidePath,
-			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number,@Param("homeAddressLongitude") String homeAddressLongitude,@Param("homeAddressLatitude") String homeAddressLatitude,@Param("detailAddress") String detailAddress,@Param("authenticationSteps") String authenticationSteps);
+			@Param("backsidePath")String backsidePath,@Param("userId") int userId,@Param("idcard_number") String idcard_number,@Param("homeAddressLongitude") String homeAddressLongitude,@Param("homeAddressLatitude") String homeAddressLatitude,@Param("detailAddress") String detailAddress,@Param("authenticationSteps") String authenticationSteps,@Param("authentime") String authentime);
 
 	String getshareOfState(int userId);
 
