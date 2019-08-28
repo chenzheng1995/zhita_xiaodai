@@ -495,7 +495,6 @@
 			<where>
 				o.id = ord.orderid
 				and o.userId = u.id
-				and o.orderStatus = #{orderStatus}
 				and sor.id = u.sourceId
 				and o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
@@ -524,6 +523,9 @@
 			</if>
 			<if test="registeClient != null and registeClient != ''">
 				AND u.registeClient = #{registeClient}
+			</if>
+			<if test="status1 != null and status1 != '' and status2 != null and status2 != ''">
+				AND o.orderStatus BETWEEN #{status1} and #{status2}
 			</if>
 			 </where>
 			 GROUP BY ord.orderId
