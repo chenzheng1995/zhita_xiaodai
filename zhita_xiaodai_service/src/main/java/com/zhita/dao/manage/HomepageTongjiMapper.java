@@ -171,8 +171,11 @@ public interface HomepageTongjiMapper {
 	//后台管理----逾前未还
 	int overduenotrepay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
-	//后台管理----已还款订单
+	//后台管理----已还款订单   还款表
 	List<Orders> overduerepay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
+	
+	//后台管理----已还款订单    线下还款表
+	List<Orders> overduerepayoff(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
 	//后台管理----逾后未还
 	int overdueafternotrepay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
@@ -180,10 +183,10 @@ public interface HomepageTongjiMapper {
 	//后台管理----已坏账
 	int baddebt(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
-	//后台管理----应还金额
+	//后台管理----实际应还金额
 	List<Orderdetails> shouldmoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
-	//后台管理----实还金额
+	//后台管理----线上实还金额
 	BigDecimal realymoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
 	//后台管理----延期费
@@ -195,8 +198,11 @@ public interface HomepageTongjiMapper {
 	//后台管理---减免金额（线上减免）
 	BigDecimal deratemoneyon(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
-	//后台管理---减免金额（线下减免）
+	//后台管理---线下实际还的金额
 	BigDecimal deratemoneyunder(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
+	
+	//后台管理---减免金额（线下减免金额）
+	BigDecimal offmoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
 	//后台管理----银行扣款金额
 	BigDecimal bankMoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
