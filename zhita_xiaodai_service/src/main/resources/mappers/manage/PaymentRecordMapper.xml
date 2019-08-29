@@ -997,6 +997,12 @@
 			</update>
 			
 			
+			<update id="UserDefeNum" parameterType="java.lang.Integer">
+				update user set delayTimes = 0 where id = (select userId from orders where id = #{orderId})
+			</update>
+			
+			
+			
 			<select id="SelectAccOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Accountadjustment">
 				select a.* from accountadjustment a,orders o where o.orderNumber = #{orderNumber} and o.id = a.orderId
 			</select> 

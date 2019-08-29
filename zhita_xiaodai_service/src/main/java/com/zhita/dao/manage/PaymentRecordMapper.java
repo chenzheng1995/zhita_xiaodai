@@ -184,4 +184,7 @@ public interface PaymentRecordMapper {
     
     
     List<Accountadjustment> SelectAccOrders(String orderNumber);
+    
+    
+    Integer UserDefeNum(Integer orderId);
 }
