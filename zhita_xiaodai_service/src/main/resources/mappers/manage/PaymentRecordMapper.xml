@@ -868,8 +868,9 @@
   					fina_id,
   					offusermoney,
   					remarks,
-  					sedn_time
-  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks},#{sedn_time})
+  					sedn_time,
+  					offmoney
+  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks},#{sedn_time},#{offmoney})
   			</insert>
   			
   			

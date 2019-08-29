@@ -28,6 +28,25 @@ public class Offlinjianmian {
 	
 	private String makeLoans;
 	
+	private BigDecimal offmoney;
+	
+	private BigDecimal orderMoney;
+
+	public BigDecimal getOrderMoney() {
+		return orderMoney;
+	}
+
+	public void setOrderMoney(BigDecimal orderMoney) {
+		this.orderMoney = orderMoney;
+	}
+
+	public BigDecimal getOffmoney() {
+		return offmoney;
+	}
+
+	public void setOffmoney(BigDecimal offmoney) {
+		this.offmoney = offmoney;
+	}
 
 	public String getAccount() {
 		return account;
