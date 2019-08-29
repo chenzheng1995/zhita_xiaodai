@@ -26,6 +26,8 @@ public class AboutUsController {
 	    public Map<String, Object> getaboutus(int companyId){
 	    	Map<String, Object> map =intAboutusService.getaboutus(companyId);
 	    	map.put("Ncode","2000");
+	    	map.put("iOS","http://dhjios.rong51dai.com");
+	    	map.put("Android","https://htmlk.oss-cn-qingdao.aliyuncs.com/xiaodai/apk/daihuijia.apk");
 			return map;
 
 	    }
