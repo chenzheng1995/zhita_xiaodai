@@ -187,4 +187,7 @@ public interface PaymentRecordMapper {
     
     
     Integer UserDefeNum(Integer orderId);
+    
+    
+    Integer UpdateOrdermoneyTime (Accountadjustment acc);
 }
