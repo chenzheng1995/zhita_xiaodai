@@ -316,10 +316,12 @@
 			overdue_phonestaus,
 			collectionMemberId,
 			collectiondate,
-			orderId
+			orderId,
+			statu,
+			deled
 			)
 			VALUES
-			(#{overdue_phonestaus},#{collectionMemberId},#{collectiondate},#{orderId})
+			(#{overdue_phonestaus},#{collectionMemberId},#{collectiondate},#{orderId},#{statu},#{deled})
 		</insert>
 		
 		

@@ -31,6 +31,7 @@ import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.ReturnChanpay;
+import com.zhita.model.manage.User;
 import com.zhita.service.manage.Statistic.Statisticsservice;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.util.HttpProtocolHandler;
@@ -602,6 +603,10 @@ public class ChanpayQuickCollection {
 	public Map<String, Object> Bangnmg_api_auth_unbind(String userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		bankcardTypeId = 1;
+		User us = chanpayservice.OneUser(Integer.valueOf(userId));
+		IDNo = us.getIdcard();
+		CstmrNm = us.getName();
 		// 2.1 基本参数
 		if(userId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
 		
