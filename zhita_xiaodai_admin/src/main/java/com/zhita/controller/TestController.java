@@ -185,19 +185,9 @@ public class TestController {
 		//System.out.println(Timestamps.stampToDate(null));
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		Date date=new Date();//得到当天时间
-		SimpleDateFormat sf1=new SimpleDateFormat("yyyy/MM/dd");
-		System.out.println(sf1.format(date));
-		
-		String company="贷回家";
-		String sourcename="App";
-		List<String> listdate=new ArrayList<>();
-		listdate.add("2019-08-27");
-		RedisClientUtil r=new RedisClientUtil();
-		r.set("贷回家App2019/08/27xiaodaiKey", "34");
-		for (int j = 0; j < listdate.size(); j++) {
-			System.out.println(Integer.parseInt(r.getSourceClick(company + sourcename + listdate.get(j).replace("-", "/") + "xiaodaiKey")));
-		}
+		BigDecimal a=new BigDecimal("17.02");
+		BigDecimal b=new BigDecimal("20.02");
+		System.out.println(a.subtract(b));
 		
 	}	
 }
