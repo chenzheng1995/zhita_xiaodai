@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.face.postDemo;
+import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 import com.zhita.util.Base64ToInputStream;
@@ -31,6 +32,9 @@ public class GetResultController {
     
     @Autowired
     IntUserService intUserService;
+    
+	@Autowired
+	ThirdcalltongjiMapper thirdcalltongjiMapper;
 	
 //    @RequestMapping("/getresult")
 //    @ResponseBody
@@ -244,7 +248,7 @@ public class GetResultController {
     	String authenticationSteps ="1";
     	intUserService.updatename(name,userId);
     	 int number = UserAttestationService.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,authentime);
-    	 if(number==1) {
+    	 if(number==1) {    		 
     	    	map.put("Ncode","2000");
 	    		map.put("code", 200);
 	    		map.put("msg","插入成功");
@@ -256,6 +260,22 @@ public class GetResultController {
 		return map;
     	
     }
+    
+    
+    //第三方收费接口
+    @RequestMapping("/setthirdcalltongji")
+    @ResponseBody
+    @Transactional
+    public Map<String, Object> setthirdcalltongji(int companyId,String thirdtypeid){
+    	Map<String, Object> map = new HashMap<String, Object>();
+		String date = System.currentTimeMillis()+"";
+		thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
+    	map.put("Ncode","2000");
+		map.put("code", 200);
+		map.put("msg","插入成功");
+		return map;
+    	
+    }  
     
     
     

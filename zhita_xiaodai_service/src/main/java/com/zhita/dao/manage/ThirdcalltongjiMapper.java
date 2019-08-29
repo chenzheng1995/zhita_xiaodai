@@ -1,5 +1,7 @@
 package com.zhita.dao.manage;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.Thirdcalltongji;
 
 public interface ThirdcalltongjiMapper {
@@ -14,4 +16,6 @@ public interface ThirdcalltongjiMapper {
     int updateByPrimaryKeySelective(Thirdcalltongji record);
 
     int updateByPrimaryKey(Thirdcalltongji record);
+
+	void setthirdcalltongji(@Param("companyId") int companyId,@Param("thirdtypeid")  String thirdtypeid,@Param("date")  String date);
 }

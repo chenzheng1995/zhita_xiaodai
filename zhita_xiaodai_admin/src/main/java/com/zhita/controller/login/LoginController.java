@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.controller.shiro.PhoneToken;
+import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.SysUser;
 import com.zhita.service.manage.login.IntLoginService;
@@ -53,7 +54,8 @@ public class LoginController {
 	@Autowired
 	private IntSourceService intSourceService;
 	
-	
+	@Autowired
+	ThirdcalltongjiMapper thirdcalltongjiMapper;
 	
 	
 	 // 发送验证码
@@ -70,6 +72,12 @@ public class LoginController {
         } else {
             YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
             String state = yunTongXunUtil.sendSMS(phone);
+            if("提交成功".equals(state)) {
+            	int companyId =3;
+    			String thirdtypeid = "1";
+    			String date = System.currentTimeMillis()+"";
+    			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
+    			}
             map.put("msg", state);
             return map;
         }
