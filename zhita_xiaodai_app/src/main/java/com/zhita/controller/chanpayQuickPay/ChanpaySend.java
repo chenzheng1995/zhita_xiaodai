@@ -85,6 +85,8 @@ public class ChanpaySend extends BaseParameter{
 	@RequestMapping("send")
 	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan,BigDecimal finalLine,String registeClient,String sourceName,
 			BigDecimal shouldTotalAmount,BigDecimal totalInterest,BigDecimal averageDailyInterest){
+		
+		
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
 		String time = sin.format(new Date());
 		RedisClientUtil redis = new RedisClientUtil();
@@ -101,19 +103,41 @@ public class ChanpaySend extends BaseParameter{
 		BigDecimal pr = new BigDecimal(0);
 		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
 		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
+		
+		
+		if(borrowingScheme.equals("1")){
+			actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
+			acmoney = new BigDecimal(TransAmt);
+			j = actualAmountReceived.compareTo(acmoney);
+			System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
+			}else if(borrowingScheme.equals("2")){
+			BigDecimal sa = new BigDecimal(TransAmt);
+			j = shouldTotalAmount.compareTo(sa);
+			}
+			int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
+			Bankcard ba = new Bankcard();
+			ba.setCompanyId(companyId);
+			ba.setUserId(userId);
+			Bankcard ban = chanser.SelectBank(ba);
+			System.out.println("数据:"+ban.getTiedCardPhone() + ban.getBankcardName() + ban.getCstmrnm() + ban.getBankcardTypeName());
+			Calendar now = Calendar.getInstance(); 
+	    	String year = now.get(Calendar.YEAR)+""; //年
+	    	String month = now.get(Calendar.MONTH) + 1 + "";//月
+	    	if(Integer.parseInt(month)<10) {
+	    		month = "0"+Integer.parseInt(month);
+	    	}
+	    	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
+	    	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
+	    	String minute = now.get(Calendar.MINUTE)+"";//分
+	    	String second = now.get(Calendar.SECOND)+"";//秒
+	    	String afterFour = ban.getTiedCardPhone().substring(ban.getTiedCardPhone().length()-4); 
+	    	String orderNumber ="DD_"+year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
+	    	
+	    	
 		try {
 			
-		if(borrowingScheme.equals("1")){
-		actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
-		acmoney = new BigDecimal(TransAmt);
-		j = actualAmountReceived.compareTo(acmoney);
-		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
-		}else if(borrowingScheme.equals("2")){
-		BigDecimal sa = new BigDecimal(TransAmt);
-		j = shouldTotalAmount.compareTo(sa);
-		}
 		
-		String chanpaysenduserid = redis.get("ChanpaySenduserId"+userId);
+		String chanpaysenduserid = redis.get("ChanpaySenduserId"+orderNumber);
 		if(chanpaysenduserid != null){
 			map1.put("code", "205");
 			map1.put("Ncode", 0);
@@ -150,28 +174,12 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("code", 0);
 		}else{
 			
-		int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
-		Bankcard ba = new Bankcard();
-		ba.setCompanyId(companyId);
-		ba.setUserId(userId);
-		Bankcard ban = chanser.SelectBank(ba);
-		System.out.println("数据:"+ban.getTiedCardPhone() + ban.getBankcardName() + ban.getCstmrnm() + ban.getBankcardTypeName());
+		
 		map1.put("Ncode", 2000);
 		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
 				&& ban.getTiedCardPhone() != "" && ban.getBankcardName() != "" && ban.getCstmrnm() != "" && ban.getBankcardTypeName() != ""){
 		
-    	Calendar now = Calendar.getInstance(); 
-    	String year = now.get(Calendar.YEAR)+""; //年
-    	String month = now.get(Calendar.MONTH) + 1 + "";//月
-    	if(Integer.parseInt(month)<10) {
-    		month = "0"+Integer.parseInt(month);
-    	}
-    	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
-    	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
-    	String minute = now.get(Calendar.MINUTE)+"";//分
-    	String second = now.get(Calendar.SECOND)+"";//秒
-    	String afterFour = ban.getTiedCardPhone().substring(ban.getTiedCardPhone().length()-4); 
-    	String orderNumber ="DD_"+year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
+    	
     	
 		if(userId != null && TransAmt != null && companyId != null && lifeOfLoan != 0){
 		
@@ -252,7 +260,7 @@ public class ChanpaySend extends BaseParameter{
 				try {
 					num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 				} catch (Exception e) {
-					redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
+					redis.set("ChanpaySenduserId"+orderNumber, orderNumber);
 					map1.put("code", "203");
 					map1.put("desc", "已放款,未保存");
 					map1.put("Ncode", 0);
@@ -270,11 +278,11 @@ public class ChanpaySend extends BaseParameter{
 						map1.put("ShortReturn", returnchanpay);
 						map1.put("code", 200);
 						map1.put("Ncode", 2000);
-						redis.delkey("ChanpaySenduserId"+userId);//删除字段
+						redis.delkey("ChanpaySenduserId"+orderNumber);//删除字段
 			    		map1.put("msg","借款成功");
 			    		map1.put("desc","插入成功");
 			    	}else {
-			    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
+			    		redis.delkey("ChanpaySenduserId"+orderNumber);//删除字段
 			    		map1.put("Ncode", 0);
 						map1.put("code",405); 
 						map1.put("msg","借款成功");
@@ -330,7 +338,7 @@ public class ChanpaySend extends BaseParameter{
 		}
 		}
 		} catch (Exception e) {
-			redis.set("ChanpaySenduserId", String.valueOf(userId));
+			redis.set("ChanpaySenduserId"+orderNumber, orderNumber);
 			map1.put("code", "203");
 			map1.put("desc", "已放款,未保存");
 			map1.put("Ncode", 0);

@@ -191,9 +191,10 @@ public class FinanceServiceimp implements FinanceService{
 			}
 			
 		}
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			acc.setAmou_time(System.currentTimeMillis()+"");
-			acc.setAccounttime(Timestamps.dateToStamp1(acc.getAccounttime()));
+			
+			acc.setAccounttime(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -262,8 +263,9 @@ public class FinanceServiceimp implements FinanceService{
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
 					ordetails.setDefeNum(defe.getDefeNum());
-					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney());//放款金额 + 利息
+					ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
+					ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 					map.put("aaa", ordetails.getInterestPenaltySum());
 					map.put("Orderdetails", ordetails);
 					
@@ -742,10 +744,12 @@ public class FinanceServiceimp implements FinanceService{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		off.setOffmoney(off.getOrderMoney().subtract(off.getOffusermoney()));
 		Integer addId = padao.AddOffJianMian(off);
 		if(addId != null){
 			Integer updateId = padao.OrdersStatus(off);
 			if(updateId != null){
+				padao.UserDefeNum(off.getOrderId());
 				map.put("code", 200);
 				map.put("desc", "操作成功");
 			}else{
@@ -838,18 +842,19 @@ public class FinanceServiceimp implements FinanceService{
         ca.setTime(new Date()); //设置时间为当前时间
         ca.add(Calendar.DATE, +off.getOnceDeferredDay());
         Date date = ca.getTime();
-        off.setOperating_time(dateFormat.format(new Date()));//操作时间
-        off.setDelay_time(dateFormat.format(date));
+        
+        try {
+        	off.setOperating_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));//操作时间
+			off.setDelay_time(Timestamps.dateToStamp1(dateFormat.format(date)));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         Integer addId = padao.AddDelay(off);
 		if(addId != null){
-			Integer updateid = padao.UpdateOrderTime(off);
-			if(updateid !=null){
+				padao.UpdateOrderTime(off);
 				map.put("code", 200);
 				map.put("desc", "已添加");
-			}else{
-				map.put("code", 200);
-				map.put("desc", "失败");
-			}
 		}else{
 			map.put("code", 0);
 			map.put("desc", "数据异常");
@@ -881,6 +886,8 @@ public class FinanceServiceimp implements FinanceService{
 			Deferred de = padao.DeleteNumMoney(ofa.get(i).getOrderId());
 			ofa.get(i).setDefeNum(de.getDefeNum());
 			ofa.get(i).setDefeMoney(de.getDefeMoney());
+			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getDelay_time()));
+			ofa.get(i).setOperating_time(Timestamps.stampToDate(ofa.get(i).getOperating_time()));
 		}
 		map.put("Offlinedelay", ofa);
 		map.put("pageutil", pages);

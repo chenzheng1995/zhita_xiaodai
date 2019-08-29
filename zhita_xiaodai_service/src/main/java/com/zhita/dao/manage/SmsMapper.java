@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
+import com.zhita.model.manage.Thirdcalltongji;
 import com.zhita.model.manage.Usershortmessage;
 
 public interface SmsMapper {
@@ -40,4 +41,7 @@ public interface SmsMapper {
 	
 	
 	Integer UserPage(Integer companyId);
+	
+	
+	Integer AddThirdcallTongj(Thirdcalltongji th);
 }

@@ -6,6 +6,7 @@
     <result column="thirdtypeid" property="thirdtypeid" jdbcType="INTEGER" />
     <result column="date" property="date" jdbcType="VARCHAR" />
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+    <result column="companyId" property="companyId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, thirdtypeid, date, deleted
@@ -79,4 +80,10 @@
       deleted = #{deleted,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+       <insert id="setthirdcalltongji" parameterType="java.util.Map">
+      insert into thirdcalltongji (thirdtypeid, date, companyId)
+      values(#{thirdtypeid},#{date},#{companyId})
+    </insert>
 </mapper>

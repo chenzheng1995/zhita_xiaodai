@@ -77,5 +77,5 @@ public interface Chanpayservice {
 	String SelectBorrowing(Integer companyId);
 	
 	
-	Integer UpdateRepayStatus(String pipelinenu);
+	Integer UpdateRepayStatus(String pipelinenu,String orderNumber);
 }

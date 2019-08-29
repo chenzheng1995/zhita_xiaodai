@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.dao.manage.CompanyMapper;
+import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.Source;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.loanthresholdvalue.IntLoanthresholdvalueService;
@@ -66,6 +67,9 @@ public class PromoteController {
 	
 	@Autowired
 	IntUsthresholdvalueService intUsthresholdvalueService;
+	
+	@Autowired
+	ThirdcalltongjiMapper thirdcalltongjiMapper;
 	
 	//判断这个渠道有没有删除或禁用，如果删除或禁用了就不让用户显示推广页
 	@RequestMapping("/isPromotion")
@@ -140,6 +144,12 @@ public class PromoteController {
         } else {
             YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
             String state = yunTongXunUtil.sendSMS(phone);
+            if("提交成功".equals(state)) {
+            	int companyId =3;
+    			String thirdtypeid = "1";
+    			String date = System.currentTimeMillis()+"";
+    			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
+    			}
             map.put("msg", state);
             return map;
         }

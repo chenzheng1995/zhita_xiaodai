@@ -995,7 +995,7 @@ public class ChanpayQuickCollection {
 			ord.setOrderNumber(OrderNumber);
 			if(as.equals("S")){
 				String pipelinenu = "Rsn_"+OriPayTrxId;
-				Integer updateId = chanpayservice.UpdateRepayStatus(pipelinenu);
+				Integer updateId = chanpayservice.UpdateRepayStatus(pipelinenu,OrderNumber);
 				if(updateId != null){
 				Integer a = servie.UpdateOrders(ord);
 					if(a!=null){

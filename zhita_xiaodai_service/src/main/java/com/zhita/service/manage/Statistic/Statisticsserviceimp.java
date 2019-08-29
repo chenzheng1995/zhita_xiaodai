@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
+import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
@@ -33,6 +34,11 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	
 	@Autowired
 	private StatisticsDao sdao;
+	
+	
+	
+	@Autowired
+	private PaymentRecordMapper padao;
 	
 
 	
@@ -253,6 +259,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		Orders o = sdao.SelectOrderId(repay.getOrderNumber());
 		repay.setOrderid(o.getId());
 		System.out.println(repay.getOrderid());
+		
 		return sdao.AddRepay(repay);
 	}
 

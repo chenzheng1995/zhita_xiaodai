@@ -17,6 +17,7 @@ import com.zhita.dao.manage.SmsMapper;
 import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
 import com.zhita.model.manage.SmsSendResponse;
+import com.zhita.model.manage.Thirdcalltongji;
 import com.zhita.model.manage.Usershortmessage;
 import com.zhita.util.ChuangLanSmsUtil;
 import com.zhita.util.PageUtil;
@@ -88,7 +89,19 @@ public class Smserviceimp implements Smservice{
 		        	SimpleDateFormat def = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		        	shor.setSend_time(def.format(new Date()));
 		        	System.out.println(shor.getSend_time());
-		        	sdao.AddSms(shor);
+		        	Integer a = sdao.AddSms(shor);
+		        	if(a != null){
+		        		Thirdcalltongji th = new Thirdcalltongji();
+		        		th.setCompanyid(shor.getCompanyid());
+		        		th.setThirdtypeid(9);
+		        		try {
+		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+		        		th.setDeleted("0");
+		        		sdao.AddThirdcallTongj(th);
+		        	}
 		        	map.put("code", "200");
 		        	map.put("desc", "已发送,数据存储");
 		        }else{
@@ -297,6 +310,16 @@ public class Smserviceimp implements Smservice{
 				}
 	    		Integer addId = sdao.AddUserShortmessage(shor);
 	    		if(addId != null){
+	    			Thirdcalltongji th = new Thirdcalltongji();
+	        		th.setCompanyid(shor.getCompanyId());
+	        		th.setThirdtypeid(9);
+	        		try {
+	        			th.setDate(Timestamps.dateToStamp(sim.format(new Date())));
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+	        		th.setDeleted("0");
+	        		sdao.AddThirdcallTongj(th);
 	    			map.put("code", 200);
 	    			map.put("desc", "成功");
 	    		}else{

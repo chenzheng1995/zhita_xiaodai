@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.xinyan.action.OperatorAction;
+import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.dao.manage.ThreeElementsMapper;
 import com.zhita.dao.manage.ZhimiRiskMapper;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
@@ -68,6 +69,9 @@ public class OperatorController {
     
     @Autowired
     ThreeElementsMapper threeElementsMapper;
+    
+	@Autowired
+	ThirdcalltongjiMapper thirdcalltongjiMapper;
 	
     @RequestMapping("/getOperator")
     @ResponseBody
@@ -136,6 +140,10 @@ public class OperatorController {
     	String error = sampleObject.getString("error");
 		int  number = operatorService.updateOperatorJson(url,userId);
 		if(number==1) {
+			int companyId =3;
+			String thirdtypeid = "5";
+			String date = System.currentTimeMillis()+"";
+			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
 			map.put("msg", "数据更新成功");
 		}else {
 			map.put("msg", "数据更新失败");
@@ -502,7 +510,10 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 		 }
 		 if(num>0) {
 			 threeElementsMapper.updateThreeElements(userId,code,trans_id,certification_number,phone);
-		}		 
+		}	
+			String thirdtypeid = "4";
+			String date = System.currentTimeMillis()+"";
+			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
 			map1.put("Ncode","2000");
 		 map1.put("code","200");
 		 map1.put("msg","认证一致");
@@ -531,7 +542,9 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 
 		 }
 		 }
-			map1.put("Ncode","405");
+			String thirdtypeid = "4";
+			String date = System.currentTimeMillis()+"";
+			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
 		 map1.put("code","405");
 		 map1.put("msg","认证不一致");	
 		 map1.put("prompt","请使用本人手机号认证");
@@ -669,6 +682,10 @@ public Map<String, Object> getwhitelistuser(String phone,int userId,String name,
          
           System.out.println("search_id"+search_id+"phone"+phone+"name"+name+"idNumber"+idNumber+"reqId"+reqId+"tianji_api_tianjiscore_pdscorev5_response"+tianji_api_tianjiscore_pdscorev5_response);
           score = Integer.parseInt(jsonObject.get("score").toString());
+          int companyId =3;
+			String thirdtypeid = "6";
+			String date = System.currentTimeMillis()+"";
+			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
 	}
      if("风控乙".equals(rmModleName)) {
          System.out.println("rmModleName------------------------------------------"+1111111);

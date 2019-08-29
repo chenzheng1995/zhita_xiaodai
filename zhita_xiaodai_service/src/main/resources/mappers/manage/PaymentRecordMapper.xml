@@ -209,7 +209,7 @@
   
   
   		  <select id="PaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,re.paymentmoney,ra.pipelinenumber
+		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber
 		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
 		  	 LEFT JOIN user u ON o.userId = u.id
 		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -868,8 +868,9 @@
   					fina_id,
   					offusermoney,
   					remarks,
-  					sedn_time
-  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks},#{sedn_time})
+  					sedn_time,
+  					offmoney
+  				)VALUES(#{orderId},#{fina_id},#{offusermoney},#{remarks},#{sedn_time},#{offmoney})
   			</insert>
   			
   			
@@ -987,6 +988,11 @@
   			</update>
 
 
+			<update id="UpdateOrdermoneyTime" parameterType="com.zhita.model.manage.Accountadjustment">
+  				update orderdetails set shouldReapyMoney = #{totalamount},orderStatus = "1", shouldReturnTime = #{accounttime} where orderId = #{orderId}
+  			</update>
+  			
+
 			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
 				update orders set shouldReturnTime = #{delay_time} where id = #{orderId}
 			</select>
@@ -995,6 +1001,12 @@
 			<update id="OrdersStatus" parameterType="com.zhita.model.manage.Offlinjianmian">
 				update orders set orderStatus = "3" where id = #{orderId}
 			</update>
+			
+			
+			<update id="UserDefeNum" parameterType="java.lang.Integer">
+				update user set delayTimes = 0 where id = (select userId from orders where id = #{orderId})
+			</update>
+			
 			
 			
 			<select id="SelectAccOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Accountadjustment">
