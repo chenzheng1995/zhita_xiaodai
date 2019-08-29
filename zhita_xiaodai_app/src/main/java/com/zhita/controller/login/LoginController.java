@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 
+import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.login.IntLoginService;
@@ -40,6 +41,11 @@ public class LoginController {
 
 	@Autowired
 	IntOrderService intOrderService;
+	
+	@Autowired
+	ThirdcalltongjiMapper thirdcalltongjiMapper;
+	
+
 
 	private String getIpAddress(HttpServletRequest request) {
 		String ip = request.getHeader("x-forwarded-for");
@@ -97,7 +103,9 @@ public class LoginController {
 			YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
 			String state = yunTongXunUtil.sendSMS(phone);
 			if("提交成功".equals(state)) {
-				
+			String thirdtypeid = "1";
+			String date = System.currentTimeMillis()+"";
+			thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
 			}
 			map.put("Ncode","2000");
 			map.put("Code","200");
