@@ -412,6 +412,8 @@ public class OrderServiceImp implements IntOrderService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllordersByLike(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		BigDecimal shourldmoney=list.get(i).getOrderdetails().getShouldReapyMoney().add(list.get(i).getOrderdetails().getInterestPenaltySum());
+    		list.get(i).setShourldmoney(shourldmoney);//应还金额（期限内应还金额+逾期的逾期费）
     		list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));//将手机号进行脱敏
     		list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
