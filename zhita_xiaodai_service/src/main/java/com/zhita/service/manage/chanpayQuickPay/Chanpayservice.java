@@ -2,13 +2,16 @@ package com.zhita.service.manage.chanpayQuickPay;
 
 
 import java.math.BigDecimal;
+
 import org.springframework.stereotype.Component;
+
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.User;
 
 
 public interface Chanpayservice {
@@ -78,4 +81,7 @@ public interface Chanpayservice {
 	
 	
 	Integer UpdateRepayStatus(String pipelinenu,String orderNumber);
+	
+	
+	User OneUser(Integer userId);
 }

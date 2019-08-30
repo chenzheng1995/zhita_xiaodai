@@ -11,17 +11,18 @@ public class HomepageTongji {
 	private Integer overdueafternotrepay;//逾后未还
 	private Integer overdueafterrepay;//逾后已还
 	private Integer baddebt;//已坏账
-	private BigDecimal shouldmoney;//应还金额
-	private BigDecimal realymoney;//实际还款金额
+	private BigDecimal originalshouldmoney;//原始应还金额
+	private BigDecimal shouldmoney;//实际应还金额
+	private BigDecimal realymoney;//线上实际还款金额-还款表
+	private BigDecimal offrealymoney;//线下实际还款金额-线下减免表
 	private BigDecimal deferredmoney;//延期费
 	private BigDecimal overduemoney;//逾期费
-	private BigDecimal deratemoney;//减免金额
+	private BigDecimal deratemoney;//线上减免金额
+	private BigDecimal offderatemoney;//线下减免金额
 	private BigDecimal bankdeduction;//银行扣款金额
 	private BigDecimal tobepaid;//待还金额
 	private String overduecvr;//逾期率
 	private String recovery;//回收率
-	
-	
 	public String getShouldtime() {
 		return shouldtime;
 	}
@@ -64,6 +65,12 @@ public class HomepageTongji {
 	public void setBaddebt(Integer baddebt) {
 		this.baddebt = baddebt;
 	}
+	public BigDecimal getOriginalshouldmoney() {
+		return originalshouldmoney;
+	}
+	public void setOriginalshouldmoney(BigDecimal originalshouldmoney) {
+		this.originalshouldmoney = originalshouldmoney;
+	}
 	public BigDecimal getShouldmoney() {
 		return shouldmoney;
 	}
@@ -75,6 +82,12 @@ public class HomepageTongji {
 	}
 	public void setRealymoney(BigDecimal realymoney) {
 		this.realymoney = realymoney;
+	}
+	public BigDecimal getOffrealymoney() {
+		return offrealymoney;
+	}
+	public void setOffrealymoney(BigDecimal offrealymoney) {
+		this.offrealymoney = offrealymoney;
 	}
 	public BigDecimal getDeferredmoney() {
 		return deferredmoney;
@@ -93,6 +106,12 @@ public class HomepageTongji {
 	}
 	public void setDeratemoney(BigDecimal deratemoney) {
 		this.deratemoney = deratemoney;
+	}
+	public BigDecimal getOffderatemoney() {
+		return offderatemoney;
+	}
+	public void setOffderatemoney(BigDecimal offderatemoney) {
+		this.offderatemoney = offderatemoney;
 	}
 	public BigDecimal getBankdeduction() {
 		return bankdeduction;
@@ -118,5 +137,5 @@ public class HomepageTongji {
 	public void setRecovery(String recovery) {
 		this.recovery = recovery;
 	}
-
+	
 }

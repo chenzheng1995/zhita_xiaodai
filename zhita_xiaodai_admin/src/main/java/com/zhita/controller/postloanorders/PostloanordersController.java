@@ -31,6 +31,7 @@ public class PostloanordersController {
 	@RequestMapping("postOrders")
 	public Map<String, Object> SelectOrderpostloanor(Orderdetails detils){
 		return postloanor.allpostOrders(detils);
+		
 	}
 	
 	

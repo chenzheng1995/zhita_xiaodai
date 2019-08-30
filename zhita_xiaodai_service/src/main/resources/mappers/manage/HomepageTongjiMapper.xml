@@ -194,9 +194,13 @@
 	<select id="overduenotrepay" resultType="java.lang.Integer">
 		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=0
 	</select>
-	<!-- 后台管理      已还款订单 -->
+	<!-- 后台管理      已还款订单      还款表-->
 	<select id="overduerepay" resultType="com.zhita.model.manage.Orders">
 		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,r.repaymentDate realtime from orders o inner join repayment r on o.id=r.orderid where companyid=#{arg0} and r.statu="成功" and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
+	</select>
+	<!-- 后台管理      已还款订单   线下还款表 -->
+	<select id="overduerepayoff" resultType="com.zhita.model.manage.Orders">
+		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,off.sedn_time realtime from orders o inner join offlinjianmian off on o.id=off.orderid where companyid=#{arg0}  and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
 	</select>
 	<!-- 后台管理          逾后未还 -->
 	<select id="overdueafternotrepay" resultType="java.lang.Integer">
@@ -206,11 +210,11 @@
 	<select id="baddebt" resultType="java.lang.Integer">
 		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=4
 	</select>
-	<!-- 后台管理        应还金额 -->
+	<!-- 后台管理        实际应还金额 -->
 	<select id="shouldmoney" resultType="com.zhita.model.manage.Orderdetails">
 		select shouldReapyMoney,interestPenaltySum from orderdetails od inner join orders o on od.orderid=o.id where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
-	<!-- 后台管理        实际还金额 -->
+	<!-- 后台管理        线上实际还金额 -->
 	<select id="realymoney" resultType="java.math.BigDecimal">
 		select sum(r.repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and r.statu="成功" and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
@@ -226,9 +230,13 @@
 	<select id="deratemoneyon" resultType="java.math.BigDecimal">
 		select sum(acc.amountmoney) from orders o inner join accountadjustment acc on o.id=acc.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
-	<!-- 后台管理        减免金额（线下减免） -->
+	<!-- 后台管理        减免金额（线下实际还的金额） -->
 	<select id="deratemoneyunder" resultType="java.math.BigDecimal">
 		select sum(off.offusermoney) from orders o inner join offlinjianmian off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理        减免金额（线下时间还的金额） -->
+	<select id="offmoney" resultType="java.math.BigDecimal">
+		select sum(off.offmoney) from orders o inner join offlinjianmian off on o.id=off.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        银行扣款金额-->
 	<select id="bankMoney" resultType="java.math.BigDecimal">

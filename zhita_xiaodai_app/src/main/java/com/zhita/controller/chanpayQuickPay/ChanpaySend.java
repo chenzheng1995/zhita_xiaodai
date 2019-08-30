@@ -137,7 +137,7 @@ public class ChanpaySend extends BaseParameter{
 		try {
 			
 		
-		String chanpaysenduserid = redis.get("ChanpaySenduserId"+orderNumber);
+		String chanpaysenduserid = redis.get("ChanpaySenduserId"+userId);
 		if(chanpaysenduserid != null){
 			map1.put("code", "205");
 			map1.put("Ncode", 0);
@@ -260,7 +260,7 @@ public class ChanpaySend extends BaseParameter{
 				try {
 					num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 				} catch (Exception e) {
-					redis.set("ChanpaySenduserId"+orderNumber, orderNumber);
+					redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 					map1.put("code", "203");
 					map1.put("desc", "已放款,未保存");
 					map1.put("Ncode", 0);
@@ -278,11 +278,11 @@ public class ChanpaySend extends BaseParameter{
 						map1.put("ShortReturn", returnchanpay);
 						map1.put("code", 200);
 						map1.put("Ncode", 2000);
-						redis.delkey("ChanpaySenduserId"+orderNumber);//删除字段
+						redis.delkey("ChanpaySenduserId"+userId);//删除字段
 			    		map1.put("msg","借款成功");
 			    		map1.put("desc","插入成功");
 			    	}else {
-			    		redis.delkey("ChanpaySenduserId"+orderNumber);//删除字段
+			    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
 			    		map1.put("Ncode", 0);
 						map1.put("code",405); 
 						map1.put("msg","借款成功");
@@ -338,7 +338,7 @@ public class ChanpaySend extends BaseParameter{
 		}
 		}
 		} catch (Exception e) {
-			redis.set("ChanpaySenduserId"+orderNumber, orderNumber);
+			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 			map1.put("code", "203");
 			map1.put("desc", "已放款,未保存");
 			map1.put("Ncode", 0);

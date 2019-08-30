@@ -988,6 +988,11 @@
   			</update>
 
 
+			<update id="UpdateOrdermoneyTime" parameterType="com.zhita.model.manage.Accountadjustment">
+  				update orderdetails set shouldReapyMoney = #{totalamount},orderStatus = "1", shouldReturnTime = #{accounttime} where orderId = #{orderId}
+  			</update>
+  			
+
 			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
 				update orders set shouldReturnTime = #{delay_time} where id = #{orderId}
 			</select>
@@ -1007,5 +1012,12 @@
 			<select id="SelectAccOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Accountadjustment">
 				select a.* from accountadjustment a,orders o where o.orderNumber = #{orderNumber} and o.id = a.orderId
 			</select> 
+			
+			
+			
+			
+			<select id="SelectOneUser" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.User">
+				select us.idcard_number as idcard,u.name from user u,user_attestation us where u.id = #{userId} and us.userId = u.id
+			</select>
  
 </mapper>

@@ -15,6 +15,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.User;
 import com.zhita.util.Timestamps;
 
 
@@ -231,6 +232,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 		Integer a = stdao.UpdateRepaystatus(pipelinenu);
 		Orders orderId = stdao.SelectOrderId(orderNumber);
 		return padao.UserDefeNum(orderId.getId());
+	}
+
+	@Override
+	public User OneUser(Integer userId) {
+		return padao.SelectOneUser(userId);
 	}
 	
 	
