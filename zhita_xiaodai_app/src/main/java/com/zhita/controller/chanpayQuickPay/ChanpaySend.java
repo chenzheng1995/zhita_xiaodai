@@ -104,13 +104,11 @@ public class ChanpaySend extends BaseParameter{
 		BigDecimal pr = new BigDecimal(0);
 		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
 		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
-		
-		if(borrowingScheme.equals("1")){
-			actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
-			acmoney = new BigDecimal(TransAmt);
-			j = actualAmountReceived.compareTo(acmoney);
-			System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
-			}else if(borrowingScheme.equals("2")){
+		actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
+		acmoney = new BigDecimal(TransAmt);
+		j = actualAmountReceived.compareTo(acmoney);
+		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
+			if(borrowingScheme.equals("2")){
 			BigDecimal sa = new BigDecimal(TransAmt);
 			j = shouldTotalAmount.compareTo(sa);
 			}
