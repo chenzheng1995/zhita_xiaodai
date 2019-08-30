@@ -1035,4 +1035,14 @@
  			<select id="SelectShouReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
  				select shouldReturnTime from orders where id = #{orderId}
  			</select>
+ 			
+ 			
+ 			<delete id="DeleteOrderNumber" parameterType="java.lang.String" >
+ 				delete from orders where orderNumber = #{orderNumber}
+ 			</delete>
+ 			
+ 			
+ 			<delete id="DeleteOrderDetailsNumber" parameterType="java.lang.String" >
+ 				delete from orderdetails where orderId = (select id from orders where orderNumber = #{orderNumber})
+ 			</delete>
 </mapper>

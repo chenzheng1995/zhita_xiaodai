@@ -84,4 +84,7 @@ public interface Chanpayservice {
 	
 	
 	User OneUser(Integer userId);
+	
+	
+	Integer DeleteOrderNumber(String orderNumber);
 }

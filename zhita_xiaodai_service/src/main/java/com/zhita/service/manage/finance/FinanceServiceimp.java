@@ -193,8 +193,8 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			
-			acc.setAccounttime(Timestamps.dateToStamp1(sim.format(new Date())));
+			acc.setAmou_time(Timestamps.dateToStamp1(sim.format(new Date())));
+			acc.setAccounttime(Timestamps.dateToStamp1(acc.getAccounttime()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

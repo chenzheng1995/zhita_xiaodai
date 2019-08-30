@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -83,6 +84,7 @@ public class ChanpaySend extends BaseParameter{
 	 */
 	@ResponseBody
 	@RequestMapping("send")
+	@Transactional
 	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan,BigDecimal finalLine,String registeClient,String sourceName,
 			BigDecimal shouldTotalAmount,BigDecimal totalInterest,BigDecimal averageDailyInterest){
 		System.out.println("金额类:"+finalLine+"基恩:"+shouldTotalAmount+"CC:");
@@ -210,30 +212,45 @@ public class ChanpaySend extends BaseParameter{
     	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
     	String borrowMoneyWay = "立即贷";//贷款方式
     	
+    	int num = 0;
+		try {
+			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
+		} catch (Exception e) {
+			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
+			map1.put("code", "203");
+			map1.put("desc", "已放款,未保存");
+			map1.put("Ncode", 0);
+			return map1;
+		}
+		actualAmountReceived = new BigDecimal(TransAmt);
+    	if(num==1) {
+    		int orderId = intOrderService.getOrderId(orderNumber);
+	    	BigDecimal surplus_money = finalLine;
+    		num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
+	    			registeClient,sourceName,shouldTotalAmount,surplus_money);
+	    	if(num==1) {
+				map1.put("code", 200);
+				map1.put("Ncode", 2000);
+				redis.delkey("ChanpaySenduserId"+userId);//删除字段
+	    		map1.put("desc","订单已生成");
+	    		map1.put("msg","订单生成成功");
     	
-    	
-    	
-    	Map<String, String> map = this.requestBaseParameter();
-		map.put("TransCode", "T10000"); // 交易码
-		map.put("OutTradeNo", orderNumber); // 商户网站唯一订单号
-		map.put("CorpAcctNo", "");  //可空
-		map.put("BusinessType", "0"); // 业务类型：0对私 1对公
-		map.put("BankCommonName", ban.getBankcardTypeName()); // 通用银行名称
-		map.put("BankCode", "");//对公必填
-		map.put("AccountType", "00"); // 账户类型
-		map.put("AcctNo", ChanPayUtil.encrypt(ban.getBankcardName(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
-		map.put("AcctName", ChanPayUtil.encrypt(ban.getCstmrnm(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
-		map.put("TransAmt", TransAmt);
-		map.put("CorpPushUrl", "http://172.20.11.16");		
-		map.put("PostScript", "放款");
-		String rea = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
-				BaseConstant.MERCHANT_PRIVATE_KEY);
-		ReturnSend returnchanpay = JSON.parseObject(rea, ReturnSend.class);
-    	
-    	
-    	
-    	
-    	
+		    	Map<String, String> map = this.requestBaseParameter();
+				map.put("TransCode", "T10000"); // 交易码
+				map.put("OutTradeNo", orderNumber); // 商户网站唯一订单号
+				map.put("CorpAcctNo", "");  //可空
+				map.put("BusinessType", "0"); // 业务类型：0对私 1对公
+				map.put("BankCommonName", ban.getBankcardTypeName()); // 通用银行名称
+				map.put("BankCode", "");//对公必填
+				map.put("AccountType", "00"); // 账户类型
+				map.put("AcctNo", ChanPayUtil.encrypt(ban.getBankcardName(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账号(此处需要用真实的账号信息)
+				map.put("AcctName", ChanPayUtil.encrypt(ban.getCstmrnm(), BaseConstant.MERCHANT_PUBLIC_KEY, BaseConstant.CHARSET)); // 对手人账户名称
+				map.put("TransAmt", TransAmt);
+				map.put("CorpPushUrl", "http://172.20.11.16");		
+				map.put("PostScript", "放款");
+				String rea = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
+						BaseConstant.MERCHANT_PRIVATE_KEY);
+				ReturnSend returnchanpay = JSON.parseObject(rea, ReturnSend.class);
     	
     	
     	
@@ -261,55 +278,12 @@ public class ChanpaySend extends BaseParameter{
 			Integer addId = null;
 			addId = chanser.AddPayment_record(pay);
 			
-			if(addId != null){
-				
-				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
-				int num = 0;
-				try {
-					num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
-				} catch (Exception e) {
-					redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
-					map1.put("code", "203");
-					map1.put("desc", "已放款,未保存");
-					map1.put("Ncode", 0);
-					return map1;
-				}
-				actualAmountReceived = new BigDecimal(TransAmt);
-		    	if(num==1) {
-		    		int orderId = intOrderService.getOrderId(orderNumber);
-			    	BigDecimal surplus_money = finalLine;
-		    		num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
-			    			registeClient,sourceName,shouldTotalAmount,surplus_money);
-			    	pay.setOrderId(orderId);
-			    	chanser.UpdatePayment(pay);
-			    	if(num==1) {
-						map1.put("ShortReturn", returnchanpay);
-						map1.put("code", 200);
-						map1.put("Ncode", 2000);
-						redis.delkey("ChanpaySenduserId"+userId);//删除字段
-			    		map1.put("desc","借款成功");
-			    		map1.put("msg","插入成功");
-			    	}else {
-			    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
-			    		map1.put("Ncode", 0);
-						map1.put("code",405); 
-						map1.put("desc","借款成功");
-						map1.put("msg", "插入失败");
-						
-					}
-		    	}
-			}
-			
-			
-			
-			
-			
-			
 		}else{
 			
 			
 			pay.setStatus("支付失败");
 			chanser.AddPayment_record(pay);
+			chanser.DeleteOrderNumber(orderNumber);
 			map1.put("ShortReturn", returnchanpay);
 			map1.put("code", 0);
 			map1.put("msg", returnchanpay.getMemo());
@@ -317,6 +291,16 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("desc", "借款失败");
 			map1.put("code", 0);
 		}
+		
+	    }else {
+	    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
+	    		map1.put("Ncode", 0);
+				map1.put("code",405); 
+				map1.put("desc","订单已生成");
+	    		map1.put("msg","订单生成失败");
+				
+			}
+    	}
 		
 		}else{
 			map1.put("msg", "userId,TransAmt,companyId,lifeOfLoan不能为空");
