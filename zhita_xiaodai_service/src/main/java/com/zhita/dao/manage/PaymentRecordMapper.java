@@ -203,4 +203,10 @@ public interface PaymentRecordMapper {
     
     
     String SelectShouReturnTime(Integer orderId);
+    
+    
+    Integer DeleteOrderNumber(String orderNumber);
+    
+    
+    Integer DeleteOrderDetailsNumber(String orderNumber);
 }
