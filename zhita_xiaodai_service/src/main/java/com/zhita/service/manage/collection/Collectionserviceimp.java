@@ -62,7 +62,7 @@ public class Collectionserviceimp implements Collectionservice{
 			
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			
-			
+			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			
 			System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime()+"金额:"+orders.get(i).getOrder_money()
 					+"利息:"+orders.get(i).getRealityBorrowMoney()+"CC:"+orders.get(i).getInterestPenaltySum()+"BB:"+orders.get(i).getInterestSum());

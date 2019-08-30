@@ -989,7 +989,7 @@
 
 
 			<update id="OrdersStatusAA" parameterType="com.zhita.model.manage.Accountadjustment">
-				update orders set orderStatus = "3",shouldReturnTime = #{accounttime} where orderId = #{orderId}
+				update orders set orderStatus = "0",shouldReturnTime = #{accounttime} where id = #{orderId}
 			</update>
 
 			<update id="UpdateOrdermoneyTime" parameterType="com.zhita.model.manage.Accountadjustment">

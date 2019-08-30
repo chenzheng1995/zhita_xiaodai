@@ -40,6 +40,7 @@ import com.zhita.util.HttpResponse;
 import com.zhita.util.HttpResultType;
 import com.zhita.util.MD5;
 import com.zhita.util.RSA;
+import com.zhita.util.RedisClientUtil;
 
 
 @Controller
@@ -49,6 +50,8 @@ public class ChanpayQuickCollection {
 	
 	@Autowired
 	private Statisticsservice servie;
+	
+	
 	
 	
 	
@@ -496,17 +499,27 @@ public class ChanpayQuickCollection {
 	@Transactional
 	public Map<String, Object> nmg_biz_api_auth_req(Integer MerUserId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		RedisClientUtil redis = new RedisClientUtil();
+		String aca = redis.get("nmg_api_auth_req"+MerUserId);
+		if(aca != null){
+			map.put("Ncode", 0);
+			map.put("code", "0");
+			map.put("msg", "请勿重复点击!!");
+			redis.delkey("nmg_api_auth_req"+MerUserId);
+			return map;
+		}
 		if(MerUserId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
+			
 			System.out.println(MerUserId);
 			System.out.println("银行卡:"+bankcardTypeId);
 			Integer id = servie.SelectUserId(MerUserId);
 			if(id != null){
 				map.put("Ncode", 0);
 				map.put("code", "0");
-				map.put("desc", "已绑卡");
+				map.put("msg", "已绑卡");
 			}else{
 				
-			
+		redis.set("nmg_api_auth_req"+MerUserId, String.valueOf(MerUserId));
 		Bankcard bank = new Bankcard();
 		bank.setAttestationStatus("0");
 		bank.setUserId(MerUserId);//登陆人ID
@@ -551,13 +564,15 @@ public class ChanpayQuickCollection {
 						map.put("code", "200");
 						map.put("Ncode", 2000);
 						map.put("desc", "插入成功");
+						redis.delkey("nmg_api_auth_req"+MerUserId);
 						map.put("ReturnChanpay", retu);
-						map.put("msg", retu);
+						map.put("msg", retu.getRetMsg());
 					}else{
 						map.put("OriAuthTrxId", TrxId);
+						redis.delkey("nmg_api_auth_req"+MerUserId);
 						map.put("code", "0");
 						map.put("Ncode", 0);
-						map.put("msg", retu);
+						map.put("msg", retu.getRetMsg());
 						map.put("desc", "插入失败");
 						map.put("ReturnChanpay", retu);
 					}
@@ -565,7 +580,7 @@ public class ChanpayQuickCollection {
 					map.put("Ncode", 0);
 					map.put("code", 0);
 					map.put("ReturnChanpay", retu);
-					map.put("msg", retu);
+					map.put("msg", retu.getRetMsg());
 				}
 				
 				
@@ -656,14 +671,14 @@ public class ChanpayQuickCollection {
 									map.put("OriAuthTrxId", TrxId);
 									map.put("code", "200");
 									map.put("Ncode", 2000);
-									map.put("desc", "插入成功");
+									map.put("msg", "插入成功");
 									map.put("ReturnChanpay", retu);
 									map.put("Bankcard", bank);
 							}else{
 								map.put("Ncode", 0);
 								map.put("code", 0);
 								map.put("ReturnChanpay", retu);
-								map.put("msg", retu);
+								map.put("msg", retu.getRetMsg());
 							}
 							
 							
@@ -756,7 +771,7 @@ public class ChanpayQuickCollection {
 					map.put("code", "200");
 					map.put("ReturnChanpay", retuJJ);
 					map.put("desc", "认证成功");
-					map.put("msg", retuJJ);
+					map.put("msg", retuJJ.getRetMsg());
 					
 				
 				}else{
@@ -853,7 +868,7 @@ public class ChanpayQuickCollection {
 					map.put("code", "200");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证成功");
-					map.put("msg", retu);
+					map.put("msg", retu.getRetMsg());
 					
 				}else{
 					map.put("Ncode", 0);
@@ -861,7 +876,7 @@ public class ChanpayQuickCollection {
 					map.put("code", "0");
 					map.put("ReturnChanpay", retu);
 					map.put("desc", "认证失败");
-					map.put("msg", retu);
+					map.put("msg", retu.getRetMsg());
 				}
 				
 				}else{
@@ -952,7 +967,7 @@ public class ChanpayQuickCollection {
 				}else{
 					map.put("Ncode", 2000);
 					map.put("ReturnChanpay", retu);
-					map.put("msg", retu);
+					map.put("msg", retu.getRetMsg());
 				}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1024,7 +1039,7 @@ public class ChanpayQuickCollection {
 				map.put("Ncode", 0);
 				map.put("code", 0);
 				map.put("ReturnChanpay", retu);
-				map.put("msg", retu);
+				map.put("msg", retu.getRetMsg());
 			}
 			
 			} catch (Exception e) {
@@ -1521,7 +1536,7 @@ public class ChanpayQuickCollection {
 				map.put("Ncode", "0");
 				map.put("code", "0");
 				map.put("ReturnChanpay", retu);
-				map.put("msg", "插入失败");
+				map.put("msg", retu.getRetMsg());
 			}
 			
 			} catch (Exception e) {

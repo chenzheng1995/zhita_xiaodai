@@ -104,14 +104,19 @@ public class ChanpaySend extends BaseParameter{
 		BigDecimal pr = new BigDecimal(0);
 		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
 		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
-		actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
-		acmoney = new BigDecimal(TransAmt);
-		j = actualAmountReceived.compareTo(acmoney);
-		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
-			if(borrowingScheme.equals("2")){
+		
+		
+		
+		
+		if(borrowingScheme.equals("2")){
 			BigDecimal sa = new BigDecimal(TransAmt);
 			j = shouldTotalAmount.compareTo(sa);
 			}
+		actualAmountReceived = new BigDecimal(TransAmt); //实际到账金额
+		acmoney = new BigDecimal(TransAmt);
+		j = actualAmountReceived.compareTo(acmoney);
+		System.out.println(j+"金额:"+acmoney+"实际到账:"+actualAmountReceived);
+			
 			int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 			Bankcard ba = new Bankcard();
 			ba.setCompanyId(companyId);
@@ -269,7 +274,7 @@ public class ChanpaySend extends BaseParameter{
 					map1.put("Ncode", 0);
 					return map1;
 				}
-				averageDailyInterest = new BigDecimal(TransAmt);
+				actualAmountReceived = new BigDecimal(TransAmt);
 		    	if(num==1) {
 		    		int orderId = intOrderService.getOrderId(orderNumber);
 			    	BigDecimal surplus_money = finalLine;
@@ -282,14 +287,14 @@ public class ChanpaySend extends BaseParameter{
 						map1.put("code", 200);
 						map1.put("Ncode", 2000);
 						redis.delkey("ChanpaySenduserId"+userId);//删除字段
-			    		map1.put("msg","借款成功");
-			    		map1.put("desc","插入成功");
+			    		map1.put("desc","借款成功");
+			    		map1.put("msg","插入成功");
 			    	}else {
 			    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
 			    		map1.put("Ncode", 0);
 						map1.put("code",405); 
-						map1.put("msg","借款成功");
-						map1.put("desc", "插入失败");
+						map1.put("desc","借款成功");
+						map1.put("msg", "插入失败");
 						
 					}
 		    	}
@@ -307,7 +312,7 @@ public class ChanpaySend extends BaseParameter{
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", returnchanpay);
 			map1.put("code", 0);
-			map1.put("msg", returnchanpay);
+			map1.put("msg", returnchanpay.getMemo());
 			map1.put("Ncode", 0);
 			map1.put("desc", "借款失败");
 			map1.put("code", 0);
@@ -343,6 +348,7 @@ public class ChanpaySend extends BaseParameter{
 			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 			map1.put("code", "203");
 			map1.put("desc", "已放款,未保存");
+			map1.put("msg", "已放款,未保存");
 			map1.put("Ncode", 0);
 			return map1;
 		}

@@ -364,8 +364,8 @@
 		
 		
 		<select id="CollMoney" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
-			select sum(ord.makeLoans) as GesamtbetraguberfalligerBetrag,count(ord.orderId) as GesamtbetraguberfallNum from orders o,orderdetails ord
-			where o.companyId = #{companyId} and o.orderStatus = "2" and o.shouldReturnTime between #{start_time} and #{end_time}
+			select sum(re.repaymentMoney) as GesamtbetraguberfalligerBetrag,count(re.id) as GesamtbetraguberfallNum from orders o,repayment re
+			where o.id = re.orderId and o.companyId = #{companyId} and o.orderStatus = "1" and re.repaymentDate between #{start_time} and #{end_time}
 		</select>
 		
 		
