@@ -58,7 +58,10 @@ public class LoanthresholdvalueServiceImp implements IntLoanthresholdvalueServic
 		int days=DateListUtil.differentDaysByMillisecond(minregisteDate, d)+1;
 		BigDecimal daysbig=new BigDecimal(days);
 		
-		BigDecimal dailyloanmoney=loanall.divide(daysbig,2,BigDecimal.ROUND_HALF_UP);//日均放款金额
+		BigDecimal dailyloanmoney=new BigDecimal("0.00");
+		if(daysbig.compareTo(BigDecimal.ZERO)!=0){
+			dailyloanmoney=loanall.divide(daysbig,2,BigDecimal.ROUND_HALF_UP);//日均放款金额
+		}
 		
 		int maxthresholdvalue = loanThresholdvalueMapper.maxthresholdvalue(companyId);//放款渠道最大阀值
 		

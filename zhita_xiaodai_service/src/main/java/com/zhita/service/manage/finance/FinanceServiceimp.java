@@ -981,6 +981,9 @@ public class FinanceServiceimp implements FinanceService{
 			priceTongji.setNote(note);
 			priceTongji.setNoteprice(BigDecimal.valueOf((int)note).multiply(noteprice));
 			
+			BigDecimal sum=priceTongji.getVerificationprice().add(priceTongji.getIdcardprice()).add(priceTongji.getFaceidprice()).add(priceTongji.getThreeelementsprice()).add(priceTongji.getOperatorprice()).add(priceTongji.getRiskmanagementprice()).add(priceTongji.getNoteprice());
+			priceTongji.setSum(sum);//总计
+			
 			listtongji.add(priceTongji);
 		}
 		

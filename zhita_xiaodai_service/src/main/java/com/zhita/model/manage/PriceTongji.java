@@ -19,6 +19,7 @@ public class PriceTongji {
 	private BigDecimal riskmanagementprice;//风控费用
 	private int note;//短信群发数
 	private BigDecimal noteprice;//短信群发费用
+	private BigDecimal sum;//总计
 	public String getDate() {
 		return date;
 	}
@@ -108,6 +109,12 @@ public class PriceTongji {
 	}
 	public void setNoteprice(BigDecimal noteprice) {
 		this.noteprice = noteprice;
+	}
+	public BigDecimal getSum() {
+		return sum;
+	}
+	public void setSum(BigDecimal sum) {
+		this.sum = sum;
 	}
 	
 }

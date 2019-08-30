@@ -185,9 +185,14 @@ public class TestController {
 		//System.out.println(Timestamps.stampToDate(null));
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		BigDecimal a=new BigDecimal("17.02");
-		BigDecimal b=new BigDecimal("20.02");
-		System.out.println(a.subtract(b));
+		
+		BigDecimal loanall=new BigDecimal("1");
+		BigDecimal daysbig=new BigDecimal("0");
+		
+		if(daysbig.compareTo(BigDecimal.ZERO)!=0){
+			BigDecimal dailyloanmoney=loanall.divide(daysbig,2,BigDecimal.ROUND_HALF_UP);//日均放款金额
+			System.out.println(dailyloanmoney);
+		}
 		
 	}	
 }
