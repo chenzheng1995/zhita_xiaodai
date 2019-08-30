@@ -243,7 +243,7 @@ public class ChanpaySend extends BaseParameter{
 		
 		pay.setPipelinenumber(returnchanpay.getPartnerId());
 		pay.setDeleted("0");
-		pay.setPaymentmoney(actualAmountReceived);
+		pay.setPaymentmoney(new BigDecimal(TransAmt));
 		pay.setCardnumber(ban.getBankcardName());
 		
 		String statu = returnchanpay.getAcceptStatus();
@@ -269,7 +269,7 @@ public class ChanpaySend extends BaseParameter{
 					map1.put("Ncode", 0);
 					return map1;
 				}
-				
+				averageDailyInterest = new BigDecimal(TransAmt);
 		    	if(num==1) {
 		    		int orderId = intOrderService.getOrderId(orderNumber);
 			    	BigDecimal surplus_money = finalLine;
