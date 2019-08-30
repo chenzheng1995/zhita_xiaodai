@@ -965,7 +965,7 @@ public class ChanpayQuickCollection {
 				
 				
 				}else{
-					map.put("Ncode", 2000);
+					map.put("Ncode", 0);
 					map.put("ReturnChanpay", retu);
 					map.put("msg", retu.getRetMsg());
 				}
@@ -1456,19 +1456,19 @@ public class ChanpayQuickCollection {
 			if(sa.equals("S")){
 				
 				Integer a = servie.AddDeferred(defe);
-			if(a != null){
-				map.put("ReturnChanpay", retu);
-				map.put("Ncode", 2000);
-				map.put("TrxId", TrxId);
-				map.put("msg", "插入成功");
-				map.put("code", 200);
-			}else{
-				map.put("ReturnChanpay", retu);
-				map.put("TrxId", TrxId);
-				map.put("Ncode", 0);
-				map.put("msg", "插入失败");
-				map.put("code", 0);
-			}
+				if(a != null){
+					map.put("ReturnChanpay", retu);
+					map.put("Ncode", 2000);
+					map.put("TrxId", TrxId);
+					map.put("msg", "插入成功");
+					map.put("code", 200);
+				}else{
+					map.put("ReturnChanpay", retu);
+					map.put("TrxId", TrxId);
+					map.put("Ncode", 0);
+					map.put("msg", "插入失败");
+					map.put("code", 0);
+				}
 			
 			}else{
 				map.put("Ncode", 0);
