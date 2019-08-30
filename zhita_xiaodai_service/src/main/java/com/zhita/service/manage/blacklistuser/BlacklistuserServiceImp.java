@@ -148,7 +148,7 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	            vo.setIdcard(String.valueOf(lo.get(2)));
 	            vo.setOperator(operator);
 	            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
-	            vo.setBlackType("3");//黑名单类型（3：手工录入）
+	            vo.setBlackType("7");//黑名单类型（7：批量导入）
 	 
 	            if(j == null)
 	            {

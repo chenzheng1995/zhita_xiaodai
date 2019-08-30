@@ -103,6 +103,6 @@
   </update>
   <!-- 后台管理     查询数量 -->
   <select id="querycount" resultType="java.lang.Integer">
-  	select count(*) from thirdcalltongji where companyid=#{arg0} and thirdtypeid=#{arg1} and date>=#{arg1} and date &lt;#{arg2} and deleted=0
+  	select count(*) from thirdcalltongji where companyid=#{arg0} and thirdtypeid=#{arg1} and date>=#{arg2} and date &lt;#{arg3} and deleted=0
   </select>
 </mapper>

@@ -10,8 +10,11 @@ public interface IntUserService {
 	//后台管理----用户列表(公司id，page,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
 	public Map<String, Object> queryUserList(UserLikeParameter userLikeParameter);
 	
-	//后台管理---添加黑名单
+	//后台管理---添加黑名单——人工添加
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator);
+	
+	//后台管理---添加黑名单——人审拒绝
+	public int insertBlacklistno(Integer companyId,Integer userId,Integer operator);
 	
 	//后台管理---解除黑名单
 	public int removeBlacklist(Integer companyId,Integer userId);
