@@ -79,7 +79,7 @@
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
     u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,u.shareOfState,u.operationTime,
     
-    s.sourcename,r.repaymentMoney,su.account,mcs.rmModleName riskcontrolname
+    s.sourcename,su.account,mcs.rmModleName riskcontrolname
   </sql>
     <sql id="Base_Column_List2" >
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
@@ -659,8 +659,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
     	<include refid="Base_Column_List" />
    		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
    		left join manage_control_settings mcs on s.manageControlId=mcs.id 
-   		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
-    	where o.companyId=#{companyid,jdbcType=INTEGER} and statu="成功"
+   		left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
       	<if test="ordernumber != null and ordernumber!='' ">
            and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
@@ -699,8 +699,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 		select count(DISTINCT o.id)
    		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
    		left join source s on s.id=u.sourceid left join manage_control_settings mcs on s.manageControlId=mcs.id 
-   		left join repayment r on r.orderId=o.id left join sys_user su on su.userId=u.operator
-    	where o.companyId=#{companyid,jdbcType=INTEGER} and r.statu="成功"
+   		left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
       	<if test="ordernumber != null and ordernumber!='' ">
            and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
@@ -741,6 +741,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	  		<select id="getorderNumber" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select orderNumber from orders where userId = #{userId} order by shouldReturnTime desc limit 1
 	</select>
-	
-
+	<!-- 后台管理      查询该订单还款成功的还款金额 -->
+	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select repaymentMoney from repayment where orderId=#{arg0} and statu="成功"
+	</select>
 </mapper>
