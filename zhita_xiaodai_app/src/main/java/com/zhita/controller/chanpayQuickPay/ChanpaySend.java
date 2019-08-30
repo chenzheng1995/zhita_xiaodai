@@ -137,7 +137,7 @@ public class ChanpaySend extends BaseParameter{
 		try {
 			
 		
-		String chanpaysenduserid = redis.get("ChanpaySenduserId"+orderNumber);
+		String chanpaysenduserid = redis.get("ChanpaySenduserId"+userId);
 		if(chanpaysenduserid != null){
 			map1.put("code", "205");
 			map1.put("Ncode", 0);
@@ -164,16 +164,21 @@ public class ChanpaySend extends BaseParameter{
 		Integer maxmoney = chanser.loanMaxMoney(companyId);//获取限额
 		BigDecimal SumPaymoney = chanser.SumpayMoney(ord);//当天放款额度
 		BigDecimal maxMon = new BigDecimal(maxmoney);
+		
 		if(SumPaymoney==null){
 			SumPaymoney = new BigDecimal(0);
 		}
-		Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
-		if(i == 1 || i == 0){
-			map1.put("msg", "今日放款已达限额,请明日再来");
-			map1.put("Ncode", 0);
-			map1.put("code", 0);
-		}else{
-			
+		
+		
+		if(maxmoney != 0){
+			Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
+			if(i == 1 || i == 0){
+				map1.put("msg", "今日放款已达限额,请明日再来");
+				map1.put("Ncode", 0);
+				map1.put("code", 0);
+				return map1;
+			}
+		}
 		
 		map1.put("Ncode", 2000);
 		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
@@ -260,7 +265,7 @@ public class ChanpaySend extends BaseParameter{
 				try {
 					num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
 				} catch (Exception e) {
-					redis.set("ChanpaySenduserId"+orderNumber, orderNumber);
+					redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 					map1.put("code", "203");
 					map1.put("desc", "已放款,未保存");
 					map1.put("Ncode", 0);
@@ -278,11 +283,11 @@ public class ChanpaySend extends BaseParameter{
 						map1.put("ShortReturn", returnchanpay);
 						map1.put("code", 200);
 						map1.put("Ncode", 2000);
-						redis.delkey("ChanpaySenduserId"+orderNumber);//删除字段
+						redis.delkey("ChanpaySenduserId"+userId);//删除字段
 			    		map1.put("msg","借款成功");
 			    		map1.put("desc","插入成功");
 			    	}else {
-			    		redis.delkey("ChanpaySenduserId"+orderNumber);//删除字段
+			    		redis.delkey("ChanpaySenduserId"+userId);//删除字段
 			    		map1.put("Ncode", 0);
 						map1.put("code",405); 
 						map1.put("msg","借款成功");
@@ -320,7 +325,6 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("code", 402);
 			map1.put("Ncode", 0);
 		}
-		}
 		}else{
 			map1.put("msg", "渠道关闭,请联系客服");
 			map1.put("code", 407);
@@ -338,7 +342,7 @@ public class ChanpaySend extends BaseParameter{
 		}
 		}
 		} catch (Exception e) {
-			redis.set("ChanpaySenduserId"+orderNumber, orderNumber);
+			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 			map1.put("code", "203");
 			map1.put("desc", "已放款,未保存");
 			map1.put("Ncode", 0);

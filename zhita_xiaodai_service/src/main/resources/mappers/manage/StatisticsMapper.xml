@@ -34,7 +34,7 @@
 			
 			
 			<update id="UpdateOrders" parameterType="com.zhita.model.manage.Orders">
-				update orders set orderStatus = "3" where orderNumber = #{orderNumber}
+				update orders set orderStatus = "3",realtime = #{realtime} where orderNumber = #{orderNumber}
 			</update>
 			
 			

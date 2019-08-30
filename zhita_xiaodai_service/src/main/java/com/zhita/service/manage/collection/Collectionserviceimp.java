@@ -53,15 +53,13 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setCompanyId(coll.getCompanyId());
 			
 			orders.get(i).setDeferAfterReturntime(orders.get(i).getOrderCreateTime());
-			BigDecimal cba = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
-			BigDecimal cbaS = null;
-			if(orders.get(i).getInterestSum()==null){
-				cbaS = new BigDecimal(0);
-			}else{
-				cbaS = orders.get(i).getInterestSum();
-			}
 			
-			orders.get(i).setOrder_money(cba.add(cbaS));
+			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
+			
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			
+			
+			
 			System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime()+"金额:"+orders.get(i).getOrder_money()
 					+"利息:"+orders.get(i).getRealityBorrowMoney()+"CC:"+orders.get(i).getInterestPenaltySum()+"BB:"+orders.get(i).getInterestSum());
 			//Deferred defe = collmapp.DefeSet(orders.get(i));

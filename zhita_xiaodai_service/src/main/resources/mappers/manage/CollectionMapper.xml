@@ -63,9 +63,9 @@
 		
 		
 		<insert id="addCollection" parameterType="java.util.List">
-			insert into `collection` (collectionMemberId,orderId,collectionStatus,collectionTime,deleted) values  
+			insert into `collection` (collectionMemberId,orderId,collectionStatus,collectionTime,deleted,promise_money,usertype) values  
 	        <foreach collection="list" item="item" index="index" separator=",">  
-	            (#{item.collectionMemberId},#{item.orderId},#{item.collectionStatus},#{item.collectionTime},#{item.deleted})  
+	            (#{item.collectionMemberId},#{item.orderId},#{item.collectionStatus},#{item.collectionTime},#{item.deleted},#{item.promise_money},#{item.usertype})  
 	        </foreach>
 		</insert>
 		

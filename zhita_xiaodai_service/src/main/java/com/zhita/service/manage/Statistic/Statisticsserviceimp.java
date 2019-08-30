@@ -268,6 +268,12 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	 */
 	@Override
 	public Integer UpdateOrders(Orders ord) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			ord.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		Integer id = sdao.UpdateOrders(ord);//
 		if(id != null){
 			Integer delaytimes = 0;

@@ -14,7 +14,17 @@ public class Overdue {
 	
 	private Integer orderId;//订单ID
 	
+	private String statu;
+	
 	private String deled;
+
+	public String getStatu() {
+		return statu;
+	}
+
+	public void setStatu(String statu) {
+		this.statu = statu;
+	}
 
 	public String getDeled() {
 		return deled;

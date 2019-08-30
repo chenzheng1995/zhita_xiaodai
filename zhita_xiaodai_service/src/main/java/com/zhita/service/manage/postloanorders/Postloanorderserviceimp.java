@@ -188,7 +188,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
 			}
 			
-			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferAfterReturntime()));
+			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));
 			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
 			ordeids.get(i).setDefeNum(defe.getDefeNum());//延期次数
 			if(defe.getInterestOnArrears() == null){
@@ -550,7 +550,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			for(int i=0;i<strs.length;i++){
 				Overdue ovdeu = new Overdue();
 				ovdeu.setCollectionMemberId(order.getCollectionMemberId());
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				System.out.println(sim.format(new Date()));
 				try {
 					System.out.println(Timestamps.dateToStamp(sim.format(new Date())));
@@ -558,7 +558,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-				System.out.println(ovdeu.getCollectiondate());
 				ovdeu.setOrderId(Integer.valueOf(strs[i]));
 				postloanorder.AddOverdue(ovdeu);
 			}
@@ -635,10 +634,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
+		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
 		if(defe.getDeferAfterReturntime()!=null){
 			if(defe.getDeferAfterReturntime().length()!=0){
+				
 				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
 			}
 		}else{
@@ -771,6 +772,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	@Override
 	public Map<String, Object> HuaiZhangOrders(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		if(order.getPhone() != null){
 			if(order.getPhone().length()!=0){
 				order.setPhone(p.encryption(order.getPhone()));
@@ -814,6 +816,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrdersAA(order);
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
+		orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		if(defe.getDeferBeforeReturntime()!=null){
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));

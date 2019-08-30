@@ -15,6 +15,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Undertheline;
+import com.zhita.model.manage.User;
 
 
 
@@ -190,4 +191,7 @@ public interface PaymentRecordMapper {
     
     
     Integer UpdateOrdermoneyTime (Accountadjustment acc);
+    
+    
+    User SelectOneUser(Integer userId);
 }
