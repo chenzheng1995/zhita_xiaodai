@@ -292,8 +292,8 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			defe.setDeferredTime(Timestamps.dateToStamp1(sim.format(new Date())));
-			defe.setDeferBeforeReturntime(Timestamps.dateToStamp2(defe.getDeferBeforeReturntime()));
-			defe.setDeferAfterReturntime(Timestamps.dateToStamp2(defe.getDeferAfterReturntime()));
+			defe.setDeferBeforeReturntime(Integer.parseInt(Timestamps.dateToStamp2(defe.getDeferBeforeReturntime())+86399000)+"");
+			defe.setDeferAfterReturntime(Integer.parseInt(Timestamps.dateToStamp2(defe.getDeferAfterReturntime())+86399000)+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

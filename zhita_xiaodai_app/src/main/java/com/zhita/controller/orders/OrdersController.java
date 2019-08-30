@@ -548,7 +548,6 @@ public class OrdersController {
 	    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");  
 	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 	    String afterTime = sdf1.format(date);//延期后应还时间
-	    afterTime =(Integer.parseInt(afterTime)+86399000)+"";
 	   	Map<String, Object> map2  = bankcardMapper.getbankcard(userId);
 	   	String bankcardName = (String) map2.get("bankcardName");
 	   	int bankcardTypeId = (int) map2.get("bankcardTypeId");

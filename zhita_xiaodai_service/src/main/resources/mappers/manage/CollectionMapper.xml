@@ -18,7 +18,7 @@
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityAccount as realityBorrowMoney,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum
+			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca
 			from orders o,user u,orderdetails ord
 			<where>
 				ord.orderId not in (select c.orderId from collection c,orders o where o.id = c.orderId AND o.companyId = 3)

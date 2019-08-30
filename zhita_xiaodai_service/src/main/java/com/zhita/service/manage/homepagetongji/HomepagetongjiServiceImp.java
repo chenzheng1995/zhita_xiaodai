@@ -326,7 +326,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			}
 			BigDecimal repaymentmoney=homepageTongjiMapper.realymoney(companyId,startTimestampsfor, endTimestampsfor);//（线上实还金额，即还款表）
 			
-			BigDecimal deratemoneyoff=homepageTongjiMapper.deratemoneyunder(companyId,startTimestampsfor, endTimestampsfor);//线下，即是线下实还金额
+			BigDecimal deratemoneyoff=homepageTongjiMapper.deratemoneyunder(companyId,startTimestampsfor, endTimestampsfor);//线下实还金额，即线下减免表
 			if(deratemoneyoff==null){
 				deratemoneyoff=new BigDecimal("0.00");
 			}
@@ -375,9 +375,9 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 				bankmoney=new BigDecimal("0.00");
 			}
 			
-			BigDecimal originalshouldmoney=shouldmoney.add(deratemoney);//原始应还金额
+			BigDecimal originalshouldmoney=shouldmoney.add(deratemoney).add(bankmoney);//原始应还金额
 			
-			BigDecimal tobepaidmoney=originalshouldmoney.subtract(repaymentmoney).subtract(deratemoneyoff).subtract(deratemoney).subtract(offderatemoney);//待还金额
+			BigDecimal tobepaidmoney=originalshouldmoney.subtract(repaymentmoney).subtract(deratemoneyoff).subtract(deratemoney).subtract(offderatemoney).subtract(bankmoney);//待还金额
 			String overduecvr="";
 			if(overdueafternotrepay!=0||baddebt!=0||shouldorder!=0){
 				overduecvr=(new DecimalFormat("0.00").format((overdueafternotrepay+baddebt)*1.0/shouldorder*100))+"%";//逾期率

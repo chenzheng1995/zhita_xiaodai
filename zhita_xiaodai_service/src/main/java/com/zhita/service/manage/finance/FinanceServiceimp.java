@@ -263,7 +263,10 @@ public class FinanceServiceimp implements FinanceService{
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
 					ordetails.setDefeNum(defe.getDefeNum());
-					ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
+					if(ordetails.getInterestPenaltySum() == null){
+						ordetails.setInterestPenaltySum(new BigDecimal(0));
+					}
+					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 					map.put("aaa", ordetails.getInterestPenaltySum());
@@ -977,6 +980,9 @@ public class FinanceServiceimp implements FinanceService{
 			BigDecimal noteprice = listprice.get(8).getPrice();//群发短信单价
 			priceTongji.setNote(note);
 			priceTongji.setNoteprice(BigDecimal.valueOf((int)note).multiply(noteprice));
+			
+			BigDecimal sum=priceTongji.getVerificationprice().add(priceTongji.getIdcardprice()).add(priceTongji.getFaceidprice()).add(priceTongji.getThreeelementsprice()).add(priceTongji.getOperatorprice()).add(priceTongji.getRiskmanagementprice()).add(priceTongji.getNoteprice());
+			priceTongji.setSum(sum);//总计
 			
 			listtongji.add(priceTongji);
 		}

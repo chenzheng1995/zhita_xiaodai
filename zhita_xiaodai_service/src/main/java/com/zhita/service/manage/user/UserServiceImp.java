@@ -93,7 +93,7 @@ public class UserServiceImp implements IntUserService{
 		
 	}
 	
-	//后台管理---添加黑名单
+	//后台管理---添加黑名单-人工添加
 	@Transactional
 	public int insertBlacklist(Integer companyId,Integer userId,Integer operator){
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
@@ -101,7 +101,30 @@ public class UserServiceImp implements IntUserService{
 		if(orders==null){
 			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
 			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
-			String blackType="3";//黑名单类型（3：手工录入）
+			String blackType="8";//黑名单类型（8：人工添加）
+			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
+			blacklistUser.setCompanyid(companyId);
+			blacklistUser.setOperator(operator);
+			blacklistUser.setOperationtime(operationTime);
+			blacklistUser.setBlackType(blackType);
+			blacklistUser.setUserid(userId);
+			blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+	
+	//后台管理---添加黑名单-人审拒绝
+	@Transactional
+	public int insertBlacklistno(Integer companyId,Integer userId,Integer operator){
+		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
+		Orders orders=userMapper.qeuryorder(userId);
+		if(orders==null){
+			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
+			String blackType="6";//黑名单类型（6：人审拒绝）
 			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
 			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
 			blacklistUser.setCompanyid(companyId);

@@ -53,8 +53,12 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setCompanyId(coll.getCompanyId());
 			
 			orders.get(i).setDeferAfterReturntime(orders.get(i).getOrderCreateTime());
-			
-			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
+			System.out.println("订单编号:"+orders.get(i).getOrderId());
+			if(orders.get(i).getInterestPenaltySum() == null){
+				orders.get(i).setInterestPenaltySum(new BigDecimal(0));
+			}
+			System.out.println("金额:"+orders.get(i).getRealityBorrowMoney()+"金额2:"+orders.get(i).getInterestPenaltySum()+"借款金额:"+orders.get(i).getCca());
+			orders.get(i).setOrder_money(orders.get(i).getCca().add(orders.get(i).getInterestPenaltySum()));
 			
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			
