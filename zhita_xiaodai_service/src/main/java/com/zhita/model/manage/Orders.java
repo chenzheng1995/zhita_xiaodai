@@ -59,9 +59,16 @@ public class Orders {
 	
 	private Integer postponeDate;//每次延期天数
 	
+	private BigDecimal shourldmoney;//应还金额（期限内应还金额+逾期的逾期费）
+	
 	private Orderdetails orderdetails;//对应订单明细表
 	
 	private User user;//对应用户对象
+	
+	
+	
+	
+	
 	
 	private BigDecimal realityBorrowMoney;//实际借款金额（元）
 	
@@ -654,6 +661,14 @@ public class Orders {
 
 	public void setPostponeDate(Integer postponeDate) {
 		this.postponeDate = postponeDate;
+	}
+
+	public BigDecimal getShourldmoney() {
+		return shourldmoney;
+	}
+
+	public void setShourldmoney(BigDecimal shourldmoney) {
+		this.shourldmoney = shourldmoney;
 	}
 
 }

@@ -934,8 +934,8 @@ public class FinanceServiceimp implements FinanceService{
 		for (int i = 0; i < list.size(); i++) {
 			PriceTongji priceTongji=new PriceTongji();
 			
-			String startTimestamps = Timestamps.dateToStamp(startTime);
-			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+			String startTimestamps = Timestamps.dateToStamp(list.get(i));
+			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(list.get(i)))+86400000)+"";
 			
 			priceTongji.setDate(list.get(i));
 			
