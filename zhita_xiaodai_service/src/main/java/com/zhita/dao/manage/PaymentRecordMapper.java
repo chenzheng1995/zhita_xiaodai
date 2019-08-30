@@ -194,4 +194,7 @@ public interface PaymentRecordMapper {
     
     
     User SelectOneUser(Integer userId);
+    
+    
+    Integer OrdersStatusAA(Accountadjustment acc);
 }
