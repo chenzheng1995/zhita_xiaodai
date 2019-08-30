@@ -620,8 +620,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		if(order.getStatus1()==null){
-			order.setStatus1("2");
-			order.setStatus2("3");
+				order.setStatus1("2");
+				order.setStatus2("3");
+			
 		}else if(order.getStatus1().equals("2")){
 			order.setStatus2("2");
 		}else if(order.getStatus1().equals("3")){
