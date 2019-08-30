@@ -635,7 +635,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
-		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
 		if(defe.getDeferAfterReturntime()!=null){
