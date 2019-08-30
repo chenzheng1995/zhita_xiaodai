@@ -85,6 +85,7 @@ public class ChanpaySend extends BaseParameter{
 	@RequestMapping("send")
 	public Map<String, Object> SendMoney(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan,BigDecimal finalLine,String registeClient,String sourceName,
 			BigDecimal shouldTotalAmount,BigDecimal totalInterest,BigDecimal averageDailyInterest){
+		System.out.println("金额类:"+finalLine+"基恩:"+shouldTotalAmount+"CC:");
 		
 		
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
@@ -103,7 +104,6 @@ public class ChanpaySend extends BaseParameter{
 		BigDecimal pr = new BigDecimal(0);
 		pr=BigDecimal.valueOf((Double)pladata);//平台服务费比率
 		BigDecimal platformServiceFee = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//平台服务费
-		
 		
 		if(borrowingScheme.equals("1")){
 			actualAmountReceived = finalLine.subtract(platformServiceFee); //实际到账金额
