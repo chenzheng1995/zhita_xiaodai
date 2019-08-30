@@ -851,8 +851,8 @@ public class FinanceServiceimp implements FinanceService{
         Date date = ca.getTime();
         
         try {
-        	off.setOperating_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));//操作时间
-			off.setDelay_time(Timestamps.dateToStamp1(dateFormat.format(date)));
+        	off.setOperating_time(dateFormat.format(new Date()));//操作时间
+			off.setDelay_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

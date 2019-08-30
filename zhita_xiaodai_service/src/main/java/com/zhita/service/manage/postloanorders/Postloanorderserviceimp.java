@@ -667,7 +667,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		System.out.println("实还时间:"+orders.get(i).getRealtime());
 		if(orders.get(i).getRealtime() != null && !("").equals(orders.get(i).getRealtime())){
 			if(orders.get(i).getRealtime().length()!=0){
-				orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+				orders.get(i).setRealtime(orders.get(i).getRealtime());
 			}
 		}else{
 			orders.get(i).setRealtime("/");
