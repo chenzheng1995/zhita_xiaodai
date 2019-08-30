@@ -736,11 +736,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
-		if(defe.getDeferBeforeReturntime()!=null){
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
-		}else{
-			orders.get(i).setDeferBeforeReturntime("/");
-		}
+		orders.get(i).setDeferBeforeReturntime(orders.get(i).getShouldReturnTime());
 		String jiephone = p.decryption(orders.get(i).getPhone());
 		orders.get(i).setPhone(tm.mobileEncrypt(jiephone));
 		System.out.println(orders.get(i).getInterestSum());
