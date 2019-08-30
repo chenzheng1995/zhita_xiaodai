@@ -270,7 +270,7 @@ public class FinanceServiceimp implements FinanceService{
 					if(ordetails.getInterestPenaltySum() == null){
 						ordetails.setInterestPenaltySum(new BigDecimal(0));
 					}
-					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
+					ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 					map.put("aaa", ordetails.getInterestPenaltySum());
@@ -844,15 +844,28 @@ public class FinanceServiceimp implements FinanceService{
 			off.setPhone(p.encryption(off.getPhone()));
 			}
 		}
+		String status = padao.OrderStatuOrder(off.getOrderId());
+		if(status.equals("0")){
+			String shoureturntime = padao.SelectShouReturnTime(off.getOrderId());
+			String stime = Timestamps.stampToDate1(shoureturntime);
+			String a = stime.substring(8, 10);//就去时间格式天数
+			String b = stime.substring(0, 8);//获取年月   2019-03-
+			Integer ac = off.getOnceDeferredDay()+Integer.valueOf(a);//天数加上
+			if(ac < 10){
+				String aa = "0"+ac;
+				off.setDelay_time(b+aa+" 23:59:59");
+			}else{
+				off.setDelay_time(b+ac+" 23:59:59");
+			}
+		}
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ca.setTime(new Date()); //设置时间为当前时间
-        ca.add(Calendar.DATE, +off.getOnceDeferredDay());
         Date date = ca.getTime();
         
         try {
         	off.setOperating_time(dateFormat.format(new Date()));//操作时间
-			off.setDelay_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));
+			off.setDelay_time(Timestamps.dateToStamp1(off.getDelay_time()));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1016,6 +1029,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectAccOrders(String orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Accountadjustment> accs = padao.SelectAccOrders(orderNumber);
+		for(int i=0;i<accs.size();i++){
+			accs.get(i).setAccounttime(Timestamps.stampToDate(accs.get(i).getAccounttime()));
+		}
 		map.put("Accountadjustment", accs);
 		return map;
 	}

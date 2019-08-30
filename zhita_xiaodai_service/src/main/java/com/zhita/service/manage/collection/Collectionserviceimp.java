@@ -111,29 +111,24 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Collection> cols = new ArrayList<Collection>();
 		String[] star = col.getOrderIds().split(",");
 		for(int i = 0;i<star.length;i++){
 			Collection cola = new Collection();
 			cola.setCollectionMemberId(col.getCollectionMemberId());
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String stime = sim.format(new Date());
 			try {
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
-				cola.setCollectionTime(Timestamps.dateToStamp1(sim.format(new Date())));
+				cola.setCollectionTime(Timestamps.dateToStamp1(stime));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 			cola.setOrderId(Integer.valueOf(star[i]));
 			cola.setDeleted("0");
-			cols.add(cola);
+			collmapp.addCollection(cola);
 		}
-		Integer addId = collmapp.addCollection(cols);
-		if(addId != null){
+		
 			map.put("code", 200);
 			map.put("desc", "已分配");
-		}else{
-			map.put("code", 0);
-			map.put("desc", "网络错误");
-		}
 		return map;
 	}
 	

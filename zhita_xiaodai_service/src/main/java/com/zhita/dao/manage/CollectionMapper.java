@@ -25,7 +25,7 @@ public interface CollectionMapper {
 	List<Sys_user> CollectionAll(Sys_user sys);
 	
 	
-	Integer addCollection(List<Collection> list);
+	Integer addCollection(Collection list);
 	
 	
 	List<Orderdetails> SelectOrdersdetails(Orderdetails order);

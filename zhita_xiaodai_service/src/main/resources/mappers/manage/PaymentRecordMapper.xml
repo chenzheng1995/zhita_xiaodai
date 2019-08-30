@@ -355,7 +355,7 @@
   
   
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,
+  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,ord.shouldReapyMoney,
 					 o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
 					 o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum
 					from orders o left JOIN user u on o.userId = u.id 
@@ -1024,4 +1024,15 @@
 				select us.idcard_number as idcard,u.name from user u,user_attestation us where u.id = #{userId} and us.userId = u.id
 			</select>
  
+ 
+ 
+ 			<select id="OrderStatuOrder" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select orderStatus from orders where id = #{orderId}
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="SelectShouReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select shouldReturnTime from orders where id = #{orderId}
+ 			</select>
 </mapper>

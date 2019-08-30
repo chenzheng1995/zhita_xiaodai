@@ -197,4 +197,10 @@ public interface PaymentRecordMapper {
     
     
     Integer OrdersStatusAA(Accountadjustment acc);
+    
+    
+    String OrderStatuOrder(Integer orderId);
+    
+    
+    String SelectShouReturnTime(Integer orderId);
 }

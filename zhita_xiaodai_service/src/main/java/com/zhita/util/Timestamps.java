@@ -103,8 +103,9 @@ public class Timestamps {
 		 try {
 			 String a = dateToStamp1("2019-08-30 00:00:00");
 			 String b = dateToStamp1("2019-08-30 23:59:59");
-			 System.out.println((Long.parseLong(Timestamps.dateToStamp2("2019/08/30")))+86399000+"");
+			 System.out.println((Long.parseLong(Timestamps.dateToStamp2("2019/08/30")))+86400000+"");
 			 System.out.println("时间:"+a+"AA"+b);
+			 System.out.println("A1:"+Timestamps.stampToDate("1567180800000"));
 		} catch (Exception e) {
 			System.out.println("报错");
 		}
