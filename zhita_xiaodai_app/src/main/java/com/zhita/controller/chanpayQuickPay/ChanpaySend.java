@@ -164,16 +164,21 @@ public class ChanpaySend extends BaseParameter{
 		Integer maxmoney = chanser.loanMaxMoney(companyId);//获取限额
 		BigDecimal SumPaymoney = chanser.SumpayMoney(ord);//当天放款额度
 		BigDecimal maxMon = new BigDecimal(maxmoney);
+		
 		if(SumPaymoney==null){
 			SumPaymoney = new BigDecimal(0);
 		}
-		Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
-		if(i == 1 || i == 0){
-			map1.put("msg", "今日放款已达限额,请明日再来");
-			map1.put("Ncode", 0);
-			map1.put("code", 0);
-		}else{
-			
+		
+		
+		if(maxmoney != 0){
+			Integer i = SumPaymoney.compareTo(maxMon);//i == -1 sumPaymoney 小于 maxMon   0  sumPaymoney 相等 maxMon   1  sumPaymoney 大于 maxMon
+			if(i == 1 || i == 0){
+				map1.put("msg", "今日放款已达限额,请明日再来");
+				map1.put("Ncode", 0);
+				map1.put("code", 0);
+				return map1;
+			}
+		}
 		
 		map1.put("Ncode", 2000);
 		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
@@ -319,7 +324,6 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("msg", "数据异常");
 			map1.put("code", 402);
 			map1.put("Ncode", 0);
-		}
 		}
 		}else{
 			map1.put("msg", "渠道关闭,请联系客服");
