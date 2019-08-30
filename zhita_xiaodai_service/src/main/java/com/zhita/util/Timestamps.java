@@ -100,22 +100,15 @@ public class Timestamps {
 	  }
 	  
 	 public static void main(String[] args) {
-//		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		 String s = simpleDateFormat.format(new Date());
-//		 try {
-//			String a = dateToStamp(s);
-//			System.out.println(a);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
 		 try {
 			 String a = dateToStamp1("2019-08-21 14:36:59");
 			 String b = dateToStamp1("2019-08-12 23:59:59");
+			 System.out.println((Long.parseLong(Timestamps.dateToStamp2("2019/08/30")))+86399000+"");
 			 System.out.println("时间:"+a+"AA"+b);
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("报错");
 		}
-		 System.out.println(stampToDate("1567007999000"));
+		
 		
 		 
 	} 

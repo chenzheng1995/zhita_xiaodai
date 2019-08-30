@@ -231,6 +231,16 @@ public class Orderdetails {
     
     private String status2;
     
+    private BigDecimal cca;
+    
+	public BigDecimal getCca() {
+		return cca;
+	}
+
+	public void setCca(BigDecimal cca) {
+		this.cca = cca;
+	}
+
 	public String getStatus1() {
 		return status1;
 	}

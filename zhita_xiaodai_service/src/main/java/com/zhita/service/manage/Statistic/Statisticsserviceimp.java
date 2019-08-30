@@ -291,9 +291,9 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		Orders o = sdao.SelectOrderId(defe.getOrderNumber());
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			defe.setDeferredTime(Timestamps.dateToStamp1(sim.format(new Date())));
-			defe.setDeferBeforeReturntime(Timestamps.dateToStamp2(defe.getDeferBeforeReturntime()));
-			defe.setDeferAfterReturntime(Timestamps.dateToStamp2(defe.getDeferAfterReturntime()));
+			defe.setDeferredTime(Timestamps.dateToStamp(sim.format(new Date())));
+			defe.setDeferBeforeReturntime((Long.parseLong(Timestamps.dateToStamp2(defe.getDeferBeforeReturntime())))+86399000+"");
+			defe.setDeferAfterReturntime((Long.parseLong(Timestamps.dateToStamp2(defe.getDeferAfterReturntime())))+86399000+"");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

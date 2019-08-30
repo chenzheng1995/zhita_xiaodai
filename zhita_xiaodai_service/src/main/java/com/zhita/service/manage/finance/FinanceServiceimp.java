@@ -204,6 +204,7 @@ public class FinanceServiceimp implements FinanceService{
 		if(addId != null){
 			Integer updateId = padao.UpdateOrdermoney(acc);
 			if(updateId != null){
+				padao.OrdersStatusAA(acc);
 				map.put("code", 200);
 				map.put("desc", "成功");
 			}else{
@@ -263,7 +264,10 @@ public class FinanceServiceimp implements FinanceService{
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					ordetails.setDefeMoney(defe.getInterestOnArrears());
 					ordetails.setDefeNum(defe.getDefeNum());
-					ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
+					if(ordetails.getInterestPenaltySum() == null){
+						ordetails.setInterestPenaltySum(new BigDecimal(0));
+					}
+					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 					map.put("aaa", ordetails.getInterestPenaltySum());
