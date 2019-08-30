@@ -58,10 +58,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int todaydeferred = homepageTongjiMapper.queryToDayDeferred(companyId, startTimestamps, endTimestamps);//今日延期笔数
 		int todayrepayment = 0;//今日回款笔数
 		int todayrepaymentreal = homepageTongjiMapper.queryToDayRepayment(companyId,startTimestamps, endTimestamps);//今日回款笔数（实际回款）
-		int todayrepaymentacc = homepageTongjiMapper.queryToDayRepaymentacc(companyId, startTimestamps, endTimestamps);//今日回款笔数（线上回款）
+		//int todayrepaymentacc = homepageTongjiMapper.queryToDayRepaymentacc(companyId, startTimestamps, endTimestamps);//今日回款笔数（线上回款）
 		int todayrepaymentoff = homepageTongjiMapper.queryToDayRepaymentoff(companyId,startTimestamps, endTimestamps);//今日回款笔数（线下回款）
 		int todayrepaymentbank = homepageTongjiMapper.queryToDayRepaymentbank(companyId, startTimestamps, endTimestamps);//今日回款笔数（银行卡回款）
-		todayrepayment=todayrepaymentreal+todayrepaymentacc+todayrepaymentoff+todayrepaymentbank;
+		todayrepayment=todayrepaymentreal+todayrepaymentoff+todayrepaymentbank;
 		
 		int todayoverdue=0;//今日逾期已还笔数
 		todayoverdue = homepageTongjiMapper.queryToDayOverdue(companyId, startTimestamps, endTimestamps);//今日逾期已还笔数
@@ -77,10 +77,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(toDayDeffer==null){
 			toDayDeffer=new BigDecimal("0.00");
 		}
-		BigDecimal toDayDefferacc = homepageTongjiMapper.queryToDayDefferacc(companyId,startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线上）
+		/*BigDecimal toDayDefferacc = homepageTongjiMapper.queryToDayDefferacc(companyId,startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线上）
 		if(toDayDefferacc==null){
 			toDayDefferacc=new BigDecimal("0.00");
-		}
+		}*/
 		BigDecimal toDayDefferoff = homepageTongjiMapper.queryToDayDefferoff(companyId, startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线下）
 		if(toDayDefferoff==null){
 			toDayDefferoff=new BigDecimal("0.00");
@@ -89,7 +89,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(toDayBank==null){
 			toDayBank=new BigDecimal("0.00");
 		}
-		todayreturtoalmoney=todayreturtoalmoneyreal.add(toDayDeffer).add(toDayDefferacc).add(toDayDefferoff).add(toDayBank);
+		todayreturtoalmoney=todayreturtoalmoneyreal.add(toDayDeffer).add(toDayDefferoff).add(toDayBank);
 		
 		BigDecimal todayoveruetotalmoney=new BigDecimal("0.00");//今日逾期已还金额
 		BigDecimal todayoveruetotalmoneyreal = homepageTongjiMapper.queryToDayOverueTotalmoney(companyId, startTimestamps, endTimestamps);//今日逾期已还金额（用户实还金额）
@@ -122,10 +122,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		int sumrepayment = 0;//累计回款总笔数
 		int sumrepaymentreal = homepageTongjiMapper.querySumRepayment(companyId);//累计回款总笔数（实还笔数）
-		int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//累计回款总笔数（线上减免已还清笔数）
+		//int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//累计回款总笔数（线上减免已还清笔数）
 		int sumrepaymentoff = homepageTongjiMapper.querySumRepaymentoff(companyId);//累计回款总笔数（线下减免已还清笔数）
 		int sumrepaymentbank = homepageTongjiMapper.querySumRepaymentbank(companyId);//累计回款总笔数（银行卡扣款已结清笔数）
-		sumrepayment=sumrepaymentreal+sumrepaymentacc+sumrepaymentoff+sumrepaymentbank;
+		sumrepayment=sumrepaymentreal+sumrepaymentoff+sumrepaymentbank;
 		
 		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
@@ -150,10 +150,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(deffermoney==null){
 			deffermoney=new BigDecimal("0.00");
 		}
-		BigDecimal deffermoneyacc = homepageTongjiMapper.querydeffermoneyacc(companyId);//累计回款总金额（线上减免）
+		/*BigDecimal deffermoneyacc = homepageTongjiMapper.querydeffermoneyacc(companyId);//累计回款总金额（线上减免）
 		if(deffermoneyacc==null){
 			deffermoneyacc=new BigDecimal("0.00");
-		}
+		}*/
 		BigDecimal deffermoneyoff = homepageTongjiMapper.querydeffermoneyoff(companyId);//累计回款总金额（线下减免）
 		if(deffermoneyoff==null){
 			deffermoneyoff=new BigDecimal("0.00");
@@ -162,7 +162,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(deffermoneybank==null){
 			deffermoneybank=new BigDecimal("0.00");
 		}
-		repaymoney=repaymoneyreal.add(deffermoney).add(deffermoneyacc).add(deffermoneyoff).add(deffermoneybank);
+		repaymoney=repaymoneyreal.add(deffermoney).add(deffermoneyoff).add(deffermoneybank);
 		
 		BigDecimal shouldMoney = new BigDecimal("0.00");//累计应收总金额
 		List<Orderdetails> listdetail = homepageTongjiMapper.queryshouldMoney(companyId);
