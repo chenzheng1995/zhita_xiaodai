@@ -293,7 +293,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			int overduerepay=0;//（逾前已还）
 			int overdueafterrepay=0;//（逾后已还）
 			List<Orders> listorders=homepageTongjiMapper.overduerepay(companyId, startTimestampsfor, endTimestampsfor);//已还款订单  还款表
-			List<Orders> listordersoff=homepageTongjiMapper.overduerepayoff(companyId, shouldrepayStartTime, shouldrepayEndTime);//已还款订单    线下还款表
+			List<Orders> listordersoff=homepageTongjiMapper.overduerepayoff(companyId, startTimestampsfor, endTimestampsfor);//已还款订单    线下还款表
 			listorders.addAll(listordersoff);//合并两个集合
 			for (int j = 0; j < listorders.size(); j++) {
 				try {
@@ -349,7 +349,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			}
 			deratemoney=deratemoneyacc;
 			
-			BigDecimal offderatemoney=homepageTongjiMapper.offmoney(companyId, shouldrepayStartTime, shouldrepayEndTime);//线下减免金额
+			BigDecimal offderatemoney=homepageTongjiMapper.offmoney(companyId, startTimestampsfor, endTimestampsfor);//线下减免金额
 			
 			BigDecimal bankmoney = homepageTongjiMapper.bankMoney(companyId,startTimestampsfor, endTimestampsfor);//银行扣款金额
 			
