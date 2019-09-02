@@ -262,7 +262,7 @@ public class ChanpaySend extends BaseParameter{
 		Bankcard banAA = chanser.SelectBank(bas);
 		
 		Payment_record pay = new Payment_record();
-		
+		pay.setUserId(userId);
 		pay.setPipelinenumber(returnchanpay.getPartnerId());
 		pay.setDeleted("0");
 		pay.setPaymentmoney(new BigDecimal(TransAmt));
