@@ -99,6 +99,16 @@ public class Collection {
 	
 	private BigDecimal dataCol;
 	
+	private BigDecimal shouldReapyMoney;
+	
+	public BigDecimal getShouldReapyMoney() {
+		return shouldReapyMoney;
+	}
+
+	public void setShouldReapyMoney(BigDecimal shouldReapyMoney) {
+		this.shouldReapyMoney = shouldReapyMoney;
+	}
+
 	public BigDecimal getDataCol() {
 		return dataCol;
 	}

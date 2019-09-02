@@ -105,13 +105,19 @@ public class OperationalServiceimp implements OperationalService{
 			Orders o = operdao.Gesamtb(ordera);//还款金额    还款数
 			Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 			Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
+			Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
 			
+			if(ode.getXiansmoney()==null){
+				ode.setXiansmoney(new BigDecimal(0));
+			}
 			
 			if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 				
 				ord.setGesamtbetragderDarlehen(new BigDecimal(0));
 				System.out.println("数据输出:"+o.getGesamtbetragderRvckzahlung()+or.getGesamtbetraguberfalligerBetrag()+os.getAmountofbaddebts());
 			}
+			
+			
 			if(o.getGesamtbetragderRvckzahlung() == null){
 				
 				o.setGesamtbetragderRvckzahlung(new BigDecimal(0));
@@ -129,6 +135,8 @@ public class OperationalServiceimp implements OperationalService{
 				os.setAmountofbaddebts(new BigDecimal(0));
 				System.out.println(os.getAmountofbaddebts());
 			}
+			ord.setXianscount(ode.getXianscount());
+			ord.setXiansmoney(ode.getXiansmoney());
 			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
 			ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
@@ -236,7 +244,7 @@ public class OperationalServiceimp implements OperationalService{
 			Orders orders = operdao.OrderHuan(order);//还款数   
 			Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 			Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
-			
+			Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
 			
 			if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 				
@@ -259,6 +267,9 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
 			ord.setGesamtbetragderRvckzahlung(orders.getGesamtbetragderRvckzahlung());
+			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung());
+			ord.setXianscount(ode.getXianscount());
+			ord.setXiansmoney(ode.getXiansmoney());
 			if(ord.getGesamtbetraguberfallNum()==null){
 				ord.setGesamtbetraguberfallNum(0);
 			}

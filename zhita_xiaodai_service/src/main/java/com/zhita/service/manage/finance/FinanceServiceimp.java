@@ -665,6 +665,8 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
 		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
+		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
+		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
@@ -680,6 +682,40 @@ public class FinanceServiceimp implements FinanceService{
 		}else{
 			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 		}
+		
+		
+		
+		if(e!=null){
+			if(e.getDeferredamount()!=null){
+				if(e.getDefeNum()!=0){
+					bank.setXianJianmianCount(""+e.getDefeNum()+","+0+","+e.getDeferredamount()+"");
+				}else{
+					bank.setXianJianmianCount(""+0+","+0+","+0+"");
+				}
+			}else{
+				bank.setXianJianmianCount(""+0+","+0+","+0+"");
+			}
+		}else{
+			bank.setXianJianmianCount(""+0+","+0+","+0+"");
+		}
+		
+		
+		
+		if(d!=null){
+			if(d.getDeferredamount()!=null){
+				if(d.getDefeNum()!=0){
+					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+","+0+"");
+				}else{
+					bank.setXianShangCoune(""+0+","+0+","+0+"");
+				}
+			}else{
+				bank.setXianShangCoune(""+0+","+0+","+0+"");
+			}
+		}else{
+			bank.setXianShangCoune(""+0+","+0+","+0+"");
+		}
+		
+		
 		
 		
 		
@@ -747,7 +783,7 @@ public class FinanceServiceimp implements FinanceService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			off.setSedn_time(Timestamps.dateToStamp(sim.format(new Date())));
+			off.setSedn_time(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

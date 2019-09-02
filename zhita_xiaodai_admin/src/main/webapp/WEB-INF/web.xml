@@ -66,11 +66,7 @@
 	</servlet-mapping>
 
 	<!-- shiro配置 开始 -->
-<<<<<<< HEAD
-     <filter>
-=======
     <filter>
->>>>>>> 0e10c4069bef845675ab75f5ed50ebc0f7fbc071
 	  	<filter-name>shiroFilter</filter-name>
 	  	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	  	<async-supported>true</async-supported>

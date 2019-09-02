@@ -209,4 +209,10 @@ public interface PaymentRecordMapper {
     
     
     Integer DeleteOrderDetailsNumber(String orderNumber);
+    
+    
+    Bankdeductions Xianshang(Bankdeductions banl);
+    
+    
+    Bankdeductions XianJianmian(Bankdeductions banl);
 }
