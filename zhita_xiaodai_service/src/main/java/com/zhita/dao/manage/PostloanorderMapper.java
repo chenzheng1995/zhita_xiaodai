@@ -139,4 +139,13 @@ public interface PostloanorderMapper {
 	
 	
 	List<Integer> DefeOrderId(Orderdetails order);
+	
+	
+	BigDecimal BankMoney(Integer orderId);
+	
+	
+	BigDecimal JianMianmoney(Integer orderId);
+	
+	
+	BigDecimal HuankuanMoney(Integer orderId);
 }

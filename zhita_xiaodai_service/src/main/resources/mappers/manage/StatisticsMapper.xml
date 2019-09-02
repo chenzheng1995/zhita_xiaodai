@@ -243,7 +243,7 @@
 			
 			
 			<update id="UpdateOrderSuperl" parameterType="com.zhita.model.manage.Orders">
-				update orderdetails set surplus_money = #{surplus_money},realityAccount = #{realityAccount} where id = #{id}
+				update orderdetails set realityAccount = #{realityAccount} where id = #{id}
 			</update>
 			
 			<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">

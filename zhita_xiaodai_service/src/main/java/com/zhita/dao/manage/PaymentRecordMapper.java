@@ -12,6 +12,7 @@ import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Undertheline;
@@ -215,4 +216,10 @@ public interface PaymentRecordMapper {
     
     
     Bankdeductions XianJianmian(Bankdeductions banl);
+    
+    
+    Orders OneOrdersUser(Integer orderId);
+    
+    
+    Bankdeductions BankMoneys(Bankdeductions banl);
 }

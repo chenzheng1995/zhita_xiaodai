@@ -248,6 +248,11 @@ public class Chanpayserviceimp implements Chanpayservice{
 		}
 		return a;
 	}
+
+	@Override
+	public Orders SelectOrdersUser(Integer orderId) {
+		return padao.OneOrdersUser(orderId);
+	}
 	
 	
 	

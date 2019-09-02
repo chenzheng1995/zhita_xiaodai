@@ -762,6 +762,7 @@
 			</if>
 			</where>
 			group by o.id
+			order by o.id desc
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -819,6 +820,9 @@
 		</select>
 		
 		
+		
+		
+		
 		<select id="ShijiMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 			select sum(repaymentMoney) as realityAccount  from repayment where orderId = #{orderId}
 		</select>
@@ -832,6 +836,21 @@
 		
 		<select id="DefeOrderId" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select de.orderid from deferred de,orders o where o.companyId = #{companyId} group by de.orderId
+		</select>
+		
+		
+		<select id="BankMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select deduction_money from bankdeductions where orderId = #{orderId}
+		</select>
+		
+		
+		<select id="JianMianmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select offusermoney from offlinjianmian where orderId = #{orderId}
+		</select>
+		
+		
+		<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select repaymentMoney from repayment where orderId = #{orderId}
 		</select>
 		
 </mapper>

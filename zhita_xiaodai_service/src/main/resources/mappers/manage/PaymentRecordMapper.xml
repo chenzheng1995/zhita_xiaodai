@@ -632,8 +632,8 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
-  				order by u.id desc
   				Group by u.id
+  				order by u.id desc
   				limit #{page},#{pagesize}
   			</select>
   			
@@ -853,8 +853,14 @@
   			
   			
   			<select id="Xianshang" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(ac.id) as defeNum,sum(ac.amountmoney) as deferredamount from accountadjustment ac,orders o where ac.orderId = o.id and 
+  				select count(ac.id) as defeNum,sum(ac.totalamount) as deferredamount from accountadjustment ac,orders o where ac.orderId = o.id and 
   				 o.companyId = #{companyId} and ac.amou_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="BankMoneys" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(ban.id) as defeNum,sum(ban.deduction_money) as deferredamount from bankdeductions ban,orders o where ac.orderId = o.id and 
+  				 o.companyId = #{companyId} and ban.deduction_time between #{start_time} and #{end_time}
   			</select>
   			
   			
@@ -1059,4 +1065,25 @@
  			<delete id="DeleteOrderDetailsNumber" parameterType="java.lang.String" >
  				delete from orderdetails where orderId = (select id from orders where orderNumber = #{orderNumber})
  			</delete>
+ 			
+ 			
+ 			
+ 			<select id="OneOrdersUser" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+ 				select o.orderNumber,o.userId,ord.shouldReapyMoney,b.bankcardName from orders o,orderdetails ord,bankcard b
+ 				where o.id = ord.orderId and b.userId = o.userId and o.id = #{orderId}
+ 			</select>
+ 			
+ 			
+ 			
+ 		<select id="ReJianMianmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select sum(offusermoney) from offlinjianmian where companyId = #{companyId}
+		</select>
+		
+		
+		<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			select sum(re.repaymentMoney) from repayment re,orders o where o.id = re.orderId and o.companyId = #{companyId}
+		</select>
+ 			
+ 			
+ 			
 </mapper>

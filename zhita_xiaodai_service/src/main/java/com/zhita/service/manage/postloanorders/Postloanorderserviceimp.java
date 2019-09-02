@@ -553,7 +553,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				System.out.println(sim.format(new Date()));
 				try {
-					System.out.println(Timestamps.dateToStamp(sim.format(new Date())));
+					System.out.println(Timestamps.dateToStamp1(sim.format(new Date())));
 					ovdeu.setCollectiondate(Timestamps.dateToStamp(sim.format(new Date())));//获取当前时间戳
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -651,17 +651,25 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setSurplus_money(new BigDecimal(0));
 		}
 		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
+		
 		orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
 		
 		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));
+		
 		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
+		
+		BigDecimal sumMoney = postloanorder.BankMoney(orders.get(i).getOrderId()).add(postloanorder.JianMianmoney(orders.get(i).getOrderId()));
+		
+		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getInterestSum()));//应还金额
+		
+		
 		System.out.println("应还总金额:"+orders.get(i).getOrder_money()+"实借金额:"+orders.get(i).getRealityAccount()+"放贷金额:"+orders.get(i).getMakeLoans()+"应还金额:"+orders.get(i).getRealityBorrowMoney());
+		
+		
 		orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
-//		BigDecimal a = postloanorder.ShijiMoney(orders.get(i).getOrderId());
-//		if(a==null){
-//			a=new BigDecimal(0);
-//		}
-//		orders.get(i).setRealityAccount(a);
+
+		
+		
 		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 		orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 		System.out.println("实还时间:"+orders.get(i).getRealtime());

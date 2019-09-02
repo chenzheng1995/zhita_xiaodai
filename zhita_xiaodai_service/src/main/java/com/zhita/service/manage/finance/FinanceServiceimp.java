@@ -314,8 +314,8 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
-			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
-			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
+//			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
+//			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -667,36 +667,51 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
 		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+		Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
-					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+"");//实借笔数    实借金额
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
 				}else{
-					bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 				}
 			}else{
-				bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
+				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 			}
 		
 		}else{
-			bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
+			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
 		}
 		
 		
+		if(bank!=null){
+			if(bank.getBankMoneys() != null){
+				if(f.getDefeNum()!=0){
+					bank.setBankMoneys(""+f.getDefeNum()+","+f.getDeferredamount()+","+0+"");
+				}else{
+					bank.setBankMoneys(""+0+","+0+","+0+"");
+				}
+			}else{
+				bank.setBankMoneys(""+0+","+0+","+0+"");//实借笔数    实借金额
+			}
+		}else{
+			bank.setBankMoneys(""+0+","+0+","+0+"");//实借笔数    实借金额
+		}
+	
 		
 		if(e!=null){
 			if(e.getDeferredamount()!=null){
 				if(e.getDefeNum()!=0){
-					bank.setXianJianmianCount(""+e.getDefeNum()+","+e.getDeferredamount()+"");
+					bank.setXianJianmianCount(""+e.getDefeNum()+","+e.getDeferredamount()+","+0+"");
 				}else{
-					bank.setXianJianmianCount(""+0+","+0+"");
+					bank.setXianJianmianCount(""+0+","+0+","+0+"");
 				}
 			}else{
-				bank.setXianJianmianCount(""+0+","+0+"");
+				bank.setXianJianmianCount(""+0+","+0+","+0+"");
 			}
 		}else{
-			bank.setXianJianmianCount(""+0+","+0+"");
+			bank.setXianJianmianCount(""+0+","+0+","+0+"");
 		}
 		
 		
@@ -706,13 +721,13 @@ public class FinanceServiceimp implements FinanceService{
 				if(d.getDefeNum()!=0){
 					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+"");
 				}else{
-					bank.setXianShangCoune(""+0+","+0+"");
+					bank.setXianShangCoune(""+0+","+0+","+0+"");
 				}
 			}else{
-				bank.setXianShangCoune(""+0+","+0+"");
+				bank.setXianShangCoune(""+0+","+0+","+0+"");
 			}
 		}else{
-			bank.setXianShangCoune(""+0+","+0+"");
+			bank.setXianShangCoune(""+0+","+0+","+0+"");
 		}
 		
 		
@@ -722,48 +737,48 @@ public class FinanceServiceimp implements FinanceService{
 		if(b!=null){
 			if(b.getRealborrowing()!=null){
 				if(b.getRealborrowing() != 0){
-					bank.setDeductionstatus(""+b.getRealborrowing()+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+b.getRealexpenditure()+","+0+"");//实还笔数    实还金额
 				}else{
-					bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 				}
 			}else{
-				bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
+				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 			}
 			
 		}else{
-			bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
+			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
 		}
 		
 		
 		if(a!=null){
 			if(a.getOverdueNum() != null){
 				if(a.getOverdueNum() != 0){
-					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+"");//逾期数   逾期费
+					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+","+0+"");//逾期数   逾期费
 				}else{
-					bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
+					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
 				}
 			}else{
-				bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
+				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
 			}
 		
 		}else{
-			bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
+			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
 		}
 			
 		
 		if(c!=null){
 			if(c.getDefeNum() != null){
 				if(c.getDefeNum() != 0 ){
-					bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+"");//延期数    延期费
+					bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+","+0+"");//延期数    延期费
 				}else{
-					bank.setName(""+0+","+0+"");//延期数    延期费
+					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 				}
 			}else{
-				bank.setName(""+0+","+0+"");//延期数    延期费
+				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 			}
 			
 		}else{
-			bank.setName(""+0+","+0+"");//延期数    延期费
+			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -896,11 +911,12 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        ca.setTime(new Date()); //设置时间为当前时间
+		ca.setTime(new Date()); //设置时间为当前时间
         Date date = ca.getTime();
         
         try {
-        	off.setOperating_time(dateFormat.format(new Date()));//操作时间
+        	off.setOperating_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));//操作时间
+        	 
 			off.setDelay_time(Timestamps.dateToStamp1(off.getDelay_time()));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
