@@ -273,27 +273,41 @@ public class Test {
 //            System.out.println(new BigInteger(1, md.digest()).toString(16)); 
 		
 		
-
-			
-			String newstr =null;
-			try {
-				MessageDigest md5 = MessageDigest.getInstance("MD5");
-				newstr = new String(Base64.encodeBase64(md5.digest("123456".getBytes("UTF-8"))), "utf-8");//MD5加密后对byte数组base64编码
-			} catch (NoSuchAlgorithmException e) {
-				try {
-					throw new Exception("md5加密失败，NoSuchAlgorithmException");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			} catch (UnsupportedEncodingException e) {
-				try {
-					throw new Exception("base64编码失败，UnsupportedEncoding");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+//
+//			
+//			String newstr =null;
+//			try {
+//				MessageDigest md5 = MessageDigest.getInstance("MD5");
+//				newstr = new String(Base64.encodeBase64(md5.digest("123456".getBytes("UTF-8"))), "utf-8");//MD5加密后对byte数组base64编码
+//			} catch (NoSuchAlgorithmException e) {
+//				try {
+//					throw new Exception("md5加密失败，NoSuchAlgorithmException");
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
+//			} catch (UnsupportedEncodingException e) {
+//				try {
+//					throw new Exception("base64编码失败，UnsupportedEncoding");
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+//
+//System.out.println(newstr);
+		
+		String refuseApplyProvince ="北京/上海北京/南京";
+		 String address = "上海市北京";
+		 String aS = address.substring(0,3);
+		 System.out.println(aS);
+		  String[] aString = refuseApplyProvince.split("/");
+	      for (int i = 0; i < aString.length; i++) {
+	    	  if(aS.indexOf(aString[i])!=-1) {
+System.out.println("不符合");
+	    	  }else {
+				System.out.println("符合");
 			}
-
-System.out.println(newstr);
+	      }
+		
 	}
 
 }

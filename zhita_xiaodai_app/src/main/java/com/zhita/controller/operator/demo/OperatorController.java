@@ -308,6 +308,7 @@ public class OperatorController {
 	  map.put("msg", "符合条件");
 	  Map<String, Object> map1 =  userAttestationService.getuserAttestation(userId);
 	  String address = (String) map1.get("address");//身份证上的住址
+	  String aS = address.substring(0,3);//身份证地址截取前三位
 	  String birth_year = (String) map1.get("birth_year");//出生年份
 	  String birth_month = (String) map1.get("birth_month");//出生月份
 	  String birth_day = (String) map1.get("birth_day");//出生日
@@ -327,7 +328,7 @@ public class OperatorController {
 	  
 	  String[] aString = refuseApplyProvince.split("/");
       for (int i = 0; i < aString.length; i++) {
-    	  if(address.indexOf(aString[i])!=-1) {
+    	  if(aS.indexOf(aString[i])!=-1) {
     		  map.put("Ncode","406");
     		  map.put("code", "406");
     		  map.put("msg", "地域不符合条件");
@@ -584,6 +585,19 @@ public Map<String, Object> getthreeElements(int userId,String phone,int companyI
 	return map1;
 	
 }
+
+
+//魔杖接口
+@RequestMapping("/setmagicwand3")
+@ResponseBody
+@Transactional
+public Map<String, Object> setmagicwand3(String mobile,int user_id,String name,String idcard){
+	Map<String, Object> map = new HashMap<>();
+
+		
+		return map;
+}
+
 
 
 //判断是否是白名单用户，如果是，风控直接通过
