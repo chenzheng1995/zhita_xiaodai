@@ -136,4 +136,7 @@ public interface OperationalMapper {
 	
 	Integer OrderOKCollection(Orderdetails ord);
 	
+	
+	Orders XianOrder(Orderdetails ord);
+	
 }

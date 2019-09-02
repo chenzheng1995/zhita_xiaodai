@@ -133,4 +133,7 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdateRepaystatus(String pipelinenu);
+	
+	
+	Integer UpdatehowMany(Integer userId);
 }

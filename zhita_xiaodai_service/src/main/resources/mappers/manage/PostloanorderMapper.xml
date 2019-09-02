@@ -477,10 +477,7 @@
 				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
 			</if>
 			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
-				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
-			</if>
-			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
-				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+				AND o.shouldReturnTime  between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
 			</if>
 			<if test="registeClient != null and registeClient != ''">
 				AND u.registeClient = #{registeClient}
@@ -492,7 +489,7 @@
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
-			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,ord.shouldReapyMoney
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid
@@ -518,7 +515,7 @@
 				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
 			</if>
 			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
-				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+				AND o.shouldReturnTime  between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
 			</if>
 			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
@@ -793,7 +790,7 @@
 		
 		
 		<select id="CollTimeData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(id) as collection_count from orders where companyId = #{companyId} and id not in (select ov.orderId from overdue ov,orders o where 
+			select count(id) as collection_count,sum(shouldReapyMoney) as shouldReapyMoney from orders where companyId = #{companyId} and id not in (select ov.orderId from overdue ov,orders o where 
 			o.companyId = #{companyId} and o.id = ov.orderId)
 			AND shouldReturnTime BETWEEN #{start_time} and #{end_time}
 		</select>

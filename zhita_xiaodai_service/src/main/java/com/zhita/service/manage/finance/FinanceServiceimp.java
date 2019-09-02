@@ -665,69 +665,105 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
 		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
+		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
+		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
-					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+"");//实借笔数    实借金额
 				}else{
-					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 				}
 			}else{
-				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+				bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 			}
 		
 		}else{
-			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+			bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 		}
+		
+		
+		
+		if(e!=null){
+			if(e.getDeferredamount()!=null){
+				if(e.getDefeNum()!=0){
+					bank.setXianJianmianCount(""+e.getDefeNum()+","+e.getDeferredamount()+"");
+				}else{
+					bank.setXianJianmianCount(""+0+","+0+"");
+				}
+			}else{
+				bank.setXianJianmianCount(""+0+","+0+"");
+			}
+		}else{
+			bank.setXianJianmianCount(""+0+","+0+"");
+		}
+		
+		
+		
+		if(d!=null){
+			if(d.getDeferredamount()!=null){
+				if(d.getDefeNum()!=0){
+					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+"");
+				}else{
+					bank.setXianShangCoune(""+0+","+0+"");
+				}
+			}else{
+				bank.setXianShangCoune(""+0+","+0+"");
+			}
+		}else{
+			bank.setXianShangCoune(""+0+","+0+"");
+		}
+		
+		
 		
 		
 		
 		if(b!=null){
 			if(b.getRealborrowing()!=null){
 				if(b.getRealborrowing() != 0){
-					bank.setDeductionstatus(""+b.getRealborrowing()+","+0+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+b.getRealexpenditure()+"");//实还笔数    实还金额
 				}else{
-					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 				}
 			}else{
-				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+				bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 			}
 			
 		}else{
-			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+			bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 		}
 		
 		
 		if(a!=null){
 			if(a.getOverdueNum() != null){
 				if(a.getOverdueNum() != 0){
-					bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+"");//逾期数   逾期费
 				}else{
-					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+					bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 				}
 			}else{
-				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+				bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 			}
 		
 		}else{
-			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+			bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 		}
 			
 		
 		if(c!=null){
 			if(c.getDefeNum() != null){
 				if(c.getDefeNum() != 0 ){
-					bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+					bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+"");//延期数    延期费
 				}else{
-					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+					bank.setName(""+0+","+0+"");//延期数    延期费
 				}
 			}else{
-				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+				bank.setName(""+0+","+0+"");//延期数    延期费
 			}
 			
 		}else{
-			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+			bank.setName(""+0+","+0+"");//延期数    延期费
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -747,7 +783,7 @@ public class FinanceServiceimp implements FinanceService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			off.setSedn_time(Timestamps.dateToStamp(sim.format(new Date())));
+			off.setSedn_time(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

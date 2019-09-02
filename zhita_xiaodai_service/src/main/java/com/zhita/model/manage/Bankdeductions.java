@@ -126,6 +126,26 @@ public class Bankdeductions {
 	private BigDecimal collection_money;//含逾应还总金额
 	
 	private String deferredTime;
+	
+	private String XianShangCoune;//线上统计
+	
+	private String XianJianmianCount;//线下统计
+
+	public String getXianShangCoune() {
+		return XianShangCoune;
+	}
+
+	public void setXianShangCoune(String xianShangCoune) {
+		XianShangCoune = xianShangCoune;
+	}
+
+	public String getXianJianmianCount() {
+		return XianJianmianCount;
+	}
+
+	public void setXianJianmianCount(String xianJianmianCount) {
+		XianJianmianCount = xianJianmianCount;
+	}
 
 	public String getStart_time() {
 		return start_time;

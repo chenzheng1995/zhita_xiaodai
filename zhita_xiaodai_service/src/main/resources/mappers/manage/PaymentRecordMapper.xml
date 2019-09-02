@@ -632,6 +632,7 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
+  				order by u.id desc
   				Group by u.id
   				limit #{page},#{pagesize}
   			</select>
@@ -661,6 +662,7 @@
 					</if>
   				</where> 
   				GROUP BY u.fina_id
+  				order by u.id desc
   			</select>
   			
   			
@@ -847,6 +849,18 @@
   			<select id="OneMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de,orders o where de.orderId = o.id and 
   				 o.companyId = #{companyId} and de.deferredTime between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="Xianshang" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(ac.id) as defeNum,sum(ac.amountmoney) as deferredamount from accountadjustment ac,orders o where ac.orderId = o.id and 
+  				 o.companyId = #{companyId} and ac.amou_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="XianJianmian" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(of.id) as defeNum,sum(of.offusermoney) as deferredamount from offlinjianmian of,orders o where of.orderId = o.id and 
+  				 o.companyId = #{companyId} and of.sedn_time between #{start_time} and #{end_time}
   			</select>
   			
   			

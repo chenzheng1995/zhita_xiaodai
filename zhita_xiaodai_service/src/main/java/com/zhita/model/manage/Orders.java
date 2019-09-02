@@ -65,10 +65,9 @@ public class Orders {
 	
 	private User user;//对应用户对象
 	
+	private Integer xianscount;
 	
-	
-	
-	
+	private BigDecimal xiansmoney;
 	
 	private BigDecimal realityBorrowMoney;//实际借款金额（元）
 	
@@ -141,7 +140,22 @@ public class Orders {
 	private String TransAmt;
 	
 	private Double collectionData;
+	
+	public Integer getXianscount() {
+		return xianscount;
+	}
 
+	public void setXianscount(Integer xianscount) {
+		this.xianscount = xianscount;
+	}
+
+	public BigDecimal getXiansmoney() {
+		return xiansmoney;
+	}
+
+	public void setXiansmoney(BigDecimal xiansmoney) {
+		this.xiansmoney = xiansmoney;
+	}
 
 	public Double getCollectionData() {
 		return collectionData;
