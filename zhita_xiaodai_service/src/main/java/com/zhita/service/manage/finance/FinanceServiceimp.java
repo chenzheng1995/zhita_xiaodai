@@ -671,16 +671,16 @@ public class FinanceServiceimp implements FinanceService{
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
-					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+"");//实借笔数    实借金额
 				}else{
-					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 				}
 			}else{
-				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+				bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 			}
 		
 		}else{
-			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+			bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 		}
 		
 		
@@ -688,15 +688,15 @@ public class FinanceServiceimp implements FinanceService{
 		if(e!=null){
 			if(e.getDeferredamount()!=null){
 				if(e.getDefeNum()!=0){
-					bank.setXianJianmianCount(""+e.getDefeNum()+","+0+","+e.getDeferredamount()+"");
+					bank.setXianJianmianCount(""+e.getDefeNum()+","+e.getDeferredamount()+"");
 				}else{
-					bank.setXianJianmianCount(""+0+","+0+","+0+"");
+					bank.setXianJianmianCount(""+0+","+0+"");
 				}
 			}else{
-				bank.setXianJianmianCount(""+0+","+0+","+0+"");
+				bank.setXianJianmianCount(""+0+","+0+"");
 			}
 		}else{
-			bank.setXianJianmianCount(""+0+","+0+","+0+"");
+			bank.setXianJianmianCount(""+0+","+0+"");
 		}
 		
 		
@@ -704,15 +704,15 @@ public class FinanceServiceimp implements FinanceService{
 		if(d!=null){
 			if(d.getDeferredamount()!=null){
 				if(d.getDefeNum()!=0){
-					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+","+0+"");
+					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+"");
 				}else{
-					bank.setXianShangCoune(""+0+","+0+","+0+"");
+					bank.setXianShangCoune(""+0+","+0+"");
 				}
 			}else{
-				bank.setXianShangCoune(""+0+","+0+","+0+"");
+				bank.setXianShangCoune(""+0+","+0+"");
 			}
 		}else{
-			bank.setXianShangCoune(""+0+","+0+","+0+"");
+			bank.setXianShangCoune(""+0+","+0+"");
 		}
 		
 		
@@ -722,48 +722,48 @@ public class FinanceServiceimp implements FinanceService{
 		if(b!=null){
 			if(b.getRealborrowing()!=null){
 				if(b.getRealborrowing() != 0){
-					bank.setDeductionstatus(""+b.getRealborrowing()+","+0+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+b.getRealexpenditure()+"");//实还笔数    实还金额
 				}else{
-					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 				}
 			}else{
-				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+				bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 			}
 			
 		}else{
-			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+			bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 		}
 		
 		
 		if(a!=null){
 			if(a.getOverdueNum() != null){
 				if(a.getOverdueNum() != 0){
-					bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+"");//逾期数   逾期费
 				}else{
-					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+					bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 				}
 			}else{
-				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+				bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 			}
 		
 		}else{
-			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+			bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 		}
 			
 		
 		if(c!=null){
 			if(c.getDefeNum() != null){
 				if(c.getDefeNum() != 0 ){
-					bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+					bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+"");//延期数    延期费
 				}else{
-					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+					bank.setName(""+0+","+0+"");//延期数    延期费
 				}
 			}else{
-				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+				bank.setName(""+0+","+0+"");//延期数    延期费
 			}
 			
 		}else{
-			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+			bank.setName(""+0+","+0+"");//延期数    延期费
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
