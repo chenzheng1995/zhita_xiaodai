@@ -32,6 +32,9 @@ public interface SourceMapper {
     //后台管理---查询渠道表所有信息
     List<Source> queryAll(Integer comapnyId);
     
+    //后台管理---查询所有渠道
+    List<Source> queryAllSource(Integer comapnyId);
+    
     //后台管理---根据id  对当前对象的假删除状态进行修改
     int updateFalDel(Integer id);
     

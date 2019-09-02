@@ -33,7 +33,7 @@ public class SourceTongjiController {
 	@Autowired
 	private IntSourceService intSourceService;
 	
-	//后台管理---我们自己看的统计数据——在用户表存在的渠道，当天的统计信息（数据待完善   目前只有渠道名     uv  注册数    uv到注册的转化率）
+	//后台管理---我们自己看的统计数据——渠道表所有渠道
 	@ResponseBody
 	@RequestMapping("/queryByToday")
 	public Map<String,Object> queryByToday(Integer companyId,Integer page)throws ParseException{
@@ -52,7 +52,7 @@ public class SourceTongjiController {
 		String endTime = today;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 		
-		listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
+		//listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
 		for (int i = 0; i < listsource.size(); i++) {
 			int sourceid=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名称
