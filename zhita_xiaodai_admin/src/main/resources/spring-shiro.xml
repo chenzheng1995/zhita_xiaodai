@@ -102,7 +102,9 @@
 				/user/queryUserAttesta = perms["22"]
 				/blacklistuser/queryAll = perms["24"]    			
 				/blacklistuser/queryAllCompany = perms["24"]    		
-				/blacklistuser/insert = perms["24"]    			
+				/blacklistuser/insert = perms["24"]    		
+				/sms/AllUserShortMessage = perms["66"]
+				/sms/AddUserShort = perms["66"]
 				<!-- /blacklistuser/selectByPrimaryKey = perms["24"]    		
 				/blacklistuser/updateByPrimaryKey = perms["24"]   -->  		
 				/blacklistuser/upaFalseDel = perms["24"]    			
@@ -131,6 +133,8 @@
 				/Chanpay/SelectBankName = perms["39"]
 				/Chanpay/BankdeduDta = perms["40"]
 				/fina/financialoverview = perms["41"]
+				/fina/queryall = perms["42"]
+				/fina/pricetongji = perms["42"]
 				<!-- 渠道管理-->
 				/sourcetongji/queryByToday = perms["43"]			
 				/sourcetongji/queryByTimeslot = perms["43"]			
@@ -222,7 +226,13 @@
 				/loanthresholdvalue/loanmax = perms["64"]           		    		
 				/loanthresholdvalue/upamaxthresholdvalue = perms["64"]            		
 				/loanthresholdvalue/queryloantoday = perms["65"]           		   
-				/loanthresholdvalue/upaloanstatus = perms["65"]            	  	        	
+				/loanthresholdvalue/upaloanstatus = perms["65"]    
+				/bankauto/queryAll = perms["68"]  
+				/bankauto/queryAllCompany = perms["68"]      
+				/bankauto/insert = perms["68"]      
+				/bankauto/selectByPrimaryKey = perms["68"]      
+				/bankauto/updateByPrimaryKey = perms["68"]  
+				/bankauto/upaFaldel = perms["68"]            	  	        	
 			</value>
 		</property>
 	</bean>

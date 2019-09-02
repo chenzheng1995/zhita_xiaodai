@@ -291,6 +291,21 @@
 	         <if test="(operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==1)|| (operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==2)">
 	           and o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR}
 	        </if>
+	        <if test="sourceid != null and sourceid !='' ">
+	        	and u.sourceId = #{sourceid,jdbcType=INTEGER}
+	        </if>
+	        <if test="shareOfState != null and shareOfState !='' ">
+	        	and u.shareOfState = #{shareOfState,jdbcType=VARCHAR}
+	        </if>
+	         <if test="clientstatus != null and clientstatus !='' and clientstatus==0 "><!-- 代表未借款用户 -->
+	        	and u.howManyTimesBorMoney=0
+	        </if>
+	        <if test="clientstatus != null and clientstatus !='' and clientstatus==1 "><!-- 代表新客户 -->
+	        	and u.howManyTimesBorMoney=1
+	        </if>
+	         <if test="clientstatus != null and clientstatus !='' and clientstatus==2 "><!-- 代表老客户 -->
+	        	and u.howManyTimesBorMoney>1
+	        </if>
 	     group by u.id order by u.registeTime desc  limit #{page},#{pagesize}
 	</select>
 	<!-- 后台管理           用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)  查询数量-->
@@ -327,6 +342,21 @@
 	        </if>
 	        <if test="(operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==1)|| (operaattestationstatus !=null and operaattestationstatus !='' and operaattestationstatus==2) ">
 	           and o.attestationStatus=#{operaattestationstatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="sourceid != null and sourceid !='' ">
+	        	and u.sourceId = #{sourceid,jdbcType=INTEGER}
+	        </if>
+	        <if test="shareOfState != null and shareOfState !='' ">
+	        	and u.shareOfState = #{shareOfState,jdbcType=VARCHAR}
+	        </if>
+	        <if test="clientstatus != null and clientstatus !='' and clientstatus==0 "><!-- 代表未借款用户 -->
+	        	and u.howManyTimesBorMoney=0
+	        </if>
+	        <if test="clientstatus != null and clientstatus !='' and clientstatus==1 "><!-- 代表新客户 -->
+	        	and u.howManyTimesBorMoney=1
+	        </if>
+	         <if test="clientstatus != null and clientstatus !='' and clientstatus==2 "><!-- 代表老客户 -->
+	        	and u.howManyTimesBorMoney>1
 	        </if>
 	</select>
 	<!-- 后台管理         添加黑名单(修改当前用户的黑名单状态) -->

@@ -40,8 +40,14 @@ public interface HomepageTongjiMapper {
 	//后台管理---今日回款笔数(银行卡回款)
 	int queryToDayRepaymentbank(Integer companyId,String startTime,String endTime);
 	
-	//后台管理---今日逾期已还笔数***
-	int queryToDayOverdue(Integer companyId,String startTime,String endTime);
+	//后台管理---今日逾后已还笔数 ----还款表
+	List<Orders> queryToDayOverdue(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日逾后已还笔数 ----线下还款表
+	List<Orders> queryToDayOverdueoff(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日逾后已还笔数 ----银行卡扣款表
+	List<Orders> queryToDayOverduebank(Integer companyId,String startTime,String endTime);
 	
 	//后台管理----今日放款总金额
 	BigDecimal queryToDayLoanTotalmoney(Integer companyId,String startTime,String endTime);
@@ -61,15 +67,14 @@ public interface HomepageTongjiMapper {
 	//后台管理---今日回款总金额（银行扣款金额）
 	BigDecimal queryToDayBank(Integer companyId,String startTime,String endTime);
 	
-	//后台管理---今日逾期已还金额（用户实还金额）***
+	//后台管理---今日逾期已还金额（用户实还金额）
 	BigDecimal queryToDayOverueTotalmoney(@Param("companyId") Integer companyId,@Param("startTime") String startTime,@Param("endTime") String endTime);
 	
-	//后台管理---今日逾期已还金额（线上减免已还）***
-	BigDecimal queryToDayOverueTotalmoneyacc(@Param("companyId") Integer companyId,@Param("startTime") String startTime,@Param("endTime") String endTime);
-	
-	//后台管理---今日逾期已还金额（线下减免已还）***
+	//后台管理---今日逾期已还金额（线下减免已还）
 	BigDecimal queryToDayOverueTotalmoneyoff(@Param("companyId") Integer companyId,@Param("startTime") String startTime,@Param("endTime") String endTime);
 	
+	//后台管理---今日逾期已还金额（银行卡扣款已还）
+	BigDecimal queryToDayOverueTotalmoneybank(@Param("companyId") Integer companyId,@Param("startTime") String startTime,@Param("endTime") String endTime);
 	/**
 	 * 累计数据
 	 * @param companyId 公司id
@@ -177,6 +182,9 @@ public interface HomepageTongjiMapper {
 	//后台管理----已还款订单    线下还款表
 	List<Orders> overduerepayoff(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
+	//后台管理----已还款订单    银行卡扣款表
+	List<Orders> overduerepaybank(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
+	
 	//后台管理----逾后未还
 	int overdueafternotrepay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
@@ -216,6 +224,9 @@ public interface HomepageTongjiMapper {
 	//后台管理---银行扣款已还清订单
 	int deratebank(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
+	
+	//后台管理---查询借款信息表的借款期限（比如借款期限是7）
+	int querylifeOfLoan(Integer companyId);
 	
 	
 	List<Orderdetails> test();

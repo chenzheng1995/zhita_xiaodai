@@ -19,7 +19,10 @@ public interface IntSourceService {
     public int insert(Source record);
     
     //后台管理---根据id查询当前对象信息
-    public Source selectByPrimaryKey(Integer id);
+    public Map<String,Object> selectByPrimaryKey(Integer companyId,Integer id);
+    
+    //后台管理---根据id查询
+    public Source selectByid(Integer id);
     
     //后台管理---编辑功能
     public int updateByPrimaryKey(Source record)throws ParseException;

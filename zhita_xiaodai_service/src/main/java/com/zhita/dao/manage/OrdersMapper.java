@@ -121,8 +121,14 @@ public interface OrdersMapper {
 
 	String getorderNumber(int userId);
 	
-	//后台管理---查询该订单还款成功的还款金额
-	String queryrepaymoney(Integer orderid);
+	//后台管理---查询该订单还款成功的还款金额---还款表
+	BigDecimal queryrepaymoney(Integer orderid);
+	
+	//后台管理---查询该订单还款成功的还款金额---线下减免表
+	BigDecimal queryrepaymoneyoff(Integer orderid);
+		
+	//后台管理---查询该订单还款成功的还款金额---银行扣款表
+	BigDecimal queryrepaymoneybank(Integer orderid);
 
 
 }

@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class SourceTongjiController {
 	@Autowired
 	private IntSourceService intSourceService;
 	
-	//后台管理---我们自己看的统计数据——在用户表存在的渠道，当天的统计信息（数据待完善   目前只有渠道名     uv  注册数    uv到注册的转化率）
+	//后台管理---我们自己看的统计数据——渠道表所有渠道
 	@ResponseBody
 	@RequestMapping("/queryByToday")
 	public Map<String,Object> queryByToday(Integer companyId,Integer page)throws ParseException{
@@ -53,7 +52,7 @@ public class SourceTongjiController {
 		String endTime = today;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 		
-		listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
+		//listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
 		for (int i = 0; i < listsource.size(); i++) {
 			int sourceid=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名称
@@ -255,63 +254,82 @@ public class SourceTongjiController {
 			String endTime = date;
 			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 			
-			TongjiSorce tongjiSorce=new TongjiSorce();
-			tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourceid);
-			if(tongjiSorce!=null){
-				float registernum=tongjiSorce.getRegisternum();//真实的注册数
-				String sourcename=tongjiSorce.getSourcename();//渠道名称
-				int uv=0;
-				String cvr=null;
+			
+			
+			TongjiSorce tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourceid);
+			
+			int uv=0;//uv
+			float registernum=0;//真实的注册数
+			String cvr=null;//uv到注册的转化率
+			if(tongjiSorce==null){
+				tongjiSorce=new TongjiSorce();
+				Source source=intSourceService.selectByid(sourceid);
+				String sourcename=source.getSourcename();
+				tongjiSorce.setSourcename(sourcename);//渠道名称
+				tongjiSorce.setRegisternum(0);
+				registernum=tongjiSorce.getRegisternum();//真实的注册数
 				if(redisClientUtil.getSourceClick(company+sourcename+listdate.get(i).replace("-", "/")+"xiaodaiKey")==null){
 					uv=0;
 				}else {
 					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + listdate.get(i).replace("-", "/") + "xiaodaiKey"));
 				}
 				tongjiSorce.setUv(uv);
-				if ((registernum < 0.000001) || (uv == 0)) {
-					cvr = 0 + "%";// 得到转化率
-				} else {
-					cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
+			}else{
+				registernum=tongjiSorce.getRegisternum();//真实的注册数
+				String sourcename=tongjiSorce.getSourcename();//渠道名称
+				if(redisClientUtil.getSourceClick(company+sourcename+listdate.get(i).replace("-", "/")+"xiaodaiKey")==null){
+					uv=0;
+				}else {
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + listdate.get(i).replace("-", "/") + "xiaodaiKey"));
 				}
-				tongjiSorce.setDate(date);
-				tongjiSorce.setCvr(cvr);//uv到注册的转化率
-				tongjiSorce.setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
-				
-				List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
-				int authencount=0;//认证人数
-				for (int j = 0; j < listuserid.size(); j++) {
-					Integer userid=listuserid.get(j);
-					int uatcount=intSourceService.queryIfExist(userid,startTimestamps,endTimestamps);
-					int bankcount=intSourceService.queryIfExist1(userid,startTimestamps,endTimestamps);
-					int operacount=intSourceService.queryIfExist2(userid,startTimestamps,endTimestamps);
-					if((uatcount==1)||(bankcount==1)||(operacount==1)){
-						authencount=authencount+1;
-					}
-				}
-				tongjiSorce.setAuthencount(authencount);//当前渠道的认证人数
-				Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
-				tongjiSorce.setApplynum(applynum);//申请数
-				String cvr1=null;
-				if ((registernum < 0.000001) || (applynum == 0)) {
-					cvr1 = 0 + "%";// 得到注册到申请转化率
-				} else {
-					cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
-				}
-				tongjiSorce.setCvr1(cvr1);// 得到注册到申请转化率
-				Integer machineauditpass=intSourceService.querypass(sourceid, startTimestamps, endTimestamps);
-				tongjiSorce.setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
-				int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);
-				tongjiSorce.setOrderpass(orderpass);//已借款人数
-				String cvr2=null;
-				if ((registernum < 0.000001) || (orderpass == 0)) {
-					cvr2 = 0 + "%";// 得到借款率
-				} else {
-					cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
-				}
-				tongjiSorce.setCvr2(cvr2);
-				listsource.add(tongjiSorce);//listsoruce里面将每一天的数据都存进去
+				tongjiSorce.setUv(uv);
 			}
+			
+			tongjiSorce.setDate(date);//日期
+			
+			if ((registernum < 0.000001) || (uv == 0)) {
+				cvr = 0 + "%";// 得到转化率
+			} else {
+				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
+			}
+			tongjiSorce.setCvr(cvr);//uv到注册的转化率
+			tongjiSorce.setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
+			
+			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
+			int authencount=0;//认证人数
+			for (int j = 0; j < listuserid.size(); j++) {
+				Integer userid=listuserid.get(j);
+				int uatcount=intSourceService.queryIfExist(userid,startTimestamps,endTimestamps);
+				int bankcount=intSourceService.queryIfExist1(userid,startTimestamps,endTimestamps);
+				int operacount=intSourceService.queryIfExist2(userid,startTimestamps,endTimestamps);
+				if((uatcount==1)||(bankcount==1)||(operacount==1)){
+					authencount=authencount+1;
+				}
+			}
+			tongjiSorce.setAuthencount(authencount);//当前渠道的认证人数
+			Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
+			tongjiSorce.setApplynum(applynum);//申请数
+			String cvr1=null;
+			if ((registernum < 0.000001) || (applynum == 0)) {
+				cvr1 = 0 + "%";// 得到注册到申请转化率
+			} else {
+				cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
+			}
+			tongjiSorce.setCvr1(cvr1);// 得到注册到申请转化率
+			Integer machineauditpass=intSourceService.querypass(sourceid, startTimestamps, endTimestamps);
+			tongjiSorce.setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
+			int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);
+			tongjiSorce.setOrderpass(orderpass);//已借款人数
+			String cvr2=null;
+			if ((registernum < 0.000001) || (orderpass == 0)) {
+				cvr2 = 0 + "%";// 得到借款率
+			} else {
+				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
+			}
+			tongjiSorce.setCvr2(cvr2);
+			listsource.add(tongjiSorce);//listsoruce里面将每一天的数据都存进去
 		}
+				
 		return listsource;
 	}
 }

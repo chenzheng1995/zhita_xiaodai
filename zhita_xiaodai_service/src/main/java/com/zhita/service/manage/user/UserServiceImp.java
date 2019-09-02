@@ -54,6 +54,7 @@ public class UserServiceImp implements IntUserService{
 		if(userLikeParameter.getPhone()!=null&&!"".equals(userLikeParameter.getPhone())){
 			userLikeParameter.setPhone(pd.encryption(userLikeParameter.getPhone()));
 		}
+		int companyId=userLikeParameter.getCompanyId();//页面传过来的公司id
 		int page=userLikeParameter.getPage();//页面传进来的当前页
 		int totalCount=userMapper.queryUserListcount(userLikeParameter);//查询总条数
 		PageUtil2 pageUtil=new PageUtil2(page,totalCount);
@@ -86,8 +87,10 @@ public class UserServiceImp implements IntUserService{
     			list.get(i).setOperaattestationstatus("0");
     		}
 		}
+    	List<Source> listsource=ordersMapper.querysource(companyId);	
 		Map<String,Object> map=new HashMap<>();
 		map.put("userlist", list);
+		map.put("listsource", listsource);
 		map.put("pageutil", pageUtil);
 		return map;
 		
