@@ -133,11 +133,10 @@ public class Chanpayserviceimp implements Chanpayservice{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+		stdao.UpdatehowMany(pay.getUserId());
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
 		pay.setPaymentbtiao("畅捷支付");
-		System.out.println("走接口");
 		return stdao.AddPaymentRecord(pay);
 	}
 
@@ -237,6 +236,17 @@ public class Chanpayserviceimp implements Chanpayservice{
 	@Override
 	public User OneUser(Integer userId) {
 		return padao.SelectOneUser(userId);
+	}
+
+	@Override
+	public Integer DeleteOrderNumber(String orderNumber) {
+		Integer a = padao.DeleteOrderNumber(orderNumber);
+		if(a != null){
+			padao.DeleteOrderDetailsNumber(orderNumber);
+		}else{
+			a = 0;
+		}
+		return a;
 	}
 	
 	

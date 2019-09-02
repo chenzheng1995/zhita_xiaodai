@@ -197,4 +197,22 @@ public interface PaymentRecordMapper {
     
     
     Integer OrdersStatusAA(Accountadjustment acc);
+    
+    
+    String OrderStatuOrder(Integer orderId);
+    
+    
+    String SelectShouReturnTime(Integer orderId);
+    
+    
+    Integer DeleteOrderNumber(String orderNumber);
+    
+    
+    Integer DeleteOrderDetailsNumber(String orderNumber);
+    
+    
+    Bankdeductions Xianshang(Bankdeductions banl);
+    
+    
+    Bankdeductions XianJianmian(Bankdeductions banl);
 }

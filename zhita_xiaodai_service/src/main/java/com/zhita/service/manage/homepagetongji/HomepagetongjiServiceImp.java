@@ -6,12 +6,14 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,13 +60,36 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int todaydeferred = homepageTongjiMapper.queryToDayDeferred(companyId, startTimestamps, endTimestamps);//今日延期笔数
 		int todayrepayment = 0;//今日回款笔数
 		int todayrepaymentreal = homepageTongjiMapper.queryToDayRepayment(companyId,startTimestamps, endTimestamps);//今日回款笔数（实际回款）
-		int todayrepaymentacc = homepageTongjiMapper.queryToDayRepaymentacc(companyId, startTimestamps, endTimestamps);//今日回款笔数（线上回款）
+		//int todayrepaymentacc = homepageTongjiMapper.queryToDayRepaymentacc(companyId, startTimestamps, endTimestamps);//今日回款笔数（线上回款）
 		int todayrepaymentoff = homepageTongjiMapper.queryToDayRepaymentoff(companyId,startTimestamps, endTimestamps);//今日回款笔数（线下回款）
 		int todayrepaymentbank = homepageTongjiMapper.queryToDayRepaymentbank(companyId, startTimestamps, endTimestamps);//今日回款笔数（银行卡回款）
-		todayrepayment=todayrepaymentreal+todayrepaymentacc+todayrepaymentoff+todayrepaymentbank;
+		todayrepayment=todayrepaymentreal+todayrepaymentoff+todayrepaymentbank;
 		
-		int todayoverdue=0;//今日逾期已还笔数
-		todayoverdue = homepageTongjiMapper.queryToDayOverdue(companyId, startTimestamps, endTimestamps);//今日逾期已还笔数
+		int todayoverdue=0;//今日逾后已还笔数
+		List<Orders> listreal = homepageTongjiMapper.queryToDayOverdue(companyId, startTimestamps, endTimestamps);//今日逾后已还笔数    ---还款表
+		List<Orders> listoff = homepageTongjiMapper.queryToDayOverdueoff(companyId, startTimestamps, endTimestamps);//今日逾后已还笔数    ---线下还款表
+		List<Orders> listbank = homepageTongjiMapper.queryToDayOverduebank(companyId, startTimestamps, endTimestamps);//今日逾后已还笔数    ---银行卡扣款 表
+		listreal.addAll(listoff);//合并两个集合
+		listreal.addAll(listbank);//合并后的集合再次合并第三个集合
+		for (int j = 0; j < listreal.size(); j++) {
+			try {
+					if(listreal.isEmpty()&&listreal.size()!=0){
+						String realtime=Timestamps.stampToDate(listreal.get(j).getRealtime());//实还时间
+						String shouletime=Timestamps.stampToDate(listreal.get(j).getShouldReturnTime());//应还时间
+					
+						if(sdf.parse(realtime).getTime()>sdf.parse(shouletime).getTime()){//转成long类型比较
+							System.out.println("实际还款时间大于应还时间");
+							todayoverdue++;
+						}/*else if(sdf.parse(realtime).getTime()<=sdf.parse(shouletime).getTime()){
+							System.out.println("还款时间小于应还时间");
+							overduerepay++;
+						}*/
+					}
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+			}
+		}
 		
 		BigDecimal todayloantotalmoney = homepageTongjiMapper.queryToDayLoanTotalmoney(companyId, startTimestamps, endTimestamps);//今日放款总金额
 		
@@ -77,10 +102,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(toDayDeffer==null){
 			toDayDeffer=new BigDecimal("0.00");
 		}
-		BigDecimal toDayDefferacc = homepageTongjiMapper.queryToDayDefferacc(companyId,startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线上）
+		/*BigDecimal toDayDefferacc = homepageTongjiMapper.queryToDayDefferacc(companyId,startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线上）
 		if(toDayDefferacc==null){
 			toDayDefferacc=new BigDecimal("0.00");
-		}
+		}*/
 		BigDecimal toDayDefferoff = homepageTongjiMapper.queryToDayDefferoff(companyId, startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线下）
 		if(toDayDefferoff==null){
 			toDayDefferoff=new BigDecimal("0.00");
@@ -89,22 +114,22 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(toDayBank==null){
 			toDayBank=new BigDecimal("0.00");
 		}
-		todayreturtoalmoney=todayreturtoalmoneyreal.add(toDayDeffer).add(toDayDefferacc).add(toDayDefferoff).add(toDayBank);
+		todayreturtoalmoney=todayreturtoalmoneyreal.add(toDayDeffer).add(toDayDefferoff).add(toDayBank);
 		
 		BigDecimal todayoveruetotalmoney=new BigDecimal("0.00");//今日逾期已还金额
 		BigDecimal todayoveruetotalmoneyreal = homepageTongjiMapper.queryToDayOverueTotalmoney(companyId, startTimestamps, endTimestamps);//今日逾期已还金额（用户实还金额）
 		if(todayoveruetotalmoneyreal==null){
 			todayoveruetotalmoneyreal=new BigDecimal("0.00");
 		}
-		BigDecimal todayoveruetotalmoneyacc = homepageTongjiMapper.queryToDayOverueTotalmoneyacc(companyId, startTimestamps, endTimestamps);//今日逾期已还金额（线上减免已还）
-		if(todayoveruetotalmoneyacc==null){
-			todayoveruetotalmoneyacc=new BigDecimal("0.00");
-		}
 		BigDecimal todayoveruetotalmoneyoff = homepageTongjiMapper.queryToDayOverueTotalmoneyoff(companyId, startTimestamps, endTimestamps);//今日逾期已还金额（线下减免已还）
 		if(todayoveruetotalmoneyoff==null){
 			todayoveruetotalmoneyoff=new BigDecimal("0.00");
 		}
-		todayoveruetotalmoney=todayoveruetotalmoneyreal.add(todayoveruetotalmoneyacc).add(todayoveruetotalmoneyoff);
+		BigDecimal todayoveruetotalmoneybank = homepageTongjiMapper.queryToDayOverueTotalmoneybank(companyId, startTimestamps, endTimestamps);//今日逾期已还金额（银行卡扣款已还）
+		if(todayoveruetotalmoneybank==null){
+			todayoveruetotalmoneybank=new BigDecimal("0.00");
+		}
+		todayoveruetotalmoney=todayoveruetotalmoneyreal.add(todayoveruetotalmoneyoff).add(todayoveruetotalmoneybank);
 		
 		String orderrepaytodaycvr=null;//当日订单回款率
 		if(todayloan==0){
@@ -122,10 +147,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		int sumrepayment = 0;//累计回款总笔数
 		int sumrepaymentreal = homepageTongjiMapper.querySumRepayment(companyId);//累计回款总笔数（实还笔数）
-		int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//累计回款总笔数（线上减免已还清笔数）
+		//int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//累计回款总笔数（线上减免已还清笔数）
 		int sumrepaymentoff = homepageTongjiMapper.querySumRepaymentoff(companyId);//累计回款总笔数（线下减免已还清笔数）
 		int sumrepaymentbank = homepageTongjiMapper.querySumRepaymentbank(companyId);//累计回款总笔数（银行卡扣款已结清笔数）
-		sumrepayment=sumrepaymentreal+sumrepaymentacc+sumrepaymentoff+sumrepaymentbank;
+		sumrepayment=sumrepaymentreal+sumrepaymentoff+sumrepaymentbank;
 		
 		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
@@ -150,10 +175,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(deffermoney==null){
 			deffermoney=new BigDecimal("0.00");
 		}
-		BigDecimal deffermoneyacc = homepageTongjiMapper.querydeffermoneyacc(companyId);//累计回款总金额（线上减免）
+		/*BigDecimal deffermoneyacc = homepageTongjiMapper.querydeffermoneyacc(companyId);//累计回款总金额（线上减免）
 		if(deffermoneyacc==null){
 			deffermoneyacc=new BigDecimal("0.00");
-		}
+		}*/
 		BigDecimal deffermoneyoff = homepageTongjiMapper.querydeffermoneyoff(companyId);//累计回款总金额（线下减免）
 		if(deffermoneyoff==null){
 			deffermoneyoff=new BigDecimal("0.00");
@@ -162,7 +187,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(deffermoneybank==null){
 			deffermoneybank=new BigDecimal("0.00");
 		}
-		repaymoney=repaymoneyreal.add(deffermoney).add(deffermoneyacc).add(deffermoneyoff).add(deffermoneybank);
+		repaymoney=repaymoneyreal.add(deffermoney).add(deffermoneyoff).add(deffermoneybank);
 		
 		BigDecimal shouldMoney = new BigDecimal("0.00");//累计应收总金额
 		List<Orderdetails> listdetail = homepageTongjiMapper.queryshouldMoney(companyId);
@@ -214,7 +239,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("todayloan", todayloan);//今日放款人数
 		map.put("todaydeferred", todaydeferred);//今日延期笔数
 		map.put("todayrepayment", todayrepayment);//今日回款笔数
-		map.put("todayoverdue", todayoverdue);//今日逾期已还笔数
+		map.put("todayoverdue", todayoverdue);//今日逾后已还笔数
 		map.put("todayloantotalmoney",todayloantotalmoney);//今日放款总金额
 		map.put("todayreturtoalmoney",todayreturtoalmoney );//今日回款总金额
 		map.put("todayoveruetotalmoney",todayoveruetotalmoney);//今日逾期已还金额
@@ -223,7 +248,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("sumregiste",sumregiste);//累计注册用户
 		map.put("sumapply",sumapply);//累计申请用户总数
 		map.put("sumloan",sumloan);//累计放款总笔数
-		map.put("sumrepayment",sumrepayment);//累计还款总笔数
+		map.put("sumrepayment",sumrepayment);//累计回款总笔数
 		map.put("paymentpasscvr",paymentpasscvr);//放款通过率
 		map.put("orderrepaycvr",orderrepaycvr);//订单回款率
 		map.put("payrecmoney",payrecmoney);//累计放款总金额
@@ -243,13 +268,18 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 	
 	//回收率报表
 	public Map<String, Object> recoveryStatement(Integer companyId,Integer page,String shouldrepayStartTime,String shouldrepayEndTime){
+		int lifeofloan = homepageTongjiMapper.querylifeOfLoan(companyId);//查询借款期限
 		List<HomepageTongji> listtongji=new ArrayList<HomepageTongji>();
 		List<HomepageTongji> listtongjito=new ArrayList<HomepageTongji>();
 		PageUtil2 pageUtil=null;
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date d=new Date();
+		Date date=new Date();
+		Calendar calendar = Calendar.getInstance(); //创建Calendar 的实例
+		calendar.set(Calendar.DAY_OF_MONTH,-1); //当前时间减去一天，即一天前的时间
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-		String date=sf.format(d);//date为当天时间(格式为年月日)
+		Date startDate = DateUtils.addDays(date, -lifeofloan);
+		Date endDate = DateUtils.addDays(date, lifeofloan);
+		//String date=sf.format(d);//date为当天时间(格式为年月日)
 		
 		String startTime = null;//开始时间（年月日格式）
 		String endTime = null;//结束时间（年月日格式）
@@ -257,8 +287,8 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			startTime = shouldrepayStartTime;
 			endTime = shouldrepayEndTime;
 		}else{
-			startTime = date;
-			endTime = date;
+			startTime = sf.format(startDate);
+			endTime = sf.format(endDate);
 		}
 		
 		List<String> list=DateListUtil.getDays(startTime, endTime);
@@ -294,9 +324,12 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			int overdueafterrepay=0;//（逾后已还）
 			List<Orders> listorders=homepageTongjiMapper.overduerepay(companyId, startTimestampsfor, endTimestampsfor);//已还款订单  还款表
 			List<Orders> listordersoff=homepageTongjiMapper.overduerepayoff(companyId, startTimestampsfor, endTimestampsfor);//已还款订单    线下还款表
+			List<Orders> listordersbank=homepageTongjiMapper.overduerepaybank(companyId, startTimestampsfor, endTimestampsfor);//已还款订单    银行卡扣款表
 			listorders.addAll(listordersoff);//合并两个集合
+			listorders.addAll(listordersbank);//合并后的集合再次合并第三个集合
 			for (int j = 0; j < listorders.size(); j++) {
 				try {
+					if(listorders.isEmpty()&&listorders.size()!=0){
 						String realtime=Timestamps.stampToDate(listorders.get(j).getRealtime());//实还时间
 						String shouletime=Timestamps.stampToDate(listorders.get(j).getShouldReturnTime());//应还时间
 					
@@ -307,6 +340,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 							System.out.println("还款时间小于应还时间");
 							overduerepay++;
 						}
+					}
 					} catch (ParseException e) {
 						e.printStackTrace();
 				}

@@ -23,7 +23,7 @@ public interface SourceMapper {
     
     //后台管理---根据id查询当前对象信息
     Source selectByPrimaryKey(Integer id);
-
+    
     int updateByPrimaryKeySelective(Source record);
     
     //后台管理---编辑功能

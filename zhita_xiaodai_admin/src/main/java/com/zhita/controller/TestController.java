@@ -1,11 +1,8 @@
 package com.zhita.controller;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,19 +11,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-import com.zhita.controller.chanpayquickpay.chanpaycollection;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
+import com.zhita.util.DateListUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.RedisClientUtil;
-import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
 
@@ -185,14 +181,34 @@ public class TestController {
 		//System.out.println(Timestamps.stampToDate(null));
 		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		RedisClientUtil redisClientUtil=new RedisClientUtil();
+		redisClientUtil.set("贷回家qudao12019/08/26xiaodaiKey", "1");
+		System.out.println(redisClientUtil.get("贷回家qudao12019/08/26xiaodaiKey"));
 		
-		BigDecimal loanall=new BigDecimal("1");
-		BigDecimal daysbig=new BigDecimal("0");
+		redisClientUtil.set("贷回家qudao12019/08/27xiaodaiKey", "12");
+		System.out.println(redisClientUtil.get("贷回家qudao12019/08/27xiaodaiKey"));
 		
-		if(daysbig.compareTo(BigDecimal.ZERO)!=0){
-			BigDecimal dailyloanmoney=loanall.divide(daysbig,2,BigDecimal.ROUND_HALF_UP);//日均放款金额
-			System.out.println(dailyloanmoney);
+		redisClientUtil.set("贷回家qudao12019/08/28xiaodaiKey", "2");
+		System.out.println(redisClientUtil.get("贷回家qudao12019/08/28xiaodaiKey"));
+		
+		String dateStart="2019-08-26";
+		String dateEnd="2019-09-02";
+		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
+		for (int i = 0; i < listdate.size(); i++) {
+			System.out.println(listdate.get(i));
 		}
 		
+		int v=7;
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		Date now = new Date();
+		Date startDate = DateUtils.addDays(now, -v);
+		Date endDate = DateUtils.addDays(now, v);
+		System.out.println(sf.format(startDate)+"--------"+sf.format(endDate));
+		
+		String realmoney="0";
+		String offmoney="0";
+		String bankmoney="0";
+		BigDecimal money=new BigDecimal(realmoney).add(new BigDecimal(offmoney)).add(new BigDecimal(bankmoney));
+		System.out.println(String.valueOf(money));
 	}	
 }

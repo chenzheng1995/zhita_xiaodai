@@ -53,6 +53,16 @@ public class Payment_record {
 	
 	private String cardnumber;//银行卡号
 	
+	private Integer userId;
+	
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
 	public String getCardnumber() {
 		return cardnumber;
 	}

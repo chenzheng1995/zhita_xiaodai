@@ -635,7 +635,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
-		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
 		if(defe.getDeferAfterReturntime()!=null){
@@ -651,7 +651,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setSurplus_money(new BigDecimal(0));
 		}
 		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
-		orders.get(i).setOrder_money(ca.add(orders.get(i).getInterestPenaltySum()));//应还总金额
+		orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
 		
 		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));
 		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
@@ -667,7 +667,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		System.out.println("实还时间:"+orders.get(i).getRealtime());
 		if(orders.get(i).getRealtime() != null && !("").equals(orders.get(i).getRealtime())){
 			if(orders.get(i).getRealtime().length()!=0){
-				orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+				orders.get(i).setRealtime(orders.get(i).getRealtime());
 			}
 		}else{
 			orders.get(i).setRealtime("/");

@@ -35,7 +35,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务     控制逾期
-      @Scheduled(cron = "0 50 11,0 * * ?")
+      @Scheduled(cron = "0 20 16,0 * * ?")
       @Lazy(false)
       public void test2() throws ParseException
       {

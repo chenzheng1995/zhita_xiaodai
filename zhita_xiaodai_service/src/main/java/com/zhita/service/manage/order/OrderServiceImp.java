@@ -379,10 +379,19 @@ public class OrderServiceImp implements IntOrderService{
 	public Map<String,Object> queryAllordersByLike(OrderQueryParameter orderQueryParameter){
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
 		TuoMinUtil tm = new TuoMinUtil();//脱敏工具类
-		if((orderQueryParameter.getRegistestarttime()!=null&&!"".equals(orderQueryParameter.getRegistestarttime()))&&(orderQueryParameter.getRegisteendtime()!=null&&!"".equals(orderQueryParameter.getRegisteendtime()))){
+		if((orderQueryParameter.getOrderstarttime()!=null&&!"".equals(orderQueryParameter.getOrderstarttime()))&&(orderQueryParameter.getOrderendtime()!=null&&!"".equals(orderQueryParameter.getOrderendtime()))){
 			try {
-				orderQueryParameter.setRegistestarttime(Timestamps.dateToStamp(orderQueryParameter.getRegistestarttime()));
-				orderQueryParameter.setRegisteendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getRegisteendtime()))+86400000)+"");
+				orderQueryParameter.setOrderstarttime(Timestamps.dateToStamp(orderQueryParameter.getOrderstarttime()));
+				orderQueryParameter.setOrderendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getOrderendtime()))+86400000)+"");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(orderQueryParameter.getShouldstarttime()!=null&&!"".equals(orderQueryParameter.getShouldstarttime())&&orderQueryParameter.getShouldendtime()!=null&&!"".equals(orderQueryParameter.getShouldendtime())){
+			try {
+				orderQueryParameter.setShouldstarttime(Timestamps.dateToStamp(orderQueryParameter.getShouldstarttime()));
+				orderQueryParameter.setShouldendtime((Long.parseLong(Timestamps.dateToStamp(orderQueryParameter.getShouldendtime()))+86400000)+"");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -412,6 +421,22 @@ public class OrderServiceImp implements IntOrderService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllordersByLike(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		BigDecimal realmoney = ordersMapper.queryrepaymoney(list.get(i).getId());//该订单还款成功的还款金额--还款表
+    		if(realmoney==null){
+    			realmoney=new BigDecimal("0.00");
+    		}
+    		BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());//该订单还款成功的还款金额--还款表
+    		if(offmoney==null){
+    			offmoney=new BigDecimal("0.00");
+    		}
+    		BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());//该订单还款成功的还款金额--还款表
+    		if(bankmoney==null){
+    			bankmoney=new BigDecimal("0.00");
+    		}
+    		BigDecimal money=realmoney.add(offmoney).add(bankmoney);
+    		System.out.println(money+"moneymoney---");
+    		list.get(i).setRepaymentMoney(String.valueOf(money));
+    		
     		BigDecimal shourldmoney=list.get(i).getOrderdetails().getShouldReapyMoney().add(list.get(i).getOrderdetails().getInterestPenaltySum());
     		list.get(i).setShourldmoney(shourldmoney);//应还金额（期限内应还金额+逾期的逾期费）
     		list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));//将手机号进行脱敏

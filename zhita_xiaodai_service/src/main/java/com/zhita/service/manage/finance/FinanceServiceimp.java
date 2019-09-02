@@ -193,8 +193,8 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			
-			acc.setAccounttime(Timestamps.dateToStamp1(sim.format(new Date())));
+			acc.setAmou_time(Timestamps.dateToStamp1(sim.format(new Date())));
+			acc.setAccounttime(Timestamps.dateToStamp1(acc.getAccounttime()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -270,7 +270,7 @@ public class FinanceServiceimp implements FinanceService{
 					if(ordetails.getInterestPenaltySum() == null){
 						ordetails.setInterestPenaltySum(new BigDecimal(0));
 					}
-					ordetails.setRealityBorrowMoney(ordetails.getRealityBorrowMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
+					ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 					map.put("aaa", ordetails.getInterestPenaltySum());
@@ -665,69 +665,105 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
 		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
+		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
+		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
-					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+bank.getRealborrowing()+","+bank.getRealexpenditure()+"");//实借笔数    实借金额
 				}else{
-					bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+					bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 				}
 			}else{
-				bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+				bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 			}
 		
 		}else{
-			bank.setBankcardName(""+0+","+0+","+0+"");//实借笔数    实借金额
+			bank.setBankcardName(""+0+","+0+"");//实借笔数    实借金额
 		}
+		
+		
+		
+		if(e!=null){
+			if(e.getDeferredamount()!=null){
+				if(e.getDefeNum()!=0){
+					bank.setXianJianmianCount(""+e.getDefeNum()+","+e.getDeferredamount()+"");
+				}else{
+					bank.setXianJianmianCount(""+0+","+0+"");
+				}
+			}else{
+				bank.setXianJianmianCount(""+0+","+0+"");
+			}
+		}else{
+			bank.setXianJianmianCount(""+0+","+0+"");
+		}
+		
+		
+		
+		if(d!=null){
+			if(d.getDeferredamount()!=null){
+				if(d.getDefeNum()!=0){
+					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+"");
+				}else{
+					bank.setXianShangCoune(""+0+","+0+"");
+				}
+			}else{
+				bank.setXianShangCoune(""+0+","+0+"");
+			}
+		}else{
+			bank.setXianShangCoune(""+0+","+0+"");
+		}
+		
+		
 		
 		
 		
 		if(b!=null){
 			if(b.getRealborrowing()!=null){
 				if(b.getRealborrowing() != 0){
-					bank.setDeductionstatus(""+b.getRealborrowing()+","+0+","+b.getRealexpenditure()+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+b.getRealborrowing()+","+b.getRealexpenditure()+"");//实还笔数    实还金额
 				}else{
-					bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+					bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 				}
 			}else{
-				bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+				bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 			}
 			
 		}else{
-			bank.setDeductionstatus(""+0+","+0+","+0+"");//实还笔数    实还金额
+			bank.setDeductionstatus(""+0+","+0+"");//实还笔数    实还金额
 		}
 		
 		
 		if(a!=null){
 			if(a.getOverdueNum() != null){
 				if(a.getOverdueNum() != 0){
-					bank.setOrderNumber(""+a.getOverdueNum()+","+0+","+a.getOverdueamount()+"");//逾期数   逾期费
+					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+"");//逾期数   逾期费
 				}else{
-					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+					bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 				}
 			}else{
-				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+				bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 			}
 		
 		}else{
-			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
+			bank.setOrderNumber(""+0+","+0+"");//逾期数   逾期费
 		}
 			
 		
 		if(c!=null){
 			if(c.getDefeNum() != null){
 				if(c.getDefeNum() != 0 ){
-					bank.setName(""+c.getDefeNum()+","+0+","+c.getDeferredamount()+"");//延期数    延期费
+					bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+"");//延期数    延期费
 				}else{
-					bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+					bank.setName(""+0+","+0+"");//延期数    延期费
 				}
 			}else{
-				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+				bank.setName(""+0+","+0+"");//延期数    延期费
 			}
 			
 		}else{
-			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+			bank.setName(""+0+","+0+"");//延期数    延期费
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -747,7 +783,7 @@ public class FinanceServiceimp implements FinanceService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			off.setSedn_time(Timestamps.dateToStamp(sim.format(new Date())));
+			off.setSedn_time(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -844,15 +880,28 @@ public class FinanceServiceimp implements FinanceService{
 			off.setPhone(p.encryption(off.getPhone()));
 			}
 		}
+		String status = padao.OrderStatuOrder(off.getOrderId());
+		if(status.equals("0")){
+			String shoureturntime = padao.SelectShouReturnTime(off.getOrderId());
+			String stime = Timestamps.stampToDate1(shoureturntime);
+			String a = stime.substring(8, 10);//就去时间格式天数
+			String b = stime.substring(0, 8);//获取年月   2019-03-
+			Integer ac = off.getOnceDeferredDay()+Integer.valueOf(a);//天数加上
+			if(ac < 10){
+				String aa = "0"+ac;
+				off.setDelay_time(b+aa+" 23:59:59");
+			}else{
+				off.setDelay_time(b+ac+" 23:59:59");
+			}
+		}
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ca.setTime(new Date()); //设置时间为当前时间
-        ca.add(Calendar.DATE, +off.getOnceDeferredDay());
         Date date = ca.getTime();
         
         try {
-        	off.setOperating_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));//操作时间
-			off.setDelay_time(Timestamps.dateToStamp1(dateFormat.format(date)));
+        	off.setOperating_time(dateFormat.format(new Date()));//操作时间
+			off.setDelay_time(Timestamps.dateToStamp1(off.getDelay_time()));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1016,6 +1065,9 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> SelectAccOrders(String orderNumber) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Accountadjustment> accs = padao.SelectAccOrders(orderNumber);
+		for(int i=0;i<accs.size();i++){
+			accs.get(i).setAccounttime(Timestamps.stampToDate(accs.get(i).getAccounttime()));
+		}
 		map.put("Accountadjustment", accs);
 		return map;
 	}

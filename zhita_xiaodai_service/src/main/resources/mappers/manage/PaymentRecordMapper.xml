@@ -355,7 +355,7 @@
   
   
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,
+  					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,ord.shouldReapyMoney,
 					 o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
 					 o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum
 					from orders o left JOIN user u on o.userId = u.id 
@@ -632,6 +632,7 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
+  				order by u.id desc
   				Group by u.id
   				limit #{page},#{pagesize}
   			</select>
@@ -661,6 +662,7 @@
 					</if>
   				</where> 
   				GROUP BY u.fina_id
+  				order by u.id desc
   			</select>
   			
   			
@@ -850,6 +852,18 @@
   			</select>
   			
   			
+  			<select id="Xianshang" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(ac.id) as defeNum,sum(ac.amountmoney) as deferredamount from accountadjustment ac,orders o where ac.orderId = o.id and 
+  				 o.companyId = #{companyId} and ac.amou_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="XianJianmian" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(of.id) as defeNum,sum(of.offusermoney) as deferredamount from offlinjianmian of,orders o where of.orderId = o.id and 
+  				 o.companyId = #{companyId} and of.sedn_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
   			<select id="YanMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
   				select sum(d.interestOnArrears) as deferredamount from deferred d,orders o 
   				<where>
@@ -1024,4 +1038,25 @@
 				select us.idcard_number as idcard,u.name from user u,user_attestation us where u.id = #{userId} and us.userId = u.id
 			</select>
  
+ 
+ 
+ 			<select id="OrderStatuOrder" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select orderStatus from orders where id = #{orderId}
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="SelectShouReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select shouldReturnTime from orders where id = #{orderId}
+ 			</select>
+ 			
+ 			
+ 			<delete id="DeleteOrderNumber" parameterType="java.lang.String" >
+ 				delete from orders where orderNumber = #{orderNumber}
+ 			</delete>
+ 			
+ 			
+ 			<delete id="DeleteOrderDetailsNumber" parameterType="java.lang.String" >
+ 				delete from orderdetails where orderId = (select id from orders where orderNumber = #{orderNumber})
+ 			</delete>
 </mapper>

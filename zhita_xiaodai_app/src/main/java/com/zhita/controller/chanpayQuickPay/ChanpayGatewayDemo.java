@@ -421,21 +421,21 @@ public class ChanpayGatewayDemo {
 //		paramMap.put("extension", "{}");
 
 			
-		//扫码、快捷
-		paramMap.put("notify_id", "87e8e322cc9b4dba8fc2f0e8010a1382");
-		paramMap.put("notify_type", "trade_status_sync"); //代收付与此不同
-		paramMap.put("notify_time", "20170807233141");
-		paramMap.put("_input_charset", "UTF-8");
-		paramMap.put("version", "1.0");
-		paramMap.put("outer_trade_no", "17080720052853968889");
-		paramMap.put("inner_trade_no", "101150210752881582798");
-		paramMap.put("trade_status", "TRADE_SUCCESS");
-		paramMap.put("trade_amount", "0.01");
-		paramMap.put("gmt_create", "20170807200534");
-		paramMap.put("gmt_payment", "20170807200534");
-		paramMap.put("extension", "{\"BANK_RET_DATA\":\"{'bank_type':'CFT','fee_type':'CNY','is_subscribe':'N','openid':'oMJGHs2wAz41X5GjYp4bPbcuB-EU','out_trade_no':'SG102946308070000040358','out_transaction_id':'4001502001201708075023175339','pay_result':'0','result_code':'0','status':'0','sub_appid':'wxfa2f613ed691411f','sub_is_subscribe':'Y','sub_openid':'os7Olwggpu_x6urLCdMh6uJseiUI','time_end':'20170807200533','total_fee':'1','transaction_id':'299540006994201708072263952157'}\"}");
-
-		
+//		//扫码、快捷
+//		paramMap.put("notify_id", "87e8e322cc9b4dba8fc2f0e8010a1382");
+//		paramMap.put("notify_type", "trade_status_sync"); //代收付与此不同
+//		paramMap.put("notify_time", "20170807233141");
+//		paramMap.put("_input_charset", "UTF-8");
+//		paramMap.put("version", "1.0");
+//		paramMap.put("outer_trade_no", "17080720052853968889");
+//		paramMap.put("inner_trade_no", "101150210752881582798");
+//		paramMap.put("trade_status", "TRADE_SUCCESS");
+//		paramMap.put("trade_amount", "0.01");
+//		paramMap.put("gmt_create", "20170807200534");
+//		paramMap.put("gmt_payment", "20170807200534");
+//		paramMap.put("extension", "{\"BANK_RET_DATA\":\"{'bank_type':'CFT','fee_type':'CNY','is_subscribe':'N','openid':'oMJGHs2wAz41X5GjYp4bPbcuB-EU','out_trade_no':'SG102946308070000040358','out_transaction_id':'4001502001201708075023175339','pay_result':'0','result_code':'0','status':'0','sub_appid':'wxfa2f613ed691411f','sub_is_subscribe':'Y','sub_openid':'os7Olwggpu_x6urLCdMh6uJseiUI','time_end':'20170807200533','total_fee':'1','transaction_id':'299540006994201708072263952157'}\"}");
+//
+//		
 		//代付
 //		paramMap.put("uid", "");
 //		paramMap.put("notify_time", "20170802175829");
@@ -453,20 +453,20 @@ public class ChanpayGatewayDemo {
 
 		
 		//代扣
-//		paramMap.put("notify_time", "20170803000841");
-//		paramMap.put("notify_id", "64ac64bed1444554a195b52ea105cefa");
-//		paramMap.put("notify_type", "trade_status_sync"); 
-//		paramMap.put("_input_charset", "UTF-8");
-//		paramMap.put("version", "1.0");	
-//		paramMap.put("outer_trade_no", "15016560129750|359469");
-//		paramMap.put("inner_trade_no", "101150165603996435603");
-//
-//		paramMap.put("trade_status", "TRADE_SUCCESS");
-//		paramMap.put("trade_amount", "100.00");
-//		paramMap.put("gmt_create", "20170802144046");
-//		paramMap.put("gmt_payment", "20170802144046");
-//		paramMap.put("extension", "{\"apiResultMsg\":\"交易成功\",\"apiResultcode\":\"S\",\"channelTransTime\":\"20170802\",\"instPayNo\":\"DI111353501080200743557\",\"paymentSeqNo\":\"20170802FI031263767\",\"unityResultCode\":\"S0001\",\"unityResultMessage\":\"交易成功\"}");
-//		
+		paramMap.put("notify_time", "20170803000841");
+		paramMap.put("notify_id", "64ac64bed1444554a195b52ea105cefa");
+		paramMap.put("notify_type", "trade_status_sync"); 
+		paramMap.put("_input_charset", "UTF-8");
+		paramMap.put("version", "1.0");	
+		paramMap.put("outer_trade_no", "15016560129750|359469");
+		paramMap.put("inner_trade_no", "101150165603996435603");
+
+		paramMap.put("trade_status", "TRADE_SUCCESS");
+		paramMap.put("trade_amount", "100.00");
+		paramMap.put("gmt_create", "20170802144046");
+		paramMap.put("gmt_payment", "20170802144046");
+		paramMap.put("extension", "{\"apiResultMsg\":\"交易成功\",\"apiResultcode\":\"S\",\"channelTransTime\":\"20170802\",\"instPayNo\":\"DI111353501080200743557\",\"paymentSeqNo\":\"20170802FI031263767\",\"unityResultCode\":\"S0001\",\"unityResultMessage\":\"交易成功\"}");
+		
 		
 		String text = createLinkString(paramMap, false);
 		System.out.println("ori_text:" + text);
@@ -645,7 +645,7 @@ public class ChanpayGatewayDemo {
 		origMap.put("EnsureAmount", "1");//担保金额
 		origMap.put("TrxAmt", "0.01");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
-//		origMap.put("SmsFlag", "1");//短信发送标识
+		origMap.put("SmsFlag", "1");//短信发送标识
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 	}
 	
@@ -678,7 +678,7 @@ public class ChanpayGatewayDemo {
 		origMap.put("MobNo", this.encrypt("13487139655", MERCHANT_PUBLIC_KEY, charset));// 银行预留手机号
 		
 		origMap.put("CardCvn2", "");//cvv2
-		origMap.put("CardExprDt", "07/21");//有效期
+		origMap.put("CardExprDt", "09/21");//有效期
 
 		origMap.put("EnsureAmount", "1");//担保金额
 		origMap.put("TrxAmt", "0.01");// 交易金额
@@ -915,7 +915,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.nmg_api_auth_unbind(); //2.4 支付请求---API
+		test.notifyVerify(); //2.4 支付请求---API
 //		test.nmg_biz_api_auth_req(); //2.5 支付确认---API
 //		test.nmg_api_auth_sms(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端
