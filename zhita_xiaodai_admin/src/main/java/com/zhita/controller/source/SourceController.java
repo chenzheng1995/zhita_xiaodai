@@ -48,9 +48,9 @@ public class SourceController {
 	//后台管理---根据id查询当前对象信息
 	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
-    public Source selectByPrimaryKey(Integer id){
-    	Source source=intSourceService.selectByPrimaryKey(id);
-    	return source;
+    public Map<String,Object> selectByPrimaryKey(Integer companyId,Integer id){
+		Map<String,Object> map=intSourceService.selectByPrimaryKey(companyId,id);
+    	return map;
     }
 	
 	//后台管理---编辑功能

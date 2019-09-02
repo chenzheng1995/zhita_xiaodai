@@ -673,8 +673,11 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="registeClient != null and registeClient !='' ">
 			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
 		</if>
-        <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
-           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+         <if test="orderstarttime != null and orderstarttime !='' and orderendtime !=null and orderendtime !=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="shouldstarttime != null and shouldstarttime !='' and shouldendtime !=null and shouldendtime !=''">
+           and o.shouldReturnTime between #{shouldstarttime,jdbcType=VARCHAR} and #{shouldendtime,jdbcType=VARCHAR}
         </if>
         <if test="sourcename!=null and sourcename!= ''">
            and u.sourceid=#{sourcename,jdbcType=INTEGER}
@@ -713,10 +716,13 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
          <if test="registeClient != null and registeClient !='' ">
 			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
  		</if>
-        <if test="registestarttime != null and registestarttime!='' and registeendtime!=null and registeendtime!=''">
-           and u.registeTime between #{registestarttime,jdbcType=VARCHAR} and #{registeendtime,jdbcType=VARCHAR}
+        <if test="orderstarttime != null and orderstarttime !='' and orderendtime !=null and orderendtime !=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
         </if>
-        <if test="sourcename!=null and sourcename!= ''">
+        <if test="shouldstarttime != null and shouldstarttime !='' and shouldendtime !=null and shouldendtime !=''">
+           and o.shouldReturnTime between #{shouldstarttime,jdbcType=VARCHAR} and #{shouldendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename !=null and sourcename!= ''">
            and u.sourceid=#{sourcename,jdbcType=INTEGER}
         </if>
         <if test="orderstatus !=null and orderstatus != '' and orderstatus ==0"><!-- orderstatus=0 代表是订单状态是已还 -->
@@ -741,8 +747,18 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	  		<select id="getorderNumber" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select orderNumber from orders where userId = #{userId} order by shouldReturnTime desc limit 1
 	</select>
-	<!-- 后台管理      查询该订单还款成功的还款金额 -->
-	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.lang.String">
+	<!-- 后台管理      查询该订单还款成功的还款金额    还款表 -->
+	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 		select repaymentMoney from repayment where orderId=#{arg0} and statu="成功"
+	</select>
+	
+	<!-- 后台管理      查询该订单还款成功的还款金额    线下减免表 -->
+	<select id="queryrepaymoneyoff" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select offusermoney from offlinjianmian where orderId=#{arg0}
+	</select>
+	
+	<!-- 后台管理      查询该订单还款成功的还款金额    银行扣款表 -->
+	<select id="queryrepaymoneybank" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select deduction_money from bankdeductions where orderId=#{arg0}
 	</select>
 </mapper>

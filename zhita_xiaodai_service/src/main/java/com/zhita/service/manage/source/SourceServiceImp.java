@@ -88,7 +88,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://dhj.rong51dai.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
@@ -103,9 +103,16 @@ public class SourceServiceImp implements IntSourceService{
     }
     
     //后台管理---根据id查询当前对象信息
-    public Source selectByPrimaryKey(Integer id){
+    public Map<String,Object> selectByPrimaryKey(Integer companyId,Integer id){
+    	List<ManageControlSettings> listmanage=manageControlSettingsMapper.queryAll(companyId);
+    	List<SourceTemplate> listtemp=sourceTemplateMapper.queryAllTemp();
     	Source source=sourceMapper.selectByPrimaryKey(id);
-    	return source;
+    	
+    	HashMap<String,Object> map=new HashMap<>();
+    	map.put("listmanage", listmanage);
+		map.put("listtemp", listtemp);
+		map.put("source",source);
+    	return map;
     }
     
     //后台管理---编辑功能
@@ -115,7 +122,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://dhj.rong51dai.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
@@ -528,4 +535,10 @@ public class SourceServiceImp implements IntSourceService{
 		String company=sourceMapper.querycompany(companyid);
 		return company;
 	}
+	
+	 //后台管理---根据id查询
+    public Source selectByid(Integer id){
+    	Source source=sourceMapper.selectByPrimaryKey(id);
+    	return source;
+    }
 }

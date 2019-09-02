@@ -19,11 +19,11 @@
     st.name,mcs.rmModleName
   </sql>
   <!-- 后台管理            根据id查询当前对象信息 -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Source">
     select 
     <include refid="Base_Column_List" />
-    from source
-    where id = #{id,jdbcType=INTEGER}
+    from source s left join source_template st on s.templateId=st.id left join manage_control_settings mcs on s.manageControlId=mcs.id
+    where s.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from source

@@ -49,7 +49,7 @@ public class Orders {
 	
 	private String repaymentMoney;//还款金额
 	
-	private Integer howManyTimesBorMoney;//第几次借款----
+	private Integer howManyTimesBorMoney;//第几次借款
 	
 	private Integer deferrTime;//延期次数
 	

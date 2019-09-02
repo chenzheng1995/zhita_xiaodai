@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.BankautoMapper" >
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Bankauto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="overdueday" property="overdueday" jdbcType="INTEGER" />
+    <result column="timing" property="timing" jdbcType="VARCHAR" />
+    <result column="rate" property="rate" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, companyId, overdueday, timing, rate, deleted
+  </sql>
+  <!-- 后管理       根据id查询当前对象 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bankauto
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bankauto
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 后台管理         添加功能 -->
+  <insert id="insert" parameterType="com.zhita.model.manage.Bankauto" >
+    insert into bankauto (companyId, overdueday, timing, rate)
+    values (#{companyid,jdbcType=INTEGER}, #{overdueday,jdbcType=INTEGER}, 
+      #{timing,jdbcType=VARCHAR}, #{rate,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Bankauto" >
+    insert into bankauto
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="overdueday != null" >
+        overdueday,
+      </if>
+      <if test="timing != null" >
+        timing,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="overdueday != null" >
+        #{overdueday,jdbcType=INTEGER},
+      </if>
+      <if test="timing != null" >
+        #{timing,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Bankauto" >
+    update bankauto
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="overdueday != null" >
+        overdueday = #{overdueday,jdbcType=INTEGER},
+      </if>
+      <if test="timing != null" >
+        timing = #{timing,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理            更新修改 -->
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Bankauto" >
+    update bankauto
+    set overdueday = #{overdueday,jdbcType=INTEGER},
+      timing = #{timing,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <!-- 后台管理         查询数量-->
+   <select id="querycount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from bankauto
+    where companyid=#{arg0} and deleted=0
+  </select>
+  <!-- 后台管理         查询所有 -->
+   <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Bankauto">
+    select 
+    <include refid="Base_Column_List" />
+    from bankauto
+    where companyid=#{arg0} and deleted=0 limit #{arg1},#{arg2}
+  </select>
+  <!-- 后台管理      添加功能（先查询出所有公司） -->
+  <select id="queryAllCompany" resultType="com.zhita.model.manage.Company">
+  	select * from company where deleted=0
+  </select>
+  <!-- 后台管理         修改假删除状态 -->
+  <update id="upaFaldel" parameterType="java.lang.Integer">
+  	update bankauto set deleted=1 where id=#{arg0}
+  </update>
+</mapper>

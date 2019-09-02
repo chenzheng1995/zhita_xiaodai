@@ -17,6 +17,9 @@ public class UserLikeParameter {
 	private String applytimeend;//申请时间结束
 	private Integer operatorid;//审核员id
 	private String registeClient;//注册客户端
+	private Integer sourceid;//渠道id
+	private String shareOfState;//风控状态（即用户状态）（0，机审未通过。1需要人工审核。2，机审通过。3，人审未通过。4，人审通过。5，未进风控。6，分控中）
+	private String clientstatus;//客户状态（0：未借款；1：新客户；2：老客户）
 	
 	public Integer getCompanyId() {
 		return companyId;
@@ -107,6 +110,24 @@ public class UserLikeParameter {
 	}
 	public void setRegisteClient(String registeClient) {
 		this.registeClient = registeClient;
+	}
+	public Integer getSourceid() {
+		return sourceid;
+	}
+	public void setSourceid(Integer sourceid) {
+		this.sourceid = sourceid;
+	}
+	public String getShareOfState() {
+		return shareOfState;
+	}
+	public void setShareOfState(String shareOfState) {
+		this.shareOfState = shareOfState;
+	}
+	public String getClientstatus() {
+		return clientstatus;
+	}
+	public void setClientstatus(String clientstatus) {
+		this.clientstatus = clientstatus;
 	}
 	
 }
