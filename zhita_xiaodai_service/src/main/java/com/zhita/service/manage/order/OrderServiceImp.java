@@ -425,11 +425,11 @@ public class OrderServiceImp implements IntOrderService{
     		if(realmoney==null){
     			realmoney=new BigDecimal("0.00");
     		}
-    		BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());//该订单还款成功的还款金额--还款表
+    		BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());//该订单还款成功的还款金额--线下还款表
     		if(offmoney==null){
     			offmoney=new BigDecimal("0.00");
     		}
-    		BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());//该订单还款成功的还款金额--还款表
+    		BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());//该订单扣款成功的还款金额--银行卡自动扣款表
     		if(bankmoney==null){
     			bankmoney=new BigDecimal("0.00");
     		}
