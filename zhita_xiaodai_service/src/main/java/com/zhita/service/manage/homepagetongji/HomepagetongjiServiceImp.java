@@ -451,18 +451,18 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			
 			listtongji.add(homepageTongji);
 		}
+		DateListUtil.ListSort3(listtongji);//按照应还时间进行倒排序
 		
 	 	if(listtongji!=null && !listtongji.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
+    		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,15);
     		listtongjito.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil2(1,10,0);
+    		pageUtil=new PageUtil2(1,15,0);
 
     	}
 		
-	 	DateListUtil.ListSort3(listtongjito);//按照应还时间进行倒排序
 	 	
 		Map<String, Object> map=new HashMap<>();
 		map.put("listtongjito", listtongjito);

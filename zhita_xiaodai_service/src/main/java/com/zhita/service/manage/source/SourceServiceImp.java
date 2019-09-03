@@ -27,6 +27,7 @@ import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.SourceTemplate;
 import com.zhita.model.manage.TongjiSorce;
+import com.zhita.model.manage.User;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil2;
 import com.zhita.util.RedisClientUtil;
@@ -540,5 +541,11 @@ public class SourceServiceImp implements IntSourceService{
     public Source selectByid(Integer id){
     	Source source=sourceMapper.selectByPrimaryKey(id);
     	return source;
+    }
+    
+    //后台管理---查询所有渠道
+    public List<TongjiSorce> queryAllSource(Integer companyId){
+    	List<TongjiSorce> list=sourceMapper.queryAllSource(companyId);
+    	return list;
     }
 }

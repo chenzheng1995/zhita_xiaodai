@@ -162,8 +162,8 @@
   </select>
   
    <!-- 后台管理      查询所有渠道 -->
-  <select id="queryAllSource" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Source">
-  	select id,sourceName from source where s.companyId=#{arg0} and s.deleted=0
+  <select id="queryAllSource" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.TongjiSorce">
+  	select id sourceid,sourceName from source where companyId=#{arg0}
   </select>
   
   <!-- 后台管理        根据id  对当前对象的假删除状态进行修改 -->
@@ -241,7 +241,9 @@
   </select>
   <!--后台管理         查询当前渠道下有多少用户是登录过得  -->
   <select id="queryCount"  resultType="java.lang.Integer">
-  	select count(*) from user u where u.sourceid=#{sourceid} and u.loginTime>=#{startTime} and u.loginTime &lt;#{endTime} and u.registeTime>=#{startTime} and u.registeTime &lt;#{endTime}
+  	select count(*) from user u where u.sourceid=#{sourceid} 
+  	and u.loginTime>=#{startTime} and u.loginTime &lt;#{endTime} and u.registeTime>=#{startTime} and u.registeTime &lt;#{endTime}
+  	and registeTime != loginTime
   </select>
   <!-- 后台管理      当前渠道下所有的用户id -->
   <select id="queryUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
