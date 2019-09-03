@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
+import com.zhita.model.manage.User;
 
 public interface IntSourceService {
 	
@@ -63,7 +64,7 @@ public interface IntSourceService {
     public TongjiSorce queryBySourcenameAndDate(Integer sourcename,String startdate,String enddate);
     
     //后台管理---查询当前渠道下有多少用户是登录过得
-    public int queryCount(Integer sourceid,String startTime,String endTime);
+    public List<User> queryCount(Integer sourceid,String startTime,String endTime);
     //后台管理---当前渠道下所有的用户id
     public List<Integer> queryUserid(Integer sourceid);
     //后台管理---查询当前用户id是否在个人信息认证表有值
@@ -106,5 +107,8 @@ public interface IntSourceService {
 	
 	//后台管理---根据公司id查询公司名字
 	public String querycompany(Integer companyid);
+	
+	//后台管理---查询所有渠道
+    public List<TongjiSorce> queryAllSource(Integer companyId);
 
 }

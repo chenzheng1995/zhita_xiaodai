@@ -298,7 +298,7 @@
 	        	and u.shareOfState = #{shareOfState,jdbcType=VARCHAR}
 	        </if>
 	         <if test="clientstatus != null and clientstatus !='' and clientstatus==0 "><!-- 代表未借款用户 -->
-	        	and u.howManyTimesBorMoney=0
+	        	and u.howManyTimesBorMoney=0 and (u.shareOfState=2 or u.shareOfState=4)
 	        </if>
 	        <if test="clientstatus != null and clientstatus !='' and clientstatus==1 "><!-- 代表新客户 -->
 	        	and u.howManyTimesBorMoney=1
@@ -350,7 +350,7 @@
 	        	and u.shareOfState = #{shareOfState,jdbcType=VARCHAR}
 	        </if>
 	        <if test="clientstatus != null and clientstatus !='' and clientstatus==0 "><!-- 代表未借款用户 -->
-	        	and u.howManyTimesBorMoney=0
+	        	and u.howManyTimesBorMoney=0 and (u.shareOfState=2 or u.shareOfState=4)
 	        </if>
 	        <if test="clientstatus != null and clientstatus !='' and clientstatus==1 "><!-- 代表新客户 -->
 	        	and u.howManyTimesBorMoney=1

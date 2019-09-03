@@ -13,15 +13,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.DateListUtil;
@@ -235,5 +234,37 @@ public class TestController {
 		for (int i = 0; i < list1.size(); i++) {
 			System.out.println(list1.get(i).getId()+"size");
 		}
+		
+		int a=0;
+		List<User> listuser=new ArrayList<>();
+		User user=new User();
+		user.setRegistetime("123333");
+		user.setLogintime("233333");
+		
+		User user1=new User();
+		user1.setRegistetime("231");
+		user1.setLogintime("332");
+		
+		
+		User user2=new User();
+		user2.setRegistetime("1");
+		user2.setLogintime("1");
+		
+		
+		User user3=new User();
+		user3.setRegistetime("134");
+		user3.setLogintime("467");
+		
+		
+		listuser.add(user);
+		listuser.add(user1);
+		listuser.add(user2);
+		listuser.add(user3);
+		for (int i = 0; i < listuser.size(); i++) {
+			if(listuser.get(i).getRegistetime()!=listuser.get(i).getLogintime()&&listuser.get(i).getRegistetime().equals(listuser.get(i).getLogintime())==false){
+				a++;
+			}
+		}
+		System.out.println(a+"---------------");
 	}	
 }
