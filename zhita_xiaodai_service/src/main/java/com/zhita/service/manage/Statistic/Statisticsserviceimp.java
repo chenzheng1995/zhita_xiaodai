@@ -100,6 +100,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Map<String, Object> AllCollection(Orderdetails order) {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = sdao.OrderCollectionNum(order.getCompanyId());
 		PageUtil pages = new PageUtil(order.getPage(),totalCount);

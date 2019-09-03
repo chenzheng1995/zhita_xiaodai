@@ -633,9 +633,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
+		System.out.println("查询条数:"+orders.size());
 		for(int i=0;i<orders.size();i++){
 		orders.get(i).setCompanyId(order.getCompanyId());
-		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
 		if(defe.getDeferAfterReturntime()!=null){

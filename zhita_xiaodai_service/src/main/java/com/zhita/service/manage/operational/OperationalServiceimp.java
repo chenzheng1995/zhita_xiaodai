@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +107,14 @@ public class OperationalServiceimp implements OperationalService{
 			Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 			Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
 			Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
+			
+			if(ode.getXianscount()==null){
+				ode.setXianscount(0);
+			}
+			
+			if(ode.getXiansmoney()==null){
+				ode.setXiansmoney(new BigDecimal(0));
+			}
 			
 			if(ode.getXiansmoney()==null){
 				ode.setXiansmoney(new BigDecimal(0));
@@ -216,6 +225,22 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> orde = new ArrayList<Orders>();
+		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+		String stimea = sima.format(new Date());
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
+		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String d = sima.format(date);//开始时间
+		calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String c = sima.format(date);//结束时间
+		System.out.println("a:"+d);
+		order.setStart_time(d+" 00:00:00");
+		order.setEnd_time(c+" 23:59:59");
+		
+		
 		if(order.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -245,6 +270,15 @@ public class OperationalServiceimp implements OperationalService{
 			Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 			Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
 			Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
+			
+			if(ode.getXianscount()==null){
+				ode.setXianscount(0);
+			}
+			
+			if(ode.getXiansmoney()==null){
+				ode.setXiansmoney(new BigDecimal(0));
+			}
+			
 			
 			if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 				

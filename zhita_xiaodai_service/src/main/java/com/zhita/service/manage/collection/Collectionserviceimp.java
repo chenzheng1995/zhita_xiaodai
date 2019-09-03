@@ -158,6 +158,7 @@ public class Collectionserviceimp implements Collectionservice{
 			order.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
+				orders.get(i).setCollectionStatus("未催收");
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
@@ -234,7 +235,7 @@ public class Collectionserviceimp implements Collectionservice{
 			Collection co = collmapp.OneCollecti(coll);
 			co.setCollection_count(collmapp.FenCol(coll));//分配订单数
 			coll.setCollectionStatus("承诺还款");
-			co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+			co.setSameday(collmapp.SelectEctuib(coll));//承诺还款
 			coll.setOrderStatus("2");
 			co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
 			coll.setOrderStatus("4");
@@ -425,48 +426,9 @@ public class Collectionserviceimp implements Collectionservice{
 		if(coll.getPhone() != null){
 			coll.setPhone(p.encryption(coll.getPhone()));
 		}
-//		try {
-//			coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
-//			coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		List<Collection> colleas = collmapp.SelectUserNum(coll);
-//		Integer totalCount = null ;		
-//		if(colleas.size() != 0){
-//			totalCount = colleas.size();
-//		}else{
-//			totalCount = 0;
-//		}
-//		PageUtil pages = new PageUtil(coll.getPage(), totalCount);
-//		coll.setPage(pages.getPage());
-//		PhoneDeal p = new PhoneDeal();
-//		List<Collection> colles = collmapp.Collectionmemberdetilas(coll);
-//		for(int i=0;i<colles.size();i++){
-//			colles.get(i).setCollectionTime(Timestamps.stampToDate(colles.get(i).getCollectionTime()));
-//			colles.get(i).setCompanyId(coll.getCompanyId());
-//			colles.get(i).setOrderNum(collmapp.SelectUserCollectionNum(colles.get(i)));
-//			colles.get(i).setCollectionStatus("承诺还款");
-//			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计成功
-//			colles.get(i).setCollectionStatus("承诺还清一部分");
-//			colles.get(i).setSameday(collmapp.SelectUsercollectionStatus(colles.get(i)));//承诺还款
-//			colles.get(i).setCollectionStatus("电话无人接听");
-//			colles.get(i).setPaymentmade(collmapp.SelectUsercollectionStatus(colles.get(i)));//未还清
-//			colles.get(i).setCollectionStatus("态度恶劣");
-//			colles.get(i).setConnected(collmapp.SelectUsercollectionStatus(colles.get(i)));//累计坏账数
-//			if(colles.get(i).getConnected() != 0 && colles.get(i).getConnected() != null){
-//				NumberFormat numberFormat = NumberFormat.getInstance();
-//				numberFormat.setMaximumFractionDigits(2);
-//				colles.get(i).setCollNumdata(numberFormat.format(((float) colles.get(i).getConnected() / (float) colles.get(i).getOrderNum()) * 100));
-//			}else{
-//				colles.get(i).setCollNumdata("0");
-//			}
-//			
-//		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		BigDecimal a=null;
-		List<List<Collection>> cols = new ArrayList<List<Collection>>();
 		if(coll.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -485,16 +447,27 @@ public class Collectionserviceimp implements Collectionservice{
 			for(int i=0;i<co.size();i++){
 				if(co.get(i) != null){
 					coll.setCollectionStatus("承诺还款");
-					System.out.println("CCC:"+collmapp.SelectcollectionStatuCC(coll));
-					co.get(i).setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+					Integer sameday = collmapp.SelectEctuib(coll);
+					if(sameday==null){
+						sameday=0;
+					}
+					co.get(i).setSameday(sameday);//承诺还款
 					coll.setOrderStatus("2");
-					co.get(i).setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+					Integer paymentmade = collmapp.SelectcollectionStatusAs(coll);
+					if(paymentmade==null){
+						paymentmade=0;
+					}
+					co.get(i).setPaymentmade(paymentmade);//未还清
 					coll.setOrderStatus("4");
-					co.get(i).setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+					Integer connected = collmapp.SelectcollectionStatusAs(coll);
+					if(connected==null){
+						connected=0;
+					}
+					co.get(i).setConnected(connected);//累计坏账数
 					
 					if(co.get(i).getSameday()!=0){
-						a = new BigDecimal(((co.get(i).getSameday()*100)/(co.get(i).getOrderNum()*100)));
-						co.get(i).setCollNumdata(String.valueOf(a));
+						long collNumdata = ((co.get(i).getSameday()/co.get(i).getOrderNum())/100);
+						co.get(i).setCollNumdata(String.valueOf(collNumdata));
 					}else{
 						a = new BigDecimal(0);
 						co.get(i).setCollNumdata(String.valueOf(a));
@@ -502,12 +475,7 @@ public class Collectionserviceimp implements Collectionservice{
 					co.get(i).setRealtime(stime);
 					
 				}
-				if(co!=null){
-					cols.add(co);
-				}
-				
-				
-				map.put("Collections", cols);
+				map.put("Collections", co);
 			}
 			
 		}else{
@@ -526,15 +494,15 @@ public class Collectionserviceimp implements Collectionservice{
 				for(int j = 0; j < as.size(); j++){
 					if(as.get(j) != null){
 						coll.setCollectionStatus("承诺还款");
-						as.get(j).setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+						as.get(j).setSameday(collmapp.SelectEctuib(coll));//承诺还款
 						coll.setOrderStatus("2");
 						as.get(j).setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
 						coll.setOrderStatus("4");
 						as.get(j).setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
 						
 						if(as.get(j).getSameday()!=0){
-							a = new BigDecimal(((as.get(j).getSameday()*100)/(as.get(j).getOrderNum()*100)));
-							as.get(j).setCollNumdata(String.valueOf(a));
+							long collNumdata = ((as.get(i).getSameday()/as.get(i).getOrderNum())/100);
+							as.get(i).setCollNumdata(String.valueOf(collNumdata));
 						}else{
 							a = new BigDecimal(0);
 							as.get(j).setCollNumdata(String.valueOf(a));
@@ -544,9 +512,6 @@ public class Collectionserviceimp implements Collectionservice{
 					}
 				}
 				
-				if(as!=null){
-					cols.add(as);
-				}
 				map.put("Collections", as);
 		}
 		}

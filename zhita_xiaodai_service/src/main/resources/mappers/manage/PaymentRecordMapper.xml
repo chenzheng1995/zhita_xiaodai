@@ -870,6 +870,8 @@
   			</select>
   			
   			
+  			
+  			
   			<select id="XianJianmian" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(of.id) as defeNum,sum(of.offusermoney) as deferredamount from offlinjianmian of,orders o where of.orderId = o.id and 
   				 o.companyId = #{companyId} and of.sedn_time between #{start_time} and #{end_time}

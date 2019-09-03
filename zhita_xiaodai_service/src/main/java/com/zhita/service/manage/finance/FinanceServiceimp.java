@@ -662,14 +662,15 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println(banl.getStart_time()+"ccc"+banl.getEnd_time()
 				);
 		Bankdeductions bank = padao.OnDefe(banl);//查询实借金额笔数
+//		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
+		//Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
-		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
+		Bankdeductions g = padao.DefeMoeny(banl);//延期记录   defeNum 次数    deferredamount  金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
 		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 		Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
-//		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
-		Bankdeductions g = padao.DefeMoeny(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+		bank.setXianxiaMoney(e.getDeferredamount().add(d.getDeferredamount()));
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
@@ -751,21 +752,6 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		
-		if(a!=null){
-			if(a.getOverdueNum() != null){
-				if(a.getOverdueNum() != 0){
-					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+","+0+"");//逾期数   逾期费
-				}else{
-					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-				}
-			}else{
-				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-			}
-		
-		}else{
-			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-		}
-			
 		
 		if(c!=null){
 			if(c.getDefeNum() != null){
@@ -780,6 +766,10 @@ public class FinanceServiceimp implements FinanceService{
 				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 			}
 			
+			
+		bank.setXiansMoney(b.getRealexpenditure().add(c.getDeferredamount()).add(f.getDeferredamount()));
+		
+		
 		}else{
 			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 		}

@@ -148,4 +148,7 @@ public interface PostloanorderMapper {
 	
 	
 	BigDecimal HuankuanMoney(Integer orderId);
+	
+	
+	Integer SelectHuan(Integer companyId);
 }
