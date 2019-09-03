@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -248,6 +249,32 @@ public class Chanpayserviceimp implements Chanpayservice{
 		}
 		return a;
 	}
+
+	@Override
+	public Orders SelectOrdersUser(Integer orderId) {
+		return padao.OneOrdersUser(orderId);
+	}
+
+	@Override
+	public Integer OrderStatus(Integer orderId) {
+		return padao.OrderStatus(orderId);
+	}
+
+	@Override
+	public Integer Addbankdeduction(Bankdeductions bank) {
+		Integer addId = stdao.Addbankdeduction(bank);//添加银行卡扣款
+		if(addId != null){
+			if(bank.getDeductionstatus().equals("扣款成功")){
+				Orders ord = stdao.SelectUpdateShouldMoney(bank.getOrderId());//查询
+				ord.setShouldReapyMoney(ord.getShouldReapyMoney().subtract(bank.getDeduction_money()));
+				System.out.println("订单应还金额:"+ord.getShouldReapyMoney());
+				ord.setId(bank.getOrderId());
+				stdao.UpdateOrdersShouldMoney(ord);
+			}
+		}
+		return addId;
+	}
+	
 	
 	
 	

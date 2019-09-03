@@ -120,6 +120,7 @@
         <if test="idcard != null and idcard!=''">
            and w.idcard like "%"#{idcard}"%"
         </if>
+        order by operationTime desc
         limit #{page},#{pagesize}
   </select>
     <!-- 后台管理        查询列表     查询数量-->

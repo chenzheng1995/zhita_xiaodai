@@ -141,6 +141,26 @@ public class Orders {
 	
 	private Double collectionData;
 	
+	private BigDecimal shouldReapyMoney;
+	
+	private String bankcardName;
+	
+	public BigDecimal getShouldReapyMoney() {
+		return shouldReapyMoney;
+	}
+
+	public void setShouldReapyMoney(BigDecimal shouldReapyMoney) {
+		this.shouldReapyMoney = shouldReapyMoney;
+	}
+
+	public String getBankcardName() {
+		return bankcardName;
+	}
+
+	public void setBankcardName(String bankcardName) {
+		this.bankcardName = bankcardName;
+	}
+
 	public Integer getXianscount() {
 		return xianscount;
 	}

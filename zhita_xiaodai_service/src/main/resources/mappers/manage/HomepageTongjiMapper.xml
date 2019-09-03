@@ -45,7 +45,7 @@
 	</select>
 	<!-- 后台管理      今日逾后已还笔数      银行卡扣表-->
 	<select id="queryToDayOverduebank" resultType="com.zhita.model.manage.Orders">
-		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,max(b.deduction_time) realtime from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
+		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,b.deduction_time realtime from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2} order by deduction_time desc limit 1
 	</select>
 	<!--后台管理        今日放款总金额  -->
 	<select id="queryToDayLoanTotalmoney" resultType="java.math.BigDecimal">
@@ -211,7 +211,7 @@
 	</select>
 	<!-- 后台管理      已还款订单   银行卡扣款表 -->
 	<select id="overduerepaybank" resultType="com.zhita.model.manage.Orders">
-		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,max(b.deduction_time) realtime from orders o inner join bankdeductions b on o.id=b.orderid where companyid=#{arg0}  and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3
+		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,b.deduction_time realtime from orders o inner join bankdeductions b on o.id=b.orderid where companyid=#{arg0}  and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=3 order by deduction_time desc limit 1
 	</select>
 	<!-- 后台管理          逾后未还 -->
 	<select id="overdueafternotrepay" resultType="java.lang.Integer">

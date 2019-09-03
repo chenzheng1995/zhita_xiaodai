@@ -130,6 +130,16 @@ public class Bankdeductions {
 	private String XianShangCoune;//线上统计
 	
 	private String XianJianmianCount;//线下统计
+	
+	private String BankMoneys;
+
+	public String getBankMoneys() {
+		return BankMoneys;
+	}
+
+	public void setBankMoneys(String bankMoneys) {
+		BankMoneys = bankMoneys;
+	}
 
 	public String getXianShangCoune() {
 		return XianShangCoune;

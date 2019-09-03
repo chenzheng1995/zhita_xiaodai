@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
+import com.zhita.model.manage.User;
 
 public interface IntSourceService {
 	
@@ -106,5 +107,8 @@ public interface IntSourceService {
 	
 	//后台管理---根据公司id查询公司名字
 	public String querycompany(Integer companyid);
+	
+	//后台管理---查询所有渠道
+    public List<TongjiSorce> queryAllSource(Integer companyId);
 
 }

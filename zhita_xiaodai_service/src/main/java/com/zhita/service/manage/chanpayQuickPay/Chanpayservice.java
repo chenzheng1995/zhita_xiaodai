@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Component;
 
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -87,4 +88,13 @@ public interface Chanpayservice {
 	
 	
 	Integer DeleteOrderNumber(String orderNumber);
+	
+	
+	Orders SelectOrdersUser(Integer orderId);
+	
+	
+	Integer OrderStatus(Integer orderId);
+	
+	
+	Integer Addbankdeduction(Bankdeductions bank);
 }

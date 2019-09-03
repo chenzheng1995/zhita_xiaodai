@@ -632,8 +632,8 @@
 						AND u.underthe_time between #{start_time} and #{end_time}
 					</if>
   				</where> 
-  				order by u.id desc
   				Group by u.id
+  				order by u.id desc
   				limit #{page},#{pagesize}
   			</select>
   			
@@ -853,8 +853,20 @@
   			
   			
   			<select id="Xianshang" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(ac.id) as defeNum,sum(ac.amountmoney) as deferredamount from accountadjustment ac,orders o where ac.orderId = o.id and 
+  				select count(ac.id) as defeNum,sum(ac.totalamount) as deferredamount from accountadjustment ac,orders o where ac.orderId = o.id and 
   				 o.companyId = #{companyId} and ac.amou_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="BankMoneys" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+  				select count(ban.id) as defeNum,sum(ban.deduction_money) as deferredamount from bankdeductions ban,orders o where ban.orderId = o.id and 
+  				 o.companyId = #{companyId} and ban.deduction_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="DefeMoeny" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+	  			select count(defe.id) as defeNum,sum(defe.extensionfee) as deferredamount from offlinedelay defe,orders o where defe.orderId = o.id and 
+	  				 o.companyId = #{companyId} and defe.operating_time between #{start_time} and #{end_time}
   			</select>
   			
   			
@@ -1059,4 +1071,30 @@
  			<delete id="DeleteOrderDetailsNumber" parameterType="java.lang.String" >
  				delete from orderdetails where orderId = (select id from orders where orderNumber = #{orderNumber})
  			</delete>
+ 			
+ 			
+ 			
+ 			<select id="OneOrdersUser" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+ 				select o.id,o.orderNumber,o.userId,ord.shouldReapyMoney,b.bankcardName from orders o left join orderdetails ord on o.id = ord.orderId 
+				left join bankcard b on b.userId = o.userId where o.id = #{orderId}
+ 			</select>
+ 			
+ 			
+ 			
+	 		<select id="ReJianMianmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+				select sum(offusermoney) from offlinjianmian where companyId = #{companyId}
+			</select>
+			
+			
+			<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+				select sum(re.repaymentMoney) from repayment re,orders o where o.id = re.orderId and o.companyId = #{companyId}
+			</select>
+	 			
+	 			
+	 			
+	 		<update id="OrderStatus" parameterType="java.lang.Integer">
+	 			update orders set orderStatus = "3" where id = #{orderId}
+	 		</update>
+	 		
+ 		
 </mapper>

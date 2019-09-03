@@ -434,7 +434,6 @@ public class OrderServiceImp implements IntOrderService{
     			bankmoney=new BigDecimal("0.00");
     		}
     		BigDecimal money=realmoney.add(offmoney).add(bankmoney);
-    		System.out.println(money+"moneymoney---");
     		list.get(i).setRepaymentMoney(String.valueOf(money));
     		
     		BigDecimal shourldmoney=list.get(i).getOrderdetails().getShouldReapyMoney().add(list.get(i).getOrderdetails().getInterestPenaltySum());

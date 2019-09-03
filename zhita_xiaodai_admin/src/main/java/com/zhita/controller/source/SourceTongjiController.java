@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
+import com.zhita.model.manage.User;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
@@ -33,7 +34,7 @@ public class SourceTongjiController {
 	@Autowired
 	private IntSourceService intSourceService;
 	
-	//后台管理---我们自己看的统计数据——在用户表存在的渠道，当天的统计信息（数据待完善   目前只有渠道名     uv  注册数    uv到注册的转化率）
+	//后台管理---我们自己看的统计数据——渠道表所有渠道
 	@ResponseBody
 	@RequestMapping("/queryByToday")
 	public Map<String,Object> queryByToday(Integer companyId,Integer page)throws ParseException{
@@ -52,12 +53,16 @@ public class SourceTongjiController {
 		String endTime = today;
 		String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 		
-		listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
+		//listsource=intSourceService.queryAllSourceByUser(companyId, startTimestamps, endTimestamps);
+		listsource=intSourceService.queryAllSource(companyId);//查询出所有渠道
 		for (int i = 0; i < listsource.size(); i++) {
 			int sourceid=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名称
-			float registernum=listsource.get(i).getRegisternum();//得到真实的注册数
-			Integer companyid=listsource.get(i).getCompanyid();//公司id
+			//float registernum=listsource.get(i).getRegisternum();//得到真实的注册数
+			//Integer companyid=listsource.get(i).getCompanyid();//公司id
+			
+			float registernum=intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);
+			listsource.get(i).setRegisternum(registernum);//真实的注册数
 			int uv=0;
 			String cvr=null;
 			if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "xiaodaiKey") == null) {
@@ -72,6 +77,7 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
+			
 			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
@@ -149,12 +155,16 @@ public class SourceTongjiController {
 		
 		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
 		
-		listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourceid);
+		//listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourceid);
+		listsource=intSourceService.queryAllSource(companyId);//查询出所有渠道
 		for (int i = 0; i < listsource.size(); i++) {
 			Integer sourceids=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名
-			float registernum=listsource.get(i).getRegisternum();//真实的注册数
-			Integer companyid=listsource.get(i).getCompanyid();//公司id
+			//float registernum=listsource.get(i).getRegisternum();//真实的注册数
+			//Integer companyid=listsource.get(i).getCompanyid();//公司id
+			
+			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);
+			listsource.get(i).setRegisternum(registernum);//真实的注册数
 			int uv=0;
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {

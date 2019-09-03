@@ -73,7 +73,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		listreal.addAll(listbank);//合并后的集合再次合并第三个集合
 		for (int j = 0; j < listreal.size(); j++) {
 			try {
-					if(listreal.isEmpty()&&listreal.size()!=0){
+					if(!listreal.isEmpty()&&listreal.size()!=0){
 						String realtime=Timestamps.stampToDate(listreal.get(j).getRealtime());//实还时间
 						String shouletime=Timestamps.stampToDate(listreal.get(j).getShouldReturnTime());//应还时间
 					
@@ -292,16 +292,16 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		}
 		
 		List<String> list=DateListUtil.getDays(startTime, endTime);
-		List<String> liststr=homepageTongjiMapper.queryAllShouldTime(companyId);
-		List<String> liststrStamp = new ArrayList<>();// 用来存时间戳转换后的时间（年月日格式的时间）（订单表所有的应还时间）
-		for (int k = 0; k < liststr.size(); k++) {
+		//List<String> liststr=homepageTongjiMapper.queryAllShouldTime(companyId);
+		//List<String> liststrStamp = new ArrayList<>();// 用来存时间戳转换后的时间（年月日格式的时间）（订单表所有的应还时间）
+		/*for (int k = 0; k < liststr.size(); k++) {
 			liststrStamp.add(Timestamps.stampToDate1(liststr.get(k)));
-		}
-		HashSet h1 = new HashSet(liststrStamp);
-		liststrStamp.clear();
-		liststrStamp.addAll(h1);
+		}*/
+		//HashSet h1 = new HashSet(liststrStamp);
+		//liststrStamp.clear();
+		//liststrStamp.addAll(h1);
 		
-		list.retainAll(liststrStamp);//两个集合的交集
+		//list.retainAll(liststrStamp);//两个集合的交集
 		
 		for (int i = 0; i < list.size(); i++) {
 			String startTimefor = list.get(i);
@@ -327,9 +327,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			List<Orders> listordersbank=homepageTongjiMapper.overduerepaybank(companyId, startTimestampsfor, endTimestampsfor);//已还款订单    银行卡扣款表
 			listorders.addAll(listordersoff);//合并两个集合
 			listorders.addAll(listordersbank);//合并后的集合再次合并第三个集合
+			
 			for (int j = 0; j < listorders.size(); j++) {
 				try {
-					if(listorders.isEmpty()&&listorders.size()!=0){
+					if(!listorders.isEmpty()&&listorders.size()!=0){
 						String realtime=Timestamps.stampToDate(listorders.get(j).getRealtime());//实还时间
 						String shouletime=Timestamps.stampToDate(listorders.get(j).getShouldReturnTime());//应还时间
 					
@@ -450,18 +451,18 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			
 			listtongji.add(homepageTongji);
 		}
+		DateListUtil.ListSort3(listtongji);//按照应还时间进行倒排序
 		
 	 	if(listtongji!=null && !listtongji.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
+    		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,15);
     		listtongjito.addAll(listPageUtil.getData());
     		
     		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
     	}else{
-    		pageUtil=new PageUtil2(1,10,0);
+    		pageUtil=new PageUtil2(1,15,0);
 
     	}
 		
-	 	DateListUtil.ListSort3(listtongjito);//按照应还时间进行倒排序
 	 	
 		Map<String, Object> map=new HashMap<>();
 		map.put("listtongjito", listtongjito);

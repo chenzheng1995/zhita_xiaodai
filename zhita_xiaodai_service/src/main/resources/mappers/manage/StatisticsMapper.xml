@@ -243,7 +243,7 @@
 			
 			
 			<update id="UpdateOrderSuperl" parameterType="com.zhita.model.manage.Orders">
-				update orderdetails set surplus_money = #{surplus_money},realityAccount = #{realityAccount} where id = #{id}
+				update orderdetails set realityAccount = #{realityAccount} where id = #{id}
 			</update>
 			
 			<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.lang.Integer">
@@ -334,5 +334,17 @@
 			
 			<update id="UpdatehowMany" parameterType="java.lang.Integer">
 				update user set howManyTimesBorMoney=howManyTimesBorMoney+1 WHERE id = #{userId}
+			</update>
+			
+			
+			
+			<select id="SelectUpdateShouldMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+				select shouldReapyMoney from orderdetails where orderId = #{orderId}
+			</select>
+			
+			
+			
+			<update id="UpdateOrdersShouldMoney" parameterType="com.zhita.model.manage.Orders">
+				update orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId = #{id}
 			</update>
 </mapper>

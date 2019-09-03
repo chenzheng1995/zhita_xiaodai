@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
+import com.zhita.model.manage.User;
 
 public interface SourceMapper {
     int deleteByPrimaryKey(Integer id);
@@ -31,6 +32,9 @@ public interface SourceMapper {
     
     //后台管理---查询渠道表所有信息
     List<Source> queryAll(Integer comapnyId);
+    
+    //后台管理---查询所有渠道
+    List<TongjiSorce> queryAllSource(Integer companyId);
     
     //后台管理---根据id  对当前对象的假删除状态进行修改
     int updateFalDel(Integer id);

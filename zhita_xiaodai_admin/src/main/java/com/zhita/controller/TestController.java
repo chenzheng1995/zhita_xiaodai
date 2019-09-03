@@ -3,6 +3,7 @@ package com.zhita.controller;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.DateListUtil;
@@ -210,5 +213,58 @@ public class TestController {
 		String bankmoney="0";
 		BigDecimal money=new BigDecimal(realmoney).add(new BigDecimal(offmoney)).add(new BigDecimal(bankmoney));
 		System.out.println(String.valueOf(money));
+		
+		List<Orders> list1=new ArrayList<Orders>();
+		/*Orders  o1=new Orders();
+		o1.setId(1);
+		list1.add(o1);*/
+		
+		List<Orders> list2=new ArrayList<Orders>();
+		Orders  o2=new Orders();
+		o2.setId(2);
+		list1.add(o2);
+		
+		List<Orders> list3=new ArrayList<Orders>();
+		/*Orders  o3=new Orders();
+		o3.setId(3);
+		list1.add(o3);*/
+		
+		list1.addAll(list2);
+		list1.addAll(list3);
+		for (int i = 0; i < list1.size(); i++) {
+			System.out.println(list1.get(i).getId()+"size");
+		}
+		
+		int a=0;
+		List<User> listuser=new ArrayList<>();
+		User user=new User();
+		user.setRegistetime("123333");
+		user.setLogintime("233333");
+		
+		User user1=new User();
+		user1.setRegistetime("231");
+		user1.setLogintime("332");
+		
+		
+		User user2=new User();
+		user2.setRegistetime("1");
+		user2.setLogintime("1");
+		
+		
+		User user3=new User();
+		user3.setRegistetime("134");
+		user3.setLogintime("467");
+		
+		
+		listuser.add(user);
+		listuser.add(user1);
+		listuser.add(user2);
+		listuser.add(user3);
+		for (int i = 0; i < listuser.size(); i++) {
+			if(listuser.get(i).getRegistetime()!=listuser.get(i).getLogintime()&&listuser.get(i).getRegistetime().equals(listuser.get(i).getLogintime())==false){
+				a++;
+			}
+		}
+		System.out.println(a+"---------------");
 	}	
 }

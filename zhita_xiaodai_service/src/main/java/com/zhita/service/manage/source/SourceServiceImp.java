@@ -27,6 +27,7 @@ import com.zhita.model.manage.ManageControlSettings;
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.SourceTemplate;
 import com.zhita.model.manage.TongjiSorce;
+import com.zhita.model.manage.User;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil2;
 import com.zhita.util.RedisClientUtil;
@@ -88,7 +89,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://dhj.rong51dai.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
@@ -122,7 +123,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://dhj.rong51dai.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
@@ -540,5 +541,11 @@ public class SourceServiceImp implements IntSourceService{
     public Source selectByid(Integer id){
     	Source source=sourceMapper.selectByPrimaryKey(id);
     	return source;
+    }
+    
+    //后台管理---查询所有渠道
+    public List<TongjiSorce> queryAllSource(Integer companyId){
+    	List<TongjiSorce> list=sourceMapper.queryAllSource(companyId);
+    	return list;
     }
 }

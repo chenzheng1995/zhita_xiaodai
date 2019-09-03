@@ -136,4 +136,10 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdatehowMany(Integer userId);
+	
+	
+	Orders SelectUpdateShouldMoney(Integer orderId);
+	
+	
+	Integer UpdateOrdersShouldMoney(Orders ord);
 }
