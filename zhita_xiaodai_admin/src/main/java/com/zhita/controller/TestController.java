@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
@@ -235,7 +236,7 @@ public class TestController {
 			System.out.println(list1.get(i).getId()+"size");
 		}
 		
-		int a=0;
+		//int a=0;
 		List<User> listuser=new ArrayList<>();
 		User user=new User();
 		user.setRegistetime("123333");
@@ -262,9 +263,30 @@ public class TestController {
 		listuser.add(user3);
 		for (int i = 0; i < listuser.size(); i++) {
 			if(listuser.get(i).getRegistetime()!=listuser.get(i).getLogintime()&&listuser.get(i).getRegistetime().equals(listuser.get(i).getLogintime())==false){
-				a++;
+				//a++;
 			}
 		}
-		System.out.println(a+"---------------");
+		//System.out.println(a+"---------------");
+		int defer=1;
+		int deferlay=2;
+		int todaydeferred=defer+deferlay;
+		System.out.println(todaydeferred+"555555");
+		
+		List<String> lista=new ArrayList<>();
+		/*lista.add("1");
+		lista.add("2");
+		lista.add("3");*/
+		List<String> listb=new ArrayList<>();
+		listb.add("1");
+		System.out.println(lista.size()+listb.size()+"6666666666666666");
+		
+		
+		String a="b123"; 
+		String b="b124";
+		 String d="b122"; 
+		String e="b123";
+		int c=a.compareTo(b);
+		System.out.println(c+"cccccccccccc");
+		
 	}	
 }

@@ -623,9 +623,17 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <select id="queryDefer" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.DeferredAndOrder">
   	select o.id,o.orderNumber,d.interestOnArrears from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0}
   </select>
-  <!-- 查询最后延期时间 -->
+   <!-- 后台管理        通过订单查询改订单在人工延期表信息 -->
+  <select id="queryDeferlay" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Offlinedelay">
+  	select o.id,o.orderNumber,lay.extensionfee from orders o inner join offlinedelay lay on lay.orderid=o.id where o.id=#{arg0}
+  </select>
+  <!-- 查询最后延期时间    线上延期-->
   <select id="qeuryFinalDefertime" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
   	select max(deferAfterReturntime) deferAfterReturntime,postponeDate from deferred where orderid=#{arg0}
+  </select> 
+  <!-- 查询最后延期时间   人工延期-->
+  <select id="qeuryFinalDefertimelay" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+  	select max(operating_time) deferAfterReturntime from offlinedelay where orderid=#{arg0}
   </select> 
   <!-- 后台管理      查询出sysuser表所有的name -->
   <select id="queryname" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.SysUser">
@@ -749,16 +757,16 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	</select>
 	<!-- 后台管理      查询该订单还款成功的还款金额    还款表 -->
 	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select repaymentMoney from repayment where orderId=#{arg0} and statu="成功"
+		select sum(repaymentMoney) from repayment where orderId=#{arg0} and statu="成功"
 	</select>
 	
 	<!-- 后台管理      查询该订单还款成功的还款金额    线下减免表 -->
 	<select id="queryrepaymoneyoff" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select offusermoney from offlinjianmian where orderId=#{arg0}
+		select sum(offusermoney) from offlinjianmian where orderId=#{arg0}
 	</select>
 	
 	<!-- 后台管理      查询该订单还款成功的还款金额    银行扣款表 -->
 	<select id="queryrepaymoneybank" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select deduction_money from bankdeductions where orderId=#{arg0}
+		select sum(deduction_money) from bankdeductions where orderId=#{arg0}
 	</select>
 </mapper>
