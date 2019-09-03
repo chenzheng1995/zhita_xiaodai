@@ -134,6 +134,7 @@
         <if test="blackType !=null and blackType!='' ">
         	and b.blackType=#{blackType}
         </if>
+     order by operationTime desc
   </select>
   <!-- 后台管理       更新假删除状态 -->
   <update id="upaFalseDel" parameterType="java.lang.Integer">
