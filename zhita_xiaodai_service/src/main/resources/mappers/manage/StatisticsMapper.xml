@@ -129,14 +129,14 @@
 			<select id="AllBanl" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 				select ord.orderId,o.orderNumber,o.userId,usea.trueName,u.phone,bank.bankcardName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,
 				ord.realityBorrowMoney,ord.makeLoans,defe.deferAfterReturntime,o.overdueGrade,ord.overdueNumberOfDays,ord.interestPenaltySum,
-				ord.surplus_money,ord.realityAccount
-				from orders o,orderdetails ord,deferred defe,bankcard bank,user u,user_attestation usea 
+				ord.surplus_money,ord.realityAccount,bkd.deduction_money,ord.shouldReapyMoney
+				from orders o left join orderdetails ord on o.id = ord.orderId
+				left join deferred defe on defe.orderid =o.id
+				left join bankcard bank on bank.userId = o.userId
+				left join user u on	o.userId = u.id
+				left join user_attestation usea on o.id = usea usea.userId
+				left join bankdeductions bkd on bkd.orderId = o.id
 				<where>
-					o.id = ord.orderId
-					and u.id = o.userId
-					and u.id = usea.userId
-					and o.id = defe.orderId
-					and u.id = bank.userId
 					and o.orderStatus = "1"
 					and o.companyId = #{companyId}
 					<if test="orderNumber != null and orderNumber != ''">

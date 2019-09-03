@@ -233,6 +233,16 @@ public class Orderdetails {
     
     private BigDecimal cca;
     
+    private BigDecimal deduction_money;
+    
+	public BigDecimal getDeduction_money() {
+		return deduction_money;
+	}
+
+	public void setDeduction_money(BigDecimal deduction_money) {
+		this.deduction_money = deduction_money;
+	}
+
 	public BigDecimal getCca() {
 		return cca;
 	}

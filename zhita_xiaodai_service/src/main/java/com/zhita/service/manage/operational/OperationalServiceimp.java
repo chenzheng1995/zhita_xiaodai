@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.OperationalMapper;
+import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Drainage_of_platform;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -45,6 +47,9 @@ public class OperationalServiceimp implements OperationalService{
 	private PostloanorderMapper pdap;
 	
 	
+	
+	@Autowired
+	private PaymentRecordMapper padao;
 	
 	
 
@@ -104,6 +109,13 @@ public class OperationalServiceimp implements OperationalService{
 			ordera.setPage(pages.getPage());
 			Orders ord = operdao.ReayMoney(ordera);//获取日期总放款金额   放款数
 			Orders o = operdao.Gesamtb(ordera);//还款金额    还款数
+			Bankdeductions banl = new Bankdeductions();
+			banl.setCompanyId(ordera.getCompanyId());
+			banl.setStart_time(ordera.getStart_time());
+			banl.setEnd_time(ordera.getEnd_time());
+			Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+			Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+			
 			Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 			Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
 			Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
@@ -146,7 +158,7 @@ public class OperationalServiceimp implements OperationalService{
 			}
 			ord.setXianscount(ode.getXianscount());
 			ord.setXiansmoney(ode.getXiansmoney());
-			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
+			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
 			ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());

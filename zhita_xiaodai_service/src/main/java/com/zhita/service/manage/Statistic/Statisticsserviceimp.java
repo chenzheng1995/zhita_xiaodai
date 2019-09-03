@@ -25,7 +25,9 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
+import com.zhita.util.TuoMinUtil;
 
 
 @Service
@@ -100,7 +102,8 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Map<String, Object> AllCollection(Orderdetails order) {
-		
+		TuoMinUtil tm = new TuoMinUtil();
+		PhoneDeal p = new PhoneDeal();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer totalCount = sdao.OrderCollectionNum(order.getCompanyId());
 		PageUtil pages = new PageUtil(order.getPage(),totalCount);
@@ -127,9 +130,15 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			
 		List<Orderdetails> ordeBank = sdao.AllBanl(order);
 		for(int i=0;i<ordeBank.size();i++){
+			if(ordeBank.get(i).getDeduction_money()==null){
+				ordeBank.get(i).setDeduction_money(new BigDecimal(0));
+			}
 			ordeBank.get(i).setOrder_money(ordeBank.get(i).getRealityBorrowMoney().add(ordeBank.get(i).getInterestPenaltySum()));
 			ordeBank.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeBank.get(i).getOrderCreateTime()));
 			ordeBank.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeBank.get(i).getDeferAfterReturntime()));
+			ordeBank.get(i).setSurplus_money(ordeBank.get(i).getShouldReapyMoney());
+			String phon = p.decryption(ordeBank.get(i).getPhone());
+			ordeBank.get(i).setPhone(tm.mobileEncrypt(phon));
 		}
 		map.put("Orderdetails", ordeBank);
 		map.put("PageUtil", pages);
