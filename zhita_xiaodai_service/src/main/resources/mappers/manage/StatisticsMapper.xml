@@ -338,13 +338,13 @@
 			
 			
 			
-			<select id="SelectUpdateShouldMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+			<select id="SelectUpdateShouldMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
 				select shouldReapyMoney from orderdetails where orderId = #{orderId}
 			</select>
 			
 			
 			
-			<update id="UpdateOrdersShouldMoney" parameterType="com.zhita.model.manage.Orderdetails">
-				update orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId = #{orderId}
+			<update id="UpdateOrdersShouldMoney" parameterType="com.zhita.model.manage.Orders">
+				update orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId = #{id}
 			</update>
 </mapper>

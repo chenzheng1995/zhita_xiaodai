@@ -1075,8 +1075,8 @@
  			
  			
  			<select id="OneOrdersUser" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
- 				select o.id,o.orderNumber,o.userId,ord.shouldReapyMoney,b.bankcardName from orders o,orderdetails ord,bankcard b
- 				where o.id = ord.orderId and b.userId = o.userId and o.id = #{orderId}
+ 				select o.id,o.orderNumber,o.userId,ord.shouldReapyMoney,b.bankcardName from orders o left join orderdetails ord on o.id = ord.orderId 
+				left join bankcard b on b.userId = o.userId where o.id = #{orderId}
  			</select>
  			
  			

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -932,12 +933,13 @@ public class ChanpayQuickCollection {
 //				repay.setPipelinenumber(pipelinenu);
 				
 				order.setShouldReapyMoney(order.getShouldReapyMoney().multiply(new BigDecimal(deductionproportion)));
-				order.setShouldReapyMoney(order.getShouldReapyMoney().divide(new BigDecimal(100)));
+				order.setShouldReapyMoney(order.getShouldReapyMoney().divide(new BigDecimal(100), 2, RoundingMode.HALF_UP));
 				String a = String.valueOf(order.getShouldReapyMoney());
 				
 				String CardBegin = order.getBankcardName().substring(0, 6);//获取银行卡前六位
 				String CardEnd = order.getBankcardName().substring(order.getBankcardName().length() - 4);//获取银行卡后四位
-				
+				System.out.println("前六位:"+CardBegin);
+				System.out.println("后四位:"+CardEnd);
 				origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 				origMap.put("OrdrName", "支付");// 商品名称
 				origMap.put("MerUserId", String.valueOf(order.getUserId()));// 用户标识（测试时需要替换一个新的meruserid）
@@ -994,7 +996,7 @@ public class ChanpayQuickCollection {
 			
 			map.put("code", 200);
 			map.put("Ncode", 2000);
-			map.put("msg", "已添加");
+			map.put("msg", "请查看扣款详情记录表里的扣款状态");
 			return map;
 	}
 

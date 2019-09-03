@@ -584,15 +584,15 @@ public class ChanpayGatewayDemo {
 
 		//origMap.put("TrxId", "201703131045234230112");// 订单号
 		origMap.put("OrdrName", "畅捷支付");// 商品名称
-		origMap.put("MerUserId", "25");// 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", "99");// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200005640044");// 子账户号
 		origMap.put("SubMerchantNo", "200005640044");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
-		origMap.put("CardBegin", "622848");// 卡号前6位
-		origMap.put("CardEnd", "6971");// 卡号后4位
-		origMap.put("TrxAmt", "8.00");// 交易金额
+		origMap.put("CardBegin", "621483");// 卡号前6位
+		origMap.put("CardEnd", "4138");// 卡号后4位
+		origMap.put("TrxAmt", "1");// 交易金额
 		origMap.put("TradeType", "11");// 交易类型
-		origMap.put("SmsFlag", "1");
+		origMap.put("SmsFlag", "0");
 		this.gatewayPost(origMap, charset, MERCHANT_PRIVATE_KEY);
 		System.out.println("订单号:"+trxId);
 	}
@@ -915,7 +915,7 @@ public class ChanpayGatewayDemo {
 //		test.nmg_biz_api_auth_req(); // 2.1 鉴权请求---API
 //		test.nmg_page_api_auth_req(); //2.2 鉴权请求 ---畅捷前端
 //		test.nmg_api_auth_sms(); // 2.3 鉴权请求确认---API
-		test.notifyVerify(); //2.4 支付请求---API
+		test.nmg_biz_api_quick_payment(); //2.4 支付请求---API
 //		test.nmg_biz_api_auth_req(); //2.5 支付确认---API
 //		test.nmg_api_auth_sms(); //2.6 支付请求（直付通）
 //		test.nmg_quick_onekeypay();  //2.7 直接请求---畅捷前端
