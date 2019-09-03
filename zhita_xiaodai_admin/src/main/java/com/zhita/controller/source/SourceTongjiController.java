@@ -163,7 +163,7 @@ public class SourceTongjiController {
 			//float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
-			float registernum=intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);
+			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);
 			listsource.get(i).setRegisternum(registernum);//真实的注册数
 			int uv=0;
 			String cvr=null;
@@ -184,7 +184,7 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
-			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceids,startTimestamps,endTimestamps));//激活数
 			List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
@@ -303,7 +303,7 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			tongjiSorce.setCvr(cvr);//uv到注册的转化率
-			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
+			tongjiSorce.setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 			
 			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数

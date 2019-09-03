@@ -33,7 +33,8 @@
 	</select>
 	<!-- 后台管理       今日回款笔数  （银行卡回款）-->
 	<select id="queryToDayRepaymentbank" resultType="java.lang.Integer">
-		select count(DISTINCT b.orderid) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
+		select count(DISTINCT b.orderid) from bankdeductions b inner join orders o on b.orderid=o.id 
+		where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2} and o.orderStatus=3
 	</select>
 	<!-- 后台管理      今日逾后已还笔数      还款表-->
 	<select id="queryToDayOverdue" resultType="com.zhita.model.manage.Orders">
@@ -45,7 +46,9 @@
 	</select>
 	<!-- 后台管理      今日逾后已还笔数      银行卡扣表-->
 	<select id="queryToDayOverduebank" resultType="com.zhita.model.manage.Orders">
-		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,b.deduction_time realtime from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2} order by deduction_time desc limit 1
+		select o.id,o.companyId,o.orderNumber,o.orderCreateTime,o.shouldReturnTime,b.deduction_time realtime from bankdeductions b inner join orders o on b.orderid=o.id 
+		where o.companyId=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2} and o.orderStatus=3
+		order by deduction_time desc limit 1
 	</select>
 	<!--后台管理        今日放款总金额  -->
 	<select id="queryToDayLoanTotalmoney" resultType="java.math.BigDecimal">
@@ -69,7 +72,8 @@
 	</select>
 	<!-- 后台管理         今日回款总金额（银行扣款金额） -->
 	<select id="queryToDayBank" resultType="java.math.BigDecimal">
-		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
+		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id 
+		where o.companyid=#{arg0} and b.deduction_time>=#{arg1} and b.deduction_time &lt;#{arg2}
 	</select>
 	<!--后台管理     今日逾期已还金额     （用户实还金额）-->
 	<select id="queryToDayOverueTotalmoney" resultType="java.math.BigDecimal">
@@ -81,7 +85,8 @@
 	</select>
 	<!--后台管理     今日逾期已还金额     （银行卡扣款已还）-->
 	<select id="queryToDayOverueTotalmoneybank" resultType="java.math.BigDecimal">
-		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{companyId} and b.deduction_time>=#{startTime} and b.deduction_time &lt;#{endTime} and o.shouldReturnTime &lt;#{startTime}
+		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id 
+		where o.companyId=#{companyId} and b.deduction_time>=#{startTime} and b.deduction_time &lt;#{endTime} and o.shouldReturnTime &lt;#{startTime}
 	</select>
 	<!-- ==============累计数据================== -->
 	
@@ -109,7 +114,7 @@
 	
 	<!-- 后台管理     回款总笔数（ 银行卡已还清笔数） -->
 	<select id="querySumRepaymentbank" resultType="java.lang.Integer">
-		select count(DISTINCT b.orderid) from  bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} 
+		select count(DISTINCT b.orderid) from  bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and o.orderStatus=3
 	</select>
 	
 	<!-- 后台管理     回款总笔数  （实还笔数）-->
