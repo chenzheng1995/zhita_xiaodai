@@ -49,7 +49,7 @@ public class Magicwand3Handler {
      *
      * @throws Exception
      */
-    public void executeGetMethod() throws Exception {
+    public String executeGetMethod() throws Exception {
         /** 请求参数 */
         Map<String, String> reqParams = new HashMap<String, String>();
         reqParams.put(ReqCommonParams.METHOD, method.getMethod());
@@ -71,6 +71,7 @@ public class Magicwand3Handler {
         String resContent = Magicwand3HttpUtils.get(API_URL, reqParams);
 
         System.out.println("resContent:" + resContent);
+		return resContent;
     }
 
     /**
