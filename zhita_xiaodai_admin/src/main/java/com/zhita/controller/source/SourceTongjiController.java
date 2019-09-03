@@ -78,15 +78,7 @@ public class SourceTongjiController {
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
 			
-			int activatecount=0;//激活数
-			List<User> listuser=intSourceService.queryCount(sourceid,startTimestamps,endTimestamps);
-			for (int j = 0; j < listuser.size(); j++) {
-				if((listuser.get(i).getRegistetime()!=listuser.get(i).getLogintime())&&(listuser.get(i).getRegistetime().equals(listuser.get(i).getLogintime())==false)){
-					activatecount++;
-				}
-			}
-			System.out.println(listuser.size()+"99999999"+activatecount+"------**********---------");
-			listsource.get(i).setActivatecount(activatecount);//激活数
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
@@ -192,14 +184,7 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
-			int activatecount=0;//激活数
-			List<User> listuser=intSourceService.queryCount(sourceid,startTimestamps,endTimestamps);
-			for (int j = 0; j < listuser.size(); j++) {
-				if((listuser.get(i).getRegistetime()!=listuser.get(i).getLogintime())&&(listuser.get(i).getRegistetime().equals(listuser.get(i).getLogintime())==false)){
-					activatecount++;
-				}
-			}
-			listsource.get(i).setActivatecount(activatecount);//激活数
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 			List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
@@ -318,14 +303,7 @@ public class SourceTongjiController {
 				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
 			}
 			tongjiSorce.setCvr(cvr);//uv到注册的转化率
-			int activatecount=0;//激活数
-			List<User> listuser=intSourceService.queryCount(sourceid,startTimestamps,endTimestamps);
-			for (int j = 0; j < listuser.size(); j++) {
-				if((listuser.get(i).getRegistetime()!=listuser.get(i).getLogintime())&&(listuser.get(i).getRegistetime().equals(listuser.get(i).getLogintime())==false)){
-					activatecount++;
-				}
-			}
-			listsource.get(i).setActivatecount(activatecount);//激活数
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 			
 			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
