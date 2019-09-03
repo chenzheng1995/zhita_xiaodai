@@ -859,8 +859,14 @@
   			
   			
   			<select id="BankMoneys" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
-  				select count(ban.id) as defeNum,sum(ban.deduction_money) as deferredamount from bankdeductions ban,orders o where ac.orderId = o.id and 
+  				select count(ban.id) as defeNum,sum(ban.deduction_money) as deferredamount from bankdeductions ban,orders o where ban.orderId = o.id and 
   				 o.companyId = #{companyId} and ban.deduction_time between #{start_time} and #{end_time}
+  			</select>
+  			
+  			
+  			<select id="DefeMoeny" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
+	  			select count(defe.id) as defeNum,sum(defe.extensionfee) as deferredamount from offlinedelay defe,orders o where defe.orderId = o.id and 
+	  				 o.companyId = #{companyId} and defe.operating_time between #{start_time} and #{end_time}
   			</select>
   			
   			
@@ -1085,5 +1091,6 @@
 		</select>
  			
  			
- 			
+ 		
+ 		
 </mapper>

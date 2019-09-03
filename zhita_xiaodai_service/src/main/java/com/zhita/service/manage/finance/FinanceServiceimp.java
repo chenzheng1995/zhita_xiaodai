@@ -669,6 +669,7 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 		Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
 //		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
+		Bankdeductions g = padao.DefeMoeny(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
@@ -719,7 +720,7 @@ public class FinanceServiceimp implements FinanceService{
 		if(d!=null){
 			if(d.getDeferredamount()!=null){
 				if(d.getDefeNum()!=0){
-					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+"");
+					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+","+0+"");
 				}else{
 					bank.setXianShangCoune(""+0+","+0+","+0+"");
 				}
@@ -769,6 +770,8 @@ public class FinanceServiceimp implements FinanceService{
 		if(c!=null){
 			if(c.getDefeNum() != null){
 				if(c.getDefeNum() != 0 ){
+					c.setDefeNum(c.getDefeNum()+g.getDefeNum());
+					c.setDeferredamount(c.getDeferredamount().add(g.getDeferredamount()));
 					bank.setName(""+c.getDefeNum()+","+c.getDeferredamount()+","+0+"");//延期数    延期费
 				}else{
 					bank.setName(""+0+","+0+","+0+"");//延期数    延期费

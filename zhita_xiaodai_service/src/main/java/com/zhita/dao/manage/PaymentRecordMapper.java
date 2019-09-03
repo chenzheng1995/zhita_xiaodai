@@ -222,4 +222,7 @@ public interface PaymentRecordMapper {
     
     
     Bankdeductions BankMoneys(Bankdeductions banl);
+    
+    
+    Bankdeductions DefeMoeny(Bankdeductions ban);
 }
