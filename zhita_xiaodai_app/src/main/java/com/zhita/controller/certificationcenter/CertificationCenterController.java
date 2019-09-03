@@ -20,6 +20,8 @@ import com.zhita.service.manage.autheninfor.IntAutheninforService;
 import com.zhita.service.manage.operator.OperatorService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
+import com.zhita.service.manage.whitelistuser.IntWhitelistuserService;
+import com.zhita.util.PhoneDeal;
 
 import sun.text.normalizer.ICUBinary.Authenticate;
 
@@ -41,6 +43,9 @@ public class CertificationCenterController {
 	
 	@Autowired
 	BankcardMapper bankcardMapper;
+	
+	@Autowired
+	IntWhitelistuserService intWhitelistuserService;
 	
 	
 //	认证中心的数据
@@ -85,7 +90,38 @@ public class CertificationCenterController {
 		   String bankcardAutheninfor = list.get(2);
 		   String zhimaAutheninfor = list.get(3);
 		   
+		   String attestationStatus = "1";
 		   
+		   String phone = intUserService.getphone(userId);
+		   PhoneDeal phoneDeal = new PhoneDeal();
+		   String newPhone = phoneDeal.decryption(phone);
+		   Map<String, Object> map5 = userAttestationService.getuserAttestation(userId);
+		   String idcard_number = (String) map5.get("idcard_number");
+		   String name = (String) map5.get("trueName");
+			int num = intWhitelistuserService.getWhitelistuser1(newPhone, idcard_number, name);
+			if (num > 0) {
+				int num1 = operatorService.getuserId(userId);
+				if (num1 == 0) {
+					String authentime = System.currentTimeMillis() + "";// 认证时间
+					int number = operatorService.setwhitelistuser(attestationStatus, userId, authentime);
+					if (number == 1) {
+						String shareOfState = "2";
+						intUserService.updateshareOfState(userId, shareOfState);
+						map3.put("Ncode", "2000");
+						map3.put("msg", "数据插入成功");
+						map3.put("Code", "201");
+					} else {
+						map3.put("Ncode", "405");
+						map3.put("msg", "数据插入失败");
+						map3.put("Code", "405");
+					}
+				}
+
+			} else {
+				map3.put("Ncode", "2000");
+				map3.put("msg", "用户不是白名单");
+				map3.put("Code", "202");
+			}
 		   
 //for (AuthenticationInformation authenticationInformation : CertificationCenter) {
 //	   int id = authenticationInformation.getId();
