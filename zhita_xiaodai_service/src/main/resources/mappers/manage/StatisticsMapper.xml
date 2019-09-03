@@ -335,4 +335,16 @@
 			<update id="UpdatehowMany" parameterType="java.lang.Integer">
 				update user set howManyTimesBorMoney=howManyTimesBorMoney+1 WHERE id = #{userId}
 			</update>
+			
+			
+			
+			<select id="SelectUpdateShouldMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+				select shouldReapyMoney from orderdetails where orderId = #{orderId}
+			</select>
+			
+			
+			
+			<update id="UpdateOrdersShouldMoney" parameterType="com.zhita.model.manage.Orderdetails">
+				update orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId = #{orderId}
+			</update>
 </mapper>

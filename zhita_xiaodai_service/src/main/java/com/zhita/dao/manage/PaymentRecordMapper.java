@@ -225,4 +225,7 @@ public interface PaymentRecordMapper {
     
     
     Bankdeductions DefeMoeny(Bankdeductions ban);
+    
+    
+    Integer OrderStatus(Integer orderId);
 }

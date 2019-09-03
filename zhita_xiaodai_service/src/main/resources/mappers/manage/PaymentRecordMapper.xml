@@ -1075,22 +1075,26 @@
  			
  			
  			<select id="OneOrdersUser" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
- 				select o.orderNumber,o.userId,ord.shouldReapyMoney,b.bankcardName from orders o,orderdetails ord,bankcard b
+ 				select o.id,o.orderNumber,o.userId,ord.shouldReapyMoney,b.bankcardName from orders o,orderdetails ord,bankcard b
  				where o.id = ord.orderId and b.userId = o.userId and o.id = #{orderId}
  			</select>
  			
  			
  			
- 		<select id="ReJianMianmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-			select sum(offusermoney) from offlinjianmian where companyId = #{companyId}
-		</select>
-		
-		
-		<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-			select sum(re.repaymentMoney) from repayment re,orders o where o.id = re.orderId and o.companyId = #{companyId}
-		</select>
- 			
- 			
- 		
+	 		<select id="ReJianMianmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+				select sum(offusermoney) from offlinjianmian where companyId = #{companyId}
+			</select>
+			
+			
+			<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+				select sum(re.repaymentMoney) from repayment re,orders o where o.id = re.orderId and o.companyId = #{companyId}
+			</select>
+	 			
+	 			
+	 			
+	 		<update id="OrderStatus" parameterType="java.lang.Integer">
+	 			update orders set orderStatus = "3" where id = #{orderId}
+	 		</update>
+	 		
  		
 </mapper>

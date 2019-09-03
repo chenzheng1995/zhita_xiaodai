@@ -657,9 +657,17 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));
 		
 		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
+		BigDecimal jianmian = postloanorder.JianMianmoney(orders.get(i).getOrderId());
+		if(jianmian==null){
+			jianmian=new BigDecimal(0);
+		}
 		
-		BigDecimal sumMoney = postloanorder.BankMoney(orders.get(i).getOrderId()).add(postloanorder.JianMianmoney(orders.get(i).getOrderId()));
+		BigDecimal sumMoney = postloanorder.BankMoney(orders.get(i).getOrderId());
+		if(sumMoney == null){
+			sumMoney = new BigDecimal(0);
+		}
 		
+		sumMoney.add(jianmian);
 		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getInterestSum()));//应还金额
 		
 		

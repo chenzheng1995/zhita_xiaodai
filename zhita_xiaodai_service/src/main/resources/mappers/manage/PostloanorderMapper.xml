@@ -840,17 +840,17 @@
 		
 		
 		<select id="BankMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-			select deduction_money from bankdeductions where orderId = #{orderId}
+			select sum(deduction_money) from bankdeductions where orderId = #{orderId}
 		</select>
 		
 		
 		<select id="JianMianmoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-			select offusermoney from offlinjianmian where orderId = #{orderId}
+			select sum(offusermoney) from offlinjianmian where orderId = #{orderId}
 		</select>
 		
 		
 		<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-			select repaymentMoney from repayment where orderId = #{orderId}
+			select sum(repaymentMoney) from repayment where orderId = #{orderId}
 		</select>
 		
 </mapper>

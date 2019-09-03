@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
@@ -41,6 +44,7 @@ import com.zhita.util.HttpResultType;
 import com.zhita.util.MD5;
 import com.zhita.util.RSA;
 import com.zhita.util.RedisClientUtil;
+import com.zhita.util.Timestamps;
 
 
 @Controller
@@ -901,6 +905,8 @@ public class ChanpayQuickCollection {
 	
 	
 	/**
+	 * 
+	 * 银行扣款
 	 * 20190805201545678123132
 	 * 2.4 支付请求接口 api nmg_biz_api_quick_payment6217000360005556842
 	 */
@@ -915,37 +921,68 @@ public class ChanpayQuickCollection {
 				Orders order = chanpayservice.SelectOrdersUser(Integer.valueOf(ids[i]));
 				
 				Map<String, String> origMap = new HashMap<String, String>();
-//				
-//				origMap = setCommonMap(origMap);
-//				origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
+				
+				origMap = setCommonMap(origMap);
+				origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
 //				Repayment repay = new Repayment();//还账记录表
-//				repay.setUserId();
+//				repay.setUserId(order.getUserId());
 //				repay.setThirdparty_id(1);
-//				repay.setOrderNumber(TrxId);
-//				repay.setPipelinenumber(TrxId);
-//				 BigDecimal bd=new BigDecimal(TrxAmt);   
+//				repay.setOrderNumber(order.getOrderNumber());
 //				repay.setRepaymentMoney(bd);
-//				origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
-//				origMap.put("OrdrName", ordrName);// 商品名称
-//				origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
-//				origMap.put("SellerId", "200005640044");// 子账户号
-//				origMap.put("SubMerchantNo", "200005640044");// 子商户号
-//				origMap.put("ExpiredTime", "40m");// 订单有效期
-//				origMap.put("CardBegin", CardBegin);// 卡号前6位
-//				origMap.put("CardEnd", CardEnd);// 卡号后4位
-//				origMap.put("TrxAmt", TrxAmt);// 交易金额
-//				origMap.put("TradeType", "11");// 交易类型
-//				origMap.put("SmsFlag", "0");
+//				repay.setPipelinenumber(pipelinenu);
+				
+				order.setShouldReapyMoney(order.getShouldReapyMoney().multiply(new BigDecimal(deductionproportion)));
+				order.setShouldReapyMoney(order.getShouldReapyMoney().divide(new BigDecimal(100)));
+				String a = String.valueOf(order.getShouldReapyMoney());
+				
+				String CardBegin = order.getBankcardName().substring(0, 6);//获取银行卡前六位
+				String CardEnd = order.getBankcardName().substring(order.getBankcardName().length() - 4);//获取银行卡后四位
+				
+				origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
+				origMap.put("OrdrName", "支付");// 商品名称
+				origMap.put("MerUserId", String.valueOf(order.getUserId()));// 用户标识（测试时需要替换一个新的meruserid）
+				origMap.put("SellerId", "200005640044");// 子账户号
+				origMap.put("SubMerchantNo", "200005640044");// 子商户号
+				origMap.put("ExpiredTime", "40m");// 订单有效期
+				origMap.put("CardBegin", CardBegin);// 卡号前6位
+				origMap.put("CardEnd", CardEnd);// 卡号后4位
+				origMap.put("TrxAmt", a);// 交易金额
+				origMap.put("TradeType", "11");// 交易类型
+				origMap.put("SmsFlag", "0");
 				String result = "";
 				try {
 					String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
 						result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 								urlStr);
 					ZhifuAcceptStatus retu = JSON.parseObject(result,ZhifuAcceptStatus.class);
-//					System.out.println("数据:"+retu.getTrxId());
-//					String pipelinenu = "Rsn_"+retu.getTrxId();
-//					repay.setPipelinenumber(pipelinenu);
-//					String sa = retu.getAcceptStatus();
+					Bankdeductions bans = new Bankdeductions();
+					bans.setSys_userId(sys_userId);
+					bans.setDeductionproportion(deductionproportion);
+					bans.setOrderId(order.getId());
+					bans.setUserId(order.getUserId());
+					bans.setDeduction_money(new BigDecimal(a));
+					System.out.println("金额:"+a);
+					SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					try {
+						bans.setDeduction_time(Timestamps.dateToStamp1(sim.format(new Date())));
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
+					//System.out.println("数据:"+retu.getTrxId());
+					//String pipelinenu = "Rsn_"+retu.getTrxId();
+					String sa = retu.getAcceptStatus();
+				if(sa.equals("S")){
+					bans.setDeductionstatus("扣款成功");
+					if(bans.getDeductionproportion() == 100){//扣款比率  等于100  修改订单状态
+						chanpayservice.OrderStatus(order.getId());
+					}
+					
+				}else{
+					bans.setDeductionstatus("扣款失败");
+				}
+				chanpayservice.Addbankdeduction(bans);
+				System.out.println(result);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -954,8 +991,11 @@ public class ChanpayQuickCollection {
 		//	String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt
 			// 2.1 基本参数 
 			
-//				System.out.println(result);
-				return map;
+			
+			map.put("code", 200);
+			map.put("Ncode", 2000);
+			map.put("msg", "已添加");
+			return map;
 	}
 
 	
