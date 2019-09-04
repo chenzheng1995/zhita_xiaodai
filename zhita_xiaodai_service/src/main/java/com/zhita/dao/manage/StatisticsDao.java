@@ -142,4 +142,7 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdateOrdersShouldMoney(Orders ord);
+	
+	
+	Integer UpdateDefe(Orders ord);
 }

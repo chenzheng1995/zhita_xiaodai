@@ -134,10 +134,11 @@
 				left join deferred defe on defe.orderid =o.id
 				left join bankcard bank on bank.userId = o.userId
 				left join user u on	o.userId = u.id
-				left join user_attestation usea on o.id = usea usea.userId
+				left join user_attestation usea on o.id = usea.userId
 				left join bankdeductions bkd on bkd.orderId = o.id
 				<where>
 					and o.orderStatus = "1"
+					and defe.deleted = "0"
 					and o.companyId = #{companyId}
 					<if test="orderNumber != null and orderNumber != ''">
 						and o.orderNumber = #{orderNumber}
@@ -346,5 +347,10 @@
 			
 			<update id="UpdateOrdersShouldMoney" parameterType="com.zhita.model.manage.Orders">
 				update orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId = #{id}
+			</update>
+			
+			
+			<update id="UpdateDefe" parameterType="com.zhita.model.manage.Orders">
+				update deferred set deleted = "0" where orderId = (select max(id) from orders where id = #{id})
 			</update>
 </mapper>

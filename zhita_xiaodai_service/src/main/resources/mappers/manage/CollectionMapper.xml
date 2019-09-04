@@ -45,7 +45,7 @@
 		<select id="DefeSet" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Deferred">
 			select MAX(defe.id),defe.deferBeforeReturntime,defe.interestOnArrears,deset.onceDeferredDay,defe.deferAfterReturntime from 
 			deferred defe,deferred_settings deset,orders o where o.companyId = deset.companyId and o.id = defe.orderid
-			and o.id = #{orderId}
+			and o.id = #{orderId} and defe.deleted = "0"
 		</select>
 		
 		
@@ -138,6 +138,7 @@
 			left join orderdetails orders on o.id =orders.orderId
 			left join deferred defe on defe.orderId
 			<where>
+				and defe.deleted = "0"
 				AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 				AND o.companyId = #{companyId}
 			</where>	
@@ -312,6 +313,7 @@
 				AND u.id = o.userId
 				AND o.id = defe.orderId
 				AND c.orderId = o.id
+				AND defe.deleted ="0"
 				AND c.collectionMemberId = cmem.userId
 				AND o.companyId = #{companyId} 
 				<if test="name != null and name != ''">
@@ -372,8 +374,9 @@
 				and deset.companyId = o.companyId 
 				and u.id = o.userId 
 				and o.id = col.orderId 
+				and o.companyId = #{companyId}
 				and col.collectionMemberId = colme.userId
-				and collection.user_type not null
+				and collection.user_type is not null
 				<if test="name != null and name != ''">
 					AND u.name LIKE concat('%',#{name},'%')  
 				</if>
@@ -465,7 +468,7 @@
 		
 		
 		<select id="DefNuma" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
-			select count(id) as DefeNum,sum(interestOnArrears) as interestOnArrears from deferred where orderId = #{orderId}
+			select count(id) as DefeNum,sum(interestOnArrears) as interestOnArrears from deferred where orderId = #{orderId} and deleted = "0"
 		</select>
 		
 		

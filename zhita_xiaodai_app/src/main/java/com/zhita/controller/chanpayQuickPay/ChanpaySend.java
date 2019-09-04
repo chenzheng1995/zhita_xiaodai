@@ -274,12 +274,11 @@ public class ChanpaySend extends BaseParameter{
 			pay.setStatus("支付成功");
 			String pipelnen = "lsn_"+returnchanpay.getTradeDate()+returnchanpay.getTradeTime();
 			pay.setPipelinenumber(pipelnen);
-			pay.setOrderNumber(orderNumber);
+			pay.setOrderId(orderId);
 			chanser.AddPayment_record(pay);
 			map1.put("ShortReturn", returnchanpay);
 			map1.put("code", 200);
-			map1.put("msg", "您的卡号存在异常,请您重新换绑一张卡!"
-					+ "给您带来不便,敬请原谅");
+			map1.put("msg", "放款成功");
 			map1.put("Ncode", 2000);
 			map1.put("desc", "借款成功");
 		}else{
