@@ -651,4 +651,10 @@ public class OrderServiceImp implements IntOrderService{
 		return orderNumber;
 	}
 
+	@Override
+	public String getrealtime(int userId) {
+		String realtime = ordersMapper.getrealtime(userId);
+		return realtime;
+	}
+
 }

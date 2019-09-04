@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhita.dao.manage.ApplynumberMapper">
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Applynumber">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="applynumber" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="applytime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="state" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, applynumber, applytime, state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from applynumber
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from applynumber
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Applynumber">
+    insert into applynumber (id, userId, applynumber, 
+      applytime, state)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{applynumber,jdbcType=VARCHAR}, 
+      #{applytime,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Applynumber">
+    insert into applynumber
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="applynumber != null">
+        applynumber,
+      </if>
+      <if test="applytime != null">
+        applytime,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="applynumber != null">
+        #{applynumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applytime != null">
+        #{applytime,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Applynumber">
+    update applynumber
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="applynumber != null">
+        applynumber = #{applynumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applytime != null">
+        applytime = #{applytime,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Applynumber">
+    update applynumber
+    set userId = #{userid,jdbcType=INTEGER},
+      applynumber = #{applynumber,jdbcType=VARCHAR},
+      applytime = #{applytime,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  	  				  	<!--APP 插入用户信息 -->
+	<insert id="setapplynumber" parameterType="java.util.Map">
+		insert into applynumber (applytime,applynumber,state,userId)
+		values (#{timStamp},
+		#{applynumber},
+		#{state},
+		#{userId}
+		)
+	</insert>
+	
+	
+	
+							<!--APP 更新用户信息-->
+		<update id="updatestate" parameterType="java.lang.Integer">
+		update applynumber
+		set state = '1'
+		where userId = #{userId}
+	</update>
+  
+</mapper>

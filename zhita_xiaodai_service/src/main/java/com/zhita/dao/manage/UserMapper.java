@@ -154,4 +154,12 @@ public interface UserMapper {
 
 	String getifBlacklist2(int userId);
 
+	String getapplynumber(int userId);
+
+	void updateuser(@Param("userId")int userId,@Param("timStamp") String timStamp,@Param("applynumber") String applynumber);
+
+	void updateapplyState(@Param("applyState")String applyState,@Param("userId") int userId);
+
+	String getapplyState(int userId);
+
 }

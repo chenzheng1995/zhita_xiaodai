@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.mozhang.Magicwand3Demo;
 import com.zhita.controller.xinyan.action.OperatorAction;
+import com.zhita.dao.manage.ApplynumberMapper;
 import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.dao.manage.ThreeElementsMapper;
@@ -74,6 +75,9 @@ public class OperatorController {
 
 	@Autowired
 	BankcardMapper bankcardMapper;
+	
+	@Autowired
+	ApplynumberMapper applynumberMapper;
 
 	@RequestMapping("/getOperator")
 	@ResponseBody
@@ -158,12 +162,12 @@ public class OperatorController {
 				if (url.indexOf("205") != -1) {
 					attestationStatus = "2";
 					operatorService.updateAttestationStatus(attestationStatus, userId);
-					map.put("Ncode", "300");
+					map.put("Ncode", "2000");
 					map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 					map.put("Code", "300");
 				}
 			} else {
-				map.put("Ncode", "401");
+				map.put("Ncode", "2000");
 				map.put("msg", "认证失败");
 				map.put("Code", "401");
 			}
@@ -400,12 +404,30 @@ public class OperatorController {
 			bankcard = (String) map4.get("attestationStatus");
 		}
 		if ("1".equals(userAttestation) && "1".equals(Operator) && "1".equals(bankcard)) {
-			String timStamp = System.currentTimeMillis() + "";// 当前时间戳
-			String applynumber = "SQ" + userId + timStamp;// 申请编号
-			intUserService.setuser(userId, timStamp, applynumber);
-			map.put("shareOfState", shareOfState);
+			if("2".equals(shareOfState)||"4".equals(shareOfState)||"5".equals(shareOfState)) {
+				String applyState = intUserService.getapplyState(userId);
+				if("2".equals(applyState)) {
+					String applynumber = intUserService.getapplynumber(userId);
+					if(applynumber==null) {
+						String timStamp = System.currentTimeMillis() + "";// 当前时间戳
+					    applynumber = "SQ" + userId + timStamp;// 申请编号
+						intUserService.setuser(userId, timStamp, applynumber);
+						String state = "0";
+						applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);
+					}else{
+						String timStamp = System.currentTimeMillis() + "";// 当前时间戳
+					    applynumber = "SQ" + userId + timStamp;// 申请编号
+						intUserService.updateuser(userId, timStamp, applynumber);
+						applynumberMapper.updatestate(userId);
+						String state = "0";
+						applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);				
+					}
+					applyState = "1";
+					intUserService.updateapplyState(applyState, userId);
+				}
+			}
 		}
-
+		map.put("shareOfState", shareOfState);
 		return map;
 
 	}

@@ -130,5 +130,7 @@ public interface OrdersMapper {
 	//后台管理---查询该订单还款成功的还款金额---银行扣款表
 	BigDecimal queryrepaymoneybank(Integer orderid);
 
+	String getrealtime(int userId);
+
 
 }

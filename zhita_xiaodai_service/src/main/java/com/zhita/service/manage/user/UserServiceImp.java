@@ -394,5 +394,29 @@ public class UserServiceImp implements IntUserService{
 		return ifBlacklist;
 	}
 
+	@Override
+	public String getapplynumber(int userId) {
+		String applynumber = userMapper.getapplynumber(userId);
+		return applynumber;
+	}
+
+	@Override
+	public void updateuser(int userId, String timStamp, String applynumber) {
+		userMapper.updateuser(userId, timStamp, applynumber);
+		
+	}
+
+	@Override
+	public void updateapplyState(String applyState, int userId) {
+		userMapper.updateapplyState(applyState,userId);
+		
+	}
+
+	@Override
+	public String getapplyState(int userId) {
+		String applyState = userMapper.getapplyState(userId);
+		return applyState;
+	}
+
 
 }
