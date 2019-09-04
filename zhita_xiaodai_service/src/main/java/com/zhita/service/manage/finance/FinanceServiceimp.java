@@ -314,8 +314,8 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
-//			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
-//			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
+			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
+			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
