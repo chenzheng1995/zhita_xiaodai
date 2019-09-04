@@ -28,12 +28,12 @@
   <sql id="Base_Column_List">
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
     u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.shareOfState,u.riskControlPoints,
-    u.applynumber,u.applytime,u.operator,u.operationTime,s.sourcename,mcs.rmModleName
+    appnum.applynumber,appnum.applytime,appnum.state,u.operator,u.operationTime,s.sourcename,mcs.rmModleName
   </sql>
    <sql id="Base_Column_List2">
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
     u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.shareOfState,u.riskControlPoints,
-    u.applynumber,u.applytime,u.operator,u.operationTime,s.sourcename,mcs.rmModleName,su.account
+    appnum.applynumber,appnum.applytime,appnum.state,u.operator,u.operationTime,s.sourcename,mcs.rmModleName,su.account
   </sql>
    <sql id="Base_Column_List1">
     u.phone,ut.id, ut.userId, ut.trueName, ut.idcard_number idcardNumber,ut.homeAddressLongitude, 
@@ -449,6 +449,7 @@
   	 select 
      <include refid="Base_Column_List" />
      from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
+     left join applynumber appnum on appnum.userid=u.id
      where u.companyId=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2) and u.ifBlacklist=0
 		<if test="applynumber != null and applynumber !='' ">
 	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
@@ -465,11 +466,15 @@
 	    <if test="applytimestart != null and applytimestart !='' and applytimeend != null and applytimeend !='' ">
 	        and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	    </if>
-     order by u.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
+	    <if test="state != null and state !='' ">
+	     	and appnum.state=#{state,jdbcType=VARCHAR}
+		</if>
+     order by appnum.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
    <!-- 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
   <select id="queryAllUsercount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
+  	 left join applynumber appnum on appnum.userid=u.id
      where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2) and u.ifBlacklist=0
      	<if test="applynumber != null and applynumber !='' ">
 	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
@@ -486,13 +491,17 @@
 	    <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	        and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	    </if>
+	    <if test="state != null and state !='' ">
+	        and appnum.state=#{state,jdbcType=VARCHAR}
+	    </if>
   </select>
   
-  <!-- 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束） -->
+  <!-- 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束） -->
   <select id="queryAllUserPeople" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
   	 select 
      <include refid="Base_Column_List" />
      from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
+     left join applynumber appnum on appnum.userid=u.id
      where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1  and u.ifBlacklist=0
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
@@ -509,11 +518,18 @@
 	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	        </if>
-     order by u.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
+	        <if test="state != null and state !='' ">
+				 and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
+			<if test="state != null and state !='' ">
+ 				and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
+     order by appnum.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
-   <!-- 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
+   <!-- 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
   <select id="queryAllUserPeoplecount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
+  	 left join applynumber appnum on appnum.userid=u.id
      where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1 and u.ifBlacklist=0 
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
@@ -530,6 +546,9 @@
 	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
 	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
 	        </if>
+	        <if test="state != null and state !='' ">
+	     	   and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
   </select>
  	
  	<!-- 人审通过按钮 -->
@@ -547,6 +566,7 @@
   	 select 
      <include refid="Base_Column_List2" />
      from user u inner join source s on u.sourceid=s.id inner join sys_user su on su.userId=u.operator inner join manage_control_settings mcs on s.manageControlId=mcs.id
+     left join applynumber appnum on appnum.userid=u.id
      where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4) and u.ifBlacklist=0
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
@@ -566,11 +586,15 @@
 	        <if test="operatorid != null and operatorid !='' ">
 	        	and u.operator =#{operatorid,jdbcType=INTEGER}
 	        </if>
-     order by u.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
+	        <if test="state != null and state !='' ">
+ 				and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
+     order by appnum.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
    <!-- 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）        查询数量-->
   <select id="queryAllUserPeopleYetcount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
   	 select count(*) from user u inner join source s on u.sourceid=s.id inner join sys_user su on su.userId=u.operator inner join manage_control_settings mcs on s.manageControlId=mcs.id
+ 	 left join applynumber appnum on appnum.userid=u.id
      where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4) and u.ifBlacklist=0
      		<if test="applynumber != null and applynumber !='' ">
 	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
@@ -590,6 +614,9 @@
 	        <if test="operatorid != null and operatorid !='' ">
 	        	and u.operator =#{operatorid,jdbcType=INTEGER}
 	        </if>
+	        <if test="state != null and state !='' ">
+ 				and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
   </select>
   
   
