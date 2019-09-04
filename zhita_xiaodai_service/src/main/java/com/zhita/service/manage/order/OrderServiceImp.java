@@ -600,7 +600,7 @@ public class OrderServiceImp implements IntOrderService {
 	}
 
 	/**
-	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
+	 * 人审状态用户（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
 	 */
 	public Map<String, Object> queryAllUserPeople(UserLikeParameter userLikeParameter) {
 		PhoneDeal pd = new PhoneDeal();// 手机号加密解密工具类

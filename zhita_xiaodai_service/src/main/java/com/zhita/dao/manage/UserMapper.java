@@ -99,11 +99,11 @@ public interface UserMapper {
 	
 	
 	/**
-	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）
+	 * 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）
 	 */
 	List<User> queryAllUserPeople(UserLikeParameter userLikeParameter);
 	/**
-	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 * 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
 	 */
 	int queryAllUserPeoplecount(UserLikeParameter userLikeParameter);
 	
