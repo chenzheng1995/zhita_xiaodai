@@ -25,8 +25,11 @@ public interface HomepageTongjiMapper {
 	//后台管理---今日放款人数
 	int queryToDayLoan(Integer companyId,String startTime,String endTime);
 	
-	//后台管理---今日延期笔数
+	//后台管理---今日延期笔数--线上延期
 	int queryToDayDeferred(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日延期笔数--人工延期
+	int queryToDayDeferredlay(Integer companyId,String startTime,String endTime);
 	
 	//后台管理---今日回款笔数(实还笔数)
 	int queryToDayRepayment(Integer companyId,String startTime,String endTime);
@@ -55,8 +58,11 @@ public interface HomepageTongjiMapper {
 	//后台管理---今日回款总金额（用户实还金额）
 	BigDecimal queryToDayReturTotalmoney(Integer companyId,String startTime,String endTime);
 	
-	//后台管理---今日回款总金额（延期费）
+	//后台管理---今日回款总金额（线上延期费）
 	BigDecimal queryToDayDeffer(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日回款总金额（人工延期费）
+	BigDecimal queryToDayDefferlay(Integer companyId,String startTime,String endTime);
 	
 	//后台管理---今日回款总金额（减免后已还总金额）（线上）
 	BigDecimal queryToDayDefferacc(Integer companyId,String startTime,String endTime);
@@ -111,8 +117,11 @@ public interface HomepageTongjiMapper {
 	//后台管理---累计回款总金额（实还金额）
 	BigDecimal queryrepayMoney(Integer companyId);
 	
-	//后台管理---累计回款总金额（延期费）
+	//后台管理---累计回款总金额（线上延期费）
 	BigDecimal querydeffermoney(Integer companyId);
+	
+	//后台管理---累计回款总金额（人工延期费）
+	BigDecimal querydeffermoneylay(Integer companyId);
 	
 	//后台管理---累计回款总金额（线上减免）
 	BigDecimal querydeffermoneyacc(Integer companyId);
@@ -197,8 +206,11 @@ public interface HomepageTongjiMapper {
 	//后台管理----线上实还金额
 	BigDecimal realymoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
-	//后台管理----延期费
+	//后台管理----线上延期费
 	BigDecimal deferredmoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
+	
+	//后台管理----人工延期费
+	BigDecimal deferredmoneylay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
 	//后台管理---逾期费
 	List<Orderdetails> overduemoney(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);

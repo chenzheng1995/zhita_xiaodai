@@ -3,10 +3,10 @@ package com.zhita.model.manage;
 import java.math.BigDecimal;
 
 public class DeferredAndOrder {
-	private Integer orderid;
-	private String ordernumber;
-	private BigDecimal interestOnArrears;
-	private String deferAfterReturntime;
+	private Integer orderid;//订单id
+	private String ordernumber;//订单编号
+	private BigDecimal interestOnArrears;//延期费
+	private String deferAfterReturntime;//延期时间
 	public Integer getOrderid() {
 		return orderid;
 	}
