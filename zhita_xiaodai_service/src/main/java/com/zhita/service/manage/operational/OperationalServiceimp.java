@@ -120,6 +120,16 @@ public class OperationalServiceimp implements OperationalService{
 			Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
 			Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
 			
+			
+			if(e.getDeferredamount()==null){
+				e.setDeferredamount(new BigDecimal(0));
+			}
+			
+			if(f.getDeferredamount()==null){
+				f.setDeferredamount(new BigDecimal(0));
+			}
+
+			
 			if(ode.getXianscount()==null){
 				ode.setXianscount(0);
 			}
