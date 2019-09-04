@@ -508,7 +508,7 @@ public class OrderServiceImp implements IntOrderService {
 			if (StringUtils.isEmpty(os.getDeferAfterReturntime())) {
 				os.setDeferAfterReturntime("0");
 			}
-			Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---线上延期
+			Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---人工延期
 			if (null == oslay) {
 				oslay = new Orders();
 			}
