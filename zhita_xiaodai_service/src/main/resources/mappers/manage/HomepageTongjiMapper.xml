@@ -17,7 +17,7 @@
 	</select>
 	<!-- 后台管理      今日延期笔数   线上延期 -->
 	<select id="queryToDayDeferred" resultType="java.lang.Integer">
-		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2}
+		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2} and df.deleted=0
 	</select>
 	<!-- 后台管理      今日延期笔数   人工延期 -->
 	<select id="queryToDayDeferredlay" resultType="java.lang.Integer">
@@ -64,7 +64,7 @@
 	</select>
 	<!-- 后台管理       今日回款总金额（线上延期费） -->
 	<select id="queryToDayDeffer" resultType="java.math.BigDecimal">
-		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deferredTime>=#{arg1} and d.deferredTime &lt;#{arg2}
+		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deferredTime>=#{arg1} and d.deferredTime &lt;#{arg2} and d.deleted=0
 	</select>
 	<!-- 后台管理       今日回款总金额（人工延期费） -->
 	<select id="queryToDayDefferlay" resultType="java.math.BigDecimal">
@@ -139,7 +139,7 @@
 	</select>
 	<!-- 后台管理       累计回款总金额（线上延期费） -->
 	<select id="querydeffermoney" resultType="java.math.BigDecimal">
-		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0}
+		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deleted=0
 	</select>
 	<!-- 后台管理       累计回款总金额（人工延期费） -->
 	<select id="querydeffermoneylay" resultType="java.math.BigDecimal">
@@ -248,7 +248,7 @@
 	</select>
 	<!-- 后台管理       线上 延期费 -->
 	<select id="deferredmoney" resultType="java.math.BigDecimal">
-		select sum(d.interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(d.interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2} and d.deleted=0
 	</select>
 	<!-- 后台管理       人工 延期费 -->
 	<select id="deferredmoneylay" resultType="java.math.BigDecimal">
