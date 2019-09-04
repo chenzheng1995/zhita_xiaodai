@@ -157,11 +157,20 @@
 	<select id="querydeffermoneybank" resultType="java.math.BigDecimal">
 		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0}
 	</select>
-	<!--后台管理      累计应收总金额  -->
+	<!--后台管理      累计应收总金额     订单明细表 -->
 	<select id="queryshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
-		select od.realityBorrowMoney,od.interestSum,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0}
+		select od.realityBorrowMoney,od.interestSum,od.interestPenaltySum 
+		from orders o inner join orderdetails od on o.id=od.orderid
+		where o.companyId=#{arg0}
 	</select>
-	
+	<!--后台管理      累计应收总金额     延期表 -->
+	<select id="queryshouldMoneydef" resultType="java.math.BigDecimal">
+		select sum(interestOnArrears) from deferred where deleted=0
+	</select>
+	<!--后台管理      累计应收总金额     人工延期表 -->
+	<select id="queryshouldMoneylay" resultType="java.math.BigDecimal">
+		select sum(extensionfee) from offlinedelay
+	</select>
 	<!--  ============期限内数据===============-->
 	
 	<!-- 后台管理        逾前未还笔数 -->

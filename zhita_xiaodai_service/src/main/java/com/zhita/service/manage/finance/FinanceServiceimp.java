@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
+import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.ThirdpricefindMapper;
 import com.zhita.model.manage.Accountadjustment;
@@ -55,6 +57,9 @@ public class FinanceServiceimp implements FinanceService{
 	
 	@Autowired
 	private ThirdpricefindMapper thirdpricefindMapper;
+	
+	@Autowired
+	private HomepageTongjiMapper homepageTongjiMapper;
 	
 	
 
@@ -1010,13 +1015,19 @@ public class FinanceServiceimp implements FinanceService{
     
     //后台管理---费用统计
     public Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime) throws ParseException{
+    	int lifeofloan = homepageTongjiMapper.querylifeOfLoan(companyId);//查询借款期限
+		
     	List<Thirdpricefind> listprice=thirdpricefindMapper.queryall(companyId);//第三方费用价格表
 		List<PriceTongji> listtongji=new ArrayList<>();
 		List<PriceTongji> listtongjito=new ArrayList<>();
 		PageUtil2 pageUtil=null;
 		Date d=new Date();
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-		String date=sf.format(d);//date为当天时间(格式为年月日)
+		//String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		Date startDate = DateUtils.addDays(d, -lifeofloan);
+		Date endDate = d;
+		
 		
 		String startTime = null;//开始时间（年月日格式）
 		String endTime = null;//结束时间（年月日格式）
@@ -1024,8 +1035,8 @@ public class FinanceServiceimp implements FinanceService{
 			startTime = starttime;
 			endTime = endtime;
 		}else{
-			startTime = date;
-			endTime = date;
+			startTime = sf.format(startDate);
+			endTime = sf.format(endDate);
 		}
 		
 		List<String> list=DateListUtil.getDays(startTime, endTime);
@@ -1086,6 +1097,8 @@ public class FinanceServiceimp implements FinanceService{
 			listtongji.add(priceTongji);
 		}
 		
+		DateListUtil.ListSort4(listtongji);//按照应还时间进行倒排序
+		
 		if(listtongji!=null && !listtongji.isEmpty()){
     		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
     		listtongjito.addAll(listPageUtil.getData());
@@ -1096,7 +1109,6 @@ public class FinanceServiceimp implements FinanceService{
 
     	}
 		
-	 	DateListUtil.ListSort4(listtongjito);//按照应还时间进行倒排序
 	 	
 		Map<String, Object> map=new HashMap<>();
 		map.put("listtongjito", listtongjito);
