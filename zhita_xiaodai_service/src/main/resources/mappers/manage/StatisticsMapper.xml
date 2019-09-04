@@ -347,4 +347,9 @@
 			<update id="UpdateOrdersShouldMoney" parameterType="com.zhita.model.manage.Orders">
 				update orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId = #{id}
 			</update>
+			
+			
+			<update id="UpdateDefe" parameterType="com.zhita.model.manage.Orders">
+				update deferred set deleted = "0" where orderId = (select max(id) from orders where id = #{id})
+			</update>
 </mapper>

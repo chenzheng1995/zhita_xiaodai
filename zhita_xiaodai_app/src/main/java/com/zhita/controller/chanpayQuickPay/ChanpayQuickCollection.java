@@ -1516,8 +1516,6 @@ public class ChanpayQuickCollection {
 			ord.setUserId(userId);
 			String sa = retu.getAcceptStatus();
 			if(sa.equals("S")){
-				
-			
 			Integer a = servie.UpdateDefeOrders(ord);
 			if(a != null){
 				map.put("Ncode", 2000);

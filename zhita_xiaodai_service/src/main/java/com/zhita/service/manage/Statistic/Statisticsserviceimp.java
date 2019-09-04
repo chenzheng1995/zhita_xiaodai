@@ -297,7 +297,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Integer AddDeferred(Deferred defe) {
-		defe.setDeleted("0");
+		defe.setDeleted("1");
 		Orders o = sdao.SelectOrderId(defe.getOrderNumber());
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -320,6 +320,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		Integer num = sdao.SelectUserdelayTimes(ord.getUserId());
 		ord = sdao.SelectOrderId(ord.getOrderNumber());
 		ord.setShouldReturnTime(sdao.DefeDefeAfertime(ord.getId()));
+		sdao.UpdateDefe(ord);
 		Integer delaytimes = num+1;
 		System.out.println("数据:"+delaytimes);
 		ord.setChenggNum(delaytimes);
