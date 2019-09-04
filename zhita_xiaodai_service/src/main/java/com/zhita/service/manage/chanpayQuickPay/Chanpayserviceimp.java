@@ -1,5 +1,6 @@
 package com.zhita.service.manage.chanpayQuickPay;
 
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -241,13 +242,22 @@ public class Chanpayserviceimp implements Chanpayservice{
 
 	@Override
 	public Integer DeleteOrderNumber(String orderNumber) {
-		Integer a = padao.DeleteOrderNumber(orderNumber);
-		if(a != null){
-			padao.DeleteOrderDetailsNumber(orderNumber);
-		}else{
-			a = 0;
+		Orders ord = padao.OneOrders(orderNumber);//查询订单
+		Orderdetails orderdetails = padao.OneOrderdetails(ord.getId());//查询订单详情
+		Integer ca = 0;
+		Integer addOrderId = padao.Adddiscardorders(ord);//添加废弃订单表
+		if(addOrderId ==1){
+			Integer a = padao.DeleteOrderDetailsNumber(orderNumber);//删除订单
+			if(a != null){
+				Integer addOrderdetails = padao.Adddiscardordertails(orderdetails);
+				if(addOrderdetails==1){
+					ca = padao.DeleteOrderNumber(orderNumber);//删除订单详情
+				}
+			}
 		}
-		return a;
+		
+		
+		return ca;
 	}
 
 	@Override

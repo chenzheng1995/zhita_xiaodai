@@ -132,6 +132,9 @@ public interface CollectionMapper {
 	Integer SelectcollectionStatuCC(Collection col);
 	
 	
+	Integer SelectEctuib(Collection col);
+	
+	
 	Integer SelectcollectionStatusAs(Collection col);
 	
 	

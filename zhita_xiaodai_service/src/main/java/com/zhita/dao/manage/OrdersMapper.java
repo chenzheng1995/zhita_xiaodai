@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import com.zhita.model.manage.DeferredAndOrder;
 //import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.ManageControlSettings;
+import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Source;
@@ -81,8 +82,14 @@ public interface OrdersMapper {
  	//后台管理---通过订单查询改订单在延期表信息
 	List<DeferredAndOrder> queryDefer(Integer orderid);
 	
-	//后台管理---查询最后延期时间
+	//后台管理---通过订单查询改订单在人工延期表信息
+	List<Offlinedelay> queryDeferlay(Integer orderid);
+	
+	//后台管理---查询最后延期时间---线上延期
 	Orders qeuryFinalDefertime(Integer orderid);
+	
+	//后台管理---查询最后延期时间---人工延期
+		Orders qeuryFinalDefertimelay(Integer orderid);
  
   	//后台管理--查询出sysuser表所有的信息
   	List<SysUser> queryname(Integer companyId);
@@ -108,6 +115,17 @@ public interface OrdersMapper {
 	 * 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
 	 */
 	Integer queryAllordersByLikeCount(OrderQueryParameter orderQueryParameter);
+	
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	List<Orders> queryAllordersByLikeacrap(OrderQueryParameter orderQueryParameter);
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	Integer queryAllordersByLikeCountacrap(OrderQueryParameter orderQueryParameter);
 	
 	int getmanageControlId(String sourceName);
 

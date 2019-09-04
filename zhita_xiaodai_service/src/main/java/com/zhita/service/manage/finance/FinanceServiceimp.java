@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
+import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.ThirdpricefindMapper;
 import com.zhita.model.manage.Accountadjustment;
@@ -55,6 +57,9 @@ public class FinanceServiceimp implements FinanceService{
 	
 	@Autowired
 	private ThirdpricefindMapper thirdpricefindMapper;
+	
+	@Autowired
+	private HomepageTongjiMapper homepageTongjiMapper;
 	
 	
 
@@ -310,12 +315,15 @@ public class FinanceServiceimp implements FinanceService{
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Accountadjustment> accounts = padao.AllAccount(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
-			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
+			
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
-//			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
-//			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
+			Accountadjustment ac = padao.Maxtotalamount(accounts.get(i).getOrderId());
+			
+			accounts.get(i).setAccounttime(Timestamps.stampToDate(ac.getAccounttime()));
+			accounts.get(i).setAmountmoney(ac.getAmountmoney());
+			accounts.get(i).setTotalamount(ac.getTotalamount());
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -662,14 +670,40 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println(banl.getStart_time()+"ccc"+banl.getEnd_time()
 				);
 		Bankdeductions bank = padao.OnDefe(banl);//查询实借金额笔数
+//		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
+		//Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
-		Bankdeductions a = padao.OneCollection(banl);//查询逾期金额
+		Bankdeductions g = padao.DefeMoeny(banl);//延期记录   defeNum 次数    deferredamount  金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
 		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
 		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 		Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
-//		Bankdeductions bank = padao.OneBank(banl);//realborrowing     实借笔数        realexpenditure   世界金额 
-		Bankdeductions g = padao.DefeMoeny(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+		
+		if(c.getRealexpenditure()==null){
+			c.setRealexpenditure(new BigDecimal(0));
+		}
+		
+		if(b.getRealexpenditure()==null){
+			b.setRealexpenditure(new BigDecimal(0));
+		}
+		
+		if(g.getDeferredamount()==null){
+			g.setDeferredamount(new BigDecimal(0));
+		}
+		
+		if(d.getDeferredamount()==null){
+			d.setDeferredamount(new BigDecimal(0));
+		}
+		
+		if(e.getDeferredamount()==null){
+			e.setDeferredamount(new BigDecimal(0));
+		}
+		
+		if(f.getDeferredamount()==null){
+			f.setDeferredamount(new BigDecimal(0));
+		}
+
+		
 		if(bank!=null){
 			if(bank.getRealborrowing() != null){
 				if(bank.getRealborrowing() !=0){
@@ -751,21 +785,6 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		
-		if(a!=null){
-			if(a.getOverdueNum() != null){
-				if(a.getOverdueNum() != 0){
-					bank.setOrderNumber(""+a.getOverdueNum()+","+a.getOverdueamount()+","+0+"");//逾期数   逾期费
-				}else{
-					bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-				}
-			}else{
-				bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-			}
-		
-		}else{
-			bank.setOrderNumber(""+0+","+0+","+0+"");//逾期数   逾期费
-		}
-			
 		
 		if(c!=null){
 			if(c.getDefeNum() != null){
@@ -780,6 +799,22 @@ public class FinanceServiceimp implements FinanceService{
 				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 			}
 			
+			if(b.getRealexpenditure()==null){
+				b.setRealexpenditure(new BigDecimal(0));
+			}
+			
+			if(c.getDeferredamount()==null){
+				c.setDeferredamount(new BigDecimal(0));
+			}
+			
+			if(f.getDeferredamount()==null){
+				f.setDeferredamount(new BigDecimal(0));
+			}
+			
+			bank.setXianxiaMoney(e.getDeferredamount().add(d.getDeferredamount()));//线下总计	
+			bank.setXiansMoney(b.getRealexpenditure().add(c.getDeferredamount()).add(f.getDeferredamount()));//线上总计
+		
+		
 		}else{
 			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 		}
@@ -898,6 +933,7 @@ public class FinanceServiceimp implements FinanceService{
 			off.setPhone(p.encryption(off.getPhone()));
 			}
 		}
+		off.setPreextensiontime(padao.OrderShouldTime(off.getOrderId()));
 		String status = padao.OrderStatuOrder(off.getOrderId());
 		if(status.equals("0")){
 			String shoureturntime = padao.SelectShouReturnTime(off.getOrderId());
@@ -944,6 +980,7 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> Delaylabor(Offlinedelay of) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		if(of.getPhone() != null){
 			if(of.getPhone().length()!=0){
 				of.setPhone(p.encryption(of.getPhone()));
@@ -959,9 +996,12 @@ public class FinanceServiceimp implements FinanceService{
 		List<Offlinedelay> ofa = padao.Allofflinedelay(of);
 		for(int i = 0;i<ofa.size();i++){
 			Deferred de = padao.DeleteNumMoney(ofa.get(i).getOrderId());
+			String phon = p.decryption(ofa.get(i).getPhone());
+			ofa.get(i).setPhone(tm.mobileEncrypt(phon));
 			ofa.get(i).setDefeNum(de.getDefeNum());
 			ofa.get(i).setDefeMoney(de.getDefeMoney());
-			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getDelay_time()));
+			ofa.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ofa.get(i).getPreextensiontime()));
+			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getShouldReturnTime()));
 			ofa.get(i).setOperating_time(Timestamps.stampToDate(ofa.get(i).getOperating_time()));
 		}
 		map.put("Offlinedelay", ofa);
@@ -983,13 +1023,19 @@ public class FinanceServiceimp implements FinanceService{
     
     //后台管理---费用统计
     public Map<String, Object> pricetongji(Integer companyId,Integer page,String starttime,String endtime) throws ParseException{
+    	int lifeofloan = homepageTongjiMapper.querylifeOfLoan(companyId);//查询借款期限
+		
     	List<Thirdpricefind> listprice=thirdpricefindMapper.queryall(companyId);//第三方费用价格表
 		List<PriceTongji> listtongji=new ArrayList<>();
 		List<PriceTongji> listtongjito=new ArrayList<>();
 		PageUtil2 pageUtil=null;
 		Date d=new Date();
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-		String date=sf.format(d);//date为当天时间(格式为年月日)
+		//String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		Date startDate = DateUtils.addDays(d, -lifeofloan);
+		Date endDate = d;
+		
 		
 		String startTime = null;//开始时间（年月日格式）
 		String endTime = null;//结束时间（年月日格式）
@@ -997,8 +1043,8 @@ public class FinanceServiceimp implements FinanceService{
 			startTime = starttime;
 			endTime = endtime;
 		}else{
-			startTime = date;
-			endTime = date;
+			startTime = sf.format(startDate);
+			endTime = sf.format(endDate);
 		}
 		
 		List<String> list=DateListUtil.getDays(startTime, endTime);
@@ -1059,6 +1105,8 @@ public class FinanceServiceimp implements FinanceService{
 			listtongji.add(priceTongji);
 		}
 		
+		DateListUtil.ListSort4(listtongji);//按照应还时间进行倒排序
+		
 		if(listtongji!=null && !listtongji.isEmpty()){
     		ListPageUtil listPageUtil=new ListPageUtil(listtongji,page,10);
     		listtongjito.addAll(listPageUtil.getData());
@@ -1069,7 +1117,6 @@ public class FinanceServiceimp implements FinanceService{
 
     	}
 		
-	 	DateListUtil.ListSort4(listtongjito);//按照应还时间进行倒排序
 	 	
 		Map<String, Object> map=new HashMap<>();
 		map.put("listtongjito", listtongjito);

@@ -359,6 +359,7 @@
 		<select id="Gesamtb" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung,count(repay.id) as GesamtbetragderNum from repayment repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and repay.repaymentDate between #{start_time} and #{end_time}
+			and repay.statu = "成功"
 		</select>
 		
 		

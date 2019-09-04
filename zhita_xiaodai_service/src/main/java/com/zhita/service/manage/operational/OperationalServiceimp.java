@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.OperationalMapper;
+import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Drainage_of_platform;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
@@ -45,6 +48,9 @@ public class OperationalServiceimp implements OperationalService{
 	
 	
 	
+	@Autowired
+	private PaymentRecordMapper padao;
+	
 	
 
 	@Override
@@ -53,6 +59,21 @@ public class OperationalServiceimp implements OperationalService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		List<Orders> ordes = new ArrayList<Orders>();
+		
+		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+		String stimea = sima.format(new Date());
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
+		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String d = sima.format(date);//开始时间
+		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String c = sima.format(date);//结束时间
+		System.out.println("a:"+d);
+		ordera.setStart_time(c+" 00:00:00");
+		ordera.setEnd_time(d+" 23:59:59");
 //		try {
 //			ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
 //			ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
@@ -87,6 +108,7 @@ public class OperationalServiceimp implements OperationalService{
 //		}
 //		map.put("Orders", ordes);
 //		map.put("PageUtil", pages);
+		System.out.println(ordera.getStart_time()+"结束时间:"+ordera.getEnd_time());
 		if(ordera.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String times = sim.format(new Date());
@@ -103,9 +125,34 @@ public class OperationalServiceimp implements OperationalService{
 			ordera.setPage(pages.getPage());
 			Orders ord = operdao.ReayMoney(ordera);//获取日期总放款金额   放款数
 			Orders o = operdao.Gesamtb(ordera);//还款金额    还款数
+			Bankdeductions banl = new Bankdeductions();
+			banl.setCompanyId(ordera.getCompanyId());
+			banl.setStart_time(ordera.getStart_time());
+			banl.setEnd_time(ordera.getEnd_time());
+			Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+			Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+			
 			Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 			Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
 			Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
+			
+			
+			if(e.getDeferredamount()==null){
+				e.setDeferredamount(new BigDecimal(0));
+			}
+			
+			if(f.getDeferredamount()==null){
+				f.setDeferredamount(new BigDecimal(0));
+			}
+
+			
+			if(ode.getXianscount()==null){
+				ode.setXianscount(0);
+			}
+			
+			if(ode.getXiansmoney()==null){
+				ode.setXiansmoney(new BigDecimal(0));
+			}
 			
 			if(ode.getXiansmoney()==null){
 				ode.setXiansmoney(new BigDecimal(0));
@@ -135,9 +182,9 @@ public class OperationalServiceimp implements OperationalService{
 				os.setAmountofbaddebts(new BigDecimal(0));
 				System.out.println(os.getAmountofbaddebts());
 			}
-			ord.setXianscount(ode.getXianscount());
-			ord.setXiansmoney(ode.getXiansmoney());
-			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
+			ord.setXianscount(e.getDefeNum());
+			ord.setXiansmoney(e.getDeferredamount());
+			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
 			ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -169,6 +216,33 @@ public class OperationalServiceimp implements OperationalService{
 				Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 				Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
 				
+				Bankdeductions banl = new Bankdeductions();
+				banl.setCompanyId(ordera.getCompanyId());
+				banl.setStart_time(ordera.getStart_time());
+				banl.setEnd_time(ordera.getEnd_time());
+				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+				Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+				Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
+				if(e.getDeferredamount()==null){
+					e.setDeferredamount(new BigDecimal(0));
+				}
+				
+				if(f.getDeferredamount()==null){
+					f.setDeferredamount(new BigDecimal(0));
+				}
+
+				
+				if(ode.getXianscount()==null){
+					ode.setXianscount(0);
+				}
+				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
+				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
 				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 					
@@ -192,7 +266,10 @@ public class OperationalServiceimp implements OperationalService{
 					os.setAmountofbaddebts(new BigDecimal(0));
 					System.out.println(os.getAmountofbaddebts());
 				}
-				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
+				
+				ord.setXianscount(e.getDefeNum());
+				ord.setXiansmoney(e.getDeferredamount());
+				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
 				ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -216,6 +293,22 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> orde = new ArrayList<Orders>();
+		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+		String stimea = sima.format(new Date());
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
+		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String d = sima.format(date);//开始时间
+		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String c = sima.format(date);//结束时间
+		System.out.println("a:"+d);
+		order.setStart_time(c+" 00:00:00");
+		order.setEnd_time(d+" 23:59:59");
+		
+		
 		if(order.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -243,8 +336,22 @@ public class OperationalServiceimp implements OperationalService{
 			order.setPage(pages.getPage());
 			Orders orders = operdao.OrderHuan(order);//还款数   
 			Orders or = operdao.CollMoney(order);//逾期金额   逾期数
+			Bankdeductions banl = new Bankdeductions();
+			banl.setCompanyId(order.getCompanyId());
+			banl.setStart_time(order.getStart_time());
+			banl.setEnd_time(order.getEnd_time());
+			Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 			Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
 			Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
+			System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
+			if(ode.getXianscount()==null){
+				ode.setXianscount(0);
+			}
+			
+			if(ode.getXiansmoney()==null){
+				ode.setXiansmoney(new BigDecimal(0));
+			}
+			
 			
 			if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 				
@@ -262,6 +369,8 @@ public class OperationalServiceimp implements OperationalService{
 				System.out.println(or.getGesamtbetraguberfalligerBetrag());
 				
 			}
+			ord.setXianscount(e.getDefeNum());
+			ord.setXiansmoney(e.getDeferredamount());
 			ord.setRemittanceTime(stime);
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -270,6 +379,7 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung());
 			ord.setXianscount(ode.getXianscount());
 			ord.setXiansmoney(ode.getXiansmoney());
+			
 			if(ord.getGesamtbetraguberfallNum()==null){
 				ord.setGesamtbetraguberfallNum(0);
 			}
@@ -330,6 +440,13 @@ public class OperationalServiceimp implements OperationalService{
 				Orders orders = operdao.OrderHuan(order);//还款数   
 				Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 				Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
+				Bankdeductions banl = new Bankdeductions();
+				banl.setCompanyId(order.getCompanyId());
+				banl.setStart_time(order.getStart_time());
+				banl.setEnd_time(order.getEnd_time());
+				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+				Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
+				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 					
 					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
@@ -348,8 +465,10 @@ public class OperationalServiceimp implements OperationalService{
 				if(orders.getZahlderGesamtdarlehen() == null){
 					orders.setZahlderGesamtdarlehen(0);
 				}
+				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				
-				
+				ord.setXianscount(e.getDefeNum());
+				ord.setXiansmoney(e.getDeferredamount());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
@@ -390,6 +509,22 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> CollectionData(Orderdetails orde) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> ordesa = new ArrayList<Orders>();
+		
+		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+		String stimea = sima.format(new Date());
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		Integer day = pdap.SelectHuan(orde.getCompanyId());//获取天数
+		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String da = sima.format(date);//开始时间
+		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String cs = sima.format(date);//结束时间
+		System.out.println("a:"+da);
+		orde.setStart_time(cs+" 00:00:00");
+		orde.setEnd_time(da+" 23:59:59");
+		
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -455,6 +590,8 @@ public class OperationalServiceimp implements OperationalService{
 					// TODO: handle exception
 				}
 				Orders ord = operdao.OneCollectionData(orde);//获取逾期笔数   逾期金额    逾期罚息
+				Orders ode = operdao.XianOrder(orde);//线下减免金额  和  次数
+				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				if(ord.getMakeLoans()==null){
 					ord.setMakeLoans(new BigDecimal(0));
 				}
@@ -485,6 +622,11 @@ public class OperationalServiceimp implements OperationalService{
 					d=0;
 				}
 				ord.setChenggNum(d);//成功数
+				if(ord.getChenggNum()!=0 && ord.getCollection_count() !=0){
+					ord.setChenggData((double) ((ord.getChenggNum()/ord.getCollection_count())*100));
+				}else{
+					ord.setChenggData((double)0);
+				}
 				ord.setOrderCreateTime(stimes.get(i));
 				ordesa.add(ord);
 				map.put("Orderdetails", ordesa);

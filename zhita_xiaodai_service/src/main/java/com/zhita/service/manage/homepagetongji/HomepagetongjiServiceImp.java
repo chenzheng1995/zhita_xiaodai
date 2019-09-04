@@ -57,7 +57,10 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int todayregiste = homepageTongjiMapper.queryToDayRegiste(companyId, startTimestamps, endTimestamps);//今日注册人数
 		int todayapply = homepageTongjiMapper.queryToDayApply(companyId, startTimestamps, endTimestamps);//今日申请人数
 		int todayloan = homepageTongjiMapper.queryToDayLoan(companyId, startTimestamps, endTimestamps);//今日放款人数
-		int todaydeferred = homepageTongjiMapper.queryToDayDeferred(companyId, startTimestamps, endTimestamps);//今日延期笔数
+		int todaydeferred=0;//今日延期笔数
+		int defer= homepageTongjiMapper.queryToDayDeferred(companyId, startTimestamps, endTimestamps);//今日延期笔数---线上延期
+		int deferlay=homepageTongjiMapper.queryToDayDeferredlay(companyId, startTimestamps, endTimestamps);//今日延期笔数---人工延期
+		todaydeferred=defer+deferlay;
 		int todayrepayment = 0;//今日回款笔数
 		int todayrepaymentreal = homepageTongjiMapper.queryToDayRepayment(companyId,startTimestamps, endTimestamps);//今日回款笔数（实际回款）
 		//int todayrepaymentacc = homepageTongjiMapper.queryToDayRepaymentacc(companyId, startTimestamps, endTimestamps);//今日回款笔数（线上回款）
@@ -98,10 +101,16 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(todayreturtoalmoneyreal==null){
 			todayreturtoalmoneyreal=new BigDecimal("0.00");
 		}
-		BigDecimal toDayDeffer = homepageTongjiMapper.queryToDayDeffer(companyId, startTimestamps, endTimestamps);//今日回款总金额（延期费）
-		if(toDayDeffer==null){
-			toDayDeffer=new BigDecimal("0.00");
+		BigDecimal toDayDeffer =new BigDecimal("0.00");//今日回款总金额（延期费）
+		BigDecimal deffer= homepageTongjiMapper.queryToDayDeffer(companyId, startTimestamps, endTimestamps);//今日回款总金额（线上延期费）
+		if(deffer==null){
+			deffer=new BigDecimal("0.00");
 		}
+		BigDecimal defferlay= homepageTongjiMapper.queryToDayDefferlay(companyId, startTimestamps, endTimestamps);//今日回款总金额（线下延期费）
+		if(defferlay==null){
+			defferlay=new BigDecimal("0.00");
+		}
+		toDayDeffer=deffer.add(defferlay);
 		/*BigDecimal toDayDefferacc = homepageTongjiMapper.queryToDayDefferacc(companyId,startTimestamps, endTimestamps);//今日回款总金额（减免后已还总金额）（线上）
 		if(toDayDefferacc==null){
 			toDayDefferacc=new BigDecimal("0.00");
@@ -171,10 +180,17 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		if(repaymoneyreal==null){
 			repaymoneyreal=new BigDecimal("0.00");
 		}
-		BigDecimal deffermoney = homepageTongjiMapper.querydeffermoney(companyId);//累计回款总金额（延期费）
-		if(deffermoney==null){
-			deffermoney=new BigDecimal("0.00");
+		BigDecimal deffermoney=new BigDecimal("0.00"); //累计回款总金额（延期费）
+		BigDecimal defmoney = homepageTongjiMapper.querydeffermoney(companyId);//累计回款总金额（线上延期费）
+		if(defmoney==null){
+			defmoney=new BigDecimal("0.00");
 		}
+		
+		BigDecimal defmoneylay = homepageTongjiMapper.querydeffermoneylay(companyId);//累计回款总金额（人工延期费）
+		if(defmoneylay==null){
+			defmoneylay=new BigDecimal("0.00");
+		}
+		deffermoney=defmoney.add(defmoneylay);
 		/*BigDecimal deffermoneyacc = homepageTongjiMapper.querydeffermoneyacc(companyId);//累计回款总金额（线上减免）
 		if(deffermoneyacc==null){
 			deffermoneyacc=new BigDecimal("0.00");
@@ -191,13 +207,23 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		BigDecimal shouldMoney = new BigDecimal("0.00");//累计应收总金额
 		List<Orderdetails> listdetail = homepageTongjiMapper.queryshouldMoney(companyId);
+		BigDecimal shoumoneydef=homepageTongjiMapper.queryshouldMoneydef(companyId);//延期表的延期费
+		if(shoumoneydef==null){
+			shoumoneydef=new BigDecimal("0.00");
+		}
+		BigDecimal shoumoneylay=homepageTongjiMapper.queryshouldMoneylay(companyId);//人工延期表的费用
+		if(shoumoneylay==null){
+			shoumoneylay=new BigDecimal("0.00");
+		}
 		for (int i = 0; i < listdetail.size(); i++) {
 			if(listdetail.get(i).getInterestPenaltySum()==null){
 				listdetail.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
 			}
-			BigDecimal queryshouldMoneyfor=listdetail.get(i).getShouldReapyMoney().add(listdetail.get(i).getInterestPenaltySum());
+			BigDecimal queryshouldMoneyfor=listdetail.get(i).getRealityBorrowMoney().add(listdetail.get(i).getInterestSum()).
+					add(listdetail.get(i).getInterestPenaltySum());
 			shouldMoney=shouldMoney.add(queryshouldMoneyfor);
 		}
+		shouldMoney=shouldMoney.add(shoumoneydef).add(shoumoneylay);
 		BigDecimal realymoney = repaymoney.subtract(payrecmoney);//实际收益
 		
 		/**
@@ -366,7 +392,16 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 				deratemoneyoff=new BigDecimal("0.00");
 			}
 		
-			BigDecimal deferredmoney=homepageTongjiMapper.deferredmoney(companyId,startTimestampsfor, endTimestampsfor);//（延期费）
+			BigDecimal deferredmoney=new BigDecimal("0.00");//（延期费）
+			BigDecimal defmoney=homepageTongjiMapper.deferredmoney(companyId,startTimestampsfor, startTimestampsfor);//（线上延期费）
+			if(defmoney==null){
+				defmoney=new BigDecimal("0.00");
+			}
+			BigDecimal defmoneylay=homepageTongjiMapper.deferredmoneylay(companyId, startTimestampsfor, startTimestampsfor);//（人工延期费）
+			if(defmoneylay==null){
+				defmoneylay=new BigDecimal("0.00");
+			}
+			deferredmoney=defmoney.add(defmoneylay);
 			
 			BigDecimal overduemoney = new BigDecimal("0.00");//（逾期费）
 			List<Orderdetails> listorderdetail=homepageTongjiMapper.overduemoney(companyId,startTimestampsfor, endTimestampsfor);
@@ -397,9 +432,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			if(deratemoneyoff==null){
 				deratemoneyoff=new BigDecimal("0.00");
 			}
-			if(deferredmoney==null){
-				deferredmoney=new BigDecimal("0.00");
-			}
+		
 			if(deratemoney==null){
 				deratemoney=new BigDecimal("0.00");
 			}

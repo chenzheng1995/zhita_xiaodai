@@ -69,8 +69,9 @@ public class User {
     private String operatorsAuthentication;//运营商名字
     
     private String applyState;
-    
-    
+
+    private String state;//状态（“0”表示有效，“1”表示无效）
+
     
 
 	public Integer getId() {
@@ -337,4 +338,12 @@ public class User {
 		this.applyState = applyState;
 	}
 
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+	
 }

@@ -291,6 +291,7 @@
 				o.id = ord.orderId
 				and o.companyId = defeset.companyId
 				and ov.orderId = o.id
+				and defe.deleted = "0"
 				and o.companyId = #{companyId}
 				and o.userId = u.id
 				and ov.collectionMemberId = #{collectionMemberId}
@@ -457,6 +458,7 @@
 			 AND u.id = o.userId
 			 AND defe.orderId = o.id
 			 AND o.orderStatus = #{orderStatus}
+			 and defe.deleted = "0"
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND u.name LIKE concat('%',#{name},'%') 
@@ -516,9 +518,6 @@
 			</if>
 			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
 				AND o.shouldReturnTime  between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
-			</if>
-			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
-				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 			</if>
 			<if test="registeClient != null and registeClient != ''">
 				AND u.registeClient = #{registeClient}
@@ -581,6 +580,7 @@
 			<where>
 			 AND u.id = o.userId
 			 AND o.orderStatus = "1" 
+			 and defe.deleted = "0"
 			 AND defe.orderId = o.id
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
@@ -631,6 +631,7 @@
 			LEFT JOIN sys_user colme on colme.userId = c.collectionMemberId
 			LEFT JOIN source so on so.id = u.sourceId
 			<where>
+				and defe.deleted = "0"
 				AND	o.companyId = #{companyId}
 			    AND o.orderStatus = "1"
 			 <if test="name != null and name != ''">
@@ -681,6 +682,7 @@
 				 AND o.id = defe.orderId
 				 AND wh.phone = u.phone
 				 AND u.id = o.userId
+				 and defe.deleted = "0"
 				 AND c.orderId = o.id
 				 AND o.companyId = #{companyId}
 				 AND bl.userId = u.id
@@ -731,6 +733,7 @@
 			LEFT JOIN sys_user colme on colme.userId = c.collectionMemberId
 			LEFT JOIN drainage_of_platform drain on drain.id = u.drainageOfPlatformId
 			<where>
+				and defe.deleted = "0"
 				AND	o.companyId = #{companyId}
 			    AND o.orderStatus = "4"
 			 <if test="name != null and name != ''">
@@ -770,7 +773,7 @@
 		
 		
 		<select id="OrderDefeNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(id) from deferred where orderid = #{orderId}
+			select count(id) from deferred where orderid = #{orderId} and deleted = "0"
 		</select>
 		
 		
@@ -785,15 +788,16 @@
 		
 		<select id="OneDeferred" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Deferred">
 			select * from deferred defe where defe.id = 
-			(select max(defe.id) from deferred defe,orders o where o.id = #{orderId} and o.companyId = #{companyId})
+			(select max(defe.id) from deferred defe,orders o where o.id = #{orderId} and o.companyId = #{companyId}) and defe.deleted = "0"
 		</select>
 		
 		
 		
 		<select id="CollTimeData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(id) as collection_count,sum(shouldReapyMoney) as shouldReapyMoney from orders where companyId = #{companyId} and id not in (select ov.orderId from overdue ov,orders o where 
+			select count(id) as collection_count,sum(shouldReapyMoney) as shouldReapyMoney from orders where companyId = #{companyId} 
+			and id not in (select ov.orderId from overdue ov,orders o where 
 			o.companyId = #{companyId} and o.id = ov.orderId)
-			AND shouldReturnTime BETWEEN #{start_time} and #{end_time}
+			AND o.shouldReturnTime BETWEEN #{start_time} and #{end_time}
 		</select>
 		
 		
@@ -835,7 +839,7 @@
 		
 		
 		<select id="DefeOrderId" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select de.orderid from deferred de,orders o where o.companyId = #{companyId} group by de.orderId
+			select de.orderid from deferred de,orders o where o.companyId = #{companyId} and de.deleted = "0" group by de.orderId
 		</select>
 		
 		
@@ -851,6 +855,11 @@
 		
 		<select id="HuankuanMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 			select sum(repaymentMoney) from repayment where orderId = #{orderId}
+		</select>
+		
+		
+		<select id="SelectHuan" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select lifeOfLoan from borrow_money_message where companyId = #{companyId}
 		</select>
 		
 </mapper>

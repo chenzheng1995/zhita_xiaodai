@@ -132,6 +132,26 @@ public class Bankdeductions {
 	private String XianJianmianCount;//线下统计
 	
 	private String BankMoneys;
+	
+	private BigDecimal xiansMoney;//线上总金额
+	
+	private BigDecimal xianxiaMoney;//线下总金额
+
+	public BigDecimal getXiansMoney() {
+		return xiansMoney;
+	}
+
+	public void setXiansMoney(BigDecimal xiansMoney) {
+		this.xiansMoney = xiansMoney;
+	}
+
+	public BigDecimal getXianxiaMoney() {
+		return xianxiaMoney;
+	}
+
+	public void setXianxiaMoney(BigDecimal xianxiaMoney) {
+		this.xianxiaMoney = xianxiaMoney;
+	}
 
 	public String getBankMoneys() {
 		return BankMoneys;

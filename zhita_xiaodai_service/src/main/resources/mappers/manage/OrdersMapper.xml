@@ -81,6 +81,22 @@
     
     s.sourcename,su.account,mcs.rmModleName riskcontrolname
   </sql>
+  
+  <sql id="Base_Column_Listacrap" >
+    DISTINCT o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
+    o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
+    o.shouldReturnTime, o.realtime, o.ifcandefer, o.canDeferNumberoftime, o.riskmanagementFraction, 
+    o.overdueGrade,o.ifpeopleWhose,o.assessor,o.howManyTimesBorMoney,
+    
+    od.id, od.orderId, od.realityBorrowMoney, od.makeLoans, od.interestDay, od.interestSum, od.overdueNumberOfDays, 
+    od.interestPenaltyDay, od.interestPenaltySum, od.interestInAll, od.shouldReapyMoney, od.technicalServiceMoney, 
+    od.realityAccount, od.rejectMonadCause, od.DrainageOfPlatform, od.registerClient,
+    
+    u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.ifBlacklist,u.shareOfState,u.operationTime,
+    
+    s.sourcename,su.account,mcs.rmModleName riskcontrolname
+  </sql>
     <sql id="Base_Column_List2" >
     o.id, o.companyId, o.userId, o.orderNumber, o.borrowMoneyUse, o.borrowRepayBankcard, o.bankPhone, 
     o.orderCreateTime, o.riskManagemenType, o.borrowTimeLimit, o.borrowMoneyWay, o.orderStatus,
@@ -619,13 +635,21 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   <select id="qeuryafter" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
   	select od.realityBorrowMoney finalborrowmoney,max(o.ordercreatetime) finalborrowtime from orders o inner join orderdetails od on o.id=od.orderid where userid=#{arg0};
   </select>
-  <!-- 后台管理        通过订单查询改订单在延期表信息 -->
+  <!-- 后台管理        通过订单查询该订单在延期表信息 -->
   <select id="queryDefer" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.DeferredAndOrder">
-  	select o.id,o.orderNumber,d.interestOnArrears from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0}
+  	select o.id,o.orderNumber,d.interestOnArrears from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0} and d.deleted=0
   </select>
-  <!-- 查询最后延期时间 -->
+   <!-- 后台管理        通过订单查询改订单在人工延期表信息 -->
+  <select id="queryDeferlay" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Offlinedelay">
+  	select o.id,o.orderNumber,lay.extensionfee from orders o inner join offlinedelay lay on lay.orderid=o.id where o.id=#{arg0}
+  </select>
+  <!-- 查询最后延期时间    线上延期-->
   <select id="qeuryFinalDefertime" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
-  	select max(deferAfterReturntime) deferAfterReturntime,postponeDate from deferred where orderid=#{arg0}
+  	select max(deferAfterReturntime) deferAfterReturntime,postponeDate from deferred where orderid=#{arg0} and deleted=0
+  </select> 
+  <!-- 查询最后延期时间   人工延期-->
+  <select id="qeuryFinalDefertimelay" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+  	select max(operating_time) deferAfterReturntime from offlinedelay where orderid=#{arg0}
   </select> 
   <!-- 后台管理      查询出sysuser表所有的name -->
   <select id="queryname" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.SysUser">
@@ -694,6 +718,9 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="clientstatus !=null and clientstatus != '' and clientstatus ==1"><!-- clientstatus=1 代表是客户状态是新客户 -->
            and o.howManyTimesBorMoney=1
         </if>
+        <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
+           and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if>
         order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
   </select>
   <!-- 订单 修改 -->
@@ -737,10 +764,106 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="clientstatus !=null and clientstatus != '' and clientstatus ==1"><!-- clientstatus=1 代表是客户状态是新客户 -->
            and o.howManyTimesBorMoney=1
         </if>
+         <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
+           and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if>
+         
+  </select>
+<!-- 订单 修改 -->
+  <!-- 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
+  <select id="queryAllordersByLikeacrap" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
+		select 
+    	<include refid="Base_Column_List" />
+   		from discardorders o left join discardorderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		left join manage_control_settings mcs on s.manageControlId=mcs.id 
+   		left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+		</if>
+         <if test="orderstarttime != null and orderstarttime !='' and orderendtime !=null and orderendtime !=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="shouldstarttime != null and shouldstarttime !='' and shouldendtime !=null and shouldendtime !=''">
+           and o.shouldReturnTime between #{shouldstarttime,jdbcType=VARCHAR} and #{shouldendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+         <if test="orderstatus !=null and orderstatus != '' and orderstatus ==0"><!-- orderstatus=0 代表是订单状态是已还 -->
+           and o.orderStatus=3
+        </if>
+        <if test="orderstatus !=null and orderstatus != '' and orderstatus ==1"><!-- orderstatus=1 代表是订单状态是未还 -->
+           and o.orderStatus!=3
+        </if>
+         <if test="clientstatus !=null and clientstatus != '' and clientstatus ==0"><!-- clientstatus=0 代表是客户状态是老客户 -->
+           and o.howManyTimesBorMoney>1
+        </if>
+        <if test="clientstatus !=null and clientstatus != '' and clientstatus ==1"><!-- clientstatus=1 代表是客户状态是新客户 -->
+           and o.howManyTimesBorMoney=1
+        </if>
+        <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
+           and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if>
+        order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
+  </select>
+  <!-- 订单 修改 -->
+  <!-- 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） 查询数量-->
+  <select id="queryAllordersByLikeCountacrap" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
+		select count(DISTINCT o.id)
+   		from discardorders o left join discardorderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
+   		left join source s on s.id=u.sourceid left join manage_control_settings mcs on s.manageControlId=mcs.id 
+   		left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+         <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 		</if>
+        <if test="orderstarttime != null and orderstarttime !='' and orderendtime !=null and orderendtime !=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="shouldstarttime != null and shouldstarttime !='' and shouldendtime !=null and shouldendtime !=''">
+           and o.shouldReturnTime between #{shouldstarttime,jdbcType=VARCHAR} and #{shouldendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename !=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+        <if test="orderstatus !=null and orderstatus != '' and orderstatus ==0"><!-- orderstatus=0 代表是订单状态是已还 -->
+           and o.orderStatus=3
+        </if>
+        <if test="orderstatus !=null and orderstatus != '' and orderstatus ==1"><!-- orderstatus=1 代表是订单状态是未还 -->
+           and o.orderStatus!=3
+        </if>
+         <if test="clientstatus !=null and clientstatus != '' and clientstatus ==0"><!-- clientstatus=0 代表是客户状态是老客户 -->
+           and o.howManyTimesBorMoney>1
+        </if>
+        <if test="clientstatus !=null and clientstatus != '' and clientstatus ==1"><!-- clientstatus=1 代表是客户状态是新客户 -->
+           and o.howManyTimesBorMoney=1
+        </if>
+         <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
+           and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if>
+         
   </select>
 
-
-  		<select id="getshouldReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	<select id="getshouldReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select shouldReturnTime from orders where companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
 	</select>
 	
@@ -749,17 +872,17 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	</select>
 	<!-- 后台管理      查询该订单还款成功的还款金额    还款表 -->
 	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select repaymentMoney from repayment where orderId=#{arg0} and statu="成功"
+		select sum(repaymentMoney) from repayment where orderId=#{arg0} and statu="成功"
 	</select>
 	
 	<!-- 后台管理      查询该订单还款成功的还款金额    线下减免表 -->
 	<select id="queryrepaymoneyoff" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select offusermoney from offlinjianmian where orderId=#{arg0}
+		select sum(offusermoney) from offlinjianmian where orderId=#{arg0}
 	</select>
 	
 	<!-- 后台管理      查询该订单还款成功的还款金额    银行扣款表 -->
 	<select id="queryrepaymoneybank" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-		select deduction_money from bankdeductions where orderId=#{arg0}
+		select sum(deduction_money) from bankdeductions where orderId=#{arg0}
 	</select>
 	
 	

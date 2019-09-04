@@ -15,9 +15,13 @@
 	<select id="queryToDayLoan" resultType="java.lang.Integer">
 		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
 	</select>
-	<!-- 后台管理      今日延期笔数 -->
+	<!-- 后台管理      今日延期笔数   线上延期 -->
 	<select id="queryToDayDeferred" resultType="java.lang.Integer">
-		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2}
+		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2} and df.deleted=0
+	</select>
+	<!-- 后台管理      今日延期笔数   人工延期 -->
+	<select id="queryToDayDeferredlay" resultType="java.lang.Integer">
+		select count(lay.id) from offlinedelay lay inner join orders o on lay.orderid=o.id where o.companyId=#{arg0} and lay.operating_time>=#{arg1} and lay.operating_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理       今日回款笔数  （实还笔数）-->
 	<select id="queryToDayRepayment" resultType="java.lang.Integer">
@@ -58,9 +62,13 @@
 	<select id="queryToDayReturTotalmoney" resultType="java.math.BigDecimal">
 		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功" and rp.repaymentDate>=#{arg1} and rp.repaymentDate &lt;#{arg2}
 	</select>
-	<!-- 后台管理       今日回款总金额（延期费） -->
+	<!-- 后台管理       今日回款总金额（线上延期费） -->
 	<select id="queryToDayDeffer" resultType="java.math.BigDecimal">
-		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deferredTime>=#{arg1} and d.deferredTime &lt;#{arg2}
+		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deferredTime>=#{arg1} and d.deferredTime &lt;#{arg2} and d.deleted=0
+	</select>
+	<!-- 后台管理       今日回款总金额（人工延期费） -->
+	<select id="queryToDayDefferlay" resultType="java.math.BigDecimal">
+		select sum(lay.extensionfee) from offlinedelay lay inner join orders o on lay.orderid=o.id where o.companyId=#{arg0} and lay.operating_time>=#{arg1} and lay.operating_time &lt;#{arg2}
 	</select>
 	<!-- 后台管理    今日回款总金额（减免后已还总金额）（线上） -->
 	<select id="queryToDayDefferacc" resultType="java.math.BigDecimal">
@@ -129,9 +137,13 @@
 	<select id="queryrepayMoney" resultType="java.math.BigDecimal">
 		select sum(rp.repaymentMoney) from repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功"
 	</select>
-	<!-- 后台管理       累计回款总金额（延期费） -->
+	<!-- 后台管理       累计回款总金额（线上延期费） -->
 	<select id="querydeffermoney" resultType="java.math.BigDecimal">
-		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0}
+		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deleted=0
+	</select>
+	<!-- 后台管理       累计回款总金额（人工延期费） -->
+	<select id="querydeffermoneylay" resultType="java.math.BigDecimal">
+		select sum(lay.extensionfee) from offlinedelay lay inner join orders o on lay.orderid=o.id where o.companyId=#{arg0}
 	</select>
 	<!-- 后台管理   累计回款总金额（减免后已还总金额）（线上） -->
 	<select id="querydeffermoneyacc" resultType="java.math.BigDecimal">
@@ -145,11 +157,20 @@
 	<select id="querydeffermoneybank" resultType="java.math.BigDecimal">
 		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0}
 	</select>
-	<!--后台管理      累计应收总金额  -->
+	<!--后台管理      累计应收总金额     订单明细表 -->
 	<select id="queryshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
-		select od.shouldReapyMoney,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus!=3
+		select od.realityBorrowMoney,od.interestSum,od.interestPenaltySum 
+		from orders o inner join orderdetails od on o.id=od.orderid
+		where o.companyId=#{arg0}
 	</select>
-	
+	<!--后台管理      累计应收总金额     延期表 -->
+	<select id="queryshouldMoneydef" resultType="java.math.BigDecimal">
+		select sum(interestOnArrears) from deferred where deleted=0
+	</select>
+	<!--后台管理      累计应收总金额     人工延期表 -->
+	<select id="queryshouldMoneylay" resultType="java.math.BigDecimal">
+		select sum(extensionfee) from offlinedelay
+	</select>
 	<!--  ============期限内数据===============-->
 	
 	<!-- 后台管理        逾前未还笔数 -->
@@ -234,9 +255,13 @@
 	<select id="realymoney" resultType="java.math.BigDecimal">
 		select sum(r.repaymentMoney) from orders o inner join repayment r on o.id=r.orderid where o.companyid=#{arg0} and r.statu="成功" and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
-	<!-- 后台管理        延期费 -->
+	<!-- 后台管理       线上 延期费 -->
 	<select id="deferredmoney" resultType="java.math.BigDecimal">
-		select sum(d.interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
+		select sum(d.interestOnArrears) from orders o inner join deferred d on o.id=d.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2} and d.deleted=0
+	</select>
+	<!-- 后台管理       人工 延期费 -->
+	<select id="deferredmoneylay" resultType="java.math.BigDecimal">
+		select sum(lay.extensionfee) from orders o inner join offlinedelay lay on o.id=lay.orderid where o.companyid=#{arg0} and o.shouldReturnTime>=#{arg1} and o.shouldReturnTime &lt;#{arg2}
 	</select>
 	<!-- 后台管理        逾期费 -->
 	<select id="overduemoney" resultType="com.zhita.model.manage.Orderdetails">

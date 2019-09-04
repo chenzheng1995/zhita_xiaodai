@@ -7,6 +7,8 @@ import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
+import com.zhita.model.manage.Discardorderdetails;
+import com.zhita.model.manage.Discardorders;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
@@ -182,7 +184,7 @@ public interface PaymentRecordMapper {
     BigDecimal SelectSumamountmoney(Integer orderId);
     
     
-    BigDecimal Maxtotalamount(Integer orderId);
+    Accountadjustment Maxtotalamount(Integer orderId);
     
     
     List<Accountadjustment> SelectAccOrders(String orderNumber);
@@ -228,4 +230,19 @@ public interface PaymentRecordMapper {
     
     
     Integer OrderStatus(Integer orderId);
+    
+    
+    Orderdetails OneOrderdetails(Integer id);
+    
+    
+    Orders OneOrders(String orderNumber);
+    
+    
+    Integer Adddiscardorders(Orders order);
+    
+    
+    Integer Adddiscardordertails(Orderdetails orderdetils);
+    
+    
+    String OrderShouldTime(Integer id);
 }

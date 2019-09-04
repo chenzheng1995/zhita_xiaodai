@@ -27,6 +27,8 @@ public class Orderdetails {
 	
 	private BigDecimal realityBorrowMoney;//实际借款金额（元）
 	
+	private BigDecimal extensionfee;//延期金额---人工延期表
+	
 	private BigDecimal makeLoans;//放款金额(元)
 	
 	private String registeTime;
@@ -233,6 +235,16 @@ public class Orderdetails {
     
     private BigDecimal cca;
     
+    private BigDecimal deduction_money;
+    
+	public BigDecimal getDeduction_money() {
+		return deduction_money;
+	}
+
+	public void setDeduction_money(BigDecimal deduction_money) {
+		this.deduction_money = deduction_money;
+	}
+
 	public BigDecimal getCca() {
 		return cca;
 	}
@@ -1144,6 +1156,14 @@ public class Orderdetails {
 
 	public void setRegisteTime(String registeTime) {
 		this.registeTime = registeTime;
+	}
+
+	public BigDecimal getExtensionfee() {
+		return extensionfee;
+	}
+
+	public void setExtensionfee(BigDecimal extensionfee) {
+		this.extensionfee = extensionfee;
 	}
     
 
