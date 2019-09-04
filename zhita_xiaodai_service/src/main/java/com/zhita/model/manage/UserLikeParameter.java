@@ -20,7 +20,7 @@ public class UserLikeParameter {
 	private Integer sourceid;//渠道id
 	private String shareOfState;//风控状态（即用户状态）（0，机审未通过。1需要人工审核。2，机审通过。3，人审未通过。4，人审通过。5，未进风控。6，分控中）
 	private String clientstatus;//客户状态（0：未借款；1：新客户；2：老客户）
-	private String state;//状态（“0”表示有效，“1”表示无效）
+	private String state="0";//状态（“0”表示有效，“1”表示无效）
 	
 	public Integer getCompanyId() {
 		return companyId;
