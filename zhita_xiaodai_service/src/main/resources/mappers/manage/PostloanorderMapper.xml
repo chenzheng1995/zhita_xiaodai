@@ -291,6 +291,7 @@
 				o.id = ord.orderId
 				and o.companyId = defeset.companyId
 				and ov.orderId = o.id
+				and defe.deleted = "0"
 				and o.companyId = #{companyId}
 				and o.userId = u.id
 				and ov.collectionMemberId = #{collectionMemberId}
@@ -457,6 +458,7 @@
 			 AND u.id = o.userId
 			 AND defe.orderId = o.id
 			 AND o.orderStatus = #{orderStatus}
+			 and defe.deleted = "0"
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND u.name LIKE concat('%',#{name},'%') 
@@ -578,6 +580,7 @@
 			<where>
 			 AND u.id = o.userId
 			 AND o.orderStatus = "1" 
+			 and defe.deleted = "0"
 			 AND defe.orderId = o.id
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
@@ -628,6 +631,7 @@
 			LEFT JOIN sys_user colme on colme.userId = c.collectionMemberId
 			LEFT JOIN source so on so.id = u.sourceId
 			<where>
+				and defe.deleted = "0"
 				AND	o.companyId = #{companyId}
 			    AND o.orderStatus = "1"
 			 <if test="name != null and name != ''">
@@ -678,6 +682,7 @@
 				 AND o.id = defe.orderId
 				 AND wh.phone = u.phone
 				 AND u.id = o.userId
+				 and defe.deleted = "0"
 				 AND c.orderId = o.id
 				 AND o.companyId = #{companyId}
 				 AND bl.userId = u.id
@@ -728,6 +733,7 @@
 			LEFT JOIN sys_user colme on colme.userId = c.collectionMemberId
 			LEFT JOIN drainage_of_platform drain on drain.id = u.drainageOfPlatformId
 			<where>
+				and defe.deleted = "0"
 				AND	o.companyId = #{companyId}
 			    AND o.orderStatus = "4"
 			 <if test="name != null and name != ''">
@@ -767,7 +773,7 @@
 		
 		
 		<select id="OrderDefeNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(id) from deferred where orderid = #{orderId}
+			select count(id) from deferred where orderid = #{orderId} and deleted = "0"
 		</select>
 		
 		
@@ -782,7 +788,7 @@
 		
 		<select id="OneDeferred" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Deferred">
 			select * from deferred defe where defe.id = 
-			(select max(defe.id) from deferred defe,orders o where o.id = #{orderId} and o.companyId = #{companyId})
+			(select max(defe.id) from deferred defe,orders o where o.id = #{orderId} and o.companyId = #{companyId}) and defe.deleted = "0"
 		</select>
 		
 		
@@ -833,7 +839,7 @@
 		
 		
 		<select id="DefeOrderId" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select de.orderid from deferred de,orders o where o.companyId = #{companyId} group by de.orderId
+			select de.orderid from deferred de,orders o where o.companyId = #{companyId} and de.deleted = "0" group by de.orderId
 		</select>
 		
 		

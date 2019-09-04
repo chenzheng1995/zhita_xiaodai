@@ -182,8 +182,8 @@ public class OperationalServiceimp implements OperationalService{
 				os.setAmountofbaddebts(new BigDecimal(0));
 				System.out.println(os.getAmountofbaddebts());
 			}
-			ord.setXianscount(ode.getXianscount());
-			ord.setXiansmoney(ode.getXiansmoney());
+			ord.setXianscount(e.getDefeNum());
+			ord.setXiansmoney(e.getDeferredamount());
 			ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
 			ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
@@ -267,8 +267,8 @@ public class OperationalServiceimp implements OperationalService{
 					System.out.println(os.getAmountofbaddebts());
 				}
 				
-				ord.setXianscount(ode.getXianscount());
-				ord.setXiansmoney(ode.getXiansmoney());
+				ord.setXianscount(e.getDefeNum());
+				ord.setXiansmoney(e.getDeferredamount());
 				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
 				ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
@@ -338,7 +338,7 @@ public class OperationalServiceimp implements OperationalService{
 			Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 			Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
 			Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
-			
+			System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 			if(ode.getXianscount()==null){
 				ode.setXianscount(0);
 			}
@@ -372,6 +372,7 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung());
 			ord.setXianscount(ode.getXianscount());
 			ord.setXiansmoney(ode.getXiansmoney());
+			
 			if(ord.getGesamtbetraguberfallNum()==null){
 				ord.setGesamtbetraguberfallNum(0);
 			}
@@ -432,6 +433,8 @@ public class OperationalServiceimp implements OperationalService{
 				Orders orders = operdao.OrderHuan(order);//还款数   
 				Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 				Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
+				Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
+				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 					
 					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
@@ -450,7 +453,7 @@ public class OperationalServiceimp implements OperationalService{
 				if(orders.getZahlderGesamtdarlehen() == null){
 					orders.setZahlderGesamtdarlehen(0);
 				}
-				
+				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -573,6 +576,8 @@ public class OperationalServiceimp implements OperationalService{
 					// TODO: handle exception
 				}
 				Orders ord = operdao.OneCollectionData(orde);//获取逾期笔数   逾期金额    逾期罚息
+				Orders ode = operdao.XianOrder(orde);//线下减免金额  和  次数
+				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				if(ord.getMakeLoans()==null){
 					ord.setMakeLoans(new BigDecimal(0));
 				}
@@ -603,6 +608,11 @@ public class OperationalServiceimp implements OperationalService{
 					d=0;
 				}
 				ord.setChenggNum(d);//成功数
+				if(ord.getChenggNum()!=0 && ord.getCollection_count() !=0){
+					ord.setChenggData((double) ((ord.getChenggNum()/ord.getCollection_count())*100));
+				}else{
+					ord.setChenggData((double)0);
+				}
 				ord.setOrderCreateTime(stimes.get(i));
 				ordesa.add(ord);
 				map.put("Orderdetails", ordesa);

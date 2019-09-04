@@ -339,7 +339,8 @@
 					left join source so on so.id = u.sourceId
 					left join manage_control_settings ma on ma.id=so.manageControlId
   			 		<where>
-  			 			pay.orderId =#{orderId} 
+  			 			and defe.deleted = "0"
+  			 			and pay.orderId =#{orderId} 
   			 			AND o.companyId = #{companyId}
 						and pay.orderId = o.id
   			 		</where>
@@ -385,6 +386,7 @@
   			
   			<select id="DeleteNumMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
   				select count(de.id) as DefeNum,sum(interestOnArrears) as DefeMoney from deferred de where orderId = #{orderId}
+  				and de.deleted = "0"
   			</select>
   			
   			
@@ -681,6 +683,7 @@
   					AND defe.orderId = o.id
   					AND o.id = b.orderId
   					AND defe.orderId = o.id
+  					and defe.deleted = "0"
   					AND o.companyId = #{companyId}
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
@@ -721,6 +724,7 @@
 				 LEFT JOIN deferred defe on defe.orderId = o.id
   				<where>
   					AND o.companyId = #{companyId}
+  					and defe.deleted = "0"
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
   					</if>
@@ -774,6 +778,7 @@
   				sum(d.interestOnArrears) as interestOnArrearsSum from deferred d left join orders o on o.id = d.orderid
   				<where>
   					AND o.companyId = #{companyId}
+  					and d.deleted = "0"
   					<if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
   						AND d.deferAfterReturntime between #{startu_time} and #{end_time}
   					</if>
@@ -788,6 +793,7 @@
   				select b.deferredTime,count(b.id) as orderNum,sum(b.interestOnArrears) as deferredamount from deferred b,orders o 
   				<where> 
   				o.id = b.orderid
+  				and b.deleted = "0"
   				and o.companyId = #{companyId}
   				AND b.deferredTime between #{startu_time} and #{end_time}
   				</where>
@@ -797,14 +803,14 @@
   			
   			<select id="BankDefeData" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select de.deferredTime,count(de.id) as orderNum,sum(de.interestOnArrears) as interestOnArrearsSum from deferred de,orders o
-  				where o.companyId = #{companyId} and de.orderId = o.id and de.deferredTime between #{startu_time} and #{end_time}
+  				where  o.companyId = #{companyId} and de.deleted = "0" and de.orderId = o.id and de.deferredTime between #{startu_time} and #{end_time}
   			</select>
   			
   			
   			
   			<select id="DefeRRe" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(de.id) as orderNum,sum(de.interestOnArrears) as interestOnArrearsSum from deferred de,orders o
-  				where o.id = de.orderId and o.companyId = #{companyId} and de.deferredTime between #{statu_time} and #{end_time}
+  				where o.id = de.orderId and de.deleted = "0" and o.companyId = #{companyId} and de.deferredTime between #{statu_time} and #{end_time}
   			</select>
   			
   			
@@ -849,7 +855,7 @@
   			
   			<select id="OneMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   			select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de inner join orders o on de.orderid=o.id where o.companyId= #{companyId}
-  			 and de.deferredTime BETWEEN #{start_time} and #{end_time}
+  			and de.deleted = "0" and de.deferredTime BETWEEN #{start_time} and #{end_time}
   			</select>
   			
   			
@@ -882,6 +888,7 @@
   			<select id="YanMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
   				select sum(d.interestOnArrears) as deferredamount from deferred d,orders o 
   				<where>
+  					and d.deleted = "0"
   					AND o.id = d.orderid
   					AND o.companyId = #{companyId}
   					 <if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
@@ -968,6 +975,7 @@
   				select count(of.id) from offlinedelay of,sys_user sy,user u,orders o,deferred defe,orderdetails ord,user_attestation ur
   				<where>
   					of.orderId = o.id
+  					and defe.deleted = "0"
   					and o.userId = u.id
   					and ur.userId = u.id
   					and sy.userId =  of.sys_userId
@@ -1002,7 +1010,7 @@
   			
   			
   			<select id="DeferrAdefe" parameterType="java.lang.Integer" resultType="java.lang.String">
-  				select deferAfterReturntime from deferred where orderid = #{orderid}
+  				select deferAfterReturntime from deferred where orderid = #{orderid} and deleted = "0"
   			</select>
   			
   			
