@@ -967,7 +967,7 @@ public class ChanpayQuickCollection {
 				}else{
 					map.put("Ncode", 0);
 					map.put("ReturnChanpay", retu);
-					map.put("msg", retu.getRetMsg());
+					map.put("msg", "卡号异常,请您换一张卡");
 				}
 				} catch (Exception e) {
 					e.printStackTrace();

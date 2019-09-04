@@ -129,12 +129,14 @@ public class Chanpayserviceimp implements Chanpayservice{
 
 	@Override
 	public Integer AddPayment_record(Payment_record pay) {
+		Orders orderId = stdao.SelectOrderId(pay.getOrderNumber());
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			pay.setRemittanceTime(Timestamps.dateToStamp1(sim.format(new Date())));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		pay.setOrderId(orderId.getId());
 		stdao.UpdatehowMany(pay.getUserId());
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
@@ -242,9 +244,9 @@ public class Chanpayserviceimp implements Chanpayservice{
 
 	@Override
 	public Integer DeleteOrderNumber(String orderNumber) {
-		Integer a = padao.DeleteOrderNumber(orderNumber);
+		Integer a = padao.DeleteOrderDetailsNumber(orderNumber);
 		if(a != null){
-			padao.DeleteOrderDetailsNumber(orderNumber);
+			padao.DeleteOrderNumber(orderNumber);
 		}else{
 			a = 0;
 		}

@@ -59,6 +59,21 @@ public class OperationalServiceimp implements OperationalService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		List<Orders> ordes = new ArrayList<Orders>();
+		
+		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+		String stimea = sima.format(new Date());
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
+		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String d = sima.format(date);//开始时间
+		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String c = sima.format(date);//结束时间
+		System.out.println("a:"+d);
+		ordera.setStart_time(c+" 00:00:00");
+		ordera.setEnd_time(d+" 23:59:59");
 //		try {
 //			ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
 //			ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
@@ -93,6 +108,7 @@ public class OperationalServiceimp implements OperationalService{
 //		}
 //		map.put("Orders", ordes);
 //		map.put("PageUtil", pages);
+		System.out.println(ordera.getStart_time()+"结束时间:"+ordera.getEnd_time());
 		if(ordera.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String times = sim.format(new Date());
@@ -200,6 +216,33 @@ public class OperationalServiceimp implements OperationalService{
 				Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
 				Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
 				
+				Bankdeductions banl = new Bankdeductions();
+				banl.setCompanyId(ordera.getCompanyId());
+				banl.setStart_time(ordera.getStart_time());
+				banl.setEnd_time(ordera.getEnd_time());
+				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+				Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+				Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
+				if(e.getDeferredamount()==null){
+					e.setDeferredamount(new BigDecimal(0));
+				}
+				
+				if(f.getDeferredamount()==null){
+					f.setDeferredamount(new BigDecimal(0));
+				}
+
+				
+				if(ode.getXianscount()==null){
+					ode.setXianscount(0);
+				}
+				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
+				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
 				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 					
@@ -223,7 +266,10 @@ public class OperationalServiceimp implements OperationalService{
 					os.setAmountofbaddebts(new BigDecimal(0));
 					System.out.println(os.getAmountofbaddebts());
 				}
-				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung());
+				
+				ord.setXianscount(ode.getXianscount());
+				ord.setXiansmoney(ode.getXiansmoney());
+				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
 				ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -255,12 +301,12 @@ public class OperationalServiceimp implements OperationalService{
 		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String d = sima.format(date);//开始时间
-		calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String c = sima.format(date);//结束时间
 		System.out.println("a:"+d);
-		order.setStart_time(d+" 00:00:00");
-		order.setEnd_time(c+" 23:59:59");
+		order.setStart_time(c+" 00:00:00");
+		order.setEnd_time(d+" 23:59:59");
 		
 		
 		if(order.getStart_time()==null){
@@ -446,6 +492,22 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> CollectionData(Orderdetails orde) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> ordesa = new ArrayList<Orders>();
+		
+		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+		String stimea = sima.format(new Date());
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		Integer day = pdap.SelectHuan(orde.getCompanyId());//获取天数
+		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String da = sima.format(date);//开始时间
+		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		String cs = sima.format(date);//结束时间
+		System.out.println("a:"+da);
+		orde.setStart_time(cs+" 00:00:00");
+		orde.setEnd_time(da+" 23:59:59");
+		
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());

@@ -835,7 +835,7 @@
   			<select id="Onrepayment" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   			select sum(rp.repaymentMoney) as realexpenditure,count(rp.id) as realborrowing from repayment rp inner join orders o on rp.orderid=o.id where
   			 o.companyId=#{companyId} and rp.statu="成功"
-  			 and rp.repaymentDate BETWEEN between #{start_time} and #{end_time}
+  			 and rp.repaymentDate BETWEEN #{start_time} and #{end_time}
   			</select>
   			
   			

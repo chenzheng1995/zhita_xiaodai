@@ -791,6 +791,18 @@ public class FinanceServiceimp implements FinanceService{
 				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 			}
 			
+			if(b.getRealexpenditure()==null){
+				b.setRealexpenditure(new BigDecimal(0));
+			}
+			
+			if(c.getDeferredamount()==null){
+				c.setDeferredamount(new BigDecimal(0));
+			}
+			
+			if(f.getDeferredamount()==null){
+				f.setDeferredamount(new BigDecimal(0));
+			}
+			
 			bank.setXianxiaMoney(e.getDeferredamount().add(d.getDeferredamount()));//线下总计	
 			bank.setXiansMoney(b.getRealexpenditure().add(c.getDeferredamount()).add(f.getDeferredamount()));//线上总计
 		
