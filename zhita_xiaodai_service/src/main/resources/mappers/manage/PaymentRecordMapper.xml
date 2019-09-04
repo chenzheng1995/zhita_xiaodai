@@ -288,6 +288,7 @@
 			  	 LEFT JOIN repayment_setting thir ON ra.thirdparty_id = thir.id
 			  	<where>
 			  		AND o.companyId = #{companyId}
+			  		AND ra.statu = "成功"
 			  		<if test="orderNumber != null and orderNumber != ''">
 			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 			  		</if>
@@ -351,8 +352,8 @@
   			 <select id="OrderMoneySum" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
   			 	select realityBorrowMoney as order_money from orderdetails where orderId = #{orderId}
   			 </select>
-  
-  
+  				
+  			
   
   
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
@@ -443,8 +444,8 @@
   			
   			
   			
-  			<select id="Maxtotalamount" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
-  				select totalamount from accountadjustment where id = (select max(id) from accountadjustment where orderId = #{orderId} )
+  			<select id="Maxtotalamount" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Accountadjustment">
+  				select totalamount,amountmoney,accounttime from accountadjustment where id = (select max(id) from accountadjustment where orderId = #{orderId} )
   			</select>
   			
   			
@@ -927,6 +928,10 @@
   			</select>
   			
   			
+  			<select id="OrderShouldTime" parameterType="java.lang.Integer" resultType="java.lang.String">
+  				select shouldReturnTime from orders where id = #{id}
+  			</select>
+  			
   			<insert id="AddDelay" parameterType="com.zhita.model.manage.Offlinedelay">
   				INSERT INTO `offlinedelay`(
   					delay_time,
@@ -934,15 +939,16 @@
   					remarks,
   					operating_time,
   					sys_userId,
-  					orderId
-  				)VALUES(#{delay_time},#{extensionfee},#{remarks},#{operating_time},#{sys_userId},#{orderId})
+  					orderId,
+  					preextensiontime
+  				)VALUES(#{delay_time},#{extensionfee},#{remarks},#{operating_time},#{sys_userId},#{orderId},#{preextensiontime})
   			</insert>
   			
   			
   			
   			<select id="Allofflinedelay" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
   				select of.id,of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,
-  				of.extensionfee,of.remarks,of.delay_time
+  				of.extensionfee,of.remarks,of.delay_time,of.preextensiontime
   				from offlinedelay of,orders o,orderdetails ord,user u,user_attestation usa,sys_user us
   				<where>
   					of.sys_userId = us.userId 
@@ -1106,6 +1112,104 @@
 	 		<update id="OrderStatus" parameterType="java.lang.Integer">
 	 			update orders set orderStatus = "3" where id = #{orderId}
 	 		</update>
+	 		
+	 		
+	 		
+	 		<select id="OneOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orders">
+	 			select * from orders where orderNumber = #{orderNumber}
+	 		</select>
+	 		
+	 		
+	 		<select id="OneOrderdetails" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orderdetails">
+	 			select * from orderdetails where orderId = #{id}
+	 		</select>
+	 		
+	 		<insert id="Adddiscardorders" parameterType="com.zhita.model.manage.Orders">
+	 			INSERT INTO discardorders (
+	 				companyId,
+	 				userId,
+	 				orderNumber,
+	 				borrowMoneyUse,
+	 				borrowRepayBankcard,
+	 				bankPhone,
+	 				orderCreateTime,
+	 				riskManagemenType,
+	 				borrowTimeLimit,
+	 				borrowMoneyWay,
+	 				howManyTimesBorMoney,
+	 				shouldReturnTime,
+	 				realtime,
+	 				ifcandefer,
+	 				canDeferNumberoftime,
+	 				riskmanagementFraction,
+	 				overdueGrade,
+	 				riskcontrolname,
+	 				ifpeopleWhose,
+	 				assessor,
+	 				orderStatus
+	 			)VALUES(
+	 				#{companyId},
+	 				#{userId},
+	 				#{orderNumber},
+	 				#{borrowMoneyUse},
+	 				#{borrowRepayBankcard},
+	 				#{bankPhone},
+	 				#{orderCreateTime},
+	 				#{riskManagemenType},
+	 				#{borrowTimeLimit},
+	 				#{borrowMoneyWay},
+	 				#{howManyTimesBorMoney},
+	 				#{shouldReturnTime},
+	 				#{realtime},
+	 				#{ifcandefer},
+	 				#{canDeferNumberoftime},
+	 				#{riskmanagementFraction},
+	 				#{overdueGrade},
+	 				#{riskcontrolname},
+	 				#{ifpeopleWhose},
+	 				#{assessor},
+	 				#{orderStatus}
+	 			)
+	 		</insert>
+	 		
+	 		
+	 		<insert id="Adddiscardordertails" parameterType="com.zhita.model.manage.Orderdetails">
+	 			INSERT INTO discardorderdetails(
+	 				orderId,
+	 				realityBorrowMoney,
+	 				makeLoans,
+	 				interestDay,
+	 				interestSum,
+	 				overdueNumberOfDays,
+	 				interestPenaltyDay,
+	 				interestPenaltySum,
+	 				interestInAll,
+	 				shouldReapyMoney,
+	 				technicalServiceMoney,
+	 				realityAccount,
+	 				rejectMonadCause,
+	 				DrainageOfPlatform,
+	 				registerClient,
+	 				surplus_money
+	 			)VALUES(
+	 				#{orderId},
+	 				#{realityBorrowMoney},
+	 				#{makeLoans},
+	 				#{interestDay},
+	 				#{interestSum},
+	 				#{overdueNumberOfDays},
+	 				#{interestPenaltyDay},
+	 				#{interestPenaltySum},
+	 				#{interestInAll},
+	 				#{shouldReapyMoney},
+	 				#{technicalServiceMoney},
+	 				#{realityAccount},
+	 				#{rejectMonadCause},
+	 				#{DrainageOfPlatform},
+	 				#{registerClient},
+	 				#{surplus_money}
+	 			)
+	 		</insert>
 	 		
  		
 </mapper>

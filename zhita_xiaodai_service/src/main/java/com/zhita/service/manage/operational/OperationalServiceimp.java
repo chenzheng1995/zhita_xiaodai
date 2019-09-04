@@ -336,6 +336,11 @@ public class OperationalServiceimp implements OperationalService{
 			order.setPage(pages.getPage());
 			Orders orders = operdao.OrderHuan(order);//还款数   
 			Orders or = operdao.CollMoney(order);//逾期金额   逾期数
+			Bankdeductions banl = new Bankdeductions();
+			banl.setCompanyId(order.getCompanyId());
+			banl.setStart_time(order.getStart_time());
+			banl.setEnd_time(order.getEnd_time());
+			Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 			Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
 			Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
 			System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
@@ -364,6 +369,8 @@ public class OperationalServiceimp implements OperationalService{
 				System.out.println(or.getGesamtbetraguberfalligerBetrag());
 				
 			}
+			ord.setXianscount(e.getDefeNum());
+			ord.setXiansmoney(e.getDeferredamount());
 			ord.setRemittanceTime(stime);
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -433,6 +440,11 @@ public class OperationalServiceimp implements OperationalService{
 				Orders orders = operdao.OrderHuan(order);//还款数   
 				Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 				Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
+				Bankdeductions banl = new Bankdeductions();
+				banl.setCompanyId(order.getCompanyId());
+				banl.setStart_time(order.getStart_time());
+				banl.setEnd_time(order.getEnd_time());
+				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 				Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
 				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
@@ -455,6 +467,8 @@ public class OperationalServiceimp implements OperationalService{
 				}
 				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				
+				ord.setXianscount(e.getDefeNum());
+				ord.setXiansmoney(e.getDeferredamount());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());

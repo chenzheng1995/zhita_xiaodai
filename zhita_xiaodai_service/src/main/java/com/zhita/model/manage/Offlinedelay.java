@@ -28,6 +28,8 @@ public class Offlinedelay {
 	
 	private String end_time;
 	
+	private String preextensiontime;//延期前应还时间
+	
 	private Integer page=0;
 	
 	private Integer pagesize=10;
@@ -47,6 +49,24 @@ public class Offlinedelay {
 	private Integer onceDeferredDay;//单次延期天数
 	
 	private Integer companyId;
+	
+	private String shouldReturnTime;
+	
+	public String getPreextensiontime() {
+		return preextensiontime;
+	}
+
+	public void setPreextensiontime(String preextensiontime) {
+		this.preextensiontime = preextensiontime;
+	}
+
+	public String getShouldReturnTime() {
+		return shouldReturnTime;
+	}
+
+	public void setShouldReturnTime(String shouldReturnTime) {
+		this.shouldReturnTime = shouldReturnTime;
+	}
 
 	public Integer getCompanyId() {
 		return companyId;

@@ -310,12 +310,15 @@ public class FinanceServiceimp implements FinanceService{
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Accountadjustment> accounts = padao.AllAccount(ordetail);
 		for (int i = 0; i < accounts.size(); i++) {
-			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
+			
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
-			accounts.get(i).setAmountmoney(padao.OrderMoneySum(accounts.get(i).getOrderId()));
-			accounts.get(i).setTotalamount(padao.Maxtotalamount(accounts.get(i).getOrderId()));
+			Accountadjustment ac = padao.Maxtotalamount(accounts.get(i).getOrderId());
+			
+			accounts.get(i).setAccounttime(Timestamps.stampToDate(ac.getAccounttime()));
+			accounts.get(i).setAmountmoney(ac.getAmountmoney());
+			accounts.get(i).setTotalamount(ac.getTotalamount());
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Accountadjustment", accounts);
@@ -925,6 +928,7 @@ public class FinanceServiceimp implements FinanceService{
 			off.setPhone(p.encryption(off.getPhone()));
 			}
 		}
+		off.setPreextensiontime(padao.OrderShouldTime(off.getOrderId()));
 		String status = padao.OrderStatuOrder(off.getOrderId());
 		if(status.equals("0")){
 			String shoureturntime = padao.SelectShouReturnTime(off.getOrderId());
@@ -971,6 +975,7 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> Delaylabor(Offlinedelay of) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
 		if(of.getPhone() != null){
 			if(of.getPhone().length()!=0){
 				of.setPhone(p.encryption(of.getPhone()));
@@ -986,9 +991,12 @@ public class FinanceServiceimp implements FinanceService{
 		List<Offlinedelay> ofa = padao.Allofflinedelay(of);
 		for(int i = 0;i<ofa.size();i++){
 			Deferred de = padao.DeleteNumMoney(ofa.get(i).getOrderId());
+			String phon = p.decryption(ofa.get(i).getPhone());
+			ofa.get(i).setPhone(tm.mobileEncrypt(phon));
 			ofa.get(i).setDefeNum(de.getDefeNum());
 			ofa.get(i).setDefeMoney(de.getDefeMoney());
-			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getDelay_time()));
+			ofa.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ofa.get(i).getPreextensiontime()));
+			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getShouldReturnTime()));
 			ofa.get(i).setOperating_time(Timestamps.stampToDate(ofa.get(i).getOperating_time()));
 		}
 		map.put("Offlinedelay", ofa);
