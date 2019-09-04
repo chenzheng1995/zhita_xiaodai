@@ -450,7 +450,7 @@
   			
   			
   			<select id="AllAccount" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.remarks,a.beoverdue,a.amou_time FROM	
+  				select o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.remarks,a.beoverdue,a.amou_time,a.totalamount,a.amountmoney FROM	
   				repayment_setting re,user u,orders o,accountadjustment a
   				<where>
   					a.orderId = o.id 
