@@ -154,11 +154,7 @@ public class FinanceServiceimp implements FinanceService{
 		}else{
 			ordea.setRealityBorrowMoney(ordea.getInterestPenaltySum().add(ordea.getRealityBorrowMoney()));
 		}
-		if(ordea.getDeferAfterReturntime()==null || ordea.getDeferAfterReturntime().equals("")){
-			ordea.setDeferAfterReturntime("/");
-		}else{
-			ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
-		}
+		
 		
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
 		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
@@ -170,23 +166,43 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println("次数:"+ordea.getDefeNum()+"金额:"+ordea.getOrder_money());
 		//interestSum  order_money  realityBorrowMoney
 		System.out.println(defe.getInterestOnArrears());
+		if(defe.getInterestOnArrears()==null){
+			defe.setInterestOnArrears(new BigDecimal(0));
+		}
 		ordea.setDefeMoney(defe.getInterestOnArrears());
 		System.out.println("未解密:"+ordea.getPhone());
 		String paone = p.decryption(ordea.getPhone());
 		System.out.println("111:"+paone);
 		ordea.setPhone(paone);
+		ordea.setShouldReturnTime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
 		String defetime = padao.DefeTime(ordea.getOrderId());
 		String offDefetime = padao.offDefetime(ordea.getOrderId());
-		int result = defetime.compareTo(offDefetime);
-		if(result>0){//defetime 大于 offDefetime
-			ordea.setDeferBeforeReturntime(Timestamps.stampToDate(defetime));
-		}else{
-			ordea.setDeferBeforeReturntime(Timestamps.stampToDate(offDefetime));
+		if(defetime==null){
+			defetime = "0";
+		}else if(offDefetime==null){
+			offDefetime = "0";
+		} else if(offDefetime!=null && defetime != null){
+			int result = defetime.compareTo(offDefetime);
+			if(result>0){//defetime 大于 offDefetime
+				ordea.setDeferBeforeReturntime(Timestamps.stampToDate(defetime));
+			}else if(result<0){
+				ordea.setDeferBeforeReturntime(Timestamps.stampToDate(offDefetime));
+			}else if(result==0){
+				ordea.setDeferBeforeReturntime(ordea.getShouldAlsoInterest());
+			}
 		}
+		
+		if(ordea.getDeferBeforeReturntime()==null){
+			ordea.setDeferBeforeReturntime(ordea.getShouldReturnTime());
+		}
+		
+		if(ordea.getDeferAfterReturntime()==null){
+			ordea.setDeferAfterReturntime(ordea.getShouldReturnTime());
+		}
+		
 		System.out.println("延期金额:"+ordea.getDefeMoney()+"手机号:"+ordea.getPhone());
 		ordea.setRegisteTime(Timestamps.stampToDate(ordea.getRegisteTime()));
-		ordea.setShouldReturnTime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
-		System.out.println("时间:"+ordea.getDeferAfterReturntime()+":AAA:"+ordea.getDeferBeforeReturntime());
+		System.out.println("时间:"+ordea.getDeferAfterReturntime()+":AAA:");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", ordea);
 		return map;
@@ -808,7 +824,7 @@ public class FinanceServiceimp implements FinanceService{
 			
 			bank.setXianxiaMoney(e.getDeferredamount());//线下总计	
 			bank.setXiansMoney(b.getRealexpenditure().add(c.getDeferredamount()).add(f.getDeferredamount()));//线上总计
-		
+			bank.setShouruMoney(bank.getXianxiaMoney().add(bank.getXiansMoney()));
 		
 		
 		

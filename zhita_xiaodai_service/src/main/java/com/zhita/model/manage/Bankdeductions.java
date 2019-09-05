@@ -136,6 +136,16 @@ public class Bankdeductions {
 	private BigDecimal xiansMoney;//线上总金额
 	
 	private BigDecimal xianxiaMoney;//线下总金额
+	
+	private BigDecimal shouruMoney;//收入总计
+
+	public BigDecimal getShouruMoney() {
+		return shouruMoney;
+	}
+
+	public void setShouruMoney(BigDecimal shouruMoney) {
+		this.shouruMoney = shouruMoney;
+	}
 
 	public BigDecimal getXiansMoney() {
 		return xiansMoney;

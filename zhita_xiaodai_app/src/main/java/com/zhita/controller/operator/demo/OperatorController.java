@@ -17,7 +17,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.mozhang.Magicwand3Demo;
 import com.zhita.controller.xinyan.action.OperatorAction;
-import com.zhita.dao.manage.ApplynumberMapper;
 import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.dao.manage.ThreeElementsMapper;
