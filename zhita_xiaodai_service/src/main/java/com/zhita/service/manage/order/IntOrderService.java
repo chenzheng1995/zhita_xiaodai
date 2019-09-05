@@ -79,6 +79,8 @@ public interface IntOrderService {
 
 	public String getorderNumber(int userId);
 
+	public String getrealtime(int userId);
+
 
 
 	

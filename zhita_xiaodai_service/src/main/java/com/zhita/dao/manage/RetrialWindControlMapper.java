@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhita.model.manage.RetrialWindControl;
 
@@ -18,6 +19,10 @@ public interface RetrialWindControlMapper {
     
     //后台管理---更新功能
     int updateByPrimaryKey(RetrialWindControl record);
+
+	Map<String, Object> getretrialWindControl(int companyId);
+
+
     
 
 }

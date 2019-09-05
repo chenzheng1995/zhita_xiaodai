@@ -884,4 +884,13 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	<select id="queryrepaymoneybank" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 		select sum(deduction_money) from bankdeductions where orderId=#{arg0}
 	</select>
+	
+	
+
+	<select id="getrealtime" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select realtime  from  orders where userId = #{userId} order by realtime desc  LIMIT 1
+	</select>
+	
+
+	
 </mapper>

@@ -78,4 +78,10 @@
       	 ifrestore = #{ifrestore}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  	<select id="getretrialWindControl" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select howmanyDaysApart,ifrestore from retrial_wind_control where companyId = #{companyId}
+	</select>
+  
 </mapper>
