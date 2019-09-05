@@ -55,6 +55,8 @@ public class Orders {
 	
 	private BigDecimal deferrMoney;//延期金额
 	
+	private String deferBeforeReturntime;//延期前应还时间
+	
 	private String deferAfterReturntime;//延期后应还时间
 	
 	private Integer postponeDate;//每次延期天数
@@ -705,4 +707,12 @@ public class Orders {
 		this.shourldmoney = shourldmoney;
 	}
 
+	public String getDeferBeforeReturntime() {
+		return deferBeforeReturntime;
+	}
+
+	public void setDeferBeforeReturntime(String deferBeforeReturntime) {
+		this.deferBeforeReturntime = deferBeforeReturntime;
+	}
+	
 }

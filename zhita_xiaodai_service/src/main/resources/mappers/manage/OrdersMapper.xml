@@ -645,11 +645,11 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   </select>
   <!-- 查询最后延期时间    线上延期-->
   <select id="qeuryFinalDefertime" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
-  	select max(deferAfterReturntime) deferAfterReturntime,postponeDate from deferred where orderid=#{arg0} and deleted=0
+  	select deferBeforeReturntime,deferAfterReturntime,postponeDate from deferred where orderid=#{arg0} and deleted=0 order by deferAfterReturntime desc limit 1;
   </select> 
   <!-- 查询最后延期时间   人工延期-->
   <select id="qeuryFinalDefertimelay" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
-  	select max(operating_time) deferAfterReturntime from offlinedelay where orderid=#{arg0}
+  	select preextensiontime deferBeforeReturntime,delay_time deferAfterReturntime from offlinedelay where orderid=#{arg0} order by delay_time desc limit 1;
   </select> 
   <!-- 后台管理      查询出sysuser表所有的name -->
   <select id="queryname" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.SysUser">

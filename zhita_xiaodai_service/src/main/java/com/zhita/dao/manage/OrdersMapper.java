@@ -89,7 +89,7 @@ public interface OrdersMapper {
 	Orders qeuryFinalDefertime(Integer orderid);
 	
 	//后台管理---查询最后延期时间---人工延期
-		Orders qeuryFinalDefertimelay(Integer orderid);
+	Orders qeuryFinalDefertimelay(Integer orderid);
  
   	//后台管理--查询出sysuser表所有的信息
   	List<SysUser> queryname(Integer companyId);
