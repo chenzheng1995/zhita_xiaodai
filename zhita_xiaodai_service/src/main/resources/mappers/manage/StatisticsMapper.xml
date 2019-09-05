@@ -137,7 +137,7 @@
 				left join user_attestation usea on o.id = usea.userId
 				left join bankdeductions bkd on bkd.orderId = o.id
 				<where>
-					and o.orderStatus = "1"
+					and o.orderStatus between "1" and "2"
 					and defe.deleted = "0"
 					and o.companyId = #{companyId}
 					<if test="orderNumber != null and orderNumber != ''">

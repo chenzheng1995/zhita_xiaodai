@@ -110,20 +110,12 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		order.setPage(pages.getPage());
 			
 			System.out.println(order.getDeferAfterReturntimeStatu_time()+order.getDeferAfterReturntimeEnd_time());
-			if(order.getOrderCreateTimeStatu_time() != null && order.getOrderCreateTimeEnd_time()!= "" && order.getOrderCreateTimeStatu_time() != "" && order.getOrderCreateTimeEnd_time()!= null){
+			if(order.getStatu_time() != null && order.getStatu_time() != "" && order.getEnd_time() != "" && order.getEnd_time()!= null){
 				try {
-					order.setOrderCreateTimeStatu_time(Timestamps.dateToStamp1(order.getOrderCreateTimeStatu_time()));
-					order.setOrderCreateTimeEnd_time(Timestamps.dateToStamp1(order.getOrderCreateTimeEnd_time()));
+					order.setStatu_time(Timestamps.dateToStamp1(order.getStatu_time()));
+					order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
 				} catch (Exception e) {
 					// TODO: handle exception
-				}
-			}else if(order.getDeferAfterReturntimeStatu_time() != null && order.getDeferAfterReturntimeStatu_time() != "" && order.getDeferAfterReturntimeEnd_time() != null && order.getDeferAfterReturntimeEnd_time() != ""){
-				try {
-					order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
-					order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
 		

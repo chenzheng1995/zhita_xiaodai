@@ -492,6 +492,9 @@ public class OrderServiceImp implements IntOrderService {
 				BigDecimal defMoneylay = new BigDecimal("0.00");// 人工延期
 				if (!listdefer.isEmpty() && listdefer.size() != 0) {
 					for (int j = 0; j < listdefer.size(); j++) {
+						if(listdefer.get(j).getInterestOnArrears()==null){
+							listdefer.get(j).setInterestOnArrears(new BigDecimal("0.00"));
+						}
 						defMoney = defMoney.add(listdefer.get(j).getInterestOnArrears());
 					}
 				}
@@ -509,25 +512,37 @@ public class OrderServiceImp implements IntOrderService {
 																					 
 				if (null == os) {
 					os = new Orders();
-				}
-				if (StringUtils.isEmpty(os.getDeferAfterReturntime())) {
+					os.setDeferBeforeReturntime("0");
 					os.setDeferAfterReturntime("0");
 				}
 				Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---人工延期
 				if (null == oslay) {
 					oslay = new Orders();
-				}
-				if (StringUtils.isEmpty(oslay.getDeferAfterReturntime())) {
+					oslay.setDeferBeforeReturntime("0");
 					oslay.setDeferAfterReturntime("0");
 				}
 				
+				
 				if (os.getDeferAfterReturntime().compareTo(oslay.getDeferAfterReturntime()) > 0) {
-					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
-					list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
+					if(os.getDeferBeforeReturntime().equals("0")&&os.getDeferAfterReturntime().equals("0")){
+						list.get(i).setDeferBeforeReturntime("0");
+						list.get(i).setDeferAfterReturntime("0");
+					}else{
+						list.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(os.getDeferBeforeReturntime()));//延期前还款时间
+						list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
+						list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
+					}
 				} else {
-					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
-					// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
+					if(oslay.getDeferBeforeReturntime().equals("0")&&oslay.getDeferAfterReturntime().equals("0")){
+						list.get(i).setDeferBeforeReturntime("0");
+						list.get(i).setDeferAfterReturntime("0");
+					}else{
+						list.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(oslay.getDeferBeforeReturntime()));//延期前还款时间
+						list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
+						// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
+					}
 				}
+				
 			}
 		}else{
 			int page = orderQueryParameter.getPage();// 页面传进来的当前页
@@ -594,6 +609,9 @@ public class OrderServiceImp implements IntOrderService {
 				BigDecimal defMoneylay = new BigDecimal("0.00");// 人工延期
 				if (!listdefer.isEmpty() && listdefer.size() != 0) {
 					for (int j = 0; j < listdefer.size(); j++) {
+						if(listdefer.get(j).getInterestOnArrears()==null){
+							listdefer.get(j).setInterestOnArrears(new BigDecimal("0.00"));
+						}
 						defMoney = defMoney.add(listdefer.get(j).getInterestOnArrears());
 					}
 				}
@@ -611,24 +629,35 @@ public class OrderServiceImp implements IntOrderService {
 																					 
 				if (null == os) {
 					os = new Orders();
-				}
-				if (StringUtils.isEmpty(os.getDeferAfterReturntime())) {
+					os.setDeferBeforeReturntime("0");
 					os.setDeferAfterReturntime("0");
 				}
 				Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---人工延期
 				if (null == oslay) {
 					oslay = new Orders();
-				}
-				if (StringUtils.isEmpty(oslay.getDeferAfterReturntime())) {
+					oslay.setDeferBeforeReturntime("0");
 					oslay.setDeferAfterReturntime("0");
 				}
 				
+				
 				if (os.getDeferAfterReturntime().compareTo(oslay.getDeferAfterReturntime()) > 0) {
-					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
-					list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
+					if(os.getDeferBeforeReturntime().equals("0")&&os.getDeferAfterReturntime().equals("0")){
+						list.get(i).setDeferBeforeReturntime("0");
+						list.get(i).setDeferAfterReturntime("0");
+					}else{
+						list.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(os.getDeferBeforeReturntime()));//延期前还款时间
+						list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
+						list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
+					}
 				} else {
-					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
-					// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
+					if(oslay.getDeferBeforeReturntime().equals("0")&&oslay.getDeferAfterReturntime().equals("0")){
+						list.get(i).setDeferBeforeReturntime("0");
+						list.get(i).setDeferAfterReturntime("0");
+					}else{
+						list.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(oslay.getDeferBeforeReturntime()));//延期前还款时间
+						list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
+						// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
+					}
 				}
 
 				/*

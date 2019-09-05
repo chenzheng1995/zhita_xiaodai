@@ -237,6 +237,16 @@ public class Orderdetails {
     
     private BigDecimal deduction_money;
     
+    private String statu_time;
+    
+	public String getStatu_time() {
+		return statu_time;
+	}
+
+	public void setStatu_time(String statu_time) {
+		this.statu_time = statu_time;
+	}
+
 	public BigDecimal getDeduction_money() {
 		return deduction_money;
 	}

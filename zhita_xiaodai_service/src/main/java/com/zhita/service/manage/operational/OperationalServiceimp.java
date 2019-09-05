@@ -65,15 +65,11 @@ public class OperationalServiceimp implements OperationalService{
 		Calendar calendar = Calendar.getInstance();
 		Date date = null;
 		Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
-		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
-		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		String d = sima.format(date);//开始时间
 		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String c = sima.format(date);//结束时间
-		System.out.println("a:"+d);
 		ordera.setStart_time(c+" 00:00:00");
-		ordera.setEnd_time(d+" 23:59:59");
+		ordera.setEnd_time(sima+" 23:59:59");
 //		try {
 //			ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
 //			ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
@@ -298,15 +294,11 @@ public class OperationalServiceimp implements OperationalService{
 		Calendar calendar = Calendar.getInstance();
 		Date date = null;
 		Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
-		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
-		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		String d = sima.format(date);//开始时间
 		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String c = sima.format(date);//结束时间
-		System.out.println("a:"+d);
 		order.setStart_time(c+" 00:00:00");
-		order.setEnd_time(d+" 23:59:59");
+		order.setEnd_time(stimea+" 23:59:59");
 		
 		
 		if(order.getStart_time()==null){
@@ -369,8 +361,6 @@ public class OperationalServiceimp implements OperationalService{
 				System.out.println(or.getGesamtbetraguberfalligerBetrag());
 				
 			}
-			ord.setXianscount(e.getDefeNum());
-			ord.setXiansmoney(e.getDeferredamount());
 			ord.setRemittanceTime(stime);
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -379,7 +369,7 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung());
 			ord.setXianscount(ode.getXianscount());
 			ord.setXiansmoney(ode.getXiansmoney());
-			
+			System.out.println("111"+ord.getXianscount());
 			if(ord.getGesamtbetraguberfallNum()==null){
 				ord.setGesamtbetraguberfallNum(0);
 			}
@@ -447,6 +437,10 @@ public class OperationalServiceimp implements OperationalService{
 				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 				Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
 				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
+				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 					
 					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
@@ -467,8 +461,8 @@ public class OperationalServiceimp implements OperationalService{
 				}
 				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				
-				ord.setXianscount(e.getDefeNum());
-				ord.setXiansmoney(e.getDeferredamount());
+				ord.setXianscount(ode.getXianscount());
+				ord.setXiansmoney(ode.getXiansmoney());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
@@ -515,15 +509,11 @@ public class OperationalServiceimp implements OperationalService{
 		Calendar calendar = Calendar.getInstance();
 		Date date = null;
 		Integer day = pdap.SelectHuan(orde.getCompanyId());//获取天数
-		calendar.add(calendar.DATE, day);//把日期往后增加n天.正数往后推,负数往前移动 
-		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		String da = sima.format(date);//开始时间
 		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String cs = sima.format(date);//结束时间
-		System.out.println("a:"+da);
 		orde.setStart_time(cs+" 00:00:00");
-		orde.setEnd_time(da+" 23:59:59");
+		orde.setEnd_time(sima+" 23:59:59");
 		
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");

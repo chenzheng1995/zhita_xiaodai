@@ -245,4 +245,10 @@ public interface PaymentRecordMapper {
     
     
     String OrderShouldTime(Integer id);
+    
+    
+    String DefeTime(Integer orderId);
+    
+    
+    String offDefetime(Integer orderId);
 }
