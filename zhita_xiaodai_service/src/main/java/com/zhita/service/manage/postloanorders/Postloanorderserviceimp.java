@@ -653,9 +653,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
 		
-		orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
+		orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
 		
-		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));
+		orders.get(i).setRealityBorrowMoney(orders.get(i).getShouldReapyMoney());
 		
 		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
 		BigDecimal jianmian = postloanorder.JianMianmoney(orders.get(i).getOrderId());
@@ -769,7 +769,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}else{
 			orders.get(i).setRealtime("/");
 		}
-
 		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
 		if(orders.get(i).getSurplus_money()==null){
 			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());

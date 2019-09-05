@@ -152,7 +152,7 @@ public class FinanceServiceimp implements FinanceService{
 		if(ordea.getDeferAfterReturntime()==null || ordea.getDeferAfterReturntime().equals("")){
 			ordea.setDeferAfterReturntime("/");
 		}else{
-			ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getDeferAfterReturntime()));
+			ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
 		}
 		
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
@@ -170,10 +170,18 @@ public class FinanceServiceimp implements FinanceService{
 		String paone = p.decryption(ordea.getPhone());
 		System.out.println("111:"+paone);
 		ordea.setPhone(paone);
+		String defetime = padao.DefeTime(ordea.getOrderId());
+		String offDefetime = padao.offDefetime(ordea.getOrderId());
+		int result = defetime.compareTo(offDefetime);
+		if(result>0){//defetime 大于 offDefetime
+			ordea.setDeferBeforeReturntime(Timestamps.stampToDate(defetime));
+		}else{
+			ordea.setDeferBeforeReturntime(Timestamps.stampToDate(offDefetime));
+		}
 		System.out.println("延期金额:"+ordea.getDefeMoney()+"手机号:"+ordea.getPhone());
 		ordea.setRegisteTime(Timestamps.stampToDate(ordea.getRegisteTime()));
 		ordea.setShouldReturnTime(Timestamps.stampToDate(ordea.getShouldReturnTime()));
-		ordea.setDeferBeforeReturntime(Timestamps.stampToDate(ordea.getDeferBeforeReturntime()));
+		System.out.println("时间:"+ordea.getDeferAfterReturntime()+":AAA:"+ordea.getDeferBeforeReturntime());
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", ordea);
 		return map;
@@ -670,7 +678,6 @@ public class FinanceServiceimp implements FinanceService{
 		Bankdeductions b = padao.Onrepayment(banl);//查询还款金额笔数
 		Bankdeductions g = padao.DefeMoeny(banl);//延期记录   defeNum 次数    deferredamount  金额
 		Bankdeductions c = padao.OneMoney(banl);//查询延期费
-		Bankdeductions d = padao.Xianshang(banl);//查询线上记录  条数 和  金额  defeNum 次数    deferredamount  金额
 		Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 		Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
 		
@@ -686,9 +693,6 @@ public class FinanceServiceimp implements FinanceService{
 			g.setDeferredamount(new BigDecimal(0));
 		}
 		
-		if(d.getDeferredamount()==null){
-			d.setDeferredamount(new BigDecimal(0));
-		}
 		
 		if(e.getDeferredamount()==null){
 			e.setDeferredamount(new BigDecimal(0));
@@ -746,20 +750,6 @@ public class FinanceServiceimp implements FinanceService{
 		
 		
 		
-		if(d!=null){
-			if(d.getDeferredamount()!=null){
-				if(d.getDefeNum()!=0){
-					bank.setXianShangCoune(""+d.getDefeNum()+","+d.getDeferredamount()+","+0+"");
-				}else{
-					bank.setXianShangCoune(""+0+","+0+","+0+"");
-				}
-			}else{
-				bank.setXianShangCoune(""+0+","+0+","+0+"");
-			}
-		}else{
-			bank.setXianShangCoune(""+0+","+0+","+0+"");
-		}
-		
 		
 		
 		
@@ -793,6 +783,11 @@ public class FinanceServiceimp implements FinanceService{
 			}else{
 				bank.setName(""+0+","+0+","+0+"");//延期数    延期费
 			}
+		}else{
+			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
+		}
+			
+			
 			
 			if(b.getRealexpenditure()==null){
 				b.setRealexpenditure(new BigDecimal(0));
@@ -806,13 +801,11 @@ public class FinanceServiceimp implements FinanceService{
 				f.setDeferredamount(new BigDecimal(0));
 			}
 			
-			bank.setXianxiaMoney(e.getDeferredamount().add(d.getDeferredamount()));//线下总计	
+			bank.setXianxiaMoney(e.getDeferredamount());//线下总计	
 			bank.setXiansMoney(b.getRealexpenditure().add(c.getDeferredamount()).add(f.getDeferredamount()));//线上总计
 		
 		
-		}else{
-			bank.setName(""+0+","+0+","+0+"");//延期数    延期费
-		}
+		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Bankdeduction", bank);
@@ -930,7 +923,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		off.setPreextensiontime(padao.OrderShouldTime(off.getOrderId()));
 		String status = padao.OrderStatuOrder(off.getOrderId());
-		if(status.equals("0")){
+		
 			String shoureturntime = padao.SelectShouReturnTime(off.getOrderId());
 			String stime = Timestamps.stampToDate1(shoureturntime);
 			String a = stime.substring(8, 10);//就去时间格式天数
@@ -942,7 +935,6 @@ public class FinanceServiceimp implements FinanceService{
 			}else{
 				off.setDelay_time(b+ac+" 23:59:59");
 			}
-		}
 		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		ca.setTime(new Date()); //设置时间为当前时间
@@ -950,7 +942,6 @@ public class FinanceServiceimp implements FinanceService{
         
         try {
         	off.setOperating_time(Timestamps.dateToStamp1(dateFormat.format(new Date())));//操作时间
-        	 
 			off.setDelay_time(Timestamps.dateToStamp1(off.getDelay_time()));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
