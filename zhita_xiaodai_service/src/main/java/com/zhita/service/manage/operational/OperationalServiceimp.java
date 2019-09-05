@@ -361,8 +361,6 @@ public class OperationalServiceimp implements OperationalService{
 				System.out.println(or.getGesamtbetraguberfalligerBetrag());
 				
 			}
-			ord.setXianscount(e.getDefeNum());
-			ord.setXiansmoney(e.getDeferredamount());
 			ord.setRemittanceTime(stime);
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
@@ -371,7 +369,7 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung());
 			ord.setXianscount(ode.getXianscount());
 			ord.setXiansmoney(ode.getXiansmoney());
-			
+			System.out.println("111"+ord.getXianscount());
 			if(ord.getGesamtbetraguberfallNum()==null){
 				ord.setGesamtbetraguberfallNum(0);
 			}
@@ -439,6 +437,10 @@ public class OperationalServiceimp implements OperationalService{
 				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 				Orders ode = operdao.XianOrder(order);//线下减免金额  和  次数
 				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
+				
 				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
 					
 					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
@@ -459,8 +461,8 @@ public class OperationalServiceimp implements OperationalService{
 				}
 				System.out.println(ode.getXianscount()+":0CCCCS;"+ode.getXiansmoney());
 				
-				ord.setXianscount(e.getDefeNum());
-				ord.setXiansmoney(e.getDeferredamount());
+				ord.setXianscount(ode.getXianscount());
+				ord.setXiansmoney(ode.getXiansmoney());
 				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
