@@ -15,7 +15,7 @@ public interface OperatorService {
 
 	int getuserId(int userId);
 
-	void updatereqId(int userId, String reqId);
+	void updatereqId(int userId, String reqId, String authentime);
 
 	void updateAttestationStatus(String attestationStatus, int userId);
 
@@ -26,5 +26,7 @@ public interface OperatorService {
 	String getphone(int userId);
 
 	int setwhitelistuser(String attestationStatus, int userId, String authentime);
+
+	String getauthentime(int userId);
 
 }
