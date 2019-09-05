@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.util.StringUtils;
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.DeferredAndOrder;
@@ -426,122 +427,230 @@ public class OrderServiceImp implements IntOrderService {
 		if (orderQueryParameter.getPhone() != null && !"".equals(orderQueryParameter.getPhone())) {
 			orderQueryParameter.setPhone(pd.encryption(orderQueryParameter.getPhone()));
 		}
-		int page = orderQueryParameter.getPage();// 页面传进来的当前页
-		int companyId = orderQueryParameter.getCompanyid();// 公司id
-		int totalCount = ordersMapper.queryAllordersByLikeCount(orderQueryParameter);// 查询总条数
-		PageUtil2 pageUtil = new PageUtil2(page, totalCount);
-		if (page < 1) {
-			page = 1;
-			pageUtil.setPage(page);
-		} else if (page > pageUtil.getTotalPageCount()) {
-			if (totalCount == 0) {
-				page = pageUtil.getTotalPageCount() + 1;
-			} else {
-				page = pageUtil.getTotalPageCount();
-			}
-			pageUtil.setPage(page);
-		}
-		int pages = (page - 1) * pageUtil.getPageSize();
-		orderQueryParameter.setPage(pages);
-		orderQueryParameter.setPagesize(pageUtil.getPageSize());
-		List<Orders> list = ordersMapper.queryAllordersByLike(orderQueryParameter);// 查询list集合
-		for (int i = 0; i < list.size(); i++) {
-			BigDecimal realmoney = ordersMapper.queryrepaymoney(list.get(i).getId());// 该订单还款成功的还款金额--还款表
-			if (realmoney == null) {
-				realmoney = new BigDecimal("0.00");
-			}
-			BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());// 该订单还款成功的还款金额--线下还款表
-			if (offmoney == null) {
-				offmoney = new BigDecimal("0.00");
-			}
-			BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());// 该订单扣款成功的还款金额--银行卡自动扣款表
-			if (bankmoney == null) {
-				bankmoney = new BigDecimal("0.00");
-			}
-			BigDecimal money = realmoney.add(offmoney).add(bankmoney);
-			list.get(i).setRepaymentMoney(String.valueOf(money));
-
-			BigDecimal shourldmoney = list.get(i).getOrderdetails().getRealityBorrowMoney()
-					.add(list.get(i).getOrderdetails().getInterestSum())
-					.add(list.get(i).getOrderdetails().getInterestPenaltySum());
-			list.get(i).setShourldmoney(shourldmoney);// 应还金额（借款金额+期限内总利息+逾期的逾期费）
-			list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));// 将手机号进行脱敏
-			list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
-			list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
-			list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
-			if (list.get(i).getUser().getOperationTime() == null
-					|| "".equals(list.get(i).getUser().getOperationTime())) {
-				list.get(i).getUser().setOperationTime(null);
-				;
-			}
-			list.get(i).getUser().setOperationTime(Timestamps.stampToDate(list.get(i).getUser().getOperationTime()));// 人审时间
-
-			// list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
-
-			List<DeferredAndOrder> listdefer = ordersMapper.queryDefer(list.get(i).getId());
-			List<Offlinedelay> listdeferlay = ordersMapper.queryDeferlay(list.get(i).getId());
-
-			list.get(i).setDeferrTime(listdefer.size() + listdeferlay.size());// 延期次数
-			BigDecimal deferrMoney = new BigDecimal("0.00");// 延期金额
-			BigDecimal defMoney = new BigDecimal("0.00");// 线上延期
-			BigDecimal defMoneylay = new BigDecimal("0.00");// 人工延期
-			if (!listdefer.isEmpty() && listdefer.size() != 0) {
-				for (int j = 0; j < listdefer.size(); j++) {
-					defMoney = defMoney.add(listdefer.get(j).getInterestOnArrears());
+		
+		List<Orders> list = new ArrayList<>();
+		PageUtil2 pageUtil=null;
+		if((!StringUtils.isEmpty(orderQueryParameter.getOrderstatus()))&&orderQueryParameter.getOrderstatus().equals("2")){
+			int page = orderQueryParameter.getPage();// 页面传进来的当前页
+			int companyId = orderQueryParameter.getCompanyid();// 公司id
+			int totalCount = ordersMapper.queryAllordersByLikeCountacrap(orderQueryParameter);// 查询总条数
+			pageUtil = new PageUtil2(page, totalCount);
+			if (page < 1) {
+				page = 1;
+				pageUtil.setPage(page);
+			} else if (page > pageUtil.getTotalPageCount()) {
+				if (totalCount == 0) {
+					page = pageUtil.getTotalPageCount() + 1;
+				} else {
+					page = pageUtil.getTotalPageCount();
 				}
+				pageUtil.setPage(page);
 			}
-			if (!listdeferlay.isEmpty() && listdeferlay.size() != 0) {
-				for (int j = 0; j < listdeferlay.size(); j++) {
-					if (listdeferlay.get(j).getExtensionfee() == null) {
-						listdeferlay.get(j).setExtensionfee(new BigDecimal("0.00"));
+			int pages = (page - 1) * pageUtil.getPageSize();
+			orderQueryParameter.setPage(pages);
+			orderQueryParameter.setPagesize(pageUtil.getPageSize());
+			list = ordersMapper.queryAllordersByLikeacrap(orderQueryParameter);// 查询list集合
+			for (int i = 0; i < list.size(); i++) {
+				BigDecimal realmoney = ordersMapper.queryrepaymoney(list.get(i).getId());// 该订单还款成功的还款金额--还款表
+				if (realmoney == null) {
+					realmoney = new BigDecimal("0.00");
+				}
+				BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());// 该订单还款成功的还款金额--线下还款表
+				if (offmoney == null) {
+					offmoney = new BigDecimal("0.00");
+				}
+				BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());// 该订单扣款成功的还款金额--银行卡自动扣款表
+				if (bankmoney == null) {
+					bankmoney = new BigDecimal("0.00");
+				}
+				BigDecimal money = realmoney.add(offmoney).add(bankmoney);
+				list.get(i).setRepaymentMoney(String.valueOf(money));
+
+				BigDecimal shourldmoney = list.get(i).getOrderdetails().getRealityBorrowMoney()
+						.add(list.get(i).getOrderdetails().getInterestSum())
+						.add(list.get(i).getOrderdetails().getInterestPenaltySum());
+				list.get(i).setShourldmoney(shourldmoney);// 应还金额（借款金额+期限内总利息+逾期的逾期费）
+				list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));// 将手机号进行脱敏
+				list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
+				list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
+				list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
+				if (list.get(i).getUser().getOperationTime() == null
+						|| "".equals(list.get(i).getUser().getOperationTime())) {
+					list.get(i).getUser().setOperationTime(null);
+					;
+				}
+				list.get(i).getUser().setOperationTime(Timestamps.stampToDate(list.get(i).getUser().getOperationTime()));// 人审时间
+
+				// list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
+
+				List<DeferredAndOrder> listdefer = ordersMapper.queryDefer(list.get(i).getId());
+				List<Offlinedelay> listdeferlay = ordersMapper.queryDeferlay(list.get(i).getId());
+
+				list.get(i).setDeferrTime(listdefer.size() + listdeferlay.size());// 延期次数
+				BigDecimal deferrMoney = new BigDecimal("0.00");// 延期金额
+				BigDecimal defMoney = new BigDecimal("0.00");// 线上延期
+				BigDecimal defMoneylay = new BigDecimal("0.00");// 人工延期
+				if (!listdefer.isEmpty() && listdefer.size() != 0) {
+					for (int j = 0; j < listdefer.size(); j++) {
+						defMoney = defMoney.add(listdefer.get(j).getInterestOnArrears());
 					}
-					defMoneylay = defMoneylay.add(listdeferlay.get(j).getExtensionfee());
+				}
+				if (!listdeferlay.isEmpty() && listdeferlay.size() != 0) {
+					for (int j = 0; j < listdeferlay.size(); j++) {
+						if (listdeferlay.get(j).getExtensionfee() == null) {
+							listdeferlay.get(j).setExtensionfee(new BigDecimal("0.00"));
+						}
+						defMoneylay = defMoneylay.add(listdeferlay.get(j).getExtensionfee());
+					}
+				}
+				deferrMoney = defMoney.add(defMoneylay);
+				list.get(i).setDeferrMoney(deferrMoney);
+				Orders os = ordersMapper.qeuryFinalDefertime(list.get(i).getId());// 查询最后延期时间    ---线上延期
+																					 
+				if (null == os) {
+					os = new Orders();
+				}
+				if (StringUtils.isEmpty(os.getDeferAfterReturntime())) {
+					os.setDeferAfterReturntime("0");
+				}
+				Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---人工延期
+				if (null == oslay) {
+					oslay = new Orders();
+				}
+				if (StringUtils.isEmpty(oslay.getDeferAfterReturntime())) {
+					oslay.setDeferAfterReturntime("0");
+				}
+				
+				if (os.getDeferAfterReturntime().compareTo(oslay.getDeferAfterReturntime()) > 0) {
+					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
+					list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
+				} else {
+					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
+					// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
 				}
 			}
-			deferrMoney = defMoney.add(defMoneylay);
-			list.get(i).setDeferrMoney(deferrMoney);
-			Orders os = ordersMapper.qeuryFinalDefertime(list.get(i).getId());// 查询最后延期时间    ---线上延期
-																				 
-			if (null == os) {
-				os = new Orders();
+		}else{
+			int page = orderQueryParameter.getPage();// 页面传进来的当前页
+			int companyId = orderQueryParameter.getCompanyid();// 公司id
+			int totalCount = ordersMapper.queryAllordersByLikeCount(orderQueryParameter);// 查询总条数
+			pageUtil = new PageUtil2(page, totalCount);
+			if (page < 1) {
+				page = 1;
+				pageUtil.setPage(page);
+			} else if (page > pageUtil.getTotalPageCount()) {
+				if (totalCount == 0) {
+					page = pageUtil.getTotalPageCount() + 1;
+				} else {
+					page = pageUtil.getTotalPageCount();
+				}
+				pageUtil.setPage(page);
 			}
-			if (StringUtils.isEmpty(os.getDeferAfterReturntime())) {
-				os.setDeferAfterReturntime("0");
-			}
-			Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---人工延期
-			if (null == oslay) {
-				oslay = new Orders();
-			}
-			if (StringUtils.isEmpty(oslay.getDeferAfterReturntime())) {
-				oslay.setDeferAfterReturntime("0");
-			}
-			
-			if (os.getDeferAfterReturntime().compareTo(oslay.getDeferAfterReturntime()) > 0) {
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
-				list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
-			} else {
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
-				// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
-			}
+			int pages = (page - 1) * pageUtil.getPageSize();
+			orderQueryParameter.setPage(pages);
+			orderQueryParameter.setPagesize(pageUtil.getPageSize());
+			list = ordersMapper.queryAllordersByLike(orderQueryParameter);// 查询list集合
+			for (int i = 0; i < list.size(); i++) {
+				BigDecimal realmoney = ordersMapper.queryrepaymoney(list.get(i).getId());// 该订单还款成功的还款金额--还款表
+				if (realmoney == null) {
+					realmoney = new BigDecimal("0.00");
+				}
+				BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());// 该订单还款成功的还款金额--线下还款表
+				if (offmoney == null) {
+					offmoney = new BigDecimal("0.00");
+				}
+				BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());// 该订单扣款成功的还款金额--银行卡自动扣款表
+				if (bankmoney == null) {
+					bankmoney = new BigDecimal("0.00");
+				}
+				BigDecimal money = realmoney.add(offmoney).add(bankmoney);
+				list.get(i).setRepaymentMoney(String.valueOf(money));
+				
+				if(list.get(i).getInterestPenaltySum()==null){
+					list.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
+				}
+				BigDecimal shourldmoney = list.get(i).getOrderdetails().getRealityBorrowMoney()
+						.add(list.get(i).getOrderdetails().getInterestSum())
+						.add(list.get(i).getOrderdetails().getInterestPenaltySum());
+				list.get(i).setShourldmoney(shourldmoney);// 应还金额（借款金额+期限内总利息+逾期的逾期费）
+				list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));// 将手机号进行脱敏
+				list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
+				list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
+				list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
+				if (list.get(i).getUser().getOperationTime() == null
+						|| "".equals(list.get(i).getUser().getOperationTime())) {
+					list.get(i).getUser().setOperationTime(null);
+					;
+				}
+				list.get(i).getUser().setOperationTime(Timestamps.stampToDate(list.get(i).getUser().getOperationTime()));// 人审时间
 
-			/*
-			 * if(listdefer.size()!=0){
-			 * list.get(i).setDeferrTime(listdefer.size()+listdeferlay.size());/
-			 * /延期次数 BigDecimal defMoney=new BigDecimal("0.00"); for (int j = 0;
-			 * j < listdefer.size(); j++) {
-			 * defMoney=defMoney.add(listdefer.get(j).getInterestOnArrears()); }
-			 * BigDecimal defMoneylay=new BigDecimal("0.00"); for (int j = 0; j
-			 * < listdeferlay.size(); j++) {
-			 * defMoneylay=defMoneylay.add(listdeferlay.get(j).getExtensionfee()
-			 * ); } deferrMoney=defMoney.add(defMoneylay);
-			 * list.get(i).setDeferrMoney(deferrMoney); Orders
-			 * os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
-			 * list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.
-			 * getDeferAfterReturntime()));//延期后还款时间
-			 * list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数 }
-			 */
+				// list.get(i).setHowManyTimesBorMoney(ordersMapper.queryHow(list.get(i).getUserId()));//第几次借款
+
+				List<DeferredAndOrder> listdefer = ordersMapper.queryDefer(list.get(i).getId());
+				List<Offlinedelay> listdeferlay = ordersMapper.queryDeferlay(list.get(i).getId());
+
+				list.get(i).setDeferrTime(listdefer.size() + listdeferlay.size());// 延期次数
+				BigDecimal deferrMoney = new BigDecimal("0.00");// 延期金额
+				BigDecimal defMoney = new BigDecimal("0.00");// 线上延期
+				BigDecimal defMoneylay = new BigDecimal("0.00");// 人工延期
+				if (!listdefer.isEmpty() && listdefer.size() != 0) {
+					for (int j = 0; j < listdefer.size(); j++) {
+						defMoney = defMoney.add(listdefer.get(j).getInterestOnArrears());
+					}
+				}
+				if (!listdeferlay.isEmpty() && listdeferlay.size() != 0) {
+					for (int j = 0; j < listdeferlay.size(); j++) {
+						if (listdeferlay.get(j).getExtensionfee() == null) {
+							listdeferlay.get(j).setExtensionfee(new BigDecimal("0.00"));
+						}
+						defMoneylay = defMoneylay.add(listdeferlay.get(j).getExtensionfee());
+					}
+				}
+				deferrMoney = defMoney.add(defMoneylay);
+				list.get(i).setDeferrMoney(deferrMoney);
+				Orders os = ordersMapper.qeuryFinalDefertime(list.get(i).getId());// 查询最后延期时间    ---线上延期
+																					 
+				if (null == os) {
+					os = new Orders();
+				}
+				if (StringUtils.isEmpty(os.getDeferAfterReturntime())) {
+					os.setDeferAfterReturntime("0");
+				}
+				Orders oslay = ordersMapper.qeuryFinalDefertimelay(list.get(i).getId());// 查询最后延期时间 ---人工延期
+				if (null == oslay) {
+					oslay = new Orders();
+				}
+				if (StringUtils.isEmpty(oslay.getDeferAfterReturntime())) {
+					oslay.setDeferAfterReturntime("0");
+				}
+				
+				if (os.getDeferAfterReturntime().compareTo(oslay.getDeferAfterReturntime()) > 0) {
+					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));// 延期后还款时间
+					list.get(i).setPostponeDate(os.getPostponeDate());// 每次延期的天数
+				} else {
+					list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(oslay.getDeferAfterReturntime()));// 延期后还款时间
+					// list.get(i).setPostponeDate(oslay.getPostponeDate());//每次延期的天数
+				}
+
+				/*
+				 * if(listdefer.size()!=0){
+				 * list.get(i).setDeferrTime(listdefer.size()+listdeferlay.size());/
+				 * /延期次数 BigDecimal defMoney=new BigDecimal("0.00"); for (int j = 0;
+				 * j < listdefer.size(); j++) {
+				 * defMoney=defMoney.add(listdefer.get(j).getInterestOnArrears()); }
+				 * BigDecimal defMoneylay=new BigDecimal("0.00"); for (int j = 0; j
+				 * < listdeferlay.size(); j++) {
+				 * defMoneylay=defMoneylay.add(listdeferlay.get(j).getExtensionfee()
+				 * ); } deferrMoney=defMoney.add(defMoneylay);
+				 * list.get(i).setDeferrMoney(deferrMoney); Orders
+				 * os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
+				 * list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.
+				 * getDeferAfterReturntime()));//延期后还款时间
+				 * list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数 }
+				 */
 		}
-		List<Source> listsource = ordersMapper.querysource(companyId);
+		
+		}
+		List<Source> listsource = ordersMapper.querysource(orderQueryParameter.getCompanyid());
 		Map<String, Object> map = new HashMap<>();
 		map.put("listorders", list);
 		map.put("listsource", listsource);
@@ -730,6 +839,12 @@ public class OrderServiceImp implements IntOrderService {
 	public String getorderNumber(int userId) {
 		String orderNumber = ordersMapper.getorderNumber(userId);
 		return orderNumber;
+	}
+
+	@Override
+	public String getrealtime(int userId) {
+		String realtime = ordersMapper.getrealtime(userId);
+		return realtime;
 	}
 
 }

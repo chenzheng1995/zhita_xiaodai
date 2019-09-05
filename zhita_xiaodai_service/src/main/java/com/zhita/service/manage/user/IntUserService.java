@@ -3,6 +3,8 @@ package com.zhita.service.manage.user;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.UserLikeParameter;
 
@@ -55,6 +57,14 @@ public interface IntUserService {
 	public void updateScore1(int userId, String shareOfState);
 
 	public String getifBlacklist2(int userId);
+
+	public String getapplynumber(int userId);
+
+	public void updateuser(int userId, String timStamp, String applynumber);
+
+	public void updateapplyState(String applyState, int userId);
+
+	public String getapplyState(int userId);
 
 
 

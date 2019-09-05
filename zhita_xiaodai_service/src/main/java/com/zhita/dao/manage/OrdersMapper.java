@@ -116,6 +116,17 @@ public interface OrdersMapper {
 	 */
 	Integer queryAllordersByLikeCount(OrderQueryParameter orderQueryParameter);
 	
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	List<Orders> queryAllordersByLikeacrap(OrderQueryParameter orderQueryParameter);
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	Integer queryAllordersByLikeCountacrap(OrderQueryParameter orderQueryParameter);
+	
 	int getmanageControlId(String sourceName);
 
 	int getBorrowTimeLimit(@Param("userId")int userId,@Param("companyId") int companyId);
@@ -136,6 +147,8 @@ public interface OrdersMapper {
 		
 	//后台管理---查询该订单还款成功的还款金额---银行扣款表
 	BigDecimal queryrepaymoneybank(Integer orderid);
+
+	String getrealtime(int userId);
 
 
 }

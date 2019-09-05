@@ -14,10 +14,11 @@ public class OrderQueryParameter {
 	private Integer sourcename;//渠道名字id
 	private Integer userid;//用户id
 	private String registeClient;//注册客户端
-	private String orderstatus;//订单状态（已还：0；    未还：1）
+	private String orderstatus;//订单状态（已还：0；    未还：1；2：失败）
 	private String clientstatus;//客户状态（老客户：0；  新客户：1）
 	private String shouldstarttime;//应还开始时间
 	private String shouldendtime;//应还结束时间
+	private String orderstatusdetail;//订单状态（0：期限中；1：已逾期；2：已延期；3：已还款  4:已坏账）
 	
 	
 	
@@ -167,6 +168,12 @@ public class OrderQueryParameter {
 	}
 	public void setAssessor(Integer assessor) {
 		this.assessor = assessor;
+	}
+	public String getOrderstatusdetail() {
+		return orderstatusdetail;
+	}
+	public void setOrderstatusdetail(String orderstatusdetail) {
+		this.orderstatusdetail = orderstatusdetail;
 	}
 	
 }

@@ -132,8 +132,14 @@ public interface HomepageTongjiMapper {
 	//后台管理---累计回款总金额（银行扣款）
 	BigDecimal querydeffermoneybank(Integer companyId);
 	
-	//后台管理---累计应收总金额*************
+	//后台管理---累计应收总金额---订单明细表
 	List<Orderdetails> queryshouldMoney(Integer companyId);
+	
+	//后台管理---累计应收总金额---延期表
+	BigDecimal queryshouldMoneydef(Integer companyId);
+	
+	//后台管理---累计应收总金额---人工延期表
+	BigDecimal queryshouldMoneylay(Integer companyId);
 	
 	//后台管理---实际收益=放款总金额-回款总金额
 	

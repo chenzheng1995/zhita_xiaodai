@@ -22,6 +22,7 @@
       <arg column="delayTimes" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="operatorsAuthentication" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="facePhoto" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="applyState" javaType="java.lang.String" jdbcType="VARCHAR" />
       
     </constructor>
   </resultMap>
@@ -469,6 +470,9 @@
 	    <if test="state != null and state !='' ">
 	     	and appnum.state=#{state,jdbcType=VARCHAR}
 		</if>
+		<if test="shareOfState != null and shareOfState !='' ">
+	     	and u.shareOfState=#{shareOfState,jdbcType=VARCHAR}
+		</if>
      order by appnum.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
    <!-- 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）        查询数量-->
@@ -494,6 +498,9 @@
 	    <if test="state != null and state !='' ">
 	        and appnum.state=#{state,jdbcType=VARCHAR}
 	    </if>
+	    <if test="shareOfState != null and shareOfState !='' ">
+	     	and u.shareOfState=#{shareOfState,jdbcType=VARCHAR}
+		</if>
   </select>
   
   <!-- 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束） -->
@@ -520,9 +527,6 @@
 	        </if>
 	        <if test="state != null and state !='' ">
 				 and appnum.state=#{state,jdbcType=VARCHAR}
-			</if>
-			<if test="state != null and state !='' ">
- 				and appnum.state=#{state,jdbcType=VARCHAR}
 			</if>
      order by appnum.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
@@ -680,6 +684,26 @@
      select ifBlacklist from user where id = #{userId}
 	</select> 
 	
+		  	   		<select id="getapplynumber" parameterType="java.lang.Integer" resultType="java.lang.String">
+     select applynumber from user where id = #{userId}
+	</select> 
+	
+	  		<update id="updateuser" parameterType="java.util.Map" >
+		update user
+		set applytime = #{timStamp},
+		   applynumber = #{applynumber} 
+		where id = #{userId}
+	</update>	
+  
+  	  		<update id="updateapplyState" parameterType="java.util.Map" >
+		update user
+		set applyState = #{applyState}
+		where id = #{userId}
+	</update>
+	
+			  	   		<select id="getapplyState" parameterType="java.lang.Integer" resultType="java.lang.String">
+     select applyState from user where id = #{userId}
+	</select> 
 	
   
 </mapper>

@@ -207,13 +207,23 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		BigDecimal shouldMoney = new BigDecimal("0.00");//累计应收总金额
 		List<Orderdetails> listdetail = homepageTongjiMapper.queryshouldMoney(companyId);
+		BigDecimal shoumoneydef=homepageTongjiMapper.queryshouldMoneydef(companyId);//延期表的延期费
+		if(shoumoneydef==null){
+			shoumoneydef=new BigDecimal("0.00");
+		}
+		BigDecimal shoumoneylay=homepageTongjiMapper.queryshouldMoneylay(companyId);//人工延期表的费用
+		if(shoumoneylay==null){
+			shoumoneylay=new BigDecimal("0.00");
+		}
 		for (int i = 0; i < listdetail.size(); i++) {
 			if(listdetail.get(i).getInterestPenaltySum()==null){
 				listdetail.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
 			}
-			BigDecimal queryshouldMoneyfor=listdetail.get(i).getRealityBorrowMoney().add(listdetail.get(i).getInterestSum()).add(listdetail.get(i).getInterestPenaltySum());
+			BigDecimal queryshouldMoneyfor=listdetail.get(i).getRealityBorrowMoney().add(listdetail.get(i).getInterestSum()).
+					add(listdetail.get(i).getInterestPenaltySum());
 			shouldMoney=shouldMoney.add(queryshouldMoneyfor);
 		}
+		shouldMoney=shouldMoney.add(shoumoneydef).add(shoumoneylay);
 		BigDecimal realymoney = repaymoney.subtract(payrecmoney);//实际收益
 		
 		/**
