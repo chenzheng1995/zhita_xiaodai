@@ -31,7 +31,7 @@ public interface OperatorMapper {
 
 	int getuserId(int userId);
 
-	void updatereqId(@Param("userId")int userId,@Param("reqId") String reqId);
+	void updatereqId(@Param("userId")int userId,@Param("reqId") String reqId,@Param("authentime") String authentime);
 
 	void updateAttestationStatus(@Param("attestationStatus")String attestationStatus,@Param("userId") int userId);
 
@@ -42,6 +42,8 @@ public interface OperatorMapper {
 	String getphone(int userId);
 
 	int setwhitelistuser(@Param("attestationStatus")String attestationStatus,@Param("userId") int userId,@Param("authentime") String authentime);
+
+	String getauthentime(int userId);
 
 
 }

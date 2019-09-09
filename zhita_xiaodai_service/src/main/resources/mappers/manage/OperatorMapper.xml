@@ -171,7 +171,8 @@
   
   		  <update id="updatereqId" parameterType="java.util.Map">
     update operator
-    set reqId = #{reqId}
+    set reqId = #{reqId},
+    authentime = #{authentime}
     where userId = #{userId}
   </update>
   
@@ -199,5 +200,8 @@
 		values (#{attestationStatus},#{userId},#{authentime})
 	</insert>
 	
+	      		<select id="getauthentime" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select authentime from operator where userId = #{userId}
+	</select>
   
 </mapper>

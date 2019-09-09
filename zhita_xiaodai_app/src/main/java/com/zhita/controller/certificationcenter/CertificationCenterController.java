@@ -219,10 +219,22 @@ public class CertificationCenterController {
 			   map1.put("code","400");
 			   map1.put("msg", "不满足条件");
 		}
+				String phone2 = intUserService.getphone(userId);// 用户登录进来的手机号
+
+				PhoneDeal pDeal = new PhoneDeal();
+			   String newphone2 = pDeal.decryption(phone2);
+			   Map<String, Object> map7 = userAttestationService.getuserAttestation(userId);
+				String idcard_number = (String) map7.get("idcard_number");
+			   int number = intWhitelistuserService.getWhitelistuser(newphone2, idcard_number);
+				if (number == 0) {
 			   
 			String orderStatus = intOrderService.getorderStatus1(userId, companyId);  
 			if("3".equals(orderStatus)) {
+				
 				String realtime = intOrderService.getrealtime(userId);//用户最后一个订单的还款时间
+				String authentime = operatorService.getauthentime(userId);//运营商认证时间
+				long rtime = Long.parseLong(realtime);
+				long atime = Long.parseLong(authentime);
 				Map<String, Object> map6 =  retrialWindControlMapper.getretrialWindControl(companyId);
 				int howmanyDaysApart = (int) map6.get("howmanyDaysApart");
 				String ifrestore = (String) map6.get("ifrestore");
@@ -240,8 +252,10 @@ public class CertificationCenterController {
 				   df.format(new Date());// new Date()为获取当前系统时间
 				   Date date = new SimpleDateFormat("yyyy-MM-dd").parse(df.format(new Date()));//取时间  
 				    int num = compare_date(df.format(date),sdf1.format(date1));
-				    if(num==1) {//num=1时用户认证过期要重新认证
-				    	String attestationStatus = "0";
+				    if(num==1&&rtime>atime) {//num=1时用户认证过期要重新认证
+				    	shareOfState = "5";
+				    	intUserService.updateshareOfState(userId, shareOfState);
+				    	String attestationStatus = "3";
                      operatorService.updateAttestationStatus(attestationStatus, userId);
                      String applyState = "2";
                      intUserService.updateapplyState(applyState,userId);
@@ -249,11 +263,12 @@ public class CertificationCenterController {
                     	 BigDecimal canBorrowlines = borrowMoneyMessageMapper.getCanBorrowlines(companyId);
                     	 intUserService.updateCanBorrowLines(canBorrowlines, userId);
                      }
-				    }
-				    
 					   map1.put("Ncode","400");
 					   map1.put("code","400");
 					   map1.put("msg", "不满足条件");
+				    }
+				    
+			}
 			}
 			
 			

@@ -157,7 +157,15 @@
 	<select id="querydeffermoneybank" resultType="java.math.BigDecimal">
 		select sum(b.deduction_money) from bankdeductions b inner join orders o on b.orderid=o.id where o.companyid=#{arg0}
 	</select>
-	<!--后台管理      累计应收总金额     订单明细表 -->
+	<!-- 后台管理       累计减免总金额（线上减免的money） -->
+	<select id="annulmoneyacc" resultType="java.math.BigDecimal">
+		select sum(acc.amountmoney) from accountadjustment acc inner join orders o on acc.orderid=o.id where o.companyid=#{arg0}
+	</select>
+	<!-- 后台管理       累计减免总金额（线下减免的money） -->
+	<select id="annulmoneyoff" resultType="java.math.BigDecimal">
+		select sum(off.offmoney) from offlinjianmian off inner join orders o on off.orderid=o.id where o.companyid=#{arg0}
+	</select>
+	<!--后台管理      累计原始应收总金额     订单明细表 -->
 	<select id="queryshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
 		select od.realityBorrowMoney,od.interestSum,od.interestPenaltySum 
 		from orders o inner join orderdetails od on o.id=od.orderid
@@ -165,17 +173,17 @@
 	</select>
 	<!--后台管理      累计应收总金额     延期表 -->
 	<select id="queryshouldMoneydef" resultType="java.math.BigDecimal">
-		select sum(interestOnArrears) from deferred where deleted=0
+		select sum(d.interestOnArrears) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deleted=0
 	</select>
 	<!--后台管理      累计应收总金额     人工延期表 -->
 	<select id="queryshouldMoneylay" resultType="java.math.BigDecimal">
-		select sum(extensionfee) from offlinedelay
+		select sum(lay.extensionfee) from offlinedelay lay inner join orders o on lay.orderid=o.id where o.companyId=#{arg0}
 	</select>
 	<!--  ============期限内数据===============-->
 	
 	<!-- 后台管理        逾前未还笔数 -->
 	<select id="overdue" resultType="java.lang.Integer">
-		select count(id) from orders where orderStatus='0' and companyId=#{arg0}
+		select count(id) from orders where orderStatus='0' || orderStatus='2' and companyId=#{arg0}
 	</select>
 	<!-- 后台管理       逾前实还金额      订单表所有还款订单-->
 	<select id="overduerealOrder" resultType="com.zhita.model.manage.Orders">
@@ -189,16 +197,16 @@
           </foreach>   
           and statu="成功" 
 	</select>
-	<!-- 后台管理       逾前应收总金额 -->
+	<!-- 后台管理       逾前未还总金额 -->
 	<select id="overdueshouldMoney" resultType="java.math.BigDecimal">
-		select sum(od.shouldReapyMoney) from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus=0
+		select sum(od.shouldReapyMoney) from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus=0 || o.orderStatus=2
 	</select>
 	
 	<!--============逾期数据=============-->
 	
 	<!-- 后台管理         逾后未还笔数 -->
 	<select id="overdue1" resultType="java.lang.Integer">
-		select count(id) from orders where orderStatus='1' and companyId=#{arg0}
+		select count(id) from orders where orderStatus='1' || orderStatus='4' and companyId=#{arg0}
 	</select>
 	<!-- 后台管理        已坏账笔数 -->
 	<select id="baddebt1" resultType="java.lang.Integer">
@@ -208,9 +216,9 @@
 	<select id="shouorder" resultType="java.lang.Integer">
 		select count(id) from orders where companyId=#{arg0} and orderStatus!=3
 	</select>
-	<!--后台管理      逾期应收总金额-->
+	<!--后台管理      逾期未还总金额-->
 	<select id="overshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
-		select od.shouldReapyMoney,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus=1
+		select od.shouldReapyMoney,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid where o.companyId=#{arg0} and o.orderStatus=1 || o.orderStatus=4
 	</select>
 	
 	

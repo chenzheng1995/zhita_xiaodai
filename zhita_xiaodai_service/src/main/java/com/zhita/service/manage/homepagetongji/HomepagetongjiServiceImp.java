@@ -175,7 +175,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			payrecmoney=new BigDecimal("0.00");
 		}
 		
-		BigDecimal repaymoney = new BigDecimal("00");//累计回款总金额
+		BigDecimal repaymoney = new BigDecimal("0.00");//累计回款总金额
 		BigDecimal repaymoneyreal = homepageTongjiMapper.queryrepayMoney(companyId);//累计回款总金额(实还金额)
 		if(repaymoneyreal==null){
 			repaymoneyreal=new BigDecimal("0.00");
@@ -205,7 +205,18 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		}
 		repaymoney=repaymoneyreal.add(deffermoney).add(deffermoneyoff).add(deffermoneybank);
 		
-		BigDecimal shouldMoney = new BigDecimal("0.00");//累计应收总金额
+		BigDecimal annulmoney=new BigDecimal("0.00");//累计减免金额（包含线上减免的money+线下减免掉的money）
+		BigDecimal annulmoneyacc = homepageTongjiMapper.annulmoneyacc(companyId);//累计减免总金额（线上减免的money）
+		if(annulmoneyacc==null){
+			annulmoneyacc=new BigDecimal("0.00");
+		}
+		BigDecimal annulmoneyoff = homepageTongjiMapper.annulmoneyoff(companyId);//累计减免总金额（线下减免的money）
+		if(annulmoneyoff==null){
+			annulmoneyoff=new BigDecimal("0.00");
+		}
+		annulmoney=annulmoneyacc.add(annulmoneyoff);
+		
+		BigDecimal shouldMoney = new BigDecimal("0.00");//累计原始应收总金额
 		List<Orderdetails> listdetail = homepageTongjiMapper.queryshouldMoney(companyId);
 		BigDecimal shoumoneydef=homepageTongjiMapper.queryshouldMoneydef(companyId);//延期表的延期费
 		if(shoumoneydef==null){
@@ -231,7 +242,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		 */
 		int overdue = homepageTongjiMapper.overdue(companyId);//逾前未还笔数
 		
-		BigDecimal overduemoney = homepageTongjiMapper.overdueshouldMoney(companyId);//逾前应收总金额
+		BigDecimal overduemoney = homepageTongjiMapper.overdueshouldMoney(companyId);//逾前未还总金额
 		if(overduemoney==null){
 			overduemoney=new BigDecimal("0.00");
 		}
@@ -240,16 +251,16 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		 * 已逾期数据
 		 */
 		int overdue1 = homepageTongjiMapper.overdue1(companyId);//逾后未还笔数
-		int baddebt = homepageTongjiMapper.baddebt1(companyId);//已坏账笔数
+		//int baddebt = homepageTongjiMapper.baddebt1(companyId);//已坏账笔数
 		int shouorder = homepageTongjiMapper.shouorder(companyId);//应还订单
 		String overduecvr=null;
 		if(shouorder==0){
 			overduecvr="0.00%";
 		}else{
-			overduecvr = (new DecimalFormat("#0.00").format((overdue1+baddebt)*1.0/shouorder*100))+"%";//逾期率
+			overduecvr = (new DecimalFormat("#0.00").format((overdue1)*1.0/shouorder*100))+"%";//逾期率
 		}
 		
-		BigDecimal overshouldMoney = new BigDecimal("0.00");//逾期应收总金额
+		BigDecimal overshouldMoney = new BigDecimal("0.00");//逾期未还总金额
 		List<Orderdetails> listtail = homepageTongjiMapper.overshouldMoney(companyId);
 		for (int i = 0; i < listtail.size(); i++) {
 			if(listtail.get(i).getInterestPenaltySum()==null){
@@ -279,16 +290,17 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("orderrepaycvr",orderrepaycvr);//订单回款率
 		map.put("payrecmoney",payrecmoney);//累计放款总金额
 		map.put("repaymoney",repaymoney);//累计回款总金额
-		map.put("shouldMoney",shouldMoney);//累计应收总金额
+		map.put("shouldMoney",shouldMoney);//累计原始应收总金额
+		map.put("annulmoney",annulmoney);//累计减免总金额
 		map.put("realymoney", realymoney);//实际收益
 		
 		map.put("overdue",overdue);//逾前未还笔数
 		//map.put("overduerealMoney", overduerealMoney);//逾期实还金额
-		map.put("overduemoney", overduemoney);//逾前应收总金额
+		map.put("overduemoney", overduemoney);//逾前未还总金额
 		
 		map.put("overdue1", overdue1);//逾后未还笔数
 		map.put("overduecvr", overduecvr);//逾期率
-		map.put("overshouldMoney", overshouldMoney);//逾期应收总金额
+		map.put("overshouldMoney", overshouldMoney);//逾期未还总金额
 		return map;
 	}
 	

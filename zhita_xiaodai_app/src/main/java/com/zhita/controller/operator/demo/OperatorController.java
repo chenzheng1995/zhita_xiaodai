@@ -93,10 +93,9 @@ public class OperatorController {
 		String reqId = phone + System.currentTimeMillis();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		String authentime = System.currentTimeMillis() + "";// 认证时间
 		int num = operatorService.getuserId(userId);
 		if (num == 0) {
-			String authentime = System.currentTimeMillis() + "";// 认证时间
 			int number = operatorService.setredIdAndPhone(reqId, userId, phone, authentime);
 			if (number == 1) {
 				map.put("Ncode", "2000");
@@ -108,7 +107,7 @@ public class OperatorController {
 				map.put("Code", "405");
 			}
 		} else {
-			operatorService.updatereqId(userId, reqId);
+			operatorService.updatereqId(userId, reqId,authentime);
 		}
 
 		H5ReportDemo h5ReportDemo = new H5ReportDemo();

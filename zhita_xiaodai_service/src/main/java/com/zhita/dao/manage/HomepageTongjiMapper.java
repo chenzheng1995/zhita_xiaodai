@@ -132,7 +132,13 @@ public interface HomepageTongjiMapper {
 	//后台管理---累计回款总金额（银行扣款）
 	BigDecimal querydeffermoneybank(Integer companyId);
 	
-	//后台管理---累计应收总金额---订单明细表
+	//后台管理---累计减免总金额（线上减免的money）
+	BigDecimal annulmoneyacc(Integer companyId);
+	
+	//后台管理---累计减免总金额（线下减免的money）
+	BigDecimal annulmoneyoff(Integer companyId);
+	
+	//后台管理---累计原始应收总金额---订单明细表
 	List<Orderdetails> queryshouldMoney(Integer companyId);
 	
 	//后台管理---累计应收总金额---延期表
@@ -157,7 +163,7 @@ public interface HomepageTongjiMapper {
 	//后台管理----逾前实还金额
 	BigDecimal overduerealMoney(List<Integer> ids);
 	
-	//后台管理----逾前应收总金额
+	//后台管理----逾前未还总金额
 	BigDecimal overdueshouldMoney(Integer companyId);
 	
 	/**
@@ -176,7 +182,7 @@ public interface HomepageTongjiMapper {
 	
 	//后台管理---逾期率----(逾后未还+已坏账)/应还订单*100%
 	
-	//后台管理---逾期应收总金额
+	//后台管理---逾期未还总金额
 	List<Orderdetails> overshouldMoney(Integer companyId);
 	
 	/**

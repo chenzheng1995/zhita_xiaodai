@@ -44,8 +44,8 @@ public class OperatorServiceimp implements OperatorService{
 	}
 
 	@Override
-	public void updatereqId(int userId, String reqId) {
-		operatorMapper.updatereqId(userId,reqId);
+	public void updatereqId(int userId, String reqId,String authentime) {
+		operatorMapper.updatereqId(userId,reqId,authentime);
 		
 	}
 
@@ -78,5 +78,12 @@ public class OperatorServiceimp implements OperatorService{
 		int number = operatorMapper.setwhitelistuser(attestationStatus,userId,authentime);
 		return number;
 	}
+
+	@Override
+	public String getauthentime(int userId) {
+		String authentime = operatorMapper.getauthentime(userId);//运营商认证时间
+		return authentime;
+	}
+
 
 }

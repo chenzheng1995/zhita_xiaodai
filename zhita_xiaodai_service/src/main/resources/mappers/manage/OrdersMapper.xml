@@ -623,7 +623,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   </select>
   
       <select id="getRepayment" parameterType="java.lang.Integer" resultType="java.util.Map">
-  select id,orderStatus,shouldReturnTime,orderNumber from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2') order by shouldReturnTime desc limit 1
+  select id,orderStatus,shouldReturnTime,orderNumber from orders where userId = #{userId} and companyId = #{companyId} and (orderStatus='0' or orderStatus='1' or orderStatus='2') order by orderCreateTime desc limit 1
   </select>
 	
   <!-- 后台管理        查询产生该订单的用户是第几次借款-->
@@ -662,16 +662,16 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 
 
   <select id="getBorrowTimeLimit" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select borrowTimeLimit from orders where companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+  	select borrowTimeLimit from orders where companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
   </select>
   
   
     <select id="getorderStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2') and companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2') and companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
   </select>
   
   		<select id="getorderStatus1" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select orderStatus from orders where userId = #{userId} and companyId = #{companyId} order by shouldReturnTime desc limit 1
+		select orderStatus from orders where userId = #{userId} and companyId = #{companyId} order by orderCreateTime desc limit 1
 	</select>
 
 
@@ -864,11 +864,11 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   </select>
 
   	<select id="getshouldReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select shouldReturnTime from orders where companyId=#{companyId} and userId = #{userId} order by shouldReturnTime desc limit 1
+		select shouldReturnTime from orders where companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
 	</select>
 	
 	  		<select id="getorderNumber" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select orderNumber from orders where userId = #{userId} order by shouldReturnTime desc limit 1
+		select orderNumber from orders where userId = #{userId} order by orderCreateTime desc limit 1
 	</select>
 	<!-- 后台管理      查询该订单还款成功的还款金额    还款表 -->
 	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
@@ -888,7 +888,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	
 
 	<select id="getrealtime" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select realtime  from  orders where userId = #{userId} order by realtime desc  LIMIT 1
+		select realtime  from  orders where userId = #{userId} order by orderCreateTime desc  LIMIT 1
 	</select>
 	
 

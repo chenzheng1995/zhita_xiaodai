@@ -295,18 +295,29 @@ public class Test {
 //
 //System.out.println(newstr);
 		
-		String refuseApplyProvince ="北京/上海北京/南京";
-		 String address = "上海市北京";
-		 String aS = address.substring(0,3);
-		 System.out.println(aS);
-		  String[] aString = refuseApplyProvince.split("/");
-	      for (int i = 0; i < aString.length; i++) {
-	    	  if(aS.indexOf(aString[i])!=-1) {
-System.out.println("不符合");
-	    	  }else {
-				System.out.println("符合");
-			}
-	      }
+//		String refuseApplyProvince ="北京/上海北京/南京";
+//		 String address = "上海市北京";
+//		 String aS = address.substring(0,3);
+//		 System.out.println(aS);
+//		  String[] aString = refuseApplyProvince.split("/");
+//	      for (int i = 0; i < aString.length; i++) {
+//	    	  if(aS.indexOf(aString[i])!=-1) {
+//System.out.println("不符合");
+//	    	  }else {
+//				System.out.println("符合");
+//			}
+//	      }
+		
+		
+		String aString = "1567672396000";
+		String bString = "1567672452000";
+		long a = Long.parseLong(aString);
+		long b = Long.parseLong(bString);
+		if(a>b) {
+			System.out.println("a大");
+		}else {
+			System.out.println("b大");
+		}
 		
 	}
 
