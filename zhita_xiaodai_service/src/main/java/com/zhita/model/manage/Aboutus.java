@@ -11,6 +11,8 @@ public class Aboutus {
     private String productname;//公司或者产品名字
 
     private String appversion;//APP版本
+    
+    private String ifcoerceupdate;//是否强制更新（1：是2：否）
 
     public Integer getId() {
         return id;
@@ -51,4 +53,13 @@ public class Aboutus {
     public void setAppversion(String appversion) {
         this.appversion = appversion == null ? null : appversion.trim();
     }
+
+	public String getIfcoerceupdate() {
+		return ifcoerceupdate;
+	}
+
+	public void setIfcoerceupdate(String ifcoerceupdate) {
+		this.ifcoerceupdate = ifcoerceupdate;
+	}
+    
 }

@@ -64,6 +64,9 @@ public class SourceServiceImp implements IntSourceService{
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
     	}
+    	for (int i = 0; i < listto.size(); i++) {
+    		listto.get(i).setToken(listto.get(i).getLink().substring(listto.get(i).getLink().length()-6,listto.get(i).getLink().length()));
+		}
     	
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("sourcelist", listto);

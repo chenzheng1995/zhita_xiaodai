@@ -230,7 +230,7 @@ public class LoginController {
 								map.put("msg", "用户登录失败，登录状态修改失败");
 							}
 	        			}else {
-	        				map.put("msg2", "验证码错误");
+	        				map.put("msg", "验证码错误");
 	        			}
 	        		}
 	        	}
