@@ -202,5 +202,9 @@ public class TestController {
 		BigDecimal price=new BigDecimal("1.01");
 		System.out.println(new BigDecimal(uv).multiply(price)+"-----------");
 		
+		String str="http://dhj.rong51dai.com/template/muban1/index.html?code=App&token=HGJKJH";
+		String result = str.substring(str.length()-6,str.length());
+		System.out.println(result+"---------------");
+		
 	}	
 }

@@ -230,7 +230,7 @@ public class LoginController {
 								map.put("msg", "用户登录失败，登录状态修改失败");
 							}
 	        			}else {
-	        				map.put("msg2", "验证码错误");
+	        				map.put("msg", "验证码错误");
 	        			}
 	        		}
 	        	}
@@ -363,8 +363,8 @@ public class LoginController {
 	        // 判断文件类型
 	        //String path = "D://nginx-1.14.2/html/dist/H5Code/" + fileName;   //39.98.83.65服务
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //139.129.102.60服务
-	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //115.29.64.145服务
-	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
+	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //115.29.64.145服务
+	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
 	        FolderUtil folderUtil = new FolderUtil();
 	        try {
 	            folderUtil.uploadImage(inputStream, path);
@@ -373,8 +373,8 @@ public class LoginController {
 	        }
 	         //return "http://tg.rong51dai.com/H5Code/" + fileName;   //39.98.83.65服务
 	         //return "http://139.129.102.60:8081/H5Code/" + fileName;   //139.129.102.60服务
-	         //return "http://115.29.64.145:8081/H5Code/" + fileName;   //115.29.64.145服务
-	         return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
+	         return "http://115.29.64.145:8081/H5Code/" + fileName;   //115.29.64.145服务
+	         //return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
 	    }
 	    
 	    private int getRandomCode() {
