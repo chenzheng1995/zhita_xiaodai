@@ -179,9 +179,11 @@ public class FinanceServiceimp implements FinanceService{
 		String offDefetime = padao.offDefetime(ordea.getOrderId());
 		if(defetime==null){
 			defetime = "0";
-		}else if(offDefetime==null){
+		}
+		if(offDefetime==null){
 			offDefetime = "0";
-		} else if(offDefetime!=null && defetime != null){
+		}
+		if(offDefetime!=null && defetime != null){
 			int result = defetime.compareTo(offDefetime);
 			if(result>0){//defetime 大于 offDefetime
 				ordea.setDeferBeforeReturntime(Timestamps.stampToDate(defetime));
@@ -192,12 +194,10 @@ public class FinanceServiceimp implements FinanceService{
 			}
 		}
 		
-		if(ordea.getDeferBeforeReturntime()==null){
-			ordea.setDeferBeforeReturntime(ordea.getShouldReturnTime());
-		}
-		
 		if(ordea.getDeferAfterReturntime()==null){
-			ordea.setDeferAfterReturntime(ordea.getShouldReturnTime());
+			ordea.setDeferBeforeReturntime(ordea.getShouldReturnTime());
+		}else if(ordea.getDeferAfterReturntime()!=null){
+			ordea.setDeferAfterReturntime(Timestamps.stampToDate(ordea.getDeferAfterReturntime()));
 		}
 		
 		System.out.println("延期金额:"+ordea.getDefeMoney()+"手机号:"+ordea.getPhone());

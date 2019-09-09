@@ -642,14 +642,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
-		if(defe.getDeferAfterReturntime()!=null){
-			if(defe.getDeferAfterReturntime().length()!=0){
-				
-				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
-			}
-		}else{
-			orders.get(i).setDeferAfterReturntime("/");
-		}
 		
 		if(orders.get(i).getSurplus_money()==null){
 			orders.get(i).setSurplus_money(new BigDecimal(0));
@@ -680,7 +672,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
 
-		
+		if(orders.get(i).getDeferAfterReturntime()==null){
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		}else{
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+		}
 		
 		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 		orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
