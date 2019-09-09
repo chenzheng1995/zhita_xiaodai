@@ -253,7 +253,7 @@
 				and o.id = ord.orderId 
 				and col.collectionMemberId = colme.userId 
 				and u.id = o.userId 
-				and col.collectionTime is null
+				and col.usertype is null
 				and o.orderStatus between "0" and "3"
 				and o.companyId = #{companyId}
 				and col.collectionMemberId = #{collectionMemberId}

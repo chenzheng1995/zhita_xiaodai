@@ -68,8 +68,9 @@ public class OperationalServiceimp implements OperationalService{
 		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String c = sima.format(date);//结束时间
+		String b = sima.format(new Date());
 		ordera.setStart_time(c+" 00:00:00");
-		ordera.setEnd_time(sima+" 23:59:59");
+		ordera.setEnd_time(b+" 23:59:59");
 //		try {
 //			ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
 //			ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
@@ -194,6 +195,7 @@ public class OperationalServiceimp implements OperationalService{
 			ordes.add(ord);
 			map.put("PageUtil", pages);
 		}else{
+			System.out.println(ordera.getStart_time()+"CC0"+ordera.getEnd_time());
 			List<String> stime = DateListUtil.getDays(ordera.getStart_time(), ordera.getEnd_time());
 			for(int i=0;i<stime.size();i++){
 				ordera.setStart_time(stime.get(i)+" 00:00:00");
@@ -297,8 +299,9 @@ public class OperationalServiceimp implements OperationalService{
 		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String c = sima.format(date);//结束时间
+		String b = sima.format(new Date());
 		order.setStart_time(c+" 00:00:00");
-		order.setEnd_time(stimea+" 23:59:59");
+		order.setEnd_time(b+" 23:59:59");
 		
 		
 		if(order.getStart_time()==null){
@@ -512,8 +515,9 @@ public class OperationalServiceimp implements OperationalService{
 		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
 		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 		String cs = sima.format(date);//结束时间
+		String ba = sima.format(new Date());//结束时间
 		orde.setStart_time(cs+" 00:00:00");
-		orde.setEnd_time(sima+" 23:59:59");
+		orde.setEnd_time(ba+" 23:59:59");
 		
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");

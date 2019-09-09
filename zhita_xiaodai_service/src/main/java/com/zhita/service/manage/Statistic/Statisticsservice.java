@@ -73,4 +73,7 @@ public interface Statisticsservice {
 	
 	Integer SelectReaymentOrderId(String orderNumber);
 	
+	
+	Integer UpdateBan(Bankcard bank);
+	
 }

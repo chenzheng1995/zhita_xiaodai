@@ -241,8 +241,9 @@ public class Chanpayserviceimp implements Chanpayservice{
 	}
 
 	@Override
-	public Integer DeleteOrderNumber(String orderNumber) {
+	public Integer DeleteOrderNumber(String orderNumber,String orderStatus) {
 		Orders ord = padao.OneOrders(orderNumber);//查询订单
+		ord.setOrderStatus(orderStatus);
 		Orderdetails orderdetails = padao.OneOrderdetails(ord.getId());//查询订单详情
 		Integer ca = 0;
 		Integer addOrderId = padao.Adddiscardorders(ord);//添加废弃订单表

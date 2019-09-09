@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
@@ -605,7 +606,75 @@ public class ChanpayQuickCollection {
 		}
 		return map;
 	}
+
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 2.3 鉴权绑卡确认 api nmg_api_auth_sms
+	 */
+	@ResponseBody
+	@RequestMapping("nmg_api_auth_sms")
+	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, String> origMap = new HashMap<String, String>();
+		
+		
+		if(oriAuthTrxId != null && SmsCode != null && oriAuthTrxId != ""){
+			System.out.println("数据:"+oriAuthTrxId);
+			// 2.1 基本参数
+			origMap = setCommonMap(origMap);
+			origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
+			// 2.1 鉴权绑卡  业务参数
+			String trxIdA = Long.toString(System.currentTimeMillis());	
+			origMap.put("TrxId", trxIdA);// 订单号
+			origMap.put("OriAuthTrxId", oriAuthTrxId);// 原鉴权绑卡订单号
+			origMap.put("SmsCode", SmsCode);// 鉴权短信验证码
+			origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
+			String resultJJ = "";
+			try {                                                                                                                                                                                             
+				String urlStrC = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
+				resultJJ = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+							urlStrC);
+				ReturnChanpay retuJJ = JSON.parseObject(resultJJ,ReturnChanpay.class);
+				String ssa = retuJJ.getAcceptStatus();
+				Bankcard bank = new Bankcard();
+				bank.setUserId(userId);
+				if(ssa.equals("S")){
+					map.put("Ncode", 2000);
+					map.put("code", "200");
+					servie.UpdateBan(bank);//修改银行卡认证状态
+					map.put("ReturnChanpay", retuJJ);
+					map.put("desc", "认证成功");
+					map.put("msg", retuJJ.getRetMsg());
+					
+				
+				}else{
+					map.put("Ncode", 0);
+					map.put("code", "0");
+					map.put("ReturnChanpay", retuJJ);
+					map.put("desc", "认证失败");
+					map.put("msg", retuJJ.getRetMsg());
+				}
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}else{
+			map.put("code", 0);
+			map.put("Ncode", 0);
+			map.put("desc", "OriAuthTrxId，SmsCode不能为空");
+			map.put("msg", "OriAuthTrxId，SmsCode不能为空");
+		}
+		
+		return map;
+	}
 	
 	
 	
@@ -756,17 +825,17 @@ public class ChanpayQuickCollection {
 							urlStrC);
 				ReturnChanpay retuJJ = JSON.parseObject(resultJJ,ReturnChanpay.class);
 				String ssa = retuJJ.getAcceptStatus();
+				Bankcard bank = new Bankcard();
+				
+				bank.setUserId(userId);//登陆人ID
+				bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
+				bank.setBankcardName(BkAcctNo);//卡号
+				bank.setTiedCardPhone(MobNo);//手机号
+				bank.setDeleted("0");
+				bank.setIDcardnumber(IDNo);//身份证号
+				bank.setCstmrnm(CstmrNm);//持卡人姓名
 				if(ssa.equals("S")){
-					Bankcard bank = new Bankcard();
 					bank.setAttestationStatus("1");
-					bank.setUserId(userId);//登陆人ID
-					bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
-					bank.setBankcardName(BkAcctNo);//卡号
-					bank.setTiedCardPhone(MobNo);//手机号
-					bank.setDeleted("0");
-					bank.setIDcardnumber(IDNo);//身份证号
-					bank.setCstmrnm(CstmrNm);//持卡人姓名
-					servie.AddBankcard(bank);
 					map.put("Ncode", 2000);
 					map.put("code", "200");
 					map.put("ReturnChanpay", retuJJ);
@@ -775,9 +844,14 @@ public class ChanpayQuickCollection {
 					
 				
 				}else{
-					
+					bank.setAttestationStatus("0");
+					map.put("Ncode", 0);
+					map.put("code", "0");
+					map.put("ReturnChanpay", retuJJ);
+					map.put("desc", "认证成功");
+					map.put("msg", retuJJ.getRetMsg());
 				}
-				
+				servie.AddBankcard(bank);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -832,69 +906,6 @@ public class ChanpayQuickCollection {
 		return map;
 	}
 
-	/**
-	 * 2.3 鉴权绑卡确认 api nmg_api_auth_sms
-	 */
-	@ResponseBody
-	@RequestMapping("nmg_api_auth_sms")
-	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, String> origMap = new HashMap<String, String>();
-		System.out.println(oriAuthTrxId+"AAAAAAA"+SmsCode);
-		if(oriAuthTrxId != null && SmsCode != null && oriAuthTrxId != ""){
-			System.out.println("数据:"+oriAuthTrxId);
-			// 2.1 基本参数
-			origMap = setCommonMap(origMap);
-			origMap.put("Service", "nmg_api_auth_sms");// 鉴权绑卡确认的接口名
-			// 2.1 鉴权绑卡  业务参数
-			String trxId = Long.toString(System.currentTimeMillis());	
-			origMap.put("TrxId", trxId);// 订单号
-			origMap.put("OriAuthTrxId", oriAuthTrxId);// 原鉴权绑卡订单号
-			origMap.put("SmsCode", SmsCode);// 鉴权短信验证码
-			origMap.put("NotifyUrl", "http://dev.chanpay.com/receive.php");// 异步通知地址
-			String result = "";
-			try {                                                                                                                                                                                             
-				String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
-				result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
-							urlStr);
-				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
-				String ssa = retu.getAcceptStatus();
-				if(ssa.equals("S")){
-					
-				
-				Integer a = servie.UpdateChanpay(userId);
-				if(a!=null){
-					map.put("Ncode", 2000);
-					map.put("code", "200");
-					map.put("ReturnChanpay", retu);
-					map.put("desc", "认证成功");
-					map.put("msg", retu.getRetMsg());
-					
-				}else{
-					map.put("Ncode", 0);
-					servie.deleteBank(userId);
-					map.put("code", "0");
-					map.put("ReturnChanpay", retu);
-					map.put("desc", "认证失败");
-					map.put("msg", retu.getRetMsg());
-				}
-				
-				}else{
-					
-				}
-				
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		}else{
-			map.put("code", 0);
-			map.put("Ncode", 0);
-			map.put("desc", "OriAuthTrxId，SmsCode不能为空");
-			map.put("msg", "OriAuthTrxId，SmsCode不能为空");
-		}
-		
-		return map;
-	}
 	
 	
 	

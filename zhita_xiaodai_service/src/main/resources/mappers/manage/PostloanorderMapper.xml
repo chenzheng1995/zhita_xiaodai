@@ -376,7 +376,7 @@
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
 			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,
-			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate
+			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate,ord.realityAccount
 			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom	
 			<where>
 				o.id = ord.orderId 

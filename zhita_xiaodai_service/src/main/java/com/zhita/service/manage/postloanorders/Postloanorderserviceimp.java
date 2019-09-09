@@ -187,6 +187,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{
 				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
 			}
+			ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
+			ordeids.get(i).setInterestSum(ordeids.get(i).getRealityAccount().add(ordeids.get(i).getInterestSum()));
+			
 			
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));
 			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
@@ -554,7 +557,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println(sim.format(new Date()));
 				try {
 					System.out.println(Timestamps.dateToStamp1(sim.format(new Date())));
-					ovdeu.setCollectiondate(Timestamps.dateToStamp(sim.format(new Date())));//获取当前时间戳
+					ovdeu.setCollectiondate(Timestamps.dateToStamp1(sim.format(new Date())));//获取当前时间戳
 				} catch (Exception e) {
 					// TODO: handle exception
 				}

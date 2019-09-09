@@ -125,6 +125,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			if(ordeBank.get(i).getDeduction_money()==null){
 				ordeBank.get(i).setDeduction_money(new BigDecimal(0));
 			}
+			ordeBank.get(i).setRealityAccount(ordeBank.get(i).getInterestSum().add(ordeBank.get(i).getRealityAccount()));
 			ordeBank.get(i).setOrder_money(ordeBank.get(i).getRealityBorrowMoney().add(ordeBank.get(i).getInterestPenaltySum()));
 			ordeBank.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeBank.get(i).getOrderCreateTime()));
 			ordeBank.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeBank.get(i).getDeferAfterReturntime()));
@@ -336,6 +337,11 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	@Override
 	public Integer SelectReaymentOrderId(String orderNumber) {
 		return sdao.SelectRepaymentOrderId(orderNumber);
+	}
+
+	@Override
+	public Integer UpdateBan(Bankcard bank) {
+		return sdao.UpdateBankcard(bank);
 	}
 		
 		

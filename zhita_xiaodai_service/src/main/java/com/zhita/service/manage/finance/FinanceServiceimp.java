@@ -1006,7 +1006,11 @@ public class FinanceServiceimp implements FinanceService{
 			String phon = p.decryption(ofa.get(i).getPhone());
 			ofa.get(i).setPhone(tm.mobileEncrypt(phon));
 			ofa.get(i).setDefeNum(de.getDefeNum());
+			if(de.getDefeMoney()==null){
+				de.setDefeMoney(new BigDecimal(0));
+			}
 			ofa.get(i).setDefeMoney(de.getDefeMoney());
+			
 			ofa.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ofa.get(i).getPreextensiontime()));
 			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getShouldReturnTime()));
 			ofa.get(i).setOperating_time(Timestamps.stampToDate(ofa.get(i).getOperating_time()));

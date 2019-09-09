@@ -1045,7 +1045,7 @@
 			
 			
 			<update id="OrdersStatus" parameterType="com.zhita.model.manage.Offlinjianmian">
-				update orders set orderStatus = "3" where id = #{orderId}
+				update orders set orderStatus = "3",realtime = #{sedn_time} where id = #{orderId}
 			</update>
 			
 			
