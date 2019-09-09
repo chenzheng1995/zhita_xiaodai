@@ -292,7 +292,7 @@ public class SourceTongjiController {
 			String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 			
 			
-			
+			Source sourceByPrimaryKey=intSourceService.selectByid(sourceid);
 			TongjiSorce tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourceid);
 			
 			int uv=0;//uv
@@ -365,8 +365,8 @@ public class SourceTongjiController {
 			}
 			tongjiSorce.setCvr2(cvr2);
 			
-			BigDecimal price=tongjiSorce.getPrice();//渠道的流量单价  
-			String clearingform=tongjiSorce.getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
+			BigDecimal price=sourceByPrimaryKey.getPrice();//渠道的流量单价  
+			String clearingform=sourceByPrimaryKey.getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
 			
 			if(clearingform.equals("1")){
 				tongjiSorce.setFlowcharge(new BigDecimal(uv).multiply(price));
