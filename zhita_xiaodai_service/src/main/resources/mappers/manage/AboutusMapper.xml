@@ -9,7 +9,7 @@
     <result column="appVersion" property="appversion" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, logo, productName, appVersion
+    id, companyId, logo, productName, appVersion,ifcoerceupdate
   </sql>
   <!-- 后台管理     根据id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -90,7 +90,8 @@
     set companyId = #{companyid,jdbcType=INTEGER},
       logo = #{logo,jdbcType=VARCHAR},
       productName = #{productname,jdbcType=VARCHAR},
-      appVersion = #{appversion,jdbcType=VARCHAR}
+      appVersion = #{appversion,jdbcType=VARCHAR},
+      ifcoerceupdate = #{ifcoerceupdate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <!-- 后台管理       查询所有 -->

@@ -196,24 +196,11 @@ public class TestController {
 		redisClientUtil.set("贷回家qudao12019/08/28xiaodaiKey", "2");
 		System.out.println(redisClientUtil.get("贷回家qudao12019/08/28xiaodaiKey"));
 		
-		String dateStart="2019-08-26";
-		String dateEnd="2019-09-02";
-		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
-		for (int i = 0; i < listdate.size(); i++) {
-			System.out.println(listdate.get(i));
-		}
+		System.out.println("0".compareTo("0")+"++++++++++++++++++");
 		
-		int v=7;
-		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-		Date now = new Date();
-		Date startDate = DateUtils.addDays(now, -v);
-		Date endDate = DateUtils.addDays(now, v);
-		System.out.println(sf.format(startDate)+"--------"+sf.format(endDate));
+		int uv=100;
+		BigDecimal price=new BigDecimal("1.01");
+		System.out.println(new BigDecimal(uv).multiply(price)+"-----------");
 		
-		OrderQueryParameter orderQueryParameter=new OrderQueryParameter();
-		orderQueryParameter.setOrderstatus("2");
-		if(orderQueryParameter.getOrderstatus()!=null&&!"".equals(orderQueryParameter.getOrderstatus())&&orderQueryParameter.getOrderstatus()=="2"){
-			System.out.println("333333333333333+++++++++++++");
-		}
 	}	
 }

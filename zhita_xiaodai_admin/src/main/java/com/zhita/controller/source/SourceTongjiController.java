@@ -1,5 +1,6 @@
 package com.zhita.controller.source;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +59,8 @@ public class SourceTongjiController {
 		for (int i = 0; i < listsource.size(); i++) {
 			int sourceid=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名称
+			BigDecimal price=listsource.get(i).getPrice();////渠道的流量单价  
+			String clearingform=listsource.get(i).getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
 			//float registernum=listsource.get(i).getRegisternum();//得到真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
@@ -119,6 +122,17 @@ public class SourceTongjiController {
 				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
 			}
 			listsource.get(i).setCvr2(cvr2);
+			
+			if(clearingform.equals("1")){
+				listsource.get(i).setFlowcharge(new BigDecimal(uv).multiply(price));
+			}
+			if(clearingform.equals("2")){
+				listsource.get(i).setFlowcharge(new BigDecimal(registernum).multiply(price));
+			}
+			if(clearingform.equals("3")){
+				listsource.get(i).setFlowcharge(new BigDecimal(orderpass).multiply(price));
+			}
+			
 		}
 		
 	  	if(listsource!=null && !listsource.isEmpty()){
@@ -160,6 +174,9 @@ public class SourceTongjiController {
 		for (int i = 0; i < listsource.size(); i++) {
 			Integer sourceids=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名
+			BigDecimal price=listsource.get(i).getPrice();////渠道的流量单价  
+			String clearingform=listsource.get(i).getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
+			
 			//float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
@@ -217,6 +234,16 @@ public class SourceTongjiController {
 				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
 			}
 			listsource.get(i).setCvr2(cvr2);
+			
+			if(clearingform.equals("1")){
+				listsource.get(i).setFlowcharge(new BigDecimal(uv).multiply(price));
+			}
+			if(clearingform.equals("2")){
+				listsource.get(i).setFlowcharge(new BigDecimal(registernum).multiply(price));
+			}
+			if(clearingform.equals("3")){
+				listsource.get(i).setFlowcharge(new BigDecimal(orderpass).multiply(price));
+			}
 		}
 		
 	  	if(listsource!=null && !listsource.isEmpty()){
@@ -331,12 +358,26 @@ public class SourceTongjiController {
 			int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);
 			tongjiSorce.setOrderpass(orderpass);//已借款人数
 			String cvr2=null;
-			if ((registernum < 0.000001) || (orderpass == 0)) {
+			if ((registernum < 0.000001) || (orderpass == 0)) { 
 				cvr2 = 0 + "%";// 得到借款率
 			} else {
 				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
 			}
 			tongjiSorce.setCvr2(cvr2);
+			
+			BigDecimal price=tongjiSorce.getPrice();//渠道的流量单价  
+			String clearingform=tongjiSorce.getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
+			
+			if(clearingform.equals("1")){
+				tongjiSorce.setFlowcharge(new BigDecimal(uv).multiply(price));
+			}
+			if(clearingform.equals("2")){
+				tongjiSorce.setFlowcharge(new BigDecimal(registernum).multiply(price));
+			}
+			if(clearingform.equals("3")){
+				tongjiSorce.setFlowcharge(new BigDecimal(orderpass).multiply(price));
+			}
+			
 			listsource.add(tongjiSorce);//listsoruce里面将每一天的数据都存进去
 		}
 				

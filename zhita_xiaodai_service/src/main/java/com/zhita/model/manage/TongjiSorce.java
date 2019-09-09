@@ -1,5 +1,7 @@
 package com.zhita.model.manage;
 
+import java.math.BigDecimal;
+
 //渠道的统计数据
 public class TongjiSorce {
 	private Integer id;//将查询出来的渠道id  当做主键id
@@ -19,6 +21,10 @@ public class TongjiSorce {
 	private Integer orderpass;//已借款人数
 	private String cvr2;//已借款率
 	private Integer companyid;//公司名id
+	private BigDecimal price;//渠道的流量单价  
+	private String clearingform;//结算方式（1：uv；2：注册数；3；已借款人数）
+	private BigDecimal flowcharge;//流量费
+
 	public Integer getId() {
 		return id;
 	}
@@ -121,6 +127,24 @@ public class TongjiSorce {
 	}
 	public void setCompanyid(Integer companyid) {
 		this.companyid = companyid;
+	}
+	public BigDecimal getPrice() {
+		return price;
+	}
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+	public String getClearingform() {
+		return clearingform;
+	}
+	public void setClearingform(String clearingform) {
+		this.clearingform = clearingform;
+	}
+	public BigDecimal getFlowcharge() {
+		return flowcharge;
+	}
+	public void setFlowcharge(BigDecimal flowcharge) {
+		this.flowcharge = flowcharge;
 	}
 	
 }

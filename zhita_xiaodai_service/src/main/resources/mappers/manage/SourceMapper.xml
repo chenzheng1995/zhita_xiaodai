@@ -15,7 +15,7 @@
     <result column="manageControlId" property="manageControlId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId,s.todaymaxuv, s.deleted,
+    s.id, s.companyId, s.sourceName, s.account, s.pwd, s.link, s.status, s.discount, s.templateId,s.manageControlId,s.todaymaxuv, s.deleted,s.price,s.clearingform,
     st.name,mcs.rmModleName
   </sql>
   <!-- 后台管理            根据id查询当前对象信息 -->
@@ -32,10 +32,11 @@
   <!-- 后台管理    添加功能 -->
   <insert id="insert" parameterType="com.zhita.model.manage.Source" >
     insert into source (companyId, sourceName,account, pwd, todaymaxuv,
-    link, discount, templateid,managecontrolid)
+    link, discount, templateid,managecontrolid,price,clearingform)
     values (#{companyid,jdbcType=INTEGER}, #{sourcename,jdbcType=VARCHAR}, 
       #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},#{todaymaxuv,jdbcType=INTEGER}, #{link,jdbcType=VARCHAR}, 
-      #{discount,jdbcType=VARCHAR}, #{templateid,jdbcType=INTEGER},#{managecontrolid,jdbcType=INTEGER})
+      #{discount,jdbcType=VARCHAR}, #{templateid,jdbcType=INTEGER},#{managecontrolid,jdbcType=INTEGER},
+      #{price,jdbcType=DECIMAL},#{clearingform,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.Source" >
     insert into source
@@ -148,8 +149,10 @@
       status = #{status,jdbcType=VARCHAR},
       discount = #{discount,jdbcType=VARCHAR},
       todaymaxuv = #{todaymaxuv,jdbcType=INTEGER},
-      templateid = #{templateid,jdbcType=VARCHAR},
-      managecontrolid = #{managecontrolid,jdbcType=VARCHAR}
+      templateid = #{templateid,jdbcType=INTEGER},
+      managecontrolid = #{managecontrolid,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      clearingform = #{clearingform,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -163,7 +166,7 @@
   
    <!-- 后台管理      查询所有渠道 -->
   <select id="queryAllSource" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.TongjiSorce">
-  	select id sourceid,sourceName from source where companyId=#{arg0}
+  	select id sourceid,sourceName,price,clearingform from source where companyId=#{arg0}
   </select>
   
   <!-- 后台管理        根据id  对当前对象的假删除状态进行修改 -->
@@ -213,8 +216,8 @@
    </select>
    <!--后台管理             查询某一天某个渠道的注册数量  -->
    <select id="queryAllSourceByUserDetail" resultType="com.zhita.model.manage.TongjiSorce">
-	select t.sourceid,count(*) registernum,t.companyid,t.sourcename from 
-	(select u.sourceid,s.sourcename,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
+	select t.sourceid,count(*) registernum,t.companyid,t.sourcename,t.price,t.clearingform from 
+	(select u.sourceid,s.sourcename,s.price,s.clearingform,u.phone,u.registeTime,u.companyid from user u left join source s on u.sourceId=s.id where u.companyid=#{arg0}
 	 and u.registeTime>=#{arg1} and u.registeTime &lt;#{arg2}) t where t.sourceid=#{arg3}
 	 group by t.sourceid 
    </select>
