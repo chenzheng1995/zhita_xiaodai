@@ -248,7 +248,6 @@
 				</if>
 			</where>
 			GROUP BY collectiondate
-			limit #{page},#{pagesize}
 		</select>
 		
 		

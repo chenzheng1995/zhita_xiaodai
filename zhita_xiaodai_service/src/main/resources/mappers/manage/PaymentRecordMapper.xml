@@ -784,7 +784,6 @@
   					</if>
   				</where>
   				group by d.deferAfterReturntime
-  				limit #{page},#{pagesize}
   			</select>
   			
   			

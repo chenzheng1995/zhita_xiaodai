@@ -366,9 +366,11 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
 			if(orders.get(i).getSurplus_money()==null){
 				orders.get(i).setSurplus_money(new BigDecimal(0));
 			}
+			System.out.println(orders.get(i).getOrder_money());
 			//orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
 			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
 			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
