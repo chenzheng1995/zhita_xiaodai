@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
+import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.dao.manage.ThirdpricefindMapper;
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
@@ -53,6 +54,12 @@ public class FinanceServiceimp implements FinanceService{
 	
 	@Autowired
 	private CollectionMapper coldao;
+	
+	
+	
+	@Autowired
+	private PostloanorderMapper pdap;
+	
 	
 	
 	@Autowired
@@ -582,6 +589,22 @@ public class FinanceServiceimp implements FinanceService{
 			banl.setPhone(p.encryption(banl.getPhone()));
 		}
 		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
+		
+		if(banl.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(banl.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			banl.setStart_time(c+" 00:00:00");
+			banl.setEnd_time(b+" 23:59:59");
+		}
+		
+		
 		
 		if(banl.getStartu_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");

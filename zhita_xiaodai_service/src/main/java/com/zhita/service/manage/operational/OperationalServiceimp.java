@@ -66,7 +66,7 @@ public class OperationalServiceimp implements OperationalService{
 			Calendar calendar = Calendar.getInstance();
 			Date date = null;
 			Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
-			calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
 			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 			String c = sima.format(date);//结束时间
 			String b = sima.format(new Date());

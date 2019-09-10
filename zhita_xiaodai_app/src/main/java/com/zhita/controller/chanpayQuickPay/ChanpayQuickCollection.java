@@ -64,7 +64,7 @@ public class ChanpayQuickCollection {
 	/**
 	 * 生产环境 测试商户号私钥
 	 */
-	private static String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALmnE/9rQUoiSGubWg1B7nomyBMJ1xvLqAbiSa91dYAERUig2dG9xsSSjdvcPuN0ghoOCfPRp++NsjQ9YTzrp3Mla7DwNcWsr9Q3J5De9LKR2BaOs8GH6tlGMrNTZeciKASEYftH3B1a7lCmNUNzsQwB5stmZBQZUOs4oHPo4pTjAgMBAAECgYA5iW1qMHxolF1rdBchmrhlBRXmyJrxE1n84C7EARwsU6aBTtCS70Tl8SGj7QtUhOw5VPaCqQxp8rky9X7oWYRoZQHuub6jvvgmCBQXoBDeUaaO4JQ+7KDYP1OpR+e0s0D0fTzL2yujChkF5LyngF2tdwi2272foAaIQgqVLFo9MQJBAOPwNqane7bXiWCuyKgcEeIA8iKGNSXZqTiF+Yf1cW/CaudXdVyV1kFdnlEqAws9fwOEbtSmr2qhdgEUjMxHVQkCQQDQgix8oqAmxmUGqwAMSfIKCUY8xc+ghd1UxmrsnPtpzVjNG/QKaa4D0pC1Li/YmX2u9tAd+oFpTF/LqH+iN2GLAkA20D1UNlJ51bsjlOSMCLQENVYFF2EQiRc4kH9BQrTUu1wZ5d5DNYUgkvLPcdrpiRBSODauzKbCbbGC8P4q4byBAkEApFrnzDq4eLgL7EygVg93nVegKMlYF1VNmMRqhiZbuxNlexActpSE2XiCHn7QsjCTNHZSqD7NAX51SGiCaxCybwJBALZSXAWzQxinkGJXYvTyvktanGqAkHzn1pSf+XbGYtokryVANhuf+YTMm/lYedq8w9um8byZhGl53ph33xn+U0Y=";
+	private static String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAOn6RSGNCtd+eo76lWte/CAjVyN0IKV9iTkf8voWmQoUShH61JKUro06RshaJwHYmqJiQUDp0fZR2GogwycqzwB2gTkodoa7vEC9bFb2Vih/2m3854beg+O94Nn8N3qc/1biTWMQEi1zRKey3pJ8a5VkP3pgjgc9R9lsMU1DrBSNAgMBAAECgYBtLsJPs7dZc8XRLpHHNt3ESXmCK9CIKRp9s7D4js7/axRda4UCmasScB1TpO4K6H7QQ7Vbi0DVBsBMVdl7T3ikRDt8VMlisOY/xhU3MHmKNha+v9Ry3H5/mr4uca7RL/RJ62QDRtdNzHevE8AyH7dFCBGDWSZiqqtgX2qvXzsiQQJBAPcxgx9EV+wxFlSku/yGbZO0vdRBdrIwqbdO7ONknrNITQraANNoHoy8nmV9BAS9V5LKljuewmBhqsgc6jx1pTkCQQDyUDmxFf5w6SHVrWTI89p3naL6ZckLt6B5vTo6WNqM5wWO8TXHt6n7fx3h/PBbpKAZOXZhBgGI9Hzee7G/yZ31AkA1AGTA+4JunkfPdlLoXlp4ZTSeojq1EkIRj9azGwv8HPCH9x5eNeD3BCpiUF/gNEjmrJFxzySWTdq0dZ6zv/XhAkEAv4EeB1G9lNj7b5epJpRq3cxM6R6WhNcsUep2YXSlzWQr5WvHOD90bRpqsJcqExOJoEXkxAtuHSI0qdUShuO+HQJBAJ3lqyDuDTEn4trLxE+CUpndq5qYjMciY+xjO3saezFozyiFZoCshh1Yq9puhoqcmCNHFWd0+1Qimb8SNuS9cOY=";
 
 	/**
 	 * 编码类型
@@ -480,7 +480,7 @@ public class ChanpayQuickCollection {
 	public Map<String, String> setCommonMap(Map<String, String> origMap) {
 		// 2.1 基本参数
 		origMap.put("Version", "1.0");
-		origMap.put("PartnerId", "200005640044");//生产环境测试商户号
+		origMap.put("PartnerId", "200005900369");//生产环境测试商户号
 		
 		origMap.put("InputCharset", charset);// 字符集
 		origMap.put("TradeDate", "20170612");// 商户请求时间
@@ -791,7 +791,7 @@ public class ChanpayQuickCollection {
 		// 2.2 业务参数
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
-		origMap.put("MerchantNo", "200005640044");// 子商户号
+		origMap.put("MerchantNo", "200005900369");// 子商户号
 		origMap.put("MerUserId", String.valueOf(userId)); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
@@ -937,8 +937,8 @@ public class ChanpayQuickCollection {
 			origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 			origMap.put("OrdrName", ordrName);// 商品名称
 			origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
-			origMap.put("SellerId", "200005640044");// 子账户号
-			origMap.put("SubMerchantNo", "200005640044");// 子商户号
+			origMap.put("SellerId", "200005900369");// 子账户号
+			origMap.put("SubMerchantNo", "200005900369");// 子商户号
 			origMap.put("ExpiredTime", "40m");// 订单有效期
 			origMap.put("CardBegin", CardBegin);// 卡号前6位
 			origMap.put("CardEnd", CardEnd);// 卡号后4位
@@ -1128,7 +1128,7 @@ public class ChanpayQuickCollection {
 //		origMap.put("OrdrDesc", "[{'商品型号':'D007','商品性能':'Test'}]");// 商品描述
 		origMap.put("MerUserId", "270");// 用户标识（测试时需要替换一个新的meruserid）
 //		origMap.put("SellerId", "200001160097");// 生产环境
-		origMap.put("SubMerchantNo", "200005640044");// 子商户号
+		origMap.put("SubMerchantNo", "200005900369");// 子商户号
 		origMap.put("ExpiredTime", "40m");// 订单有效期
 		origMap.put("BkAcctTp", "01");// 卡类型（00 – 银行贷记卡;01 – 银行借记卡;）
 		origMap.put("BkAcctNo", this.encrypt("6214835901884138", MERCHANT_PUBLIC_KEY, charset));// 卡号
@@ -1271,7 +1271,7 @@ public class ChanpayQuickCollection {
 		// 2.2 业务参数
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
-		origMap.put("MerchantNo", "200005640044");// 子商户号
+		origMap.put("MerchantNo", "200005900369");// 子商户号
 		origMap.put("MerUserId", MerUserId); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
