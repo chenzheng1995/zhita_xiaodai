@@ -158,7 +158,9 @@ public class Collectionserviceimp implements Collectionservice{
 			order.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
-				orders.get(i).setCollectionStatus("未催收");
+				if(orders.get(i).getCollectionStatus() == null){
+					orders.get(i).setCollectionStatus("未催收");
+				}
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));

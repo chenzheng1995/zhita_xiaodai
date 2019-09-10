@@ -401,7 +401,6 @@
 				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 					AND o.shouldReturnTime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
-				AND o.companyId = #{companyId} 
 			</where>
 			group by o.id
 			limit #{page},#{pagesize}
