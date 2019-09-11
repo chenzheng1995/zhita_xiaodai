@@ -606,12 +606,12 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_sms")
-	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId,Integer MerUserId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
+	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> origMap = new HashMap<String, String>();
 		Bankcard bank = new Bankcard();
 		bank.setAttestationStatus("0");
-		bank.setUserId(MerUserId);//登陆人ID
+		bank.setUserId(userId);//登陆人ID
 		bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
 		bank.setBankcardName(BkAcctNo);//卡号
 		bank.setTiedCardPhone(MobNo);//手机号
