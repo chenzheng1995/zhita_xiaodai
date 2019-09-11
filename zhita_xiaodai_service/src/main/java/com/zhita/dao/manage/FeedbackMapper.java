@@ -1,0 +1,21 @@
+package com.zhita.dao.manage;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.zhita.model.manage.Feedback;
+
+public interface FeedbackMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Feedback record);
+
+    int insertSelective(Feedback record);
+
+    Feedback selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Feedback record);
+
+    int updateByPrimaryKey(Feedback record);
+
+	int setfeedback(@Param("userId")int userId,@Param("advice") String advice,@Param("url1") String url1,@Param("url2") String url2,@Param("url3") String url3,@Param("time") String time);
+}

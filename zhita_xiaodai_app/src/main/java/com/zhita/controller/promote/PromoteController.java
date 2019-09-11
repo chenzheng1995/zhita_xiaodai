@@ -250,7 +250,7 @@ public class PromoteController {
             e.printStackTrace();
         }
 //        return "http://tg.rong51dai.com/H5Code/" + fileName;
-        return "http://115.29.64.145:8081/H5Code/" + fileName;
+        return "http://47.104.179.26:8081/H5Code/" + fileName;
     }
     
     private int getRandomCode() {

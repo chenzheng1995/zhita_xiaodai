@@ -7,6 +7,7 @@
     <result column="logo" property="logo" jdbcType="VARCHAR" />
     <result column="productName" property="productname" jdbcType="VARCHAR" />
     <result column="appVersion" property="appversion" jdbcType="VARCHAR" />
+    <result column="ifcoerceupdate" property="ifcoerceupdate" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, companyId, logo, productName, appVersion,ifcoerceupdate
@@ -107,7 +108,7 @@
   </select>
   
     <select id="getaboutus" parameterType="java.lang.Integer" resultType="java.util.Map">
-  	select logo,productName,appVersion from aboutus where companyId = #{companyId}
+  	select logo,productName,appVersion,ifcoerceupdate from aboutus where companyId = #{companyId}
   </select>
   
 </mapper>
