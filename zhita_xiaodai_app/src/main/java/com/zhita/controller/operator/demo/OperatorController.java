@@ -3,6 +3,7 @@ package com.zhita.controller.operator.demo;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.dao.manage.ThreeElementsMapper;
 import com.zhita.dao.manage.ZhimiRiskMapper;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
+import com.zhita.service.manage.autheninfor.IntAutheninforService;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
 import com.zhita.service.manage.manconsettings.IntManconsettingsServcie;
 import com.zhita.service.manage.operator.OperatorService;
@@ -80,6 +82,9 @@ public class OperatorController {
 	
 	@Autowired
 	ApplynumberMapper applynumberMapper;
+	
+	@Autowired
+	IntAutheninforService intAutheninforService;
 
 	@RequestMapping("/getOperator")
 	@ResponseBody
@@ -142,19 +147,19 @@ public class OperatorController {
 		String url = h5ReportQueryDemo.getH5ReportQuery(userId, phone, name, idNumber, reqId, search_id);
 		JSONObject sampleObject = JSON.parseObject(url);
 		String error = sampleObject.getString("error");
-		int number = operatorService.updateOperatorJson(url, userId);
-		if (number == 1) {
-			int companyId = 3;
-			String thirdtypeid = "5";
-			String date = System.currentTimeMillis() + "";
-			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-			map.put("msg", "数据更新成功");
-		} else {
-			map.put("msg", "数据更新失败");
-		}
 		if (error.equals("200")) {
 			attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
+			int number = operatorService.updateOperatorJson(url, userId);
+			if (number == 1) {
+				int companyId = 3;
+				String thirdtypeid = "5";
+				String date = System.currentTimeMillis() + "";
+				thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+				map.put("msg", "数据更新成功");
+			} else {
+				map.put("msg", "数据更新失败");
+			}
 			map.put("Ncode", "2000");
 			map.put("msg", "认证成功");
 			map.put("Code", "200");
@@ -510,118 +515,235 @@ public class OperatorController {
 //    }
 
 //做三要素认证
+//	@RequestMapping("/threeElements")
+//	@ResponseBody
+//	@Transactional
+//	public Map<String, Object> getthreeElements(int userId, String phone, int companyId)
+//			throws UnsupportedEncodingException {
+//		Map<String, Object> map1 = new HashMap<>();
+//		String code1 = threeElementsMapper.getcode(userId, phone);
+//		if ("0".equals(code1)) {
+//			map1.put("Ncode", "2000");
+//			map1.put("code", "200");
+//			map1.put("msg", "认证一致");
+//			return map1;
+//		}
+//
+//		String ifBlacklist = intUserService.getifBlacklist2(userId);
+//		if ("1".equals(ifBlacklist)) {
+//			map1.put("Ncode", "402");
+//			map1.put("code", "402");
+//			map1.put("msg", "黑名单用户");
+//			map1.put("prompt", "您暂时不符合我们的要求");
+//			return map1;
+//		}
+//
+//		Map<String, Object> map = userAttestationService.getuserAttestation(userId);
+//		String trueName = (String) map.get("trueName");
+//		String idcard_number = (String) map.get("idcard_number");
+//		OperatorAction operatorAction = new OperatorAction();
+//		Map<String, Object> map2 = operatorAction.certification(idcard_number, trueName, phone);
+//		String result = (String) map2.get("result");
+//		String trans_id = (String) map2.get("trans_id");
+//		JSONObject jsonObject = null;
+//		jsonObject = JSONObject.parseObject(result);
+//		jsonObject = jsonObject.getJSONObject("data");
+//		String code = jsonObject.getString("code");
+//		if ("0".equals(code)) {
+//			int certification_number = 0;
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			String thirdtypeid = "4";
+//			String date = System.currentTimeMillis() + "";
+//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+//			map1.put("Ncode", "2000");
+//			map1.put("code", "200");
+//			map1.put("msg", "认证一致");
+//
+//		}
+//		if ("1".equals(code)) {
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				int certification_number = 1;
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				int certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
+//				certification_number = certification_number + 1;
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//				if (certification_number > 2) {
+//					intUserService.updateifBlacklist(userId);
+//					String date = System.currentTimeMillis() + "";
+//					int num1 = intBlacklistuserService.getid(phone, companyId);// 判断手机号是否是黑名单
+//					if (num1 == 0) {
+//						String blackType = "5";
+//						intBlacklistuserService.setBlacklistuser(idcard_number, userId, companyId, phone, trueName,
+//								date, blackType);
+//					}
+//
+//				}
+//			}
+//			String thirdtypeid = "4";
+//			String date = System.currentTimeMillis() + "";
+//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+//			map1.put("code", "405");
+//			map1.put("msg", "认证不一致");
+//			map1.put("prompt", "请使用本人手机号认证");
+//		}
+//		if ("2".equals(code)) {
+//			int certification_number = 0;
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			map1.put("Ncode", "407");
+//			map1.put("code", "407");
+//			map1.put("msg", "认证信息不存在");
+//			map1.put("prompt", "认证信息不存在，请重新认证");
+//		}
+//		if ("9".equals(code)) {
+//			int certification_number = 0;
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			map1.put("Ncode", "409");
+//			map1.put("code", "409");
+//			map1.put("msg", "其他异常");
+//			map1.put("prompt", "未知错误，请联系客服");
+//		}
+//
+//		return map1;
+//
+//	}
+	
+	
+	
 	@RequestMapping("/threeElements")
 	@ResponseBody
 	@Transactional
 	public Map<String, Object> getthreeElements(int userId, String phone, int companyId)
 			throws UnsupportedEncodingException {
 		Map<String, Object> map1 = new HashMap<>();
-		String code1 = threeElementsMapper.getcode(userId, phone);
-		if ("0".equals(code1)) {
+//		String code1 = threeElementsMapper.getcode(userId, phone);
+//		if ("0".equals(code1)) {
 			map1.put("Ncode", "2000");
 			map1.put("code", "200");
 			map1.put("msg", "认证一致");
 			return map1;
-		}
-
-		String ifBlacklist = intUserService.getifBlacklist2(userId);
-		if ("1".equals(ifBlacklist)) {
-			map1.put("Ncode", "402");
-			map1.put("code", "402");
-			map1.put("msg", "黑名单用户");
-			map1.put("prompt", "您暂时不符合我们的要求");
-			return map1;
-		}
-
-		Map<String, Object> map = userAttestationService.getuserAttestation(userId);
-		String trueName = (String) map.get("trueName");
-		String idcard_number = (String) map.get("idcard_number");
-		OperatorAction operatorAction = new OperatorAction();
-		Map<String, Object> map2 = operatorAction.certification(idcard_number, trueName, phone);
-		String result = (String) map2.get("result");
-		String trans_id = (String) map2.get("trans_id");
-		JSONObject jsonObject = null;
-		jsonObject = JSONObject.parseObject(result);
-		jsonObject = jsonObject.getJSONObject("data");
-		String code = jsonObject.getString("code");
-		if ("0".equals(code)) {
-			int certification_number = 0;
-			int num = threeElementsMapper.getnum(userId, phone);
-			if (num == 0) {
-				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			if (num > 0) {
-				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			String thirdtypeid = "4";
-			String date = System.currentTimeMillis() + "";
-			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-			map1.put("Ncode", "2000");
-			map1.put("code", "200");
-			map1.put("msg", "认证一致");
-
-		}
-		if ("1".equals(code)) {
-			int num = threeElementsMapper.getnum(userId, phone);
-			if (num == 0) {
-				int certification_number = 1;
-				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			if (num > 0) {
-				int certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-				certification_number = certification_number + 1;
-				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-				if (certification_number > 2) {
-					intUserService.updateifBlacklist(userId);
-					String date = System.currentTimeMillis() + "";
-					int num1 = intBlacklistuserService.getid(phone, companyId);// 判断手机号是否是黑名单
-					if (num1 == 0) {
-						String blackType = "5";
-						intBlacklistuserService.setBlacklistuser(idcard_number, userId, companyId, phone, trueName,
-								date, blackType);
-					}
-
-				}
-			}
-			String thirdtypeid = "4";
-			String date = System.currentTimeMillis() + "";
-			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-			map1.put("code", "405");
-			map1.put("msg", "认证不一致");
-			map1.put("prompt", "请使用本人手机号认证");
-		}
-		if ("2".equals(code)) {
-			int certification_number = 0;
-			int num = threeElementsMapper.getnum(userId, phone);
-			if (num == 0) {
-				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			if (num > 0) {
-				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			map1.put("Ncode", "407");
-			map1.put("code", "407");
-			map1.put("msg", "认证信息不存在");
-			map1.put("prompt", "认证信息不存在，请重新认证");
-		}
-		if ("9".equals(code)) {
-			int certification_number = 0;
-			int num = threeElementsMapper.getnum(userId, phone);
-			if (num == 0) {
-				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			if (num > 0) {
-				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-			}
-			map1.put("Ncode", "409");
-			map1.put("code", "409");
-			map1.put("msg", "其他异常");
-			map1.put("prompt", "未知错误，请联系客服");
-		}
-
-		return map1;
+//		}
+//
+//		String ifBlacklist = intUserService.getifBlacklist2(userId);
+//		if ("1".equals(ifBlacklist)) {
+//			map1.put("Ncode", "402");
+//			map1.put("code", "402");
+//			map1.put("msg", "黑名单用户");
+//			map1.put("prompt", "您暂时不符合我们的要求");
+//			return map1;
+//		}
+//
+//		Map<String, Object> map = userAttestationService.getuserAttestation(userId);
+//		String trueName = (String) map.get("trueName");
+//		String idcard_number = (String) map.get("idcard_number");
+//		OperatorAction operatorAction = new OperatorAction();
+//		Map<String, Object> map2 = operatorAction.certification(idcard_number, trueName, phone);
+//		String result = (String) map2.get("result");
+//		String trans_id = (String) map2.get("trans_id");
+//		JSONObject jsonObject = null;
+//		jsonObject = JSONObject.parseObject(result);
+//		jsonObject = jsonObject.getJSONObject("data");
+//		String code = jsonObject.getString("code");
+//		if ("0".equals(code)) {
+//			int certification_number = 0;
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			String thirdtypeid = "4";
+//			String date = System.currentTimeMillis() + "";
+//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+//			map1.put("Ncode", "2000");
+//			map1.put("code", "200");
+//			map1.put("msg", "认证一致");
+//
+//		}
+//		if ("1".equals(code)) {
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				int certification_number = 1;
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				int certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
+//				certification_number = certification_number + 1;
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//				if (certification_number > 2) {
+//					intUserService.updateifBlacklist(userId);
+//					String date = System.currentTimeMillis() + "";
+//					int num1 = intBlacklistuserService.getid(phone, companyId);// 判断手机号是否是黑名单
+//					if (num1 == 0) {
+//						String blackType = "5";
+//						intBlacklistuserService.setBlacklistuser(idcard_number, userId, companyId, phone, trueName,
+//								date, blackType);
+//					}
+//
+//				}
+//			}
+//			String thirdtypeid = "4";
+//			String date = System.currentTimeMillis() + "";
+//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+//			map1.put("code", "405");
+//			map1.put("msg", "认证不一致");
+//			map1.put("prompt", "请使用本人手机号认证");
+//		}
+//		if ("2".equals(code)) {
+//			int certification_number = 0;
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			map1.put("Ncode", "407");
+//			map1.put("code", "407");
+//			map1.put("msg", "认证信息不存在");
+//			map1.put("prompt", "认证信息不存在，请重新认证");
+//		}
+//		if ("9".equals(code)) {
+//			int certification_number = 0;
+//			int num = threeElementsMapper.getnum(userId, phone);
+//			if (num == 0) {
+//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			if (num > 0) {
+//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
+//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
+//			}
+//			map1.put("Ncode", "409");
+//			map1.put("code", "409");
+//			map1.put("msg", "其他异常");
+//			map1.put("prompt", "未知错误，请联系客服");
+//		}
+//
+//		return map1;
 
 	}
 
@@ -691,6 +813,17 @@ public class OperatorController {
 		map.put("Ncode", "2000");
 //   	shareOfState ="6";
 //   	intUserService.updateshareOfState(userId, shareOfState);
+		
+		int companyId =3;
+		ArrayList<String> list = intAutheninforService.getifAuthentication(companyId);
+		String operatorAutheninfor = list.get(1);
+		if("2".equals(operatorAutheninfor)) {
+			shareOfState = "1";
+			intUserService.updateScore1(userId, shareOfState);
+			map.put("code", 200);
+			return map;
+		}
+		
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
 		String idNumber = (String) userAttestation.get("idcard_number");
@@ -737,7 +870,6 @@ public class OperatorController {
 					"search_id" + search_id + "phone" + phone + "name" + name + "idNumber" + idNumber + "reqId" + reqId
 							+ "tianji_api_tianjiscore_pdscorev5_response" + tianji_api_tianjiscore_pdscorev5_response);
 			score = Integer.parseInt(jsonObject.get("score").toString());
-			int companyId = 3;
 			String thirdtypeid = "6";
 			String date = System.currentTimeMillis() + "";
 			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);

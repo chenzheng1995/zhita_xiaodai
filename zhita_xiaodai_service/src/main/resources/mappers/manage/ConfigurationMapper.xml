@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhita.dao.manage.ConfigurationMapper">
+  <resultMap id="BaseResultMap" type="com.zhita.model.manage.Configuration">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="wifiName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="wifiIP" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="wifiMac" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phoneMarket" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phoneModel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phoneRes" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="lac" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="loc" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="uuid" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zhita.model.manage.Configuration">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="wifiName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="wifiIP" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="wifiMac" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phoneMarket" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phoneModel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phoneRes" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="lac" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="loc" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="wrapName" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="uuid" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, wifiName, wifiIP, wifiMac, phoneMarket, phoneModel, phoneRes, lac, loc
+  </sql>
+  <sql id="Blob_Column_List">
+    wrapName
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from configuration
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from configuration
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhita.model.manage.Configuration">
+    insert into configuration (id, userId, wifiName, 
+      wifiIP, wifiMac, phoneMarket, 
+      phoneModel, phoneRes, lac, 
+      loc, wrapName)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{wifiname,jdbcType=VARCHAR}, 
+      #{wifiip,jdbcType=VARCHAR}, #{wifimac,jdbcType=VARCHAR}, #{phonemarket,jdbcType=VARCHAR}, 
+      #{phonemodel,jdbcType=VARCHAR}, #{phoneres,jdbcType=VARCHAR}, #{lac,jdbcType=VARCHAR}, 
+      #{loc,jdbcType=VARCHAR}, #{wrapname,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhita.model.manage.Configuration">
+    insert into configuration
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="wifiname != null">
+        wifiName,
+      </if>
+      <if test="wifiip != null">
+        wifiIP,
+      </if>
+      <if test="wifimac != null">
+        wifiMac,
+      </if>
+      <if test="phonemarket != null">
+        phoneMarket,
+      </if>
+      <if test="phonemodel != null">
+        phoneModel,
+      </if>
+      <if test="phoneres != null">
+        phoneRes,
+      </if>
+      <if test="lac != null">
+        lac,
+      </if>
+      <if test="loc != null">
+        loc,
+      </if>
+      <if test="wrapname != null">
+        wrapName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="wifiname != null">
+        #{wifiname,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiip != null">
+        #{wifiip,jdbcType=VARCHAR},
+      </if>
+      <if test="wifimac != null">
+        #{wifimac,jdbcType=VARCHAR},
+      </if>
+      <if test="phonemarket != null">
+        #{phonemarket,jdbcType=VARCHAR},
+      </if>
+      <if test="phonemodel != null">
+        #{phonemodel,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneres != null">
+        #{phoneres,jdbcType=VARCHAR},
+      </if>
+      <if test="lac != null">
+        #{lac,jdbcType=VARCHAR},
+      </if>
+      <if test="loc != null">
+        #{loc,jdbcType=VARCHAR},
+      </if>
+      <if test="wrapname != null">
+        #{wrapname,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhita.model.manage.Configuration">
+    update configuration
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="wifiname != null">
+        wifiName = #{wifiname,jdbcType=VARCHAR},
+      </if>
+      <if test="wifiip != null">
+        wifiIP = #{wifiip,jdbcType=VARCHAR},
+      </if>
+      <if test="wifimac != null">
+        wifiMac = #{wifimac,jdbcType=VARCHAR},
+      </if>
+      <if test="phonemarket != null">
+        phoneMarket = #{phonemarket,jdbcType=VARCHAR},
+      </if>
+      <if test="phonemodel != null">
+        phoneModel = #{phonemodel,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneres != null">
+        phoneRes = #{phoneres,jdbcType=VARCHAR},
+      </if>
+      <if test="lac != null">
+        lac = #{lac,jdbcType=VARCHAR},
+      </if>
+      <if test="loc != null">
+        loc = #{loc,jdbcType=VARCHAR},
+      </if>
+      <if test="wrapname != null">
+        wrapName = #{wrapname,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zhita.model.manage.Configuration">
+    update configuration
+    set userId = #{userid,jdbcType=INTEGER},
+      wifiName = #{wifiname,jdbcType=VARCHAR},
+      wifiIP = #{wifiip,jdbcType=VARCHAR},
+      wifiMac = #{wifimac,jdbcType=VARCHAR},
+      phoneMarket = #{phonemarket,jdbcType=VARCHAR},
+      phoneModel = #{phonemodel,jdbcType=VARCHAR},
+      phoneRes = #{phoneres,jdbcType=VARCHAR},
+      lac = #{lac,jdbcType=VARCHAR},
+      loc = #{loc,jdbcType=VARCHAR},
+      wrapName = #{wrapname,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Configuration">
+    update configuration
+    set userId = #{userid,jdbcType=INTEGER},
+      wifiName = #{wifiname,jdbcType=VARCHAR},
+      wifiIP = #{wifiip,jdbcType=VARCHAR},
+      wifiMac = #{wifimac,jdbcType=VARCHAR},
+      phoneMarket = #{phonemarket,jdbcType=VARCHAR},
+      phoneModel = #{phonemodel,jdbcType=VARCHAR},
+      phoneRes = #{phoneres,jdbcType=VARCHAR},
+      lac = #{lac,jdbcType=VARCHAR},
+      loc = #{loc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  	<insert id="setconfiguration" parameterType="java.util.Map">
+		insert into configuration (userId,phoneMarket,phoneModel,phoneRes,lac,loc,uuid,wifiIP,wifiMac,wifiName,wrapName)
+		values (#{userId},
+		#{phoneMarket},
+		#{phoneModel},
+		#{phoneRes},
+		#{lac},
+		#{loc},
+		#{uuid},
+		#{wifiIP},
+		#{wifiMac},
+		#{wifiName},
+		#{wrapName})
+	</insert>
+	
+	<select id="getId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+     select count(id) from configuration where userId = #{userId}
+	</select> 
+	
+	
+	<update id="updateconfiguration" parameterType="java.util.Map">
+		update configuration
+		set phoneMarket = #{phoneMarket},
+		phoneModel = #{phoneModel},
+		phoneRes = #{phoneRes},
+		lac = #{lac},
+		loc = #{loc},
+		uuid = #{uuid},
+		wifiIP = #{wifiIP},
+		wifiMac = #{wifiMac},
+		wifiName = #{wifiName},
+		wrapName = #{wrapName}
+		where userId = #{userId}
+	</update>
+	
+	
+			<select id="getconfiguration" parameterType="java.lang.Integer" resultType="java.util.Map">
+     select phoneMarket,phoneModel,phoneRes,lac,loc,uuid,wifiIP,wifiMac,wifiName,wrapName from configuration where userId = #{userId}
+	</select> 
+
+</mapper>
