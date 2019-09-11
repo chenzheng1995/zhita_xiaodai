@@ -418,5 +418,29 @@ public class UserServiceImp implements IntUserService{
 		return applyState;
 	}
 
+	@Override
+	public String getregisteTime(int userId) {
+		String registeTime = userMapper.getregisteTime(userId);
+		return registeTime;
+	}
+
+	@Override
+	public void setRiskControlPoints(int userId,int riskControlPoints) {
+		userMapper.setRiskControlPoints(userId,riskControlPoints);
+		
+	}
+
+	@Override
+	public void setModel(int userId, String rString) {
+		userMapper.setModel(userId,rString);
+		
+	}
+
+	@Override
+	public String getModel(int userId) {
+		 String model = userMapper.getModel(userId);
+		return model;
+	}
+
 
 }

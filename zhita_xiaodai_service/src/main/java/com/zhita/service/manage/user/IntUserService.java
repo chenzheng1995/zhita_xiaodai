@@ -66,6 +66,14 @@ public interface IntUserService {
 
 	public String getapplyState(int userId);
 
+	public String getregisteTime(int userId);
+
+	public void setRiskControlPoints(int userId, int riskControlPoints);
+
+	public void setModel(int userId, String rString);
+
+	public String getModel(int userId);
+
 
 
 

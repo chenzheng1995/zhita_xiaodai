@@ -347,10 +347,13 @@ public class Test {
 //		System.out.println("wifiName:"+wifiName);
 //		System.out.println("wrapName:"+wrapName);
 
-		String jsonString = "{'phoneMarket':'vivo','phoneModel':'qqq','phoneRes':'ios','phoneStand':{'lac':'gggg','loc':'bbb'},'uuid':'1111','wifiIP':'192.168.0.123','wifiMac':'35679','wifiName':'222','wrapName': [{'name':'qqq','time':'12893248668'}]}";
-		String phone = "15646541565";
+//		String jsonString = "{'phoneMarket':'vivo','phoneModel':'qqq','phoneRes':'ios','phoneStand':{'lac':'gggg','loc':'bbb'},'uuid':'1111','wifiIP':'192.168.0.123','wifiMac':'35679','wifiName':'222','wrapName': [{'name':'qqq','time':'12893248668'}]}";
+//		String phone = "15646541565";
+//		PostAndGet pGet = new PostAndGet();
+//		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fenkong/Anti/AddUserPhone?"+jsonString+"&"+phone);	
+		
 		PostAndGet pGet = new PostAndGet();
-		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fenkong/Anti/AddUserPhone?"+jsonString+"&"+phone);	
+		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+"16516546546565");
 		
 	}
 

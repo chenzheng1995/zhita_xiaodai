@@ -23,6 +23,7 @@
       <arg column="operatorsAuthentication" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="facePhoto" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="applyState" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="model" javaType="java.lang.String" jdbcType="VARCHAR" />
       
     </constructor>
   </resultMap>
@@ -789,5 +790,28 @@
      select applyState from user where id = #{userId}
 	</select> 
 	
+	
+	<select id="getregisteTime" parameterType="java.lang.Integer" resultType="java.lang.String">
+     select registeTime from user where id = #{userId}
+	</select> 
   
+  
+    	  		<update id="setRiskControlPoints" parameterType="java.util.Map" >
+		update user
+		set riskControlPoints = #{riskControlPoints}
+		where id = #{userId}
+	</update>
+
+  
+      	  		<update id="setModel" parameterType="java.util.Map" >
+		update user
+		set model = #{rString}
+		where id = #{userId}
+	</update>
+	
+		<select id="getModel" parameterType="java.lang.Integer" resultType="java.lang.String">
+     select model from user where id = #{userId}
+	</select> 
+	
+	
 </mapper>

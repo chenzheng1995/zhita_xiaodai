@@ -71,6 +71,8 @@ public class User {
     private String applyState;
 
     private String state;//状态（“0”表示有效，“1”表示无效）
+    
+    private String model;//模型数据是否命中
 
     
 
@@ -344,6 +346,14 @@ public class User {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+	
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 	
 }
