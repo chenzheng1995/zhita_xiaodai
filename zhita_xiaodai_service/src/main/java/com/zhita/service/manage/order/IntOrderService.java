@@ -1,8 +1,11 @@
 package com.zhita.service.manage.order;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.zhita.model.manage.DeferredAndOrder;
+import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.User;
@@ -130,6 +133,27 @@ public interface IntOrderService {
 	 * 人审过后状态用户（导出Excel）
 	 */
 	public List<User> queryAllUserPeopleYetExcel(UserLikeParameter userLikeParameter);
+	
+	//后台管理---查询该订单还款成功的还款金额---还款表
+	public BigDecimal queryrepaymoney(Integer orderid);
+	
+	//后台管理---查询该订单还款成功的还款金额---线下减免表
+	public BigDecimal queryrepaymoneyoff(Integer orderid);
+		
+	//后台管理---查询该订单还款成功的还款金额---银行扣款表
+	public BigDecimal queryrepaymoneybank(Integer orderid);
+	
+ 	//后台管理---通过订单查询改订单在延期表信息
+	public List<DeferredAndOrder> queryDefer(Integer orderid);
+	
+	//后台管理---通过订单查询改订单在人工延期表信息
+	public List<Offlinedelay> queryDeferlay(Integer orderid);
+	
+	//后台管理---查询最后延期时间---线上延期
+	public Orders qeuryFinalDefertime(Integer orderid);
+	
+	//后台管理---查询最后延期时间---人工延期
+	public Orders qeuryFinalDefertimelay(Integer orderid);
 
 
 	public String getshouldReturnTime(int userId, int companyId);

@@ -41,7 +41,7 @@ public class Orders {
 
 	private String riskcontrolname;//风控名字
 	
-	private String orderStatus;//订单状态（0：期限中；1：已逾期；2：已延期；3：已还款）
+	private String orderStatus;//订单状态（0：期限中；1：已逾期；2：已延期；3：已还款  4:已坏账）
 	
 	private String ifpeopleWhose;//是否人审（1；已人审；0：未人审）
 	
