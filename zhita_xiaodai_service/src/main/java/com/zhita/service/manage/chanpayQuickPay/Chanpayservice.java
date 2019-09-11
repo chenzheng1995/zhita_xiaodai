@@ -87,7 +87,7 @@ public interface Chanpayservice {
 	User OneUser(Integer userId);
 	
 	
-	Integer DeleteOrderNumber(String orderNumber);
+	Integer DeleteOrderNumber(String orderNumber,String orderStatus);
 	
 	
 	Orders SelectOrdersUser(Integer orderId);

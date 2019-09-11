@@ -145,4 +145,9 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdateDefe(Orders ord);
+	
+	
+	Integer UpdateBankcard(Bankcard bank);
 }
+
+

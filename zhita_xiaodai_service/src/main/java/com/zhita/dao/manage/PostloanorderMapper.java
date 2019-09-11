@@ -151,4 +151,8 @@ public interface PostloanorderMapper {
 	
 	
 	Integer SelectHuan(Integer companyId);
+	
+	
+	
+	Integer YiHuanOrdersTotalCountOO(Orderdetails order);
 }

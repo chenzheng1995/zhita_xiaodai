@@ -353,4 +353,9 @@
 			<update id="UpdateDefe" parameterType="com.zhita.model.manage.Orders">
 				update deferred set deleted = "0" where orderId = (select max(id) from orders where id = #{id})
 			</update>
+			
+			
+			<update id="UpdateBankcard" parameterType="com.zhita.model.manage.Bankcard">
+				update bankcard set attestationStatus = "1" where id =  (select b.id from (select max(id) as id from bankcard where userId =#{userId}) AS b)
+			</update>
 </mapper>

@@ -1,8 +1,11 @@
 package com.zhita.service.manage.order;
 
+import java.util.List;
 import java.util.Map;
 
 import com.zhita.model.manage.OrderQueryParameter;
+import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserLikeParameter;
 
 public interface IntOrderService {
@@ -48,6 +51,30 @@ public interface IntOrderService {
 	 * 订单查询【机审通过和人审通过的用户    在放款后在订单表产生的订单数据】（公司id，page,订单号，姓名，手机号，注册开始时间，注册结束时间，渠道id）
 	 */
 	public Map<String,Object> queryAllordersByLike(OrderQueryParameter orderQueryParameter);
+	/**
+	 * 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	public Integer queryAllordersByLikeCount(OrderQueryParameter orderQueryParameter);
+	/**
+	 * 订单查询（导出Excel）
+	 */
+	public List<Orders> queryAllordersByLikeExcel(OrderQueryParameter orderQueryParameter);
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	public List<Orders> queryAllordersByLikeacrap(OrderQueryParameter orderQueryParameter);
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	public Integer queryAllordersByLikeCountacrap(OrderQueryParameter orderQueryParameter);
+	
+	/**
+	 * 报废订单查询（导出Excel）
+	 */
+	public List<Orders> queryAllordersByLikeacrapExcel(OrderQueryParameter orderQueryParameter);
+	
 	
 	/**
 	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
@@ -55,9 +82,30 @@ public interface IntOrderService {
 	public Map<String, Object> queryAllUser(UserLikeParameter userLikeParameter);
 	
 	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 */
+	public int queryAllUsercount(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（导出Excel）
+	 */
+	public List<User> queryAllUserExcel(UserLikeParameter userLikeParameter);
+	
+	
+	/**
 	 * 人审状态用户【包含机审拒绝和机审通过用户】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
 	 */
 	public Map<String, Object> queryAllUserPeople(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 */
+	public int queryAllUserPeoplecount(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审状态用户（导出Excel）
+	 */
+	public List<User> queryAllUserPeopleExcel(UserLikeParameter userLikeParameter);
 	
 	/**
 	 * 人审通过按钮
@@ -73,6 +121,15 @@ public interface IntOrderService {
 	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）
 	 */
 	public Map<String, Object> queryAllUserPeopleYet(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）——查询数量
+	 */
+	public int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter);
+	/**
+	 * 人审过后状态用户（导出Excel）
+	 */
+	public List<User> queryAllUserPeopleYetExcel(UserLikeParameter userLikeParameter);
 
 
 	public String getshouldReturnTime(int userId, int companyId);

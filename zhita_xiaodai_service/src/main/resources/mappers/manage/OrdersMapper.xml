@@ -766,8 +766,54 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         </if>
          <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
            and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if> 
+  </select>
+  <!-- 订单 修改 -->
+  <!-- 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
+  <select id="queryAllordersByLikeExcel" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
+		select 
+    	<include refid="Base_Column_List" />
+   		from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		left join manage_control_settings mcs on s.manageControlId=mcs.id 
+   		left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
         </if>
-         
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+		</if>
+         <if test="orderstarttime != null and orderstarttime !='' and orderendtime !=null and orderendtime !=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="shouldstarttime != null and shouldstarttime !='' and shouldendtime !=null and shouldendtime !=''">
+           and o.shouldReturnTime between #{shouldstarttime,jdbcType=VARCHAR} and #{shouldendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+         <if test="orderstatus !=null and orderstatus != '' and orderstatus ==0"><!-- orderstatus=0 代表是订单状态是已还 -->
+           and o.orderStatus=3
+        </if>
+        <if test="orderstatus !=null and orderstatus != '' and orderstatus ==1"><!-- orderstatus=1 代表是订单状态是未还 -->
+           and o.orderStatus!=3
+        </if>
+         <if test="clientstatus !=null and clientstatus != '' and clientstatus ==0"><!-- clientstatus=0 代表是客户状态是老客户 -->
+           and o.howManyTimesBorMoney>1
+        </if>
+        <if test="clientstatus !=null and clientstatus != '' and clientstatus ==1"><!-- clientstatus=1 代表是客户状态是新客户 -->
+           and o.howManyTimesBorMoney=1
+        </if>
+        <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
+           and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if>
+        order by o.orderCreateTime desc 
   </select>
 <!-- 订单 修改 -->
   <!-- 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
@@ -860,9 +906,54 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
          <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
            and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
         </if>
-         
   </select>
-
+<!-- 订单 修改 -->
+  <!-- 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
+  <select id="queryAllordersByLikeacrapExcel" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
+		select 
+    	<include refid="Base_Column_List" />
+   		from discardorders o left join discardorderdetails od on o.id=od.orderId left join user u on o.userId=u.id left join source s on s.id=u.sourceid 
+   		left join manage_control_settings mcs on s.manageControlId=mcs.id 
+   		left join sys_user su on su.userId=u.operator
+    	where o.companyId=#{companyid,jdbcType=INTEGER}
+      	<if test="ordernumber != null and ordernumber!='' ">
+           and o.orderNumber like "%"#{ordernumber,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="name != null and name!='' ">
+           and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="phone != null and phone!='' ">
+           and u.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+		</if>
+         <if test="orderstarttime != null and orderstarttime !='' and orderendtime !=null and orderendtime !=''">
+           and o.orderCreateTime between #{orderstarttime,jdbcType=VARCHAR} and #{orderendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="shouldstarttime != null and shouldstarttime !='' and shouldendtime !=null and shouldendtime !=''">
+           and o.shouldReturnTime between #{shouldstarttime,jdbcType=VARCHAR} and #{shouldendtime,jdbcType=VARCHAR}
+        </if>
+        <if test="sourcename!=null and sourcename!= ''">
+           and u.sourceid=#{sourcename,jdbcType=INTEGER}
+        </if>
+         <if test="orderstatus !=null and orderstatus != '' and orderstatus ==0"><!-- orderstatus=0 代表是订单状态是已还 -->
+           and o.orderStatus=3
+        </if>
+        <if test="orderstatus !=null and orderstatus != '' and orderstatus ==1"><!-- orderstatus=1 代表是订单状态是未还 -->
+           and o.orderStatus!=3
+        </if>
+         <if test="clientstatus !=null and clientstatus != '' and clientstatus ==0"><!-- clientstatus=0 代表是客户状态是老客户 -->
+           and o.howManyTimesBorMoney>1
+        </if>
+        <if test="clientstatus !=null and clientstatus != '' and clientstatus ==1"><!-- clientstatus=1 代表是客户状态是新客户 -->
+           and o.howManyTimesBorMoney=1
+        </if>
+        <if test="orderstatusdetail !=null and orderstatusdetail != '' ">
+           and o.orderstatus=#{orderstatusdetail,jdbcType=VARCHAR}
+        </if>
+        order by o.orderCreateTime desc 
+  </select>
   	<select id="getshouldReturnTime" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select shouldReturnTime from orders where companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
 	</select>

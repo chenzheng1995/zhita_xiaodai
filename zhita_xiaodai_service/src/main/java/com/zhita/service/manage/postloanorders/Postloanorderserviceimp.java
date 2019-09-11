@@ -187,6 +187,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{
 				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
 			}
+			ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
+			ordeids.get(i).setInterestSum(ordeids.get(i).getRealityAccount().add(ordeids.get(i).getInterestSum()));
+			
 			
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));
 			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
@@ -554,7 +557,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println(sim.format(new Date()));
 				try {
 					System.out.println(Timestamps.dateToStamp1(sim.format(new Date())));
-					ovdeu.setCollectiondate(Timestamps.dateToStamp(sim.format(new Date())));//获取当前时间戳
+					ovdeu.setCollectiondate(Timestamps.dateToStamp1(sim.format(new Date())));//获取当前时间戳
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -629,7 +632,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			order.setStatus2("3");
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCountOO(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
@@ -639,14 +642,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
-		if(defe.getDeferAfterReturntime()!=null){
-			if(defe.getDeferAfterReturntime().length()!=0){
-				
-				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
-			}
-		}else{
-			orders.get(i).setDeferAfterReturntime("/");
-		}
 		
 		if(orders.get(i).getSurplus_money()==null){
 			orders.get(i).setSurplus_money(new BigDecimal(0));
@@ -677,7 +672,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
 
-		
+		if(orders.get(i).getDeferAfterReturntime()==null){
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		}else{
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+		}
 		
 		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 		orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
@@ -831,10 +830,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setCompanyId(order.getCompanyId());
 		orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
-		if(defe.getDeferBeforeReturntime()!=null){
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
+		
+		if(defe.getDeferAfterReturntime()!=null){
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferAfterReturntime()));
 		}else{
-			orders.get(i).setDeferBeforeReturntime("/");
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 		}
 		
 		System.out.println(orders.get(i).getInterestSum());

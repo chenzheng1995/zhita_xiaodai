@@ -282,15 +282,13 @@ public class ChanpaySend extends BaseParameter{
 			map1.put("Ncode", 2000);
 			map1.put("desc", "借款成功");
 		}else{
-			
-			
+			String orderStatus = returnchanpay.getRetMsg();
 			pay.setStatus("支付失败");
 			chanser.AddPayment_record(pay);
-			chanser.DeleteOrderNumber(orderNumber);
+			chanser.DeleteOrderNumber(orderNumber,orderStatus);
 			map1.put("ShortReturn", returnchanpay);
 			map1.put("code", 0);
-			map1.put("msg", "您的卡号存在异常,请您重新换绑一张卡!"
-					+ "给您带来不便,敬请原谅");
+			map1.put("msg", orderStatus);
 			map1.put("Ncode", 0);
 			map1.put("desc", "借款失败");
 			map1.put("code", 0);

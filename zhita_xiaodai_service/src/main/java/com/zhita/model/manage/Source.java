@@ -1,5 +1,7 @@
 ﻿package com.zhita.model.manage;
 
+import java.math.BigDecimal;
+
 //渠道表
 public class Source {
     private Integer id;
@@ -31,6 +33,10 @@ public class Source {
     private String deleted;//假删除（删除：1，没删除：0）
     
     private String token;//认证码
+    
+    private BigDecimal price;//渠道的流量单价
+    
+    private String clearingform;//'结算方式（1：uv；2：注册数；3；已借款人数）
 
 	public Integer getId() {
 		return id;
@@ -152,4 +158,20 @@ public class Source {
 		this.token = token;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getClearingform() {
+		return clearingform;
+	}
+
+	public void setClearingform(String clearingform) {
+		this.clearingform = clearingform;
+	}
+	
 }

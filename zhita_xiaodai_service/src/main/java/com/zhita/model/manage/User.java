@@ -40,7 +40,7 @@ public class User {
     
     private String ifblacklist;//是否是黑名单（1：是；0：不是）
     
-    private String shareOfState;//风控状态（0，审核未通过。1需要人工审核。2，审核通过）
+    private String shareOfState;//风控状态（0，机审未通过。1需要人工审核。2，机审通过。3，人审未通过。4，人审通过。5，未进风控。6，分控中）
     
     private Integer delayTimes;//延期次数
 

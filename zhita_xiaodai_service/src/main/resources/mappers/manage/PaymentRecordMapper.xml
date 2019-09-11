@@ -784,7 +784,6 @@
   					</if>
   				</where>
   				group by d.deferAfterReturntime
-  				limit #{page},#{pagesize}
   			</select>
   			
   			
@@ -1040,12 +1039,12 @@
   			
 
 			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
-				update orders set shouldReturnTime = #{delay_time} where id = #{orderId}
+				update orders set orderStatus = "2",shouldReturnTime = #{delay_time} where id = #{orderId}
 			</select>
 			
 			
 			<update id="OrdersStatus" parameterType="com.zhita.model.manage.Offlinjianmian">
-				update orders set orderStatus = "3" where id = #{orderId}
+				update orders set orderStatus = "3",realtime = #{sedn_time} where id = #{orderId}
 			</update>
 			
 			
@@ -1211,12 +1210,12 @@
 	 		</insert>
 	 		
  			<select id="DefeTime" parameterType="java.lang.Integer" resultType="java.lang.String">
- 				select deferBeforeReturntime from deferred where id = (select max(id) from deferred where orderid = #{orderid})
+				select deferBeforeReturntime from deferred where orderid = #{orderid} ORDER BY deferBeforeReturntime desc limit 1
  			</select>
  			
  			
  			<select id="offDefetime" parameterType="java.lang.Integer" resultType="java.lang.String">
- 				select preextensiontime from offlinedelay where id = (select max(id) from offlinedelay where orderId = #{orderId})
+				select preextensiontime from offlinedelay where orderid = #{orderid} ORDER BY preextensiontime desc limit 1
  			</select>
  			
 </mapper>
