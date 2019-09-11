@@ -464,7 +464,10 @@ public class OrderServiceImp implements IntOrderService {
 				}
 				BigDecimal money = realmoney.add(offmoney).add(bankmoney);
 				list.get(i).setRepaymentMoney(String.valueOf(money));
-
+				
+				if(list.get(i).getInterestPenaltySum()==null){
+					list.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
+				}
 				BigDecimal shourldmoney = list.get(i).getOrderdetails().getRealityBorrowMoney()
 						.add(list.get(i).getOrderdetails().getInterestSum())
 						.add(list.get(i).getOrderdetails().getInterestPenaltySum());
@@ -928,6 +931,39 @@ public class OrderServiceImp implements IntOrderService {
 		return userMapper.queryAllUserPeopleYetExcel(userLikeParameter);
 	}
 
+	//后台管理---查询该订单还款成功的还款金额---还款表
+	public BigDecimal queryrepaymoney(Integer orderid){
+		return ordersMapper.queryrepaymoney(orderid);
+	}
+	
+	//后台管理---查询该订单还款成功的还款金额---线下减免表
+	public BigDecimal queryrepaymoneyoff(Integer orderid){
+		return ordersMapper.queryrepaymoneyoff(orderid);
+	}
+		
+	//后台管理---查询该订单还款成功的还款金额---银行扣款表
+	public BigDecimal queryrepaymoneybank(Integer orderid){
+		return ordersMapper.queryrepaymoneybank(orderid);
+	}
+	
+	//后台管理---通过订单查询改订单在延期表信息
+	public List<DeferredAndOrder> queryDefer(Integer orderid){
+		return ordersMapper.queryDefer(orderid);
+	}
+		
+	//后台管理---通过订单查询改订单在人工延期表信息
+	public List<Offlinedelay> queryDeferlay(Integer orderid){
+		return ordersMapper.queryDeferlay(orderid);
+	}
+	//后台管理---查询最后延期时间---线上延期
+	public Orders qeuryFinalDefertime(Integer orderid){
+		return ordersMapper.qeuryFinalDefertime(orderid);
+	}
+		
+	//后台管理---查询最后延期时间---人工延期
+	public Orders qeuryFinalDefertimelay(Integer orderid){
+		return ordersMapper.qeuryFinalDefertimelay(orderid);
+	}
 	@Override
 	public String getshouldReturnTime(int userId, int companyId) {
 		String beforeTime = ordersMapper.getshouldReturnTime(userId, companyId);

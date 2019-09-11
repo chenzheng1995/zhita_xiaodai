@@ -28,6 +28,9 @@ public class WebContextFilter implements Filter {
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "OPTIONS,GET,POST,DELETE,PUT"); 
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setHeader("Access-Control-Allow-Origin", httpRequest.getHeader("Origin"));
+        
+        httpServletResponse.setHeader("Content-disposition","attachment; filename=excel.xls");
+        httpServletResponse.setHeader("Content-Type", "application/msexcel");
         chain.doFilter(request, httpServletResponse);
          
     }

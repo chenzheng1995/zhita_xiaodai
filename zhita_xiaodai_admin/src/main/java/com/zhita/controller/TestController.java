@@ -209,5 +209,7 @@ public class TestController {
 		
 		TuoMinUtil tuoMinUtil=new TuoMinUtil();
 		System.out.println(tuoMinUtil.mobileEncrypt("18871552652")+":::"+"8888888888888888");;
+		
+		
 	}	
 }

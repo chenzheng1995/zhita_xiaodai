@@ -32,14 +32,13 @@ public class ChanpayGatewayDemo {
 	/**
 	 * 畅捷支付平台公钥
 	 */
-	public static final String MERCHANT_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDPq3oXX5aFeBQGf3Ag/86zNu0VICXmkof85r+DDL46w3vHcTnkEWVbp9DaDurcF7DMctzJngO0u9OG1cb4mn+Pn/uNC1fp7S4JH4xtwST6jFgHtXcTG9uewWFYWKw/8b3zf4fXyRuI/2ekeLSstftqnMQdenVP7XCxMuEnnmM1RwIDAQAB";//生产环境公钥
+	public static final String MERCHANT_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCzus3Hofycmc3Km7aD4bVgiFFzcrwEP2AqPTm7Yp3Ue9Oz9bmKfq3iqyUHFXeXwOyY0OsgkMSqA/2hlBFUWWYgBKuVKchTE9J37cWj5DcFithgHJuPtDTXX4pxBl0uOTsHat2NNLNxwxD1/fJbRUZJS8Ju7/jXC2AKXJTZrHO+XwIDAQAB";//生产环境公钥
 		                                                
 		
 	/**
 	 * 商户私钥
 	 */
-	public static final String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALmnE/9rQUoiSGubWg1B7nomyBMJ1xvLqAbiSa91dYAERUig2dG9xsSSjdvcPuN0ghoOCfPRp++NsjQ9YTzrp3Mla7DwNcWsr9Q3J5De9LKR2BaOs8GH6tlGMrNTZeciKASEYftH3B1a7lCmNUNzsQwB5stmZBQZUOs4oHPo4pTjAgMBAAECgYA5iW1qMHxolF1rdBchmrhlBRXmyJrxE1n84C7EARwsU6aBTtCS70Tl8SGj7QtUhOw5VPaCqQxp8rky9X7oWYRoZQHuub6jvvgmCBQXoBDeUaaO4JQ+7KDYP1OpR+e0s0D0fTzL2yujChkF5LyngF2tdwi2272foAaIQgqVLFo9MQJBAOPwNqane7bXiWCuyKgcEeIA8iKGNSXZqTiF+Yf1cW/CaudXdVyV1kFdnlEqAws9fwOEbtSmr2qhdgEUjMxHVQkCQQDQgix8oqAmxmUGqwAMSfIKCUY8xc+ghd1UxmrsnPtpzVjNG/QKaa4D0pC1Li/YmX2u9tAd+oFpTF/LqH+iN2GLAkA20D1UNlJ51bsjlOSMCLQENVYFF2EQiRc4kH9BQrTUu1wZ5d5DNYUgkvLPcdrpiRBSODauzKbCbbGC8P4q4byBAkEApFrnzDq4eLgL7EygVg93nVegKMlYF1VNmMRqhiZbuxNlexActpSE2XiCHn7QsjCTNHZSqD7NAX51SGiCaxCybwJBALZSXAWzQxinkGJXYvTyvktanGqAkHzn1pSf+XbGYtokryVANhuf+YTMm/lYedq8w9um8byZhGl53ph33xn+U0Y=";
-		
+	public static final String MERCHANT_PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALO6zceh/JyZzcqbtoPhtWCIUXNyvAQ/YCo9ObtindR707P1uYp+reKrJQcVd5fA7JjQ6yCQxKoD/aGUEVRZZiAEq5UpyFMT0nftxaPkNwWK2GAcm4+0NNdfinEGXS45Owdq3Y00s3HDEPX98ltFRklLwm7v+NcLYApclNmsc75fAgMBAAECgYBbgZV5uaCavrgHGuZ/GPC2uFD3/Yd6hiXY+5kkLZ5765uquUYBHGQ9zrMoeyaLjf8oAt5jkzF9+lAs7u0vy+BxO53XdWaKCdRz6E4gBzUApPlmfU2hnlKuTXbMAh8WwqcWHXfei0BfrJq5QNZnfGvPM9PbjM4G4feZR5RCL7mxoQJBAOlN2RON432KrEXwsNqaxZXO0qlLRyFvImrIlUR735iYaGevKFCWYyOAAN+gsR45E5LUErpW3fj9i3Tc63jDx9ECQQDFNsBdt+Oggu9s7I3oNIO0DZG55btbtMzSxq4/BX2JoJjydLHhlREpuZ8bsp3NMxkrRyIGlvc1Hvpfkfw+A98vAkAUc5eQ6EJF8g8R/nxyXVjuvfenkYrFuolI1RaIr1c1eD7GwAsHrXc5WHI7KEn+fUBjAaY2oYDJ3+gGsYsOxhLRAkEAtRi6+xSC9YFnBToQcbvPeUbAm9mG/AaB08fYeEy9Y+VSrcpVElZFpXAr2E5kM+uJYEF40F5O8bvZpGs1G2mIxwJABzTGaCcdWE1y6BVvVUtpCkQJGwDU7EX8n36ouSiX2Vdz0kSGCbcmLoaM5zdNa2zQVOVFKGxBtpbL8mt1IV0RBA==";		
 	
 	/**
 	/**
@@ -487,7 +486,7 @@ public class ChanpayGatewayDemo {
 	public Map<String, String> setCommonMap(Map<String, String> origMap) {
 		// 2.1 基本参数
 		origMap.put("Version", "1.0");
-		origMap.put("PartnerId", "200005640044");//生产环境测试商户号
+		origMap.put("PartnerId", "200005900369");//生产环境测试商户号
 		
 		origMap.put("InputCharset", charset);// 字符集
 		origMap.put("TradeDate", "20170612");// 商户请求时间
@@ -762,7 +761,7 @@ public class ChanpayGatewayDemo {
 		// 2.2 业务参数
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
-		origMap.put("MerchantNo", "200005640044");// 子商户号
+		origMap.put("MerchantNo", "200005900369");// 子商户号
 		origMap.put("MerUserId", "250"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识

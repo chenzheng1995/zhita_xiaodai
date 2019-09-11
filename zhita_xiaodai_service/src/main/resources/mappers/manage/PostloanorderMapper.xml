@@ -456,7 +456,6 @@
 			<where>
 			 AND u.id = o.userId
 			 AND defe.orderId = o.id
-			 and defe.deleted = "0"
 			 AND o.companyId = #{companyId}
 			 <if test="name != null and name != ''">
 			 	AND u.name LIKE concat('%',#{name},'%') 

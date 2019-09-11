@@ -769,7 +769,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         </if> 
   </select>
   <!-- 订单 修改 -->
-  <!-- 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
+  <!-- 订单查询    导出Excel-->
   <select id="queryAllordersByLikeExcel" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
 		select 
     	<include refid="Base_Column_List" />
@@ -908,7 +908,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         </if>
   </select>
 <!-- 订单 修改 -->
-  <!-- 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id） -->
+  <!-- 报废订单查询    导出Excel -->
   <select id="queryAllordersByLikeacrapExcel" parameterType="com.zhita.model.manage.OrderQueryParameter" resultMap="BaseResultMap">
 		select 
     	<include refid="Base_Column_List" />
