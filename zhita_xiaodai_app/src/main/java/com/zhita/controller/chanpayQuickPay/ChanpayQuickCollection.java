@@ -499,7 +499,7 @@ public class ChanpayQuickCollection {
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_req")
 	@Transactional
-	public Map<String, Object> nmg_biz_api_auth_req(Integer MerUserId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
+	public Map<String, Object> nmg_biz_api_auth_req(Integer MerUserId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		RedisClientUtil redis = new RedisClientUtil();
 		String aca = redis.get("nmg_api_auth_req"+MerUserId);
@@ -510,7 +510,7 @@ public class ChanpayQuickCollection {
 			redis.delkey("nmg_api_auth_req"+MerUserId);
 			return map;
 		}
-		if(MerUserId != null && BkAcctNo != null && IDNo != null && CstmrNm != null && MobNo != null && bankcardTypeId != null){
+		if(MerUserId != null && BkAcctNo != null && MobNo != null){
 			
 			Integer id = servie.SelectUserId(MerUserId);
 			if(id != null){
