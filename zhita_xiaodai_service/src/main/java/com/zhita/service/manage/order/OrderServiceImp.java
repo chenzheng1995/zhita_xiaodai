@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.util.StringUtils;
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.DeferredAndOrder;
@@ -686,6 +685,40 @@ public class OrderServiceImp implements IntOrderService {
 		map.put("pageutil", pageUtil);
 		return map;
 	}
+	
+	/**
+	 * 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	public Integer queryAllordersByLikeCount(OrderQueryParameter orderQueryParameter){
+		return ordersMapper.queryAllordersByLikeCount(orderQueryParameter);
+	}
+	/**
+	 * 订单查询（导出Excel）
+	 */
+	public List<Orders> queryAllordersByLikeExcel(OrderQueryParameter orderQueryParameter){
+		return ordersMapper.queryAllordersByLikeExcel(orderQueryParameter);
+	}
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
+	 */
+	public List<Orders> queryAllordersByLikeacrap(OrderQueryParameter orderQueryParameter){
+		return ordersMapper.queryAllordersByLikeacrap(orderQueryParameter);
+	}
+	
+	/**
+	 * 报废订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）——查询数量
+	 */
+	public Integer queryAllordersByLikeCountacrap(OrderQueryParameter orderQueryParameter){
+		return ordersMapper.queryAllordersByLikeCountacrap(orderQueryParameter);
+	}
+	
+	/**
+	 * 报废订单查询（导出Excel）
+	 */
+	public List<Orders> queryAllordersByLikeacrapExcel(OrderQueryParameter orderQueryParameter){
+		return ordersMapper.queryAllordersByLikeacrapExcel(orderQueryParameter);
+	}
 
 	/**
 	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
@@ -736,7 +769,18 @@ public class OrderServiceImp implements IntOrderService {
 		return map;
 
 	}
-
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 */
+	public int queryAllUsercount(UserLikeParameter userLikeParameter){
+		return userMapper.queryAllUsercount(userLikeParameter);
+	}
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（导出Excel）
+	 */
+	public List<User> queryAllUserExcel(UserLikeParameter userLikeParameter){
+		return userMapper.queryAllUserExcel(userLikeParameter);
+	}
 	/**
 	 * 人审状态用户（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束）
 	 */
@@ -785,6 +829,19 @@ public class OrderServiceImp implements IntOrderService {
 		map.put("pageutil", pageUtil);
 		return map;
 
+	}
+	/**
+	 * 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
+	 */
+	public int queryAllUserPeoplecount(UserLikeParameter userLikeParameter){
+		return userMapper.queryAllUserPeoplecount(userLikeParameter);
+	}
+	
+	/**
+	 * 人审状态用户（导出Excel）
+	 */
+	public List<User> queryAllUserPeopleExcel(UserLikeParameter userLikeParameter){
+		return userMapper.queryAllUserPeopleExcel(userLikeParameter);
 	}
 
 	/**
@@ -856,6 +913,19 @@ public class OrderServiceImp implements IntOrderService {
 		map.put("listacount", listacount);
 		map.put("pageutil", pageUtil);
 		return map;
+	}
+	
+	/**
+	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）——查询数量
+	 */
+	public int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter){
+		return userMapper.queryAllUserPeopleYetcount(userLikeParameter);
+	}
+	/**
+	 * 人审过后状态用户（导出Excel）
+	 */
+	public List<User> queryAllUserPeopleYetExcel(UserLikeParameter userLikeParameter){
+		return userMapper.queryAllUserPeopleYetExcel(userLikeParameter);
 	}
 
 	@Override

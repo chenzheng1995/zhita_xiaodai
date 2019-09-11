@@ -97,6 +97,10 @@ public interface UserMapper {
 	 */
 	int queryAllUsercount(UserLikeParameter userLikeParameter);
 	
+	/**
+	 * 机审状态用户【包含机审拒绝和机审通过用户】（导出Excel）
+	 */
+	List<User> queryAllUserExcel(UserLikeParameter userLikeParameter);
 	
 	/**
 	 * 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）
@@ -106,6 +110,11 @@ public interface UserMapper {
 	 * 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束）——查询数量
 	 */
 	int queryAllUserPeoplecount(UserLikeParameter userLikeParameter);
+	
+	/**
+	 * 人审状态用户（导出Excel）
+	 */
+	List<User> queryAllUserPeopleExcel(UserLikeParameter userLikeParameter);
 	
 	/**
 	 * 人审通过按钮
@@ -126,6 +135,10 @@ public interface UserMapper {
 	 * 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）——查询数量
 	 */
 	int queryAllUserPeopleYetcount(UserLikeParameter userLikeParameter);
+	/**
+	 * 人审过后状态用户（导出Excel）
+	 */
+	List<User> queryAllUserPeopleYetExcel(UserLikeParameter userLikeParameter);
 
 	void updateshareOfState(@Param("userId")int userId,@Param("shareOfState") String shareOfState);
 
