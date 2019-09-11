@@ -65,8 +65,11 @@ public class ChanpayQuickCollection {
 	/**
 	 * 商户私钥
 	 */
-	public static final String MERCHANT_PRIVATE_KEY = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALmnE/9rQUoiSGubWg1B7nomyBMJ1xvLqAbiSa91dYAERUig2dG9xsSSjdvcPuN0ghoOCfPRp++NsjQ9YTzrp3Mla7DwNcWsr9Q3J5De9LKR2BaOs8GH6tlGMrNTZeciKASEYftH3B1a7lCmNUNzsQwB5stmZBQZUOs4oHPo4pTjAgMBAAECgYA5iW1qMHxolF1rdBchmrhlBRXmyJrxE1n84C7EARwsU6aBTtCS70Tl8SGj7QtUhOw5VPaCqQxp8rky9X7oWYRoZQHuub6jvvgmCBQXoBDeUaaO4JQ+7KDYP1OpR+e0s0D0fTzL2yujChkF5LyngF2tdwi2272foAaIQgqVLFo9MQJBAOPwNqane7bXiWCuyKgcEeIA8iKGNSXZqTiF+Yf1cW/CaudXdVyV1kFdnlEqAws9fwOEbtSmr2qhdgEUjMxHVQkCQQDQgix8oqAmxmUGqwAMSfIKCUY8xc+ghd1UxmrsnPtpzVjNG/QKaa4D0pC1Li/YmX2u9tAd+oFpTF/LqH+iN2GLAkA20D1UNlJ51bsjlOSMCLQENVYFF2EQiRc4kH9BQrTUu1wZ5d5DNYUgkvLPcdrpiRBSODauzKbCbbGC8P4q4byBAkEApFrnzDq4eLgL7EygVg93nVegKMlYF1VNmMRqhiZbuxNlexActpSE2XiCHn7QsjCTNHZSqD7NAX51SGiCaxCybwJBALZSXAWzQxinkGJXYvTyvktanGqAkHzn1pSf+XbGYtokryVANhuf+YTMm/lYedq8w9um8byZhGl53ph33xn+U0Y=";
-		
+	public static final String MERCHANT_PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK+8wQFljcjGMMFR42YpC1lHmCBxY97r+YFdDaEefv3kofmW4TY1F9h/KzWWM0AaTn5vkgQX8sjcc8cmD+iEsFhG0GbLMDUozaJ/0Jyn2n9oVG84CY/XiZZIfSuJwmqgXL5BcWdgDKGxNYVAe3Q7E15ea9yAzKSQg+daS2aUzSoRAgMBAAECgYBO9vmirwcumB+APlN3rCm1TD5HFaxSlqXeQvnE0/csDnfZtrorqV+1oC7CPWN6AlgS5/8sZ7ZoGubLLYcoa7bwtPxJ8nPwnMSjtLRun6TPjaefn6RqRY+GZRslsvx+O8KLJdKOkfJTA7pKhf7+65V0fbewIxmcDdoJIVN9lqKrgQJBANfO4/jyP1/8moQCsEcP1h1D8SqN6NDFti3vpZWU6QUARGLrwfKezTNMgN3Awh4YEbeNIWLmF160TjvVPfgINuUCQQDQd2a8SKTBvydWWj0nzailV7tCgwH50Fv+uIxMe4bSFmIC+/nRSi3gM906hK9g4+5jlRmbI2lz07XP+R+xJOe9AkA/FfXCkl5AWwF4UajiPRjkWTYosG88iG9nIkUPYwZzNc7H9A8wM4fc1SJesLiOP47+Tz1RQd3XC3JLP1zsIsqZAkEArZjwzZQ01z7GlEtbJ/1EFkRDpXSRPaX8JdcqxjoLoIGRJukMNPPv1gd6j9OUdDv69aRhCWbo1tKTUdgkQxD3hQJAYKijoNX03nixLjFwNdMz3xbQqc3xO9diq3I6pC4vx/9EFL8aMxOQtSqClbuBsochMollxsyGwy0miHnHTXXQhw==";
+	
+	
+	
+	
 	/**
 	 * 编码类型
 	 */
@@ -664,7 +667,6 @@ public class ChanpayQuickCollection {
 		}else{
 			map.put("code", 0);
 			map.put("Ncode", 0);
-			map.put("desc", "OriAuthTrxId，SmsCode不能为空");
 			map.put("msg", "OriAuthTrxId，SmsCode不能为空");
 		}
 		
