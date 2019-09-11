@@ -8,6 +8,8 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.alibaba.fastjson.JSONObject;
+
 public class Test {
 	
 
@@ -309,15 +311,46 @@ public class Test {
 //	      }
 		
 		
-		String aString = "1567672396000";
-		String bString = "1567672452000";
-		long a = Long.parseLong(aString);
-		long b = Long.parseLong(bString);
-		if(a>b) {
-			System.out.println("a大");
-		}else {
-			System.out.println("b大");
-		}
+//		String aString = "1567672396000";
+//		String bString = "1567672452000";
+//		long a = Long.parseLong(aString);
+//		long b = Long.parseLong(bString);
+//		if(a>b) {
+//			System.out.println("a大");
+//		}else {
+//			System.out.println("b大");
+//		}
+		
+//		String aString  = "{'phoneMarket':'vivo','phoneModel':'qqq','phoneRes':'ios','phoneStand':{'lac':'gggg','loc':'bbb'},'uuid':'1111','wifiIP':'192.168.0.123','wifiMac':'35679','wifiName':'222','wrapName': [{'name':'qqq','time':'12893248668'}]}";
+//		JSONObject jsonObject = JSONObject.parseObject(aString);
+//		String phoneMarket = jsonObject.getString("phoneMarket");
+//		String phoneModel = jsonObject.getString("phoneModel");
+//		String phoneRes = jsonObject.getString("phoneRes");
+//		String phoneStand = jsonObject.getString("phoneStand"); 
+//		JSONObject jsonObject1 = JSONObject.parseObject(phoneStand);
+//		String lac = jsonObject1.getString("lac");
+//		String loc = jsonObject1.getString("loc");
+//		String uuid = jsonObject.getString("uuid");
+//		String wifiIP = jsonObject.getString("wifiIP");
+//		String wifiMac = jsonObject.getString("wifiMac");
+//		String wifiName = jsonObject.getString("wifiName");
+//		String wrapName = jsonObject.getString("wrapName");
+//		System.out.println("phoneMarket:"+phoneMarket);
+//		System.out.println("phoneModel:"+phoneModel);
+//		System.out.println("phoneRes:"+phoneRes);
+//		System.out.println("phoneStand:"+phoneStand);
+//		System.out.println("lac:"+lac);
+//		System.out.println("loc:"+loc);
+//		System.out.println("uuid:"+uuid);
+//		System.out.println("wifiIP:"+wifiIP);
+//		System.out.println("wifiMac:"+wifiMac);
+//		System.out.println("wifiName:"+wifiName);
+//		System.out.println("wrapName:"+wrapName);
+
+		String jsonString = "{'phoneMarket':'vivo','phoneModel':'qqq','phoneRes':'ios','phoneStand':{'lac':'gggg','loc':'bbb'},'uuid':'1111','wifiIP':'192.168.0.123','wifiMac':'35679','wifiName':'222','wrapName': [{'name':'qqq','time':'12893248668'}]}";
+		String phone = "15646541565";
+		PostAndGet pGet = new PostAndGet();
+		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fenkong/Anti/AddUserPhone?"+jsonString+"&"+phone);	
 		
 	}
 

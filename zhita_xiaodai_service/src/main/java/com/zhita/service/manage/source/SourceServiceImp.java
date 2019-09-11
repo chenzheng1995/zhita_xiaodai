@@ -48,6 +48,7 @@ public class SourceServiceImp implements IntSourceService{
 	@Autowired
 	private OrdersMapper ordersMapper;
 	
+	
 	//后台管理---查询渠道表所有信息
     public Map<String,Object> queryAll(Integer companyId,Integer page){
     	List<Source> list=new ArrayList<>();

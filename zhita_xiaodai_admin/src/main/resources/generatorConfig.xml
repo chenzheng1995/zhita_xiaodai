@@ -21,7 +21,7 @@
         <!--jdbc的数据库连接 -->
         <jdbcConnection
                 driverClass="com.mysql.jdbc.Driver"
-                connectionURL="jdbc:mysql://192.168.0.189:3306/xiaodai?characterEncoding=utf-8"
+                connectionURL="jdbc:mysql://192.168.0.107:3306/xiaodai?characterEncoding=utf-8"
                 userId="root"
                 password="123456">
         </jdbcConnection>
@@ -71,6 +71,7 @@
         <!-- <table tableName="zhimi_risk" domainObjectName="ZhimiRisk" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
         <!-- <table tableName="three_elements" domainObjectName="ThreeElements" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
         <!-- <table tableName="magic_wand3_info" domainObjectName="MagicWand3Info" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
-        <table tableName="applynumber" domainObjectName="Applynumber" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
+        <!-- <table tableName="applynumber" domainObjectName="Applynumber" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
+        <table tableName="configuration" domainObjectName="Configuration" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
     </context>
 </generatorConfiguration>

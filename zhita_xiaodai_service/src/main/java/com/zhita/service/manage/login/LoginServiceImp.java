@@ -89,7 +89,7 @@ public class LoginServiceImp implements IntLoginService{
 	
 	//admin---登录——退出登录
 	public int updateLoginStatus(Integer userId){
-		int num=sysUserMapper.updateLoginStatus(userId);
+		int num=sysUserMapper.updateLoginStatus(userId); 
 		return num;
 
 	}

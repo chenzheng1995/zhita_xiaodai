@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.sql.ast.SQLPartitionValue.Operator;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.BorrowMoneyMessageMapper;
@@ -24,12 +25,15 @@ import com.zhita.dao.manage.RetrialWindControlMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.service.manage.autheninfor.IntAutheninforService;
+import com.zhita.service.manage.configuration.ConfigurationService;
 import com.zhita.service.manage.operator.OperatorService;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 import com.zhita.service.manage.whitelistuser.IntWhitelistuserService;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.PostAndGet;
+import com.zhita.util.PostUtil;
 
 import sun.text.normalizer.ICUBinary.Authenticate;
 
@@ -38,7 +42,7 @@ import sun.text.normalizer.ICUBinary.Authenticate;
 public class CertificationCenterController {
 	
 	@Autowired
-	IntAutheninforService IntAutheninforService;
+	IntAutheninforService intAutheninforService;
 	
 	@Autowired
 	UserAttestationService userAttestationService;
@@ -63,6 +67,74 @@ public class CertificationCenterController {
 	
 	@Autowired
 	BorrowMoneyMessageMapper borrowMoneyMessageMapper;
+	
+	@Autowired
+	ConfigurationService configurationService;
+	
+	//插入分控模型数据
+	@RequestMapping("/setconfiguration")
+	@ResponseBody
+	@Transactional
+    public Map<String, Object> setconfiguration(String jsonString,int userId,String phone){
+		PostAndGet pGet = new PostAndGet();
+		pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_fenkong/Anti/AddUserPhone?jsonString="+jsonString+"&phone="+phone);
+    	Map<String, Object> map = new HashMap<>();
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
+		String phoneMarket = jsonObject.getString("phoneMarket");
+		String phoneModel = jsonObject.getString("phoneModel");
+		String phoneRes = jsonObject.getString("phoneRes");
+		String phoneStand = jsonObject.getString("phoneStand"); 
+		JSONObject jsonObject1 = JSONObject.parseObject(phoneStand);
+		String lac = jsonObject1.getString("lac");
+		String loc = jsonObject1.getString("loc");
+		String uuid = jsonObject.getString("uuid");
+		String wifiIP = jsonObject.getString("wifiIP");
+		String wifiMac = jsonObject.getString("wifiMac");
+		String wifiName = jsonObject.getString("wifiName");
+		String wrapName = jsonObject.getString("wrapName");
+		int number = configurationService.getId(userId);
+		if(number==0) {
+			int num = configurationService.setconfiguration(userId,phoneMarket,phoneModel,phoneRes,lac,loc,uuid,wifiIP,wifiMac,wifiName,wrapName);
+			if (num==1) {
+				map.put("Ncode","2000");
+				map.put("code","200");
+				map.put("msg","数据插入成功");
+			}else {
+				map.put("Ncode","405");
+				map.put("code","405");
+				map.put("msg","数据插入失败");
+			}
+		}else {
+			int num = configurationService.updateconfiguration(userId,phoneMarket,phoneModel,phoneRes,lac,loc,uuid,wifiIP,wifiMac,wifiName,wrapName);
+			if (num==1) {
+				map.put("Ncode","2000");
+				map.put("code","200");
+				map.put("msg","数据更新成功");
+			}else {
+				map.put("Ncode","405");
+				map.put("code","405");
+				map.put("msg","数据更新失败");
+			}
+		}
+
+		
+		return map;
+
+    }
+	
+	
+	//获取分控模型数据
+	@RequestMapping("/getconfiguration")
+	@ResponseBody
+	@Transactional
+    public Map<String, Object> getconfiguration(int userId){
+    	Map<String, Object> map = new HashMap<>();
+		map = configurationService.getconfiguration(userId);
+		return map;
+
+    }
+	
+	
 	
 	
 	
@@ -103,13 +175,21 @@ public class CertificationCenterController {
 		   
 		   String zhima ="0";
 		   
-		   ArrayList<String> list = IntAutheninforService.getifAuthentication(companyId);
+		   ArrayList<String> list = intAutheninforService.getifAuthentication(companyId);
 		   String userAttestationAutheninfor = list.get(0);
-		   String operatorAutheninfor = list.get(1);
-		   String bankcardAutheninfor = list.get(2);
+		   String operatorAutheninfor = list.get(2);
+		   String bankcardAutheninfor = list.get(1);
 		   String zhimaAutheninfor = list.get(3);
 		   
-		   
+           map3.put("userAttestation", userAttestation);
+           map3.put("Operator", Operator);
+           map3.put("bankcard", bankcard);
+           map3.put("zhima", zhima);
+           map3.put("userAttestationAutheninfor", userAttestationAutheninfor);
+           map3.put("operatorAutheninfor", operatorAutheninfor);
+           map3.put("bankcardAutheninfor", bankcardAutheninfor);
+           map3.put("zhimaAutheninfor", zhimaAutheninfor);
+           
 		  if("1".equals(userAttestation)&&"1".equals(bankcard)) {
 			   String attestationStatus = "1";		   
 			   String phone = intUserService.getphone(userId);
@@ -120,13 +200,14 @@ public class CertificationCenterController {
 			   String name = (String) map5.get("trueName");
 				int num = intWhitelistuserService.getWhitelistuser1(newPhone, idcard_number, name);
 				if (num > 0) {
+					operatorService.updateAttestationStatus(attestationStatus, userId);
+					String shareOfState = "2";
+					intUserService.updateshareOfState(userId, shareOfState);
 					int num1 = operatorService.getuserId(userId);
 					if (num1 == 0) {
 						String authentime = System.currentTimeMillis() + "";// 认证时间
 						int number = operatorService.setwhitelistuser(attestationStatus, userId, authentime);
 						if (number == 1) {
-							String shareOfState = "2";
-							intUserService.updateshareOfState(userId, shareOfState);
 							map3.put("Ncode", "2000");
 							map3.put("msg", "数据插入成功");
 							map3.put("Code", "201");
@@ -136,7 +217,7 @@ public class CertificationCenterController {
 							map3.put("Code", "405");
 						}
 					}
-
+					map3.put("Operator","1");
 				} else {
 					map3.put("Ncode", "2000");
 					map3.put("msg", "用户不是白名单");
@@ -158,14 +239,7 @@ public class CertificationCenterController {
 //		   list.add(authenticationInformation);
 //	   }
 //}
-             map3.put("userAttestation", userAttestation);
-             map3.put("Operator", Operator);
-             map3.put("bankcard", bankcard);
-             map3.put("zhima", zhima);
-             map3.put("userAttestationAutheninfor", userAttestationAutheninfor);
-             map3.put("operatorAutheninfor", operatorAutheninfor);
-             map3.put("bankcardAutheninfor", bankcardAutheninfor);
-             map3.put("zhimaAutheninfor", zhimaAutheninfor);
+
              
 
 		   
@@ -219,6 +293,9 @@ public class CertificationCenterController {
 			   map1.put("code","400");
 			   map1.put("msg", "不满足条件");
 		}
+			   
+			   
+				if("1".equals(userAttestation)) {	
 				String phone2 = intUserService.getphone(userId);// 用户登录进来的手机号
 
 				PhoneDeal pDeal = new PhoneDeal();
@@ -228,6 +305,7 @@ public class CertificationCenterController {
 			   int number = intWhitelistuserService.getWhitelistuser(newphone2, idcard_number);
 				if (number == 0) {
 			   
+	
 			String orderStatus = intOrderService.getorderStatus1(userId, companyId);  
 			if("3".equals(orderStatus)) {
 				
@@ -270,7 +348,7 @@ public class CertificationCenterController {
 				    
 			}
 			}
-			
+				}
 			
 		   
 			return map1;
