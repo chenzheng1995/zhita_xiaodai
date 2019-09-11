@@ -502,7 +502,36 @@
 	     	and u.shareOfState=#{shareOfState,jdbcType=VARCHAR}
 		</if>
   </select>
-  
+  <!-- 机审状态用户【包含机审拒绝和机审通过用户】   导出Excel -->
+  <select id="queryAllUserExcel" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
+  	 select 
+     <include refid="Base_Column_List" />
+     from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
+     left join applynumber appnum on appnum.userid=u.id
+     where u.companyId=#{companyId,jdbcType=INTEGER} and (u.shareOfState=0 or u.shareOfState=2) and u.ifBlacklist=0
+     	<if test="applynumber != null and applynumber !='' ">
+	        and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
+	    </if>
+      	<if test="name != null and name!='' ">
+	        and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+	    </if>
+	    <if test="phone != null and phone !='' ">
+	        and u.phone = #{phone,jdbcType=VARCHAR}
+	    </if>
+	    <if test="registeClient != null and registeClient !='' ">
+			and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 		</if>
+	    <if test="applytimestart != null and applytimestart !='' and applytimeend != null and applytimeend !='' ">
+	        and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
+	    </if>
+	    <if test="state != null and state !='' ">
+	     	and appnum.state=#{state,jdbcType=VARCHAR}
+		</if>
+		<if test="shareOfState != null and shareOfState !='' ">
+	     	and u.shareOfState=#{shareOfState,jdbcType=VARCHAR}
+		</if>
+     order by appnum.applytime desc 
+  </select>
   <!-- 人审状态用户（公司id，page，pagesize,申请编号，姓名，手机号，申请时间开始，申请时间结束） -->
   <select id="queryAllUserPeople" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
   	 select 
@@ -554,7 +583,33 @@
 	     	   and appnum.state=#{state,jdbcType=VARCHAR}
 			</if>
   </select>
- 	
+ <!-- 人审状态用户       导出Excel -->
+  <select id="queryAllUserPeopleExcel" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
+  	 select 
+     <include refid="Base_Column_List" />
+     from user u inner join source s on u.sourceid=s.id inner join manage_control_settings mcs on s.manageControlId=mcs.id
+     left join applynumber appnum on appnum.userid=u.id
+     where u.companyid=#{companyId,jdbcType=INTEGER} and u.shareOfState=1  and u.ifBlacklist=0
+     		<if test="applynumber != null and applynumber !='' ">
+	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
+	        </if>
+      		<if test="name != null and name!='' ">
+	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+	        </if>
+	        <if test="phone != null and phone!='' ">
+	        	and u.phone = #{phone,jdbcType=VARCHAR}
+	        </if>
+	        <if test="registeClient != null and registeClient !='' ">
+				and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+			</if>
+	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
+	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
+	        </if>
+	        <if test="state != null and state !='' ">
+				 and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
+     order by appnum.applytime desc 
+  </select>
  	<!-- 人审通过按钮 -->
   <update id="updateShareOfState">
   	update user set shareOfState=4,operator=#{arg0},operationTime=#{arg1} where id=#{arg2}
@@ -622,7 +677,36 @@
  				and appnum.state=#{state,jdbcType=VARCHAR}
 			</if>
   </select>
-  
+  <!-- 人审过后状态用户      导出Excel-->
+  <select id="queryAllUserPeopleYetExcel" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
+  	 select 
+     <include refid="Base_Column_List2" />
+     from user u inner join source s on u.sourceid=s.id inner join sys_user su on su.userId=u.operator inner join manage_control_settings mcs on s.manageControlId=mcs.id
+     left join applynumber appnum on appnum.userid=u.id
+     where u.companyid=#{companyId,jdbcType=INTEGER} and (u.shareOfState=3 or u.shareOfState=4) and u.ifBlacklist=0
+     		<if test="applynumber != null and applynumber !='' ">
+	        	and u.applynumber like "%"#{applynumber,jdbcType=VARCHAR}"%"
+	        </if>
+      		<if test="name != null and name!='' ">
+	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
+	        </if>
+	        <if test="phone != null and phone!='' ">
+	        	and u.phone = #{phone,jdbcType=VARCHAR}
+	        </if>
+	       	<if test="registeClient != null and registeClient !='' ">
+				and u.registeClient = #{registeClient,jdbcType=VARCHAR}
+ 			</if>
+	        <if test="applytimestart != null and applytimestart!='' and applytimeend != null and applytimeend !='' ">
+	           and u.applytime between #{applytimestart,jdbcType=VARCHAR} and #{applytimeend,jdbcType=VARCHAR}
+	        </if>
+	        <if test="operatorid != null and operatorid !='' ">
+	        	and u.operator =#{operatorid,jdbcType=INTEGER}
+	        </if>
+	        <if test="state != null and state !='' ">
+ 				and appnum.state=#{state,jdbcType=VARCHAR}
+			</if>
+     order by appnum.applytime desc 
+  </select>
   
      <!-- 更新分控状态 -->
   <update id="updateshareOfState"> 

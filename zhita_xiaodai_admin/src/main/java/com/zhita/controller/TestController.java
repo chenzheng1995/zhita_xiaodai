@@ -206,5 +206,8 @@ public class TestController {
 		String result = str.substring(str.length()-6,str.length());
 		System.out.println(result+"---------------");
 		
+		
+		TuoMinUtil tuoMinUtil=new TuoMinUtil();
+		System.out.println(tuoMinUtil.mobileEncrypt("18871552652")+":::"+"8888888888888888");;
 	}	
 }

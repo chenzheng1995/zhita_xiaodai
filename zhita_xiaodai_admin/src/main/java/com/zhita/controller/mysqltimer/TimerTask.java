@@ -24,7 +24,7 @@ public class TimerTask {
      */
 	  //                   秒分时日 月周
 	 //每日0点  将各个渠道的历史数据存入历史表
-      @Scheduled(cron = "0 01 0 * * ?")
+      @Scheduled(cron = "0 01 1 * * ?")
       @Lazy(false)
       public void test1() throws ParseException
       {
@@ -35,7 +35,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务     控制逾期
-      @Scheduled(cron = "0 20 16,0 * * ?")
+      @Scheduled(cron = "0 01 0 * * ?")
       @Lazy(false)
       public void test2() throws ParseException
       {
@@ -46,7 +46,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务   控制逾期等级
-      @Scheduled(cron = "0 01 0 * * ?")
+      @Scheduled(cron = "0 30 0 * * ?")
       @Lazy(false)
       public void test3() throws ParseException
       {
@@ -57,7 +57,7 @@ public class TimerTask {
       
       //                   秒分时日 月周
       //定时任务   控制黑名单
-      @Scheduled(cron = "0 01 0 * * ?")
+      @Scheduled(cron = "0 50 0 * * ?")
       @Lazy(false)
       public void test4() throws ParseException
       {
