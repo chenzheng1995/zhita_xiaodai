@@ -60,17 +60,19 @@ public class OperationalServiceimp implements OperationalService{
 		
 		List<Orders> ordes = new ArrayList<Orders>();
 		
-		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
-		String stimea = sima.format(new Date());
-		Calendar calendar = Calendar.getInstance();
-		Date date = null;
-		Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
-		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
-		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		String c = sima.format(date);//结束时间
-		String b = sima.format(new Date());
-		ordera.setStart_time(c+" 00:00:00");
-		ordera.setEnd_time(b+" 23:59:59");
+		if(ordera.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			ordera.setStart_time(c+" 00:00:00");
+			ordera.setEnd_time(b+" 23:59:59");
+		}
 //		try {
 //			ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
 //			ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
@@ -291,17 +293,19 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> orde = new ArrayList<Orders>();
-		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
-		String stimea = sima.format(new Date());
-		Calendar calendar = Calendar.getInstance();
-		Date date = null;
-		Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
-		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
-		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		String c = sima.format(date);//结束时间
-		String b = sima.format(new Date());
-		order.setStart_time(c+" 00:00:00");
-		order.setEnd_time(b+" 23:59:59");
+		if(order.getStart_time()==null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			order.setStart_time(c+" 00:00:00");
+			order.setEnd_time(b+" 23:59:59");
+		}
 		
 		
 		if(order.getStart_time()==null){
@@ -507,17 +511,19 @@ public class OperationalServiceimp implements OperationalService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> ordesa = new ArrayList<Orders>();
 		
-		SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
-		String stimea = sima.format(new Date());
-		Calendar calendar = Calendar.getInstance();
-		Date date = null;
-		Integer day = pdap.SelectHuan(orde.getCompanyId());//获取天数
-		calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
-		date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-		String cs = sima.format(date);//结束时间
-		String ba = sima.format(new Date());//结束时间
-		orde.setStart_time(cs+" 00:00:00");
-		orde.setEnd_time(ba+" 23:59:59");
+		if(orde.getStart_time()==null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(orde.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String cs = sima.format(date);//结束时间
+			String ba = sima.format(new Date());//结束时间
+			orde.setStart_time(cs+" 00:00:00");
+			orde.setEnd_time(ba+" 23:59:59");
+		}
 		
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");

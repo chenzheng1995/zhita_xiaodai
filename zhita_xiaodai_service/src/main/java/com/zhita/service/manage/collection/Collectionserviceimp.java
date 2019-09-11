@@ -158,7 +158,9 @@ public class Collectionserviceimp implements Collectionservice{
 			order.setPage(pages.getPage());
 			List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
 			for(int i=0;i<orders.size();i++){
-				orders.get(i).setCollectionStatus("未催收");
+				if(orders.get(i).getCollectionStatus() == null){
+					orders.get(i).setCollectionStatus("未催收");
+				}
 				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
@@ -364,9 +366,11 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
 			if(orders.get(i).getSurplus_money()==null){
 				orders.get(i).setSurplus_money(new BigDecimal(0));
 			}
+			System.out.println(orders.get(i).getOrder_money());
 			//orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
 			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
 			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));

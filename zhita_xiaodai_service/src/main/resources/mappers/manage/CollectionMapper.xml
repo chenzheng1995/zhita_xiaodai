@@ -176,7 +176,6 @@
 					</if>
 				</where>
 				GROUP BY col.collectionTime
-				limit #{page},#{pagesize}
 		</select>
 		
 		
@@ -192,7 +191,6 @@
 				</if>
 			</where>
 			GROUP BY c.collectionMemberId
-			limit #{page},#{pagesize}
 		</select>
 		
 		
@@ -234,7 +232,6 @@
 				</if>
 			</where>
 		 	GROUP BY c.collectionMemberId
-		 	limit #{page},#{pagesize}
 		</select>
 		
 		
@@ -301,7 +298,7 @@
 		
 		<select id="AllCountNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			SELECT COUNT(c.collectionId) from collection c,sys_user com where c.collectionMemberId = com.userId 
-			and com.companyId = #{companyId} and c.collectionTime is null
+			and com.companyId = #{companyId} and c.usertype is null
 		</select>
 		
 		
@@ -366,7 +363,7 @@
 		<select id="WeiControllerOrdetialis" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade,o.shouldReturnTime
+			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade,o.shouldReturnTime,ord.shouldReapyMoney
 			 from orders o ,orderdetails ord,sys_user colme,user u ,deferred_settings deset,overdue_class ov,collection col,collectiondetails collection
 			<where>
 				o.companyId = ov.companyId 
@@ -401,12 +398,10 @@
 				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
 					AND o.shouldReturnTime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
 				</if>
-				AND o.companyId = #{companyId} 
 			</where>
 			group by o.id
 			limit #{page},#{pagesize}
 		</select>
-		
 		
 		
 		<select id="CollNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -452,7 +447,7 @@
 		</select>
 		
 		
-			<select id="SelectUserCollectionNum" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
+		<select id="SelectUserCollectionNum" parameterType="com.zhita.model.manage.Collectiondetails" resultType="java.lang.Integer">
 			select count(orderId) from collection where collectionMemberId = #{collectionMemberId}
 			AND collectionTime = #{collectionTime} group by orderId
 		</select>
@@ -497,7 +492,7 @@
 			)
 			VALUES
 			(#{collection_time},#{user_type},#{collectionmoney},#{collectionMemberId},#{orderId})
-		</insert>
+		</insert> 
 		
 		
 		<select id="OneCollecti" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Collection">
@@ -537,10 +532,10 @@
 			and o.companyId = #{companyId}
 			AND c.collectionMemberId = #{collectionMemberId}
 			</where>
-		</select>
+		</select> 
 		
 		
-		<select id="SelectcollectionStatusAs" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+		 <select id="SelectcollectionStatusAs" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(o.id) from collection c,orders o 
 			<where>
 			 o.orderStatus = #{orderStatus}
@@ -578,5 +573,5 @@
 		
 		<select id="PrmoiseMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 			select sum(collectionmoney) from collectiondetails where orderId = #{orderId}
-		</select>
+		</select> 
 </mapper>

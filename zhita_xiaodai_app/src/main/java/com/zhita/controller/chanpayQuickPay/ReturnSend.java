@@ -6,7 +6,7 @@ public class ReturnSend {
 	
 	private String InputCharset;
 	
-	private String Memo;
+	private String RetMsg;
 	
 	private String PartnerId;
 	
@@ -38,12 +38,12 @@ public class ReturnSend {
 		InputCharset = inputCharset;
 	}
 
-	public String getMemo() {
-		return Memo;
+	public String getRetMsg() {
+		return RetMsg;
 	}
 
-	public void setMemo(String memo) {
-		Memo = memo;
+	public void setRetMsg(String retMsg) {
+		RetMsg = retMsg;
 	}
 
 	public String getPartnerId() {
