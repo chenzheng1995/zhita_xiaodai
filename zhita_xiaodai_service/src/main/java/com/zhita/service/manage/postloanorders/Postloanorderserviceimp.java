@@ -632,7 +632,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			order.setStatus2("3");
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCountOO(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.YiHuanOrders(order);
@@ -830,10 +830,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setCompanyId(order.getCompanyId());
 		orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
-		if(defe.getDeferBeforeReturntime()!=null){
-			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(defe.getDeferBeforeReturntime()));
+		
+		if(defe.getDeferAfterReturntime()!=null){
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferAfterReturntime()));
 		}else{
-			orders.get(i).setDeferBeforeReturntime("/");
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 		}
 		
 		System.out.println(orders.get(i).getInterestSum());

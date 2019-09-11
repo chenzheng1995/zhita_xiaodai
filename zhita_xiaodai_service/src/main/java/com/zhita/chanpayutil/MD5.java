@@ -4,10 +4,12 @@ import java.io.UnsupportedEncodingException;
 import java.security.SignatureException;
 import org.apache.commons.codec.digest.DigestUtils;
 
+
+
+
 /**
  * MD5签名处理核心文件
  * */
-
 public class MD5 {
 
     /**

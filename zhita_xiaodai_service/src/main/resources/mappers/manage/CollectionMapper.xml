@@ -298,7 +298,7 @@
 		
 		<select id="AllCountNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			SELECT COUNT(c.collectionId) from collection c,sys_user com where c.collectionMemberId = com.userId 
-			and com.companyId = #{companyId} and c.collectionTime is null
+			and com.companyId = #{companyId} and c.usertype is null
 		</select>
 		
 		

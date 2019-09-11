@@ -451,6 +451,46 @@
 		
 		
 		
+		<select id="YiHuanOrdersTotalCountOO" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(o.id) from orders o,user u,deferred defe
+			<where>
+			 AND u.id = o.userId
+			 AND defe.orderId = o.id
+			 and defe.deleted = "0"
+			 AND o.companyId = #{companyId}
+			 <if test="name != null and name != ''">
+			 	AND u.name LIKE concat('%',#{name},'%') 
+			 </if>
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
+			 </if>
+			 <if test="phone != null and phone != ''">
+			 	AND u.phone LIKE concat('%',#{phone},'%') 
+			 </if>
+			 <if test="orderNumber != null and orderNumber != ''">
+			 	AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+			 </if>
+			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+				AND o.orderCreateTime between #{start_time} and #{end_time}
+			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND o.shouldReturnTime  between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
+			</if>
+			<if test="status1 != null and status1 != '' and status2 != null and status2 != ''">
+				AND o.orderStatus BETWEEN #{status1} and #{status2}
+			</if>
+			 </where>
+		</select>
+		
+		
+		
+		
 		<select id="YiHuanOrdersTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select count(o.id) from orders o,user u,deferred defe
 			<where>
@@ -485,6 +525,8 @@
 			</if>
 			 </where>
 		</select>
+		
+		
 		
 		
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
@@ -533,7 +575,7 @@
 		<select id="HuaiZhangOrdersAA" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
-			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.shouldReturnTime
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid
