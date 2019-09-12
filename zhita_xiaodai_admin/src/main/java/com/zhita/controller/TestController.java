@@ -207,8 +207,9 @@ public class TestController {
 		System.out.println(result+"---------------");
 		
 		
-		TuoMinUtil tuoMinUtil=new TuoMinUtil();
-		System.out.println(tuoMinUtil.mobileEncrypt("18871552652")+":::"+"8888888888888888");;
+		BigDecimal b1=new BigDecimal("5.00");
+		BigDecimal b2=new BigDecimal("9");
+		System.out.println(b1.compareTo(b2)+"比较");
 		
 		
 	}	

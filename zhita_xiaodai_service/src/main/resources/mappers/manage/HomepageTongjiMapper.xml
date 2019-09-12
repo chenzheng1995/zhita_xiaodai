@@ -167,9 +167,10 @@
 	</select>
 	<!--后台管理      累计原始应收总金额     订单明细表 -->
 	<select id="queryshouldMoney" resultType="com.zhita.model.manage.Orderdetails">
-		select od.realityBorrowMoney,od.interestSum,od.interestPenaltySum 
-		from orders o inner join orderdetails od on o.id=od.orderid
-		where o.companyId=#{arg0}
+		select od.realityBorrowMoney,od.makeLoans,
+		od.interestSum,od.interestPenaltySum,
+		od.technicalServiceMoney from orders o inner join orderdetails od on o.id=od.orderid
+		where o.companyId=3
 	</select>
 	<!--后台管理      累计应收总金额     延期表 -->
 	<select id="queryshouldMoneydef" resultType="java.math.BigDecimal">
