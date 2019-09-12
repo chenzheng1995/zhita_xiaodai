@@ -175,4 +175,12 @@ public interface UserMapper {
 
 	String getapplyState(int userId);
 
+	String getregisteTime(int userId);
+
+	void setRiskControlPoints(@Param("userId")int userId,@Param("riskControlPoints") int riskControlPoints);
+
+	void setModel(@Param("userId")int userId,@Param("rString") String rString);
+
+	String getModel(int userId);
+
 }
