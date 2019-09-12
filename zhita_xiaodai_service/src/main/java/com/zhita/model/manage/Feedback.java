@@ -14,6 +14,10 @@ public class Feedback {
     private String url3;
     
     private String time;
+    
+    private String name;//用户姓名
+    
+    private String phone;//用户手机号
 
     public Feedback(Integer id, Integer userid, String advice, String url1, String url2, String url3,String time) {
         this.id = id;
@@ -85,4 +89,22 @@ public class Feedback {
     public void setTime(String time) {
         this.time = time == null ? null : time.trim();
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+    
+    
 }

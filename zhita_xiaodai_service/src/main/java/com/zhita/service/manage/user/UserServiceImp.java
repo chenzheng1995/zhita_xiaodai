@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.BlacklistUserMapper;
+import com.zhita.dao.manage.MaillistMapper;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.UserMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.DeferredAndOrder;
+import com.zhita.model.manage.Maillist;
 import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
@@ -37,6 +39,9 @@ public class UserServiceImp implements IntUserService{
 	private OrdersMapper ordersMapper;
 	@Autowired
 	private BlacklistUserMapper blacklistUserMapper;
+	
+	@Autowired
+	private MaillistMapper maillistMapper;
 	
 	//后台管理----用户列表(公司id，page,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)
 	public Map<String, Object> queryUserList(UserLikeParameter userLikeParameter){
@@ -287,6 +292,7 @@ public class UserServiceImp implements IntUserService{
   	
 	//后台管理---用户认证信息
 	public Map<String,Object> queryUserAttesta(Integer userid){
+		List<Maillist> lsitmaill=maillistMapper.queryByUserid(userid);//通讯录信息
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
 		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息对象
 		if(userAttestation!=null){
@@ -304,6 +310,7 @@ public class UserServiceImp implements IntUserService{
 		
 		
 		HashMap<String,Object> map=new HashMap<>();
+		map.put("lsitmaill", lsitmaill);
 		map.put("userAttestation", userAttestation);
 		map.put("bankcard",bankcard );
 		map.put("operator", operator);
@@ -416,6 +423,30 @@ public class UserServiceImp implements IntUserService{
 	public String getapplyState(int userId) {
 		String applyState = userMapper.getapplyState(userId);
 		return applyState;
+	}
+
+	@Override
+	public String getregisteTime(int userId) {
+		String registeTime = userMapper.getregisteTime(userId);
+		return registeTime;
+	}
+
+	@Override
+	public void setRiskControlPoints(int userId,int riskControlPoints) {
+		userMapper.setRiskControlPoints(userId,riskControlPoints);
+		
+	}
+
+	@Override
+	public void setModel(int userId, String rString) {
+		userMapper.setModel(userId,rString);
+		
+	}
+
+	@Override
+	public String getModel(int userId) {
+		 String model = userMapper.getModel(userId);
+		return model;
 	}
 
 
