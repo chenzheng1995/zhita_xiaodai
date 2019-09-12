@@ -645,7 +645,6 @@ public class ChanpayQuickCollection {
 					bank.setAttestationStatus("1");
 					map.put("Ncode", 2000);
 					map.put("code", "200");
-					servie.UpdateBan(bank);//修改银行卡认证状态
 					map.put("ReturnChanpay", retuJJ);
 					map.put("desc", "认证成功");
 					map.put("msg", retuJJ.getRetMsg());
@@ -1256,9 +1255,7 @@ public class ChanpayQuickCollection {
 	 * 
 	 * 用户鉴权解绑 nmg_api_auth_unbind  普通方式
 	 */
-	@ResponseBody
-	@RequestMapping("nmg_api_auth_unbind")
-	public Map<String, Object> nmg_api_auth_unbind(String CardBegin,String CardEnd,String MerUserId) {
+	public Map<String, Object> nmg_api_auth_unbind() {
 		Map<String, String> origMap = new HashMap<String, String>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 2.1 基本参数
@@ -1268,11 +1265,11 @@ public class ChanpayQuickCollection {
 		String trxId = Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", trxId);// 商户网站唯一订单号
 		origMap.put("MerchantNo", "200005640044");// 子商户号
-		origMap.put("MerUserId", MerUserId); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("MerUserId", "115"); // 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
 //		origMap.put("CardId", "");// 卡号标识
-		origMap.put("CardBegin", CardBegin);// 卡号前6位
-		origMap.put("CardEnd", CardEnd);// 卡号后4位
+		origMap.put("CardBegin", "621669");// 卡号前6位
+		origMap.put("CardEnd", "7494");// 卡号后4位
 		origMap.put("Extension", "");// 扩展字段
 		String result = null;
 		try {
@@ -1280,7 +1277,8 @@ public class ChanpayQuickCollection {
 			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
 			ReturnUserBank retu = JSON.parseObject(result,ReturnUserBank.class);
-			chanpayservice.DeleteChan(Integer.valueOf(MerUserId));
+		//	chanpayservice.DeleteChan(Integer.valueOf(MerUserId));
+			System.out.println(result);
 			map.put("ReturnChanpay", retu);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1601,7 +1599,7 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_auth_info_qry(); // 2.9 鉴权绑卡查询
 //		test.nmg_api_auth_unbind(); // 鉴权解绑（普通）
 //		test.nmg_api_refund();//商户退款请求
-		test.nmg_quick_onekeypay();
+		test.nmg_api_auth_unbind();
 	//	test.nmg_api_auth_unbind("621700", "6842", "17");
 //		test.nmg_sms_resend(); //2.11 短信重发
 //		test.nmg_api_query_trade(); //2.14 订单状态查询
