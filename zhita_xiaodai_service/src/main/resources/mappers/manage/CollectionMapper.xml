@@ -12,8 +12,8 @@
 		<select id="SelectTotalCount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(*) from orders where id not in
 			(select c.orderId from collection c,orders o where o.id = c.orderId and o.companyId = #{companyId} )
-		 	AND companyId = #{companyId}
-		</select>
+		 	AND companyId = #{companyId} AND orderStatus = "1"
+		</select> 
 		
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
@@ -297,7 +297,7 @@
 		
 		
 		<select id="AllCountNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
-			SELECT COUNT(c.collectionId) from collection c,sys_user com where c.collectionMemberId = com.userId 
+			SELECT COUNT(c.collectionId) from collection c,sys_user com where c.collectionMemberId = com.userId and c.collectionMemberId = #{collectionMemberId}
 			and com.companyId = #{companyId} and c.usertype is null
 		</select>
 		

@@ -591,7 +591,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
 		
-		if(banl.getStart_time() == null){
+		if(banl.getStartu_time() == null){
 			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
 			String stimea = sima.format(new Date());
 			Calendar calendar = Calendar.getInstance();
@@ -601,10 +601,9 @@ public class FinanceServiceimp implements FinanceService{
 			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 			String c = sima.format(date);//结束时间
 			String b = sima.format(new Date());
-			banl.setStart_time(c+" 00:00:00");
+			banl.setStartu_time(c+" 00:00:00");
 			banl.setEnd_time(b+" 23:59:59");
 		}
-		
 		
 		
 		if(banl.getStartu_time()==null){

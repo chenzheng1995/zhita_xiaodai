@@ -861,7 +861,7 @@
   			
   			<select id="BankMoneys" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(ban.id) as defeNum,sum(ban.deduction_money) as deferredamount from bankdeductions ban,orders o where ban.orderId = o.id and 
-  				 o.companyId = #{companyId} and ban.deduction_time between #{start_time} and #{end_time} and ban.deductionstatus = "扣款成功"
+  				 o.companyId = #{companyId} and ban.deduction_time between #{startu_time} and #{end_time} and ban.deductionstatus = "扣款成功"
   			</select>
   			
   			

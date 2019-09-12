@@ -350,7 +350,7 @@ public class OperatorController {
 		String phone = intUserService.getphone(userId);
 		String newphone = phoneDeal.decryption(phone);
 		PostAndGet pGet = new PostAndGet();
-String rString = pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+newphone);
+String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+newphone);
 JSONObject object = JSONObject.parseObject(rString);
 String phonetype =object.getString("phonetype");
 String uuidtype =object.getString("uuidtype");
