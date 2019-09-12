@@ -304,13 +304,11 @@
 		
 		<select id="CollectionWeiTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(o.id) from collection 
-			c,sys_user cmem,orderdetails orders,orders o,user u,deferred defe
+			c,sys_user cmem,orderdetails orders,orders o,user u
 			<where>
 				AND o.id = orders.orderId
 				AND u.id = o.userId
-				AND o.id = defe.orderId
 				AND c.orderId = o.id
-				AND defe.deleted ="0"
 				AND c.collectionMemberId = cmem.userId
 				AND o.companyId = #{companyId} 
 				<if test="name != null and name != ''">

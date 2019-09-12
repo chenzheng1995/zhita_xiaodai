@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -198,7 +199,9 @@ public class OperationalServiceimp implements OperationalService{
 			map.put("PageUtil", pages);
 		}else{
 			System.out.println(ordera.getStart_time()+"CC0"+ordera.getEnd_time());
+			
 			List<String> stime = DateListUtil.getDays(ordera.getStart_time(), ordera.getEnd_time());
+			Collections.reverse(stime); // 倒序排列 
 			for(int i=0;i<stime.size();i++){
 				ordera.setStart_time(stime.get(i)+" 00:00:00");
 				ordera.setEnd_time(stime.get(i)+" 23:59:59");
@@ -299,7 +302,7 @@ public class OperationalServiceimp implements OperationalService{
 			Calendar calendar = Calendar.getInstance();
 			Date date = null;
 			Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
-			calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
 			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 			String c = sima.format(date);//结束时间
 			String b = sima.format(new Date());
@@ -411,6 +414,7 @@ public class OperationalServiceimp implements OperationalService{
 			map.put("PageUtil", pages);
 		}else{
 			List<String> stime = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
+			Collections.reverse(stime); // 倒序排列 
 			for(int i=0;i<stime.size();i++){
 				order.setStart_time(stime.get(i)+" 00:00:00");
 				order.setEnd_time(stime.get(i)+" 23:59:59");
@@ -517,7 +521,7 @@ public class OperationalServiceimp implements OperationalService{
 			Calendar calendar = Calendar.getInstance();
 			Date date = null;
 			Integer day = pdap.SelectHuan(orde.getCompanyId());//获取天数
-			calendar.add(calendar.DATE, -(day+1));//把日期往后增加n天.正数往后推,负数往前移动 
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
 			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 			String cs = sima.format(date);//结束时间
 			String ba = sima.format(new Date());//结束时间
@@ -580,6 +584,7 @@ public class OperationalServiceimp implements OperationalService{
 			map.put("Orderdetails", ordesa);
 		}else{
 			List<String> stimes = DateListUtil.getDays(orde.getStart_time(), orde.getEnd_time());
+			Collections.reverse(stimes); // 倒序排列 
 			for(int i = 0;i<stimes.size();i++){
 				orde.setStart_time(stimes.get(i)+" 00:00:00");
 				orde.setEnd_time(stimes.get(i)+" 23:59:59");

@@ -197,7 +197,7 @@ public class FinanceServiceimp implements FinanceService{
 			}else if(result<0){
 				ordea.setDeferBeforeReturntime(Timestamps.stampToDate(offDefetime));
 			}else if(result==0){
-				ordea.setDeferBeforeReturntime(ordea.getShouldAlsoInterest());
+				ordea.setDeferAfterReturntime(ordea.getShouldAlsoInterest());
 			}
 		}
 		
