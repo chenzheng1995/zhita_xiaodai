@@ -290,7 +290,6 @@
 				o.id = ord.orderId
 				and o.companyId = defeset.companyId
 				and ov.orderId = o.id
-				and defe.deleted = "0"
 				and o.companyId = #{companyId}
 				and o.userId = u.id
 				and ov.collectionMemberId = #{collectionMemberId}

@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -644,6 +645,7 @@ public class FinanceServiceimp implements FinanceService{
 				banks.add(bank);
 		}else{
 			List<String> times =  DateListUtil.getDays(banl.getStartu_time(), banl.getEnd_time());
+			Collections.reverse(times); // 倒序排列 
 			for(int i=0;i<times.size();i++){
 				banl.setStartu_time(times.get(i)+" 00:00:00");
 				banl.setEnd_time(times.get(i)+" 23:59:59");
