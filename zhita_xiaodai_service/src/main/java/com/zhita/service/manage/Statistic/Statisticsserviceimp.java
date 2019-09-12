@@ -118,7 +118,12 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 					// TODO: handle exception
 				}
 			}
-		
+		PhoneDeal pAC = new PhoneDeal();
+		if(order.getPhone()!=null){
+			if(order.getPhone().length()!=0){
+				order.setPhone(pAC.decryption(order.getPhone()));
+			}
+		}
 			
 		List<Orderdetails> ordeBank = sdao.AllBanl(order);
 		for(int i=0;i<ordeBank.size();i++){

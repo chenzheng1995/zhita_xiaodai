@@ -86,6 +86,7 @@ public class Collectionserviceimp implements Collectionservice{
 //			
 			}
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		return map;
 		}
 		
@@ -198,6 +199,7 @@ public class Collectionserviceimp implements Collectionservice{
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
+			map.put("pageutil", pages);
 		}else{
 			map.put("Orderdetails", "0");
 			map.put("pageutil", "数据异常");
@@ -407,9 +409,10 @@ public class Collectionserviceimp implements Collectionservice{
 			
 		}
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		}else{
 			map.put("Orderdetails", "0");
-			map.put("Pageutil", "数据异常");
+			map.put("pageutil", "数据异常");
 		}
 		return map;
 	}

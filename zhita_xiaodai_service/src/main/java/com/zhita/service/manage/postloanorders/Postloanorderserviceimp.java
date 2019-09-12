@@ -77,6 +77,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orderdetils);
+		map.put("pageutil", pages);
 		return map;
 	}
 	
@@ -101,6 +102,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orderdetils = postloanorder.allBeoverdueOrderdetails(details);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orderdetils);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -132,11 +134,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				nodeid.add(0);
 				order.setIds(nodeid);
 			}
+			PageUtil pages = null;
 			if(totalCount != null){
-				PageUtil pages = new PageUtil(order.getPage(), totalCount);
+				pages = new PageUtil(order.getPage(), totalCount);
 				order.setPage(pages.getPage());
 			}else{
-				PageUtil pages = new PageUtil(order.getPage(), 0);
+				pages = new PageUtil(order.getPage(), 0);
 				order.setPage(pages.getPage());
 			}
 			order.setIds(nodeid);
@@ -154,6 +157,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println("天数："+ordeids.get(i).getOnceDeferredDay());
 			}
 			map.put("Orderdetails", ordeids);
+			map.put("pageutil", pages);
 		return map;
 	}
 
@@ -207,6 +211,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			ordeids.get(i).setCollectiondate(Timestamps.stampToDate(ordeids.get(i).getCollectiondate()));//分配时间
 		}
 		map.put("Orderdetails", ordeids);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -483,11 +488,12 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	public Map<String, Object> MyOverdues(Orderdetails order) {
 		PhoneDeal p = new PhoneDeal();
 		Integer totalCount = postloanorder.MyOrderNum(order);
+		PageUtil pages = null;
 		if(totalCount != null){
-			PageUtil pages = new PageUtil(order.getPage(), totalCount);
+			pages = new PageUtil(order.getPage(), totalCount);
 			order.setPage(pages.getPage());
 		}else{
-			PageUtil pages = new PageUtil(order.getPage(), 0);
+			pages = new PageUtil(order.getPage(), 0);
 			order.setPage(pages.getPage());
 		}
 		List<Orderdetails> orders = postloanorder.MyOrderdue(order);
@@ -514,6 +520,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -692,7 +699,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		System.out.println("渠道名:"+orders.get(i).getSourceName()+"手机号:"+orders.get(i).getPhone()+"订单时间:"+orders.get(i).getOrderCreateTime()+"实还时间:"+orders.get(i).getRealtime());
 		}
 		map.put("Orderdetails", orders);
-		map.put("PageUtil", pages);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -775,6 +782,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		}
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -858,6 +866,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		}
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		return map;
 	}
 
