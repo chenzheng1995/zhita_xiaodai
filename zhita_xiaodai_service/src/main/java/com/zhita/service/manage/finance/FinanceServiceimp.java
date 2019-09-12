@@ -107,6 +107,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("PaymentRecord", payments);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -146,6 +147,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Repayment", rapay);
+		map.put("pageutil", pages);
 		return map;
 	}
 
