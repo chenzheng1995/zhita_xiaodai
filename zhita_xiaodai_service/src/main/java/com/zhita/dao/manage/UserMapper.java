@@ -45,6 +45,9 @@ public interface UserMapper {
 	//后台管理----用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)——查询数量
 	int queryUserListcount(UserLikeParameter userLikeParameter);
 	
+	//后台管理----用户列表（导出Excel）
+	List<User> queryUserListExcel(UserLikeParameter userLikeParameter);
+	
 	//后台管理---添加黑名单(修改当前用户的黑名单状态)
 	int upaBlacklistStatus(Integer userid);
 	

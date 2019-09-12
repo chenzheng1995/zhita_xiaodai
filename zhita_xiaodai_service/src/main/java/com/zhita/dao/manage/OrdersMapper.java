@@ -67,6 +67,9 @@ public interface OrdersMapper {
 	//后台管理----订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）——查询数量
   	int queryAllOrdersByUserid1count(OrderQueryParameter orderQueryParameter);
   	
+  	//后台管理----订单 查询（导出Excel）
+  	List<Orders> queryAllOrdersByUserid1Excel(OrderQueryParameter orderQueryParameter);
+  	
   	//后台管理---渠道统计模块——申请人数字段
   	int queryNum(Integer companyId,String sourcename);
   	
