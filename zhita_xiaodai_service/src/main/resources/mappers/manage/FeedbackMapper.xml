@@ -117,5 +117,12 @@
 		#{url3},
 		#{time})
 	</insert>
-  
+	<!-- 后台管理   查询数量 -->
+  <select id="queryAllcount" resultType="java.lang.Integer">
+  	select count(*) from user u inner join feedback f on u.id=f.userid
+  </select>
+  <!-- 后台管理   查询功能 -->
+  <select id="queryAll" resultType="com.zhita.model.manage.Feedback">
+  	select u.name,u.phone,f.time,f.advice,f.url1,f.url2,f.url3 from user u inner join feedback f on u.id=f.userid limit #{arg0},#{arg1}
+  </select>
 </mapper>
