@@ -1582,6 +1582,37 @@ public class ChanpayQuickCollection {
 		  System.out.println(uuid);
 	}
 	
+	
+	
+	
+	
+	
+	private void nmg_api_auth_unbindAAA() {
+		Map<String, String> origMap = new HashMap<String, String>();
+		// 2.1 基本参数
+		origMap = setCommonMap(origMap);
+		origMap.put("Service", "nmg_api_auth_unbind");// 用户鉴权解绑接口名
+		// 2.2 业务参数
+		String trxId = Long.toString(System.currentTimeMillis());		
+		origMap.put("TrxId", trxId);// 商户网站唯一订单号
+		origMap.put("MerchantNo", "200005640044");// 子商户号
+		origMap.put("MerUserId", "15"); // 用户标识（测试时需要替换一个新的meruserid）
+		origMap.put("UnbindType", "1"); // 解绑模式。0为物理解绑，1为逻辑解绑
+//		origMap.put("CardId", "");// 卡号标识
+		origMap.put("CardBegin", "621669");// 卡号前6位
+		origMap.put("CardEnd", "7494");// 卡号后4位
+		origMap.put("Extension", "");// 扩展字段
+		String result = "";
+		try {
+			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
+			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
+					urlStr);
+			System.out.println(result);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 
 	
 	
@@ -1608,6 +1639,9 @@ public class ChanpayQuickCollection {
 //		test.nmg_api_quick_payment_receiptconfirm();// 2.13 确认收货接口
 //		test.notifyVerify(); // 测试异步通知验签
 	}
+	
+	
+	
 	
 	
 	

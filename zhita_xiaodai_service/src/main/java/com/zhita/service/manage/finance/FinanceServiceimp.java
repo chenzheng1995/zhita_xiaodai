@@ -47,6 +47,9 @@ import com.zhita.util.TuoMinUtil;
 public class FinanceServiceimp implements FinanceService{
 	
 	
+	@Autowired
+	private PostloanorderMapper postloanorder;
+	
 	
 	@Autowired
 	private PaymentRecordMapper padao;
@@ -167,7 +170,14 @@ public class FinanceServiceimp implements FinanceService{
 		
 		
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
-		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
+		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney();//前置应还金额
+		
+		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
+			ordea.setOrder_money(ordea.getShouldReapyMoney());//应还总金额
+		}else{
+			ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
+		}
+		
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
 		ordea.setDefeNum(defe.getDefeNum());

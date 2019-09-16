@@ -898,4 +898,12 @@
 			select lifeOfLoan from borrow_money_message where companyId = #{companyId}
 		</select>
 		
+		
+		
+		<select id="SelectQianshouldReapyMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orderdetails">
+			select realityBorrowMoney,makeLoans from orderdetails where orderId = #{orderId}
+		</select>
+		 
+		 
+		 
 </mapper>
