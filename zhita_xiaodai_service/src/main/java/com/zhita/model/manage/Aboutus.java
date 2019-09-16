@@ -13,6 +13,10 @@ public class Aboutus {
     private String appversion;//APP版本
     
     private String ifcoerceupdate;//是否强制更新（1：是2：否）
+    
+    private String androidlink;//android下载链接
+    
+    private String ioslink;//ios下载链接
 
 
     public Integer getId() {
@@ -62,5 +66,21 @@ public class Aboutus {
     public void setIfcoerceupdate(String ifcoerceupdate) {
         this.ifcoerceupdate = ifcoerceupdate == null ? null : ifcoerceupdate.trim();
     }
+
+	public String getAndroidlink() {
+		return androidlink;
+	}
+
+	public void setAndroidlink(String androidlink) {
+		this.androidlink = androidlink;
+	}
+
+	public String getIoslink() {
+		return ioslink;
+	}
+
+	public void setIoslink(String ioslink) {
+		this.ioslink = ioslink;
+	}
 
 }

@@ -28,6 +28,9 @@ public interface WhitelistUserMapper {
     //后台管理---查询列表_查询数量
     int queryAllcount(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard);
     
+    //后台管理---查询列表  导出Excel
+    List<WhitelistUser> queryAllExcel(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard);
+    
     //后台管理---更新假删除状态
     int upaFalseDel(Integer id);
     

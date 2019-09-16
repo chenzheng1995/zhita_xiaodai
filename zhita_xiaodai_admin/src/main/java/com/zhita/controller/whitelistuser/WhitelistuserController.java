@@ -1,7 +1,11 @@
 package com.zhita.controller.whitelistuser;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,6 +94,16 @@ public class WhitelistuserController {
 	private void success(boolean b) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * 人工添加白名单
+	 * 用于导出excel的查询结果
+	 */
+	@RequestMapping("/exportwhite.do")
+	public void exportwhite(Integer companyId,String name,String phone,String idcard, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		intWhitelistuserService.exportwhite(companyId, name, phone, idcard,request, response);
 	}
 
 }

@@ -198,13 +198,28 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	 * 人工添加黑名单
 	 * 用于导出excel的查询结果
 	 */
-	public void exportblack(Integer page,Integer companyId,String name,String phone,String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)
+	public void exportblack(Integer companyId,String name,String phone,String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		// 查询黑名单用户表的全部数据
 		List<BlacklistUser> userlList = new ArrayList<BlacklistUser>(blacklistUserMapper.queryAll(companyId, name, phone, idcard, blackType));
 		for (int i = 0; i < userlList.size(); i++) {
-			if(userlList.get(i).getAccount().isEmpty()){
-				userlList.get(i).setAccount("null");
+			userlList.get(i).setOperationtime(Timestamps.stampToDate(userlList.get(i).getOperationtime()));
+			if(userlList.get(i).getBlackType().equals("1")){
+				userlList.get(i).setBlackType("逾期自动判定");
+			}else if(userlList.get(i).getBlackType().equals("2")){
+				userlList.get(i).setBlackType("重复用户");
+			}else if(userlList.get(i).getBlackType().equals("3")){
+				userlList.get(i).setBlackType("手工录入");
+			}else if(userlList.get(i).getBlackType().equals("4")){
+				userlList.get(i).setBlackType("第三方黑名单");
+			}else if(userlList.get(i).getBlackType().equals("5")){
+				userlList.get(i).setBlackType("三要素认证超过次数");
+			}else if(userlList.get(i).getBlackType().equals("6")){
+				userlList.get(i).setBlackType("人审拒绝");
+			}else if(userlList.get(i).getBlackType().equals("7")){
+				userlList.get(i).setBlackType("批量导入");
+			}else{
+				userlList.get(i).setBlackType("人工添加");
 			}
 		}
 

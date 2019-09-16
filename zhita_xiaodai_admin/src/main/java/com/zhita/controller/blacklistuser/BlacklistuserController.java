@@ -101,10 +101,10 @@ public class BlacklistuserController {
 	 * 人工添加黑名单
 	 * 用于导出excel的查询结果
 	 */
-	/*@RequestMapping("/exportblack.do")
-	public void exportblack(Integer page,Integer companyId,String name,String phone,String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)
+	@RequestMapping("/exportblack.do")
+	public void exportblack(Integer companyId,String name,String phone,String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		intBlacklistuserService.exportblack(page, companyId, name, phone, idcard, blackType, request, response);
-	}*/
+		intBlacklistuserService.exportblack(companyId, name, phone, idcard, blackType, request, response);
+	}
 	
 }

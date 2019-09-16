@@ -582,12 +582,17 @@ public class OrderServiceImp implements IntOrderService {
 				BigDecimal money = realmoney.add(offmoney).add(bankmoney);
 				list.get(i).setRepaymentMoney(String.valueOf(money));
 				
+				BigDecimal shourldmoney =new BigDecimal("0.00");//应还金额（借款金额+期限内总利息+逾期的逾期费）
 				if(list.get(i).getInterestPenaltySum()==null){
 					list.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
 				}
-				BigDecimal shourldmoney = list.get(i).getOrderdetails().getRealityBorrowMoney()
-						.add(list.get(i).getOrderdetails().getInterestSum())
-						.add(list.get(i).getOrderdetails().getInterestPenaltySum());
+				if(list.get(i).getOrderdetails().getRealityBorrowMoney().compareTo(list.get(i).getOrderdetails().getMakeLoans())==0){
+					shourldmoney=list.get(i).getOrderdetails().getRealityBorrowMoney().add(list.get(i).getOrderdetails().getInterestSum()).
+							add(list.get(i).getOrderdetails().getInterestPenaltySum().add(list.get(i).getOrderdetails().getTechnicalServiceMoney()));
+				}else{
+					shourldmoney=list.get(i).getOrderdetails().getRealityBorrowMoney().add(list.get(i).getOrderdetails().getInterestSum()).
+							add(list.get(i).getOrderdetails().getInterestPenaltySum());
+				}
 				list.get(i).setShourldmoney(shourldmoney);// 应还金额（借款金额+期限内总利息+逾期的逾期费）
 				list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));// 将手机号进行脱敏
 				list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
