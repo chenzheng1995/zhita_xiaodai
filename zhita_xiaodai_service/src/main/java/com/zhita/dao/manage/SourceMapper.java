@@ -36,6 +36,9 @@ public interface SourceMapper {
     //后台管理---查询所有渠道
     List<TongjiSorce> queryAllSource(Integer companyId);
     
+    //后台管理---查询所有渠道
+    List<TongjiSorce> queryAllSourceBysourceid(Integer companyId,Integer sourceid);
+    
     //后台管理---根据id  对当前对象的假删除状态进行修改
     int updateFalDel(Integer id);
     

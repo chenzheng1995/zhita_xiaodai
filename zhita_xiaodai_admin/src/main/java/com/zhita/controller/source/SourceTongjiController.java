@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
-import com.zhita.model.manage.User;
 import com.zhita.service.manage.source.IntSourceService;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
@@ -170,7 +169,7 @@ public class SourceTongjiController {
 		List<String> listdate=DateListUtil.getDays(dateStart, dateEnd);
 		
 		//listsource=intSourceService.queryAllSourceBySouce(companyId, startTimestamps, endTimestamps, sourceid);
-		listsource=intSourceService.queryAllSource(companyId);//查询出所有渠道
+		listsource=intSourceService.queryAllSourceBysourceid(companyId, sourceid);//查询出所有渠道
 		for (int i = 0; i < listsource.size(); i++) {
 			Integer sourceids=listsource.get(i).getSourceid();//渠道id
 			String sourcename=listsource.get(i).getSourcename();//渠道名

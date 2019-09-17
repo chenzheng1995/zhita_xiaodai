@@ -552,4 +552,10 @@ public class SourceServiceImp implements IntSourceService{
     	List<TongjiSorce> list=sourceMapper.queryAllSource(companyId);
     	return list;
     }
+    
+    //后台管理---查询所有渠道  根据渠道查询
+    public List<TongjiSorce> queryAllSourceBysourceid(Integer companyId,Integer sourceid){
+    	List<TongjiSorce> list=sourceMapper.queryAllSourceBysourceid(companyId,sourceid);
+    	return list;
+    }
 }
