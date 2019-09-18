@@ -170,7 +170,7 @@
   </select>
   <!-- 后台管理      查询所有渠道   根据渠道查询 -->
   <select id="queryAllSourceBysourceid" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.TongjiSorce">
-  	select id sourceid,sourceName,price,clearingform from source where companyId=#{arg0} and deleted=0
+  	select id sourceid,sourceName,price,clearingform from source where companyId=#{companyId,jdbcType=INTEGER} and deleted=0
   	 <if test="sourceid != null and sourceid!='' ">
          and id =#{sourceid,jdbcType=INTEGER}
      </if>
