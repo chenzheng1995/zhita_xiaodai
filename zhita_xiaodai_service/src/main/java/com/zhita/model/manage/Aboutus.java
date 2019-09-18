@@ -85,20 +85,6 @@ public class Aboutus {
         this.ioslink = ioslink == null ? null : ioslink.trim();
     }
 
-	public String getAndroidlink() {
-		return androidlink;
-	}
 
-	public void setAndroidlink(String androidlink) {
-		this.androidlink = androidlink;
-	}
-
-	public String getIoslink() {
-		return ioslink;
-	}
-
-	public void setIoslink(String ioslink) {
-		this.ioslink = ioslink;
-	}
 
 }
