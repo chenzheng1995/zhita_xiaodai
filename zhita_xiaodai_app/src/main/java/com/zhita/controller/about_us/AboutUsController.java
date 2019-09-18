@@ -35,8 +35,11 @@ public class AboutUsController {
 	    public Map<String, Object> getaboutus(int companyId){
 	    	Map<String, Object> map =intAboutusService.getaboutus(companyId);
 	    	map.put("Ncode","2000");
-	    	map.put("iOS","http://dhjios.rong51dai.com");
-	    	map.put("Android","https://htmlk.oss-cn-qingdao.aliyuncs.com/xiaodai/apk/daihuijia.apk");
+	    	Map<String, Object> map1  = intAboutusService.geturl(companyId);
+	    	String androidlink = (String) map1.get("androidlink");
+	    	String ioslink = (String) map1.get("ioslink");
+	    	map.put("iOS",ioslink);
+	    	map.put("Android",androidlink);
 			return map;
 
 	    }

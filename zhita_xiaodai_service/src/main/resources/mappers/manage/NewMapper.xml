@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.NewMapper" >
+
+	<select id="NewloanRepayment" parameterMap="java.lang.Integer" resultType="com.zhita.model.manage.Thirdparty_interface">
+		select loanSource,repaymentSource from thirdparty_interface where companyId = #{companyId}
+	</select>
+	
+</mapper>

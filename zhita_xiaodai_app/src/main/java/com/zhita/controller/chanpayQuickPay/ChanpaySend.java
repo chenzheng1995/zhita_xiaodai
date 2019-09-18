@@ -24,6 +24,7 @@ import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
@@ -93,7 +94,10 @@ public class ChanpaySend extends BaseParameter{
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
 		String time = sin.format(new Date());
 		RedisClientUtil redis = new RedisClientUtil();
-		String a =  chanser.loanSetStatu(companyId);//放款状态  1  开启    2 关闭
+		Loan_setting loan = new Loan_setting();
+		loan.setCompanyId(companyId);
+		loan.setName("畅捷支付");
+		String a =  chanser.loanSetStatu(loan);//放款状态  1  开启    2 关闭
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
 		Integer id = chanser.SelectOrdersId(userId);
