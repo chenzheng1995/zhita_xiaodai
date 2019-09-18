@@ -110,5 +110,8 @@ public interface IntSourceService {
 	
 	//后台管理---查询所有渠道
     public List<TongjiSorce> queryAllSource(Integer companyId);
+    
+    //后台管理---查询所有渠道  根据渠道查询
+    public List<TongjiSorce> queryAllSourceBysourceid(Integer companyId,Integer sourceid);
 
 }

@@ -29,7 +29,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
-    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.shareOfState,u.riskControlPoints,
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.shareOfState,u.riskControlPoints,u.canBorrowLines,
     appnum.applynumber,appnum.applytime,appnum.state,u.operator,u.operationTime,s.sourcename,mcs.rmModleName
   </sql>
    <sql id="Base_Column_List2">

@@ -123,6 +123,24 @@
         order by operationTime desc
         limit #{page},#{pagesize}
   </select>
+  
+  <!-- 后台管理        查询列表    导出Excel-->
+  <select id="queryAllExcel" resultType="com.zhita.model.manage.WhitelistUser">
+  	select 
+    <include refid="Base_Column_List" />
+    from whitelist_user w left join sys_user su on su.userid=w.operator
+    where w.companyId=#{companyId} and w.deleted=0
+    	<if test="name != null and name!=''">
+           and w.name like "%"#{name}"%"
+        </if>
+        <if test="phone != null and phone!=''">
+           and w.phone like "%"#{phone}"%"
+        </if>
+        <if test="idcard != null and idcard!=''">
+           and w.idcard like "%"#{idcard}"%"
+        </if>
+        order by operationTime desc
+  </select>
     <!-- 后台管理        查询列表     查询数量-->
   <select id="queryAllcount" resultType="java.lang.Integer">
   	select count(*)
