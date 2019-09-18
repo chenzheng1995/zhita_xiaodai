@@ -20,7 +20,6 @@ import com.zhita.service.manage.newpayment.util.MapUtil;
 import com.zhita.util.RedisClientUtil;
 
 
-
 @Service
 public class NewPaymentserviceimp implements NewPaymentservice{
 	
