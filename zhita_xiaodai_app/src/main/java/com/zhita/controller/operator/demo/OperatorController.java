@@ -80,10 +80,10 @@ public class OperatorController {
 
 	@Autowired
 	BankcardMapper bankcardMapper;
-	
+
 	@Autowired
 	ApplynumberMapper applynumberMapper;
-	
+
 	@Autowired
 	IntAutheninforService intAutheninforService;
 
@@ -113,7 +113,7 @@ public class OperatorController {
 				map.put("Code", "405");
 			}
 		} else {
-			operatorService.updatereqId(userId, reqId,authentime);
+			operatorService.updatereqId(userId, reqId, authentime);
 		}
 
 		H5ReportDemo h5ReportDemo = new H5ReportDemo();
@@ -139,10 +139,10 @@ public class OperatorController {
 		String phone = (String) operator.get("phone");
 		String reqId = (String) operator.get("reqId");
 
-//        Map<String, Object> map2 = operatorService.getOperator(userId);
-//        String url = (String) map2.get("operatorJson");
-//        JSONObject sampleObject = JSON.parseObject(url);
-//    	String error = sampleObject.getString("error");
+		// Map<String, Object> map2 = operatorService.getOperator(userId);
+		// String url = (String) map2.get("operatorJson");
+		// JSONObject sampleObject = JSON.parseObject(url);
+		// String error = sampleObject.getString("error");
 
 		H5ReportQueryDemo h5ReportQueryDemo = new H5ReportQueryDemo();
 		String url = h5ReportQueryDemo.getH5ReportQuery(userId, phone, name, idNumber, reqId, search_id);
@@ -180,8 +180,8 @@ public class OperatorController {
 			}
 
 		}
-//		  map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-//        map.put("Code", "300");	
+		// map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+		// map.put("Code", "300");
 
 		return map;
 
@@ -309,12 +309,13 @@ public class OperatorController {
 	@Transactional
 	public Map<String, Object> conditions(int userId, int companyId) throws ParseException, Exception {
 		Map<String, Object> map = new HashMap<>();
+		String shareOfState = "0";
 		map.put("Ncode", "2000");
 		map.put("code", "200");
 		map.put("msg", "符合条件");
 		Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);
 		String address = (String) map1.get("address");// 身份证上的住址
-//		String aS = address.substring(0, 3);// 身份证地址截取前三位
+		// String aS = address.substring(0, 3);// 身份证地址截取前三位
 		String birth_year = (String) map1.get("birth_year");// 出生年份
 		String birth_month = (String) map1.get("birth_month");// 出生月份
 		String birth_day = (String) map1.get("birth_day");// 出生日
@@ -326,487 +327,533 @@ public class OperatorController {
 		int maximumage = (int) map2.get("maximumage");
 		String refuseApplyProvince = (String) map2.get("refuseApplyProvince");
 		if (age < minimumage || age > maximumage) {
-			map.put("Ncode", "405");
+			intUserService.updateshareOfState(userId, shareOfState);
+			map.put("Ncode", "2000");
 			map.put("code", "405");
 			map.put("msg", "年龄不符合条件");
 			return map;
 		}
-
 		String[] aString = refuseApplyProvince.split("/");
 		for (int i = 0; i < aString.length; i++) {
 			if (address.indexOf(aString[i]) != -1) {
-				map.put("Ncode", "406");
+				intUserService.updateshareOfState(userId, shareOfState);
+				map.put("Ncode", "2000");
 				map.put("code", "406");
 				map.put("msg", "地域不符合条件");
 				return map;
 			}
-		
-			
+
 		}
-		
-		
-		
+
 		PhoneDeal phoneDeal = new PhoneDeal();
 		String phone = intUserService.getphone(userId);
 		String newphone = phoneDeal.decryption(phone);
 		PostAndGet pGet = new PostAndGet();
-String rString = pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+newphone);
-JSONObject object = JSONObject.parseObject(rString);
-String phonetype =object.getString("phonetype");
-String uuidtype =object.getString("uuidtype");
-String wifitype =object.getString("wifitype");
-String daytype =object.getString("daytype");
-String wifimactype =object.getString("wifimactype");
-String maillistype =object.getString("maillistype");
-String apptype =object.getString("apptype");
-if("1".equals(phonetype)||"1".equals(uuidtype)||"1".equals(wifitype)||"1".equals(daytype)||"1".equals(wifimactype)||"1".equals(maillistype)||"1".equals(apptype)) {
-map.put("Ncode", "407");
-map.put("code", "407");
-map.put("msg", "其他条件不符合");
-return map;
-}
-intUserService.setModel(userId,rString);
+		String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone=" + newphone);
+		intUserService.setModel(userId, rString);
+		JSONObject object = JSONObject.parseObject(rString);
+		String phonetype = object.getString("phonetype");
+		String uuidtype = object.getString("uuidtype");
+		String wifitype = object.getString("wifitype");
+		String daytype = object.getString("daytype");
+		String wifimactype = object.getString("wifimactype");
+		String maillistype = object.getString("maillistype");
+		String apptype = object.getString("apptype");
+		System.out.println(phonetype);
+		System.out.println(uuidtype);
+		System.out.println(wifitype);
+		System.out.println(daytype);
+		System.out.println(wifimactype);
+		System.out.println(maillistype);
+		System.out.println(apptype);
+		if ("1".equals(phonetype) || "1".equals(uuidtype) || "1".equals(wifitype) || "1".equals(daytype)
+				|| "1".equals(wifimactype) || "1".equals(maillistype) || "1".equals(apptype)) {
+			intUserService.updateshareOfState(userId, shareOfState);
+			map.put("Ncode", "2000");
+			map.put("code", "407");
+			map.put("msg", "其他条件不符合");
+			return map;
+		}
+
 
 		return map;
 
 	}
-	
-	
+
 	// 判断用户是否年龄或者地域不允许借钱
 	@RequestMapping("/getModel")
 	@ResponseBody
 	@Transactional
-	public String getModel(int userId){
-       String model = intUserService.getModel(userId);
-
-
+	public String getModel(int userId) {
+		String model = intUserService.getModel(userId);
 		return model;
-
 	}
-	
 
-//分控状态
-//	@RequestMapping("/getshareOfState")
-//	@ResponseBody
-//	@Transactional
-//	public Map<String, Object> getshareOfState(int userId) {
-//		String Operator = null;
-// 		String bankcard = null; 		
-// 		
-//		String shareOfState = intUserService.getshareOfState(userId);
-//		if ("0".equals(shareOfState) || ("1".equals(shareOfState)) || ("3".equals(shareOfState))) {
-//			int riskControlPoints = intUserService.getRiskControlPoints(userId);
-//			int sourceId = intUserService.getsourceId(userId);
-//			String sourceName = intSourceService.getsourceName(sourceId);
-//			int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
-//			Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
-//			String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
-//			String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
-//			String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
-//			int roatnptFractionalSegmentSmall = Integer
-//					.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
-//			int roatnptFractionalSegmentBig = Integer.parseInt(roatnptFractionalSegment
-//					.substring(roatnptFractionalSegment.indexOf("-") + 1, roatnptFractionalSegment.length()));
-//
-//			if (riskControlPoints < roatnptFractionalSegmentSmall) {
-//				String orderNumber = intOrderService.getorderNumber(userId);
-//				if (orderNumber == null || !"3".equals(orderNumber)) {
-//					shareOfState = "0";
-//					intUserService.updateshareOfState(userId, shareOfState);
-//				}
-//			}
-//			if (riskControlPoints > roatnptFractionalSegmentSmall && riskControlPoints < roatnptFractionalSegmentBig) {
-//				shareOfState = "1";
-//				intUserService.updateshareOfState(userId, shareOfState);
-//			}
-//			if (riskControlPoints > roatnptFractionalSegmentBig) {
-//				shareOfState = "2";
-//				intUserService.updateshareOfState(userId, shareOfState);
-//			}
-//
-//		}
-//		Map<String, Object> map = new HashMap<>();
-//		map.put("Ncode", "2000");
-//
-//		String userAttestation = null;
-//		Map<String, Object> map3 = userAttestationService.getuserAttestation(userId);
-//
-//		if (map3 == null) {
-//			userAttestation = "0";
-//		} else {
-//			userAttestation = (String) map3.get("attestationStatus");
-//		}
-//
-//		Map<String, Object> map2 = operatorService.getOperator(userId);
-//		if (map2 == null) {
-//			Operator = "0";
-//		} else {
-//			Operator = (String) map2.get("attestationStatus");
-//		}
-//
-//		Map<String, Object> map4 = bankcardMapper.getbankcard(userId);
-//		if (map4 == null) {
-//			bankcard = "0";
-//		} else {
-//			bankcard = (String) map4.get("attestationStatus");
-//		}
-//		if ("1".equals(userAttestation) && "1".equals(Operator) && "1".equals(bankcard)) {
-//			if("2".equals(shareOfState)||"4".equals(shareOfState)||"5".equals(shareOfState)) {
-//				String applyState = intUserService.getapplyState(userId);
-//				if("2".equals(applyState)) {
-//					String applynumber = intUserService.getapplynumber(userId);
-//					if(applynumber==null) {
-//						String timStamp = System.currentTimeMillis() + "";// 当前时间戳
-//					    applynumber = "SQ" + userId + timStamp;// 申请编号
-//						intUserService.setuser(userId, timStamp, applynumber);
-//						String state = "0";
-//						applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);
-//					}else{
-//						String timStamp = System.currentTimeMillis() + "";// 当前时间戳
-//					    applynumber = "SQ" + userId + timStamp;// 申请编号
-//						intUserService.updateuser(userId, timStamp, applynumber);
-//						applynumberMapper.updatestate(userId);
-//						String state = "0";
-//						applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);				
-//					}
-//					applyState = "1";
-//					intUserService.updateapplyState(applyState, userId);
-//				}
-//			}
-//		}
-//		map.put("shareOfState", shareOfState);
-//		return map;
-//
-//	}
+	// 分控状态
+	// @RequestMapping("/getshareOfState")
+	// @ResponseBody
+	// @Transactional
+	// public Map<String, Object> getshareOfState(int userId) {
+	// String Operator = null;
+	// String bankcard = null;
+	//
+	// String shareOfState = intUserService.getshareOfState(userId);
+	// if ("0".equals(shareOfState) || ("1".equals(shareOfState)) ||
+	// ("3".equals(shareOfState))) {
+	// int riskControlPoints = intUserService.getRiskControlPoints(userId);
+	// int sourceId = intUserService.getsourceId(userId);
+	// String sourceName = intSourceService.getsourceName(sourceId);
+	// int manageControlId = intSourceService.getmanageControlId(sourceName);//
+	// 风控id
+	// Map<String, Object> map1 =
+	// intManconsettingsServcie.getManconsettings(manageControlId);
+	// String atrntlFractionalSegment = (String)
+	// map1.get("atrntlFractionalSegment");
+	// String roatnptFractionalSegment = (String)
+	// map1.get("roatnptFractionalSegment");
+	// String airappFractionalSegment = (String)
+	// map1.get("airappFractionalSegment");
+	// int roatnptFractionalSegmentSmall = Integer
+	// .parseInt(roatnptFractionalSegment.substring(0,
+	// roatnptFractionalSegment.indexOf("-")));
+	// int roatnptFractionalSegmentBig =
+	// Integer.parseInt(roatnptFractionalSegment
+	// .substring(roatnptFractionalSegment.indexOf("-") + 1,
+	// roatnptFractionalSegment.length()));
+	//
+	// if (riskControlPoints < roatnptFractionalSegmentSmall) {
+	// String orderNumber = intOrderService.getorderNumber(userId);
+	// if (orderNumber == null || !"3".equals(orderNumber)) {
+	// shareOfState = "0";
+	// intUserService.updateshareOfState(userId, shareOfState);
+	// }
+	// }
+	// if (riskControlPoints > roatnptFractionalSegmentSmall &&
+	// riskControlPoints < roatnptFractionalSegmentBig) {
+	// shareOfState = "1";
+	// intUserService.updateshareOfState(userId, shareOfState);
+	// }
+	// if (riskControlPoints > roatnptFractionalSegmentBig) {
+	// shareOfState = "2";
+	// intUserService.updateshareOfState(userId, shareOfState);
+	// }
+	//
+	// }
+	// Map<String, Object> map = new HashMap<>();
+	// map.put("Ncode", "2000");
+	//
+	// String userAttestation = null;
+	// Map<String, Object> map3 =
+	// userAttestationService.getuserAttestation(userId);
+	//
+	// if (map3 == null) {
+	// userAttestation = "0";
+	// } else {
+	// userAttestation = (String) map3.get("attestationStatus");
+	// }
+	//
+	// Map<String, Object> map2 = operatorService.getOperator(userId);
+	// if (map2 == null) {
+	// Operator = "0";
+	// } else {
+	// Operator = (String) map2.get("attestationStatus");
+	// }
+	//
+	// Map<String, Object> map4 = bankcardMapper.getbankcard(userId);
+	// if (map4 == null) {
+	// bankcard = "0";
+	// } else {
+	// bankcard = (String) map4.get("attestationStatus");
+	// }
+	// if ("1".equals(userAttestation) && "1".equals(Operator) &&
+	// "1".equals(bankcard)) {
+	// if("2".equals(shareOfState)||"4".equals(shareOfState)||"5".equals(shareOfState)||"0".equals(shareOfState))
+	// {
+	// String applyState = intUserService.getapplyState(userId);
+	// if("2".equals(applyState)) {
+	// String applynumber = intUserService.getapplynumber(userId);
+	// if(applynumber==null) {
+	// String timStamp = System.currentTimeMillis() + "";// 当前时间戳
+	// applynumber = "SQ" + userId + timStamp;// 申请编号
+	// intUserService.setuser(userId, timStamp, applynumber);
+	// String state = "0";
+	// applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);
+	// }else{
+	// String timStamp = System.currentTimeMillis() + "";// 当前时间戳
+	// applynumber = "SQ" + userId + timStamp;// 申请编号
+	// intUserService.updateuser(userId, timStamp, applynumber);
+	// applynumberMapper.updatestate(userId);
+	// String state = "0";
+	// applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);
+	// }
+	// applyState = "1";
+	// intUserService.updateapplyState(applyState, userId);
+	// }
+	// }
+	// }
+	// map.put("shareOfState", shareOfState);
+	// return map;
+	//
+	// }
 
-	//分控状态(运营商免认证)
-		@RequestMapping("/getshareOfState")
-		@ResponseBody
-		@Transactional
-		public Map<String, Object> getshareOfState(int userId) {
-			String Operator = null;
-	 		String bankcard = null; 		
-	 		
-			String shareOfState = intUserService.getshareOfState(userId);
-			if ("0".equals(shareOfState) || ("1".equals(shareOfState))) {
-				int riskControlPoints = intUserService.getRiskControlPoints(userId);
-				int sourceId = intUserService.getsourceId(userId);
-				String sourceName = intSourceService.getsourceName(sourceId);
-				int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
-				Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
-				String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
-				String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
-				String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
-				int roatnptFractionalSegmentSmall = Integer
-						.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
-				int roatnptFractionalSegmentBig = Integer.parseInt(roatnptFractionalSegment
-						.substring(roatnptFractionalSegment.indexOf("-") + 1, roatnptFractionalSegment.length()));
-				
-				if (riskControlPoints < roatnptFractionalSegmentSmall) {
-					String orderNumber = intOrderService.getorderNumber(userId);
-					if (orderNumber == null || !"3".equals(orderNumber)) {
-						shareOfState = "0";
-						intUserService.updateshareOfState(userId, shareOfState);
-					}
-				}
-				if (riskControlPoints > roatnptFractionalSegmentSmall && riskControlPoints < roatnptFractionalSegmentBig) {
-					shareOfState = "1";
+	// 分控状态(运营商免认证)
+	@RequestMapping("/getshareOfState")
+	@ResponseBody
+	@Transactional
+	public Map<String, Object> getshareOfState(int userId) {
+		String Operator = null;
+		String bankcard = null;
+
+		String shareOfState = intUserService.getshareOfState(userId);
+		if ("0".equals(shareOfState) || ("1".equals(shareOfState))) {
+			int riskControlPoints = intUserService.getRiskControlPoints(userId);
+			int sourceId = intUserService.getsourceId(userId);
+			String sourceName = intSourceService.getsourceName(sourceId);
+			int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
+			Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
+			String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+			String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+			String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+			int roatnptFractionalSegmentSmall = Integer
+					.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
+			int roatnptFractionalSegmentBig = Integer.parseInt(roatnptFractionalSegment
+					.substring(roatnptFractionalSegment.indexOf("-") + 1, roatnptFractionalSegment.length()));
+
+			if (riskControlPoints < roatnptFractionalSegmentSmall) {
+				String orderNumber = intOrderService.getorderNumber(userId);
+				if (orderNumber == null || !"3".equals(orderNumber)) {
+					shareOfState = "0";
 					intUserService.updateshareOfState(userId, shareOfState);
 				}
-				if (riskControlPoints > roatnptFractionalSegmentBig) {
-					shareOfState = "2";
-					intUserService.updateshareOfState(userId, shareOfState);
-				}
-
 			}
-			Map<String, Object> map = new HashMap<>();
-			map.put("Ncode", "2000");
-
-			String userAttestation = null;
-			Map<String, Object> map3 = userAttestationService.getuserAttestation(userId);
-
-			if (map3 == null) {
-				userAttestation = "0";
-			} else {
-				userAttestation = (String) map3.get("attestationStatus");
+			if (riskControlPoints > roatnptFractionalSegmentSmall && riskControlPoints < roatnptFractionalSegmentBig) {
+				shareOfState = "1";
+				intUserService.updateshareOfState(userId, shareOfState);
 			}
-
-			Map<String, Object> map2 = operatorService.getOperator(userId);
-			if (map2 == null) {
-				Operator = "0";
-			} else {
-				Operator = (String) map2.get("attestationStatus");
+			if (riskControlPoints > roatnptFractionalSegmentBig) {
+				shareOfState = "2";
+				intUserService.updateshareOfState(userId, shareOfState);
 			}
-
-			Map<String, Object> map4 = bankcardMapper.getbankcard(userId);
-			if (map4 == null) {
-				bankcard = "0";
-			} else {
-				bankcard = (String) map4.get("attestationStatus");
-			}
-			if ("1".equals(userAttestation) && "1".equals(bankcard)) {
-				if("2".equals(shareOfState)||"4".equals(shareOfState)||"5".equals(shareOfState)) {
-					String applyState = intUserService.getapplyState(userId);
-					if("2".equals(applyState)) {
-						String applynumber = intUserService.getapplynumber(userId);
-						if(applynumber==null) {
-							String timStamp = System.currentTimeMillis() + "";// 当前时间戳
-						    applynumber = "SQ" + userId + timStamp;// 申请编号
-							intUserService.setuser(userId, timStamp, applynumber);
-							String state = "0";
-							applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);
-						}else{
-							String timStamp = System.currentTimeMillis() + "";// 当前时间戳
-						    applynumber = "SQ" + userId + timStamp;// 申请编号
-							intUserService.updateuser(userId, timStamp, applynumber);
-							applynumberMapper.updatestate(userId);
-							String state = "0";
-							applynumberMapper.setapplynumber(userId,timStamp,applynumber,state);				
-						}
-						applyState = "1";
-						intUserService.updateapplyState(applyState, userId);
-					}
-				}
-			}
-			map.put("shareOfState", shareOfState);
-			return map;
 
 		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("Ncode", "2000");
 
-//做三要素认证
-//	@RequestMapping("/threeElements")
-//	@ResponseBody
-//	@Transactional
-//	public Map<String, Object> getthreeElements(int userId, String phone, int companyId)
-//			throws UnsupportedEncodingException {
-//		Map<String, Object> map1 = new HashMap<>();
-//		String code1 = threeElementsMapper.getcode(userId, phone);
-//		if ("0".equals(code1)) {
-//			map1.put("Ncode", "2000");
-//			map1.put("code", "200");
-//			map1.put("msg", "认证一致");
-//			return map1;
-//		}
-//
-//		String ifBlacklist = intUserService.getifBlacklist2(userId);
-//		if ("1".equals(ifBlacklist)) {
-//			map1.put("Ncode", "402");
-//			map1.put("code", "402");
-//			map1.put("msg", "黑名单用户");
-//			map1.put("prompt", "您暂时不符合我们的要求");
-//			return map1;
-//		}
-//
-//		Map<String, Object> map = userAttestationService.getuserAttestation(userId);
-//		String trueName = (String) map.get("trueName");
-//		String idcard_number = (String) map.get("idcard_number");
-//		OperatorAction operatorAction = new OperatorAction();
-//		Map<String, Object> map2 = operatorAction.certification(idcard_number, trueName, phone);
-//		String result = (String) map2.get("result");
-//		String trans_id = (String) map2.get("trans_id");
-//		JSONObject jsonObject = null;
-//		jsonObject = JSONObject.parseObject(result);
-//		jsonObject = jsonObject.getJSONObject("data");
-//		String code = jsonObject.getString("code");
-//		if ("0".equals(code)) {
-//			int certification_number = 0;
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
+		String userAttestation = null;
+		Map<String, Object> map3 = userAttestationService.getuserAttestation(userId);
+
+		if (map3 == null) {
+			userAttestation = "0";
+		} else {
+			userAttestation = (String) map3.get("attestationStatus");
+		}
+
+		Map<String, Object> map2 = operatorService.getOperator(userId);
+		if (map2 == null) {
+			Operator = "0";
+		} else {
+			Operator = (String) map2.get("attestationStatus");
+		}
+
+		Map<String, Object> map4 = bankcardMapper.getbankcard(userId);
+		if (map4 == null) {
+			bankcard = "0";
+		} else {
+			bankcard = (String) map4.get("attestationStatus");
+		}
+		if ("1".equals(userAttestation) && "1".equals(bankcard)) {
+//			if ("2".equals(shareOfState) || "4".equals(shareOfState) || "5".equals(shareOfState)||"0".equals(shareOfState)) {
+				String applyState = intUserService.getapplyState(userId);
+				if ("2".equals(applyState)) {
+					String applynumber = intUserService.getapplynumber(userId);
+					if (applynumber == null) {
+						String timStamp = System.currentTimeMillis() + "";// 当前时间戳
+						applynumber = "SQ" + userId + timStamp;// 申请编号
+						intUserService.setuser(userId, timStamp, applynumber);
+						String state = "0";
+						applynumberMapper.setapplynumber(userId, timStamp, applynumber, state);
+					} else {
+						String timStamp = System.currentTimeMillis() + "";// 当前时间戳
+						applynumber = "SQ" + userId + timStamp;// 申请编号
+						intUserService.updateuser(userId, timStamp, applynumber);
+						applynumberMapper.updatestate(userId);
+						String state = "0";
+						applynumberMapper.setapplynumber(userId, timStamp, applynumber, state);
+					}
+					applyState = "1";
+					intUserService.updateapplyState(applyState, userId);
+				}
 //			}
-//			if (num > 0) {
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			String thirdtypeid = "4";
-//			String date = System.currentTimeMillis() + "";
-//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-//			map1.put("Ncode", "2000");
-//			map1.put("code", "200");
-//			map1.put("msg", "认证一致");
-//
-//		}
-//		if ("1".equals(code)) {
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				int certification_number = 1;
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				int certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-//				certification_number = certification_number + 1;
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//				if (certification_number > 2) {
-//					intUserService.updateifBlacklist(userId);
-//					String date = System.currentTimeMillis() + "";
-//					int num1 = intBlacklistuserService.getid(phone, companyId);// 判断手机号是否是黑名单
-//					if (num1 == 0) {
-//						String blackType = "5";
-//						intBlacklistuserService.setBlacklistuser(idcard_number, userId, companyId, phone, trueName,
-//								date, blackType);
-//					}
-//
-//				}
-//			}
-//			String thirdtypeid = "4";
-//			String date = System.currentTimeMillis() + "";
-//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-//			map1.put("code", "405");
-//			map1.put("msg", "认证不一致");
-//			map1.put("prompt", "请使用本人手机号认证");
-//		}
-//		if ("2".equals(code)) {
-//			int certification_number = 0;
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			map1.put("Ncode", "407");
-//			map1.put("code", "407");
-//			map1.put("msg", "认证信息不存在");
-//			map1.put("prompt", "认证信息不存在，请重新认证");
-//		}
-//		if ("9".equals(code)) {
-//			int certification_number = 0;
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			map1.put("Ncode", "409");
-//			map1.put("code", "409");
-//			map1.put("msg", "其他异常");
-//			map1.put("prompt", "未知错误，请联系客服");
-//		}
-//
-//		return map1;
-//
-//	}
-	
-	
-	
+		}
+		map.put("shareOfState", shareOfState);
+		return map;
+
+	}
+
+	// 做三要素认证
+	// @RequestMapping("/threeElements")
+	// @ResponseBody
+	// @Transactional
+	// public Map<String, Object> getthreeElements(int userId, String phone, int
+	// companyId)
+	// throws UnsupportedEncodingException {
+	// Map<String, Object> map1 = new HashMap<>();
+	// String code1 = threeElementsMapper.getcode(userId, phone);
+	// if ("0".equals(code1)) {
+	// map1.put("Ncode", "2000");
+	// map1.put("code", "200");
+	// map1.put("msg", "认证一致");
+	// return map1;
+	// }
+	//
+	// String ifBlacklist = intUserService.getifBlacklist2(userId);
+	// if ("1".equals(ifBlacklist)) {
+	// map1.put("Ncode", "402");
+	// map1.put("code", "402");
+	// map1.put("msg", "黑名单用户");
+	// map1.put("prompt", "您暂时不符合我们的要求");
+	// return map1;
+	// }
+	//
+	// Map<String, Object> map =
+	// userAttestationService.getuserAttestation(userId);
+	// String trueName = (String) map.get("trueName");
+	// String idcard_number = (String) map.get("idcard_number");
+	// OperatorAction operatorAction = new OperatorAction();
+	// Map<String, Object> map2 = operatorAction.certification(idcard_number,
+	// trueName, phone);
+	// String result = (String) map2.get("result");
+	// String trans_id = (String) map2.get("trans_id");
+	// JSONObject jsonObject = null;
+	// jsonObject = JSONObject.parseObject(result);
+	// jsonObject = jsonObject.getJSONObject("data");
+	// String code = jsonObject.getString("code");
+	// if ("0".equals(code)) {
+	// int certification_number = 0;
+	// int num = threeElementsMapper.getnum(userId, phone);
+	// if (num == 0) {
+	// threeElementsMapper.setThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// if (num > 0) {
+	// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// String thirdtypeid = "4";
+	// String date = System.currentTimeMillis() + "";
+	// thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+	// map1.put("Ncode", "2000");
+	// map1.put("code", "200");
+	// map1.put("msg", "认证一致");
+	//
+	// }
+	// if ("1".equals(code)) {
+	// int num = threeElementsMapper.getnum(userId, phone);
+	// if (num == 0) {
+	// int certification_number = 1;
+	// threeElementsMapper.setThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// if (num > 0) {
+	// int certification_number =
+	// threeElementsMapper.getCertificationnumber(userId, phone);
+	// certification_number = certification_number + 1;
+	// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// if (certification_number > 2) {
+	// intUserService.updateifBlacklist(userId);
+	// String date = System.currentTimeMillis() + "";
+	// int num1 = intBlacklistuserService.getid(phone, companyId);// 判断手机号是否是黑名单
+	// if (num1 == 0) {
+	// String blackType = "5";
+	// intBlacklistuserService.setBlacklistuser(idcard_number, userId,
+	// companyId, phone, trueName,
+	// date, blackType);
+	// }
+	//
+	// }
+	// }
+	// String thirdtypeid = "4";
+	// String date = System.currentTimeMillis() + "";
+	// thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+	// map1.put("code", "405");
+	// map1.put("msg", "认证不一致");
+	// map1.put("prompt", "请使用本人手机号认证");
+	// }
+	// if ("2".equals(code)) {
+	// int certification_number = 0;
+	// int num = threeElementsMapper.getnum(userId, phone);
+	// if (num == 0) {
+	// threeElementsMapper.setThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// if (num > 0) {
+	// certification_number = threeElementsMapper.getCertificationnumber(userId,
+	// phone);
+	// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// map1.put("Ncode", "407");
+	// map1.put("code", "407");
+	// map1.put("msg", "认证信息不存在");
+	// map1.put("prompt", "认证信息不存在，请重新认证");
+	// }
+	// if ("9".equals(code)) {
+	// int certification_number = 0;
+	// int num = threeElementsMapper.getnum(userId, phone);
+	// if (num == 0) {
+	// threeElementsMapper.setThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// if (num > 0) {
+	// certification_number = threeElementsMapper.getCertificationnumber(userId,
+	// phone);
+	// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+	// certification_number, phone);
+	// }
+	// map1.put("Ncode", "409");
+	// map1.put("code", "409");
+	// map1.put("msg", "其他异常");
+	// map1.put("prompt", "未知错误，请联系客服");
+	// }
+	//
+	// return map1;
+	//
+	// }
+
 	@RequestMapping("/threeElements")
 	@ResponseBody
 	@Transactional
 	public Map<String, Object> getthreeElements(int userId, String phone, int companyId)
 			throws UnsupportedEncodingException {
 		Map<String, Object> map1 = new HashMap<>();
-//		String code1 = threeElementsMapper.getcode(userId, phone);
-//		if ("0".equals(code1)) {
-			map1.put("Ncode", "2000");
-			map1.put("code", "200");
-			map1.put("msg", "认证一致");
-			return map1;
-//		}
-//
-//		String ifBlacklist = intUserService.getifBlacklist2(userId);
-//		if ("1".equals(ifBlacklist)) {
-//			map1.put("Ncode", "402");
-//			map1.put("code", "402");
-//			map1.put("msg", "黑名单用户");
-//			map1.put("prompt", "您暂时不符合我们的要求");
-//			return map1;
-//		}
-//
-//		Map<String, Object> map = userAttestationService.getuserAttestation(userId);
-//		String trueName = (String) map.get("trueName");
-//		String idcard_number = (String) map.get("idcard_number");
-//		OperatorAction operatorAction = new OperatorAction();
-//		Map<String, Object> map2 = operatorAction.certification(idcard_number, trueName, phone);
-//		String result = (String) map2.get("result");
-//		String trans_id = (String) map2.get("trans_id");
-//		JSONObject jsonObject = null;
-//		jsonObject = JSONObject.parseObject(result);
-//		jsonObject = jsonObject.getJSONObject("data");
-//		String code = jsonObject.getString("code");
-//		if ("0".equals(code)) {
-//			int certification_number = 0;
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			String thirdtypeid = "4";
-//			String date = System.currentTimeMillis() + "";
-//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-//			map1.put("Ncode", "2000");
-//			map1.put("code", "200");
-//			map1.put("msg", "认证一致");
-//
-//		}
-//		if ("1".equals(code)) {
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				int certification_number = 1;
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				int certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-//				certification_number = certification_number + 1;
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//				if (certification_number > 2) {
-//					intUserService.updateifBlacklist(userId);
-//					String date = System.currentTimeMillis() + "";
-//					int num1 = intBlacklistuserService.getid(phone, companyId);// 判断手机号是否是黑名单
-//					if (num1 == 0) {
-//						String blackType = "5";
-//						intBlacklistuserService.setBlacklistuser(idcard_number, userId, companyId, phone, trueName,
-//								date, blackType);
-//					}
-//
-//				}
-//			}
-//			String thirdtypeid = "4";
-//			String date = System.currentTimeMillis() + "";
-//			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-//			map1.put("code", "405");
-//			map1.put("msg", "认证不一致");
-//			map1.put("prompt", "请使用本人手机号认证");
-//		}
-//		if ("2".equals(code)) {
-//			int certification_number = 0;
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			map1.put("Ncode", "407");
-//			map1.put("code", "407");
-//			map1.put("msg", "认证信息不存在");
-//			map1.put("prompt", "认证信息不存在，请重新认证");
-//		}
-//		if ("9".equals(code)) {
-//			int certification_number = 0;
-//			int num = threeElementsMapper.getnum(userId, phone);
-//			if (num == 0) {
-//				threeElementsMapper.setThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			if (num > 0) {
-//				certification_number = threeElementsMapper.getCertificationnumber(userId, phone);
-//				threeElementsMapper.updateThreeElements(userId, code, trans_id, certification_number, phone);
-//			}
-//			map1.put("Ncode", "409");
-//			map1.put("code", "409");
-//			map1.put("msg", "其他异常");
-//			map1.put("prompt", "未知错误，请联系客服");
-//		}
-//
-//		return map1;
+		// String code1 = threeElementsMapper.getcode(userId, phone);
+		// if ("0".equals(code1)) {
+		map1.put("Ncode", "2000");
+		map1.put("code", "200");
+		map1.put("msg", "认证一致");
+		return map1;
+		// }
+		//
+		// String ifBlacklist = intUserService.getifBlacklist2(userId);
+		// if ("1".equals(ifBlacklist)) {
+		// map1.put("Ncode", "402");
+		// map1.put("code", "402");
+		// map1.put("msg", "黑名单用户");
+		// map1.put("prompt", "您暂时不符合我们的要求");
+		// return map1;
+		// }
+		//
+		// Map<String, Object> map =
+		// userAttestationService.getuserAttestation(userId);
+		// String trueName = (String) map.get("trueName");
+		// String idcard_number = (String) map.get("idcard_number");
+		// OperatorAction operatorAction = new OperatorAction();
+		// Map<String, Object> map2 =
+		// operatorAction.certification(idcard_number, trueName, phone);
+		// String result = (String) map2.get("result");
+		// String trans_id = (String) map2.get("trans_id");
+		// JSONObject jsonObject = null;
+		// jsonObject = JSONObject.parseObject(result);
+		// jsonObject = jsonObject.getJSONObject("data");
+		// String code = jsonObject.getString("code");
+		// if ("0".equals(code)) {
+		// int certification_number = 0;
+		// int num = threeElementsMapper.getnum(userId, phone);
+		// if (num == 0) {
+		// threeElementsMapper.setThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// if (num > 0) {
+		// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// String thirdtypeid = "4";
+		// String date = System.currentTimeMillis() + "";
+		// thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid,
+		// date);
+		// map1.put("Ncode", "2000");
+		// map1.put("code", "200");
+		// map1.put("msg", "认证一致");
+		//
+		// }
+		// if ("1".equals(code)) {
+		// int num = threeElementsMapper.getnum(userId, phone);
+		// if (num == 0) {
+		// int certification_number = 1;
+		// threeElementsMapper.setThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// if (num > 0) {
+		// int certification_number =
+		// threeElementsMapper.getCertificationnumber(userId, phone);
+		// certification_number = certification_number + 1;
+		// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// if (certification_number > 2) {
+		// intUserService.updateifBlacklist(userId);
+		// String date = System.currentTimeMillis() + "";
+		// int num1 = intBlacklistuserService.getid(phone, companyId);//
+		// 判断手机号是否是黑名单
+		// if (num1 == 0) {
+		// String blackType = "5";
+		// intBlacklistuserService.setBlacklistuser(idcard_number, userId,
+		// companyId, phone, trueName,
+		// date, blackType);
+		// }
+		//
+		// }
+		// }
+		// String thirdtypeid = "4";
+		// String date = System.currentTimeMillis() + "";
+		// thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid,
+		// date);
+		// map1.put("code", "405");
+		// map1.put("msg", "认证不一致");
+		// map1.put("prompt", "请使用本人手机号认证");
+		// }
+		// if ("2".equals(code)) {
+		// int certification_number = 0;
+		// int num = threeElementsMapper.getnum(userId, phone);
+		// if (num == 0) {
+		// threeElementsMapper.setThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// if (num > 0) {
+		// certification_number =
+		// threeElementsMapper.getCertificationnumber(userId, phone);
+		// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// map1.put("Ncode", "407");
+		// map1.put("code", "407");
+		// map1.put("msg", "认证信息不存在");
+		// map1.put("prompt", "认证信息不存在，请重新认证");
+		// }
+		// if ("9".equals(code)) {
+		// int certification_number = 0;
+		// int num = threeElementsMapper.getnum(userId, phone);
+		// if (num == 0) {
+		// threeElementsMapper.setThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// if (num > 0) {
+		// certification_number =
+		// threeElementsMapper.getCertificationnumber(userId, phone);
+		// threeElementsMapper.updateThreeElements(userId, code, trans_id,
+		// certification_number, phone);
+		// }
+		// map1.put("Ncode", "409");
+		// map1.put("code", "409");
+		// map1.put("msg", "其他异常");
+		// map1.put("prompt", "未知错误，请联系客服");
+		// }
+		//
+		// return map1;
 
 	}
 
-//魔杖接口
+	// 魔杖接口
 	@RequestMapping("/setmagicwand3")
 	@ResponseBody
 	@Transactional
@@ -825,42 +872,45 @@ intUserService.setModel(userId,rString);
 		return map;
 	}
 
-//判断是否是白名单用户，如果是，风控直接通过
-//	@RequestMapping("/getwhitelistuser")
-//	@ResponseBody
-//	@Transactional
-//	public Map<String, Object> getwhitelistuser(String phone, int userId, String name, String idcard_number) {
-//		Map<String, Object> map = new HashMap<>();
-//		String attestationStatus = "1";
-//		int num = intWhitelistuserService.getWhitelistuser1(phone, idcard_number, name);
-//		if (num > 0) {
-//			int num1 = operatorService.getuserId(userId);
-//			if (num1 == 0) {
-//				String authentime = System.currentTimeMillis() + "";// 认证时间
-//				int number = operatorService.setwhitelistuser(attestationStatus, userId, authentime);
-//				if (number == 1) {
-//					String shareOfState = "2";
-//					intUserService.updateshareOfState(userId, shareOfState);
-//					map.put("Ncode", "2000");
-//					map.put("msg", "数据插入成功");
-//					map.put("Code", "201");
-//				} else {
-//					map.put("Ncode", "405");
-//					map.put("msg", "数据插入失败");
-//					map.put("Code", "405");
-//				}
-//			}
-//
-//		} else {
-//			map.put("Ncode", "2000");
-//			map.put("msg", "用户不是白名单");
-//			map.put("Code", "202");
-//		}
-//
-//		return map;
-//	}
+	// 判断是否是白名单用户，如果是，风控直接通过
+	// @RequestMapping("/getwhitelistuser")
+	// @ResponseBody
+	// @Transactional
+	// public Map<String, Object> getwhitelistuser(String phone, int userId,
+	// String name, String idcard_number) {
+	// Map<String, Object> map = new HashMap<>();
+	// String attestationStatus = "1";
+	// int num = intWhitelistuserService.getWhitelistuser1(phone, idcard_number,
+	// name);
+	// if (num > 0) {
+	// int num1 = operatorService.getuserId(userId);
+	// if (num1 == 0) {
+	// String authentime = System.currentTimeMillis() + "";// 认证时间
+	// int number = operatorService.setwhitelistuser(attestationStatus, userId,
+	// authentime);
+	// if (number == 1) {
+	// String shareOfState = "2";
+	// intUserService.updateshareOfState(userId, shareOfState);
+	// map.put("Ncode", "2000");
+	// map.put("msg", "数据插入成功");
+	// map.put("Code", "201");
+	// } else {
+	// map.put("Ncode", "405");
+	// map.put("msg", "数据插入失败");
+	// map.put("Code", "405");
+	// }
+	// }
+	//
+	// } else {
+	// map.put("Ncode", "2000");
+	// map.put("msg", "用户不是白名单");
+	// map.put("Code", "202");
+	// }
+	//
+	// return map;
+	// }
 
-//  分控分数
+	// 分控分数
 	@RequestMapping("/getScore")
 	@ResponseBody
 	@Transactional
@@ -870,13 +920,13 @@ intUserService.setModel(userId,rString);
 		int score = 0;
 		Map<String, Object> map = new HashMap<>();
 		map.put("Ncode", "2000");
-//   	shareOfState ="6";
-//   	intUserService.updateshareOfState(userId, shareOfState);
-		
-		int companyId =3;
+		// shareOfState ="6";
+		// intUserService.updateshareOfState(userId, shareOfState);
+
+		int companyId = 3;
 		ArrayList<String> list = intAutheninforService.getifAuthentication(companyId);
 		String operatorAutheninfor = list.get(2);
-		if("2".equals(operatorAutheninfor)) {
+		if ("2".equals(operatorAutheninfor)) {
 			int sourceId = intUserService.getsourceId(userId);
 			String sourceName = intSourceService.getsourceName(sourceId);
 			int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
@@ -886,16 +936,14 @@ intUserService.setModel(userId,rString);
 			String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
 			int roatnptFractionalSegmentSmall = Integer
 					.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
-			int riskControlPoints = roatnptFractionalSegmentSmall+1;
-			intUserService.setRiskControlPoints(userId,riskControlPoints);
+			int riskControlPoints = roatnptFractionalSegmentSmall + 1;
+			intUserService.setRiskControlPoints(userId, riskControlPoints);
 			shareOfState = "1";
 			intUserService.updateScore1(userId, shareOfState);
 			map.put("code", 200);
 			return map;
 		}
-		
-		
-		
+
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
 		String idNumber = (String) userAttestation.get("idcard_number");
@@ -946,46 +994,50 @@ intUserService.setModel(userId,rString);
 			String date = System.currentTimeMillis() + "";
 			thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
 		}
-		if ("风控乙".equals(rmModleName)) {
-			System.out.println("rmModleName------------------------------------------" + 1111111);
-			String fileContent = operatorService.getoperatorJson(userId);
-			Map<String, Object> map2 = userAttestationService.getuserAttestation(userId);
-			String linkmanOneName = (String) map2.get("linkmanOneName");
-			String linkmanOnePhone = (String) map2.get("linkmanOnePhone");
-			String linkmanTwoName = (String) map2.get("linkmanTwoName");
-			String linkmanTwoPhone = (String) map2.get("linkmanTwoPhone");
-			ZhimiRiskDemo zDemo = new ZhimiRiskDemo();
-			String responseStr = zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone, linkmanTwoName,
-					linkmanTwoPhone, address, newphone, idcard_number, name);
-			JSONObject jsonObject = null;
-			jsonObject = JSONObject.parseObject(responseStr);
-			score = new Double(jsonObject.getDouble("score")).intValue();
-			String request_id = jsonObject.getString("request_id");
-			String history_apply = jsonObject.getString("history_apply");
-			jsonObject = JSONObject.parseObject(history_apply);
-			int mobile_1h_cnt = jsonObject.getInteger("mobile_1h_cnt");
-			int mobile_3h_cnt = jsonObject.getInteger("mobile_3h_cnt");
-			int mobile_12h_cnt = jsonObject.getInteger("mobile_12h_cnt");
-			int mobile_1d_cnt = jsonObject.getInteger("mobile_1d_cnt");
-			int mobile_3d_cnt = jsonObject.getInteger("mobile_3d_cnt");
-			int mobile_7d_cnt = jsonObject.getInteger("mobile_7d_cnt");
-			int mobile_14d_cnt = jsonObject.getInteger("mobile_14d_cnt");
-			int mobile_30d_cnt = jsonObject.getInteger("mobile_30d_cnt");
-			int mobile_60d_cnt = jsonObject.getInteger("mobile_60d_cnt");
-			int idcard_1h_cnt = jsonObject.getInteger("idcard_1h_cnt");
-			int idcard_3h_cnt = jsonObject.getInteger("idcard_3h_cnt");
-			int idcard_12h_cnt = jsonObject.getInteger("idcard_12h_cnt");
-			int idcard_1d_cnt = jsonObject.getInteger("idcard_1d_cnt");
-			int idcard_3d_cnt = jsonObject.getInteger("idcard_3d_cnt");
-			int idcard_7d_cnt = jsonObject.getInteger("idcard_7d_cnt");
-			int idcard_14d_cnt = jsonObject.getInteger("idcard_14d_cnt");
-			int idcard_30d_cnt = jsonObject.getInteger("idcard_30d_cnt");
-			int idcard_60d_cnt = jsonObject.getInteger("idcard_60d_cnt");
-			zhimiRiskMapper.setzhimiRisk(userId, request_id, mobile_1h_cnt, mobile_3h_cnt, mobile_12h_cnt,
-					mobile_1d_cnt, mobile_3d_cnt, mobile_7d_cnt, mobile_14d_cnt, mobile_30d_cnt, mobile_60d_cnt,
-					idcard_1h_cnt, idcard_3h_cnt, idcard_12h_cnt, idcard_1d_cnt, idcard_3d_cnt, idcard_7d_cnt,
-					idcard_14d_cnt, idcard_30d_cnt, idcard_60d_cnt);
-		}
+		/*
+		 * if ("风控乙".equals(rmModleName)) { System.out.println(
+		 * "rmModleName------------------------------------------" + 1111111);
+		 * String fileContent = operatorService.getoperatorJson(userId);
+		 * Map<String, Object> map2 =
+		 * userAttestationService.getuserAttestation(userId); String
+		 * linkmanOneName = (String) map2.get("linkmanOneName"); String
+		 * linkmanOnePhone = (String) map2.get("linkmanOnePhone"); String
+		 * linkmanTwoName = (String) map2.get("linkmanTwoName"); String
+		 * linkmanTwoPhone = (String) map2.get("linkmanTwoPhone"); ZhimiRiskDemo
+		 * zDemo = new ZhimiRiskDemo(); String responseStr =
+		 * zDemo.getzhimi(fileContent, linkmanOneName, linkmanOnePhone,
+		 * linkmanTwoName, linkmanTwoPhone, address, newphone, idcard_number,
+		 * name); JSONObject jsonObject = null; jsonObject =
+		 * JSONObject.parseObject(responseStr); score = new
+		 * Double(jsonObject.getDouble("score")).intValue(); String request_id =
+		 * jsonObject.getString("request_id"); String history_apply =
+		 * jsonObject.getString("history_apply"); jsonObject =
+		 * JSONObject.parseObject(history_apply); int mobile_1h_cnt =
+		 * jsonObject.getInteger("mobile_1h_cnt"); int mobile_3h_cnt =
+		 * jsonObject.getInteger("mobile_3h_cnt"); int mobile_12h_cnt =
+		 * jsonObject.getInteger("mobile_12h_cnt"); int mobile_1d_cnt =
+		 * jsonObject.getInteger("mobile_1d_cnt"); int mobile_3d_cnt =
+		 * jsonObject.getInteger("mobile_3d_cnt"); int mobile_7d_cnt =
+		 * jsonObject.getInteger("mobile_7d_cnt"); int mobile_14d_cnt =
+		 * jsonObject.getInteger("mobile_14d_cnt"); int mobile_30d_cnt =
+		 * jsonObject.getInteger("mobile_30d_cnt"); int mobile_60d_cnt =
+		 * jsonObject.getInteger("mobile_60d_cnt"); int idcard_1h_cnt =
+		 * jsonObject.getInteger("idcard_1h_cnt"); int idcard_3h_cnt =
+		 * jsonObject.getInteger("idcard_3h_cnt"); int idcard_12h_cnt =
+		 * jsonObject.getInteger("idcard_12h_cnt"); int idcard_1d_cnt =
+		 * jsonObject.getInteger("idcard_1d_cnt"); int idcard_3d_cnt =
+		 * jsonObject.getInteger("idcard_3d_cnt"); int idcard_7d_cnt =
+		 * jsonObject.getInteger("idcard_7d_cnt"); int idcard_14d_cnt =
+		 * jsonObject.getInteger("idcard_14d_cnt"); int idcard_30d_cnt =
+		 * jsonObject.getInteger("idcard_30d_cnt"); int idcard_60d_cnt =
+		 * jsonObject.getInteger("idcard_60d_cnt");
+		 * zhimiRiskMapper.setzhimiRisk(userId, request_id, mobile_1h_cnt,
+		 * mobile_3h_cnt, mobile_12h_cnt, mobile_1d_cnt, mobile_3d_cnt,
+		 * mobile_7d_cnt, mobile_14d_cnt, mobile_30d_cnt, mobile_60d_cnt,
+		 * idcard_1h_cnt, idcard_3h_cnt, idcard_12h_cnt, idcard_1d_cnt,
+		 * idcard_3d_cnt, idcard_7d_cnt, idcard_14d_cnt, idcard_30d_cnt,
+		 * idcard_60d_cnt); }
+		 */
 
 		String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
 		String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
@@ -1014,12 +1066,12 @@ intUserService.setModel(userId,rString);
 			map.put("code", 200);
 			map.put("msg", "分数够了");
 		}
-		
+
 		String registeTime = intUserService.getregisteTime(userId);
-//		if(registeTime) {
-//			
-//		}
-		
+		// if(registeTime) {
+		//
+		// }
+
 		intUserService.updateScore(score, userId, shareOfState);
 		map.put("score", score);
 

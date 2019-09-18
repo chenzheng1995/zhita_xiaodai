@@ -28,5 +28,7 @@ public interface AboutusMapper {
     String queryAppLogo(Integer id);
 
 	Map<String, Object> getaboutus(int companyId);
+
+	Map<String, Object> geturl(int companyId);
     
 }
