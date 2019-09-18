@@ -415,7 +415,7 @@ public class PromoteController {
  	@ResponseBody
  	@Transactional
  	public Map<String, Object> codeLogin(String phone, int companyId, String registeClient,
- 			String sourceName, String useMarket) {
+ 			String sourceName, String useMarket,String userAgentInfo) {
  		Map<String, Object> map = new HashMap<String, Object>();
  		String loginStatus = "1";
  		PhoneDeal phoneDeal = new PhoneDeal();
@@ -473,8 +473,8 @@ public class PromoteController {
  			 			}
  						String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
  						int merchantId = intSourceService.getsourceId(sourceName);
- 						int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
- 								registrationTime, merchantId, useMarket, operatorsAuthentication);
+ 						int number = loginService.insertUser2(newPhone, loginStatus, companyId, registeClient,
+ 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo);
  						if (number == 1) {
  							id = loginService.getId(newPhone, companyId); // 获取该用户的id
  							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");

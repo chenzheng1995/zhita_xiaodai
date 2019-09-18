@@ -24,6 +24,7 @@
       <arg column="facePhoto" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="applyState" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="model" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="userAgentInfo" javaType="java.lang.String" jdbcType="VARCHAR" />
       
     </constructor>
   </resultMap>
@@ -865,5 +866,20 @@
      select model from user where id = #{userId}
 	</select> 
 	
+	
+					  	<!--APP 插入用户信息 -->
+	<insert id="insertUser2" parameterType="java.util.Map">
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,userAgentInfo)
+		values (#{newPhone},
+		#{registrationTime},
+		#{loginStatus},
+		#{companyId},
+		#{registeClient},
+		#{registrationTime},
+		#{merchantId},
+		#{useMarket},
+		#{operatorsAuthentication},
+		#{userAgentInfo})
+	</insert>
 	
 </mapper>

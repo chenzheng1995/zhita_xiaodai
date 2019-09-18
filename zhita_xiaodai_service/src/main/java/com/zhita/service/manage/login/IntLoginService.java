@@ -62,5 +62,9 @@ public void updateifBlacklist1(String newPhone, int companyId);
 
 public long getnumber(long todayZeroTimestamps, long tomorrowZeroTimestamps, int companyId);
 
+public int insertUser2(String newPhone, String loginStatus, int companyId, String registeClient,
+		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication,
+		String userAgentInfo);
+
    
 }

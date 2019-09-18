@@ -558,4 +558,10 @@ public class SourceServiceImp implements IntSourceService{
     	List<TongjiSorce> list=sourceMapper.queryAllSourceBysourceid(companyId,sourceid);
     	return list;
     }
+
+	@Override
+	public String getstatus(int companyId, String sourceName) {
+		String status = sourceMapper.getstatus(companyId,sourceName);
+		return status;
+	}
 }

@@ -114,5 +114,7 @@ public interface SourceMapper {
 	
 	//后台管理---根据公司id查询公司名字
 	String querycompany(Integer companyid);
+
+	String getstatus(@Param("companyId")int companyId,@Param("sourceName") String sourceName);
     
 }
