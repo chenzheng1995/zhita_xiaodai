@@ -172,7 +172,7 @@
   <select id="queryAllSourceBysourceid" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.TongjiSorce">
   	select id sourceid,sourceName,price,clearingform from source where companyId=#{arg0} and deleted=0
   	 <if test="sourceid != null and sourceid!='' ">
-         and sourceid =#{sourceid,jdbcType=INTEGER}
+         and id =#{sourceid,jdbcType=INTEGER}
      </if>
   </select>
   
