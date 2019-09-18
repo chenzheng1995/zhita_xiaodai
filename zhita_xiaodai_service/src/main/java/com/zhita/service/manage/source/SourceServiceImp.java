@@ -262,7 +262,7 @@ public class SourceServiceImp implements IntSourceService{
   	}
     
     //定时任务
-    //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
+    //后台管理----做定时任务需要执行的方法（每日1点  将各个渠道的历史数据存入历史表）
     @Transactional
     public void selAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
@@ -272,8 +272,6 @@ public class SourceServiceImp implements IntSourceService{
     	for (int i = 0; i < list.size(); i++) {
     		Integer sourceid=list.get(i).getId();//渠道id
     		String sourceName=list.get(i).getSourcename();//渠道名称
-    		List<String> liststr=sourceMapper.queryTime(companyId, sourceName);// 查询出当前渠道所有的注册时间(liststr里面的时间为时间戳格式)
-    		
     		
     		//获取前一天的日期
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -329,6 +327,7 @@ public class SourceServiceImp implements IntSourceService{
 				sourceDiscountHistoryMapper.updateByPrimaryKey(tongjiSorce);//说明修改成功
 			}
     		
+			List<String> liststr=sourceMapper.queryTime(companyId, sourceName);// 查询出当前渠道所有的注册时间(liststr里面的时间为时间戳格式)
     		if(liststr!=null&&!liststr.isEmpty()) {//代表当前渠道在用户表有注册的用户
     			List<String> list1 = new ArrayList<>();// 用来存时间戳转换后的时间（年月日格式的时间）(user的注册时间)
     			for (int j = 0; j< liststr.size(); j++) {
@@ -402,7 +401,6 @@ public class SourceServiceImp implements IntSourceService{
     				}
     			}
     		}
-    		
     		
 		}
 	}
