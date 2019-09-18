@@ -13,6 +13,7 @@ import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
@@ -199,8 +200,8 @@ public class Chanpayserviceimp implements Chanpayservice{
 	}
 
 	@Override
-	public String loanSetStatu(Integer companyId) {
-		return stdao.SelectLoanStatus(companyId);
+	public String loanSetStatu(Loan_setting loan) {
+		return stdao.SelectLoanStatus(loan);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,9 @@ import com.zhita.util.TuoMinUtil;
 @Service
 public class FinanceServiceimp implements FinanceService{
 	
+	
+	@Autowired
+	private PostloanorderMapper postloanorder;
 	
 	
 	@Autowired
@@ -106,6 +110,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("PaymentRecord", payments);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -145,6 +150,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Repayment", rapay);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -164,7 +170,14 @@ public class FinanceServiceimp implements FinanceService{
 		
 		
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
-		ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
+		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney();//前置应还金额
+		
+		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
+			ordea.setOrder_money(ordea.getShouldReapyMoney());//应还总金额
+		}else{
+			ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
+		}
+		
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
 		ordea.setDefeNum(defe.getDefeNum());
@@ -588,7 +601,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
 		
-		if(banl.getStart_time() == null){
+		if(banl.getStartu_time() == null){
 			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
 			String stimea = sima.format(new Date());
 			Calendar calendar = Calendar.getInstance();
@@ -598,10 +611,9 @@ public class FinanceServiceimp implements FinanceService{
 			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 			String c = sima.format(date);//结束时间
 			String b = sima.format(new Date());
-			banl.setStart_time(c+" 00:00:00");
+			banl.setStartu_time(c+" 00:00:00");
 			banl.setEnd_time(b+" 23:59:59");
 		}
-		
 		
 		
 		if(banl.getStartu_time()==null){
@@ -644,6 +656,7 @@ public class FinanceServiceimp implements FinanceService{
 				banks.add(bank);
 		}else{
 			List<String> times =  DateListUtil.getDays(banl.getStartu_time(), banl.getEnd_time());
+			Collections.reverse(times); // 倒序排列 
 			for(int i=0;i<times.size();i++){
 				banl.setStartu_time(times.get(i)+" 00:00:00");
 				banl.setEnd_time(times.get(i)+" 23:59:59");

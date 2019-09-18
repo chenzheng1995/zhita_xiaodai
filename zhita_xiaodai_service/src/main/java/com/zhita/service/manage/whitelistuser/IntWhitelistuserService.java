@@ -1,7 +1,11 @@
 package com.zhita.service.manage.whitelistuser;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,4 +42,11 @@ public interface IntWhitelistuserService {
 
 	public int getWhitelistuser1(String phone, String idcard_number, String name);
 
+
+	/**
+	 * 人工添加白名单
+	 * 用于导出excel的查询结果
+	 */
+	public void exportwhite(Integer companyId,String name,String phone,String idcard, HttpServletRequest request, HttpServletResponse response)
+			throws IOException;
 }

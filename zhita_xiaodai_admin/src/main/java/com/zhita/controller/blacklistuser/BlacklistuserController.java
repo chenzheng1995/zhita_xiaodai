@@ -1,7 +1,11 @@
 package com.zhita.controller.blacklistuser;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -91,4 +95,16 @@ public class BlacklistuserController {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	/**
+	 * 人工添加黑名单
+	 * 用于导出excel的查询结果
+	 */
+	@RequestMapping("/exportblack.do")
+	public void exportblack(Integer companyId,String name,String phone,String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		intBlacklistuserService.exportblack(companyId, name, phone, idcard, blackType, request, response);
+	}
+	
 }

@@ -64,7 +64,7 @@ public class User {
     
     private BigDecimal UserMoney;
     
-    private String idcard;
+    private String idcard;//身份证号
     
     private String operatorsAuthentication;//运营商名字
     

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
@@ -63,7 +64,7 @@ public interface Chanpayservice {
 	void SelectId(String orderNumber);
 	
 	
-	String loanSetStatu(Integer companyId);
+	String loanSetStatu(Loan_setting loan);
 	
 	
 	Integer loanMaxMoney(Integer companyId);

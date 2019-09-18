@@ -173,7 +173,7 @@ public class SourcesideTongjiController {
 		int uv = 0;
 		String cvr = null;
 		float disAppnum=0;//折扣申请数
-		if(!date.equals(datetoday)){//证明穿进来的日期不是今天
+		if(!date.equals(datetoday)){//证明传进来的日期不是今天
 			if(tongjiSorcelist!=null){
 				tongjiSorce=tongjiSorcelist;
 				tongjiSorce.setDate(Timestamps.stampToDate1(tongjiSorce.getDate()));

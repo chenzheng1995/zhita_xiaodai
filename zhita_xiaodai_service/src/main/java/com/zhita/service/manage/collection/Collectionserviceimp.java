@@ -3,12 +3,16 @@ package com.zhita.service.manage.collection;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
@@ -29,6 +33,9 @@ public class Collectionserviceimp implements Collectionservice{
 	@Autowired
 	private CollectionMapper collmapp;
 
+	
+	@Autowired
+	private PostloanorderMapper pdap;
 	
 	
 	@Autowired
@@ -79,6 +86,7 @@ public class Collectionserviceimp implements Collectionservice{
 //			
 			}
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		return map;
 		}
 		
@@ -191,6 +199,7 @@ public class Collectionserviceimp implements Collectionservice{
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
+			map.put("pageutil", pages);
 		}else{
 			map.put("Orderdetails", "0");
 			map.put("pageutil", "数据异常");
@@ -218,6 +227,20 @@ public class Collectionserviceimp implements Collectionservice{
 		PhoneDeal p = new PhoneDeal();
 		if(coll.getPhone() != null){
 			coll.setPhone(p.encryption(coll.getPhone()));
+		}
+		
+		if(coll.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(coll.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			coll.setStart_time(c+" 00:00:00");
+			coll.setEnd_time(b+" 23:59:59");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -259,6 +282,7 @@ public class Collectionserviceimp implements Collectionservice{
 			map.put("Collection", colles);
 		}else{
 			List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
+			Collections.reverse(stimes); // 倒序排列 
 			for(int i=0;i<stimes.size();i++){
 				coll.setStart_time(stimes.get(i)+" 00:00:00");
 				coll.setEnd_time(stimes.get(i)+" 23:59:59");
@@ -385,9 +409,10 @@ public class Collectionserviceimp implements Collectionservice{
 			
 		}
 		map.put("Orderdetails", orders);
+		map.put("pageutil", pages);
 		}else{
 			map.put("Orderdetails", "0");
-			map.put("Pageutil", "数据异常");
+			map.put("pageutil", "数据异常");
 		}
 		return map;
 	}

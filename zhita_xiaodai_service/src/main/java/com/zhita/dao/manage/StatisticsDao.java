@@ -2,9 +2,11 @@ package com.zhita.dao.manage;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
+import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
@@ -111,7 +113,7 @@ public interface StatisticsDao {
 	String DefeDefeAfertime(Integer orderId);
 	
 	
-	String SelectLoanStatus(Integer companyId);
+	String SelectLoanStatus(Loan_setting loan);
 	
 	
 	Integer SelectMaxMoney(Integer companyId);

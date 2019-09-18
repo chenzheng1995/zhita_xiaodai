@@ -78,6 +78,7 @@ public class CertificationCenterController {
 	@Transactional
     public Map<String, Object> setconfiguration(String jsonString,int userId,String phone){
 		PostAndGet pGet = new PostAndGet();
+
 		UserJson paramObject = new UserJson();
 		paramObject.setJsonString(jsonString);
 		paramObject.setPhone(phone);
@@ -85,6 +86,7 @@ public class CertificationCenterController {
 		String json  = JSONObject.toJSONString(paramObject);
 		System.out.println(json);
 		pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
+
     	Map<String, Object> map = new HashMap<>();
 		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		String phoneMarket = jsonObject.getString("phoneMarket");

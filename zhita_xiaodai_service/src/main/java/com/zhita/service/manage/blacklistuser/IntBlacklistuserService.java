@@ -1,8 +1,13 @@
 package com.zhita.service.manage.blacklistuser;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.BlacklistUser;
@@ -40,6 +45,11 @@ public interface IntBlacklistuserService {
 
 	public void setBlacklistuser(String idCard, int userId, int companyId, String phone, String name, String date,
 			String blackType);
-
-
+	
+	/**
+	 * 人工添加黑名单
+	 * 用于导出excel的查询结果
+	 */
+	public void exportblack(Integer companyId,String name,String phone,
+			String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)throws IOException;
 }

@@ -115,7 +115,7 @@
 			
 			
 			<select id="SelectBanl" parameterType="com.zhita.model.manage.Bankcard" resultType="com.zhita.model.manage.Bankcard">
-				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm from bankcard ban,bankcard_type baty,user u 
+				select baty.bankcardTypeName,ban.bankcardName,ban.tiedCardPhone,ban.cstmrnm,ban.IDcardnumber from bankcard ban,bankcard_type baty,user u 
 				where ban.bankcardTypeId = baty.id and baty.companyId = #{companyId} and u.id = ban.userId and  ban.userId = #{userId}
 			</select>
 			
@@ -171,7 +171,14 @@
 			
 			
 			<select id="OrderCollectionNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-				select count(id) from orders where companyId = #{companyId}
+				select count(o.id) from orders o left join orderdetails ord on o.id = ord.orderId
+				left join deferred defe on defe.orderid =o.id
+				left join bankcard bank on bank.userId = o.userId
+				left join user u on	o.userId = u.id
+				left join user_attestation usea on o.id = usea.userId
+				left join bankdeductions bkd on bkd.orderId = o.id 
+				where companyId = #{companyId}
+				and o.orderStatus between "1" and "2"
 			</select>
 			
 			
@@ -291,8 +298,8 @@
 			</select>
 			
 			
-			<select id="SelectLoanStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
-				select status from loan_setting where companyId = #{companyId}
+			<select id="SelectLoanStatus" parameterType="com.zhita.model.manage.Loan_setting" resultType="java.lang.String">
+				select status from loan_setting where companyId = #{companyId} and name = #{name}
 			</select>
 			
 			
