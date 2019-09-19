@@ -1007,7 +1007,7 @@ public class ChanpayQuickCollection {
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
 				if(paymentname.getLoanSource().equals("钊力")){
-					
+					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "http://new", companyId, Integer.valueOf(MerUserId));
 				}else{
 			Map<String, String> origMap = new HashMap<String, String>();
 			// 2.1 基本参数 
@@ -1045,6 +1045,7 @@ public class ChanpayQuickCollection {
 					Integer a = servie.AddRepayment(repay);
 					if(a!=null){
 						map.put("Ncode", 2000);
+						map.put("status", 1);
 						map.put("ReturnChanpay", retu);
 						map.put("TrxId", TrxId);
 						map.put("code", 200);

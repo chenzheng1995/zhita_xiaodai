@@ -55,13 +55,14 @@ public class BankAuthenticationController {
 	    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
 	    	*/
 	    	HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
-	    	String returns = response.toString();
-	    	String code = returns.substring(9, 13);
-	    	RreturnAuth rauth = JSON.parseObject(EntityUtils.toString(response.getEntity()), RreturnAuth.class);
-	    	System.out.println(rauth.getResult().getMessagetype()+rauth.getResult().getMessage());
+//	    	RreturnAuth rauth = JSON.parseObject(EntityUtils.toString(response.getEntity()), RreturnAuth.class);
+	    	System.out.println("数据:"+EntityUtils.toString(response.getEntity()));
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
+	    
+	    
+	    
 	}
 	
 	/**
