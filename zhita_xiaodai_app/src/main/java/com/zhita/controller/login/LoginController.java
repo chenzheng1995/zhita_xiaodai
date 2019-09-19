@@ -1,11 +1,13 @@
 package com.zhita.controller.login;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 
+import com.zhita.dao.manage.BorrowMoneyMessageMapper;
 import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
@@ -44,6 +46,9 @@ public class LoginController {
 	
 	@Autowired
 	ThirdcalltongjiMapper thirdcalltongjiMapper;
+	
+	@Autowired
+	BorrowMoneyMessageMapper borrowMoneyMessageMapper;
 	
 
 
@@ -215,10 +220,11 @@ public class LoginController {
 								map.put("code", "411");
 								return map;
 				        }else {
+		                   	 BigDecimal canBorrowlines = borrowMoneyMessageMapper.getCanBorrowlines(companyId);
 							String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
 							int merchantId = intSourceService.getsourceId(sourceName);
 							int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
-									registrationTime, merchantId, useMarket, operatorsAuthentication);
+									registrationTime, merchantId, useMarket, operatorsAuthentication,canBorrowlines);
 							if (number == 1) {
 								id = loginService.getId(newPhone, companyId); // 获取该用户的id
 								map.put("Ncode","2000");
