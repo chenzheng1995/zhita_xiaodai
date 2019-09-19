@@ -139,7 +139,6 @@ public class Chanpayserviceimp implements Chanpayservice{
 		stdao.UpdatehowMany(pay.getUserId());
 		pay.setProfessionalWork("放款");
 		pay.setThirdparty_id(1);
-		pay.setPaymentbtiao("畅捷支付");
 		return stdao.AddPaymentRecord(pay);
 	}
 

@@ -5,12 +5,14 @@ import java.util.List;
 
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
+import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.User;
 
 public interface StatisticsDao {
 	
@@ -150,6 +152,18 @@ public interface StatisticsDao {
 	
 	
 	Integer UpdateBankcard(Bankcard bank);
+	
+	
+	Integer SelectUserRenNum(Integer userId);
+	
+	
+	Integer UserAuthenNum(User user);
+	
+	
+	Integer UserBlacklist(Integer userId);
+	
+	
+	Integer Addblacklist_user(BlacklistUser blackuser);
 }
 
 

@@ -14,5 +14,10 @@ public interface BankcardService {
 
 
 	Map<String, Object> SelectBankCard(Integer companyId);
+	
+	
+	Integer GetBanktype(String bankcardTypeName);
+	
+	
 
 }

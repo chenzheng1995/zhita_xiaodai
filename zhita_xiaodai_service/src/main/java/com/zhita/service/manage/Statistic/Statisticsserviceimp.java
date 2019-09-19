@@ -1,13 +1,15 @@
 package com.zhita.service.manage.Statistic;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,23 +17,33 @@ import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
+import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.StatisticsDao;
+import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
+import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.RreturnAuth;
+import com.zhita.model.manage.User;
+import com.zhita.util.MD5Utils;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
+import com.zhita.util.YunTongXunUtil;
 
 
 @Service
 public class Statisticsserviceimp extends BaseParameter implements Statisticsservice {
+	
+	@Autowired
+	private BankcardMapper bankcardMapper;
 	
 	
 	@Autowired
@@ -41,6 +53,11 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	
 	@Autowired
 	private PaymentRecordMapper padao;
+	
+	
+	
+	@Autowired
+	ThirdcalltongjiMapper thirdcalltongjiMapper;
 	
 
 	
@@ -347,6 +364,135 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	@Override
 	public Integer UpdateBan(Bankcard bank) {
 		return sdao.UpdateBankcard(bank);
+	}
+
+	@Override
+	public Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,
+			Integer conpanyId,String appNumber,String code) {
+		
+		 Map<String, Object> map = new HashMap<String, Object>();
+		  Integer banktypeid = bankcardMapper.SelectBankName(bankcardTypeName);
+		if(banktypeid!=null){
+			
+			 	String host = "https://bankver.market.alicloudapi.com";
+			    String path = "/creditop/BankCardQuery/BankCardVerification";
+			    String method = "GET";
+			    String appcode = "ea779e8386254a6db6b3d4b599dfea44";
+			    Map<String, String> headers = new HashMap<String, String>();
+			    //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+			    headers.put("Authorization", "APPCODE " + appcode);
+			    Map<String, String> querys = new HashMap<String, String>();
+			    querys.put("accountNo", accountNo);
+			    querys.put("bankPreMobile", bankPreMobile);
+			    querys.put("idCardCode", idCardCode);
+			    querys.put("name", name);
+			    
+			    
+
+			    
+	    		
+			    try {
+			    	/**
+			    	* 重要提示如下:
+			    	* HttpUtils请从
+			    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/src/main/java/com/aliyun/api/gateway/demo/util/HttpUtils.java
+			    	* 下载
+			    	*
+			    	* 相应的依赖请参照
+			    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
+			    	*/
+			    	HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
+			    	RreturnAuth rauth = JSON.parseObject(EntityUtils.toString(response.getEntity()), RreturnAuth.class);
+			    	if(rauth.getResult().getMessage().equals("银行卡鉴权成功")){//等于0是认证成功
+			    		Integer num = sdao.SelectUserRenNum(userId);
+			    		if(num>3){
+			    			int i = sdao.UserBlacklist(userId);
+			    			if(i==1){
+			    				BlacklistUser banuser = new BlacklistUser();
+			    				banuser.setCompanyid(conpanyId);
+			    				banuser.setName(name);
+			    				banuser.setPhone(bankPreMobile);
+			    				banuser.setIdcard(idCardCode);
+			    				banuser.setUserid(userId);
+			    				SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			    				try {
+			    					banuser.setOperationtime(Timestamps.dateToStamp1(sima.format(new Date())));
+								} catch (Exception e) {
+									// TODO: handle exception
+								}
+			    				banuser.setBlackType("5");
+			    				banuser.setDeleted("0");
+			    				
+			    				sdao.Addblacklist_user(banuser);
+			    				if(i==1){
+				    				map.put("code", 200);
+						    		map.put("Ncode", 200);
+						    		map.put("msg", "您重复认证超过三次,您已被拉入黑名单");
+				    			}else{
+				    				map.put("code", 0);
+						    		map.put("Ncode", 0);
+						    		map.put("msg", "拉入失败");
+				    			}
+			    			}
+			    		}else{
+			    			sdao.SelectUserRenNum(userId);
+			    			User user = new User();
+			    			user.setId(userId);
+			    			user.setAuthentication(num+1);
+			    			Integer i = sdao.UserAuthenNum(user);//修改用户认证次数
+			    			if(i!=null){
+			    				
+			    				
+			    				DateFormat format = new SimpleDateFormat("yyyy/M/d");
+			    				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+			    				if (result.length() == 31) {
+			    					result = 0 + MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+			    				}
+			    				System.out.println("验证码:"+code+":C:"+result);
+			    				if (result.equals(code)) {
+			    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+			    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
+			    					if("提交成功".equals(state)) {
+			    					String thirdtypeid = "1";
+			    					String date = System.currentTimeMillis()+"";
+			    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
+			    					}
+			    					map.put("Ncode","2000");
+			    					map.put("code","200");
+			    					map.put("msg", state);
+						    		map.put("desc", "认证成功");
+						    		return map;
+			    				} else {
+			    					map.put("Ncode","405");
+			    					map.put("msg", "发送失败");
+			    					map.put("Code","405");
+			    					return map;
+			    				}
+			    				
+			    			}else{
+			    				map.put("code", 0);
+					    		map.put("Ncode", 0);
+					    		map.put("msg", "认证失败");
+			    			}
+			    		}
+			    	}else{
+			    		
+			    		
+			    		map.put("code", 0);
+			    		map.put("Ncode", 0);
+			    		map.put("msg", rauth.getResult().getMessage());
+			    	}
+			    } catch (Exception e) {
+			    	e.printStackTrace();
+			    }
+			
+		}else{
+			map.put("code", "0");
+			map.put("Ncode", "0");
+			map.put("msg", "该卡不在放款范围");
+		}
+	   
+	    return map;
 	}
 		
 		

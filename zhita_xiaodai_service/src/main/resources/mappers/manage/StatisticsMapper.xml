@@ -365,4 +365,34 @@
 			<update id="UpdateBankcard" parameterType="com.zhita.model.manage.Bankcard">
 				update bankcard set attestationStatus = "1" where id =  (select b.id from (select max(id) as id from bankcard where userId =#{userId}) AS b)
 			</update>
+			
+			
+			<select id="SelectUserRenNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select authentication from user where id = #{userId}
+			</select>
+			
+			<update id="UserBlacklist" parameterType="java.lang.Integer">
+				update user set ifBlacklist = "1" where id = #{userId}
+			</update>
+			
+			
+			<update id="UserAuthenNum" parameterType="com.zhita.model.manage.User">
+				update user set authentication = #{authentication} where id = #{userId}
+			</update>
+			
+			
+			
+			<insert id="Addblacklist_user" parameterType="com.zhita.model.manage.BlacklistUser">
+				INSERT INTO blacklist_user(
+					companyId,
+					name,
+					phone,
+					idcard,
+					userId,
+					operator,
+					operationTime,
+					blackType,
+					deleted
+				)	
+			</insert>
 </mapper>
