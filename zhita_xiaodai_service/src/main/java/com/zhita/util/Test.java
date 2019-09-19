@@ -352,8 +352,19 @@ public class Test {
 //		PostAndGet pGet = new PostAndGet();
 //		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fenkong/Anti/AddUserPhone?"+jsonString+"&"+phone);	
 		
-		PostAndGet pGet = new PostAndGet();
-		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+"16516546546565");
+		String username = "13486070402";
+		String password ="";
+		String identityName = "";
+		String identityNo = "";
+		String crawlerType = "";
+		String appId = "";
+		String secret_key = "";
+		String sign = "";
+		PostUtil pUtil = new PostUtil();
+//		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+"16516546546565");
+		String param = "{'username':'"+username+"','password':'"+password+"','identityName':'"+identityName+"','identityNo':'"+identityNo+"','crawlerType':'"+crawlerType+"','appId':'"+appId+"','secret_key':'"+secret_key+"','sign':'"+sign+"'}";
+		pUtil.post("http://bbk.chao234.top/api/Gateway/index", param);
+		
 		
 	}
 
