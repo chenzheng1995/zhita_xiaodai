@@ -1,5 +1,9 @@
 package com.zhita.controller.source;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -10,6 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -384,4 +395,199 @@ public class SourceTongjiController {
 				
 		return listsource;
 	}
+	
+	/**
+	 * 渠道统计
+	 * 用于导出Excel的查询结果
+	 */
+	@RequestMapping("/exportSourceTongji.do")
+	public void exportSourceTongji(Integer companyId,Integer sourceid, String dateStart,String dateEnd, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		Date date=new Date();//得到当天时间
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		String today=sf.format(date);//(当天时间——年月日格式)
+		
+		String startTime = null;//开始时间（年月日格式）
+		String endTime = null;//结束时间（年月日格式）
+		if((dateStart!=null&&!"".equals(dateStart))&&(dateEnd!=null&&!"".equals(dateEnd))){
+			startTime = dateStart;
+			endTime = dateEnd;
+		}else{
+			startTime = today;
+			endTime = today;
+		}
+		
+
+		String company=intSourceService.querycompany(companyId);
+		List<TongjiSorce> listsource = new ArrayList<>();
+		RedisClientUtil redisClientUtil=new RedisClientUtil();
+		
+		String startTimestamps=null;
+		String endTimestamps=null;
+		try {
+			startTimestamps = Timestamps.dateToStamp(startTime);
+			endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List<String> listdate=DateListUtil.getDays(startTime, endTime);
+		
+		listsource=intSourceService.queryAllSourceBysourceid(companyId, sourceid);//查询出所有渠道
+		for (int i = 0; i < listsource.size(); i++) {
+			Integer sourceids=listsource.get(i).getSourceid();//渠道id
+			String sourcename=listsource.get(i).getSourcename();//渠道名
+			BigDecimal price=listsource.get(i).getPrice();////渠道的流量单价  
+			String clearingform=listsource.get(i).getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
+			
+			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);
+			listsource.get(i).setRegisternum(registernum);//真实的注册数
+			int uv=0;
+			String cvr=null;
+			for (int j = 0; j < listdate.size(); j++) {
+				int uvi=0;
+				if (redisClientUtil.getSourceClick(company + sourcename + listdate.get(j).replace("-", "/") + "xiaodaiKey") == null) {
+					uvi = 0;
+				} else {
+					uvi = Integer.parseInt(redisClientUtil.getSourceClick(company + sourcename + listdate.get(j).replace("-", "/") + "xiaodaiKey"));
+				}
+				uv=uv+uvi;
+			}
+			
+			listsource.get(i).setUv(uv);//uv
+			if ((registernum < 0.000001) || (uv == 0)) {
+				cvr = 0 + "%";// 得到转化率
+			} else {
+				cvr = (new DecimalFormat("#.00").format(registernum / uv * 100)) + "%";// 得到uv到注册人数转化率
+			}
+			listsource.get(i).setCvr(cvr);//uv到注册的转化率
+			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceids,startTimestamps,endTimestamps));//激活数
+			List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
+			int authencount=0;//认证人数
+			for (int j = 0; j < listuserid.size(); j++) {
+				Integer userid=listuserid.get(j);
+				int uatcount=intSourceService.queryIfExist(userid,startTimestamps,endTimestamps);
+				int bankcount=intSourceService.queryIfExist1(userid,startTimestamps,endTimestamps);
+				int operacount=intSourceService.queryIfExist2(userid,startTimestamps,endTimestamps);
+				if((uatcount==1)||(bankcount==1)||(operacount==1)){
+					authencount=authencount+1;
+				}
+			}
+			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
+			Integer applynum=intSourceService.queryNum(companyId, sourceids,startTimestamps, endTimestamps);//申请人数
+			listsource.get(i).setApplynum(applynum);//申请数
+			String cvr1=null;
+			if ((registernum < 0.000001) || (applynum == 0)) {
+				cvr1 = 0 + "%";// 得到注册到申请转化率
+			} else {
+				cvr1 = (new DecimalFormat("#.00").format( applynum/ registernum * 100)) + "%";// 得到注册到申请转化率
+			}
+			listsource.get(i).setCvr1(cvr1);// 得到注册到申请转化率
+			Integer machineauditpass=intSourceService.querypass(sourceids, startTimestamps, endTimestamps);
+			listsource.get(i).setMachineauditpass(machineauditpass);//通过人数(包含机审通过和人审通过)
+			int orderpass=intSourceService.queryorderpass(sourceids, startTimestamps, endTimestamps);
+			listsource.get(i).setOrderpass(orderpass);//已借款人数
+			String cvr2=null;
+			if ((registernum < 0.000001) || (orderpass == 0)) {
+				cvr2 = 0 + "%";// 得到借款率
+			} else {
+				cvr2 = (new DecimalFormat("#.00").format( orderpass/ registernum * 100)) + "%";// 得到借款率
+			}
+			listsource.get(i).setCvr2(cvr2);
+			
+			if(clearingform.equals("1")){
+				listsource.get(i).setFlowcharge(new BigDecimal(uv).multiply(price));
+			}
+			if(clearingform.equals("2")){
+				listsource.get(i).setFlowcharge(new BigDecimal(registernum).multiply(price));
+			}
+			if(clearingform.equals("3")){
+				listsource.get(i).setFlowcharge(new BigDecimal(orderpass).multiply(price));
+			}
+		}
+    	
+		// 查询有多少行记录
+				Integer count =listsource.size();
+				// 创建excel表的表头
+				String[] headers = { "渠道", "UV人数", "注册人数", "UV到注册转化率（%）", "激活人数", "认证人数", "申请人数", "注册到申请转化率（%）", "通过人数", "已借款人数","注册到借款转化率（%）","流量单价","流量统计"};
+				// 创建Excel工作簿
+				HSSFWorkbook workbook = new HSSFWorkbook();
+				// 创建一个工作表sheet
+				HSSFSheet sheet = workbook.createSheet();
+				// 创建第一行
+				HSSFRow row = sheet.createRow(0);
+				// 定义一个单元格,相当于在第一行插入了三个单元格值分别是 "姓名", "性别", "年龄"
+				HSSFCell cell = null;
+				// 插入第一行数据
+				for (int i = 0; i < headers.length; i++) {
+					cell = row.createCell(i);
+					cell.setCellValue(headers[i]);
+				}
+				// 追加数据
+				for (int i = 1; i <= count; i++) {
+					HSSFRow nextrow = sheet.createRow(i);
+					HSSFCell cell2 = nextrow.createCell(0);
+					cell2.setCellValue(listsource.get(i - 1).getSourcename());
+					cell2 = nextrow.createCell(1);
+					cell2.setCellValue(listsource.get(i - 1).getUv());
+					cell2 = nextrow.createCell(2);
+					cell2.setCellValue(listsource.get(i - 1).getRegisternum());
+					cell2 = nextrow.createCell(3);
+					cell2.setCellValue(listsource.get(i - 1).getCvr());
+					cell2 = nextrow.createCell(4);
+					cell2.setCellValue(listsource.get(i - 1).getActivatecount());
+					cell2 = nextrow.createCell(5);
+					cell2.setCellValue(listsource.get(i - 1).getAuthencount());
+					cell2 = nextrow.createCell(6);
+					cell2.setCellValue(listsource.get(i - 1).getApplynum());
+					cell2 = nextrow.createCell(7);
+					cell2.setCellValue(listsource.get(i - 1).getCvr1());
+					cell2 = nextrow.createCell(8);
+					cell2.setCellValue(listsource.get(i - 1).getMachineauditpass());
+					cell2 = nextrow.createCell(9);
+					cell2.setCellValue(listsource.get(i - 1).getOrderpass());
+					cell2 = nextrow.createCell(10);
+					cell2.setCellValue(listsource.get(i - 1).getCvr2());
+					cell2 = nextrow.createCell(11);
+					cell2.setCellValue(listsource.get(i - 1).getPrice().toString());
+					cell2 = nextrow.createCell(12);
+					cell2.setCellValue(listsource.get(i - 1).getFlowcharge().toString());
+				}
+				// 将excel的数据写入文件
+				ByteArrayOutputStream fos = null;
+				byte[] retArr = null;
+				try {
+					fos = new ByteArrayOutputStream();
+					workbook.write(fos);
+					retArr = fos.toByteArray();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					try {
+						fos.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				OutputStream os = response.getOutputStream();
+				try {
+					response.reset();
+					response.setHeader("Content-Disposition", "attachment; filename=agent_book.xls");// 要保存的文件名
+					response.setContentType("application/octet-stream; charset=utf-8");
+					os.write(retArr);
+					os.flush();
+				} finally {
+					if (os != null) {
+						os.close();
+					}
+				}
+	}
+		
+
 }
