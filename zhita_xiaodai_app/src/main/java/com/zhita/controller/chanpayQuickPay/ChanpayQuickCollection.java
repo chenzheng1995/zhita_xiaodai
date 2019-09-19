@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +28,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.ChanPayUtil;
+import com.zhita.dao.manage.BankcardMapper;
+import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.ReturnChanpay;
+import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.Statistic.Statisticsservice;
+import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
+import com.zhita.service.manage.newpayment.NewPaymentservice;
+import com.zhita.service.manage.order.IntOrderService;
+import com.zhita.service.manage.user.IntUserService;
 import com.zhita.util.HttpProtocolHandler;
 import com.zhita.util.HttpRequest;
 import com.zhita.util.HttpResponse;
@@ -42,6 +51,7 @@ import com.zhita.util.HttpResultType;
 import com.zhita.util.MD5;
 import com.zhita.util.RSA;
 import com.zhita.util.RedisClientUtil;
+import com.zhita.util.Timestamps;
 
 
 @Controller
@@ -77,6 +87,33 @@ public class ChanpayQuickCollection {
 	
 	@Resource
 	private Chanpayservice chanpayservice;
+	
+	
+	@Autowired
+	private NewPaymentservice newsim;
+	
+	
+	
+	@Autowired
+	IntOrderService intOrderService;
+	
+	
+	@Autowired
+	IntUserService intUserService;
+	
+	
+	
+	@Autowired
+    OrderdetailsMapper orderdetailsMapper;
+	
+	
+	
+	@Autowired
+	IntBorrowmonmesService intBorrowmonmesService;
+	
+	
+	@Autowired
+	private BankcardMapper bankcardMapper;
 	
 	
 	
@@ -608,20 +645,28 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_api_auth_sms")
-	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
+	public Map<String, Object> nmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,String bankcardName,Integer companyId,String code) {
+		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
 		Map<String, Object> map = new HashMap<String, Object>();
+		Integer banktypeid = bankcardMapper.SelectBankName(bankcardName);
+		System.out.println("开户行:"+bankcardName);
+		if(banktypeid!=null){
+			
+		if(oriAuthTrxId != null && SmsCode != null && oriAuthTrxId != null){
+		
+		if(paymentname.getLoanSource().equals("畅捷支付")){
 		Map<String, String> origMap = new HashMap<String, String>();
 		Bankcard bank = new Bankcard();
 		bank.setAttestationStatus("0");
 		bank.setUserId(userId);//登陆人ID
-		bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
+		bank.setBankcardTypeId(banktypeid);//银行卡类型
 		bank.setBankcardName(BkAcctNo);//卡号
 		bank.setTiedCardPhone(MobNo);//手机号
 		bank.setDeleted("0");
 		bank.setIDcardnumber(IDNo);//身份证号
 		bank.setCstmrnm(CstmrNm);//持卡人姓名
 		
-		if(oriAuthTrxId != null && SmsCode != null && oriAuthTrxId != ""){
+		
 			System.out.println("数据:"+oriAuthTrxId);
 			// 2.1 基本参数
 			origMap = setCommonMap(origMap);
@@ -662,12 +707,52 @@ public class ChanpayQuickCollection {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+		
+		}else{
+			RedisClientUtil redisClientUtil = new RedisClientUtil();
+		    String key = MobNo + "xiaodaiKey";
+		    String redisCode = redisClientUtil.get(key);
+		    if (redisCode == null) {
+		     map.put("Ncode","402");
+		     map.put("msg", "验证码已过期，请重新发送");
+		     map.put("code", "402");
+		     return map;
+		    }
+		    if (redisCode.equals(code)) {
+		     redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
+		     Bankcard bank = new Bankcard();
+			    bank.setUserId(userId);
+			    bank.setBankcardTypeId(banktypeid);
+			    bank.setBankcardName(BkAcctNo);
+			    bank.setTiedCardPhone(MobNo);
+			    bank.setIDcardnumber(IDNo);
+			    bank.setDeleted("0");
+			    bank.setCstmrnm(CstmrNm);
+				bank.setAttestationStatus("1");
+				servie.AddBankcard(bank);
+				 map.put("Ncode","200");
+			     map.put("msg", "验证成功");
+			     map.put("code", "200");
+			     return map;
+		    }else{
+		    	 map.put("Ncode","0");
+			     map.put("msg", "验证错误");
+			     map.put("code", "0");
+			     return map;
+		    }
+		
+		
+		}
 		}else{
 			map.put("code", 0);
 			map.put("Ncode", 0);
 			map.put("msg", "OriAuthTrxId，SmsCode不能为空");
 		}
-		
+		}else{
+			map.put("code", 0);
+			map.put("Ncode", 0);
+			map.put("msg", "开户行不能未空");
+		}
 		return map;
 	}
 	
@@ -912,12 +997,18 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("nmg_biz_api_quick_payment")
-	public Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt) {
+	public Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,Integer companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
+		
+			
 		
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
+				if(paymentname.getLoanSource().equals("钊力")){
+					
+				}else{
 			Map<String, String> origMap = new HashMap<String, String>();
 			// 2.1 基本参数 
 			origMap = setCommonMap(origMap);
@@ -979,6 +1070,7 @@ public class ChanpayQuickCollection {
 					e.printStackTrace();
 				}
 				System.out.println(result);
+				}
 			}else{
 				map.put("msg", "该订单已还");
 				map.put("Ncode", 2000);
@@ -991,6 +1083,7 @@ public class ChanpayQuickCollection {
 				map.put("Ncode", 0);
 				map.put("msg", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 			}
+		
 		return map;
 	}
 

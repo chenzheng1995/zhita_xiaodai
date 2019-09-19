@@ -76,4 +76,8 @@ public interface Statisticsservice {
 	
 	Integer UpdateBan(Bankcard bank);
 	
+	
+	Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,Integer conpanyId
+			, String appNumber, String code);
+	
 }

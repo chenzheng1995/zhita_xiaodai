@@ -749,4 +749,11 @@ public class OrderController {
 						}
 	
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping("Hkuanhuidiao")
+	public void OrderStuts(String status){
+		intOrderService.UpdateOrdersUpdate();
+	}
 }

@@ -364,7 +364,7 @@ public class ZpayHelper {
 		//YuXia(new BigDecimal("2.0"), "test_" + "20190917176545233652");
 	//	Select();
 //		billId = "test_201909017175056";
-		Receivables(new BigDecimal("1.0"), "test_20190917176545233652"); 
+		Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
 //		Receivables(billId, money, createTime, returnUrl)
 //		SelectFF();
 	}

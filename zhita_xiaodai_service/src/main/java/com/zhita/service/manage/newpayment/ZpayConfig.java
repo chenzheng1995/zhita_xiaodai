@@ -29,6 +29,6 @@ public class ZpayConfig {
     public final static String GATEWAY_URL="https://z.ibwin.cn:4433/api/gateway";
    // https://z.ibwin.cn:4433/api/gateway
     //企业支付——异步通知url
-    public static final String RECHARGE_NOTIFY_NEW="http://new";
+    public static final String RECHARGE_NOTIFY_NEW="mdbhk.rong51dai.com";
 
 }
