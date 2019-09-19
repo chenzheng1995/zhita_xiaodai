@@ -401,8 +401,12 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    	* 相应的依赖请参照
 			    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
 			    	*/
-			    	HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
-			    	RreturnAuth rauth = JSON.parseObject(EntityUtils.toString(response.getEntity()), RreturnAuth.class);
+			    	HttpResponse responsea = HttpUtils.doGet(host, path, method, headers, querys);
+			    	String responses = EntityUtils.toString(responsea.getEntity());
+			    	System.out.println("数据:"+responses);
+			    	if(responses!=null){
+			    		if(responses.length()!=0){
+			    	RreturnAuth rauth = JSON.parseObject(responses, RreturnAuth.class);
 			    	if(rauth.getResult().getMessage().equals("银行卡鉴权成功")){//等于0是认证成功
 			    		Integer num = sdao.SelectUserRenNum(userId);
 			    		if(num>3){
@@ -426,7 +430,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    				sdao.Addblacklist_user(banuser);
 			    				if(i==1){
 				    				map.put("code", 200);
-						    		map.put("Ncode", 200);
+						    		map.put("Ncode", 2000);
 						    		map.put("msg", "您重复认证超过三次,您已被拉入黑名单");
 				    			}else{
 				    				map.put("code", 0);
@@ -482,15 +486,30 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    		map.put("Ncode", 0);
 			    		map.put("msg", rauth.getResult().getMessage());
 			    	}
+			    		}else{
+			    			map.put("code", 0);
+				    		map.put("Ncode", 0);
+				    		map.put("msg", "该卡无法认证,请换张卡");
+			    		}
+			    		
+			    		
+			    	}else{
+			    		map.put("code", 0);
+			    		map.put("Ncode", 0);
+			    		map.put("msg", "该卡无法认证,请换张卡");
+			    	}
 			    } catch (Exception e) {
 			    	e.printStackTrace();
 			    }
+			    
+			  
 			
 		}else{
 			map.put("code", "0");
 			map.put("Ncode", "0");
 			map.put("msg", "该卡不在放款范围");
 		}
+		
 	   
 	    return map;
 	}

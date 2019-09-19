@@ -59,7 +59,6 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		loan.setName("钊力");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
 		
-		
 		RedisClientUtil redis = new RedisClientUtil();
 		redis.set("NewChanpaymentId", "NewChanpaymentId "+userId);
 		if(a.equals("1")){
@@ -78,7 +77,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		        payParams.put("skName", ban.getCstmrnm());//收款人姓名东新雨
 		        payParams.put("skUnpayAccount", ban.getBankcardName());//收款人账号"6214835901884138"
 		        payParams.put("skBankCode", maputil.getBankMap(ban.getBankcardTypeName()));//收款人银行编码
-		        payParams.put("skCardCode", ban.getIDcardnumber());//收款银行卡号
+		        payParams.put("skCardCode", ban.getBankcardName());//收款银行卡号
 		        payParams.put("skMobile", ban.getTiedCardPhone());//银行预留手机号
 		        payParams.put("skIdCode", ban.getIDcardnumber());//收款人身份证号"420621199905157170"
 		        String resultSign= SignUtils.getSign(payParams,ZpayConfig.NEW_MD5_KEY).toUpperCase();
@@ -94,17 +93,11 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 			        	String tradeNo = jsonObject.getString("tradeNo");
 			        	if(code.equals("SUCCESS")){
 			        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
-			        			map.put("code", 200);
-				        		map.put("Ncode", 2000);
 				        		map.put("msg", maputil.getMap(status));
 				        		map.put("tradeNo", tradeNo);
 				        		System.out.println("数据:"+jsonObject);
 			        			return map;
 			        		}
-			        	}else{
-			        		map.put("code", 0);
-			        		map.put("Ncode", 0);
-			        		map.put("msg", maputil.getCodeMap(code));
 			        	}
 			        }
 				} catch (Exception e) {
@@ -128,7 +121,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 
 
 	@Override
-	public Map<String, Object> Payment(BigDecimal amount,String billId,String returnUrl,Integer companyId,Integer userId) {
+	public Map<String, Object> Payment(BigDecimal amount,String returnUrl,Integer companyId,Integer userId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Bankcard ba = new Bankcard();
 		ba.setCompanyId(companyId);
@@ -139,7 +132,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		loan.setCompanyId(companyId);
 		loan.setName("钊力");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
-		
+		String billId = stdao.SelectOrderNumber(userId);//订单编号
 		
 		RedisClientUtil redis = new RedisClientUtil();
 		redis.set("NewChanpaymentId", "NewChanpaymentId "+userId);
@@ -178,18 +171,17 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        	String url = jsonObject.getString("qrUrl");
 	        	String orderNumber = jsonObject.getString("orderId");
 	        	String number = jsonObject.getString("tradeNo");//还款流水号
+	        	String msg = jsonObject.getString("msg");
 	        	if(code.equals("SUCCESS")){
 	        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
 	        			map.put("code", 200);
 		        		map.put("Ncode", 200);
 	        			map.put("url", url);
+	        			map.put("msg", msg);
+	        			map.put("status", 2);
 	        			map.put("loaName", "钊力");
 	        			return map;
 	        		}
-	        	}else{
-	        		map.put("code", 0);
-	        		map.put("Ncode", 0);
-	        		return map;
 	        	}
 	        }
 		} catch (Exception e) {

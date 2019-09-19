@@ -1,5 +1,9 @@
 package com.zhita.service.manage.homepagetongji;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -9,11 +13,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -521,6 +531,292 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("pageutil", pageUtil);
 		return map;
 	}
+	
+	/**
+	 * 回收率报表
+	 * 用于导出excel的查询结果
+	 * 
+	 * @param queryJson
+	 * @return
+	 * @throws IOException
+	 */
+	public void exportRecoveryStatement(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		int lifeofloan = homepageTongjiMapper.querylifeOfLoan(companyId);//查询借款期限
+		List<HomepageTongji> listtongji=new ArrayList<HomepageTongji>();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date=new Date();
+		Calendar calendar = Calendar.getInstance(); //创建Calendar 的实例
+		calendar.set(Calendar.DAY_OF_MONTH,-1); //当前时间减去一天，即一天前的时间
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = DateUtils.addDays(date, -lifeofloan);
+		Date endDate = DateUtils.addDays(date, lifeofloan);
+		//String date=sf.format(d);//date为当天时间(格式为年月日)
+		
+		String startTime = null;//开始时间（年月日格式）
+		String endTime = null;//结束时间（年月日格式）
+		if((shouldrepayStartTime!=null&&!"".equals(shouldrepayStartTime))&&(shouldrepayEndTime!=null&&!"".equals(shouldrepayEndTime))){
+			startTime = shouldrepayStartTime;
+			endTime = shouldrepayEndTime;
+		}else{
+			startTime = sf.format(startDate);
+			endTime = sf.format(endDate);
+		}
+		
+		List<String> list=DateListUtil.getDays(startTime, endTime);
+		
+		for (int i = 0; i < list.size(); i++) {
+			String startTimefor = list.get(i);
+			String endTimefor = list.get(i);
+			
+			String startTimestampsfor = null;//开始时间（时间戳格式）
+			String endTimestampsfor = null;//结束时间（时间戳格式）
+			try {
+				startTimestampsfor = Timestamps.dateToStamp(startTimefor);
+				endTimestampsfor = (Long.parseLong(Timestamps.dateToStamp(endTimefor))+86400000)+"";
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			
+			HomepageTongji homepageTongji=new HomepageTongji();//循环一次new出一个HomepageTongji实体类
+			int shouldorder=homepageTongjiMapper.shouldorder(companyId, startTimestampsfor, endTimestampsfor);//（应还订单 ）
+			int overduenotrepay=homepageTongjiMapper.overduenotrepay(companyId, startTimestampsfor, endTimestampsfor);//（逾前未还）
+			int overduerepay=0;//（逾前已还）
+			int overdueafterrepay=0;//（逾后已还）
+			List<Orders> listorders=homepageTongjiMapper.overduerepay(companyId, startTimestampsfor, endTimestampsfor);//已还款订单  还款表
+			List<Orders> listordersoff=homepageTongjiMapper.overduerepayoff(companyId, startTimestampsfor, endTimestampsfor);//已还款订单    线下还款表
+			List<Orders> listordersbank=homepageTongjiMapper.overduerepaybank(companyId, startTimestampsfor, endTimestampsfor);//已还款订单    银行卡扣款表
+			listorders.addAll(listordersoff);//合并两个集合
+			listorders.addAll(listordersbank);//合并后的集合再次合并第三个集合
+			
+			for (int j = 0; j < listorders.size(); j++) {
+				try {
+					if(!listorders.isEmpty()&&listorders.size()!=0){
+						String realtime=Timestamps.stampToDate(listorders.get(j).getRealtime());//实还时间
+						String shouletime=Timestamps.stampToDate(listorders.get(j).getShouldReturnTime());//应还时间
+					
+						if(sdf.parse(realtime).getTime()>sdf.parse(shouletime).getTime()){//转成long类型比较
+							System.out.println("实际还款时间大于应还时间");
+							overdueafterrepay++;
+						}else if(sdf.parse(realtime).getTime()<=sdf.parse(shouletime).getTime()){
+							System.out.println("还款时间小于应还时间");
+							overduerepay++;
+						}
+					}
+					} catch (ParseException e) {
+						e.printStackTrace();
+				}
+			}
+			int overdueafternotrepay=homepageTongjiMapper.overdueafternotrepay(companyId,startTimestampsfor, endTimestampsfor);//（逾后未还）
+			int baddebt=homepageTongjiMapper.baddebt(companyId,startTimestampsfor, endTimestampsfor);//（已坏账）
+			
+			
+			BigDecimal shouldmoney = new BigDecimal("0.00");//（实际应还金额）
+			List<Orderdetails> orderdetails=homepageTongjiMapper.shouldmoney(companyId,startTimestampsfor, endTimestampsfor);
+			for (int k = 0; k < orderdetails.size(); k++) {
+				if(orderdetails.get(k).getInterestPenaltySum()==null){
+					orderdetails.get(k).setInterestPenaltySum(new BigDecimal("0.00") );
+				}
+				BigDecimal shouldmoneyfor=orderdetails.get(k).getShouldReapyMoney().add(orderdetails.get(k).getInterestPenaltySum());
+				shouldmoney=shouldmoney.add(shouldmoneyfor);
+			}
+			BigDecimal repaymentmoney=homepageTongjiMapper.realymoney(companyId,startTimestampsfor, endTimestampsfor);//（线上实还金额，即还款表）
+			
+			BigDecimal deratemoneyoff=homepageTongjiMapper.deratemoneyunder(companyId,startTimestampsfor, endTimestampsfor);//线下实还金额，即线下减免表
+			if(deratemoneyoff==null){
+				deratemoneyoff=new BigDecimal("0.00");
+			}
+		
+			BigDecimal deferredmoney=new BigDecimal("0.00");//（延期费）
+			BigDecimal defmoney=homepageTongjiMapper.deferredmoney(companyId,startTimestampsfor, startTimestampsfor);//（线上延期费）
+			if(defmoney==null){
+				defmoney=new BigDecimal("0.00");
+			}
+			BigDecimal defmoneylay=homepageTongjiMapper.deferredmoneylay(companyId, startTimestampsfor, startTimestampsfor);//（人工延期费）
+			if(defmoneylay==null){
+				defmoneylay=new BigDecimal("0.00");
+			}
+			deferredmoney=defmoney.add(defmoneylay);
+			
+			BigDecimal overduemoney = new BigDecimal("0.00");//（逾期费）
+			List<Orderdetails> listorderdetail=homepageTongjiMapper.overduemoney(companyId,startTimestampsfor, endTimestampsfor);
+			for (int o = 0; o < listorderdetail.size(); o++) {
+				if(listorderdetail.get(o).getInterestPenaltySum()==null){
+					listorderdetail.get(o).setInterestPenaltySum(new BigDecimal("0.00") );
+				}
+				overduemoney=overduemoney.add(listorderdetail.get(o).getInterestPenaltySum());
+			}
+			
+			BigDecimal deratemoney=new BigDecimal("0.00");//（线上减免金额）
+			BigDecimal deratemoneyacc=homepageTongjiMapper.deratemoneyon(companyId,startTimestampsfor, endTimestampsfor);//线上，即是线上减免金额
+			if(deratemoneyacc==null){
+				deratemoneyacc=new BigDecimal("0.00");
+			}
+			deratemoney=deratemoneyacc;
+			
+			BigDecimal offderatemoney=homepageTongjiMapper.offmoney(companyId, startTimestampsfor, endTimestampsfor);//线下减免金额
+			
+			BigDecimal bankmoney = homepageTongjiMapper.bankMoney(companyId,startTimestampsfor, endTimestampsfor);//银行扣款金额
+			
+			if(shouldmoney==null){
+				shouldmoney=new BigDecimal("0.00");
+			}
+			if(repaymentmoney==null){
+				repaymentmoney=new BigDecimal("0.00");
+			}
+			if(deratemoneyoff==null){
+				deratemoneyoff=new BigDecimal("0.00");
+			}
+		
+			if(deratemoney==null){
+				deratemoney=new BigDecimal("0.00");
+			}
+			if(offderatemoney==null){
+				offderatemoney=new BigDecimal("0.00");
+			}
+			if(bankmoney==null){
+				bankmoney=new BigDecimal("0.00");
+			}
+			
+			BigDecimal originalshouldmoney=shouldmoney.add(deratemoney).add(bankmoney);//原始应还金额
+			
+			BigDecimal tobepaidmoney=originalshouldmoney.subtract(repaymentmoney).subtract(deratemoneyoff).subtract(deratemoney).subtract(offderatemoney).subtract(bankmoney);//待还金额
+			String overduecvr="";
+			if(overdueafternotrepay!=0||baddebt!=0||shouldorder!=0){
+				overduecvr=(new DecimalFormat("0.00").format((overdueafternotrepay+baddebt)*1.0/shouldorder*100))+"%";//逾期率
+			}else{
+				overduecvr="0.00%";
+			}
+			//int derateaccon = homepageTongjiMapper.derateaccon(companyId,startTimestampsfor, endTimestampsfor);//线上减免已还清
+			//int derateaccunder = homepageTongjiMapper.derateaccunder(companyId,startTimestampsfor, endTimestampsfor);//线下减免已还清
+			//int deratebank = homepageTongjiMapper.deratebank(companyId,startTimestampsfor, endTimestampsfor);//银行扣款已还清
+			String recovery=null;
+			if(overduerepay!=0||overdueafterrepay!=0||shouldorder!=0){
+				recovery=(new DecimalFormat("#0.00").format((overduerepay+overdueafterrepay)*1.0/(shouldorder)*100))+"%";//回收率
+			}else{
+				recovery="0.00%";
+			}
+			
+			homepageTongji.setShouldtime(list.get(i));//应还日期
+			homepageTongji.setShouldorder(shouldorder);//应还订单
+			homepageTongji.setOverduenotrepay(overduenotrepay);//（逾前未还）
+			homepageTongji.setOverduerepay(overduerepay);////逾前已还
+			homepageTongji.setOverdueafterrepay(overdueafterrepay);//逾后已还
+			homepageTongji.setOverdueafternotrepay(overdueafternotrepay);//逾后未还
+			homepageTongji.setBaddebt(baddebt);//已坏账
+			homepageTongji.setOriginalshouldmoney(originalshouldmoney);//原始应还
+			homepageTongji.setShouldmoney(shouldmoney);//实际应还金额（期限内应还金额+逾期费）
+			homepageTongji.setRealymoney(repaymentmoney);//线上实际还款金额
+			homepageTongji.setOffrealymoney(deratemoneyoff);//线下实际还款金额
+			homepageTongji.setDeferredmoney(deferredmoney);//延期费
+			homepageTongji.setOverduemoney(overduemoney);//逾期费
+			homepageTongji.setDeratemoney(deratemoney);//线上减免金额
+			homepageTongji.setOffderatemoney(offderatemoney);//线下减免金额
+			homepageTongji.setBankdeduction(bankmoney);//银行扣款金额
+			homepageTongji.setTobepaid(tobepaidmoney);//待还金额
+			homepageTongji.setOverduecvr(overduecvr);//逾期率
+			homepageTongji.setRecovery(recovery);//回收率
+			
+			listtongji.add(homepageTongji);
+		}
+		DateListUtil.ListSort3(listtongji);//按照应还时间进行倒排序
+		
+		// 查询有多少行记录
+		Integer count =listtongji.size();
+		// 创建excel表的表头
+		String[] headers = { "应还日期", "应还订单", "逾前未还", "逾前已还", "逾后未还", "逾后已还", "已坏账", "原始应还", "实际应还", "线上实还","线下实还","延期费","逾期费","线上减免","线下减免","银行扣款","待还金额","逾期率","回收率" };
+		// 创建Excel工作簿
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 创建一个工作表sheet
+		HSSFSheet sheet = workbook.createSheet();
+		// 创建第一行
+		HSSFRow row = sheet.createRow(0);
+		// 定义一个单元格,相当于在第一行插入了三个单元格值分别是 "姓名", "性别", "年龄"
+		HSSFCell cell = null;
+		// 插入第一行数据
+		for (int i = 0; i < headers.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(headers[i]);
+		}
+		// 追加数据
+		for (int i = 1; i <= count; i++) {
+			HSSFRow nextrow = sheet.createRow(i);
+			HSSFCell cell2 = nextrow.createCell(0);
+			cell2.setCellValue(listtongji.get(i - 1).getShouldtime());
+			cell2 = nextrow.createCell(1);
+			cell2.setCellValue(listtongji.get(i - 1).getShouldorder());
+			cell2 = nextrow.createCell(2);
+			cell2.setCellValue(listtongji.get(i - 1).getOverduenotrepay());
+			cell2 = nextrow.createCell(3);
+			cell2.setCellValue(listtongji.get(i - 1).getOverduerepay());
+			cell2 = nextrow.createCell(4);
+			cell2.setCellValue(listtongji.get(i - 1).getOverdueafternotrepay());
+			cell2 = nextrow.createCell(5);
+			cell2.setCellValue(listtongji.get(i - 1).getOverdueafterrepay());
+			cell2 = nextrow.createCell(6);
+			cell2.setCellValue(listtongji.get(i - 1).getBaddebt());
+			cell2 = nextrow.createCell(7);
+			cell2.setCellValue(listtongji.get(i - 1).getOriginalshouldmoney().toString());
+			cell2 = nextrow.createCell(8);
+			cell2.setCellValue(listtongji.get(i - 1).getShouldmoney().toString());
+			cell2 = nextrow.createCell(9);
+			cell2.setCellValue(listtongji.get(i - 1).getRealymoney().toString());
+			cell2 = nextrow.createCell(10);
+			cell2.setCellValue(listtongji.get(i - 1).getOffrealymoney().toString());
+			cell2 = nextrow.createCell(11);
+			cell2.setCellValue(listtongji.get(i - 1).getDeferredmoney().toString());
+			cell2 = nextrow.createCell(12);
+			cell2.setCellValue(listtongji.get(i - 1).getOverduemoney().toString());
+			cell2 = nextrow.createCell(13);
+			cell2.setCellValue(listtongji.get(i - 1).getDeratemoney().toString());
+			cell2 = nextrow.createCell(14);
+			cell2.setCellValue(listtongji.get(i - 1).getOffderatemoney().toString());
+			cell2 = nextrow.createCell(15);
+			cell2.setCellValue(listtongji.get(i - 1).getBankdeduction().toString());
+			cell2 = nextrow.createCell(16);
+			cell2.setCellValue(listtongji.get(i - 1).getTobepaid().toString());
+			cell2 = nextrow.createCell(17);
+			cell2.setCellValue(listtongji.get(i - 1).getOverduecvr());
+			cell2 = nextrow.createCell(18);
+			cell2.setCellValue(listtongji.get(i - 1).getRecovery());
+		}
+		// 将excel的数据写入文件
+		ByteArrayOutputStream fos = null;
+		byte[] retArr = null;
+		try {
+			fos = new ByteArrayOutputStream();
+			workbook.write(fos);
+			retArr = fos.toByteArray();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		OutputStream os = response.getOutputStream();
+		try {
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=agent_book.xls");// 要保存的文件名
+			response.setContentType("application/octet-stream; charset=utf-8");
+			os.write(retArr);
+			os.flush();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
+	}
+	
+	
 	
 	public List<Orderdetails> test(){
 		List<Orderdetails> list=homepageTongjiMapper.test();

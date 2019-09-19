@@ -395,4 +395,10 @@
 					deleted
 				)	
 			</insert>
+			
+			
+			<select id="SelectOrderNumber" parameterType="java.lang.Integer" resultType="java.lang.String">
+				select orderNumber from orders where orderStatus  not like "3" and userId = #{userId}
+
+			</select>
 </mapper>

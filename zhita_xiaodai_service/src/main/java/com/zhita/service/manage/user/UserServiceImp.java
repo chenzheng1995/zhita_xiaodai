@@ -82,6 +82,7 @@ public class UserServiceImp implements IntUserService{
     	for (int i = 0; i <list.size(); i++) {
     		list.get(i).setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getPhone())));//将手机号进行脱敏
     		list.get(i).setRegistetime(Timestamps.stampToDate(list.get(i).getRegistetime()));
+    		list.get(i).setLogintime(Timestamps.stampToDate(list.get(i).getLogintime()));
     		if(list.get(i).getUserattestationstatus()==null||"".equals(list.get(i).getUserattestationstatus())){
     			list.get(i).setUserattestationstatus("0");
     		}

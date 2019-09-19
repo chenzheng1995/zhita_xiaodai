@@ -1,6 +1,10 @@
 package com.zhita.controller.homepagetongji;
 
+import java.io.IOException;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +37,20 @@ public class HomepageTongjiController {
 	public Map<String, Object> recoveryStatement(Integer companyId,Integer page,String shouldrepayStartTime,String shouldrepayEndTime){
 		Map<String, Object> map=intHomepagetongjiService.recoveryStatement(companyId,page,shouldrepayStartTime, shouldrepayEndTime);
 		return map;
+	}
+	
+	/**
+	 * 回收率报表
+	 * 用于导出excel的查询结果
+	 * 
+	 * @param queryJson
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/exportRecoveryStatement.do")
+	public void exportRecoveryStatement(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		intHomepagetongjiService.exportRecoveryStatement(companyId, shouldrepayStartTime, shouldrepayEndTime, request, response);
 	}
 	
 	//test

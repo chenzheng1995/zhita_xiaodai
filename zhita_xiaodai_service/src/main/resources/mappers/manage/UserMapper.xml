@@ -262,7 +262,7 @@
 	</update>
 	<!-- 后台管理           用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)-->
 	<select id="queryUserList" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
-		select u.id,u.name,u.phone,u.registeTime,u.shareOfState,u.registeClient,s.sourcename,uat.attestationStatus userattestationstatus,b.attestationStatus bankattestationstatus,o.attestationStatus operaattestationstatus from  
+		select u.id,u.name,u.phone,u.registeTime,u.loginTime,u.shareOfState,u.registeClient,s.sourcename,uat.attestationStatus userattestationstatus,b.attestationStatus bankattestationstatus,o.attestationStatus operaattestationstatus from  
 		user u LEFT JOIN source s on u.sourceid=s.id left join user_attestation uat on uat.userId=u.id LEFT JOIN bankcard b on b.userId=u.id LEFT JOIN operator o on o.userId=u.id
 		where u.companyId=#{companyId,jdbcType=INTEGER} and u.ifBlacklist=0
 	        <if test="name != null and name!='' ">
