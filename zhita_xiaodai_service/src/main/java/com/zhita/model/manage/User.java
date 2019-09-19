@@ -73,8 +73,28 @@ public class User {
     private String state;//状态（“0”表示有效，“1”表示无效）
     
     private String model;//模型数据是否命中
-
     
+    private String userAgentInfo;//模型数据是否命中
+
+    private Integer authentication;//认证次数
+    
+    private Integer userId;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getAuthentication() {
+		return authentication;
+	}
+
+	public void setAuthentication(Integer authentication) {
+		this.authentication = authentication;
+	}
 
 	public Integer getId() {
 		return id;
@@ -356,4 +376,11 @@ public class User {
 		this.model = model;
 	}
 	
+	public String getUserAgentInfo() {
+		return userAgentInfo;
+	}
+
+	public void setUserAgentInfo(String userAgentInfo) {
+		this.userAgentInfo = userAgentInfo;
+	}
 }

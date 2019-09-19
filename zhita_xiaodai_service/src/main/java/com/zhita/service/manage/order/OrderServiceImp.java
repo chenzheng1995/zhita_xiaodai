@@ -27,6 +27,7 @@ import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil2;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
@@ -985,6 +986,13 @@ public class OrderServiceImp implements IntOrderService {
 	public String getrealtime(int userId) {
 		String realtime = ordersMapper.getrealtime(userId);
 		return realtime;
+	}
+
+	@Override
+	public Map<String, Object> UpdateOrdersUpdate() {
+		RedisClientUtil redis = new RedisClientUtil();
+		redis.get("orderId");
+		return null;
 	}
 
 }

@@ -152,5 +152,11 @@
 	<select id="getBankcardtype" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.BankcardType">
 		select * from Bankcard_type where companyId = #{companyId}
 	</select>
+	
+	
+	<select id="SelectBankName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select id from Bankcard_type where bankcardTypeName = #{bankcardTypeName}
+	</select>
+	
 
 </mapper>

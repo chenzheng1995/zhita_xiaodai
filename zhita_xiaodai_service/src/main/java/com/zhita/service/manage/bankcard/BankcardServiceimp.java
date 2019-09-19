@@ -63,8 +63,19 @@ public class BankcardServiceimp implements BankcardService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<BankcardType> banks = bankcardMapper.getBankcardtype(companyId);
 		map.put("BankcardType", banks);
+		map.put("code", 200);
+		map.put("Ncode", 2000);
 		return map;
 	}
+
+
+	@Override
+	public Integer GetBanktype(String bankcardTypeName) {
+		// TODO Auto-generated method stub
+		return bankcardMapper.SelectBankName(bankcardTypeName);
+	}
+
+
 
 
 

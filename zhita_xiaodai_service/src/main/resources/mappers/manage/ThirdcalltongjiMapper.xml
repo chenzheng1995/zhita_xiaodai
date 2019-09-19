@@ -86,4 +86,10 @@
       insert into thirdcalltongji (thirdtypeid, date, companyId)
       values(#{thirdtypeid},#{date},#{companyId})
     </insert>
+    
+           <insert id="setthirdcalltongji2" parameterType="java.util.Map">
+      insert into thirdcalltongji (thirdtypeid, date, companyId,userId)
+      values(#{thirdtypeid},#{date},#{companyId},#{userId})
+    </insert>
+    
 </mapper>

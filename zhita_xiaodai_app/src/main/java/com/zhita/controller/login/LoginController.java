@@ -152,7 +152,6 @@ public class LoginController {
 	public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient,
 			String sourceName, String useMarket) {
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		String loginStatus = "1";
 		PhoneDeal phoneDeal = new PhoneDeal();
 		String newPhone = phoneDeal.encryption(phone);
@@ -209,23 +208,32 @@ public class LoginController {
 					redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
 					String registrationTime = System.currentTimeMillis() + ""; // 获取当前时间戳
 					if (id == null) {
-						String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
-						int merchantId = intSourceService.getsourceId(sourceName);
-						int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
-								registrationTime, merchantId, useMarket, operatorsAuthentication);
-						if (number == 1) {
-							id = loginService.getId(newPhone, companyId); // 获取该用户的id
-							map.put("Ncode","2000");
-							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
-							map.put("code", "201");
-							map.put("loginStatus", loginStatus);
-							map.put("userId", id);
-							map.put("phone", phone);
-						} else {
-							map.put("Ncode","405");
-							map.put("msg", "用户登录失败，用户数据插入失败");
-							map.put("code", "405");
-						}
+				        String status = intSourceService.getstatus(companyId,sourceName);
+				        if("2".equals(status)) {
+								map.put("Ncode","2000");
+								map.put("msg", "渠道已关闭");
+								map.put("code", "411");
+								return map;
+				        }else {
+							String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
+							int merchantId = intSourceService.getsourceId(sourceName);
+							int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
+									registrationTime, merchantId, useMarket, operatorsAuthentication);
+							if (number == 1) {
+								id = loginService.getId(newPhone, companyId); // 获取该用户的id
+								map.put("Ncode","2000");
+								map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
+								map.put("code", "201");
+								map.put("loginStatus", loginStatus);
+								map.put("userId", id);
+								map.put("phone", phone);
+							} else {
+								map.put("Ncode","405");
+								map.put("msg", "用户登录失败，用户数据插入失败");
+								map.put("code", "405");
+							}
+				        }
+
 					} else {
 						String loginTime = System.currentTimeMillis() + "";
 						int num = loginService.updateStatus(loginStatus, newPhone, companyId, loginTime);

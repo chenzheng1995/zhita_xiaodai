@@ -327,4 +327,9 @@
 	<select id="querycompany" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select company from company where companyId=#{arg0} and deleted=0
 	</select>
+	
+		<select id="getstatus" parameterType="java.util.Map" resultType="java.lang.String">
+		select status from source where companyId=#{companyId} and sourceName=#{sourceName} and deleted=0
+	</select>
+	
 </mapper>

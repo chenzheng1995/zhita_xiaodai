@@ -24,5 +24,7 @@ public interface BankcardMapper {
 	Map<String, Object> getattestationStatus(int userId);
 	
 	List<BankcardType> getBankcardtype(Integer companyId);
+	
+	Integer SelectBankName(String bankcardTypeName);
 
 }
