@@ -25,4 +25,6 @@ public interface IntAboutusService {
     public int updateByPrimaryKey(Aboutus record);
 
 	public Map<String, Object> getaboutus(int companyId);
+
+	public Map<String, Object> geturl(int companyId);
 }

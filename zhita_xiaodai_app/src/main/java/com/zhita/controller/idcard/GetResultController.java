@@ -266,10 +266,10 @@ public class GetResultController {
     @RequestMapping("/setthirdcalltongji")
     @ResponseBody
     @Transactional
-    public Map<String, Object> setthirdcalltongji(int companyId,String thirdtypeid){
+    public Map<String, Object> setthirdcalltongji(int companyId,String thirdtypeid,int userId){
     	Map<String, Object> map = new HashMap<String, Object>();
 		String date = System.currentTimeMillis()+"";
-		thirdcalltongjiMapper.setthirdcalltongji(companyId,thirdtypeid,date);
+		thirdcalltongjiMapper.setthirdcalltongji2(companyId,thirdtypeid,date,userId);
     	map.put("Ncode","2000");
 		map.put("code", 200);
 		map.put("msg","插入成功");

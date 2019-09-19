@@ -262,7 +262,7 @@ public class SourceServiceImp implements IntSourceService{
   	}
     
     //定时任务
-    //后台管理----做定时任务需要执行的方法（每日0点  将各个渠道的历史数据存入历史表）
+    //后台管理----做定时任务需要执行的方法（每日1点  将各个渠道的历史数据存入历史表）
     @Transactional
     public void selAllTongji() throws ParseException{
     	RedisClientUtil redisClientUtil=new RedisClientUtil();//redis工具类
@@ -272,8 +272,62 @@ public class SourceServiceImp implements IntSourceService{
     	for (int i = 0; i < list.size(); i++) {
     		Integer sourceid=list.get(i).getId();//渠道id
     		String sourceName=list.get(i).getSourcename();//渠道名称
-    		List<String> liststr=sourceMapper.queryTime(companyId, sourceName);// 查询出当前渠道所有的注册时间(liststr里面的时间为时间戳格式)
     		
+    		//获取前一天的日期
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, -1);
+			String dateyes = df.format(calendar.getTime());
+			System.out.println("今天日期的前一天："+dateyes);
+    		
+			String startTime1 = dateyes;
+			String startTimestamps1 = Timestamps.dateToStamp(startTime1);//该时间为时间戳格式
+			String endTime1 = dateyes;
+			String endTimestamps1 = (Long.parseLong(Timestamps.dateToStamp(endTime1))+86400000)+"";
+			
+			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(sourceid, startTimestamps1,endTimestamps1);
+			if(tongjisourceyes!=null){
+				float appnumHistory=tongjisourceyes.getRegisternumdis();//历史表折扣后的注册人数
+				String startTimestamps2 = tongjisourceyes.getDate();//该时间为时间戳格式
+				
+				float appnum = sourceMapper.queryApplicationNumber(companyId, sourceid, startTimestamps2, endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
+				String discount = sourceMapper.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
+				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
+				int uv = 0;
+				String cvr = null;
+				float disAppnum=0;//折扣申请数
+					
+				if (redisClientUtil.getSourceClick(company + sourceName + dateyes.replace("-", "/") + "xiaodaiKey") == null) {
+					uv = 0;
+				} else {
+					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + dateyes.replace("-", "/") + "xiaodaiKey"));
+				}
+				
+				if (appnum >= 30) {
+					int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
+					disAppnum=(int)Math.ceil((overtop * discount1 *1.0/ 100+30))+appnumHistory;// 申请数
+				} else {
+					disAppnum=appnum+appnumHistory;// 申请数
+				}
+				
+				if ((appnum < 0.000001) || (uv == 0)) {
+					cvr = 0 + "%";// 得到转化率
+				} else {
+					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
+				}
+				
+				TongjiSorce tongjiSorce=new TongjiSorce();
+				tongjiSorce.setDate(Timestamps.dateToStamp(dateyes));// 日期
+				tongjiSorce.setDate1(tongjisourceyes.getDate());
+				tongjiSorce.setSourceid(sourceid);
+				//tongjiSorce.setSourcename(sourceName);// 渠道名称
+				tongjiSorce.setUv(uv);// uv
+				tongjiSorce.setRegisternumdis(disAppnum);
+				tongjiSorce.setCvr(cvr);// 转化率
+				sourceDiscountHistoryMapper.updateByPrimaryKey(tongjiSorce);//说明修改成功
+			}
+    		
+			List<String> liststr=sourceMapper.queryTime(companyId, sourceName);// 查询出当前渠道所有的注册时间(liststr里面的时间为时间戳格式)
     		if(liststr!=null&&!liststr.isEmpty()) {//代表当前渠道在用户表有注册的用户
     			List<String> list1 = new ArrayList<>();// 用来存时间戳转换后的时间（年月日格式的时间）(user的注册时间)
     			for (int j = 0; j< liststr.size(); j++) {
@@ -348,59 +402,6 @@ public class SourceServiceImp implements IntSourceService{
     			}
     		}
     		
-    		//获取前一天的日期
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.DATE, -1);
-			String dateyes = df.format(calendar.getTime());
-			System.out.println("今天日期的前一天："+dateyes);
-    		
-			String startTime1 = dateyes;
-			String startTimestamps1 = Timestamps.dateToStamp(startTime1);//该时间为时间戳格式
-			String endTime1 = dateyes;
-			String endTimestamps1 = (Long.parseLong(Timestamps.dateToStamp(endTime1))+86400000)+"";
-			
-			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(sourceid, startTimestamps1,endTimestamps1);
-			if(tongjisourceyes!=null){
-				float appnumHistory=tongjisourceyes.getRegisternumdis();//历史表折扣后的注册人数
-				String startTimestamps2 = tongjisourceyes.getDate();//该时间为时间戳格式
-				
-				float appnum = sourceMapper.queryApplicationNumber(companyId, sourceid, startTimestamps2, endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
-				String discount = sourceMapper.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
-				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
-				int uv = 0;
-				String cvr = null;
-				float disAppnum=0;//折扣申请数
-					
-				if (redisClientUtil.getSourceClick(company + sourceName + dateyes.replace("-", "/") + "xiaodaiKey") == null) {
-					uv = 0;
-				} else {
-					uv = Integer.parseInt(redisClientUtil.getSourceClick(company + sourceName + dateyes.replace("-", "/") + "xiaodaiKey"));
-				}
-				
-				if (appnum >= 30) {
-					int overtop=(int)appnum-30;//overtop是当前申请数超过30的那部分数量
-					disAppnum=(int)Math.ceil((overtop * discount1 *1.0/ 100+30))+appnumHistory;// 申请数
-				} else {
-					disAppnum=appnum+appnumHistory;// 申请数
-				}
-				
-				if ((appnum < 0.000001) || (uv == 0)) {
-					cvr = 0 + "%";// 得到转化率
-				} else {
-					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
-				}
-				
-				TongjiSorce tongjiSorce=new TongjiSorce();
-				tongjiSorce.setDate(Timestamps.dateToStamp(dateyes));// 日期
-				tongjiSorce.setDate1(tongjisourceyes.getDate());
-				tongjiSorce.setSourceid(sourceid);
-				//tongjiSorce.setSourcename(sourceName);// 渠道名称
-				tongjiSorce.setUv(uv);// uv
-				tongjiSorce.setRegisternumdis(disAppnum);
-				tongjiSorce.setCvr(cvr);// 转化率
-				sourceDiscountHistoryMapper.updateByPrimaryKey(tongjiSorce);//说明修改成功
-			}
 		}
 	}
     		
@@ -558,4 +559,10 @@ public class SourceServiceImp implements IntSourceService{
     	List<TongjiSorce> list=sourceMapper.queryAllSourceBysourceid(companyId,sourceid);
     	return list;
     }
+
+	@Override
+	public String getstatus(int companyId, String sourceName) {
+		String status = sourceMapper.getstatus(companyId,sourceName);
+		return status;
+	}
 }

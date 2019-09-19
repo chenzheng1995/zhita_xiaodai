@@ -24,6 +24,7 @@
       <arg column="facePhoto" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="applyState" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="model" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="userAgentInfo" javaType="java.lang.String" jdbcType="VARCHAR" />
       
     </constructor>
   </resultMap>
@@ -34,7 +35,7 @@
   </sql>
    <sql id="Base_Column_List2">
     u.id, u.companyId, u.sourceId, u.name, u.phone, u.pwd, u.transactionPwd, u.registeTime, u.loginTime, 
-    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.shareOfState,u.riskControlPoints,
+    u.loginStatus, u.registeClient, u.useMarket, u.drainageOfPlatformId,u.shareOfState,u.riskControlPoints,u.canBorrowLines,
     appnum.applynumber,appnum.applytime,appnum.state,u.operator,u.operationTime,s.sourcename,mcs.rmModleName,su.account
   </sql>
    <sql id="Base_Column_List1">
@@ -865,5 +866,20 @@
      select model from user where id = #{userId}
 	</select> 
 	
+	
+					  	<!--APP 插入用户信息 -->
+	<insert id="insertUser2" parameterType="java.util.Map">
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,userAgentInfo)
+		values (#{newPhone},
+		#{registrationTime},
+		#{loginStatus},
+		#{companyId},
+		#{registeClient},
+		#{registrationTime},
+		#{merchantId},
+		#{useMarket},
+		#{operatorsAuthentication},
+		#{userAgentInfo})
+	</insert>
 	
 </mapper>

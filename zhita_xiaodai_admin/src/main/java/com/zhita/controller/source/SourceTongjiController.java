@@ -255,8 +255,10 @@ public class SourceTongjiController {
 
     	}
     	
+		List<Source> sourcelist=intSourceService.querysource(companyId);	 
 		HashMap<String,Object> map=new HashMap<>();
 		map.put("listsourcepage", listsourcepage);
+		map.put("sourcelist", sourcelist);
 		map.put("pageutil", pageUtil);
     	return map;
 	}

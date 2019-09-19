@@ -18,4 +18,6 @@ public interface ThirdcalltongjiMapper {
     int updateByPrimaryKey(Thirdcalltongji record);
 
 	void setthirdcalltongji(@Param("companyId") int companyId,@Param("thirdtypeid")  String thirdtypeid,@Param("date")  String date);
+
+	void setthirdcalltongji2(@Param("companyId") int companyId,@Param("thirdtypeid")  String thirdtypeid,@Param("date")  String date,@Param("userId") int userId);
 }

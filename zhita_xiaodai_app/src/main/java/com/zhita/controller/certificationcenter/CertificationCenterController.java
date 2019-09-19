@@ -24,6 +24,7 @@ import com.zhita.dao.manage.BorrowMoneyMessageMapper;
 import com.zhita.dao.manage.RetrialWindControlMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Bankcard;
+import com.zhita.model.manage.UserJson;
 import com.zhita.service.manage.autheninfor.IntAutheninforService;
 import com.zhita.service.manage.configuration.ConfigurationService;
 import com.zhita.service.manage.operator.OperatorService;
@@ -77,8 +78,15 @@ public class CertificationCenterController {
 	@Transactional
     public Map<String, Object> setconfiguration(String jsonString,int userId,String phone){
 		PostAndGet pGet = new PostAndGet();
-		System.out.println("数据！"+jsonString+"AAA"+phone);
-		pGet.sendGet2("http://39.98.83.65:8080/zhita_heitong_Fengkong/Anti/AddUserPhone?jsonString="+jsonString+"&phone="+phone);
+
+		UserJson paramObject = new UserJson();
+		paramObject.setJsonString(jsonString);
+		paramObject.setPhone(phone);
+		paramObject.setUserId(userId);
+		String json  = JSONObject.toJSONString(paramObject);
+		System.out.println(json);
+		pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
+
     	Map<String, Object> map = new HashMap<>();
 		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		String phoneMarket = jsonObject.getString("phoneMarket");

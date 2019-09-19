@@ -102,5 +102,11 @@ public class AboutusServiceImp implements IntAboutusService{
 		Map<String, Object> map =aboutusMapper.getaboutus(companyId);
 		return map;
 	}
+
+	@Override
+	public Map<String, Object> geturl(int companyId) {
+		Map<String, Object> map1  = aboutusMapper.geturl(companyId);
+		return map1;
+	}
     
 }
