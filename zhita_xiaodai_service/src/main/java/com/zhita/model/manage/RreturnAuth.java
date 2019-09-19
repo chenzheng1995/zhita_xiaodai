@@ -4,35 +4,46 @@ import com.zhita.model.manage.Result;
 
 public class RreturnAuth {
 	
-	private Integer error_code;
+	private Integer Code;
 	
-	private String reason;
+	private String CodeDetail;
 	
-	private Result result;
+	private Result Msg;
+	
+	private String Data;
 
-	public Integer getError_code() {
-		return error_code;
+	public Integer getCode() {
+		return Code;
 	}
 
-	public void setError_code(Integer error_code) {
-		this.error_code = error_code;
+	public void setCode(Integer code) {
+		Code = code;
 	}
 
-	public String getReason() {
-		return reason;
+	public String getCodeDetail() {
+		return CodeDetail;
 	}
 
-	public void setReason(String reason) {
-		this.reason = reason;
+	public void setCodeDetail(String codeDetail) {
+		CodeDetail = codeDetail;
 	}
 
-	public Result getResult() {
-		return result;
+	public Result getMsg() {
+		return Msg;
 	}
 
-	public void setResult(Result result) {
-		this.result = result;
+	public void setMsg(Result msg) {
+		Msg = msg;
 	}
+
+	public String getData() {
+		return Data;
+	}
+
+	public void setData(String data) {
+		Data = data;
+	}
+
 	
 	
 }

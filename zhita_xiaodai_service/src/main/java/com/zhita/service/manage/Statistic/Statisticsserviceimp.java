@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
@@ -29,11 +31,13 @@ import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.Result;
 import com.zhita.model.manage.RreturnAuth;
 import com.zhita.model.manage.User;
 import com.zhita.util.MD5Utils;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 import com.zhita.util.YunTongXunUtil;
@@ -373,22 +377,26 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		 Map<String, Object> map = new HashMap<String, Object>();
 		  Integer banktypeid = bankcardMapper.SelectBankName(bankcardTypeName);
 		if(banktypeid!=null){
-			
-			 	String host = "https://bankver.market.alicloudapi.com";
-			    String path = "/creditop/BankCardQuery/BankCardVerification";
-			    String method = "GET";
-			    String appcode = "ea779e8386254a6db6b3d4b599dfea44";
-			    Map<String, String> headers = new HashMap<String, String>();
-			    //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
-			    headers.put("Authorization", "APPCODE " + appcode);
-			    Map<String, String> querys = new HashMap<String, String>();
-			    querys.put("accountNo", accountNo);
-			    querys.put("bankPreMobile", bankPreMobile);
-			    querys.put("idCardCode", idCardCode);
-			    querys.put("name", name);
-			    
-			    
+			String host = "https://riskcheck.market.alicloudapi.com";
+		    String path = "/bankCard4Info";
+		    String method = "POST";
+		    String appcode = "ea779e8386254a6db6b3d4b599dfea44";
+		    Map<String, String> headers = new HashMap<String, String>();
+		    //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+		    headers.put("Authorization", "APPCODE " + appcode);
+		    //根据API的要求，定义相对应的Content-Type
+		    headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+		    Map<String, String> querys = new HashMap<String, String>();
+		    Map<String, String> bodys = new HashMap<String, String>();
+		    bodys.put("bankCardNum", accountNo);
+		    bodys.put("idCardNum", idCardCode);
+		    bodys.put("mobile", bankPreMobile);
+		    bodys.put("realName", name);
+		    
+		    
+			    RedisClientUtil redisClientUtil = new RedisClientUtil();
 
+			    	
 			    
 	    		
 			    try {
@@ -401,13 +409,18 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    	* 相应的依赖请参照
 			    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
 			    	*/
-			    	HttpResponse responsea = HttpUtils.doGet(host, path, method, headers, querys);
-			    	String responses = EntityUtils.toString(responsea.getEntity());
-			    	System.out.println("数据:"+responses);
-			    	if(responses!=null){
-			    		if(responses.length()!=0){
-			    	RreturnAuth rauth = JSON.parseObject(responses, RreturnAuth.class);
-			    	if(rauth.getResult().getMessage().equals("银行卡鉴权成功")){//等于0是认证成功
+			    	//redisClientUtil.set("biaoshi"+userId, biaoshi);
+			    	HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
+			    	//获取response的body
+			    	String a = EntityUtils.toString(response.getEntity());
+			    	JSONObject jsonObject=JSONObject.parseObject(a);
+			    	String codes = jsonObject.getString("Code");
+			    	String msg = jsonObject.getString("msg");
+			    	
+			    	System.out.println("数据:"+a);
+			    	if(response!=null){
+			    		if(a.length()!=0){
+			    	if(codes.equals("0")){//等于0是认证成功
 			    		Integer num = sdao.SelectUserRenNum(userId);
 			    		if(num>3){
 			    			int i = sdao.UserBlacklist(userId);
@@ -484,7 +497,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    		
 			    		map.put("code", 0);
 			    		map.put("Ncode", 0);
-			    		map.put("msg", rauth.getResult().getMessage());
+			    		map.put("msg", msg);
 			    	}
 			    		}else{
 			    			map.put("code", 0);
@@ -509,7 +522,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			map.put("Ncode", "0");
 			map.put("msg", "该卡不在放款范围");
 		}
-		
 	   
 	    return map;
 	}

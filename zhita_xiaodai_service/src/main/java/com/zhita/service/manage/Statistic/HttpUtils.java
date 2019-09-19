@@ -1,5 +1,6 @@
 package com.zhita.service.manage.Statistic;
 
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
@@ -309,5 +310,4 @@ public class HttpUtils {
         	throw new RuntimeException(ex);
         }
     }
-
 }

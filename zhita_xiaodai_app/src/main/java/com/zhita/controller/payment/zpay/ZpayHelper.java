@@ -1,6 +1,7 @@
 package com.zhita.controller.payment.zpay;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class ZpayHelper {
 	 * @param billId	订单号
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static JSONObject yuanApp(BigDecimal amount,String billId){
 		Map<String, String> payParams=new HashMap<String, String>();    
 	    payParams.put("method","zpay.trade.yuan");
@@ -364,8 +366,11 @@ public class ZpayHelper {
 		//YuXia(new BigDecimal("2.0"), "test_" + "20190917176545233652");
 	//	Select();
 //		billId = "test_201909017175056";
-		Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
+		//Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
 //		Receivables(billId, money, createTime, returnUrl)
 //		SelectFF();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	    String biaoshi = sim.format(new Date());
+		System.out.println(biaoshi);
 	}
 }

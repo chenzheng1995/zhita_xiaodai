@@ -17,5 +17,9 @@ public interface NewPaymentservice {
 	
 	
 	Map<String, Object> Payment(BigDecimal amount,String returnUrl,Integer companyId,Integer userId);
+	
+	
+	
+	Map<String, Object> DefePayment(BigDecimal amount,String returnUrl,Integer companyId,Integer userId);
 
 }
