@@ -230,7 +230,7 @@
 		#{merchantId},
 		#{useMarket},
 		#{operatorsAuthentication},
-		#{canBorrowLines})
+		#{canBorrowlines})
 	</insert>
 	
 	
