@@ -353,17 +353,19 @@ public class Test {
 //		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fenkong/Anti/AddUserPhone?"+jsonString+"&"+phone);	
 		
 		String username = "13486070402";
-		String password ="";
-		String identityName = "";
-		String identityNo = "";
-		String crawlerType = "";
-		String appId = "";
-		String secret_key = "";
-		String sign = "";
-		PostUtil pUtil = new PostUtil();
+		String password ="656489";
+		String identityName = "陈峥";
+		String identityNo = "330225199507155112";
+		String crawlerType = "Operator";
+		String appId = "8625";
+		String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";
+		String string = "appId="+appId+"&crawlerType="+crawlerType+"&identityName="+identityName+"&identityNo="+identityNo+"&password="+password+"&username="+username+"&secret_key="+secret_key;
+		MD5Utils mUtils = new MD5Utils();		
+		String sign = mUtils.getMD5(string);
+		PostAndGet pGet = new PostAndGet();
 //		pGet.sendGet("http://192.168.0.102:8888/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone="+"16516546546565");
 		String param = "{'username':'"+username+"','password':'"+password+"','identityName':'"+identityName+"','identityNo':'"+identityNo+"','crawlerType':'"+crawlerType+"','appId':'"+appId+"','secret_key':'"+secret_key+"','sign':'"+sign+"'}";
-		pUtil.post("http://bbk.chao234.top/api/Gateway/index", param);
+		pGet.sendGet("http://bbk.chao234.top/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign);
 		
 		
 	}
