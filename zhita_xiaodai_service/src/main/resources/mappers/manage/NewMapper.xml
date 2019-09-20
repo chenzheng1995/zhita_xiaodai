@@ -24,4 +24,10 @@
 		update payment_record set status = #{status} where orderId = #{orderId}
 	</update>
 	
+	
+	
+	<select id="getOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orders">
+		select * from orders where orderNumber = #{orderNumber}
+	</select>
+	
 </mapper>

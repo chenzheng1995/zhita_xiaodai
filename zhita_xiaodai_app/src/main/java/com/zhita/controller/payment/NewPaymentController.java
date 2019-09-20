@@ -373,7 +373,7 @@ public class NewPaymentController {
     			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
     			pay.setPipelinenumber(pipelnen);
     			pay.setOrderId(orderId);
-    			pay.setStatus("放款成功");
+    			pay.setStatus("支付失败");
     			chanser.AddPayment_record(pay);
     			map1.put("code", 200);
     			map1.put("msg", "放款成功，可能需要几分钟到账");

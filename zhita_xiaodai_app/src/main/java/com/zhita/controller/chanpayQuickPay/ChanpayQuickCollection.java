@@ -1536,7 +1536,8 @@ public class ChanpayQuickCollection {
 				if(paymentname.getRepaymentSource().equals("钊力")){
 					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
 					servie.AddDeferred(defe);
-					redis.set("DefeUserId", MerUserId);
+					String orderId = (String) maps.get("orderId");
+					redis.set("DefeUserId"+orderId, MerUserId);
 					return maps;
 				}else{
 		Map<String, String> origMap = new HashMap<String, String>();

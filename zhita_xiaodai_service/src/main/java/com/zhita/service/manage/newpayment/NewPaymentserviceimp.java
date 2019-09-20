@@ -17,6 +17,7 @@ import com.zhita.dao.manage.NewMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Loan_setting;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Thirdparty_interface;
@@ -272,6 +273,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        			map.put("msg", msg);
 	        			map.put("status", 2);
 	        			map.put("loaName", "钊力");
+	        			map.put("orderId", orderId);
 	        			return map;
 	        		}
 	        	}
@@ -307,11 +309,30 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		return newdao.getOrderId(orderIds);
 	}
 
+	
+	
+	
+	
 
 
 	@Override
 	public Integer Updatepaymemt(Payment_record pay) {
 		return newdao.Updatepaymemt(pay);
+	}
+
+
+
+	@Override
+	public Orders getOrders(String orderNumber) {
+		return newdao.getOrders(orderNumber);
+	}
+
+
+
+	@Override
+	public Payment_record getPayment(Integer orderId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
