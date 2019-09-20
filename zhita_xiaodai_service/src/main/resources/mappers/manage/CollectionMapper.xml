@@ -18,7 +18,7 @@
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityAccount as realityBorrowMoney,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca,o.shouldReturnTime
+			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca,o.shouldReturnTime,ord.technicalServiceMoney
 			from orders o,user u,orderdetails ord
 			<where>
 				ord.orderId not in (select c.orderId from collection c,orders o where o.id = c.orderId AND o.companyId = 3)
@@ -361,7 +361,7 @@
 		<select id="WeiControllerOrdetialis" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade,o.shouldReturnTime,ord.shouldReapyMoney
+			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade,o.shouldReturnTime,ord.shouldReapyMoney,ord.technicalServiceMoney
 			 from orders o ,orderdetails ord,sys_user colme,user u ,deferred_settings deset,overdue_class ov,collection col,collectiondetails collection
 			<where>
 				o.companyId = ov.companyId 

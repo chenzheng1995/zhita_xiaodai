@@ -730,7 +730,7 @@ public class ChanpayQuickCollection {
 			    bank.setCstmrnm(CstmrNm);
 				bank.setAttestationStatus("1");
 				servie.AddBankcard(bank);
-				 map.put("Ncode","200");
+				 map.put("Ncode","2000");
 			     map.put("msg", "验证成功");
 			     map.put("code", "200");
 			     return map;
@@ -1000,27 +1000,29 @@ public class ChanpayQuickCollection {
 	public Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,Integer companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
-		
-			
+		Repayment repay = new Repayment();//还账记录表
+		repay.setUserId(Integer.valueOf(MerUserId));
+		repay.setThirdparty_id(1);
+		repay.setOrderNumber(TrxId);
+		repay.setPipelinenumber(TrxId);
+		BigDecimal bd=new BigDecimal(TrxAmt);   
+		repay.setRepaymentMoney(bd);
+		RedisClientUtil redis = new RedisClientUtil();
 		
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
 				if(paymentname.getRepaymentSource().equals("钊力")){
+					
 					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
+					servie.AddRepayment(repay);
+					
 					return maps;
 				}else{
 			Map<String, String> origMap = new HashMap<String, String>();
 			// 2.1 基本参数 
 			origMap = setCommonMap(origMap);
 			origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
-			Repayment repay = new Repayment();//还账记录表
-			repay.setUserId(Integer.valueOf(MerUserId));
-			repay.setThirdparty_id(1);
-			repay.setOrderNumber(TrxId);
-			repay.setPipelinenumber(TrxId);
-			 BigDecimal bd=new BigDecimal(TrxAmt);   
-			repay.setRepaymentMoney(bd);
 			origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 			origMap.put("OrdrName", ordrName);// 商品名称
 			origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
@@ -1521,19 +1523,7 @@ public class ChanpayQuickCollection {
 			String deferBeforeReturntime,Integer postponeDate,String deferAfterReturntime,Integer companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
-		
-			
-		
-		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
-				if(paymentname.getRepaymentSource().equals("钊力")){
-					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
-					return maps;
-				}else{
-		Map<String, String> origMap = new HashMap<String, String>();
-		// 2.1 基本参数 
-		System.out.println("走接口");
-		origMap = setCommonMap(origMap);
-		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
+		RedisClientUtil redis = new RedisClientUtil();
 		Deferred defe = new Deferred();
 		
 		//DefePayment
@@ -1543,6 +1533,19 @@ public class ChanpayQuickCollection {
 		defe.setDeferBeforeReturntime(deferBeforeReturntime);
 		defe.setPostponeDate(postponeDate);
 		defe.setDeferAfterReturntime(deferAfterReturntime);
+		
+		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
+				if(paymentname.getRepaymentSource().equals("钊力")){
+					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
+					servie.AddDeferred(defe);
+					redis.set("DefeUserId", MerUserId);
+					return maps;
+				}else{
+		Map<String, String> origMap = new HashMap<String, String>();
+		// 2.1 基本参数 
+		System.out.println("走接口");
+		origMap = setCommonMap(origMap);
+		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
 		
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 		origMap.put("OrdrName", ordrName);// 商品名称
