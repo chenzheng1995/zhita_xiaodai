@@ -72,15 +72,11 @@ public class NewPaymentController {
 	 String code = request.getParameter("code");
      String msg = request.getParameter("msg");
      String orderId = request.getParameter("orderId");
-  /*   String mchId = request.getParameter("mchId");
-     String orderUid = request.getParameter("orderUid");*/
      String tradeNo = request.getParameter("tradeNo");
      String status = request.getParameter("status");
-    // String amount = request.getParameter("amount");
-/*     String sign = request.getParameter("sign");*/
      String biaoshiid = redis.get("userId"+tradeNo);
      String orderIds = redis.get("orderId"+biaoshiid);//获取订单编号
-     System.out.println("收款回调接收到的参数:"+code+"返回放款状态:"+status+"msg:"+msg+"orderId:"+orderId);
+     System.out.println("收款回调接收到的参数:"+code+",返回放款状态:"+status+",msg:"+msg+",orderId:"+orderId+",tradeNo:"+tradeNo+",状态:"+status);
      
      Map<String, Object> map = new HashMap<String, Object>();
      Repayment repay = new Repayment();
@@ -151,7 +147,6 @@ public class NewPaymentController {
 	@RequestMapping(value = "/callbackpay", consumes = "multipart/form-data", method = RequestMethod.POST)
     public String callbackpay(MultipartHttpServletRequest request) {
 	
-		// RedisClientUtil redis = new RedisClientUtil();
 			
 		 String code = request.getParameter("code");
 	     String msg = request.getParameter("msg");

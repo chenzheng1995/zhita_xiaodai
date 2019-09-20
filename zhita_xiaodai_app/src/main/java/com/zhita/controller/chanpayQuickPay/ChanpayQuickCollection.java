@@ -1007,8 +1007,6 @@ public class ChanpayQuickCollection {
 		repay.setPipelinenumber(TrxId);
 		BigDecimal bd=new BigDecimal(TrxAmt);   
 		repay.setRepaymentMoney(bd);
-		RedisClientUtil redis = new RedisClientUtil();
-		
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){

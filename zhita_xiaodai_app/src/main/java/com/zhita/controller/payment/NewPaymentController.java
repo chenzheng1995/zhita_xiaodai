@@ -359,9 +359,7 @@ public class NewPaymentController {
     	 String msg = (String) mappam.get("msg");
     	 if(msg.equals("代付失败")){
     		String orderStatus = (String) mappam.get("msg");
- 			/*pay.setStatus("支付失败");
- 			chanser.AddPayment_record(pay);
- 			chanser.DeleteOrderNumber(orderNumber,orderStatus);*/
+ 			chanser.DeleteOrderNumber(orderNumber,orderStatus);
  			map1.put("code", 0);
  			map1.put("msg", orderStatus);
  			map1.put("Ncode", 0);
@@ -375,6 +373,7 @@ public class NewPaymentController {
     			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
     			pay.setPipelinenumber(pipelnen);
     			pay.setOrderId(orderId);
+    			pay.setStatus("放款成功");
     			chanser.AddPayment_record(pay);
     			map1.put("code", 200);
     			map1.put("msg", "放款成功，可能需要几分钟到账");
