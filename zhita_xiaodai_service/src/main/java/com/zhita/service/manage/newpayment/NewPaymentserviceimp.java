@@ -17,6 +17,8 @@ import com.zhita.dao.manage.NewMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Loan_setting;
+import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.service.manage.newpayment.util.MapUtil;
 import com.zhita.util.RedisClientUtil;
@@ -133,13 +135,15 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		loan.setCompanyId(companyId);
 		loan.setName("钊力");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
-		String billId = String.valueOf(new Date().getTime());//stdao.SelectOrderNumber(userId);//订单编号
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		String billId = sim.format(new Date());
+		String orderId = stdao.SelectOrderNumber(userId);//订单编号
 		
 		RedisClientUtil redis = new RedisClientUtil();
-		redis.set("NewChanpaymentId", "NewChanpaymentId "+userId);
+		redis.setOrderId("orderId"+billId, orderId);
 		if(a.equals("1")){
-			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
+		
+		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
 					&& ban.getTiedCardPhone() != "" && ban.getBankcardName() != "" && ban.getCstmrnm() != "" && ban.getBankcardTypeName() != ""){
 		Map<String, String> payParams=new HashMap<String, String>();    
 	    payParams.put("method","zpay.trade.znew");
@@ -149,10 +153,10 @@ public class NewPaymentserviceimp implements NewPaymentservice{
         payParams.put("appType","xunpay");
         payParams.put("type", "3");
         payParams.put("payType", "1");
-        payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
+        payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEWPAY);//异步通知地址
         payParams.put("returnUrl", returnUrl);
         payParams.put("orderId", billId);//订单ID
-        redis.set("orderId", billId+userId);
+        redis.setOrderId("userId"+billId, billId);
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("khName", ban.getCstmrnm());//收款人姓名
@@ -219,12 +223,13 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		loan.setCompanyId(companyId);
 		loan.setName("钊力");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
-		String billId = String.valueOf(new Date().getTime());//stdao.SelectOrderNumber(userId);//订单编号
-		
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		String billId = sim.format(new Date());//stdao.SelectOrderNumber(userId);//订单编号
+		String orderId = stdao.SelectOrderNumber(userId);//订单编号
 		RedisClientUtil redis = new RedisClientUtil();
-		redis.set("NewChanpaymentId", "NewChanpaymentId "+userId);
+		redis.setOrderId("DefeorderId"+billId, orderId);
 		if(a.equals("1")){
-			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
 			if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
 					&& ban.getTiedCardPhone() != "" && ban.getBankcardName() != "" && ban.getCstmrnm() != "" && ban.getBankcardTypeName() != ""){
 		Map<String, String> payParams=new HashMap<String, String>();    
@@ -235,10 +240,10 @@ public class NewPaymentserviceimp implements NewPaymentservice{
         payParams.put("appType","xunpay");
         payParams.put("type", "3");
         payParams.put("payType", "1");
-        payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
+        payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEWDEFE);//异步通知地址
         payParams.put("returnUrl", returnUrl);
         payParams.put("orderId", billId);//订单ID
-        redis.set("orderId", billId+userId);
+        redis.setOrderId("DefeuserId"+billId, billId);
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("khName", ban.getCstmrnm());//收款人姓名
@@ -286,6 +291,27 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		}
 			
 		return map;
+	}
+
+
+
+	@Override
+	public Integer UpdateRepayment(Repayment orderIds) {
+		return newdao.Repaymentsa(orderIds);
+	}
+
+
+
+	@Override
+	public Integer getOrderId(String orderIds) {
+		return newdao.getOrderId(orderIds);
+	}
+
+
+
+	@Override
+	public Integer Updatepaymemt(Payment_record pay) {
+		return newdao.Updatepaymemt(pay);
 	}
 	
 	

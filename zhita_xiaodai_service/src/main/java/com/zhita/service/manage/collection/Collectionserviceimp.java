@@ -58,7 +58,10 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setPhone(phon);//手机号解密 
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setCompanyId(coll.getCompanyId());
-			
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(a==0){
+				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			}
 			orders.get(i).setDeferAfterReturntime(orders.get(i).getOrderCreateTime());
 			System.out.println("订单编号:"+orders.get(i).getOrderId());
 			if(orders.get(i).getInterestPenaltySum() == null){
@@ -66,6 +69,9 @@ public class Collectionserviceimp implements Collectionservice{
 			}
 			System.out.println("金额:"+orders.get(i).getRealityBorrowMoney()+"金额2:"+orders.get(i).getInterestPenaltySum()+"借款金额:"+orders.get(i).getCca());
 			orders.get(i).setOrder_money(orders.get(i).getCca().add(orders.get(i).getInterestPenaltySum()));
+			
+			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			
 			
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			
@@ -196,6 +202,11 @@ public class Collectionserviceimp implements Collectionservice{
 				}else{
 					orders.get(i).setDeferAfterReturntime("/");
 				}
+				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+				if(a==0){
+					orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+				}
+				
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
@@ -355,7 +366,10 @@ public class Collectionserviceimp implements Collectionservice{
 				}else{
 					orders.get(i).setDeferAfterReturntime("/");
 				}
-				
+				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+				if(a==0){
+					orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+				}
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
@@ -394,11 +408,20 @@ public class Collectionserviceimp implements Collectionservice{
 			if(orders.get(i).getSurplus_money()==null){
 				orders.get(i).setSurplus_money(new BigDecimal(0));
 			}
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(a==0){
+				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			}
 			System.out.println(orders.get(i).getOrder_money());
 			//orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
 			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
 			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			BigDecimal des = collmapp.PrmoiseMoney(orders.get(i).getOrderId());
+			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			int ac = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(ac==0){
+				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			}
 			if(des != null){
 				orders.get(i).setPromise_money(des);
 			}else{
