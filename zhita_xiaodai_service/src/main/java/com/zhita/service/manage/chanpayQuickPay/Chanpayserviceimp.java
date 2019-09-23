@@ -285,6 +285,25 @@ public class Chanpayserviceimp implements Chanpayservice{
 		}
 		return addId;
 	}
+
+	@Override
+	public String RepaymentStatus(String orderNumber) {
+		Orders o = stdao.SelectOrderId(orderNumber);
+		return padao.RepaymentStatus(o.getId());
+	}
+
+	@Override
+	public Integer UpdateRepayStatusAA(Repayment repay) {
+		Integer a = stdao.UpdateRepaystatus(repay.getPipelinenumber());
+		Orders orderId = stdao.SelectOrderId(repay.getOrderNumber());
+		return padao.UserDefeNum(orderId.getId());
+	}
+
+	@Override
+	public String DefeStatus(String orderNumber) {
+		Orders o = stdao.SelectOrderId(orderNumber);
+		return padao.DefeStatus(o.getId());
+	}
 	
 	
 	

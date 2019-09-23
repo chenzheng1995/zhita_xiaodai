@@ -830,9 +830,8 @@
 		
 		
 		<select id="CollTimeData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(id) as collection_count,sum(shouldReapyMoney) as shouldReapyMoney from orders where companyId = #{companyId} 
-			and id not in (select ov.orderId from overdue ov,orders o where 
-			o.companyId = #{companyId} and o.id = ov.orderId)
+			select count(o.id) as collection_count,sum(ord.shouldReapyMoney) as shouldReapyMoney from orders o,orderdetails ord 
+			where  o.id (select ov.orderId from overdue ov,orders o where o.companyId = #{companyId} and o.id = ov.orderId)
 			AND o.shouldReturnTime BETWEEN #{start_time} and #{end_time}
 		</select>
 		

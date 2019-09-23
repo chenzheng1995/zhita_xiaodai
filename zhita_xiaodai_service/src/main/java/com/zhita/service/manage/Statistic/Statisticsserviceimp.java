@@ -7,14 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
@@ -370,7 +367,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		return sdao.UpdateBankcard(bank);
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,
 			Integer conpanyId,String appNumber,String code) {
@@ -448,7 +444,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
 		    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
 		    					if("提交成功".equals(state)) {
-		    					redis.delkey("userId"+userId);
 		    					String thirdtypeid = "1";
 		    					String date = System.currentTimeMillis()+"";
 		    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
@@ -456,7 +451,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		    					map.put("Ncode","2000");
 		    					map.put("code","200");
 		    					map.put("msg", state);
-		    					redis.delkey("userId"+userId);
 					    		map.put("desc", "认证成功");
 					    		return map;
 		    				} else {
@@ -497,8 +491,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
 			    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
 			    					if("提交成功".equals(state)) {
-			    						redis.delkey("userId"+userId);
-			    					redis.set("userId"+userId, String.valueOf(userId));
 			    					String thirdtypeid = "1";
 			    					String date = System.currentTimeMillis()+"";
 			    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
@@ -507,7 +499,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    					map.put("code","200");
 			    					map.put("msg", state);
 						    		map.put("desc", "认证成功");
-						    		redis.delkey("userId"+userId);
 						    		return map;
 			    				} else {
 			    					map.put("Ncode","405");

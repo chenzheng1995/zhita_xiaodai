@@ -251,4 +251,10 @@ public interface PaymentRecordMapper {
     
     
     String offDefetime(Integer orderId);
+    
+    
+    String RepaymentStatus(Integer orderId);
+    
+    
+    String DefeStatus(Integer orderId);
 }

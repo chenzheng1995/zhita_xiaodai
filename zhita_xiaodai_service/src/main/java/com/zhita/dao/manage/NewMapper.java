@@ -26,4 +26,8 @@ public interface NewMapper {
 	
 	
 	Orders getOrders(String orderNumber);
+	
+	
+	
+	Payment_record getPayment(Integer orderId);
 }

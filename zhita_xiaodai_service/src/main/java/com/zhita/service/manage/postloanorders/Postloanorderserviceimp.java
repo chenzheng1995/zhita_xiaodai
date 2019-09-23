@@ -65,6 +65,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orderdetils = postloanorder.allOrderdetails(details);
 		TuoMinUtil tm = new TuoMinUtil();
 		for(int i=0;i<orderdetils.size();i++){
+			int a = orderdetils.get(i).getRealityBorrowMoney().compareTo(orderdetils.get(i).getRealityAccount());
+			if(a==0){
+				orderdetils.get(i).getShouldReapyMoney().add(orderdetils.get(i).getInterestPenaltySum().add(orderdetils.get(i).getTechnicalServiceMoney()));
+			}
 			orderdetils.get(i).setOrderCreateTime(Timestamps.stampToDate(orderdetils.get(i).getOrderCreateTime()));
 			orderdetils.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferBeforeReturntime()));
 			orderdetils.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orderdetils.get(i).getDeferAfterReturntime()));
@@ -151,7 +155,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));
 				String op = p.decryption(ordeids.get(i).getPhone());
 				ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
+				
 				ordeids.get(i).setRealityBorrowMoney(ordeids.get(i).getRealityBorrowMoney().add(ordeids.get(i).getInterestSum()));
+				
+				int a = ordeids.get(i).getRealityBorrowMoney().compareTo(ordeids.get(i).getRealityAccount());
+				
+				if(a==0){
+					ordeids.get(i).setRealityBorrowMoney(ordeids.get(i).getRealityBorrowMoney().add(ordeids.get(i).getInterestPenaltySum().add(ordeids.get(i).getTechnicalServiceMoney())));
+				}
+				
 				System.out.println("金额:"+ordeids.get(i).getRealityAccount());
 				ordeids.get(i).setPhone(tm.mobileEncrypt(op));
 				System.out.println("天数："+ordeids.get(i).getOnceDeferredDay());
@@ -652,7 +664,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney();//前置应还金额
+		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
@@ -785,7 +797,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
 		
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney();//前置应还金额
+		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
@@ -876,7 +888,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		//orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney();//前置应还金额
+		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
