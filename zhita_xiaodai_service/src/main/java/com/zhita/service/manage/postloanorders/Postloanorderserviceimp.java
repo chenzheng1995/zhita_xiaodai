@@ -664,12 +664,20 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+		/*Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
 		}else{
 			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
+		}*/
+		
+		int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+		
+		if(a==0){
+			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getTechnicalServiceMoney())));
+		}else{
+			orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
 		}
 		
 		if(orders.get(i).getSurplus_money()==null){
@@ -805,13 +813,13 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+		/*Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
 		}else{
 			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
-		}
+		}*/
 		
 		if(orders.get(i).getSurplus_money()==null){
 			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
@@ -896,12 +904,20 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		//orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+//		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+//		
+//		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
+//			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
+//		}else{
+//			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
+//		}
 		
-		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
-			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
+		int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+		
+		if(a==0){
+			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getTechnicalServiceMoney())));
 		}else{
-			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
+			orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
 		}
 		
 		if(orders.get(i).getSurplus_money()!=null){
