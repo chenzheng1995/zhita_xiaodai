@@ -7,17 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.payment.util.HttpClient;
 import com.zhita.controller.payment.util.SignUtils;
 
-
-@Controller
-@RequestMapping("zpayhelper")
 public class ZpayHelper {
 
 	/**
@@ -196,18 +190,15 @@ public class ZpayHelper {
 	 * @param billId	订单号
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("CC")
-	public Map<String, Object> YuXia(){
-		Map<String, Object> map = new HashMap<String, Object>();
+	public static JSONObject YuXia(BigDecimal amount,String billId){
 		Map<String, String> payParams=new HashMap<String, String>();    
 	    payParams.put("method","zpay.order.trade");
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
-        payParams.put("amount","10");
+        payParams.put("amount",amount.setScale(2).toString());
         payParams.put("appType","xunpay");
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
-        payParams.put("orderId", "test_201909201745545233652");//订单ID
+        payParams.put("orderId", billId);//订单ID
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("skName", "东新雨");//收款人姓名
@@ -227,17 +218,14 @@ public class ZpayHelper {
 	        	String code=jsonObject.getString("code");
 	        	if(code.equals("SUCCESS")){
 	        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
-	        			map.put("code", 200);
-	        			map.put("Ncode", 2000);
-	        			map.put("msg", "成功");
-	        			return map;
+	        			return jsonObject;
 	        		}
 	        	}
 	        }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return map;
+        return null;
 	}
 	
 	
@@ -299,7 +287,6 @@ public class ZpayHelper {
 	 * @param billId	订单号
 	 * @return
 	 */
-	
 	public static JSONObject Select(){
 		Map<String, String> payParams=new HashMap<String, String>();    
 	    payParams.put("method","zpay.order.query");
@@ -376,14 +363,14 @@ public class ZpayHelper {
 		//yuanApp(new BigDecimal("2.0"), "test_" + System.currentTimeMillis());
 		//企业支付宝 APP
 		//yuanH5(new BigDecimal("2.0"), "test_" + System.currentTimeMillis(),"http://test");
-		//YuXia(new BigDecimal("10.0"), "test_" + "20190920164545233652");
+		//YuXia(new BigDecimal("2.0"), "test_" + "20190917176545233652");
 	//	Select();
 //		billId = "test_201909017175056";
 		//Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
 //		Receivables(billId, money, createTime, returnUrl)
 //		SelectFF();
-		//	SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-		//    String biaoshi = sim.format(new Date());
-		//	System.out.println(biaoshi);
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	    String biaoshi = sim.format(new Date());
+		System.out.println(biaoshi);
 	}
 }

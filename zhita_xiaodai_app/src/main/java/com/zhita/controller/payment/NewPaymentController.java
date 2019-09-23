@@ -195,7 +195,6 @@ public class NewPaymentController {
 	    	String orderNumber ="DD_"+year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
 	    	
 	    	
-		try {
 			
 		
 		String chanpaysenduserid = redis.get("ChanpaySenduserId"+userId);
@@ -355,30 +354,33 @@ public class NewPaymentController {
 		
     	}else{
     		
-    		
+    	redis.delkey("ChanpaySenduserId"+userId);//删除字段
     	 Map<String, Object> mappam = newsim.Newpayment(new BigDecimal(TransAmt), orderNumber, userId, companyId);
-    	 String codes = (String) mappam.get("code");
-    	 if(codes.equals("200")){
+    	 String msg = (String) mappam.get("msg");
+    	 if(msg.equals("代付失败")){
+    		String orderStatus = (String) mappam.get("msg");
+ 			chanser.DeleteOrderNumber(orderNumber,orderStatus);
+ 			map1.put("code", 0);
+ 			map1.put("msg", orderStatus);
+ 			map1.put("Ncode", 0);
+ 			map1.put("desc", "借款失败");
+ 			map1.put("code", 0);
+ 			return map1;
+ 			
+    		}else{
+    			redis.set("payorderId", String.valueOf(orderId));
     			pay.setPaymentbtiao(paymentname.getLoanSource());
-    			pay.setStatus("支付成功");
     			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
     			pay.setPipelinenumber(pipelnen);
     			pay.setOrderId(orderId);
-    			chanser.AddPayment_record(pay);
-    			map1.put("code", 200);
-    			map1.put("msg", "放款成功");
-    			map1.put("Ncode", 2000);
-    			map1.put("desc", "借款成功");
-    		}else{
-    			String orderStatus = (String) mappam.get("msg");
     			pay.setStatus("支付失败");
     			chanser.AddPayment_record(pay);
-    			chanser.DeleteOrderNumber(orderNumber,orderStatus);
-    			map1.put("code", 0);
-    			map1.put("msg", orderStatus);
-    			map1.put("Ncode", 0);
-    			map1.put("desc", "借款失败");
-    			map1.put("code", 0);
+    			map1.put("code", 200);
+    			map1.put("msg", "放款成功，可能需要几分钟到账");
+    			map1.put("Ncode", 2000);
+    			map1.put("desc", "借款成功");
+    			return map1;
+    			
     		}
     	}
 	    	}else {
@@ -418,14 +420,6 @@ public class NewPaymentController {
 		}
 		}
 		
-		} catch (Exception e) {
-			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
-			map1.put("code", "203");
-			map1.put("desc", "已放款,未保存");
-			map1.put("msg", "已放款,未保存");
-			map1.put("Ncode", 0);
-			return map1;
-		}
 			}else{
 				map1.put("code", "0");
 				map1.put("msg", "银行卡信息不完整");
@@ -451,15 +445,6 @@ public class NewPaymentController {
 		
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
 		Map<String, Object> map = new HashMap<String, Object>();
-		RedisClientUtil redis = new RedisClientUtil();
-		String aca = redis.get("nmg_api_auth_req"+MerUserId);
-		if(aca != null){
-			map.put("Ncode", 0);
-			map.put("code", "0");
-			map.put("msg", "请勿重复点击!!");
-			redis.delkey("nmg_api_auth_req"+MerUserId);
-			return map;
-		}
 		if(MerUserId != null && BkAcctNo != null && MobNo != null){
 			
 			Integer id = servie.SelectUserId(MerUserId);
@@ -469,15 +454,16 @@ public class NewPaymentController {
 				map.put("msg", "已绑卡");
 			}else{
 				
-		redis.set("nmg_api_auth_req"+MerUserId, String.valueOf(MerUserId));
 		Bankcard bank = new Bankcard();
 		bank.setUserId(MerUserId);//登陆人ID
 		bank.setBankcardName(BkAcctNo);//卡号
+		
 		bank.setTiedCardPhone(MobNo);//手机号
 		Integer SeleId = servie.SelectTrxId(bank);//查询银行卡号
 		if(SeleId == null ){
 			if(paymentname.getLoanSource().equals("钊力")){
 				Map<String, Object> maps = servie.RenzhenId(BkAcctNo, MobNo, IDNo, CstmrNm, bankcardTypeName, MerUserId, companyId,appNumber,codes);
+				
 				return maps;
 			}else{
 				
@@ -513,7 +499,6 @@ public class NewPaymentController {
 						map.put("code", "200");
 						map.put("Ncode", 2000);
 						map.put("desc", "插入成功");
-						redis.delkey("nmg_api_auth_req"+MerUserId);
 						map.put("ReturnChanpay", retu);
 						map.put("msg", retu.getRetMsg());
 						

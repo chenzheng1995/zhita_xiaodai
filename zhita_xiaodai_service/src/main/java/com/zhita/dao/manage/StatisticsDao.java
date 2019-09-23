@@ -164,6 +164,9 @@ public interface StatisticsDao {
 	
 	
 	Integer Addblacklist_user(BlacklistUser blackuser);
+	
+	
+	String SelectOrderNumber(Integer userId);
 }
 
 

@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.BaseParameter;
 import com.zhita.chanpayutil.ChanPayUtil;
@@ -29,11 +31,13 @@ import com.zhita.model.manage.MouthBankName;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Repayment;
+import com.zhita.model.manage.Result;
 import com.zhita.model.manage.RreturnAuth;
 import com.zhita.model.manage.User;
 import com.zhita.util.MD5Utils;
 import com.zhita.util.PageUtil;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 import com.zhita.util.YunTongXunUtil;
@@ -366,6 +370,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		return sdao.UpdateBankcard(bank);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,
 			Integer conpanyId,String appNumber,String code) {
@@ -374,7 +379,8 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		  Integer banktypeid = bankcardMapper.SelectBankName(bankcardTypeName);
 		if(banktypeid!=null){
 			
-			 	String host = "https://bankver.market.alicloudapi.com";
+			
+			 String host = "https://bankver.market.alicloudapi.com";
 			    String path = "/creditop/BankCardQuery/BankCardVerification";
 			    String method = "GET";
 			    String appcode = "ea779e8386254a6db6b3d4b599dfea44";
@@ -387,8 +393,17 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    querys.put("idCardCode", idCardCode);
 			    querys.put("name", name);
 			    
-			    
+		    
+		    RedisClientUtil redis = new RedisClientUtil();
 
+			    
+		    
+		    if(redis.get("userId"+userId)!=null){
+		    	map.put("code", 0);
+		    	map.put("Ncode", 0);
+		    	map.put("msg", "请勿重复点击");
+		    	return map;
+		    }else{
 			    
 	    		
 			    try {
@@ -401,11 +416,115 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    	* 相应的依赖请参照
 			    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
 			    	*/
+			    	//redisClientUtil.set("biaoshi"+userId, biaoshi);
 			    	HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
-			    	RreturnAuth rauth = JSON.parseObject(EntityUtils.toString(response.getEntity()), RreturnAuth.class);
-			    	if(rauth.getResult().getMessage().equals("银行卡鉴权成功")){//等于0是认证成功
+			    	//获取response的body
+			    	String a = EntityUtils.toString(response.getEntity());
+			    	JSONObject jsonObject=JSONObject.parseObject(a);
+			    	System.out.println("数据:"+a);
+			    	redis.set("userId"+userId, String.valueOf(userId));
+			    	if(a!=null){
+			    		if(a.length()!=0){
+					    	String msg = jsonObject.getString("message");
+					    	String reason = jsonObject.getString("reason");
+			    	if(reason.equals("成功")){//等于0是认证成功
 			    		Integer num = sdao.SelectUserRenNum(userId);
-			    		if(num>3){
+			    		if(num==null){
+			    			num=0;
+			    		}
+			    		User user = new User();
+		    			user.setId(userId);
+		    			user.setAuthentication(num+1);
+		    			Integer i = sdao.UserAuthenNum(user);//修改用户认证次数
+		    			
+		    			if(i!=null){
+		    				DateFormat format = new SimpleDateFormat("yyyy/M/d");
+		    				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+		    				if (result.length() == 31) {
+		    					result = 0 + MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+		    				}
+		    				System.out.println("验证码:"+code+":C:"+result);
+		    				if (result.equals(code)) {
+		    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+		    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
+		    					if("提交成功".equals(state)) {
+		    					redis.delkey("userId"+userId);
+		    					String thirdtypeid = "1";
+		    					String date = System.currentTimeMillis()+"";
+		    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
+		    					}
+		    					map.put("Ncode","2000");
+		    					map.put("code","200");
+		    					map.put("msg", state);
+		    					redis.delkey("userId"+userId);
+					    		map.put("desc", "认证成功");
+					    		return map;
+		    				} else {
+		    					redis.delkey("userId"+userId);
+		    					map.put("Ncode","405");
+		    					map.put("msg", "发送失败");
+		    					map.put("Code","405");
+		    					return map;
+		    				}
+		    			}else{
+		    				redis.delkey("userId"+userId);
+		    				map.put("Ncode","405");
+	    					map.put("msg", "更新失败");
+	    					map.put("Code","405");
+	    					return map;
+		    			}
+		    			
+			    	}else{
+			    		
+			    		Integer num = sdao.SelectUserRenNum(userId);
+			    		if(num==null){
+			    			num=0;
+			    		}
+			    		if(num < 3){
+			    			User user = new User();
+			    			user.setId(userId);
+			    			user.setAuthentication(num+1);
+			    			Integer i = sdao.UserAuthenNum(user);//修改用户认证次数
+			    			
+			    			if(i!=null){
+			    				DateFormat format = new SimpleDateFormat("yyyy/M/d");
+			    				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+			    				if (result.length() == 31) {
+			    					result = 0 + MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+			    				}
+			    				System.out.println("验证码:"+code+":C:"+result);
+			    				if (result.equals(code)) {
+			    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+			    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
+			    					if("提交成功".equals(state)) {
+			    						redis.delkey("userId"+userId);
+			    					redis.set("userId"+userId, String.valueOf(userId));
+			    					String thirdtypeid = "1";
+			    					String date = System.currentTimeMillis()+"";
+			    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
+			    					}
+			    					map.put("Ncode","2000");
+			    					map.put("code","200");
+			    					map.put("msg", state);
+						    		map.put("desc", "认证成功");
+						    		redis.delkey("userId"+userId);
+						    		return map;
+			    				} else {
+			    					map.put("Ncode","405");
+			    					redis.delkey("userId"+userId);
+			    					map.put("msg", "发送失败");
+			    					map.put("Code","405");
+			    					return map;
+			    				}
+			    			}else{
+			    				redis.delkey("userId"+userId);
+			    				map.put("Ncode","405");
+		    					map.put("msg", "更新失败");
+		    					map.put("Code","405");
+		    					return map;
+			    			}
+			    		}else{
+			    			
 			    			int i = sdao.UserBlacklist(userId);
 			    			if(i==1){
 			    				BlacklistUser banuser = new BlacklistUser();
@@ -426,65 +545,45 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    				sdao.Addblacklist_user(banuser);
 			    				if(i==1){
 				    				map.put("code", 200);
-						    		map.put("Ncode", 200);
+				    				redis.delkey("userId"+userId);
+						    		map.put("Ncode", 2000);
 						    		map.put("msg", "您重复认证超过三次,您已被拉入黑名单");
+						    		return map;
 				    			}else{
+				    				redis.delkey("userId"+userId);
 				    				map.put("code", 0);
 						    		map.put("Ncode", 0);
 						    		map.put("msg", "拉入失败");
-				    			}
-			    			}
-			    		}else{
-			    			sdao.SelectUserRenNum(userId);
-			    			User user = new User();
-			    			user.setId(userId);
-			    			user.setAuthentication(num+1);
-			    			Integer i = sdao.UserAuthenNum(user);//修改用户认证次数
-			    			if(i!=null){
-			    				
-			    				
-			    				DateFormat format = new SimpleDateFormat("yyyy/M/d");
-			    				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
-			    				if (result.length() == 31) {
-			    					result = 0 + MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
-			    				}
-			    				System.out.println("验证码:"+code+":C:"+result);
-			    				if (result.equals(code)) {
-			    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
-			    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
-			    					if("提交成功".equals(state)) {
-			    					String thirdtypeid = "1";
-			    					String date = System.currentTimeMillis()+"";
-			    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
-			    					}
-			    					map.put("Ncode","2000");
-			    					map.put("code","200");
-			    					map.put("msg", state);
-						    		map.put("desc", "认证成功");
 						    		return map;
-			    				} else {
-			    					map.put("Ncode","405");
-			    					map.put("msg", "发送失败");
-			    					map.put("Code","405");
-			    					return map;
-			    				}
-			    				
-			    			}else{
-			    				map.put("code", 0);
-					    		map.put("Ncode", 0);
-					    		map.put("msg", "认证失败");
-			    			}
+				    			}
+			    			
 			    		}
-			    	}else{
-			    		
-			    		
+			    			redis.delkey("userId"+userId);
 			    		map.put("code", 0);
 			    		map.put("Ncode", 0);
-			    		map.put("msg", rauth.getResult().getMessage());
+			    		map.put("msg", msg);
+			    	}
+			    	}
+			    	}else{
+			    		redis.delkey("userId"+userId);
+			    			map.put("code", 0);
+				    		map.put("Ncode", 0);
+				    		map.put("msg", "该卡无法认证,请换张卡");
+			    		}
+			    		
+			    		
+			    	}else{
+			    		redis.delkey("userId"+userId);
+			    		map.put("code", 0);
+			    		map.put("Ncode", 0);
+			    		map.put("msg", "该卡无法认证,请换张卡");
 			    	}
 			    } catch (Exception e) {
 			    	e.printStackTrace();
+			    	redis.delkey("userId"+userId);
 			    }
+			    
+		    } 
 			
 		}else{
 			map.put("code", "0");
@@ -492,6 +591,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			map.put("msg", "该卡不在放款范围");
 		}
 	   
+		
 	    return map;
 	}
 		

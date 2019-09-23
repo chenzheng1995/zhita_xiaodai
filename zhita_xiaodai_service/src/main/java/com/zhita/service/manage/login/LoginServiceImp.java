@@ -1,5 +1,6 @@
 package com.zhita.service.manage.login;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,8 +97,8 @@ public class LoginServiceImp implements IntLoginService{
 
 	@Override
 	public int insertUser1(String newPhone, String loginStatus, int companyId, String registeClient,
-			String registrationTime, int merchantId, String useMarket,String operatorsAuthentication) {
-		 int number = userMapper.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication);
+			String registrationTime, int merchantId, String useMarket,String operatorsAuthentication,BigDecimal canBorrowlines) {
+		 int number = userMapper.insertUser1(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication,canBorrowlines);
 		return number;
 	}
 
@@ -164,8 +165,8 @@ public class LoginServiceImp implements IntLoginService{
 	@Override
 	public int insertUser2(String newPhone, String loginStatus, int companyId, String registeClient,
 			String registrationTime, int merchantId, String useMarket, String operatorsAuthentication,
-			String userAgentInfo) {
-		 int number = userMapper.insertUser2(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication,userAgentInfo);
+			String userAgentInfo,BigDecimal canBorrowlines) {
+		 int number = userMapper.insertUser2(newPhone, loginStatus, companyId, registeClient, registrationTime, merchantId, useMarket,operatorsAuthentication,userAgentInfo,canBorrowlines);
 		return number;
 	}
 

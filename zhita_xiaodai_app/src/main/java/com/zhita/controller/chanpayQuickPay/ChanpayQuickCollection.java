@@ -730,7 +730,7 @@ public class ChanpayQuickCollection {
 			    bank.setCstmrnm(CstmrNm);
 				bank.setAttestationStatus("1");
 				servie.AddBankcard(bank);
-				 map.put("Ncode","200");
+				 map.put("Ncode","2000");
 			     map.put("msg", "验证成功");
 			     map.put("code", "200");
 			     return map;
@@ -1000,26 +1000,27 @@ public class ChanpayQuickCollection {
 	public Map<String, Object> nmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,Integer companyId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
-		
-			
-		
+		Repayment repay = new Repayment();//还账记录表
+		repay.setUserId(Integer.valueOf(MerUserId));
+		repay.setThirdparty_id(1);
+		repay.setOrderNumber(TrxId);
+		repay.setPipelinenumber(TrxId);
+		BigDecimal bd=new BigDecimal(TrxAmt);   
+		repay.setRepaymentMoney(bd);
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
-				if(paymentname.getLoanSource().equals("钊力")){
+				if(paymentname.getRepaymentSource().equals("钊力")){
 					
+					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
+					servie.AddRepayment(repay);
+					
+					return maps;
 				}else{
 			Map<String, String> origMap = new HashMap<String, String>();
 			// 2.1 基本参数 
 			origMap = setCommonMap(origMap);
 			origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
-			Repayment repay = new Repayment();//还账记录表
-			repay.setUserId(Integer.valueOf(MerUserId));
-			repay.setThirdparty_id(1);
-			repay.setOrderNumber(TrxId);
-			repay.setPipelinenumber(TrxId);
-			 BigDecimal bd=new BigDecimal(TrxAmt);   
-			repay.setRepaymentMoney(bd);
 			origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
 			origMap.put("OrdrName", ordrName);// 商品名称
 			origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
@@ -1045,6 +1046,7 @@ public class ChanpayQuickCollection {
 					Integer a = servie.AddRepayment(repay);
 					if(a!=null){
 						map.put("Ncode", 2000);
+						map.put("status", 1);
 						map.put("ReturnChanpay", retu);
 						map.put("TrxId", TrxId);
 						map.put("code", 200);
@@ -1515,18 +1517,14 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Defenmg_biz_api_quick_payment")
-	public Map<String, Object> Defenmg_biz_api_quick_payment(String TrxId,String OrdrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,
-			String deferBeforeReturntime,Integer postponeDate,String deferAfterReturntime) {
-		Map<String, Object> map = new HashMap<String, Object>();	
-		if(TrxId != null && OrdrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
-		Map<String, String> origMap = new HashMap<String, String>();
-		// 2.1 基本参数 
-		System.out.println("走接口");
-		origMap = setCommonMap(origMap);
-		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
+	public Map<String, Object> Defenmg_biz_api_quick_payment(String TrxId,String ordrName,String MerUserId,String CardBegin,String CardEnd,String TrxAmt,
+			String deferBeforeReturntime,Integer postponeDate,String deferAfterReturntime,Integer companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
+		RedisClientUtil redis = new RedisClientUtil();
 		Deferred defe = new Deferred();
 		
-		
+		//DefePayment
 		defe.setOrderNumber(TrxId);
 		BigDecimal onarrears = new BigDecimal(TrxAmt);
 		defe.setInterestOnArrears(onarrears);
@@ -1534,8 +1532,22 @@ public class ChanpayQuickCollection {
 		defe.setPostponeDate(postponeDate);
 		defe.setDeferAfterReturntime(deferAfterReturntime);
 		
+		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
+				if(paymentname.getRepaymentSource().equals("钊力")){
+					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
+					servie.AddDeferred(defe);
+					String orderId = (String) maps.get("orderId");
+					redis.set("DefeUserId"+orderId, MerUserId);
+					return maps;
+				}else{
+		Map<String, String> origMap = new HashMap<String, String>();
+		// 2.1 基本参数 
+		System.out.println("走接口");
+		origMap = setCommonMap(origMap);
+		origMap.put("Service", "nmg_biz_api_quick_payment");// 支付的接口名
+		
 		origMap.put("TrxId", ChanPayUtil.generateOutTradeNo());// 订单号
-		origMap.put("OrdrName", OrdrName);// 商品名称
+		origMap.put("OrdrName", ordrName);// 商品名称
 		origMap.put("MerUserId", MerUserId);// 用户标识（测试时需要替换一个新的meruserid）
 		origMap.put("SellerId", "200005640044");// 子账户号
 		origMap.put("SubMerchantNo", "200005640044");// 子商户号
@@ -1577,12 +1589,14 @@ public class ChanpayQuickCollection {
 				e.printStackTrace();
 			}
 			System.out.println(result);
-		}else{
+			}
+			}else{
 			map.put("ReturnChanpay", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 			map.put("Ncode", 0);
 			map.put("code", 0);
 			map.put("msg", "TrxId,OrdrName,MerUserId,CardBegin,CardEnd,TrxAmt不能位null");
 		}
+		
 		return map;
 	}
 

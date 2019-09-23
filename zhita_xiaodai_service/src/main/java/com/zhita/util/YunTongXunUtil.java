@@ -41,7 +41,8 @@ public class YunTongXunUtil {
 		String state = "未知问题";
 		PostUtil postUtil = new PostUtil();
 		String code =((int)((Math.random()*9+1)*1000))+"";
-		String content = "【鼎坤】您的验证码是："+code+"。请不要把验证码泄露给其他人。";
+//		String content = "【鼎坤】您的验证码是："+code+"。请不要把验证码泄露给其他人。";
+		String content = "【米多宝】您的验证码是："+code+"。请不要把验证码泄露给其他人。";
 		String param = "{'account':'"+account+"','password':'"+password+"','msg':'"+content+"','phone':'"+mobile+"','report':'true'}";
 		String jsonString = postUtil.post("http://smssh1.253.com/msg/send/json", param);
 		Map<String, Object> map = JSONObject.parseObject(jsonString);

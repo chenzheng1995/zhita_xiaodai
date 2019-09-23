@@ -1,4 +1,4 @@
-package com.zhita.service.manage.newpayment;
+package com.zhita.controller.payment.zpay;
 
 /**
  * @author chenyun
@@ -29,12 +29,6 @@ public class ZpayConfig {
     public final static String GATEWAY_URL="https://z.ibwin.cn:4433/api/gateway";
    // https://z.ibwin.cn:4433/api/gateway
     //企业支付——异步通知url
-    public static final String RECHARGE_NOTIFY_NEW="https://mdbpay.tcc1688.com/newpay/callbackpay";//测试服放款
-    //public static final String RECHARGE_NOTIFY_NEW="https://47.102.40.133:8081/newpay/callbackpay";//正式服放款
-    
-    public static final String RECHARGE_NOTIFY_NEWPAY="https://mdbpay.tcc1688.com/newpay/callback";//测试服还款
-    //public static final String RECHARGE_NOTIFY_NEWPAY="https://47.102.40.133:8081/newpay/callback";//正式服还款
-    
-    public static final String RECHARGE_NOTIFY_NEWDEFE="https://mdbpay.tcc1688.com/newpay/callbackdefe";//测试服延期
-    //public static final String RECHARGE_NOTIFY_NEWDEFE="https://47.102.40.133:8081/newpay/callbackdefe";//正式服延期
+    public static final String RECHARGE_NOTIFY_NEW="http://new";
+
 }

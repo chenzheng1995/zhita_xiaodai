@@ -6,4 +6,28 @@
 		select loanSource,repaymentSource from thirdparty_interface where companyId = #{companyId}
 	</select>
 	
+	
+	
+	<update id="Repaymentsa" parameterType="com.zhita.model.manage.Repayment">
+		update repayment set pipelinenumber = #{pipelinenumber} where orderId = (select max(id) from orders where id = #{orderId})
+	</update>
+	
+	
+	
+	<select id="getOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select id from orders where orderNumber = #{orderNumber}
+	</select>
+	
+	
+	
+	<update id="Updatepaymemt" parameterType="com.zhita.model.manage.Payment_record">
+		update payment_record set status = #{status} where orderId = #{orderId}
+	</update>
+	
+	
+	
+	<select id="getOrders" parameterType="java.lang.String" resultType="com.zhita.model.manage.Orders">
+		select * from orders where orderNumber = #{orderNumber}
+	</select>
+	
 </mapper>

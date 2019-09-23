@@ -220,7 +220,7 @@
 	
 				  	<!--APP 插入用户信息 -->
 	<insert id="insertUser1" parameterType="java.util.Map">
-		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication)
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,canBorrowlines)
 		values (#{newPhone},
 		#{registrationTime},
 		#{loginStatus},
@@ -229,7 +229,25 @@
 		#{registrationTime},
 		#{merchantId},
 		#{useMarket},
-		#{operatorsAuthentication})
+		#{operatorsAuthentication},
+		#{canBorrowlines})
+	</insert>
+	
+	
+						  	<!--APP 插入用户信息 -->
+	<insert id="insertUser2" parameterType="java.util.Map">
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,userAgentInfo,canBorrowlines)
+		values (#{newPhone},
+		#{registrationTime},
+		#{loginStatus},
+		#{companyId},
+		#{registeClient},
+		#{registrationTime},
+		#{merchantId},
+		#{useMarket},
+		#{operatorsAuthentication},
+		#{userAgentInfo},
+		#{canBorrowlines})
 	</insert>
 	
 	
@@ -867,19 +885,6 @@
 	</select> 
 	
 	
-					  	<!--APP 插入用户信息 -->
-	<insert id="insertUser2" parameterType="java.util.Map">
-		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,userAgentInfo)
-		values (#{newPhone},
-		#{registrationTime},
-		#{loginStatus},
-		#{companyId},
-		#{registeClient},
-		#{registrationTime},
-		#{merchantId},
-		#{useMarket},
-		#{operatorsAuthentication},
-		#{userAgentInfo})
-	</insert>
+
 	
 </mapper>

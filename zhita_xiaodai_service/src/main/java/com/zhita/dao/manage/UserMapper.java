@@ -29,7 +29,7 @@ public interface UserMapper {
     Integer findphone(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
 	int insertUser1(@Param("newPhone")String newPhone,@Param("loginStatus")String loginStatus,@Param("companyId")int companyId,@Param("registeClient")String registeClient,
-			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication);
+			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication,@Param("canBorrowlines") BigDecimal canBorrowlines);
 
 	int getId(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
 
@@ -187,7 +187,7 @@ public interface UserMapper {
 	String getModel(int userId);
 
 	int insertUser2(@Param("newPhone")String newPhone,@Param("loginStatus")String loginStatus,@Param("companyId")int companyId,@Param("registeClient")String registeClient,
-			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication,@Param("userAgentInfo")String userAgentInfo);
+			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication,@Param("userAgentInfo")String userAgentInfo,@Param("canBorrowlines") BigDecimal canBorrowlines);
 
 
 }

@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.dao.manage.BorrowMoneyMessageMapper;
 import com.zhita.dao.manage.CompanyMapper;
 import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.Source;
@@ -70,6 +72,9 @@ public class PromoteController {
 	
 	@Autowired
 	ThirdcalltongjiMapper thirdcalltongjiMapper;
+	
+	@Autowired
+	BorrowMoneyMessageMapper borrowMoneyMessageMapper;
 	
 	//判断这个渠道有没有删除或禁用，如果删除或禁用了就不让用户显示推广页
 	@RequestMapping("/isPromotion")
@@ -250,7 +255,8 @@ public class PromoteController {
             e.printStackTrace();
         }
 //        return "http://tg.rong51dai.com/H5Code/" + fileName;
-        return "http://139.129.102.60:8081/H5Code/" + fileName;
+//        return "http://139.129.102.60:8081/H5Code/" + fileName;
+        return "http://47.56.173.1:8080/H5Code/" + fileName;
     }
     
     private int getRandomCode() {
@@ -353,8 +359,9 @@ public class PromoteController {
  			 			}
  						String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
  						int merchantId = intSourceService.getsourceId(sourceName);
+ 						BigDecimal canBorrowlines = borrowMoneyMessageMapper.getCanBorrowlines(companyId);
  						int number = loginService.insertUser2(newPhone, loginStatus, companyId, registeClient,
- 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo);
+ 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines);
  						if (number == 1) {
  							id = loginService.getId(newPhone, companyId); // 获取该用户的id
  							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");

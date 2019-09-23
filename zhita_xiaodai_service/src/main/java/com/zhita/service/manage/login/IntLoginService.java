@@ -1,5 +1,6 @@
 package com.zhita.service.manage.login;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.zhita.model.manage.SysUser;
@@ -40,7 +41,7 @@ public Integer findphone(String newPhone, int companyId);
    public int updateLoginStatus(Integer userId);
 
 public int insertUser1(String newPhone, String loginStatus, int companyId, String registeClient,
-		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication);
+		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication, BigDecimal canBorrowlines);
 
 public int getId(String newPhone, int companyId);
 
@@ -64,7 +65,7 @@ public long getnumber(long todayZeroTimestamps, long tomorrowZeroTimestamps, int
 
 public int insertUser2(String newPhone, String loginStatus, int companyId, String registeClient,
 		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication,
-		String userAgentInfo);
+		String userAgentInfo, BigDecimal canBorrowlines);
 
    
 }

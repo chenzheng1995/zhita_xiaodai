@@ -32,6 +32,24 @@ public class RedisClientUtil {
         jedis.close();
         return set;
     }
+    
+    
+    
+    /**
+     * Redis存储简单类型
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public String setOrderId(String key, String value) {
+        Jedis jedis = pool.getResource();
+        String set = jedis.set(key, value);
+        jedis.close();
+        return set;
+    }
+    
+    
 
     public static String set(String key, String value, int seconds) {
         Jedis jedis = pool.getResource();
@@ -39,6 +57,7 @@ public class RedisClientUtil {
         jedis.close();
         return set;
     }
+    
 
     /**
      * 根据key，获取值
