@@ -33,7 +33,7 @@ public interface IntOrderService {
 	public int getOrdersId(int userId, int companyId);
 
 	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
-			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard);
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard,String bank);
 
 	public int getOrderId(String orderNumber);
 

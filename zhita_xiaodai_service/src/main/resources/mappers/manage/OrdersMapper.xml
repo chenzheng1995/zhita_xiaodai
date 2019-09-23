@@ -636,7 +636,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   
   
   	<insert id="setOrder" parameterType="java.util.Map">
-		insert into orders(companyId,userId,orderNumber,orderCreateTime,borrowTimeLimit,howManyTimesBorMoney,shouldReturnTime,riskmanagementFraction,borrowMoneyWay,borrowRepayBankcard) values(#{companyId},#{userId},#{orderNumber},#{orderCreateTime},#{lifeOfLoan},#{howManyTimesBorMoney},#{shouldReturned},#{riskmanagementFraction},#{borrowMoneyWay},#{borrowRepayBankcard})
+		insert into orders(companyId,userId,orderNumber,orderCreateTime,borrowTimeLimit,howManyTimesBorMoney,shouldReturnTime,riskmanagementFraction,
+		borrowMoneyWay,borrowRepayBankcard,bank) values(#{companyId},#{userId},#{orderNumber},#{orderCreateTime},#{lifeOfLoan},#{howManyTimesBorMoney},#{shouldReturned},#{riskmanagementFraction},#{borrowMoneyWay},#{borrowRepayBankcard},#{bank})
 	</insert>
 
 

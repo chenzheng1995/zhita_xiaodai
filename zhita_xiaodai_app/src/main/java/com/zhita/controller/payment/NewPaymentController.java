@@ -709,7 +709,7 @@ public class NewPaymentController {
     	
     	int num = 0;
 		try {
-			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay,ban.getBankcardName());
+			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay,ban.getBankcardName(),ban.getBankcardTypeName());
 		} catch (Exception e) {
 			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 			map1.put("code", "203");
