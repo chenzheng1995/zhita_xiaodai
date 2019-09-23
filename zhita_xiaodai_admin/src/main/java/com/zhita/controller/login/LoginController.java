@@ -364,7 +364,9 @@ public class LoginController {
 	        //String path = "D://nginx-1.14.2/html/dist/H5Code/" + fileName;   //39.98.83.65服务
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //139.129.102.60服务
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //115.29.64.145服务
-	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
+	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
+	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.173.1服务
+	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.172.8服务
 	        FolderUtil folderUtil = new FolderUtil();
 	        try {
 	            folderUtil.uploadImage(inputStream, path);
