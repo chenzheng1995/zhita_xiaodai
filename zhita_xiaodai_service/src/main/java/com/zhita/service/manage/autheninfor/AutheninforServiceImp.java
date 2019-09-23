@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.dao.manage.AuthenticationInformationMapper;
 import com.zhita.dao.manage.SysUserMapper;
+import com.zhita.model.manage.AuthenSecondattributes;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Company;
 
@@ -25,9 +26,18 @@ public class AutheninforServiceImp implements IntAutheninforService{
 	//后台管理---查询认证信息表所有信息
     public List<AuthenticationInformation> queryAll(Integer companyId){
     	List<AuthenticationInformation> list=authenticationInformationMapper.queryAll(companyId);
+    	for (int i = 0; i < list.size(); i++) {
+			//if(list.get(i).getIfauthentication().equals("1")){
+				List<AuthenSecondattributes> listsec=authenticationInformationMapper.queryauthsecond(list.get(i).getId());
+				list.get(i).setListsecond(listsec);
+			//}
+		}
     	return list;
     }
-    
+    //后台管理---根据主键id更新状态（authen_secondattributes表）
+    public int upastatuByprimiartKey(String status,Integer id){
+    	return authenticationInformationMapper.upastatuByprimiartKey(status, id);
+    }
     
     //后台管理---添加功能（查询出所有公司）
     public List<Company> queryAllCompany(){

@@ -51,6 +51,7 @@ public class Smserviceimp implements Smservice{
 //		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			
 			Map<String, Object> map = new HashMap<String, Object>();
+			sm.setMsg("【米多宝】"+sm.getMsg());
 			System.out.println(sm.getPhone());
 			if(sm.getPhone() == null){
 				map.put("code", "0");
@@ -286,7 +287,7 @@ public class Smserviceimp implements Smservice{
 			map.put("code", "0");
 			map.put("desc", "内容不能为空");
 		}else{
-			
+			shor.setShort_text("【米多宝】"+shor.getShort_text());
 			SmsSendRequest smsSingleRequest = new SmsSendRequest(account, password, shor.getShort_text(), shor.getPhone(),report);
 
 	        String requestJson = JSON.toJSONString(smsSingleRequest);

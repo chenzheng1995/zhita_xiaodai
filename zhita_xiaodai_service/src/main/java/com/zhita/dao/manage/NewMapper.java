@@ -1,5 +1,6 @@
 package com.zhita.dao.manage;
 
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Thirdparty_interface;
@@ -21,4 +22,12 @@ public interface NewMapper {
 	
 	
 	Integer Updatepaymemt(Payment_record pay);
+	
+	
+	
+	Orders getOrders(String orderNumber);
+	
+	
+	
+	Payment_record getPayment(Integer orderId);
 }

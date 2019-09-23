@@ -10,8 +10,8 @@
     <result column="thirdpartyPayment" property="thirdpartypayment" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, companyId, idcardFaceAuthentication, operatorsAuthentication, loansource, 
-    repaymentsource
+    id, companyId, idcardFaceAuthentication, operatorsAuthentication, loansource,
+    repaymentsource, phonethreeelements,bankfourelements
   </sql>
   <!-- 后台管理       根据id查询当前对象信息 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -104,7 +104,9 @@
       idcardFaceAuthentication = #{idcardfaceauthentication,jdbcType=VARCHAR},
       operatorsAuthentication = #{operatorsauthentication,jdbcType=VARCHAR},
       loansource = #{loansource,jdbcType=VARCHAR},
-      repaymentsource = #{repaymentsource,jdbcType=VARCHAR}
+      repaymentsource = #{repaymentsource,jdbcType=VARCHAR},
+      phonethreeelements = #{phonethreeelements,jdbcType=VARCHAR},
+      bankfourelements = #{bankfourelements,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <!-- 后台管理         查询出第三方接口配置表所有信息 -->
@@ -129,6 +131,16 @@
   <!-- 后台管理      查询还款渠道设置表所有信息 -->
    <select id="queryrepayment" resultType="com.zhita.model.manage.RepaymentSetting">
   	select * from repayment_setting where companyId=#{arg0} and deleted=0;
+  </select>
+  
+   <!-- 后台管理      查询手机三要素设置表所有信息 -->
+   <select id="queryphonethree" resultType="com.zhita.model.manage.PhoneThreeelements">
+  	select * from phone_threeelements where companyId=#{arg0} and deleted=0;
+  </select>
+  
+   <!-- 后台管理      查询银行卡四要素设置表所有信息 -->
+   <select id="querybankfour" resultType="com.zhita.model.manage.BankFourelements">
+  	select * from bank_fourelements where companyId=#{arg0} and deleted=0;
   </select>
   
      <select id="getOperatorsAuthentication" parameterType="java.lang.Integer" resultType="java.lang.String">

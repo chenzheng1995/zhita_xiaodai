@@ -562,7 +562,8 @@
 				AND o.orderStatus BETWEEN #{status1} and #{status2}
 			</if>
 			 </where>
-			 GROUP BY ord.orderId
+			 GROUP BY ord.orderId 
+			 order by ord.orderId desc
 			 limit #{page},#{pagesize}
 		</select>
 		
@@ -570,7 +571,7 @@
 		<select id="HuaiZhangOrdersAA" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
-			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.shouldReturnTime
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.shouldReturnTime,ord.interestInAll,ord.technicalServiceMoney
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid
@@ -607,6 +608,7 @@
 			</if>
 			</where>
 			 GROUP BY ord.orderId
+			 order by ord.orderId desc
 			 limit #{page},#{pagesize}
 		</select>
 		
@@ -830,9 +832,8 @@
 		
 		
 		<select id="CollTimeData" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(id) as collection_count,sum(shouldReapyMoney) as shouldReapyMoney from orders where companyId = #{companyId} 
-			and id not in (select ov.orderId from overdue ov,orders o where 
-			o.companyId = #{companyId} and o.id = ov.orderId)
+			select count(o.id) as collection_count,sum(ord.shouldReapyMoney) as shouldReapyMoney from orders o,orderdetails ord 
+			where  o.id (select ov.orderId from overdue ov,orders o where o.companyId = #{companyId} and o.id = ov.orderId)
 			AND o.shouldReturnTime BETWEEN #{start_time} and #{end_time}
 		</select>
 		

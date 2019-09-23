@@ -204,7 +204,7 @@ public class Collectionserviceimp implements Collectionservice{
 				}
 				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 				if(a==0){
-					orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
 				}
 				
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
@@ -368,7 +368,7 @@ public class Collectionserviceimp implements Collectionservice{
 				}
 				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 				if(a==0){
-					orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
 				}
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
@@ -420,8 +420,9 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
 			int ac = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 			if(ac==0){
-				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+				orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
 			}
+
 			if(des != null){
 				orders.get(i).setPromise_money(des);
 			}else{

@@ -218,7 +218,7 @@ public class ChanpaySend extends BaseParameter{
     	
     	int num = 0;
 		try {
-			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
+			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay,ban.getBankcardName(), ban.getBankcardTypeName());
 		} catch (Exception e) {
 			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 			map1.put("code", "203");
@@ -365,97 +365,97 @@ public class ChanpaySend extends BaseParameter{
 	 *BigDecimal averageDailyInterest
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("Mingxi")
-	public Map<String, Object> SendMing(String orderNumber,int lifeOfLoan,String sourceName,String registeClient,
-			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,
-			BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {
-		int borrowNumberR = intOrderService.borrowNumber(userId,companyId); //用户还款次数
-	    int	howManyTimesBorMoney = borrowNumberR+1;//第几次借款
-	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
-	    Map<String, String> map = this.requestBaseParameter();
-		Map<String, Object> map1 = new HashMap<String, Object>();
-    	Integer riskmanagementFraction = 0;
-    	Integer asc = intUserService.getRiskControlPoints(userId);//获取风控分数
-    	if(asc != null){
-    		riskmanagementFraction=asc;
-    	}
-    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
-    	String borrowMoneyWay = "立即贷";//贷款方式
-    	
-    	
-    	/*                           获取银行卡信息         */
-    	Bankcard bas = new Bankcard();
-    	bas.setCompanyId(companyId);
-		bas.setUserId(userId);
-		Bankcard banAA = chanser.SelectBank(bas);
-		System.out.println("数据:"+banAA.getTiedCardPhone() + banAA.getBankcardName() + banAA.getCstmrnm() + banAA.getBankcardTypeName());
-		
-		Payment_record pay = new Payment_record();
-		map.put("TransCode", "C00000");
-		map.put("BusinessType", "0");
-		map.put("BankCommonName", "");//卡类型可空
-		map.put("AcctNo", banAA.getBankcardName());
-		map.put("AcctName", banAA.getName());
-		map.put("TransAmt", "");//交易金额  可空
-		map.put("OutTradeNo", ChanPayUtil.generateOutTradeNo());
-		map.put("OriOutTradeNo", orderNumber);
-		String staring = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
-				BaseConstant.MERCHANT_PRIVATE_KEY);
-		System.out.println("返回:"+staring);
-		System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
-		Jiaoyi sreturn = JSON.parseObject(staring,Jiaoyi.class);
-		System.out.println("111111");
-		pay.setPipelinenumber(sreturn.getPartnerId());
-		pay.setDeleted("0");
-		pay.setPaymentmoney(actualAmountReceived);
-		String statu = sreturn.getAcceptStatus();
-
-		if(statu.equals("S")){
-			System.out.println("支付成功");
-
-			pay.setStatus("支付成功");
-			String pipelnen = "lsn_"+sreturn.getPartnerId();
-			pay.setPipelinenumber(pipelnen);
-			pay.setOrderNumber(orderNumber);
-			Integer addId = chanser.AddPayment_record(pay);
-			if(addId != null){
-				
-				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
-				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
-		    	if(num==1) {
-		    		int orderId = intOrderService.getOrderId(orderNumber);
-			    	BigDecimal surplus_money = finalLine;
-		    		num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
-			    			registeClient,sourceName,shouldTotalAmount,surplus_money);
-			    	pay.setOrderId(orderId);
-			    	chanser.UpdatePayment(pay);
-			    	if(num==1) {
-			    		map.put("ShortReturn", staring);
-			    		map1.put("code", 200);
-			    		map1.put("Ncode", 2000);
-			    		map1.put("msg","插入成功");
-			    	}else {
-			    		map1.put("Ncode", 2000);
-						map1.put("code",405); 
-						map1.put("msg", "插入失败");
-					}
-		    	}
-			}
-			
-
-		}else if(statu.equals("F")){
-
-			map1.put("Ncode", 0);
-			pay.setStatus("支付失败");
-			chanser.AddPayment_record(pay);
-			map1.put("ShortReturn", sreturn);
-			map1.put("code", 0);
-			map1.put("msg", sreturn);
-		}
-	
-		return map1;
-	}
+//	@ResponseBody
+//	@RequestMapping("Mingxi")
+//	public Map<String, Object> SendMing(String orderNumber,int lifeOfLoan,String sourceName,String registeClient,
+//			Integer userId,Integer companyId,BigDecimal finalLine,BigDecimal averageDailyInterest,BigDecimal totalInterest,
+//			BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {
+//		int borrowNumberR = intOrderService.borrowNumber(userId,companyId); //用户还款次数
+//	    int	howManyTimesBorMoney = borrowNumberR+1;//第几次借款
+//	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
+//	    Map<String, String> map = this.requestBaseParameter();
+//		Map<String, Object> map1 = new HashMap<String, Object>();
+//    	Integer riskmanagementFraction = 0;
+//    	Integer asc = intUserService.getRiskControlPoints(userId);//获取风控分数
+//    	if(asc != null){
+//    		riskmanagementFraction=asc;
+//    	}
+//    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
+//    	String borrowMoneyWay = "立即贷";//贷款方式
+//    	
+//    	
+//    	/*                           获取银行卡信息         */
+//    	Bankcard bas = new Bankcard();
+//    	bas.setCompanyId(companyId);
+//		bas.setUserId(userId);
+//		Bankcard banAA = chanser.SelectBank(bas);
+//		System.out.println("数据:"+banAA.getTiedCardPhone() + banAA.getBankcardName() + banAA.getCstmrnm() + banAA.getBankcardTypeName());
+//		
+//		Payment_record pay = new Payment_record();
+//		map.put("TransCode", "C00000");
+//		map.put("BusinessType", "0");
+//		map.put("BankCommonName", "");//卡类型可空
+//		map.put("AcctNo", banAA.getBankcardName());
+//		map.put("AcctName", banAA.getName());
+//		map.put("TransAmt", "");//交易金额  可空
+//		map.put("OutTradeNo", ChanPayUtil.generateOutTradeNo());
+//		map.put("OriOutTradeNo", orderNumber);
+//		String staring = ChanPayUtil.sendPost(map, BaseConstant.CHARSET,
+//				BaseConstant.MERCHANT_PRIVATE_KEY);
+//		System.out.println("返回:"+staring);
+//		System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
+//		Jiaoyi sreturn = JSON.parseObject(staring,Jiaoyi.class);
+//		System.out.println("111111");
+//		pay.setPipelinenumber(sreturn.getPartnerId());
+//		pay.setDeleted("0");
+//		pay.setPaymentmoney(actualAmountReceived);
+//		String statu = sreturn.getAcceptStatus();
+//
+//		if(statu.equals("S")){
+//			System.out.println("支付成功");
+//
+//			pay.setStatus("支付成功");
+//			String pipelnen = "lsn_"+sreturn.getPartnerId();
+//			pay.setPipelinenumber(pipelnen);
+//			pay.setOrderNumber(orderNumber);
+//			Integer addId = chanser.AddPayment_record(pay);
+//			if(addId != null){
+//				
+//				System.out.println("kaishu:"+companyId+","+userId+","+orderNumber+","+orderCreateTime+","+lifeOfLoan+","+shouldReturned+","+riskmanagementFraction+","+borrowMoneyWay+"");
+//				int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
+//		    	if(num==1) {
+//		    		int orderId = intOrderService.getOrderId(orderNumber);
+//			    	BigDecimal surplus_money = finalLine;
+//		    		num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,
+//			    			registeClient,sourceName,shouldTotalAmount,surplus_money);
+//			    	pay.setOrderId(orderId);
+//			    	chanser.UpdatePayment(pay);
+//			    	if(num==1) {
+//			    		map.put("ShortReturn", staring);
+//			    		map1.put("code", 200);
+//			    		map1.put("Ncode", 2000);
+//			    		map1.put("msg","插入成功");
+//			    	}else {
+//			    		map1.put("Ncode", 2000);
+//						map1.put("code",405); 
+//						map1.put("msg", "插入失败");
+//					}
+//		    	}
+//			}
+//			
+//
+//		}else if(statu.equals("F")){
+//
+//			map1.put("Ncode", 0);
+//			pay.setStatus("支付失败");
+//			chanser.AddPayment_record(pay);
+//			map1.put("ShortReturn", sreturn);
+//			map1.put("code", 0);
+//			map1.put("msg", sreturn);
+//		}
+//	
+//		return map1;
+//	}
 	
 	
 	

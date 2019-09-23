@@ -185,49 +185,49 @@ public class OrdersController {
 	    	
 	    	
 	    }
-	    //立即提现按钮
-	    @RequestMapping("/setorder")
-	    @ResponseBody
-	    @Transactional
-	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName,int lifeOfLoan,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {  //finalLine是上面那个接口得到的额度
-	    	 Map<String, Object> map = new HashMap<String, Object>();		
-
-		    int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
-		    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
-	    	Calendar now = Calendar.getInstance(); 
-	    	String year = now.get(Calendar.YEAR)+""; //年
-	    	String month = now.get(Calendar.MONTH) + 1 + "";//月
-	    	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
-	    	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
-	    	String minute = now.get(Calendar.MINUTE)+"";//分
-	    	String second = now.get(Calendar.SECOND)+"";//秒
-	    	String afterFour = phone.substring(phone.length()-4); 
-	    	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
-	    	String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
-	    	int riskmanagementFraction = intUserService.getRiskControlPoints(userId);//获取风控分数
-	    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
-	    	String borrowMoneyWay = "立即贷";//贷款方式
-	    	int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
-	    	if(num==1) {
-	    		BigDecimal surplus_money = finalLine;
-	    		int orderId = intOrderService.getOrderId(orderNumber);
-		    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,registeClient,sourceName,shouldTotalAmount,surplus_money);
-		    	if(num==1) {
-			    	 map.put("Ncode","2000");
-		    		map.put("code", 200);
-		    		map.put("msg","插入成功");
-		    		map.put("orderNumber",orderNumber);
-		    	}else {
-			    	 map.put("Ncode","405");
-					map.put("code",405);
-					map.put("msg", "插入失败");
-				}
-	    	}
-	    	
-	    	
-			return map;
-		   
-	   }
+//	    //立即提现按钮
+//	    @RequestMapping("/setorder")
+//	    @ResponseBody
+//	    @Transactional
+//	    public Map<String, Object> setorder(int userId,int companyId,BigDecimal finalLine,String phone,String registeClient, String sourceName,int lifeOfLoan,BigDecimal averageDailyInterest,BigDecimal totalInterest,BigDecimal platformServiceFee,BigDecimal actualAmountReceived,BigDecimal shouldTotalAmount) {  //finalLine是上面那个接口得到的额度
+//	    	 Map<String, Object> map = new HashMap<String, Object>();		
+//
+//		    int borrowNumber = intOrderService.borrowNumber(userId,companyId); //用户还款次数
+//		    int	howManyTimesBorMoney = borrowNumber+1;//第几次借款
+//	    	Calendar now = Calendar.getInstance(); 
+//	    	String year = now.get(Calendar.YEAR)+""; //年
+//	    	String month = now.get(Calendar.MONTH) + 1 + "";//月
+//	    	String day = now.get(Calendar.DAY_OF_MONTH)+"";//日
+//	    	String hour = now.get(Calendar.HOUR_OF_DAY)+"";//时
+//	    	String minute = now.get(Calendar.MINUTE)+"";//分
+//	    	String second = now.get(Calendar.SECOND)+"";//秒
+//	    	String afterFour = phone.substring(phone.length()-4); 
+//	    	String orderNumber = year+month+day+hour+minute+second+afterFour+"0"+(lifeOfLoan+"")+((borrowNumber+1)+"");//订单编号
+//	    	String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
+//	    	int riskmanagementFraction = intUserService.getRiskControlPoints(userId);//获取风控分数
+//	    	String shouldReturned = getShouldReturned(lifeOfLoan-1);//应还日时间戳,因为借款当天也算一天，所以要减去一天
+//	    	String borrowMoneyWay = "立即贷";//贷款方式
+//	    	int num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
+//	    	if(num==1) {
+//	    		BigDecimal surplus_money = finalLine;
+//	    		int orderId = intOrderService.getOrderId(orderNumber);
+//		    	num = orderdetailsMapper.setororderdetails(orderId,finalLine,averageDailyInterest,totalInterest,platformServiceFee,actualAmountReceived,registeClient,sourceName,shouldTotalAmount,surplus_money);
+//		    	if(num==1) {
+//			    	 map.put("Ncode","2000");
+//		    		map.put("code", 200);
+//		    		map.put("msg","插入成功");
+//		    		map.put("orderNumber",orderNumber);
+//		    	}else {
+//			    	 map.put("Ncode","405");
+//					map.put("code",405);
+//					map.put("msg", "插入失败");
+//				}
+//	    	}
+//	    	
+//	    	
+//			return map;
+//		   
+//	   }
 
 	   
 	   public static String getShouldReturned(int day) {

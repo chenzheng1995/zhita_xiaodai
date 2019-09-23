@@ -34,20 +34,20 @@ public class ThirdpartyintController {
     }
     
     //后台管理---添加功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/insert")
     public int insert(ThirdpartyInterface record){
     	int num=intThirdpartyintService.insert(record);
     	return num;
-    }
+    }*/
 	
     //后台管理---根据id查询当前对象信息
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/selectByPrimaryKey")
     public ThirdpartyInterface selectByPrimaryKey(Integer id){
     	ThirdpartyInterface thirdpartyInterface=intThirdpartyintService.selectByPrimaryKey(id);
     	return thirdpartyInterface;
-    }
+    }*/
 	
 	 //后台管理---编辑保存功能
 	@ResponseBody

@@ -170,7 +170,7 @@ public class FinanceServiceimp implements FinanceService{
 		
 		
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney();//前置应还金额
+		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(ordea.getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			ordea.setOrder_money(ordea.getShouldReapyMoney());//应还总金额

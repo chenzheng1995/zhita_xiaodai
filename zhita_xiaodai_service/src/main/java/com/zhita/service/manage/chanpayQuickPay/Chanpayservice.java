@@ -98,4 +98,13 @@ public interface Chanpayservice {
 	
 	
 	Integer Addbankdeduction(Bankdeductions bank);
+	
+	
+	String RepaymentStatus(String orderNumber);
+	
+	
+	Integer UpdateRepayStatusAA(Repayment repay);
+	
+	
+	String DefeStatus(String orderNumber);
 }

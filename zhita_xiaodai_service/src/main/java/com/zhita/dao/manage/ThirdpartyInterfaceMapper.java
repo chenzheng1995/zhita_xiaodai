@@ -2,9 +2,11 @@ package com.zhita.dao.manage;
 
 import java.util.List;
 
+import com.zhita.model.manage.BankFourelements;
 import com.zhita.model.manage.FaceRecognition;
 import com.zhita.model.manage.LoanSetting;
 import com.zhita.model.manage.OperatorSetting;
+import com.zhita.model.manage.PhoneThreeelements;
 import com.zhita.model.manage.RepaymentSetting;
 import com.zhita.model.manage.ThirdpartyInterface;
 
@@ -38,6 +40,12 @@ public interface ThirdpartyInterfaceMapper {
     
    //后台管理---查询还款渠道设置表所有信息
     List<RepaymentSetting> queryrepayment(Integer companyId);
+    
+    //后台管理---查询手机三要素表所有信息
+    List<PhoneThreeelements> queryphonethree(Integer companyId);
+    
+    //后台管理---查询银行卡四要素表所有信息
+    List<BankFourelements> querybankfour(Integer companyId);
 
 	String getOperatorsAuthentication(int companyId);
 }

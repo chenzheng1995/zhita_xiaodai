@@ -1011,10 +1011,20 @@ public class ChanpayQuickCollection {
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
 				if(paymentname.getRepaymentSource().equals("钊力")){
-					
+					System.out.println("还钱!!!!!!");
 					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
-					servie.AddRepayment(repay);
-					
+					String pipelinenu = "Rsn_"+maps.get("billId");
+					repay.setPipelinenumber(pipelinenu);
+					Integer i = servie.AddRepayment(repay);
+					if(i!=null){
+						maps.put("code", "200");
+						maps.put("Ncode", 2000);
+						maps.put("msg", "还款成功");
+					}else{
+						maps.put("code", "0");
+						maps.put("Ncode", 0);
+						maps.put("msg", "还款成功,订单生成失败");
+					}
 					return maps;
 				}else{
 			Map<String, String> origMap = new HashMap<String, String>();
@@ -1043,6 +1053,7 @@ public class ChanpayQuickCollection {
 				repay.setPipelinenumber(pipelinenu);
 				String sa = retu.getAcceptStatus();
 				if(sa.equals("S")){
+					repay.setStatu("成功");
 					Integer a = servie.AddRepayment(repay);
 					if(a!=null){
 						map.put("Ncode", 2000);
@@ -1535,8 +1546,16 @@ public class ChanpayQuickCollection {
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 				if(paymentname.getRepaymentSource().equals("钊力")){
 					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
-					servie.AddDeferred(defe);
-					redis.set("DefeUserId", MerUserId);
+					Integer a = servie.AddDeferred(defe);
+					if(a!=null){
+						maps.put("code", "200");
+						maps.put("Ncode", 2000);
+						maps.put("msg", "还款成功");
+					}else{
+						maps.put("code", "0");
+						maps.put("Ncode", 0);
+						maps.put("msg", "还款成功,订单生成失败");
+					}
 					return maps;
 				}else{
 		Map<String, String> origMap = new HashMap<String, String>();

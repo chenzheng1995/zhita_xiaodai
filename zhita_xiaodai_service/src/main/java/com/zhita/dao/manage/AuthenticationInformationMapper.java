@@ -3,6 +3,7 @@ package com.zhita.dao.manage;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zhita.model.manage.AuthenSecondattributes;
 import com.zhita.model.manage.AuthenticationInformation;
 
 public interface AuthenticationInformationMapper {
@@ -23,6 +24,12 @@ public interface AuthenticationInformationMapper {
     
     //后台管理---查询认证信息表所有信息
     List<AuthenticationInformation> queryAll(Integer companyId);
+    
+    //后台管理---根据认证表的认证id查询认证信息二级属性关联表的值
+    List<AuthenSecondattributes> queryauthsecond(Integer authid);
+    
+    //后台管理---根据主键id更新状态（authen_secondattributes表）
+    int upastatuByprimiartKey(String status,Integer id);
     
     //后台管理---根据id查询图标字段
     String queryIcon(Integer id);

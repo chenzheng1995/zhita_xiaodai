@@ -5,11 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.payment.util.HttpClient;
 import com.zhita.controller.payment.util.SignUtils;
@@ -17,6 +15,7 @@ import com.zhita.dao.manage.NewMapper;
 import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Loan_setting;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Thirdparty_interface;
@@ -72,7 +71,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		        payParams.put("version","1.0");
 		        payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
 		        payParams.put("amount",amount.setScale(2).toString());
-		        payParams.put("appType","xunpay");
+		        payParams.put("appType","autobank");
 		        payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
 		        payParams.put("orderId", billId);//订单ID
 		        payParams.put("orderUid", "MDBS");//客户ID
@@ -175,13 +174,11 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        	String code=jsonObject.getString("code");
 	        	String url = jsonObject.getString("qrUrl");
 	        	String orderNumber = jsonObject.getString("orderId");
-	        	String number = jsonObject.getString("tradeNo");//还款流水号
 	        	String msg = jsonObject.getString("msg");
 	        	if(code.equals("SUCCESS")){
 	        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
-	        			map.put("code", 200);
-		        		map.put("Ncode", 2000);
 	        			map.put("url", url);
+	        			map.put("billId", orderNumber);
 	        			map.put("msg", msg);
 	        			map.put("status", 2);
 	        			map.put("loaName", "钊力");
@@ -266,9 +263,8 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        	String msg = jsonObject.getString("msg");
 	        	if(code.equals("SUCCESS")){
 	        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
-	        			map.put("code", 200);
-		        		map.put("Ncode", 2000);
 	        			map.put("url", url);
+	        			map.put("DefebillId", orderNumber);
 	        			map.put("msg", msg);
 	        			map.put("status", 2);
 	        			map.put("loaName", "钊力");
@@ -307,11 +303,30 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		return newdao.getOrderId(orderIds);
 	}
 
+	
+	
+	
+	
 
 
 	@Override
 	public Integer Updatepaymemt(Payment_record pay) {
 		return newdao.Updatepaymemt(pay);
+	}
+
+
+
+	@Override
+	public Orders getOrders(String orderNumber) {
+		return newdao.getOrders(orderNumber);
+	}
+
+
+
+	@Override
+	public Payment_record getPayment(Integer orderId) {
+		// TODO Auto-generated method stub
+		return newdao.getPayment(orderId);
 	}
 	
 	

@@ -332,4 +332,10 @@
 		select status from source where companyId=#{companyId} and sourceName=#{sourceName} and deleted=0
 	</select>
 	
+	<!-- 后台管理     查询当前渠道当前时间的认证数量 -->
+	<select id="queryattcount" resultType="java.lang.Integer">
+		select count(DISTINCT u.name) from user u inner join user_attestation uat on u.id=uat.userId
+		where u.sourceid=#{arg0} and uat.authentime>=#{arg1} and uat.authentime &lt;#{arg2}
+	</select>
+	
 </mapper>

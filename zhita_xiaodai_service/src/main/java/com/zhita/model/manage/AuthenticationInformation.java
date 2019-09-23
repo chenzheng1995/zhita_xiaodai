@@ -1,5 +1,7 @@
 package com.zhita.model.manage;
 
+import java.util.List;
+
 //认证信息表
 public class AuthenticationInformation {
     private Integer id;
@@ -14,9 +16,9 @@ public class AuthenticationInformation {
 
     private String deleted;//假删除（1：删除；0：没删除）
     
-    private String certificationstatus;//认证状态
+    private List<AuthenSecondattributes> listsecond;//二层属性的值
     
-
+    private String certificationstatus;//认证状态
     
 
     public Integer getId() {
@@ -75,4 +77,13 @@ public class AuthenticationInformation {
     public void setCertificationstatus(String certificationstatus) {
         this.certificationstatus = certificationstatus == null ? null : certificationstatus.trim();
     }
+
+	public List<AuthenSecondattributes> getListsecond() {
+		return listsecond;
+	}
+
+	public void setListsecond(List<AuthenSecondattributes> listsecond) {
+		this.listsecond = listsecond;
+	}
+    
 }
