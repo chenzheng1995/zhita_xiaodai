@@ -98,7 +98,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://dhj.rong51dai.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
@@ -132,7 +132,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://dhj.rong51dai.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
@@ -569,5 +569,10 @@ public class SourceServiceImp implements IntSourceService{
 	public String getstatus(int companyId, String sourceName) {
 		String status = sourceMapper.getstatus(companyId,sourceName);
 		return status;
+	}
+	
+	//后台管理----查询当前渠道当前时间的认证数量
+	public int queryattcount(Integer sourceid,String starttime,String endtime){
+		return sourceMapper.queryattcount(sourceid, starttime, endtime);
 	}
 }

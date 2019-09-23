@@ -98,6 +98,14 @@
     from authentication_information
     where companyId=#{arg0}
   </select>
+  <!-- 后台管理         根据认证表的认证id查询认证信息二级属性关联表的值 -->
+  <select id="queryauthsecond" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.AuthenSecondattributes">
+  	select * from authen_secondattributes where authenid=#{arg0}
+  </select>
+  <!-- 后台管理          根据主键id更新状态（authen_secondattributes表） -->
+  <update id="upastatuByprimiartKey">
+  	update authen_secondattributes set status=#{arg0} where id=#{arg1}
+  </update>
   <!-- 后台管理        根据id查询图标字段 -->
   <select id="queryIcon" parameterType="java.lang.Integer" resultType="java.lang.String">
   	select icon from authentication_information where id=#{arg0}

@@ -122,4 +122,6 @@ public interface IntSourceService {
 
 	public String getstatus(int companyId, String sourceName);
 
+	//后台管理----查询当前渠道当前时间的认证数量
+	public int queryattcount(Integer sourceid,String starttime,String endtime);
 }

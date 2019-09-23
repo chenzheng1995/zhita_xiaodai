@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhita.model.manage.AuthenField;
+import com.zhita.model.manage.AuthenField1;
+import com.zhita.model.manage.AuthenField2;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.service.manage.autheninfor.IntAutheninforService;
 import com.zhita.util.OssUtil;
@@ -109,14 +111,45 @@ public class AutheninforController {
     }*/
 
     //后台管理---编辑功能
-	@ResponseBody
+/*	@ResponseBody
 	@RequestMapping("/updateByPrimaryKey")
-    public int updateByPrimaryKey(AuthenField record){
+    public int updateByPrimaryKey(AuthenField record,List<AuthenSecondattributes> listopeator,List<AuthenSecondattributes> listbank){
 		int num=0;
 		num=intAutheninforService.updateByPrimaryKey(record.getId1(), record.getValue1());
 		num=intAutheninforService.updateByPrimaryKey(record.getId2(), record.getValue2());
+		if(record.getValue2().equals("1")){
+			for (int i = 0; i < listopeator.size(); i++) {
+				intAutheninforService.upastatuByprimiartKey(listopeator.get(i).getStatus(), listopeator.get(i).getId());
+			}
+		}
 		num=intAutheninforService.updateByPrimaryKey(record.getId3(), record.getValue3());
+		if(record.getValue3().equals("1")){
+			for (int i = 0; i < listbank.size(); i++) {
+				intAutheninforService.upastatuByprimiartKey(listbank.get(i).getStatus(), listbank.get(i).getId());
+			}
+		}
 		num=intAutheninforService.updateByPrimaryKey(record.getId4(), record.getValue4());
 		return num;
-    }
+    }*/
+	
+	
+	   //后台管理---编辑功能
+		@ResponseBody
+		@RequestMapping("/updateByPrimaryKey")
+	    public int updateByPrimaryKey(AuthenField record,AuthenField1 record1,AuthenField2 record2){
+			int num=0;
+			num=intAutheninforService.updateByPrimaryKey(record.getId1(), record.getValue1());
+			num=intAutheninforService.updateByPrimaryKey(record.getId2(), record.getValue2());
+			if(record.getValue2().equals("1")){
+				intAutheninforService.upastatuByprimiartKey(record1.getValue1b(),record1.getId1b());
+				intAutheninforService.upastatuByprimiartKey(record1.getValue2b(),record1.getId2b());
+			}
+			num=intAutheninforService.updateByPrimaryKey(record.getId3(), record.getValue3());
+			if(record.getValue3().equals("1")){
+				intAutheninforService.upastatuByprimiartKey(record2.getValue1o(),record2.getId1o());
+				intAutheninforService.upastatuByprimiartKey(record2.getValue2o(),record2.getId2o());
+			}
+			num=intAutheninforService.updateByPrimaryKey(record.getId4(), record.getValue4());
+			return num;
+	    }
 }

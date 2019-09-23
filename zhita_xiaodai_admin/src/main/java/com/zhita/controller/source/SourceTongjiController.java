@@ -92,7 +92,7 @@ public class SourceTongjiController {
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
 			
 			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
-			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
+			/*List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
 				Integer userid=listuserid.get(j);
@@ -102,7 +102,8 @@ public class SourceTongjiController {
 				if((uatcount==1)||(bankcount==1)||(operacount==1)){
 					authencount=authencount+1;
 				}
-			}
+			}*/
+			int authencount=intSourceService.queryattcount(sourceid, startTimestamps, endTimestamps);//认证人数
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
 			Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
 			listsource.get(i).setApplynum(applynum);//申请数
@@ -212,7 +213,7 @@ public class SourceTongjiController {
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
 			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceids,startTimestamps,endTimestamps));//激活数
-			List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
+			/*List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
 				Integer userid=listuserid.get(j);
@@ -222,7 +223,8 @@ public class SourceTongjiController {
 				if((uatcount==1)||(bankcount==1)||(operacount==1)){
 					authencount=authencount+1;
 				}
-			}
+			}*/
+			int authencount=intSourceService.queryattcount(sourceids, startTimestamps, endTimestamps);//认证人数
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
 			Integer applynum=intSourceService.queryNum(companyId, sourceids,startTimestamps, endTimestamps);//申请人数
 			listsource.get(i).setApplynum(applynum);//申请数
@@ -344,7 +346,7 @@ public class SourceTongjiController {
 			tongjiSorce.setCvr(cvr);//uv到注册的转化率
 			tongjiSorce.setActivatecount(intSourceService.queryCount(sourceid,startTimestamps,endTimestamps));//激活数
 			
-			List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
+			/*List<Integer> listuserid=intSourceService.queryUserid(sourceid);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
 				Integer userid=listuserid.get(j);
@@ -354,7 +356,8 @@ public class SourceTongjiController {
 				if((uatcount==1)||(bankcount==1)||(operacount==1)){
 					authencount=authencount+1;
 				}
-			}
+			}*/
+			int authencount=intSourceService.queryattcount(sourceid, startTimestamps, endTimestamps);//认证人数
 			tongjiSorce.setAuthencount(authencount);//当前渠道的认证人数
 			Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
 			tongjiSorce.setApplynum(applynum);//申请数
@@ -463,7 +466,7 @@ public class SourceTongjiController {
 			}
 			listsource.get(i).setCvr(cvr);//uv到注册的转化率
 			listsource.get(i).setActivatecount(intSourceService.queryCount(sourceids,startTimestamps,endTimestamps));//激活数
-			List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
+			/*List<Integer> listuserid=intSourceService.queryUserid(sourceids);//查询当前渠道下的所有userid
 			int authencount=0;//认证人数
 			for (int j = 0; j < listuserid.size(); j++) {
 				Integer userid=listuserid.get(j);
@@ -473,7 +476,8 @@ public class SourceTongjiController {
 				if((uatcount==1)||(bankcount==1)||(operacount==1)){
 					authencount=authencount+1;
 				}
-			}
+			}*/
+			int authencount=intSourceService.queryattcount(sourceids, startTimestamps, endTimestamps);//认证人数
 			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
 			Integer applynum=intSourceService.queryNum(companyId, sourceids,startTimestamps, endTimestamps);//申请人数
 			listsource.get(i).setApplynum(applynum);//申请数

@@ -10,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zhita.dao.manage.SysUserMapper;
 import com.zhita.dao.manage.ThirdpartyInterfaceMapper;
+import com.zhita.model.manage.BankFourelements;
 import com.zhita.model.manage.Company;
 import com.zhita.model.manage.FaceRecognition;
 import com.zhita.model.manage.LoanSetting;
 import com.zhita.model.manage.OperatorSetting;
+import com.zhita.model.manage.PhoneThreeelements;
 import com.zhita.model.manage.RepaymentSetting;
 import com.zhita.model.manage.ThirdpartyInterface;
 
@@ -33,16 +35,21 @@ public class ThirdpartyintServiceImp implements IntThirdpartyintService{
     //后台管理---添加功能（查询出所有公司）
     public Map<String, Object> queryAllCompany(Integer companyId){
     	List<Company> list=sysUserMapper.queryAllCompany();
-    	List<FaceRecognition> list1=thirdpartyInterfaceMapper.queryface(companyId);
-    	List<OperatorSetting> list2=thirdpartyInterfaceMapper.queryopera(companyId);
-    	List<LoanSetting> list3=thirdpartyInterfaceMapper.queryloan(companyId);
-    	List<RepaymentSetting> list4=thirdpartyInterfaceMapper.queryrepayment(companyId);
+    	List<FaceRecognition> list1=thirdpartyInterfaceMapper.queryface(companyId);//身份证及人脸认证
+    	List<OperatorSetting> list2=thirdpartyInterfaceMapper.queryopera(companyId);//运营商认证
+    	List<LoanSetting> list3=thirdpartyInterfaceMapper.queryloan(companyId);//放款渠道
+    	List<RepaymentSetting> list4=thirdpartyInterfaceMapper.queryrepayment(companyId);//回款渠道
+    	List<PhoneThreeelements> list5=thirdpartyInterfaceMapper.queryphonethree(companyId);//手机三要素
+    	List<BankFourelements> list6=thirdpartyInterfaceMapper.querybankfour(companyId);//银行卡四要素
+    	
     	Map<String, Object> map=new HashMap<>();
     	map.put("comlist", list);
     	map.put("facelist", list1);
     	map.put("operalist", list2);
     	map.put("loanlist", list3);
     	map.put("repaylist", list4);
+    	map.put("phonethree", list5);
+    	map.put("bankfour", list6);
     	return map;
     }
     
