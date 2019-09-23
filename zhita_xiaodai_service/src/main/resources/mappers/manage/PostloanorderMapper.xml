@@ -570,7 +570,7 @@
 		<select id="HuaiZhangOrdersAA" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
-			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.shouldReturnTime
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.shouldReturnTime,ord.interestInAll,ord.technicalServiceMoney
 			from orders o,user u,orderdetails ord,source sor
 			<where>
 				o.id = ord.orderid

@@ -371,9 +371,15 @@ public class LoginController {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
+<<<<<<< .merge_file_a12936
 	           //return "http://tg.rong51dai.com/H5Code/" + fileName;   //39.98.83.65服务
 	           //return "http://139.129.102.60:8081/H5Code/" + fileName;   //139.129.102.60服务
 	          //return "http://115.29.64.145:8081/H5Code/" + fileName;   //115.29.64.145服务
+=======
+	         //return "http://tg.rong51dai.com/H5Code/" + fileName;   //39.98.83.65服务
+	         //return "http://139.129.102.60:8081/H5Code/" + fileName;   //139.129.102.60服务
+	        //return "http://47.56.172.8:8080/H5Code/" + fileName;   //115.29.64.145服务
+>>>>>>> .merge_file_a12900
 	         return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
 	    }
 	    

@@ -14,6 +14,9 @@ public interface IntAutheninforService {
 	//后台管理---查询认证信息表所有信息
     public List<AuthenticationInformation> queryAll(Integer companyId);
     
+    //后台管理---根据主键id更新状态（authen_secondattributes表）
+    public int upastatuByprimiartKey(String status,Integer id);
+    
     //后台管理---添加功能
     public int insert(AuthenticationInformation record);
     

@@ -13,6 +13,10 @@ public class ThirdpartyInterface {
     private String loansource;//放款渠道
 
     private String repaymentsource;//还款渠道
+    
+    private String phonethreeelements;//手机三要素
+    
+    private String bankfourelements;//银行卡四要素
 
 	public Integer getId() {
 		return id;
@@ -62,4 +66,20 @@ public class ThirdpartyInterface {
 		this.repaymentsource = repaymentsource;
 	}
 
+	public String getPhonethreeelements() {
+		return phonethreeelements;
+	}
+
+	public void setPhonethreeelements(String phonethreeelements) {
+		this.phonethreeelements = phonethreeelements;
+	}
+
+	public String getBankfourelements() {
+		return bankfourelements;
+	}
+
+	public void setBankfourelements(String bankfourelements) {
+		this.bankfourelements = bankfourelements;
+	}
+	
 }

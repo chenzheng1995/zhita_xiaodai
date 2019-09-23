@@ -24,7 +24,7 @@ public class WebContextFilter implements Filter {
             throws IOException, ServletException {
     	HttpServletRequest httpRequest = (HttpServletRequest)request;
         HttpServletResponse  httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "accept,content-type"); 
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, x-requested-with, Content-Type, Accept,X-Cookie"); 
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "OPTIONS,GET,POST,DELETE,PUT"); 
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setHeader("Access-Control-Allow-Origin", httpRequest.getHeader("Origin"));

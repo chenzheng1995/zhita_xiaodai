@@ -570,4 +570,9 @@ public class SourceServiceImp implements IntSourceService{
 		String status = sourceMapper.getstatus(companyId,sourceName);
 		return status;
 	}
+	
+	//后台管理----查询当前渠道当前时间的认证数量
+	public int queryattcount(Integer sourceid,String starttime,String endtime){
+		return sourceMapper.queryattcount(sourceid, starttime, endtime);
+	}
 }

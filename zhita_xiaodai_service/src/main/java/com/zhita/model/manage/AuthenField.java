@@ -2,16 +2,16 @@ package com.zhita.model.manage;
 
 //认证信息配置   ——更新时需要的字段实体类
 public class AuthenField {
-	private Integer id1;
+	private Integer id1;//个人信息
 	private String value1;
 
-	private Integer id2;
+	private Integer id2;//收款银行卡
 	private String value2;
 	
-	private Integer id3;
+	private Integer id3;//手机运营商
 	private String value3;
 	
-	private Integer id4;
+	private Integer id4;//芝麻授信
 	private String value4;
 	
 	

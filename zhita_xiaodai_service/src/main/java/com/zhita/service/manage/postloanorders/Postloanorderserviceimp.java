@@ -795,7 +795,15 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}else{
 			orders.get(i).setRealtime("/");
 		}
-		orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+		
+		int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+		
+		if(a==0){
+			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getTechnicalServiceMoney())));
+		}else{
+			orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+		}
+		
 		
 		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
 		
