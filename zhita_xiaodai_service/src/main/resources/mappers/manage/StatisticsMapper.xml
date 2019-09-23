@@ -358,7 +358,7 @@
 			
 			
 			<update id="UpdateDefe" parameterType="com.zhita.model.manage.Orders">
-				update deferred set deleted = "0" where orderId = (select max(id) from orders where id = #{id})
+				update deferred set deleted = "0" where id = (select max(id) from deferred where orderIdid = #{id})
 			</update>
 			
 			

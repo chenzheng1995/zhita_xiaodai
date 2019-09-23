@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,13 +76,15 @@ public class NewPaymentController {
 	//还款
 	@ResponseBody
 	@RequestMapping(value = "/callback")
-    public void callback(MultipartHttpServletRequest request,HttpServletResponse response) {
+    public void callback(HttpServletRequest request,HttpServletResponse response) {
 	 RedisClientUtil redis = new RedisClientUtil();
-	 
+	 System.out.println("快还钱!!!!");
 	 CommonUtils com = new CommonUtils();
+	 Map<String, String> requestmap = com.getParameterMap(request);
+	 String resultSign= SignUtils.getSign(requestmap,ZpayConfig.NEW_MD5_KEY).toUpperCase();
+	 requestmap.put("sign",resultSign);
 	 try {
 		 String responseStr = "ERROR";
-		 Map<String, String> requestmap = com.getParameterMap(request);
 			 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
 				 String tradeNo = requestmap.get("tradeNo");
 				 String status = requestmap.get("status");
@@ -154,13 +157,15 @@ public class NewPaymentController {
 	
 	
 	@RequestMapping(value = "/callbackdefe")
-    public void callbackDefe(MultipartHttpServletRequest request,HttpServletResponse response) {
+    public void callbackDefe(HttpServletRequest request,HttpServletResponse response) {
 		RedisClientUtil redis = new RedisClientUtil();
-		
+		System.out.println("调用言言言,111111111");
 		CommonUtils com = new CommonUtils();
+		Map<String, String> requestmap = com.getParameterMap(request);
+		 String resultSign= SignUtils.getSign(requestmap,ZpayConfig.NEW_MD5_KEY).toUpperCase();
+		 requestmap.put("sign",resultSign);
 		 try {
 			 String responseStr = "ERROR";
-			 Map<String, String> requestmap = com.getParameterMap(request);
 				 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
 					 String tradeNo = requestmap.get("tradeNo");
 					 String orderId = requestmap.get("orderId");
@@ -232,16 +237,19 @@ public class NewPaymentController {
 	
 	
 	
-
+	@ResponseBody
 	@RequestMapping(value = "/callbackpay")
-    public void callbackpay(MultipartHttpServletRequest request,HttpServletResponse response) {
+    public Object callbackpay(HttpServletRequest request,HttpServletResponse response) {
 		CommonUtils com = new CommonUtils();
-		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("调用支付回调,111111111");
+		Map<String, String> requestmap = com.getParameterMap(request);
+		String resultSign= SignUtils.getSign(requestmap,ZpayConfig.NEW_MD5_KEY).toUpperCase();
+		requestmap.put("sign",resultSign);
 		 try {
 			 String responseStr = "ERROR";
 			 String code = request.getParameter("code");
 			 if(code.equals("SUCCESS")){
-				 Map<String, String> requestmap = com.getParameterMap(request);
+				 
 				 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
 					 String tradeNo = requestmap.get("tradeNo");
 					 String orderId = requestmap.get("orderId");
@@ -302,6 +310,7 @@ public class NewPaymentController {
 //	     }
 //	     
 //	     return "SUCCESS";
+		 return 1;
 }
 	
 	

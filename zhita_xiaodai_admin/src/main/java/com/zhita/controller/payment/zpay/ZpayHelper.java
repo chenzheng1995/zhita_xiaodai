@@ -158,6 +158,7 @@ public class ZpayHelper {
 		Map<String, String> payParams=new HashMap<String, String>();        
         payParams.put("method","zpay.trade.query");
         payParams.put("version","1.0");
+        
         payParams.put("mchId",ZpayConfig.MERCHANT_NO);
         payParams.put("orderId", billId);
         String resultSign= SignUtils.getSign(payParams,ZpayConfig.MD5_KEY);
@@ -366,9 +367,10 @@ public class ZpayHelper {
 		//YuXia(new BigDecimal("2.0"), "test_" + "20190917176545233652");
 	//	Select();
 //		billId = "test_201909017175056";
-		//Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
+		Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
 //		Receivables(billId, money, createTime, returnUrl)
 //		SelectFF();
+		//query("201909221409080028525");
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 	    String biaoshi = sim.format(new Date());
 		System.out.println(biaoshi);

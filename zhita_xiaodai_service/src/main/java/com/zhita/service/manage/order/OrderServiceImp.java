@@ -348,9 +348,9 @@ public class OrderServiceImp implements IntOrderService {
 
 	@Override
 	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
-			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay) {
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard) {
 		int num = ordersMapper.setOrder(companyId, userId, orderNumber, orderCreateTime, lifeOfLoan,
-				howManyTimesBorMoney, shouldReturned, riskmanagementFraction, borrowMoneyWay);
+				howManyTimesBorMoney, shouldReturned, riskmanagementFraction, borrowMoneyWay,borrowRepayBankcard);
 		return num;
 	}
 

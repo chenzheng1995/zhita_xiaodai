@@ -13,41 +13,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-
-
-
-
-
-
-
+import javax.annotation.Resource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zhita.chanpayutil.BaseConstant;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.controller.chanpayQuickPay.ChanpayQuickCollection;
 import com.zhita.controller.chanpayQuickPay.ReturnSend;
+import com.zhita.controller.payment.util.HttpClient;
+import com.zhita.controller.payment.util.SignUtils;
+import com.zhita.controller.payment.zpay.ZpayConfig;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.ReturnChanpay;
 import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.service.manage.Statistic.Statisticsservice;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
 import com.zhita.service.manage.newpayment.NewPaymentservice;
-import com.zhita.service.manage.newpayment.NewPaymentserviceimp;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.util.HttpProtocolHandler;
@@ -68,8 +65,18 @@ public class NewPaymentController {
 	
 	
 	
+	
+	
+	
 	@Autowired
 	private Statisticsservice servie;
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -124,6 +131,444 @@ public class NewPaymentController {
 	IntBorrowmonmesService intBorrowmonmesService;
 	
 	
+	
+	@Resource
+	private Chanpayservice chanpayservice;
+	
+	
+	
+	
+	
+	
+	/**
+	 * 修改延期状态
+	 * @param billId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("UpdateDefeStatus")
+	public Map<String, Object> RtimeDefeStatus(String billId,Integer userId){
+		System.out.println("还款状态接口调用：");
+		RedisClientUtil redis = new RedisClientUtil();
+		final long timeInterval = 1000;  
+		Map<String, String> payParams=new HashMap<String, String>();        
+        payParams.put("method","zpay.trade.query");
+        payParams.put("version","1.0");
+        payParams.put("mchId",ZpayConfig.MERCHANT_NO);
+        payParams.put("orderId", billId);
+        String resultSign= SignUtils.getSign(payParams,ZpayConfig.MD5_KEY);
+        payParams.put("sign",resultSign);
+		Map<String, Object> map = new HashMap<String, Object>();
+		String resp;
+		
+		try {
+			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+			resp = httpClient.send(payParams, "utf-8");
+			System.out.println(resp);
+	        if(StringUtils.isNotBlank(resp)){
+	        	JSONObject jsonObject=JSONObject.parseObject(resp);
+	        	String code=jsonObject.getString("code");
+	        	String status = jsonObject.getString("status");
+	        	String msg = jsonObject.getString("msg");
+	        	String orderId = jsonObject.getString("orderId");
+	        	String OrderNumber = redis.get("DefeorderId"+orderId);
+	    		
+	        	if(code.equals("SUCCESS")){//接口访问成功走此内容
+	        		Orders ord = new Orders();
+	    			ord.setOrderNumber(OrderNumber);
+	        		 if(status.equals("SUCCESS")){//还款状态成功
+	 	        		ord.setUserId(userId);
+	 	        		Integer a = servie.UpdateDefeOrders(ord);
+	 	        		if(a != null){
+	 	        			map.put("Ncode", 2000);
+	 	        			map.put("code", "200");
+	 	        			map.put("desc", "插入成功");
+	 	        			map.put("msg", "插入成功");
+	 	        		}else{
+	 	        			map.put("code", "0");
+	 	        			map.put("desc", "插入失败");
+	 	        			map.put("msg", "插入失败");
+	 	        		}
+	 	        		
+	     				
+	        		 }else if(status.equals("PAYERROR")){//还款状态代付失败
+	        			map.put("code", 0);
+	 	        		map.put("Ncode", 0);
+	 	        		map.put("msg", msg);
+	 	        		return map;
+	        		 }else{//中间状态   比如  待审核   已审核   已提交   待付款
+	        			 Runnable runnable = new Runnable() {  
+		        	        	
+		        	            public void run() { 
+		        	            	int i = 1;
+		        	                while (true) { 
+		        	                    // ------- code for task to run  
+		        	                    System.out.println("Hello !!");  
+		        	                    // ------- ends here  
+		        	                    try {  
+		        	                        Thread.sleep(timeInterval);  
+		        						        try {
+		        									HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+		        									String resp = httpClient.send(payParams, "utf-8");
+		        									System.out.println(resp);
+		        							        if(StringUtils.isNotBlank(resp)){
+		        							        	JSONObject jsonObject=JSONObject.parseObject(resp);
+		        							        	String code=jsonObject.getString("code");
+		        							        	String hkstatus = jsonObject.getString("status");
+		        							        	if(code.equals("SUCCESS")){
+		        							        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.MD5_KEY)){
+		        							        			if(hkstatus.equals("SUCCESS")){
+		        							        				servie.UpdateDefeOrders(ord);
+		        							        			}
+		        							        		}
+		        							        	}
+		        							        }
+		        								} catch (Exception e) {
+		        									e.printStackTrace();
+		        								}
+		        	                        	break;
+		        	                    } catch (InterruptedException e) {  
+		        	                        e.printStackTrace();  
+		        	                    }  
+		        	                }  
+		        	            }  
+		        	        };  
+		        	        Thread thread = new Thread(runnable);  
+		        	        thread.start(); 
+		        	        String Repaymentstatus = chanser.DefeStatus(OrderNumber);
+		        	        Integer codesa = 0;
+		        	        Integer Ncode = 0;
+		        	        if(Repaymentstatus!=null){
+		        	        	if(Repaymentstatus.length()!=0){
+			        	        	if(Repaymentstatus.equals("成功")){
+			        	        		codesa = 200;
+			        	        		Repaymentstatus = "延期成功";
+			        	        		Ncode = 2000;
+				        	        }else{
+				        	        	codesa = 0;
+				        	        	Repaymentstatus = "延期失败";
+			        	        		Ncode = 0;
+				        	        }
+		        	        	}else{
+		        	        		Repaymentstatus = "正在处理,请稍后查询";
+		        	        	}
+		        	        }else{
+		        	        	Repaymentstatus = "正在处理,请稍后查询";
+		        	        }
+		        	        
+		        	        map.put("msg", Repaymentstatus);
+		        	        map.put("code", codesa);
+		        	        map.put("Ncode", Ncode);
+		        	        return map;
+	        		 }
+	        			
+	        	}else{
+	        		map.put("code", 0);
+	        		map.put("Ncode", 0);
+	        		map.put("msg", msg);
+	        		return map;
+	        	}
+	        	}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return map;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 修改还款状态
+	 * @param billId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("UpdateRepaymentStatus")
+	public Map<String, Object> Rtime(String billId){
+		System.out.println("还款状态接口调用：");
+		RedisClientUtil redis = new RedisClientUtil();
+		final long timeInterval = 1000;  
+		Map<String, String> payParams=new HashMap<String, String>();        
+        payParams.put("method","zpay.trade.query");
+        payParams.put("version","1.0");
+        payParams.put("mchId",ZpayConfig.MERCHANT_NO);
+        payParams.put("orderId", billId);
+        String resultSign= SignUtils.getSign(payParams,ZpayConfig.MD5_KEY);
+        payParams.put("sign",resultSign);
+		Map<String, Object> map = new HashMap<String, Object>();
+		String resp;
+		
+		try {
+			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+			resp = httpClient.send(payParams, "utf-8");
+			System.out.println(resp);
+	        if(StringUtils.isNotBlank(resp)){
+	        	JSONObject jsonObject=JSONObject.parseObject(resp);
+	        	String code=jsonObject.getString("code");
+	        	String status = jsonObject.getString("status");
+	        	String msg = jsonObject.getString("msg");
+	        	String tradeNo = jsonObject.getString("tradeNo");
+	        	String orderId = jsonObject.getString("orderId");
+	        	String OrderNumber = redis.get("orderId"+orderId);
+	        	String pipelinenu = "Rsn_"+orderId;
+	        	 Repayment repay = new Repayment();
+    			 repay.setStatu("成功");
+    			 repay.setPipelinenumber(pipelinenu);
+    			 repay.setOrderNumber(OrderNumber);
+	    		
+	        	if(code.equals("SUCCESS")){//接口访问成功走此内容
+	        		Orders ord = new Orders();
+	    			ord.setOrderNumber(OrderNumber);
+	        		 if(status.equals("SUCCESS")){//还款状态成功
+	        			 Integer updateId = chanpayservice.UpdateRepayStatusAA(repay);
+	     				if(updateId != null){
+	     				Integer a = servie.UpdateOrders(ord);
+	     					if(a!=null){
+	     						map.put("Ncode", 2000);
+	     						map.put("code", "200");
+	     						map.put("msg", "插入成功");
+	     						return map;
+	     					}else{
+	     						map.put("code", "0");
+	     						map.put("Ncode", 0);
+	     						map.put("msg", msg);
+	     						return map;
+	     					}
+	     				}else{
+	     					map.put("code", "0");
+	     					map.put("Ncode", 0);
+	     					map.put("msg", "还款状态修改失败,请联系客服");
+	     					return map;
+	     				}
+	     				
+	        		 }else if(status.equals("PAYERROR")){//还款状态代付失败
+	        			map.put("code", 0);
+	 	        		map.put("Ncode", 0);
+	 	        		map.put("msg", msg);
+	 	        		return map;
+	        		 }else{//中间状态   比如  待审核   已审核   已提交   待付款
+	        			 Runnable runnable = new Runnable() {  
+		        	        	
+		        	            public void run() { 
+		        	            	int i = 1;
+		        	                while (true) { 
+		        	                    // ------- code for task to run  
+		        	                    System.out.println("Hello !!");  
+		        	                    // ------- ends here  
+		        	                    try {  
+		        	                        Thread.sleep(timeInterval);  
+		        						        try {
+		        									HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+		        									String resp = httpClient.send(payParams, "utf-8");
+		        									System.out.println(resp);
+		        							        if(StringUtils.isNotBlank(resp)){
+		        							        	JSONObject jsonObject=JSONObject.parseObject(resp);
+		        							        	String code=jsonObject.getString("code");
+		        							        	String hkstatus = jsonObject.getString("status");
+		        							        	if(code.equals("SUCCESS")){
+		        							        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.MD5_KEY)){
+		        							        			if(hkstatus.equals("SUCCESS")){
+		        							        				 Integer updateId = chanpayservice.UpdateRepayStatus(pipelinenu,OrderNumber);
+		        							 	     				if(updateId != null){
+		        							 	     				servie.UpdateOrders(ord);
+		        							 	     				break;
+		        							 	     				}
+		        							        			}
+		        							        		}
+		        							        	}
+		        							        }
+		        								} catch (Exception e) {
+		        									e.printStackTrace();
+		        								}
+		        	                        	break;
+		        	                    } catch (InterruptedException e) {  
+		        	                        e.printStackTrace();  
+		        	                    }  
+		        	                }  
+		        	            }  
+		        	        };  
+		        	        Thread thread = new Thread(runnable);  
+		        	        thread.start(); 
+		        	        String Repaymentstatus = chanser.RepaymentStatus(OrderNumber);
+		        	        Integer codesa = 0;
+		        	        Integer Ncode = 0;
+		        	        if(Repaymentstatus!=null){
+		        	        	if(Repaymentstatus.length()!=0){
+			        	        	if(Repaymentstatus.equals("成功")){
+			        	        		codesa = 200;
+			        	        		Repaymentstatus = "还款成功";
+			        	        		Ncode = 2000;
+				        	        }else{
+				        	        	codesa = 0;
+				        	        	Repaymentstatus = "还款失败";
+			        	        		Ncode = 0;
+				        	        }
+		        	        	}else{
+		        	        		Repaymentstatus = "正在处理,请稍后查询";
+		        	        	}
+		        	        }else{
+		        	        	Repaymentstatus = "正在处理,请稍后查询";
+		        	        }
+		        	        
+		        	        map.put("msg", Repaymentstatus);
+		        	        map.put("code", codesa);
+		        	        map.put("Ncode", Ncode);
+		        	        return map;
+	        		 }
+	        			
+	        	}else{
+	        		map.put("code", 0);
+	        		map.put("Ncode", 0);
+	        		map.put("msg", msg);
+	        		return map;
+	        	}
+	        	}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return map;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@ResponseBody
+	@RequestMapping("SelectPayment")
+	public Map<String, Object> SelectPaymentStatus(String orderId){
+		Map<String, Object> map=new HashMap<String, Object>();    
+		Map<String, String> payParams=new HashMap<String, String>();    
+	    payParams.put("method","zpay.order.query");
+        payParams.put("version","1.0");
+        payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
+        payParams.put("orderId", orderId);//订单ID
+        String resultSign= SignUtils.getSign(payParams,ZpayConfig.NEW_MD5_KEY).toUpperCase();
+        payParams.put("sign",resultSign);
+        try {
+			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+			String resp = httpClient.send(payParams, "utf-8");
+			System.out.println("数据:"+resp);
+	        if(StringUtils.isNotBlank(resp)){
+	        	JSONObject jsonObject=JSONObject.parseObject(resp);
+	        	String code=jsonObject.getString("code");
+	        	String status = jsonObject.getString("status");
+	        	if(code.equals("SUCCESS")){
+	        				 //String tradeNo = jsonObject.getString("tradeNo");
+	    					 String orderIda = jsonObject.getString("orderId");
+	    					 //商户订单号
+	    					 Integer order = newsim.getOrderId(orderIda);
+	    					 
+	    					 if(order!=null){
+	    						 Payment_record pays = newsim.getPayment(order);
+	    						 if(pays.getStatus().equals("支付成功")){
+	    							 map.put("code", 200);
+	    							 map.put("Ncode", 2000);
+	    							 map.put("msg", "已放款,请勿重复点击");
+	    							 return map;
+	    						 }else{
+	    							 Integer oid = newsim.getOrderId(orderIda);
+	    							 Payment_record pay = new Payment_record();
+	    					    	 pay.setOrderId(oid);
+	    					    	 if(status.equals("SUCCESS")){
+	    					    		 pay.setStatus("支付成功");
+	    					    	 }else if(status.equals("PAYERROR")){
+	    					    		 pay.setStatus("支付失败");
+	    					    	 }else{
+	    					    		 pay.setStatus("支付成功"); 
+	    					    	 }
+	    					    	 newsim.Updatepaymemt(pay);
+	    						 }
+	    					 }
+	        		}
+	        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return map;
+	}
+	
+	
+	
+	
+	
+	public Integer UpdateStatus(String orderId){
+		Integer a = 0;
+		Map<String, String> payParams=new HashMap<String, String>();    
+	    payParams.put("method","zpay.order.query");
+        payParams.put("version","1.0");
+        payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
+        payParams.put("orderId", orderId);//订单ID
+        String resultSign= SignUtils.getSign(payParams,ZpayConfig.NEW_MD5_KEY).toUpperCase();
+        payParams.put("sign",resultSign);
+        try {
+			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+			String resp = httpClient.send(payParams, "utf-8");
+			System.out.println("数据:"+resp);
+	        if(StringUtils.isNotBlank(resp)){
+	        	JSONObject jsonObject=JSONObject.parseObject(resp);
+	        	String code=jsonObject.getString("code");
+	        	String status = jsonObject.getString("status");
+	        	String msg = jsonObject.getString("msg");
+	        	if(code.equals("SUCCESS")){
+	        				 //String tradeNo = jsonObject.getString("tradeNo");
+	    					 String orderIda = jsonObject.getString("orderId");
+	    					 //商户订单号
+	    					 Integer order = newsim.getOrderId(orderIda);
+	    					 
+	    					 if(order!=null){
+	    						 Payment_record pays = newsim.getPayment(order);
+	    						 if(pays.getStatus().equals("支付成功")){
+	    							 a=3;
+	    							 return a;
+	    						 }else{
+	    							 Integer oid = newsim.getOrderId(orderIda);
+	    							 Payment_record pay = new Payment_record();
+	    					    	 pay.setOrderId(oid);
+	    					    	 if(status.equals("SUCCESS")){
+	    					    		 pay.setStatus("支付成功");
+	    					    	 }else if(status.equals("PAYERROR")){
+	    					    		 pay.setStatus("支付失败");
+	    					    		 chanser.DeleteOrderNumber(orderId,msg);
+	    					    	 }else{
+	    					    		 pay.setStatus("支付成功");
+	    					    	 }
+	    					    	 int c = newsim.Updatepaymemt(pay);
+	    					    	 if(c==1){
+	    					    		 a = 1;
+	    					    	 }
+	    						 }
+	    					 }
+	        		}
+	        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return a;
+	}
+	
+	
 	/**
 	 * 放款
 	 * @param companyId
@@ -135,12 +580,9 @@ public class NewPaymentController {
 	public Map<String, Object> Newpanyment(Integer userId,String TransAmt,Integer companyId,int lifeOfLoan,BigDecimal finalLine,String registeClient,String sourceName,
 			BigDecimal shouldTotalAmount,BigDecimal totalInterest,BigDecimal averageDailyInterest){
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
-		Map<String, Object> mapsa = new HashMap<String, Object>();
 		Loan_setting loana = new Loan_setting();
 		loana.setCompanyId(companyId);
 		loana.setName(paymentname.getLoanSource());
-		String ac =  chanser.loanSetStatu(loana);//放款状态  1  开启    2 关闭
-
 
 		SimpleDateFormat sin = new SimpleDateFormat("yyyy-MM-dd");
 		String time = sin.format(new Date());
@@ -254,8 +696,6 @@ public class NewPaymentController {
 		calendar.setTime(date);
 		calendar.add(Calendar.DATE, +1);
 		date = calendar.getTime();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMdd");
-		
 		int borrowNumberR = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 	    int	howManyTimesBorMoney = borrowNumberR+1;//第几次借款
 	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
@@ -269,7 +709,7 @@ public class NewPaymentController {
     	
     	int num = 0;
 		try {
-			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay);
+			num = intOrderService.setOrder(companyId,userId,orderNumber,orderCreateTime,lifeOfLoan,howManyTimesBorMoney,shouldReturned,riskmanagementFraction,borrowMoneyWay,ban.getBankcardName());
 		} catch (Exception e) {
 			redis.set("ChanpaySenduserId"+userId, String.valueOf(userId));
 			map1.put("code", "203");
@@ -322,9 +762,6 @@ public class NewPaymentController {
     	Bankcard bas = new Bankcard();
     	bas.setCompanyId(companyId);
 		bas.setUserId(userId);
-		Bankcard banAA = chanser.SelectBank(bas);
-		
-		
 		pay.setPipelinenumber(returnchanpay.getPartnerId());
 		String statu = returnchanpay.getAcceptStatus();
 		if(statu.equals("S")){
@@ -374,11 +811,30 @@ public class NewPaymentController {
     			pay.setPipelinenumber(pipelnen);
     			pay.setOrderId(orderId);
     			pay.setStatus("支付失败");
-    			chanser.AddPayment_record(pay);
+    			int i = chanser.AddPayment_record(pay);
+    			if(i == 1){
+    				Integer sta = this.UpdateStatus(orderNumber);
+    				if(sta == 0){
+    					map1.put("code", 0);
+    	    			map1.put("msg", "放款失败");
+    	    			map1.put("Ncode", 0);
+    	    			map1.put("desc", "放款失败");
+    				}else if(sta == 1){
+    					map1.put("code", 200);
+    	    			map1.put("msg", "放款成功，可能需要几分钟到账");
+    	    			map1.put("Ncode", 2000);
+    	    			map1.put("desc", "借款成功");
+    				}else if(sta == 3){
+    					map1.put("code", 203);
+    	    			map1.put("msg", "放款成功，可能需要几分钟到账");
+    	    			map1.put("Ncode", 2003);
+    				}
+    			}
     			map1.put("code", 200);
     			map1.put("msg", "放款成功，可能需要几分钟到账");
     			map1.put("Ncode", 2000);
     			map1.put("desc", "借款成功");
+    			
     			return map1;
     			
     		}
@@ -427,6 +883,95 @@ public class NewPaymentController {
 			}
 		return map1;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 查询订单
+	 * @param billId  订单号
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("SelectHkSta")
+	public Map<String, String> query(String billId){
+		Map<String, String> map=new HashMap<String, String>();   
+		RedisClientUtil redis = new RedisClientUtil();
+		Map<String, String> payParams=new HashMap<String, String>();        
+        payParams.put("method","zpay.trade.query");
+        payParams.put("version","1.0");
+        payParams.put("mchId",ZpayConfig.MERCHANT_NO);
+        payParams.put("orderId", billId);
+        String resultSign= SignUtils.getSign(payParams,ZpayConfig.MD5_KEY);
+        payParams.put("sign",resultSign);
+        
+        try {
+			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+			String resp = httpClient.send(payParams, "utf-8");
+			System.out.println(resp);
+			JSONObject jsonObject=JSONObject.parseObject(resp);
+			String tradeNo = jsonObject.getString("tradeNo");
+			String status = jsonObject.getString("status");
+			String msg = jsonObject.getString("msg");
+			
+			String biaoshiid = redis.get("userId"+tradeNo);
+		     String orderIds = redis.get("orderId"+biaoshiid);//获取订单编号
+			 Orders order = newsim.getOrders(orderIds);
+	        if(StringUtils.isNotBlank(resp)){
+	        	String code=jsonObject.getString("code");
+	        	if(code.equals("SUCCESS")){
+	        		 if(order.getOrderStatus().equals("3")){
+					 }else{
+						 Repayment repay = new Repayment();
+					     Integer oid = newsim.getOrderId(orderIds);
+					     repay.setOrderid(oid);
+					     repay.setPipelinenumber("Rsn_"+tradeNo);
+				    	 if(status.equals("SUCCESS")){
+				    		 Integer updateId = newsim.UpdateRepayment(repay);
+				    		 if(updateId != null){
+				    			 Orders ord = new Orders();
+				    	    	 ord.setOrderNumber(orderIds);
+				    	    	 servie.UpdateOrders(ord);
+				    	    	 map.put("code", "200");
+					    		 map.put("Ncode", "2000");
+					    		 map.put("msg", msg);
+					    		 return map;
+				    		 }
+				    	 }else if(status.equals("PAYERROR")){
+				    		 map.put("code", "0");
+				    		 map.put("Ncode", "0");
+				    		 map.put("msg", msg);
+				    		 return map;
+				    	 }
+	        		}
+	        	}else{
+	        		 map.put("code", "0");
+		    		 map.put("Ncode", "0");
+		    		 map.put("msg", msg);
+		    		 return map;
+	        	}
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return map;
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -888,5 +1433,13 @@ public class NewPaymentController {
 		origMap.put(BaseConstant.MEMO, "");// 备注
 		return origMap;
 		
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		
+		NewPaymentController newp = new NewPaymentController();
+		newp.changebank(131, "6217000360005556842", "142727199807191015", "刘晓云", "18235980719", 3, "建设银行", "米多宝", "eb8f8c9fec27fa660d5351d3925fa803");
 	}
 }

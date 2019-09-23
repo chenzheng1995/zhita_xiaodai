@@ -30,4 +30,10 @@
 		select * from orders where orderNumber = #{orderNumber}
 	</select>
 	
+	
+	
+	<select id="getPayment" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Payment_record">
+		select * from payment_record where id = (select max(id) from payment_record where orderId = #{orderId})
+	</select>
+	
 </mapper>

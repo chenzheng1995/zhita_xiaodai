@@ -158,6 +158,6 @@ public interface PostloanorderMapper {
 	
 	
 	
-	Orderdetails SelectQianshouldReapyMoney();
+	Orderdetails SelectQianshouldReapyMoney(Integer orderId);
 	
 }

@@ -1213,4 +1213,13 @@
 				select preextensiontime from offlinedelay where orderid = #{orderid} ORDER BY preextensiontime desc limit 1
  			</select>
  			
+ 			
+ 			<select id="RepaymentStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select statu from repayment where id = (select max(id) from repayment where orderId = #{orderId})
+ 			</select>
+ 			
+ 			
+ 			<select id="DefeStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select deleted from deferred where id = (select max(id) from deferred where orderId = #{orderId})
+ 			</select>
 </mapper>

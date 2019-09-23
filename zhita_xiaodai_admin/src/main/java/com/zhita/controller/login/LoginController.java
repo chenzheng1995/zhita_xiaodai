@@ -373,11 +373,11 @@ public class LoginController {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
-	         //return "http://tg.rong51dai.com/H5Code/" + fileName;   //39.98.83.65服务
-	         //return "http://139.129.102.60:8081/H5Code/" + fileName;   //139.129.102.60服务
-	         //return "http://47.56.172.8:8080/H5Code/" + fileName;   //115.29.64.145服务
-	         //return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
-	        //return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
+	        //return "http://tg.rong51dai.com/H5Code/" + fileName;   //39.98.83.65服务
+	       //return "http://139.129.102.60:8081/H5Code/" + fileName;   //139.129.102.60服务
+	       //return "http://115.29.64.145:8081/H5Code/" + fileName;   //115.29.64.145服务
+	       //return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
+	       //return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
 	        return "http://47.56.172.8:8081/H5Code/" + fileName;   //47.56.172.8服务
 	    }
 	    

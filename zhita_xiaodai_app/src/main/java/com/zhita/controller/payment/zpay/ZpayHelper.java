@@ -198,16 +198,18 @@ public class ZpayHelper {
 	 */
 	@ResponseBody
 	@RequestMapping("CC")
-	public Map<String, Object> YuXia(){
+	public static Map<String, Object> YuXia(){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, String> payParams=new HashMap<String, String>();    
+		Map<String, String> payParams=new HashMap<String, String>();  
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		String orderId = sim.format(new Date());
 	    payParams.put("method","zpay.order.trade");
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
-        payParams.put("amount","10");
+        payParams.put("amount","25");
         payParams.put("appType","xunpay");
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
-        payParams.put("orderId", "test_201909201745545233652");//订单ID
+        payParams.put("orderId", "DD_"+orderId);//订单ID
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("skName", "东新雨");//收款人姓名
@@ -250,18 +252,20 @@ public class ZpayHelper {
 	 * @param billId	订单号
 	 * @return
 	 */
-	public static JSONObject Receivables(BigDecimal amount,String billId){
+	public static JSONObject Receivables(BigDecimal amount){
 		Map<String, String> payParams=new HashMap<String, String>();    
+		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSSSSSS");
+		String billId = sim.format(new Date());
 	    payParams.put("method","zpay.trade.znew");
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
         payParams.put("amount",amount.setScale(2).toString());
-        payParams.put("appType","xunpay");
+        payParams.put("appType","autobank");
         payParams.put("type", "3");
         payParams.put("payType", "1");
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
         payParams.put("returnUrl", "http://new");
-        payParams.put("orderId", billId);//订单ID
+        payParams.put("orderId", "DD_"+billId);//订单ID
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("khName", "东新雨");//收款人姓名
@@ -280,6 +284,7 @@ public class ZpayHelper {
 	        	String code=jsonObject.getString("code");
 	        	if(code.equals("SUCCESS")){
 	        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
+	        			System.out.println(billId);
 	        			return jsonObject;
 	        		}
 	        	}
@@ -341,10 +346,10 @@ public class ZpayHelper {
 	 */
 	public static JSONObject SelectFF(){
 		Map<String, String> payParams=new HashMap<String, String>();    
-	    payParams.put("method","zpay.trade.query");
+	    payParams.put("method","zpay.order.query");
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
-        payParams.put("orderId", "test_20190901716225944");//订单ID
+        payParams.put("orderId", "DD_20190922171832a433016");//订单ID
         String resultSign= SignUtils.getSign(payParams,ZpayConfig.NEW_MD5_KEY).toUpperCase();
         payParams.put("sign",resultSign);
         try {
@@ -376,14 +381,19 @@ public class ZpayHelper {
 		//yuanApp(new BigDecimal("2.0"), "test_" + System.currentTimeMillis());
 		//企业支付宝 APP
 		//yuanH5(new BigDecimal("2.0"), "test_" + System.currentTimeMillis(),"http://test");
-		//YuXia(new BigDecimal("10.0"), "test_" + "20190920164545233652");
+		//SelectFF();
 	//	Select();
+//		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+//		String billId = sim.format(new Date());
 //		billId = "test_201909017175056";
-		//Receivables(new BigDecimal("1.0"), "test_20190918176545233652"); 
-//		Receivables(billId, money, createTime, returnUrl)
+		//Receivables(new BigDecimal("1.0"), "test_201909201745652145233652"); 
+		//Receivables(new , "test_201909201745652145233652");
 //		SelectFF();
 		//	SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		//    String biaoshi = sim.format(new Date());
 		//	System.out.println(biaoshi);
+		//20190923124515394
+		YuXia();
+		//query("20190923151144230");
 	}
 }

@@ -167,6 +167,9 @@ public interface StatisticsDao {
 	
 	
 	String SelectOrderNumber(Integer userId);
+	
+	
+//	Integer UpdateRepaystatusS(Repayment repay);
 }
 
 
