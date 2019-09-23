@@ -256,4 +256,9 @@ select overdueNumberOfDays from orderdetails where orderId = #{orderId}
     <select id="interestPenaltySum" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 select interestPenaltySum from orderdetails where orderId = #{orderId}
  </select>
+ 
+     <select id="getOrderdetails1" parameterType="java.lang.Integer" resultType="java.util.Map">
+select 
+ </select>
+ 
 </mapper>

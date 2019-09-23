@@ -40,5 +40,7 @@ public interface OrderdetailsMapper {
 	
 	String loanSetStatu(Integer companyId);
 
+	Map<String, Object> getOrderdetails1(int id);
+
 
 }

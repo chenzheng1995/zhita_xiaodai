@@ -995,4 +995,10 @@ public class OrderServiceImp implements IntOrderService {
 		return null;
 	}
 
+	@Override
+	public Map<String, Object> getOrder(int userId) {
+		Map<String, Object> map = ordersMapper.getOrder(userId);
+		return map;
+	}
+
 }

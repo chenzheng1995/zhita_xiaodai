@@ -147,6 +147,8 @@ public class Orders {
 	
 	private String bankcardName;
 	
+	private String bank;
+	
 	public BigDecimal getShouldReapyMoney() {
 		return shouldReapyMoney;
 	}
@@ -713,6 +715,14 @@ public class Orders {
 
 	public void setDeferBeforeReturntime(String deferBeforeReturntime) {
 		this.deferBeforeReturntime = deferBeforeReturntime;
+	}
+	
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
 	}
 	
 }

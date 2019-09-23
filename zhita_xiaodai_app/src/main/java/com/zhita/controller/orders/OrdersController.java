@@ -564,17 +564,6 @@ public class OrdersController {
    }
    
    
-   //立即延期按钮
-   @RequestMapping("/delayButton")
-   @ResponseBody
-   @Transactional
-   public Map<String, Object> delayButton (int userId,int companyId,String orderNumber,BigDecimal finalLine) throws ParseException{
-	   
-	return null;
-	   
-   }
-   
-   
    
    public static int compare_date(String DATE1, String DATE2) {//比较时间大小
  DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -596,7 +585,45 @@ public class OrdersController {
    
    
    
-   
+   //最近一笔已还订单信息
+   @RequestMapping("/orderInformation")
+   @ResponseBody
+   @Transactional
+   public Map<String, Object> getOrderInformation (int userId) throws ParseException{
+//	   Map<String, Object> map = intOrderService.getOrder(userId);
+//	   String orderCreateTime = (String) map.get("orderCreateTime");//借款时间
+//	   int id = (int) map.get("id");
+//	   String realtime = (String) map.get("realtime");//还款时间
+//	   Map<String, Object> map1 = orderdetailsMapper.getOrderdetails1(id);
+	   Map<String, Object> map3  = new HashMap<String, Object>();
+	   String orderCreateTime ="sudfh";//借款时间
+	   String name = "df";//借款人
+	   String bank ="sfa";//开户银行
+	   String borrowRepayBankcard = "dfas";//卡号
+	   String realityBorrowMoney = "4165";//借款金额
+	   String interestInAll ="16";//利息
+	   String interestPenaltySum ="652";//逾期费
+	   String technicalServiceMoney ="464";//手续费
+	   String realAmount ="46";//实还金额
+	   String realtime = "sad";//还款时间
+	   map3.put("orderCreateTime", orderCreateTime);
+	   map3.put("name", name);
+	   map3.put("bank", bank);
+	   map3.put("borrowRepayBankcard", borrowRepayBankcard);
+	   map3.put("realityBorrowMoney", realityBorrowMoney);
+	   map3.put("interestInAll", interestInAll);
+	   map3.put("interestPenaltySum", interestPenaltySum);
+	   map3.put("technicalServiceMoney", technicalServiceMoney);
+	   map3.put("realAmount", realAmount);
+	   map3.put("realtime", realtime);
+	   map3.put("code",200);
+	   map3.put("Ncode",2000);
+	   
+//	   map3.put("code",400);
+//	   map3.put("Ncode",2000);  
+	return map3;
+	   
+   }
    
    
    
