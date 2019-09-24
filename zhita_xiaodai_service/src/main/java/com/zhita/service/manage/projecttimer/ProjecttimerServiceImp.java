@@ -32,7 +32,7 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 	@Autowired
 	private BlacklistUserMapper blacklistUserMapper;
 	
-	//后台管理----查询订单表     所有逾期中的订单(定时任务     控制逾期)
+	//后台管理----查询订单表     所有期限中，已逾期，已延期的订单(定时任务     控制逾期)
 	@Transactional
 	public void selAllover(){
 		Integer companyId = 3;
@@ -45,33 +45,49 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 			String shouldReturnTime = Timestamps.stampToDate(list.get(i).getShouldReturnTime());//应还时间（String类型）
 			try {
 				if(sdf.parse(date).getTime()>sdf.parse(shouldReturnTime).getTime()){//转成long类型比较
-					Integer orderid = list.get(i).getId();
+					Integer orderid = list.get(i).getId();//订单id
 					projecttimerMapper.updateover(orderid);//修改订单状态为逾期
 					
 					DateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 					String shouldReturnTime1 = Timestamps.stampToDate1(list.get(i).getShouldReturnTime());//应还时间（String类型）
 					Date shoulddate = sdf1.parse(shouldReturnTime1);//应还时间（date类型）
 					Date d1 = new Date();
-					Integer overdueNumberOfDays = DateListUtil.differentDaysByMillisecond(shoulddate,d1);//逾期天数
+					Integer overdueNumberOfDays = DateListUtil.differentDaysByMillisecond(shoulddate,d1);//逾期天数****
 					
-					List<BigDecimal> list1 = new ArrayList<BigDecimal>();
-					BigDecimal interestPenaltySumfor=list.get(i).getInterestPenaltySum();//逾期总罚息
-					if(interestPenaltySumfor==null){
-						interestPenaltySumfor=new BigDecimal("0.00");
-					}
+					
 					List<OverdueSettings> listover = projecttimerMapper.queryAllOversett(companyId);//查询逾期设置表所有信息
+					List<BigDecimal> list1 = new ArrayList<BigDecimal>();
 					for (int j = 0; j < listover.size(); j++) {
 						if(overdueNumberOfDays<=listover.get(j).getOverduehowmanydaysage()){
 							list1.add(listover.get(j).getPenaltyinterestrates());
+							break;
 						}
 					}
-					BigDecimal interestPenaltyDay = list1.get(0);//日均罚息（20%  存的就是20）
-					BigDecimal interestPenaltySum = new BigDecimal("0.00");//逾期总罚息
-					if(String.valueOf(overdueNumberOfDays).equals(list.get(i).getOverdueNumberOfDays())){
-						interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
-					}else{
-						interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP).add(interestPenaltySumfor);
+					if(list1.isEmpty()||list1.size()==0){
+						list1.add(new BigDecimal("0.00"));
 					}
+					BigDecimal interestPenaltyDay = list1.get(0);//日均罚息（20%  存的就是20）
+					
+					BigDecimal interestPenaltySumfor=list.get(i).getInterestPenaltySum();//逾期总罚息（叠加的金额）
+					if(interestPenaltySumfor==null){
+						interestPenaltySumfor=new BigDecimal("0.00");
+					}
+					
+					BigDecimal interestPenaltySum = new BigDecimal("0.00");//逾期总罚息
+					if(list.get(i).getRealityBorrowMoney().compareTo(list.get(i).getMakeLoans())==0){//代表是后置模式
+						if(String.valueOf(overdueNumberOfDays).equals(list.get(i).getOverdueNumberOfDays())){
+							interestPenaltySum = interestPenaltySumfor;
+						}else{
+							interestPenaltySum = (list.get(i).getRealityBorrowMoney().add(list.get(i).getTechnicalServiceMoney())).multiply(interestPenaltyDay).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP).add(interestPenaltySumfor);
+						}
+					}else{//代表是前置模式
+						if(String.valueOf(overdueNumberOfDays).equals(list.get(i).getOverdueNumberOfDays())){
+							interestPenaltySum = interestPenaltySumfor;
+						}else{
+							interestPenaltySum = list.get(i).getRealityBorrowMoney().multiply(interestPenaltyDay).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP).add(interestPenaltySumfor);
+						}
+					}
+					
 					BigDecimal interestInAll = list.get(i).getInterestSum().add(interestPenaltySum);//总利息
 					
 					projecttimerMapper.upaorderdetail(overdueNumberOfDays, interestPenaltyDay, interestPenaltySum, interestInAll, list.get(i).getId());

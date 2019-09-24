@@ -2,7 +2,7 @@ package com.zhita.service.manage.projecttimer;
 
 public interface IntProjecttimerService {
 	
-	//后台管理----查询订单表     所有逾期中的订单(定时任务     控制逾期)
+	//后台管理----查询订单表     所有期限内，已逾期，已延期的订单(定时任务     控制逾期)
 	public void selAllover();
 	
 	

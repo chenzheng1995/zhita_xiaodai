@@ -12,7 +12,7 @@ public interface ProjecttimerMapper{
 	 * 控制订单逾期
 	 */
 	
-	//后台管理----查询订单表     所有逾期中的订单
+	//后台管理----查询订单表     所有期限内，已逾期，已延期的订单
 	List<Orders> queryAllover(Integer companyId);
 	
 	//后台管理----修改订单状态为逾期

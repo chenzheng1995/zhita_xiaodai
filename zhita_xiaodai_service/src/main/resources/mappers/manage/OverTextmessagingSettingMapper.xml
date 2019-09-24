@@ -13,8 +13,8 @@
     id, companyId, overdueday, timing, templateid, deleted
   </sql>
   <!-- 后台管理             根据id查询 -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-  	select ot.id,ot.companyId,ot.overdueday,ot.timing,t.name,t.content,ot.deleted 
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.OverTextmessagingSetting">
+  	select ot.id,ot.companyId,ot.overdueday,ot.timing,t.id templateid,t.name,t.content,ot.deleted 
   	from over_textmessaging_setting ot inner join textmessaging_template t on ot.templateid=t.id 
     where ot.id = #{id,jdbcType=INTEGER}
   </select>
@@ -108,7 +108,7 @@
   </select>
   <!-- 后台管理      查询列表 -->
   <select id="queryAll" resultType="com.zhita.model.manage.OverTextmessagingSetting">
-  	select ot.id,ot.companyId,ot.overdueday,ot.timing,t.name,t.content,ot.deleted 
+  	select ot.id,ot.companyId,ot.overdueday,ot.timing,t.id templateid,t.name,t.content,ot.deleted 
   	from over_textmessaging_setting ot inner join textmessaging_template t on ot.templateid=t.id where ot.companyId=#{arg0} and ot.deleted=0 limit #{arg1},#{arg2}
   </select>
   <!-- 后台管理     查询列表数量 -->
