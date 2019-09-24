@@ -130,6 +130,12 @@ public class UserAttestationServiceImp implements UserAttestationService{
 		return idCard;
 	}
 
+	@Override
+	public String gettrueName(int userId) {
+		String name = userAttestationMapper.gettrueName(userId);
+		return name;
+	}
+
 
 
 

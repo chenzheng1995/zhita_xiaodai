@@ -1001,4 +1001,16 @@ public class OrderServiceImp implements IntOrderService {
 		return map;
 	}
 
+	@Override
+	public int getId(int userId) {
+		int num = ordersMapper.getId(userId);
+		return num;
+	}
+
+	@Override
+	public Map<String, Object> lifeOfLoan(int userId) {
+		Map<String, Object> map4 = ordersMapper.lifeOfLoan(userId);
+		return map4;
+	}
+
 }

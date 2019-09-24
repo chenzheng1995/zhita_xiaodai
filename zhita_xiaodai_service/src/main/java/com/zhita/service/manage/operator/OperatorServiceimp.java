@@ -85,5 +85,17 @@ public class OperatorServiceimp implements OperatorService{
 		return authentime;
 	}
 
+	@Override
+	public int setoperator(int userId, String authentime) {
+		int number = operatorMapper.setoperator(userId,authentime);
+		return number;
+	}
+
+	@Override
+	public void updateoperator(int userId, String authentime) {
+		operatorMapper.updateoperator(userId,authentime);
+		
+	}
+
 
 }

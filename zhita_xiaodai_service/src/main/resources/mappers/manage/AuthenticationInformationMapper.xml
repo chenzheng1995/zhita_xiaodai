@@ -120,5 +120,13 @@
   	select ifAuthentication from authentication_information where companyId=#{companyId} and deleted =0;
   </select>
   
+        <select id="getoperifAuthentication" parameterType="java.util.Map" resultType="java.lang.String">
+  	select ifAuthentication from authentication_information where companyId=#{companyId} and authenticationName=#{authenticationName} and deleted =0;
+  </select>
+  
+  
+          <select id="secondattributes" parameterType="java.lang.String" resultType="java.lang.String">
+  	select status from authentication_information where secondattributes=#{secondattributes} and deleted =0;
+  </select>
   
 </mapper>
