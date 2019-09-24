@@ -257,4 +257,22 @@ public interface PaymentRecordMapper {
     
     
     String DefeStatus(Integer orderId);
+    
+    
+    Integer PaymentStatus(Integer orderId);
+    
+    
+    String SelectPaymentStatus(Integer orderId);
+    
+    
+    Accountadjustment SelectOrderId(Integer id);
+    
+    
+    
+    Integer UpdateOrdertails(Orderdetails orderdetails);
+    
+    
+    
+    Integer DeleteOrderAcc(Integer id);
+    
 }

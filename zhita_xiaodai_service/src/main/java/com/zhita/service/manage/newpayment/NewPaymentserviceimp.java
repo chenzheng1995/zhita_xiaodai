@@ -97,6 +97,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 			        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
 				        		map.put("msg", maputil.getMap(status));
 				        		map.put("tradeNo", tradeNo);
+				        		map.put("orderId", billId);
 				        		System.out.println("数据:"+jsonObject);
 			        			return map;
 			        		}
