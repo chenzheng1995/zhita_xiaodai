@@ -348,9 +348,9 @@ public class OrderServiceImp implements IntOrderService {
 
 	@Override
 	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
-			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard) {
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard,String bank) {
 		int num = ordersMapper.setOrder(companyId, userId, orderNumber, orderCreateTime, lifeOfLoan,
-				howManyTimesBorMoney, shouldReturned, riskmanagementFraction, borrowMoneyWay,borrowRepayBankcard);
+				howManyTimesBorMoney, shouldReturned, riskmanagementFraction, borrowMoneyWay,borrowRepayBankcard,bank);
 		return num;
 	}
 
@@ -947,6 +947,12 @@ public class OrderServiceImp implements IntOrderService {
 		RedisClientUtil redis = new RedisClientUtil();
 		redis.get("orderId");
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> getOrder(int userId) {
+		Map<String, Object> map = ordersMapper.getOrder(userId);
+		return map;
 	}
 
 }

@@ -149,6 +149,8 @@ public class Orders {
 	
 	private String bankcardName;
 	
+	private String bank;
+	
 	public BigDecimal getShouldReapyMoney() {
 		return shouldReapyMoney;
 	}
@@ -723,6 +725,14 @@ public class Orders {
 
 	public void setTechnicalServiceMoney(BigDecimal technicalServiceMoney) {
 		this.technicalServiceMoney = technicalServiceMoney;
+	}
+	
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
 	}
 	
 }

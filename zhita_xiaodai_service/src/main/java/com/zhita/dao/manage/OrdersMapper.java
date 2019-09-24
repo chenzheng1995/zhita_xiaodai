@@ -102,7 +102,7 @@ public interface OrdersMapper {
 
 	int setOrder(@Param("companyId")int companyId,@Param("userId") int userId,@Param("orderNumber") String orderNumber,@Param("orderCreateTime") String orderCreateTime,@Param("lifeOfLoan") int lifeOfLoan,
 			@Param("howManyTimesBorMoney")int howManyTimesBorMoney,@Param("shouldReturned") String shouldReturned,@Param("riskmanagementFraction") int riskmanagementFraction,
-			@Param("borrowMoneyWay") String borrowMoneyWay,@Param("borrowRepayBankcard") String borrowRepayBankcard);
+			@Param("borrowMoneyWay") String borrowMoneyWay,@Param("borrowRepayBankcard") String borrowRepayBankcard,@Param("bank") String bank);
 
 	int getOrderId(String orderNumber);
 
@@ -161,6 +161,8 @@ public interface OrdersMapper {
 	BigDecimal queryrepaymoneybank(Integer orderid);
 
 	String getrealtime(int userId);
+
+	Map<String, Object> getOrder(int userId);
 
 
 }

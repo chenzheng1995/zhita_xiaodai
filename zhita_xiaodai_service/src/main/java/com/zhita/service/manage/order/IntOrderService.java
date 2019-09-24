@@ -33,7 +33,7 @@ public interface IntOrderService {
 	public int getOrdersId(int userId, int companyId);
 
 	public int setOrder(int companyId, int userId, String orderNumber, String orderCreateTime, int lifeOfLoan,
-			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard);
+			int howManyTimesBorMoney, String shouldReturned, int riskmanagementFraction, String borrowMoneyWay,String borrowRepayBankcard,String bank);
 
 	public int getOrderId(String orderNumber);
 
@@ -166,6 +166,8 @@ public interface IntOrderService {
 	
 	//还款成功修改订单状态  添加还款记录
 	Map<String, Object> UpdateOrdersUpdate();
+
+	public Map<String, Object> getOrder(int userId);
 	
 
 }
