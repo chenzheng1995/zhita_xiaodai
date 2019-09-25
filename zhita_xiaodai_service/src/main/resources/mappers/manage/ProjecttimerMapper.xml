@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhita.dao.manage.ProjecttimerMapper">
 	<!-- ==========================控制订单逾期======================= -->
-	<!-- 后台管理        查询订单表     所有逾期中的订单 -->
+	<!-- 后台管理        查询订单表     所有期限内，已逾期，已延期的订单 -->
 	<select id="queryAllover" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
-		select o.id,o.orderNumber,o.shouldReturnTime,od.realityBorrowMoney,od.interestSum,od.overdueNumberOfDays,od.interestPenaltySum from orders o inner join orderdetails od on o.id=od.orderid 
+		select o.id,o.orderNumber,o.shouldReturnTime,od.realityBorrowMoney,od.makeLoans,od.interestSum,od.overdueNumberOfDays,od.interestPenaltySum,od.technicalServiceMoney from orders o inner join orderdetails od on o.id=od.orderid 
 		where o.companyId=#{arg0} and (o.orderStatus=0||o.orderStatus=1||o.orderStatus=2)
 	</select>
 	<!--后台管理      修改订单状态为逾期  -->

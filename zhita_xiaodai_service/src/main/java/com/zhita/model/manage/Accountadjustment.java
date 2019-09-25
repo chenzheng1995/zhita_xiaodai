@@ -44,6 +44,16 @@ public class Accountadjustment {
 	
 	private String pipelinenumber;
 	
+	private String typename;
+	
+	public String getTypename() {
+		return typename;
+	}
+
+	public void setTypename(String typename) {
+		this.typename = typename;
+	}
+
 	public String getPipelinenumber() {
 		return pipelinenumber;
 	}

@@ -275,4 +275,7 @@ public interface PaymentRecordMapper {
     
     Integer DeleteOrderAcc(Integer id);
     
+    
+    Integer selectPatyId(String name);
+    
 }

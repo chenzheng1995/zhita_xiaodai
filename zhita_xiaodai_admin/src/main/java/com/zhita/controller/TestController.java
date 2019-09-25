@@ -1,6 +1,7 @@
 package com.zhita.controller;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,20 +13,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-import com.zhita.model.manage.OrderQueryParameter;
-import com.zhita.model.manage.Orders;
-import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
-import com.zhita.util.DateListUtil;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.TuoMinUtil;
@@ -207,10 +202,23 @@ public class TestController {
 		System.out.println(result+"---------------");
 		
 		
-		BigDecimal b1=new BigDecimal("5.00");
-		BigDecimal b2=new BigDecimal("9");
+		BigDecimal b1=new BigDecimal("700");
+		BigDecimal b2=new BigDecimal("7.00");
 		System.out.println(b1.compareTo(b2)+"比较");
 		
 		
+		System.out.println((b1.add(new BigDecimal("100"))).multiply(b2));
+		
+		
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date d = new Date();
+		String date = sdf.format(d);//当天时间（年月日时分秒格式）
+		System.out.println(d+"*************"+date+"-----------"+sdf.parse(date)+"++++++++++"+d.getTime());
+		
+		BigDecimal b=null;
+		if(b==null){
+			b=new BigDecimal("0.00");
+		}
+		System.out.println(b1.multiply(b)+"testteststwwt");
 	}	
 }

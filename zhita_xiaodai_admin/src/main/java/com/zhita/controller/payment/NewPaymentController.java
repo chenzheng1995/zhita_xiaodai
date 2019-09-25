@@ -254,6 +254,7 @@ public class NewPaymentController {
 					 String tradeNo = requestmap.get("tradeNo");
 					 String orderId = requestmap.get("orderId");
 					 String status = requestmap.get("status");
+					 String msg = requestmap.get("msg");
 					 //商户订单号
 					 Integer order = newsim.getOrderId(orderId);
 					 
@@ -267,10 +268,13 @@ public class NewPaymentController {
 					    	 pay.setOrderId(oid);
 					    	 if(status.equals("SUCCESS")){
 					    		 pay.setStatus("支付成功");
+					    		 newsim.Updatepaymemt(pay);
 					    	 }else if(status.equals("PAYERROR")){
+					    		 chanser.DeleteOrderNumber(orderId,msg);
 					    		 pay.setStatus("支付失败");
+					    		 newsim.Updatepaymemt(pay);
 					    	 }
-					    	 newsim.Updatepaymemt(pay);
+					    	 
 					    	 responseStr = "SUCCESS";
 						 }
 					 }

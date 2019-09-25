@@ -8,6 +8,8 @@ public class TextmessagingTemplate {
     private String name;//模板名字
 
     private String content;//内容
+    
+    private String deleted;//假删除（1：删除；0：没删除）
 
     public Integer getId() {
         return id;
@@ -32,4 +34,13 @@ public class TextmessagingTemplate {
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
+
+	public String getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
+	}
+    
 }

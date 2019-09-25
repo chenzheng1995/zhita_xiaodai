@@ -273,6 +273,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		acc.setRename_id(padao.selectPatyId(acc.getTypename()));
 		Integer addId = padao.AddCAccount(acc);
 		if(addId != null){
 			Integer updateId = padao.UpdateOrdermoney(acc);

@@ -594,9 +594,17 @@ public class OrderController {
 			BigDecimal money = realmoney.add(offmoney).add(bankmoney);
 			orderList.get(i).setRepaymentMoney(String.valueOf(money));
 
-			BigDecimal shourldmoney = orderList.get(i).getOrderdetails().getRealityBorrowMoney()
-					.add(orderList.get(i).getOrderdetails().getInterestSum())
-					.add(orderList.get(i).getOrderdetails().getInterestPenaltySum());
+			BigDecimal shourldmoney =new BigDecimal("0.00");//应还金额（借款金额+期限内总利息+逾期的逾期费）
+			if(orderList.get(i).getInterestPenaltySum()==null){
+				orderList.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
+			}
+			if(orderList.get(i).getOrderdetails().getRealityBorrowMoney().compareTo(orderList.get(i).getOrderdetails().getMakeLoans())==0){
+				shourldmoney=orderList.get(i).getOrderdetails().getRealityBorrowMoney().add(orderList.get(i).getOrderdetails().getInterestSum()).
+						add(orderList.get(i).getOrderdetails().getInterestPenaltySum().add(orderList.get(i).getOrderdetails().getTechnicalServiceMoney()));
+			}else{
+				shourldmoney=orderList.get(i).getOrderdetails().getRealityBorrowMoney().add(orderList.get(i).getOrderdetails().getInterestSum()).
+						add(orderList.get(i).getOrderdetails().getInterestPenaltySum());
+			}
 			orderList.get(i).setShourldmoney(shourldmoney);// 应还金额（借款金额+期限内总利息+逾期的逾期费）
 			orderList.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(orderList.get(i).getUser().getPhone())));// 将手机号进行脱敏
 			orderList.get(i).setShouldReturnTime(Timestamps.stampToDate(orderList.get(i).getShouldReturnTime()));

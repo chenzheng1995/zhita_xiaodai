@@ -1249,4 +1249,9 @@
  			<delete id="DeleteOrderAcc" parameterType="java.lang.Integer">
  				delete from accountadjustment where id = #{id}
  			</delete>
+ 			
+ 			
+ 			<select id="selectPatyId" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 				select id from loan_setting where name = #{name}
+ 			</select>
 </mapper>

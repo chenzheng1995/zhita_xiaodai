@@ -247,19 +247,27 @@ public class GetResultController {
 		backsidePath = ossUtil.uploadFile(stream1, path1);
     	String authenticationSteps ="1";
     	intUserService.updatename(name,userId);
-    	 int number = UserAttestationService.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,authentime);
-    	 if(number==1) {    		 
-    	    	map.put("Ncode","2000");
-	    		map.put("code", 200);
-	    		map.put("msg","插入成功");
-	    	}else {
-	        	map.put("Ncode","405");
-				map.put("code",405);
-				map.put("msg", "插入失败");
-			}
+    	String string = UserAttestationService.getauthenticationSteps(userId);
+    	if(string==null) {
+          	 int number = UserAttestationService.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,authentime);
+           	 if(number==1) {    		 
+           	    	map.put("Ncode","2000");
+       	    		map.put("code", 200);
+       	    		map.put("msg","插入成功");
+       	    	}else {
+       	        	map.put("Ncode","405");
+       				map.put("code",405);
+       				map.put("msg", "插入失败");
+       			}
+    	}else {
+	    	map.put("Ncode","410");
+    		map.put("code", 410);
+    		map.put("msg","该用户数据已存在");
+    	}
 		return map;
     	
     }
+      
     
     
     //第三方收费接口

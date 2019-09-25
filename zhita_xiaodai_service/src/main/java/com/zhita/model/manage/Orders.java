@@ -135,6 +135,8 @@ public class Orders {
 	
 	private BigDecimal interestPenaltySum;//逾期总罚息
 	
+	private BigDecimal technicalServiceMoney;//技术服务费
+	
 	private Integer chenggNum;
 	
 	private Double chenggData;
@@ -149,14 +151,6 @@ public class Orders {
 	
 	private String bank;
 	
-	public String getBank() {
-		return bank;
-	}
-
-	public void setBank(String bank) {
-		this.bank = bank;
-	}
-
 	public BigDecimal getShouldReapyMoney() {
 		return shouldReapyMoney;
 	}
@@ -723,6 +717,22 @@ public class Orders {
 
 	public void setDeferBeforeReturntime(String deferBeforeReturntime) {
 		this.deferBeforeReturntime = deferBeforeReturntime;
+	}
+
+	public BigDecimal getTechnicalServiceMoney() {
+		return technicalServiceMoney;
+	}
+
+	public void setTechnicalServiceMoney(BigDecimal technicalServiceMoney) {
+		this.technicalServiceMoney = technicalServiceMoney;
+	}
+	
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
 	}
 	
 }

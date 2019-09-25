@@ -166,6 +166,8 @@ public interface IntOrderService {
 	
 	//还款成功修改订单状态  添加还款记录
 	Map<String, Object> UpdateOrdersUpdate();
+
+	public Map<String, Object> getOrder(int userId);
 	
 
 }
