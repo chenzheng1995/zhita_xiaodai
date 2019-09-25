@@ -55,6 +55,26 @@ public class Payment_record {
 	
 	private Integer userId;
 	
+	private String borrowRepayBankcard;
+	
+	private String bank;
+	
+	public String getBorrowRepayBankcard() {
+		return borrowRepayBankcard;
+	}
+
+	public void setBorrowRepayBankcard(String borrowRepayBankcard) {
+		this.borrowRepayBankcard = borrowRepayBankcard;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
 	public Integer getUserId() {
 		return userId;
 	}

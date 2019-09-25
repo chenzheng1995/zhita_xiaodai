@@ -138,7 +138,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 		}
 		stdao.UpdatehowMany(pay.getUserId());
 		pay.setProfessionalWork("放款");
-		pay.setThirdparty_id(1);
+		pay.setThirdparty_id(padao.selectPatyId(pay.getPaymentbtiao()));
 		return stdao.AddPaymentRecord(pay);
 	}
 
@@ -304,6 +304,20 @@ public class Chanpayserviceimp implements Chanpayservice{
 		Orders o = stdao.SelectOrderId(orderNumber);
 		return padao.DefeStatus(o.getId());
 	}
+
+	@Override
+	public String paymentStatus(String orderNumber) {
+		Orders o = stdao.SelectOrderId(orderNumber);
+		return padao.SelectPaymentStatus(o.getId());
+	}
+
+	@Override
+	public Integer UpdatePayStatus(String orderNumber) {
+		Orders o = stdao.SelectOrderId(orderNumber);
+		return padao.PaymentStatus(o.getId());
+	}
+	
+	
 	
 	
 	

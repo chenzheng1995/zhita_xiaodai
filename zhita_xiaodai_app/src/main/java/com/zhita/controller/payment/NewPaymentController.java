@@ -454,11 +454,16 @@ public class NewPaymentController {
 	
 	
 	
-	
+	/**
+	 * 放款状态
+	 * @param orderId
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("SelectPayment")
 	public Map<String, Object> SelectPaymentStatus(String orderId){
 		Map<String, Object> map=new HashMap<String, Object>();    
+		final long timeInterval = 1000;  
 		Map<String, String> payParams=new HashMap<String, String>();    
 	    payParams.put("method","zpay.order.query");
         payParams.put("version","1.0");
@@ -470,39 +475,127 @@ public class NewPaymentController {
 			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
 			String resp = httpClient.send(payParams, "utf-8");
 			System.out.println("数据:"+resp);
+			
 	        if(StringUtils.isNotBlank(resp)){
 	        	JSONObject jsonObject=JSONObject.parseObject(resp);
 	        	String code=jsonObject.getString("code");
 	        	String status = jsonObject.getString("status");
+	        	String msg = jsonObject.getString("msg");
 	        	if(code.equals("SUCCESS")){
-	        				 //String tradeNo = jsonObject.getString("tradeNo");
-	    					 String orderIda = jsonObject.getString("orderId");
-	    					 //商户订单号
-	    					 Integer order = newsim.getOrderId(orderIda);
-	    					 
-	    					 if(order!=null){
-	    						 Payment_record pays = newsim.getPayment(order);
-	    						 if(pays.getStatus().equals("支付成功")){
-	    							 map.put("code", 200);
-	    							 map.put("Ncode", 2000);
-	    							 map.put("msg", "已放款,请勿重复点击");
-	    							 return map;
-	    						 }else{
-	    							 Integer oid = newsim.getOrderId(orderIda);
-	    							 Payment_record pay = new Payment_record();
-	    					    	 pay.setOrderId(oid);
-	    					    	 if(status.equals("SUCCESS")){
-	    					    		 pay.setStatus("支付成功");
-	    					    	 }else if(status.equals("PAYERROR")){
-	    					    		 pay.setStatus("支付失败");
-	    					    	 }else{
-	    					    		 pay.setStatus("支付成功"); 
-	    					    	 }
-	    					    	 newsim.Updatepaymemt(pay);
-	    						 }
-	    					 }
+	        		String orderIda = jsonObject.getString("orderId");
+//	        				 //String tradeNo = jsonObject.getString("tradeNo");
+//	    					 String orderIda = jsonObject.getString("orderId");
+//	    					 //商户订单号
+//	    					 Integer order = newsim.getOrderId(orderIda);
+//	    					 
+//	    					 Payment_record pays = newsim.getPayment(order);
+//	    						 if(pays.getStatus().equals("支付成功")){
+//	    							 map.put("code", 200);
+//	    							 map.put("Ncode", 2000);
+//	    							 map.put("msg", "已放款,请勿重复点击");
+//	    							 return map;
+//	    						 }else{
+//	    							 Integer oid = newsim.getOrderId(orderIda);
+//	    							 Payment_record pay = new Payment_record();
+//	    					    	 pay.setOrderId(oid);
+//	    					    	 if(status.equals("SUCCESS")){
+//	    					    		 pay.setStatus("支付成功");
+//	    					    	 }else if(status.equals("PAYERROR")){
+//	    					    		 pay.setStatus("支付失败");
+//	    					    	 }else{
+//	    					    		 pay.setStatus("支付成功"); 
+//	    					    	 }
+//	    					    	 newsim.Updatepaymemt(pay);
+//	    						 }
+	        			Integer order = newsim.getOrderId(orderIda);
+	        		 	Payment_record pays = newsim.getPayment(order);
+	        		 	Payment_record pay = new Payment_record();
+	        		 	pay.setOrderId(order);
+	        			if(status.equals("SUCCESS")){//放款状态成功
+	        				pay.setStatus("支付成功"); 
+	        				newsim.Updatepaymemt(pay);
+	        			}else if(status.equals("PAYERROR")){//放款失败
+	        				chanser.DeleteOrderNumber(orderId,msg);
+	        				map.put("code", 0);
+		        			map.put("Ncode", 0);
+		        			map.put("msg", msg);
+		        			return map;
+	        			}else{
+	        				 Runnable runnable = new Runnable() {  
+			        	        	
+			        	            public void run() { 
+			        	                while (true) { 
+			        	                    // ------- code for task to run  
+			        	                    System.out.println("Hello !!");  
+			        	                    // ------- ends here  
+			        	                    try {  
+			        	                        Thread.sleep(timeInterval);  
+			        						        try {
+			        									HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
+			        									String resp = httpClient.send(payParams, "utf-8");
+			        									System.out.println(resp);
+			        							        if(StringUtils.isNotBlank(resp)){
+			        							        	JSONObject jsonObject=JSONObject.parseObject(resp);
+			        							        	String code=jsonObject.getString("code");
+			        							        	String hkstatus = jsonObject.getString("status");
+			        							        	if(code.equals("SUCCESS")){
+			        							        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.MD5_KEY)){
+			        							        			if(hkstatus.equals("SUCCESS")){
+			        							        				 Integer updateId = chanpayservice.UpdatePayStatus(orderIda);
+			        							 	     				if(updateId != null){
+			        							 	     				break;
+			        							 	     				}
+			        							        			}
+			        							        		}
+			        							        	}
+			        							        }
+			        								} catch (Exception e) {
+			        									e.printStackTrace();
+			        								}
+			        	                        	break;
+			        	                    } catch (InterruptedException e) {  
+			        	                        e.printStackTrace();  
+			        	                    }  
+			        	                }  
+			        	            }  
+			        	        };  
+			        	        Thread thread = new Thread(runnable);  
+			        	        thread.start(); 
+			        	        String paymentStatus = chanser.paymentStatus(orderIda);
+			        	        Integer codesa = 0;
+			        	        Integer Ncode = 0;
+			        	        if(paymentStatus!=null){
+			        	        	if(paymentStatus.length()!=0){
+				        	        	if(paymentStatus.equals("支付成功")){
+				        	        		codesa = 200;
+				        	        		paymentStatus = "支付成功";
+				        	        		Ncode = 2000;
+					        	        }else{
+					        	        	codesa = 0;
+					        	        	paymentStatus = "支付失败";
+				        	        		Ncode = 0;
+					        	        }
+			        	        	}else{
+			        	        		paymentStatus = "正在处理,请稍后查询";
+			        	        	}
+			        	        }else{
+			        	        	paymentStatus = "正在处理,请稍后查询";
+			        	        }
+			        	        
+			        	        map.put("msg", paymentStatus);
+			        	        map.put("code", codesa);
+			        	        map.put("Ncode", Ncode);
+			        	        return map;
+		        		 }
+	        			}
+	        		
+	        		}else{
+	        			map.put("code", 0);
+	        			map.put("Ncode", 0);
+	        			map.put("msg", "放款异常");
+	        			return map;
 	        		}
-	        	}
+	        	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -512,7 +605,8 @@ public class NewPaymentController {
 	
 	
 	
-	
+	@ResponseBody
+	@RequestMapping("UpdatePaymentStatus")
 	public Integer UpdateStatus(String orderId){
 		Integer a = 0;
 		Map<String, String> payParams=new HashMap<String, String>();    
@@ -589,7 +683,7 @@ public class NewPaymentController {
 		RedisClientUtil redis = new RedisClientUtil();
 		Loan_setting loan = new Loan_setting();
 		loan.setCompanyId(companyId);
-		loan.setName("畅捷支付");
+		loan.setName(paymentname.getLoanSource());
 		String a =  chanser.loanSetStatu(loan);//放款状态  1  开启    2 关闭
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
@@ -792,16 +886,17 @@ public class NewPaymentController {
     	}else{
     		
     	redis.delkey("ChanpaySenduserId"+userId);//删除字段
+    	pay.setPaymentbtiao(paymentname.getLoanSource());
     	 Map<String, Object> mappam = newsim.Newpayment(new BigDecimal(TransAmt), orderNumber, userId, companyId);
     	 String msg = (String) mappam.get("msg");
     	 if(msg.equals("代付失败")){
     		String orderStatus = (String) mappam.get("msg");
  			chanser.DeleteOrderNumber(orderNumber,orderStatus);
- 			map1.put("code", 0);
- 			map1.put("msg", orderStatus);
- 			map1.put("Ncode", 0);
- 			map1.put("desc", "借款失败");
- 			map1.put("code", 0);
+ 			mappam.put("code", 0);
+ 			mappam.put("msg", orderStatus);
+ 			mappam.put("Ncode", 0);
+ 			mappam.put("desc", "借款失败");
+ 			mappam.put("code", 0);
  			return map1;
  			
     		}else{
@@ -810,32 +905,15 @@ public class NewPaymentController {
     			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
     			pay.setPipelinenumber(pipelnen);
     			pay.setOrderId(orderId);
-    			pay.setStatus("支付失败");
+    			pay.setStatus("支付中");
     			int i = chanser.AddPayment_record(pay);
     			if(i == 1){
-    				Integer sta = this.UpdateStatus(orderNumber);
-    				if(sta == 0){
-    					map1.put("code", 0);
-    	    			map1.put("msg", "放款失败");
-    	    			map1.put("Ncode", 0);
-    	    			map1.put("desc", "放款失败");
-    				}else if(sta == 1){
-    					map1.put("code", 200);
-    	    			map1.put("msg", "放款成功，可能需要几分钟到账");
-    	    			map1.put("Ncode", 2000);
-    	    			map1.put("desc", "借款成功");
-    				}else if(sta == 3){
-    					map1.put("code", 203);
-    	    			map1.put("msg", "放款成功，可能需要几分钟到账");
-    	    			map1.put("Ncode", 2003);
-    				}
+    				mappam.put("code", 200);
+    				mappam.put("msg", "放款成功，可能需要几分钟到账");
+    				mappam.put("Ncode", 2000);
+    				mappam.put("desc", "借款成功");
     			}
-    			map1.put("code", 200);
-    			map1.put("msg", "放款成功，可能需要几分钟到账");
-    			map1.put("Ncode", 2000);
-    			map1.put("desc", "借款成功");
-    			
-    			return map1;
+    			return mappam;
     			
     		}
     	}

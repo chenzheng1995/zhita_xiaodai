@@ -616,6 +616,56 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		return map;
 	}
+
+
+
+
+	@Override
+	public List<Orderdetails> allBeoverdueConnectionCollection(Collection col) {
+		List<Orderdetails> orders = collmapp.Allorderdetails(col);
+		PhoneDeal p = new PhoneDeal();
+		Integer totalCount = collmapp.SelectTotalCount(col);
+		PageUtil pages = new PageUtil(col.getPage(), totalCount);
+		TuoMinUtil tm = new TuoMinUtil();
+		col.setPage(pages.getPage());
+		pages.setTotalCount(totalCount);
+		for(int i=0;i<orders.size();i++){
+			String phon = tm.mobileEncrypt(p.decryption(orders.get(i).getPhone()));//脱敏
+			orders.get(i).setPhone(phon);//手机号解密 
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+			orders.get(i).setCompanyId(col.getCompanyId());
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(a==0){
+				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			}
+			orders.get(i).setDeferAfterReturntime(orders.get(i).getOrderCreateTime());
+			System.out.println("订单编号:"+orders.get(i).getOrderId());
+			if(orders.get(i).getInterestPenaltySum() == null){
+				orders.get(i).setInterestPenaltySum(new BigDecimal(0));
+			}
+			System.out.println("金额:"+orders.get(i).getRealityBorrowMoney()+"金额2:"+orders.get(i).getInterestPenaltySum()+"借款金额:"+orders.get(i).getCca());
+			orders.get(i).setOrder_money(orders.get(i).getCca().add(orders.get(i).getInterestPenaltySum()));
+			
+			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			
+			
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			
+			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			
+			System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime()+"金额:"+orders.get(i).getOrder_money()
+					+"利息:"+orders.get(i).getRealityBorrowMoney()+"CC:"+orders.get(i).getInterestPenaltySum()+"BB:"+orders.get(i).getInterestSum());
+		}
+			return orders;
+	}
+
+
+
+
+	@Override
+	public Integer SelectTotalCount(Collection col) {
+		return collmapp.SelectTotalCount(col);
+	}
 	
 	
 	

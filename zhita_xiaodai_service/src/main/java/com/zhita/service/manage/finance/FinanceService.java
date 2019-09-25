@@ -94,4 +94,7 @@ public interface FinanceService {
     
     
     Map<String, Object> SelectAccOrders(String orderNumber);
+    
+    
+    Map<String, Object> DeleteAccorders(Integer id);
 }

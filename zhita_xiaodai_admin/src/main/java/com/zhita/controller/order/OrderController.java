@@ -648,8 +648,7 @@ public class OrderController {
 			}else if(orderList.get(i).getOrderStatus().equals("4")){
 				orderList.get(i).setOrderStatus("已坏账");
 			}
-			
-			if(orderList.get(i).getUser().getAccount().isEmpty()){
+			if(orderList.get(i).getUser().getAccount()==null||orderList.get(i).getUser().getAccount().isEmpty()){
 				orderList.get(i).getUser().setAccount("机审");
 			}
 			

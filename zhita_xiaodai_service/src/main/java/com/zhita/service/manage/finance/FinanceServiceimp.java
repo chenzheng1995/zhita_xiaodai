@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.HomepageTongjiMapper;
+import com.zhita.dao.manage.NewMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.dao.manage.ThirdpricefindMapper;
@@ -32,6 +33,7 @@ import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.PriceTongji;
 import com.zhita.model.manage.Repayment_setting;
+import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.model.manage.Thirdpricefind;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
@@ -63,6 +65,11 @@ public class FinanceServiceimp implements FinanceService{
 	
 	@Autowired
 	private PostloanorderMapper pdap;
+	
+	
+	
+	@Autowired
+	private NewMapper newdao;
 	
 	
 	
@@ -162,6 +169,23 @@ public class FinanceServiceimp implements FinanceService{
 		orderNumber.setCompanyId(orderNumber.getCompanyId());
 		PhoneDeal p = new PhoneDeal();
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
+		
+		int a = ordea.getRealityBorrowMoney().compareTo(ordea.getMakeLoans());
+		System.out.println("状态:"+a+"金额111CC:"+ordea.getRealityBorrowMoney()+"金额2222BBB:"+ordea.getMakeLoans());
+		if(a==0){
+			System.out.println("后置");
+			BigDecimal aa =ordea.getInterestPenaltySum().add(ordea.getTechnicalServiceMoney());
+			ordea.setOrder_money(ordea.getRealityBorrowMoney().add(ordea.getInterestSum()).add(aa));
+			System.out.println(ordea.getRealityBorrowMoney()+"CCC"+ordea.getInterestSum()+"CCCC11"+ordea.getInterestPenaltySum()+"金额:"+ordea.getTechnicalServiceMoney());
+			System.out.println(ordea.getOrder_money());
+		}else{
+			System.out.println("前置");
+			ordea.setOrder_money(ordea.getInterestPenaltySum().add(ordea.getRealityBorrowMoney()));//应还总金额
+		}
+		
+		
+		
+		
 		if(ordea.getInterestSum() == null){
 			ordea.setRealityBorrowMoney(ordea.getRealityBorrowMoney());
 		}else{
@@ -170,19 +194,21 @@ public class FinanceServiceimp implements FinanceService{
 		
 		
 		System.out.println(ordea.getDeferAfterReturntime()+"风控:"+ordea.getRiskcontrolname()+"分数:"+ordea.getRiskmanagementFraction());
-		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(ordea.getOrderId());//前置应还金额
+		/*Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(ordea.getOrderId());//前置应还金额
 		
 		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
 			ordea.setOrder_money(ordea.getShouldReapyMoney());//应还总金额
 		}else{
 			ordea.setOrder_money(ordea.getInterestInAll().add(ordea.getRealityBorrowMoney()));
-		}
+		}*/
+		
+		
 		
 		ordea.setOrderCreateTime(Timestamps.stampToDate(ordea.getOrderCreateTime()));//时间戳转换
 		Deferred defe =  coldao.DefNuma(ordea.getOrderId());
 		ordea.setDefeNum(defe.getDefeNum());
 		System.out.println("次数:"+ordea.getDefeNum());
-		ordea.setOrder_money(padao.OrderMoneySum(ordea.getOrderId()).add(ordea.getInterestSum()));
+//		ordea.setOrder_money(padao.OrderMoneySum(ordea.getOrderId()).add(ordea.getInterestSum()));
 		System.out.println("次数:"+ordea.getDefeNum()+"金额:"+ordea.getOrder_money());
 		//interestSum  order_money  realityBorrowMoney
 		System.out.println(defe.getInterestOnArrears());
@@ -247,6 +273,7 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		acc.setRename_id(padao.selectPatyId(acc.getTypename()));
 		Integer addId = padao.AddCAccount(acc);
 		if(addId != null){
 			Integer updateId = padao.UpdateOrdermoney(acc);
@@ -282,14 +309,12 @@ public class FinanceServiceimp implements FinanceService{
 			
 			
 		}else{
-			if(orderNumber.getIdcard_number().length()==0 && orderNumber.getPhone().length()==0){
-				map.put("Orderdetails", "条件不能为null");
-				map.put("Deferred", 0);
-			}else{
 				PhoneDeal p = new PhoneDeal();
 				if(orderNumber.getPhone() != null){
 					if(orderNumber.getPhone().length()==11){
+						System.out.println("进加密");
 						orderNumber.setPhone(p.encryption(orderNumber.getPhone()));
+						System.out.println("已加密手机号:"+orderNumber.getPhone());
 					}
 					
 				}
@@ -324,7 +349,6 @@ public class FinanceServiceimp implements FinanceService{
 					map.put("Orderdetails", ordetails);
 					
 				}
-			}
 			}
 			
 		return map;
@@ -497,8 +521,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> ThirdpatyAll(Integer compayId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Loan_setting> third = padao.SelectThird(compayId);
-		map.put("Loan_setting", third);
+		Thirdparty_interface paymentname = newdao.NewloanRepayment(compayId);//获取系统设置的 放款名称   和  还款名称
+		map.put("Loan_setting", paymentname.getLoanSource());
 		return map;
 	}
 
@@ -607,7 +631,7 @@ public class FinanceServiceimp implements FinanceService{
 			Calendar calendar = Calendar.getInstance();
 			Date date = null;
 			Integer day = pdap.SelectHuan(banl.getCompanyId());//获取天数
-			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			calendar.add(Calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
 			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 			String c = sima.format(date);//结束时间
 			String b = sima.format(new Date());
@@ -948,8 +972,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> RepaymentAll(Integer compayId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Repayment_setting> repay = padao.SelectRepay(compayId);
-		map.put("Repayment_setting", repay);
+		Thirdparty_interface paymentname = newdao.NewloanRepayment(compayId);//获取系统设置的 放款名称   和  还款名称
+		map.put("Repayment_setting", paymentname.getRepaymentSource());
 		return map;
 	}
 
@@ -1180,6 +1204,25 @@ public class FinanceServiceimp implements FinanceService{
 			accs.get(i).setAccounttime(Timestamps.stampToDate(accs.get(i).getAccounttime()));
 		}
 		map.put("Accountadjustment", accs);
+		return map;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> DeleteAccorders(Integer id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Accountadjustment orderId = padao.SelectOrderId(id);//查询订单号      调账金额       调账后应还金额
+		Orderdetails orderdetails = new Orderdetails();
+		orderdetails.setShouldReapyMoney(orderId.getTotalamount().add(orderId.getAmountmoney()));//获取应还金额
+		Integer updateId = padao.UpdateOrdertails(orderdetails);
+		if(updateId!=null){
+			padao.DeleteOrderAcc(id);
+		}
+		map.put("code", 200);
+		map.put("Ncode", 2000);
+		map.put("msg", "已删除");
 		return map;
 	}
 
