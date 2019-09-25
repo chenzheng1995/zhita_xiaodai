@@ -301,15 +301,31 @@ public class CertificationCenterController {
 		   String authenticationName = "手机运营商";
 		   String ifAuthentication =  authenticationInformationMapper.getoperifAuthentication(authenticationName,companyId);
 		   if("1".equals(ifAuthentication)) {
-			   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&("2".equals(shareOfState)||"4".equals(shareOfState))) {
-			   map1.put("code","200");
-			   map1.put("msg", "满足条件");
-			   map1.put("Ncode","2000");
-		   }else {
-			   map1.put("Ncode","400");
-			   map1.put("code","400");
-			   map1.put("msg", "不满足条件");
-		}
+			   String secondattributes = "运营商";
+			   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+			   if("1".equals(status)) {
+				   if(userAttestation.equals("1")&&Operator.equals("1")&&bankcard.equals("1")&&("2".equals(shareOfState)||"4".equals(shareOfState))) {
+					   map1.put("code","200");
+					   map1.put("msg", "满足条件");
+					   map1.put("Ncode","2000");
+				   }else {
+					   map1.put("Ncode","400");
+					   map1.put("code","400");
+					   map1.put("msg", "不满足条件");
+				}
+					 }
+			   
+			   if("2".equals(status)) {
+				   if(userAttestation.equals("1")&&bankcard.equals("1")&&("2".equals(shareOfState)||"4".equals(shareOfState))) {
+					   map1.put("code","200");
+					   map1.put("msg", "满足条件");
+					   map1.put("Ncode","2000");
+				   }else {
+					   map1.put("Ncode","400");
+					   map1.put("code","400");
+					   map1.put("msg", "不满足条件");
+				}
+					 }
 		   }
 		   
 		   if("2".equals(ifAuthentication)) {

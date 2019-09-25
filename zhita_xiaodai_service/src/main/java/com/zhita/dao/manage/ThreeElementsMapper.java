@@ -26,4 +26,8 @@ public interface ThreeElementsMapper {
 	int getCertificationnumber(@Param("userId")int userId,@Param("phone") String phone);
 
 	String getcode(@Param("userId")int userId,@Param("phone") String phone);
+
+	void setThreeElements1(@Param("userId")int userId,@Param("verificationResult") String verificationResult,@Param("certification_number") int certification_number,@Param("phone") String phone);
+
+	void updateThreeElements1(@Param("userId")int userId,@Param("verificationResult") String verificationResult,@Param("certification_number") int certification_number,@Param("phone") String phone);
 }

@@ -126,7 +126,7 @@
   
   
           <select id="secondattributes" parameterType="java.lang.String" resultType="java.lang.String">
-  	select status from authentication_information where secondattributes=#{secondattributes} and deleted =0;
+  	select status from authen_secondattributes where secondattributes=#{secondattributes};
   </select>
   
 </mapper>

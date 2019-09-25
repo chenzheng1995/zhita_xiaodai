@@ -45,9 +45,9 @@ public interface OperatorMapper {
 
 	String getauthentime(int userId);
 
-	int setoperator(@Param("userId")int userId,@Param("authentime") String authentime);
+	int setoperator(@Param("userId")int userId,@Param("authentime") String authentime,@Param("phone") String phone);
 
-	void updateoperator(@Param("userId")int userId,@Param("authentime") String authentime);
+	void updateoperator(@Param("userId")int userId,@Param("authentime") String authentime,@Param("phone") String phone);
 
 
 }
