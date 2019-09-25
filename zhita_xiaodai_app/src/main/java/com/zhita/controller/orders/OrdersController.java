@@ -35,6 +35,7 @@ import com.zhita.service.manage.liftingamount.IntLiftingamountServcie;
 import com.zhita.service.manage.operational.OperationalService;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
+import com.zhita.service.manage.userattestation.UserAttestationService;
 
 
 @Controller
@@ -63,6 +64,9 @@ public class OrdersController {
 	
 	@Autowired
 	BankcardTypeMapper bankcardTypeMapper;
+	
+	@Autowired
+	UserAttestationService userAttestationService;
 	
 	
 	
@@ -529,15 +533,22 @@ public class OrdersController {
   	Map<String, Object> map = intBorrowmonmesService.getborrowMoneyMessage(companyId); 
     Map<String, Object> map1  = new HashMap<String, Object>();
     map1.put("Ncode","2000");
+    
+    Map<String, Object> map4 = intOrderService.lifeOfLoan(userId);
+    int lifeOfLoan = (int) map4.get("borrowTimeLimit");
+    int orderId = intOrderService.getOrdersId(userId, companyId);
+
+    
   	BigDecimal ll = new BigDecimal(0);
-  	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//延期天数
+//  	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//延期天数
   	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
   	int platformfeeRatio =  ((int) map.get("platformfeeRatio"));//平台服务费比率
       BigDecimal pr = new BigDecimal(0);
       pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
       BigDecimal bd8 = new BigDecimal("100");
       pr = pr.divide(bd8);//平台服务费比率除以100之后
-      BigDecimal deferredexpenses = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//延期费用	
+//      BigDecimal deferredexpenses = (finalLine.multiply(pr)).setScale(2,BigDecimal.ROUND_HALF_UP);//延期费用	
+      BigDecimal deferredexpenses =orderdetailsMapper.gettechnicalServiceMoney(orderId);
 	  String beforeTime = intOrderService.getshouldReturnTime(userId,companyId);//延期前应还时间
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 	beforeTime = sdf.format(new Date(Long.parseLong(beforeTime))); // 时间戳转换日期  
@@ -590,37 +601,59 @@ public class OrdersController {
    @ResponseBody
    @Transactional
    public Map<String, Object> getOrderInformation (int userId) throws ParseException{
-//	   Map<String, Object> map = intOrderService.getOrder(userId);
-//	   String orderCreateTime = (String) map.get("orderCreateTime");//借款时间
-//	   int id = (int) map.get("id");
-//	   String realtime = (String) map.get("realtime");//还款时间
-//	   Map<String, Object> map1 = orderdetailsMapper.getOrderdetails1(id);
 	   Map<String, Object> map3  = new HashMap<String, Object>();
-	   String orderCreateTime ="sudfh";//借款时间
-	   String name = "df";//借款人
-	   String bank ="sfa";//开户银行
-	   String borrowRepayBankcard = "dfas";//卡号
-	   String realityBorrowMoney = "4165";//借款金额
-	   String interestInAll ="16";//利息
-	   String interestPenaltySum ="652";//逾期费
-	   String technicalServiceMoney ="464";//手续费
-	   String realAmount ="46";//实还金额
-	   String realtime = "sad";//还款时间
-	   map3.put("orderCreateTime", orderCreateTime);
-	   map3.put("name", name);
-	   map3.put("bank", bank);
-	   map3.put("borrowRepayBankcard", borrowRepayBankcard);
-	   map3.put("realityBorrowMoney", realityBorrowMoney);
-	   map3.put("interestInAll", interestInAll);
-	   map3.put("interestPenaltySum", interestPenaltySum);
-	   map3.put("technicalServiceMoney", technicalServiceMoney);
-	   map3.put("realAmount", realAmount);
-	   map3.put("realtime", realtime);
-	   map3.put("code",200);
-	   map3.put("Ncode",2000);
+	   Map<String, Object> map = intOrderService.getOrder(userId);
+
+	   int num = intOrderService.getId(userId);
+	   if(num==0) {
+		   
+		   map3.put("code",400);
+		   map3.put("Ncode",2000); 
+	   }else {
+		   String orderCreateTime = (String) map.get("orderCreateTime");//借款时间
+		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		   orderCreateTime = sdf.format(new Date(Long.parseLong(String.valueOf(orderCreateTime))));
+		   int id = (int) map.get("id");//订单id
+		   String realtime = (String) map.get("realtime");//还款时间
+		   realtime = sdf.format(new Date(Long.parseLong(String.valueOf(realtime))));
+		   String borrowRepayBankcard = (String) map.get("borrowRepayBankcard");//卡号
+		   String bank = (String) map.get("bank");//开户行	   
+		   Map<String, Object> map1 = orderdetailsMapper.getOrderdetails1(id);
+		   BigDecimal realityBorrowMoney = (BigDecimal) map1.get("realityBorrowMoney");//借款金额
+		   BigDecimal interestSum = (BigDecimal) map1.get("interestSum");//利息
+		   BigDecimal interestPenaltySum = (BigDecimal) map1.get("interestPenaltySum");//逾期费
+		   BigDecimal technicalServiceMoney =(BigDecimal) map1.get("technicalServiceMoney");//逾期费
+		   BigDecimal repaymentMoney = orderdetailsMapper.getrepaymentMoney(id);//还款金额
+		   if(repaymentMoney==null) {
+			   repaymentMoney =new BigDecimal(0);
+		   }
+		   BigDecimal offusermoney = orderdetailsMapper.getoffusermoney(id);//线下实还金额
+		   if(offusermoney==null) {
+			   offusermoney =new BigDecimal(0);
+		   }
+		   BigDecimal deduction_money = orderdetailsMapper.getdeduction_money(id);//扣款金额
+		   if(deduction_money==null) {
+			   deduction_money =new BigDecimal(0);
+		   }
+		   BigDecimal realAmount = repaymentMoney.add(offusermoney).add(deduction_money);
+		   
+		   String name = userAttestationService.gettrueName(userId);
+
+		   map3.put("orderCreateTime", orderCreateTime);
+		   map3.put("name", name);
+		   map3.put("bank", bank);
+		   map3.put("borrowRepayBankcard", borrowRepayBankcard);
+		   map3.put("realityBorrowMoney", realityBorrowMoney);
+		   map3.put("interestInAll", interestSum);
+		   map3.put("interestPenaltySum", interestPenaltySum);
+		   map3.put("technicalServiceMoney", technicalServiceMoney);
+		   map3.put("realAmount", realAmount);
+		   map3.put("realtime", realtime);
+		   map3.put("code",200);
+		   map3.put("Ncode",2000);
+	 
+	   }
 	   
-//	   map3.put("code",400);
-//	   map3.put("Ncode",2000);  
 	return map3;
 	   
    }

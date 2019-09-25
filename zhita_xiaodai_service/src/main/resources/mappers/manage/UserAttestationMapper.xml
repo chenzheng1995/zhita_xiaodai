@@ -539,4 +539,9 @@
 		select idcard_number from user_attestation where userId = #{userId} 
 	</select>
 	
+				<select id="gettrueName" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select trueName from user_attestation where userId = #{userId} 
+	</select>
+	
+	
 </mapper>

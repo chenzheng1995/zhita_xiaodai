@@ -3,6 +3,8 @@ package com.zhita.dao.manage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhita.model.manage.AuthenSecondattributes;
 import com.zhita.model.manage.AuthenticationInformation;
 
@@ -37,4 +39,8 @@ public interface AuthenticationInformationMapper {
 	ArrayList<AuthenticationInformation> getCertificationCenter(int companyId);
 
 	ArrayList<String> getifAuthentication(int companyId);
+
+	String getoperifAuthentication(@Param("authenticationName")String authenticationName,@Param("companyId") int companyId);
+
+	String secondattributes(String secondattributes);
 }

@@ -42,5 +42,15 @@ public interface OrderdetailsMapper {
 
 	Map<String, Object> getOrderdetails1(int id);
 
+	Map<String, Object> getreimbursement(int id);
+
+	BigDecimal getrepaymentMoney(int id);
+
+	BigDecimal getoffusermoney(int id);
+
+	BigDecimal getdeduction_money(int id);
+
+	BigDecimal gettechnicalServiceMoney(int orderId);
+
 
 }

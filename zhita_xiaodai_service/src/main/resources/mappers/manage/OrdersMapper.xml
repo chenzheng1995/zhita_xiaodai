@@ -1012,8 +1012,15 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	</select>
 	
 		<select id="getOrder" parameterType="java.lang.Integer" resultType="java.util.Map">
-		select orderCreateTime,id,realtime where userId = #{userId} order by orderCreateTime desc  LIMIT 1
+		select orderCreateTime,id,realtime,bank,borrowRepayBankcard from orders where userId = #{userId} and orderStatus ='3' order by orderCreateTime desc  LIMIT 1
 	</select>
 
+		<select id="getId" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+		select count(id) from orders where userId = #{userId} and orderStatus = '3'
+	</select>
+	
+			<select id="lifeOfLoan" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select borrowTimeLimit from orders where userId = #{userId} order by orderCreateTime desc  LIMIT 1
+	</select>
 	
 </mapper>
