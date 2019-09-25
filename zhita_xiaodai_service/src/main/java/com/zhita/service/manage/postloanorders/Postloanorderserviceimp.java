@@ -674,8 +674,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			if(a==0){
 				System.out.println("后置");
 				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(aa));
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()).add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
@@ -810,8 +810,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			if(a==0){
 				System.out.println("后置");
 				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(aa));
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()).add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
@@ -912,7 +912,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			if(a==0){
 				System.out.println("后置");
 				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(aa));
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()).add(aa));
 				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{

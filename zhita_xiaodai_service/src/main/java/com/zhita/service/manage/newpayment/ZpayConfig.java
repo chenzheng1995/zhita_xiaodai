@@ -34,11 +34,11 @@ public class ZpayConfig {
     //public static final String RECHARGE_NOTIFY_NEW="http://115.29.64.145:8081/zhita_xiaodai_admin/newpay/callbackpay";//
     
     
-    public static final String RECHARGE_NOTIFY_NEWPAY="https://mdbpay.tcc1688.com/zhita_xiaodai_admin/newpay/callback";//香港服还款
+    public static final String RECHARGE_NOTIFY_NEWPAY="http://mdbpay.tcc1688.com/zhita_xiaodai_admin/newpay/callback";//香港服还款
     //public static final String RECHARGE_NOTIFY_NEWPAY="http://47.102.40.133:8081/zhita_xiaodai_admin/newpay/callback";//正式服还款
     //public static final String RECHARGE_NOTIFY_NEWPAY="http://115.29.64.145:8081/zhita_xiaodai_admin/newpay/callback";//
     
-    public static final String RECHARGE_NOTIFY_NEWDEFE="https://mdbpay.tcc1688.com/newpay/zhita_xiaodai_admin/callbackdefe";//香港服延期
+    public static final String RECHARGE_NOTIFY_NEWDEFE="http://mdbpay.tcc1688.com/newpay/zhita_xiaodai_admin/callbackdefe";//香港服延期
     //public static final String RECHARGE_NOTIFY_NEWDEFE="http://47.102.40.133:8081/newpay/zhita_xiaodai_admin/callbackdefe";//正式服延期
     //public static final String RECHARGE_NOTIFY_NEWDEFE="http://115.29.64.145:8081/zhita_xiaodai_admin/newpay/callbackdefe";//
 }

@@ -175,8 +175,8 @@ public class FinanceServiceimp implements FinanceService{
 		if(a==0){
 			System.out.println("后置");
 			BigDecimal aa =ordea.getInterestPenaltySum().add(ordea.getTechnicalServiceMoney());
-			ordea.setOrder_money(ordea.getRealityBorrowMoney().add(ordea.getInterestInAll()).add(aa));
-			System.out.println(ordea.getRealityBorrowMoney()+"CCC"+ordea.getInterestInAll()+"CCCC11"+ordea.getInterestPenaltySum()+"金额:"+ordea.getTechnicalServiceMoney());
+			ordea.setOrder_money(ordea.getRealityBorrowMoney().add(ordea.getInterestSum()).add(aa));
+			System.out.println(ordea.getRealityBorrowMoney()+"CCC"+ordea.getInterestSum()+"CCCC11"+ordea.getInterestPenaltySum()+"金额:"+ordea.getTechnicalServiceMoney());
 			System.out.println(ordea.getOrder_money());
 		}else{
 			System.out.println("前置");
