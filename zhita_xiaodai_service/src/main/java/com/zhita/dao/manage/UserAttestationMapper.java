@@ -64,4 +64,6 @@ public interface UserAttestationMapper {
 
 	String getidCard(int userId);
 
+	String gettrueName(int userId);
+
 }

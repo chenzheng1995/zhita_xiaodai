@@ -107,4 +107,10 @@ public interface Chanpayservice {
 	
 	
 	String DefeStatus(String orderNumber);
+	
+	
+	String paymentStatus(String orderNumber);
+	
+	
+	Integer UpdatePayStatus(String orderNumber);
 }

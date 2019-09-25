@@ -395,5 +395,18 @@ public class FinanceController {
 	public Map<String, Object> AllAccorders(String orderNumber){
 		return fianser.SelectAccOrders(orderNumber);
 	}
+	
+	
+	
+	/**
+	 * 删除线上减免记录
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("DeleteAccorders")
+	public Map<String, Object> DeleteAccorders(Integer id){
+		return fianser.DeleteAccorders(id);
+	}
 
 }

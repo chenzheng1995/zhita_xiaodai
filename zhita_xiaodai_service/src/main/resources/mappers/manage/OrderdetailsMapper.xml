@@ -258,7 +258,26 @@ select interestPenaltySum from orderdetails where orderId = #{orderId}
  </select>
  
      <select id="getOrderdetails1" parameterType="java.lang.Integer" resultType="java.util.Map">
-select 
+select realityBorrowMoney,interestInAll,interestPenaltySum,interestSum,technicalServiceMoney from orderdetails where orderId = #{id}
  </select>
+ 
+ 
+       <select id="getrepaymentMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+select repaymentMoney from  repayment where orderId = #{id} and statu = "成功"
+ </select>
+ 
+        <select id="getoffusermoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+select offusermoney from  offlinjianmian where orderId = #{id}
+ </select>
+ 
+         <select id="getdeduction_money" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+select deduction_money from  bankdeductions where orderId = #{id}
+ </select>
+ 
+ 
+          <select id="gettechnicalServiceMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+select technicalServiceMoney from  orderdetails where orderId = #{orderId}
+ </select>
+ 
  
 </mapper>

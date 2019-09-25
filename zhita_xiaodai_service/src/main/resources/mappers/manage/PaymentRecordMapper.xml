@@ -205,7 +205,8 @@
   
   
   		  <select id="PaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber
+		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber,
+		  	o.bank,o.borrowRepayBankcard
 		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
 		  	 LEFT JOIN user u ON o.userId = u.id
 		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -326,7 +327,7 @@
   			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,so.sourceName as drainageOfPlatformName,o.riskmanagementFraction,
 					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityAccount as realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
 					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferAfterReturntime,ord.InterestSum,o.shouldReturnTime,
-					ord.interestPenaltySum,o.realtime 
+					ord.interestPenaltySum,o.realtime,ord.technicalServiceMoney
   			 		from orders o left join user u on o.userId = u.id
 					left join orderdetails ord on o.id = ord.orderId
 					left join payment_record pay ON pay.orderId = o.id
@@ -353,7 +354,8 @@
   			<select id="OrdeRepayment" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
   					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,ord.shouldReapyMoney,
 					 o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
-					 o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum
+					 o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum,
+					 o.borrowTimeLimit,ord.technicalServiceMoney,o.borrowTimeLimit
 					from orders o left JOIN user u on o.userId = u.id 
 					LEFT JOIN source d on d.id = u.sourceId
 					LEFT JOIN orderdetails ord on o.id = ord.orderid
@@ -1221,5 +1223,35 @@
  			
  			<select id="DefeStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
  				select deleted from deferred where id = (select max(id) from deferred where orderId = #{orderId})
+ 			</select>
+ 			
+ 			
+ 			<select id="SelectPaymentStatus" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select status from payment_record where id = (select max(id) from payment_record where orderId = #{orderId})
+ 			</select>
+ 			
+ 			
+ 			<update id="PaymentStatus" parameterType="java.lang.Integer">
+ 				update payment_record set status = "支付成功" where id = (select max(id) from payment_record where orderId = #{orderId})
+ 			</update>
+ 			
+ 			
+ 			<select id="SelectOrderId" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Accountadjustment">
+ 			 	select orderId,amountmoney,totalamount from accountadjustment where id = #{id}
+ 			</select>
+ 			
+ 			
+ 			<update id="UpdateOrdertails" parameterType="com.zhita.model.manage.Orderdetails">
+ 				update Orderdetails set shouldReapyMoney = #{shouldReapyMoney} where orderId =#{orderId}
+ 			</update>
+ 			
+ 			
+ 			<delete id="DeleteOrderAcc" parameterType="java.lang.Integer">
+ 				delete from accountadjustment where id = #{id}
+ 			</delete>
+ 			
+ 			
+ 			<select id="selectPatyId" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 				select id from loan_setting where name = #{name}
  			</select>
 </mapper>

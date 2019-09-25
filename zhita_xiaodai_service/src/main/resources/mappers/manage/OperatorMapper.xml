@@ -203,5 +203,17 @@
 	      		<select id="getauthentime" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select authentime from operator where userId = #{userId}
 	</select>
+	
+		<insert id="setoperator" parameterType="java.util.Map">
+		insert into operator (userId,authentime)
+		values (#{userId},#{authentime})
+	</insert>
+	
+	
+	  		  <update id="updateoperator" parameterType="java.util.Map">
+    update operator set
+    authentime = #{authentime}
+    where userId = #{userId}
+  </update>
   
 </mapper>

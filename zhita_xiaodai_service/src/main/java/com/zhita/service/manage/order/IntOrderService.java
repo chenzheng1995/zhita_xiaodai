@@ -168,6 +168,10 @@ public interface IntOrderService {
 	Map<String, Object> UpdateOrdersUpdate();
 
 	public Map<String, Object> getOrder(int userId);
+
+	public int getId(int userId);
+
+	public Map<String, Object> lifeOfLoan(int userId);
 	
 
 }

@@ -164,5 +164,9 @@ public interface OrdersMapper {
 
 	Map<String, Object> getOrder(int userId);
 
+	int getId(int userId);
+
+	Map<String, Object> lifeOfLoan(int userId);
+
 
 }

@@ -50,6 +50,8 @@ public interface UserAttestationService {
 
 	String getidCard(int userId);
 
+	String gettrueName(int userId);
+
 
 
 
