@@ -32,6 +32,7 @@ import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.PriceTongji;
+import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.model.manage.Thirdpricefind;
@@ -520,8 +521,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> ThirdpatyAll(Integer compayId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Thirdparty_interface paymentname = newdao.NewloanRepayment(compayId);//获取系统设置的 放款名称   和  还款名称
-		map.put("Loan_setting", paymentname.getLoanSource());
+		List<Loan_setting> paymentname = padao.SelectThird(compayId);//获取系统设置的 放款名称   和  还款名称
+		map.put("Loan_setting", paymentname);
 		return map;
 	}
 
@@ -971,8 +972,8 @@ public class FinanceServiceimp implements FinanceService{
 	@Override
 	public Map<String, Object> RepaymentAll(Integer compayId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Thirdparty_interface paymentname = newdao.NewloanRepayment(compayId);//获取系统设置的 放款名称   和  还款名称
-		map.put("Repayment_setting", paymentname.getRepaymentSource());
+		List<Repayment_setting> paymentname = padao.SelectRepay(compayId);//获取系统设置的 放款名称   和  还款名称
+		map.put("Repayment_setting", paymentname);
 		return map;
 	}
 
@@ -1200,7 +1201,7 @@ public class FinanceServiceimp implements FinanceService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Accountadjustment> accs = padao.SelectAccOrders(orderNumber);
 		for(int i=0;i<accs.size();i++){
-			accs.get(i).setAccounttime(Timestamps.stampToDate(accs.get(i).getAccounttime()));
+			accs.get(i).setAccounttime(Timestamps.stampToDate(accs.get(i).getAmou_time()));
 		}
 		map.put("Accountadjustment", accs);
 		return map;
@@ -1223,6 +1224,345 @@ public class FinanceServiceimp implements FinanceService{
 		map.put("Ncode", 2000);
 		map.put("msg", "已删除");
 		return map;
+	}
+
+
+
+
+	@Override
+	public List<Payment_record> AllPaymentrecordexport(Payment_record payrecord) {
+		PhoneDeal p = new PhoneDeal();
+		if(payrecord.getPhone() != null){
+			if(payrecord.getPhone().length()!=0){
+				payrecord.setPhone(p.encryption(payrecord.getPhone()));
+			}
+			
+		}
+		if(payrecord.getStart_time()!=null && payrecord.getStart_time()!="" && payrecord.getEnd_time()!=null && payrecord.getEnd_time()!=""){
+			try {
+				payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+				payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		Integer totalCount = padao.TotalCountPayment(payrecord);
+		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
+		payrecord.setPage(pages.getPage());
+		payrecord.setProfessionalWork("放款");
+		TuoMinUtil tm = new TuoMinUtil();
+		List<Payment_record> payments = padao.PaymentAllAc(payrecord);
+		for(int i=0;i<payments.size();i++){
+			payments.get(i).setRemittanceTime(Timestamps.stampToDate(payments.get(i).getRemittanceTime()));
+			if(payments.get(i).getPhone()!=null){
+				if(payments.get(i).getPhone().length()!=0){
+					payments.get(i).setPhone(p.decryption(payments.get(i).getPhone()));
+				}
+				
+			}
+			payments.get(i).setPhone(tm.mobileEncrypt(payments.get(i).getPhone()));
+		
+		}
+		return payments;
+	}
+
+
+
+
+	@Override
+	public List<Payment_record> AllHuankuanexport(Payment_record payrecord) {
+		PhoneDeal p = new PhoneDeal();
+		if(payrecord.getPhone() != null){
+			if(payrecord.getPhone().length()!=0){
+				payrecord.setPhone(p.encryption(payrecord.getPhone()));
+			}
+			
+		}
+		try {
+			payrecord.setStart_time(Timestamps.dateToStamp1(payrecord.getStart_time()));
+			payrecord.setEnd_time(Timestamps.dateToStamp1(payrecord.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Integer totalCount = padao.RepaymentTotalCount(payrecord);
+		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
+		payrecord.setPage(pages.getPage());
+		payrecord.setProfessionalWork("还款");
+		TuoMinUtil tm = new TuoMinUtil();
+		List<Payment_record> rapay = padao.RepaymentAll(payrecord);
+		for(int i = 0 ;i<rapay.size();i++){
+			rapay.get(i).setRepaymentDate(Timestamps.stampToDate(rapay.get(i).getRepaymentDate()));
+			if(rapay.get(i).getPhone()!=null){
+				if(rapay.get(i).getPhone().length()!=0){
+					rapay.get(i).setPhone(p.decryption(rapay.get(i).getPhone()));
+				}
+			}
+			
+			rapay.get(i).setPhone(tm.mobileEncrypt(rapay.get(i).getPhone()));
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("Repayment", rapay);
+		return rapay;
+	}
+
+
+
+
+	@Override
+	public List<Accountadjustment> SelectOrderAccountSc(Orderdetails ordetail) {
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		PhoneDeal p = new PhoneDeal();
+		if(ordetail.getPhone() != null){
+			if(ordetail.getPhone().length()!=0){
+				ordetail.setPhone(p.encryption(ordetail.getPhone()));
+			}
+			
+		}
+		ordetail.setAccounttime(System.currentTimeMillis()+"");
+		try {
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
+			ordetail.setRealtime(Timestamps.dateToStamp1(sim.format(new Date())));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Integer totalCount = padao.AccountTotalCount(ordetail);
+		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
+		ordetail.setPage(pages.getPage());
+		TuoMinUtil tm = new TuoMinUtil();
+		List<Accountadjustment> accounts = padao.AllAccountAc(ordetail);
+		for (int i = 0; i < accounts.size(); i++) {
+			
+			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
+			String ps = p.decryption(accounts.get(i).getPhone());
+			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
+			Accountadjustment ac = padao.Maxtotalamount(accounts.get(i).getOrderId());
+			
+			accounts.get(i).setAccounttime(Timestamps.stampToDate(ac.getAccounttime()));
+			accounts.get(i).setAmountmoney(ac.getAmountmoney());
+			accounts.get(i).setTotalamount(ac.getTotalamount());
+		}
+		return accounts;
+	}
+
+
+
+
+	@Override
+	public List<Accountadjustment> SelectNoMoneyAc(Orderdetails ordetail) {
+		ordetail.setAccounttime(System.currentTimeMillis()+"");
+		PhoneDeal p = new PhoneDeal();
+		if(ordetail.getPhone() != null){
+			if(ordetail.getPhone().length()!=0){
+				ordetail.setPhone(p.encryption(ordetail.getPhone()));
+			}
+			
+		}
+		try {
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Integer totalCount = padao.AccountTotalCount(ordetail);
+		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
+		ordetail.setPage(pages.getPage());
+		TuoMinUtil tm = new TuoMinUtil();
+		List<Accountadjustment> accounts = padao.AllStatuAc(ordetail);
+		for (int i = 0; i < accounts.size(); i++) {
+			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
+			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
+			String ps = p.decryption(accounts.get(i).getPhone());
+			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
+			
+		}
+		return accounts;
+	}
+
+
+
+
+	@Override
+	public List<Accountadjustment> SelectOkMoneyAc(Orderdetails ordetail) {
+		PhoneDeal p = new PhoneDeal();
+		if(ordetail.getPhone() != null){
+			if(ordetail.getPhone().length()!=0){
+				ordetail.setPhone(p.encryption(ordetail.getPhone()));
+			}
+			
+		}
+		try {
+			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			ordetail.setRealtime(Timestamps.dateToStamp(sim.format(new Date())));
+			ordetail.setAccounttime(System.currentTimeMillis()+"");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		try {
+			
+			ordetail.setAccounttimestart_time(Timestamps.dateToStamp1(ordetail.getAccounttimestart_time()));
+			ordetail.setAccounttimeent_time(Timestamps.dateToStamp1(ordetail.getAccounttimeent_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Integer totalCount = padao.AccountTotalCount(ordetail);
+		PageUtil pages = new PageUtil(ordetail.getPage(), totalCount);
+		TuoMinUtil tm = new TuoMinUtil();
+		ordetail.setPage(pages.getPage());
+		List<Accountadjustment> accounts = padao.AllNotMoneyStatuAc(ordetail);
+		for (int i = 0; i < accounts.size(); i++) {
+			accounts.get(i).setAccounttime(Timestamps.stampToDate(accounts.get(i).getAccounttime()));
+			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
+			String ps = p.decryption(accounts.get(i).getPhone());
+			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
+			
+		}
+		return accounts;
+	}
+
+
+
+
+	@Override
+	public List<Bankdeductions> AllDelayStatisAc(Bankdeductions banl) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		PhoneDeal p = new PhoneDeal();
+		if(banl.getPhone() != null){
+			banl.setPhone(p.encryption(banl.getPhone()));
+		}
+		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
+		
+		if(banl.getStartu_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(banl.getCompanyId());//获取天数
+			calendar.add(Calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			banl.setStartu_time(c+" 00:00:00");
+			banl.setEnd_time(b+" 23:59:59");
+		}
+		
+		List<String> times =  DateListUtil.getDays(banl.getStartu_time(), banl.getEnd_time());
+		Collections.reverse(times); // 倒序排列 
+		for(int i=0;i<times.size();i++){
+			banl.setStartu_time(times.get(i)+" 00:00:00");
+			banl.setEnd_time(times.get(i)+" 23:59:59");
+			try {	
+				banl.setStartu_time(Timestamps.dateToStamp1(banl.getStartu_time()));
+				banl.setEnd_time(Timestamps.dateToStamp1(banl.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		
+			
+			Integer totalCount = padao.DelayTatolCount(banl);
+			
+			if(totalCount !=null){
+				PageUtil pages = new PageUtil(banl.getPage(), totalCount);
+				banl.setPage(pages.getPage());
+			}else{
+				PageUtil pages = new PageUtil(banl.getPage(), 0);
+				banl.setPage(pages.getPage());
+			}
+			
+			Bankdeductions bank = padao.BankdeduCtionsData(banl);
+			bank.setDeferredTime(times.get(i));
+			Bankdeductions b = padao.BankMoney(banl);
+			if(bank.getDeferredamount()==null){
+				bank.setDeferredamount(new BigDecimal(0));
+			}
+			
+			if(b.getDeduction_money()==null){
+				b.setDeduction_money(new BigDecimal(0));
+			}
+			
+			
+			bank.setDeduction_money(b.getDeduction_money());
+			bank.setUserNum(b.getUserNum());
+			banks.add(bank);
+		}
+		
+		
+		return banks;
+	}
+
+
+
+
+	@Override
+	public List<Offlinedelay> DelaylaborAc(Offlinedelay of) {
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
+		if(of.getPhone() != null){
+			if(of.getPhone().length()!=0){
+				of.setPhone(p.encryption(of.getPhone()));
+			}
+			}
+			
+		Integer totalCount = padao.OffTotalCount(of);
+		if(totalCount == null){
+			totalCount = 0;
+		}
+		PageUtil pages = new PageUtil(of.getPage(), totalCount);
+		of.setPage(pages.getPage());
+		List<Offlinedelay> ofa = padao.AllofflinedelayAc(of);
+		for(int i = 0;i<ofa.size();i++){
+			Deferred de = padao.DeleteNumMoney(ofa.get(i).getOrderId());
+			String phon = p.decryption(ofa.get(i).getPhone());
+			ofa.get(i).setPhone(tm.mobileEncrypt(phon));
+			ofa.get(i).setDefeNum(de.getDefeNum());
+			if(de.getDefeMoney()==null){
+				de.setDefeMoney(new BigDecimal(0));
+			}
+			ofa.get(i).setDefeMoney(de.getDefeMoney());
+			
+			ofa.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ofa.get(i).getPreextensiontime()));
+			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getShouldReturnTime()));
+			ofa.get(i).setOperating_time(Timestamps.stampToDate(ofa.get(i).getOperating_time()));
+		}
+		return ofa;
+	}
+
+
+
+
+	@Override
+	public List<Offlinjianmian> SelectXiaOrderAc(Orderdetails ord) {
+		PhoneDeal p = new PhoneDeal();
+		if(ord.getPhone() != null){
+			if(ord.getPhone().length()!=0){
+				ord.setPhone(p.encryption(ord.getPhone()));
+			}
+			
+		}
+		try {
+			ord.setStart_time(Timestamps.dateToStamp1(ord.getStart_time()));
+			ord.setEnd_time(Timestamps.dateToStamp1(ord.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		List<Integer> totalCount = padao.XiaTotalCount(ord);
+		Integer a = null;
+		if(totalCount == null){
+			a=0;
+		}else{
+			a=totalCount.size();
+		}
+		PageUtil pages = new PageUtil(ord.getPage(), a);
+		ord.setPage(pages.getPage());
+		TuoMinUtil tm = new TuoMinUtil();
+		List<Offlinjianmian> unders = padao.XiaOrderAc(ord);
+		for(int i=0;i<unders.size();i++){
+			unders.get(i).setPhone(p.decryption(unders.get(i).getPhone()));
+			unders.get(i).setPhone(tm.mobileEncrypt(unders.get(i).getPhone()));
+			unders.get(i).setSedn_time(Timestamps.stampToDate(unders.get(i).getSedn_time()));
+		}
+		return unders;
 	}
 
 }
