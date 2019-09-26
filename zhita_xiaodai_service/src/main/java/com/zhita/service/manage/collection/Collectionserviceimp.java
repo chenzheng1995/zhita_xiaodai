@@ -666,6 +666,81 @@ public class Collectionserviceimp implements Collectionservice{
 	public Integer SelectTotalCount(Collection col) {
 		return collmapp.SelectTotalCount(col);
 	}
+
+
+
+
+	@Override
+	public List<Orderdetails> BeoverdueYiCollection(Orderdetails order) {
+		
+		PhoneDeal p = new PhoneDeal();
+		if(order.getPhone() != null){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
+		}
+		
+		try {
+			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
+		
+		
+		for(int i=0;i<orders.size();i++){
+			if(orders.get(i).getCollectionStatus() == null){
+				orders.get(i).setCollectionStatus("未催收");
+			}
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+			System.out.println("逾期天数:"+orders.get(i).getOverdueNumberOfDays());
+			if(orders.get(i).getMakeLoans() != null && orders.get(i).getInterestPenaltySum() != null){
+				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+			}else if(orders.get(i).getInterestPenaltySum() != null){
+				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
+			}else{
+				orders.get(i).setOrder_money(orders.get(i).getMakeLoans());
+			}
+			
+			if(orders.get(i).getSurplus_money()==null){
+				
+				orders.get(i).setSurplus_money(new BigDecimal(0));
+			}
+			
+			Deferred des = collmapp.DefeSet(orders.get(i));
+			if(des != null ){
+				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
+				orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
+				orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+				System.out.println(des.getDeferAfterReturntime());
+			}else{
+				orders.get(i).setDeferAfterReturntime("/");
+			}
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(a==0){
+				orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
+			}
+			
+			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+		}
+		return orders;
+	}
+
+
+
+
+	@Override
+	public List<Collection> ColldetailsYiCollection(Collection coll) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

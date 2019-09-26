@@ -167,6 +167,12 @@ public interface OrdersMapper {
 	int getId(int userId);
 
 	Map<String, Object> lifeOfLoan(int userId);
+	
+	
+	Integer getUserOrderId(@Param("userId") Integer userId,@Param("companyId") Integer companyId);
+	
+	
+	Integer getPaymentStatus(Integer orderId);
 
 
 }
