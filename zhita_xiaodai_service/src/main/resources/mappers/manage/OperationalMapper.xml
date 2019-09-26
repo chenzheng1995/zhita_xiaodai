@@ -223,7 +223,7 @@
 			<where>
 				ora.orderId = o.id
 				AND u.id = o.userId
-				AND o.orderStatus = "1"
+				AND ora.overdueNumberOfDays != "0"
 				AND o.companyId = #{companyId} 
 				AND o.orderCreateTime between #{start_time} and #{end_time}
 				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">

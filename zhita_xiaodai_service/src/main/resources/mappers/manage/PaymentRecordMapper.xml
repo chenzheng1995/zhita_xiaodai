@@ -237,6 +237,42 @@
 		  	order by ra.orderId desc
 		  	limit #{page},#{pagesize}
 		  </select>
+		  
+		  
+		  
+		  
+		  <select id="PaymentAllAc" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
+		  	select ra.orderId,ra.remittanceTime,thir.name as sourceName,o.orderNumber,u.name,u.phone,ra.paymentmoney,ra.pipelinenumber,
+		  	o.bank,o.borrowRepayBankcard
+		  	 from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
+		  	 LEFT JOIN user u ON o.userId = u.id
+		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
+		  	 LEFT JOIN loan_setting thir ON ra.thirdparty_id = thir.id
+		  	<where>
+		  		AND ra.professionalWork = #{professionalWork}
+		  		AND o.companyId = #{companyId}
+		  		<if test="orderNumber != null and orderNumber != ''">
+		  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+		  		</if>
+		  		<if test="pipelinenumber != null and pipelinenumber != ''">
+		  			AND ra.pipelinenumber = #{pipelinenumber}
+		  		</if>
+		  		<if test="name != null and name != ''">
+		  			AND u.name LIKE concat('%',#{name},'%') 
+		  		</if>
+		  		<if test="phone != null and phone != ''">
+		  			AND u.phone LIKE concat('%',#{phone},'%')  
+		  		</if>
+		  		<if test="thirdparty_id != null and thirdparty_id != ''">
+					AND thir.id = #{thirdparty_id}
+				</if>
+		  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND ra.remittanceTime between #{start_time} and #{end_time}
+				</if>
+		  	</where>
+		  	group by ra.orderId 
+		  	order by ra.orderId desc
+		  </select>
   
   
   
@@ -266,7 +302,7 @@
 			  			AND u.phone LIKE concat('%',#{phone},'%')  
 			  		</if>
 			  		<if test="thirdparty_id != null and thirdparty_id != ''">
-						AND thir.id = #{thirdparty_id}
+						AND ra.thirdparty_id = #{thirdparty_id}
 					</if>
 			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND ra.repaymentDate between #{start_time} and #{end_time}
@@ -301,12 +337,47 @@
 						AND ra.repaymentDate between #{start_time} and #{end_time}
 					</if>
 					<if test="thirdparty_id != null and thirdparty_id != ''">
-						AND thir.id = #{thirdparty_id}
+						AND ra.thirdparty_id = #{thirdparty_id}
 					</if>
 			  	</where>
 			  	group by o.id 
 			  	order by o.id desc
 		  		limit #{page},#{pagesize}
+			  </select>
+			  
+			  
+			  
+			  
+			  <select id="RepaymentAllAc" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
+			  	select o.id,ra.repaymentDate,ra.statu,thir.name as thname,ra.repaymentMoney,o.orderNumber,u.name,u.phone,ra.pipelinenumber
+			  	 from repayment ra LEFT JOIN orders o on ra.orderId = o.id
+			  	 LEFT JOIN user u ON o.userId = u.id
+			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
+			  	 LEFT JOIN repayment_setting thir ON ra.thirdparty_id = thir.id
+			  	<where>
+			  		AND o.companyId = #{companyId}
+			  		AND ra.statu = "成功"
+			  		<if test="orderNumber != null and orderNumber != ''">
+			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+			  		</if>
+			  		<if test="pipelinenumber != null and pipelinenumber != ''">
+			  			AND ra.pipelinenumber LIKE concat('%',#{pipelinenumber},'%') 
+			  		</if>
+			  		<if test="name != null and name != ''">
+			  			AND u.name LIKE concat('%',#{name},'%') 
+			  		</if>
+			  		<if test="phone != null and phone != ''">
+			  			AND u.phone LIKE concat('%',#{phone},'%')
+			  		</if>
+			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND ra.repaymentDate between #{start_time} and #{end_time}
+					</if>
+					<if test="thirdparty_id != null and thirdparty_id != ''">
+						AND thir.id = #{thirdparty_id}
+					</if>
+			  	</where>
+			  	group by o.id 
+			  	order by o.id desc
 			  </select>
 			  
 			  
@@ -477,6 +548,40 @@
   				order by o.id desc
   				limit #{page},#{pagesize}
   			</select>
+  			
+  			
+  			
+  			
+  			<select id="AllAccountAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
+  				select a.orderId,o.orderNumber,u.name,u.phone,re.name as thname,a.accounttime,a.remarks,a.beoverdue,a.amou_time,a.totalamount,a.amountmoney FROM	
+  				repayment_setting re,user u,orders o,accountadjustment a
+  				<where>
+  					a.orderId = o.id 
+  					AND u.id = o.userId 
+  					AND o.companyId = #{companyId}
+  					AND o.orderStatus = "0"
+  					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND o.orderCreateTime between #{start_time} and #{end_time}
+					</if>
+					<if test="name != null and name != ''">
+						AND u.name LIKE concat('%',#{name},'%') 
+					</if>
+					<if test="phone != null and phone != ''">
+						AND u.phone LIKE concat('%',#{phone},'%')  
+					</if>
+					<if test="orderNumber != null and orderNumber != ''">
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+					</if>
+					<if test="rename_id != null and rename_id != ''">
+						AND re.id = #{rename_id}
+					</if>
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.amou_time between #{accounttimestart_time} and #{accounttimeent_time}
+					</if>
+  				</where>
+  				group by o.id 
+  				order by o.id desc
+  			</select>
   
   
   
@@ -511,6 +616,42 @@
   				</where>
   				group by o.orderNumber
   				limit #{page},#{pagesize}
+  			</select>
+  			
+  			
+  			
+  			
+  			<select id="AllStatuAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
+  				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue,
+  				 a.amou_time,re.pipelinenumber from orders o,user u,accountadjustment a,repayment_setting th,repayment re  
+  				<where>
+  					a.orderId = o.id 
+  					and u.id = o.userId 
+  					and o.orderStatus = "3"
+  					and re.orderId = a.orderId
+  					and o.companyId = #{companyId}
+  					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND o.orderCreateTime between #{start_time} and #{end_time}
+					</if>
+					<if test="name != null and name != ''">
+						AND u.name LIKE concat('%',#{name},'%')  
+					</if>
+					<if test="phone != null and phone != ''">
+						AND u.phone LIKE concat('%',#{phone},'%') 
+					</if>
+					<if test="orderNumber != null and orderNumber != ''">
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
+					</if>
+					<if test="rename_id != null and rename_id != ''">
+						AND a.rename_id = #{rename_id}
+					</if>
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.amou_time between #{accounttimestart_time} and #{accounttimeent_time}
+					</if>
+					
+  				</where>
+  				group by o.orderNumber
+  				order by o.id desc
   			</select>
   			
   			
@@ -551,6 +692,43 @@
   				limit #{page},#{pagesize}
   			</select>
   			
+  			
+  			
+  			
+  			<select id="AllNotMoneyStatuAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
+  				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amou_time,
+  				a.amountmoney,a.remarks,a.accounttime,a.beoverdue
+  				,ord.overdueNumberOfDays from 
+  				 orderdetails ord,orders o,user u,accountadjustment a,repayment_setting th
+  				<where>
+  					o.id = ord.orderId
+  					AND a.orderId = o.id 
+  					AND u.id = o.userId
+	 				AND th.id = a.rename_id
+  					AND o.orderStatus = "1"
+  					AND o.companyId = #{companyId}
+  					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND o.orderCreateTime between #{start_time} and #{end_time}
+					</if>
+					<if test="name != null and name != ''">
+						AND u.name LIKE concat('%',#{name},'%') 
+					</if>
+					<if test="phone != null and phone != ''">
+						AND u.phone LIKE concat('%',#{phone},'%')  
+					</if>
+					<if test="orderNumber != null and orderNumber != ''">
+						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+					</if>
+					<if test="repaymentSource != null and repaymentSource != ''">
+						AND th.repaymentSource = #{repaymentSource}
+					</if>
+					<if test="accounttimestart_time != null and accounttimestart_time != '' and accounttimeent_time != null and accounttimeent_time != ''">
+						AND a.amou_time between #{accounttimestart_time} and #{accounttimeent_time}
+					</if>
+  				</where>
+  				group by o.id 
+  				order by o.id desc
+  			</select>
   			
   			
   			
@@ -634,6 +812,37 @@
   				Group by u.id
   				order by u.id desc
   				limit #{page},#{pagesize}
+  			</select>
+  			
+  			
+  			
+  			
+  			
+  			<select id="XiaOrderAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Offlinjianmian">
+  					select u.sedn_time,sy.account,o.orderNumber,ua.name,ua.phone,ord.makeLoans,u.offusermoney,u.remarks
+  				 from offlinjianmian u,sys_user sy,orders o,user ua,orderdetails ord 
+  				<where>
+  					 u.fina_id = sy.userId
+  					and o.companyId = sy.companyId
+  					and o.id = u.orderId
+  					and o.id = ord.orderId
+  					and o.companyId = #{companyId}
+  					and ua.id = o.userId
+  					<if test="orderNumber != null and orderNumber != ''">
+  						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
+  					</if>
+  					<if test="phone != null and phone != ''">
+  						AND ua.phone LIKE concat('%',#{phone},'%') 
+  					</if>
+  					<if test="name != null and name != ''">
+  						AND ua.name LIKE concat('%',#{name},'%') 
+  					</if>
+  					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND u.underthe_time between #{start_time} and #{end_time}
+					</if>
+  				</where> 
+  				Group by u.id
+  				order by u.id desc
   			</select>
   			
   			
@@ -970,6 +1179,35 @@
   				limit #{page},#{pagesize}
   			</select>
   			
+  			
+  			
+  			<select id="AllofflinedelayAc" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">
+  				select of.id,of.operating_time,us.account,of.orderId,u.name,u.phone,usa.idcard_number,o.shouldReturnTime,ord.overdueNumberOfDays,
+  				of.extensionfee,of.remarks,of.delay_time,of.preextensiontime
+  				from offlinedelay of,orders o,orderdetails ord,user u,user_attestation usa,sys_user us
+  				<where>
+  					of.sys_userId = us.userId 
+  					AND u.id = o.userId 
+  					AND o.id = of.orderId 
+  					AND usa.userId = u.id
+					AND ord.orderId = o.id
+  					and o.companyId = #{companyId}
+  					<if test="orderId != null and orderId != ''">
+  						and of.orderId = #{orderId}
+  					</if>
+  					<if test="name != null and name != ''">
+  						and u.name like CONCAT('%',#{name},'%') 
+  					</if>
+  					<if test="phone != null and phone != ''">
+  						and u.phone like CONCAT('%',#{phone},'%')  
+  					</if>
+  					<if test="statu_time != null and statu_time != '' and end_time != null and end_time != ''">
+  						and of.operating_time between #{statu_time} and #{end_time}
+  					</if>
+  				</where>
+  				group by of.id
+  				order by of.id desc
+  			</select>
   			
   			
   			<select id="OffTotalCount" parameterType="com.zhita.model.manage.Offlinedelay" resultType="com.zhita.model.manage.Offlinedelay">

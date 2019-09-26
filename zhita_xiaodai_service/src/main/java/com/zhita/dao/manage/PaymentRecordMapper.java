@@ -278,4 +278,25 @@ public interface PaymentRecordMapper {
     
     Integer selectPatyId(String name);
     
+    
+    List<Payment_record> PaymentAllAc(Payment_record pay);
+    
+    
+    List<Payment_record> RepaymentAllAc(Payment_record pay);
+    
+    
+    List<Accountadjustment> AllAccountAc(Orderdetails orderi);
+    
+    
+    List<Accountadjustment> AllStatuAc(Orderdetails orderi);
+    
+    
+    List<Accountadjustment> AllNotMoneyStatuAc(Orderdetails orderi);
+    
+    
+    List<Offlinedelay> AllofflinedelayAc(Offlinedelay of);
+    
+    
+    List<Offlinjianmian> XiaOrderAc(Orderdetails order);
+    
 }
