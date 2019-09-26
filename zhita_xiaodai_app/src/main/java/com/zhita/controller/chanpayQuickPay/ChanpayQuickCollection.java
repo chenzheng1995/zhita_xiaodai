@@ -1011,7 +1011,7 @@ public class ChanpayQuickCollection {
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
-				if(paymentname.getRepaymentSource().equals("钊力")){
+				if(paymentname.getRepaymentSource().equals("必付")){
 					System.out.println("还钱!!!!!!");
 					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
 					String pipelinenu = "Rsn_"+maps.get("billId");
@@ -1545,7 +1545,7 @@ public class ChanpayQuickCollection {
 		defe.setDeferAfterReturntime(deferAfterReturntime);
 		
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
-				if(paymentname.getRepaymentSource().equals("钊力")){
+				if(paymentname.getRepaymentSource().equals("必付")){
 					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
 					Integer a = servie.AddDeferred(defe);
 					if(a!=null){

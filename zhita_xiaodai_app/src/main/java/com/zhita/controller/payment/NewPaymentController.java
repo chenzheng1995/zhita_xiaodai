@@ -1084,7 +1084,7 @@ public class NewPaymentController {
 		bank.setTiedCardPhone(MobNo);//手机号
 		Integer SeleId = servie.SelectTrxId(bank);//查询银行卡号
 		if(SeleId == null ){
-			if(paymentname.getLoanSource().equals("钊力")){
+			if(paymentname.getLoanSource().equals("必付")){
 				Map<String, Object> maps = servie.RenzhenId(BkAcctNo, MobNo, IDNo, CstmrNm, bankcardTypeName, MerUserId, companyId,appNumber,codes);
 				
 				return maps;

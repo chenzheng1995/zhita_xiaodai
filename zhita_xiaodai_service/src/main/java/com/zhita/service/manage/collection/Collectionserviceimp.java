@@ -843,6 +843,69 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		return colles;
 	}
+
+
+
+
+	@Override
+	public List<Collection> CollectionmemberUserlv(Collection coll) {
+		
+		PhoneDeal p = new PhoneDeal();
+		if(coll.getPhone() != null){
+			coll.setPhone(p.encryption(coll.getPhone()));
+		}
+		
+		if(coll.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(coll.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			coll.setStart_time(c+" 00:00:00");
+			coll.setEnd_time(b+" 23:59:59");
+		}
+		
+		List<Collection> colles = new ArrayList<Collection>();
+		
+		List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
+		Collections.reverse(stimes); // 倒序排列 
+		for(int i=0;i<stimes.size();i++){
+			coll.setStart_time(stimes.get(i)+" 00:00:00");
+			coll.setEnd_time(stimes.get(i)+" 23:59:59");
+			
+			try {
+				coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+				coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			Collection co = collmapp.OneCollecti(coll);
+			co.setCollection_count(collmapp.FenCol(coll));//分配订单数
+			coll.setCollectionStatus("承诺还款");
+			co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+			coll.setOrderStatus("2");
+			co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+			coll.setOrderStatus("4");
+			co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+			BigDecimal a=null;
+			if(co.getSameday()!=0){
+				a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
+				co.setDataCol(a);
+			}else{
+				a = new BigDecimal(0);
+				co.setDataCol(a);
+			}
+			co.setRealtime(stimes.get(i));
+			if(co != null){
+				colles.add(co);
+			}
+		}
+		return colles;
+	}
 	
 	
 	

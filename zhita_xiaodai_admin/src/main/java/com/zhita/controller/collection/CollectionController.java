@@ -447,6 +447,98 @@ public class CollectionController {
 	
 	
 	
+	/**
+	 * 查询催收员催收率报表
+	 * 用于导出excel的查询结果
+	 * 
+	 * @param queryJson
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("CollectionUserLvexport")
+	public void CollectionUserLvexport(Collection coll, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		// 查询用户表的全部数据
+		List<Collection> userlList = new ArrayList<Collection>(collservice.CollectionmemberUserlv(coll));
+
+		for (int i = 0; i < userlList.size(); i++) {
+			
+		}
+		// 查询用户表有多少行记录
+		Integer count = userlList.size();
+		// 创建excel表的表头
+		String[] headers = { "催收员姓名", "分配订单数", "承诺还款订单数", "未还清订单数", "坏账订单数", "催回率(%)"};
+		// 创建Excel工作簿
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 创建一个工作表sheet
+		HSSFSheet sheet = workbook.createSheet();
+		// 创建第一行
+		HSSFRow row = sheet.createRow(0);
+		// 定义一个单元格,相当于在第一行插入了三个单元格值分别是 "姓名", "性别", "年龄"
+		HSSFCell cell = null;
+		// 插入第一行数据
+		for (int i = 0; i < headers.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(headers[i]);
+		}
+		// 追加数据
+		for (int i = 1; i <= count; i++) {
+			HSSFRow nextrow = sheet.createRow(i);
+			HSSFCell cell2 = nextrow.createCell(0);
+			cell2.setCellValue(userlList.get(i - 1).getRealtime());
+			cell2 = nextrow.createCell(1);
+			cell2.setCellValue(userlList.get(i - 1).getOrderNum());
+			cell2 = nextrow.createCell(2);
+			cell2.setCellValue(userlList.get(i - 1).getCollection_count());
+			cell2 = nextrow.createCell(3);
+			cell2.setCellValue(userlList.get(i - 1).getSameday());
+			cell2 = nextrow.createCell(4);
+			cell2.setCellValue(userlList.get(i - 1).getPaymentmade());
+			cell2 = nextrow.createCell(5);
+			cell2.setCellValue(userlList.get(i - 1).getConnected());
+			cell2 = nextrow.createCell(6);
+			cell2.setCellValue(userlList.get(i - 1).getDataCol().toString());
+			
+		}
+		// 将excel的数据写入文件
+		ByteArrayOutputStream fos = null;
+		byte[] retArr = null;
+		try {
+			fos = new ByteArrayOutputStream();
+			workbook.write(fos);
+			retArr = fos.toByteArray();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		OutputStream os = response.getOutputStream();
+		try {
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=agent_book.xls");// 要保存的文件名
+			response.setContentType("application/octet-stream; charset=utf-8");
+			os.write(retArr);
+			os.flush();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
+	}
+	
+	
+	
+	
 	
 	/**
 	 * 查询催收员工报表

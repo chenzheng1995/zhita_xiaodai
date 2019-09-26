@@ -697,4 +697,138 @@ public class OperationalServiceimp implements OperationalService{
 		return lastLine;
 	}
 
+
+
+	@Override
+	public List<Orders> PlatformsNuexport(Orderdetails ordera) {
+Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<Orders> ordes = new ArrayList<Orders>();
+		
+		if(ordera.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(ordera.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			ordera.setStart_time(c+" 00:00:00");
+			ordera.setEnd_time(b+" 23:59:59");
+		}
+
+			System.out.println(ordera.getStart_time()+"结束时间:"+ordera.getEnd_time());
+			System.out.println(ordera.getStart_time()+"CC0"+ordera.getEnd_time());
+			
+			List<String> stime = DateListUtil.getDays(ordera.getStart_time(), ordera.getEnd_time());
+			Collections.reverse(stime); // 倒序排列 
+			for(int i=0;i<stime.size();i++){
+				ordera.setStart_time(stime.get(i)+" 00:00:00");
+				ordera.setEnd_time(stime.get(i)+" 23:59:59");
+				try {
+					ordera.setStart_time(Timestamps.dateToStamp1(ordera.getStart_time()));
+					ordera.setEnd_time(Timestamps.dateToStamp1(ordera.getEnd_time()));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				Integer totalCount = operdao.OrderNum(ordera);
+				PageUtil pages = new PageUtil(ordera.getPage(), totalCount);
+				ordera.setPage(pages.getPage());
+				Orders ord = operdao.ReayMoney(ordera);//获取日期总放款金额   放款数
+				Orders o = operdao.Gesamtb(ordera);//还款金额    还款数
+				Orders or = operdao.CollMoney(ordera);//逾期金额   逾期数
+				Orders os = operdao.HuaiMoney(ordera);//坏账金额  坏账笔数
+				
+				Bankdeductions banl = new Bankdeductions();
+				banl.setCompanyId(ordera.getCompanyId());
+				banl.setStart_time(ordera.getStart_time());
+				banl.setEnd_time(ordera.getEnd_time());
+				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
+				Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
+				Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
+				if(e.getDeferredamount()==null){
+					e.setDeferredamount(new BigDecimal(0));
+				}
+				
+				if(f.getDeferredamount()==null){
+					f.setDeferredamount(new BigDecimal(0));
+				}
+
+				
+				if(ode.getXianscount()==null){
+					ode.setXianscount(0);
+				}
+				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
+				
+				if(ode.getXiansmoney()==null){
+					ode.setXiansmoney(new BigDecimal(0));
+				}
+				
+				if(ord.getGesamtbetragderDarlehen() == null){//总还款金额
+					
+					ord.setGesamtbetragderDarlehen(new BigDecimal(0));
+					System.out.println("数据输出:"+o.getGesamtbetragderRvckzahlung()+or.getGesamtbetraguberfalligerBetrag()+os.getAmountofbaddebts());
+				}
+				if(o.getGesamtbetragderRvckzahlung() == null){
+					
+					o.setGesamtbetragderRvckzahlung(new BigDecimal(0));
+					System.out.println(o.getGesamtbetragderRvckzahlung());
+					
+				}
+				if(or.getGesamtbetraguberfalligerBetrag() == null){
+					
+					or.setGesamtbetraguberfalligerBetrag(new BigDecimal(0));
+					System.out.println(or.getGesamtbetraguberfalligerBetrag());
+					
+				}
+				if(os.getAmountofbaddebts()==null){
+					
+					os.setAmountofbaddebts(new BigDecimal(0));
+					System.out.println(os.getAmountofbaddebts());
+				}
+				
+				ord.setXianscount(e.getDefeNum());
+				ord.setXiansmoney(e.getDeferredamount());
+				ord.setGesamtbetragderRvckzahlung(o.getGesamtbetragderRvckzahlung().add(e.getDeferredamount()).add(f.getDeferredamount()));
+				ord.setGesamtbetragderNum(o.getGesamtbetragderNum());
+				ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
+				ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
+				ord.setAmountofbaddebts(os.getAmountofbaddebts());
+				ord.setBaddebt(os.getBaddebt());
+				ord.setRemittanceTime(stime.get(i));
+				ordes.add(ord);
+				map.put("PageUtil", pages);
+			}
+		
+		return ordes;
+	}
+
+
+
+	@Override
+	public List<Orders> HuanKuanexport(Orderdetails order) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Orders> orde = new ArrayList<Orders>();
+		if(order.getStart_time()==null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			order.setStart_time(c+" 00:00:00");
+			order.setEnd_time(b+" 23:59:59");
+		}
+		
+		return null;
+	}
+
 }

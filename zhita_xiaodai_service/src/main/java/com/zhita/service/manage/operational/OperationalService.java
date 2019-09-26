@@ -1,8 +1,11 @@
 package com.zhita.service.manage.operational;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
+
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 
 
 public interface OperationalService {
@@ -27,5 +30,11 @@ public interface OperationalService {
 
 
 	BigDecimal getlastLine(int ordersId);
+	
+	
+	List<Orders> PlatformsNuexport(Orderdetails or);
+	
+	
+	List<Orders> HuanKuanexport(Orderdetails or);
 
 }

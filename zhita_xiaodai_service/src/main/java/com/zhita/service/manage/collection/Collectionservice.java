@@ -57,4 +57,7 @@ public interface Collectionservice {
 	
 	
 	List<Collection> ColldetailsYiCollection(Collection coll);
+	
+	
+	List<Collection> CollectionmemberUserlv(Collection coll);
 }
