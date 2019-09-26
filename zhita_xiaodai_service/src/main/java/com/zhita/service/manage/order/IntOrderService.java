@@ -173,5 +173,8 @@ public interface IntOrderService {
 
 	public Map<String, Object> lifeOfLoan(int userId);
 	
+	
+	Integer getPaymentStatus(Integer userId,Integer companyId);
+	
 
 }

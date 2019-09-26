@@ -905,7 +905,7 @@ public class NewPaymentController {
     			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
     			pay.setPipelinenumber(pipelnen);
     			pay.setOrderId(orderId);
-    			pay.setStatus("支付中");
+    			pay.setStatus("支付失败");
     			int i = chanser.AddPayment_record(pay);
     			if(i == 1){
     				mappam.put("code", 200);

@@ -416,8 +416,15 @@ public class OrdersController {
 		   map.put("code", "1");
 		   map.put("msg", "没有正在执行的订单");
 	   }else {
+		   
 		   map.put("code", "2");
 		   map.put("msg", "有正在执行的订单");
+		   Integer id = intOrderService.getPaymentStatus(userId,companyId);//查询用户订单  放款表中该订单的支付成功 记录是否存在
+		   if(id != null){
+			   map.put("status", "1");//放款成功
+		   }else{
+			   map.put("status", "2");//放款中
+		   }
 	}
 	   
 	return map;

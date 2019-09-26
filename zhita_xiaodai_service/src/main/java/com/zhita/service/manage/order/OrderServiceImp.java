@@ -967,4 +967,9 @@ public class OrderServiceImp implements IntOrderService {
 		return map4;
 	}
 
+	@Override
+	public Integer getPaymentStatus(Integer userId, Integer companyId) {
+		return ordersMapper.getPaymentStatus(ordersMapper.getUserOrderId(userId,companyId));
+	}
+
 }

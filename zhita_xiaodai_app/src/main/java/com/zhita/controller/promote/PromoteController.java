@@ -254,11 +254,11 @@ public class PromoteController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        return "http://tg.rong51dai.com/H5Code/" + fileName;
-        return "http://47.102.40.133:8081/H5Code/" + fileName;
+
         //return "http://115.29.64.145:8081/H5Code/" + fileName;
-      //return "http://47.102.40.133:8081/H5Code/" + fileName;
-       // return "http://46.56.172.8:8081/H5Code/"+ fileName;
+        //return "http://139.129.102.60:8081/H5Code/" + fileName;
+      return "http://47.102.40.133:8081/H5Code/" + fileName;
+       //return "http://47.56.173.1:8081/H5Code/"+ fileName;
     }
     
     private int getRandomCode() {

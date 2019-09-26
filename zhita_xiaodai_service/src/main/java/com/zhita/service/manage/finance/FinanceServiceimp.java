@@ -278,7 +278,6 @@ public class FinanceServiceimp implements FinanceService{
 		if(addId != null){
 			Integer updateId = padao.UpdateOrdermoney(acc);
 			if(updateId != null){
-				padao.OrdersStatusAA(acc);
 				map.put("code", 200);
 				map.put("desc", "成功");
 			}else{

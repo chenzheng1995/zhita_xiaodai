@@ -51,4 +51,10 @@ public interface Collectionservice {
 	
 	
 	Integer SelectTotalCount(Collection col);
+	
+	
+	List<Orderdetails> BeoverdueYiCollection(Orderdetails col);
+	
+	
+	List<Collection> ColldetailsYiCollection(Collection coll);
 }

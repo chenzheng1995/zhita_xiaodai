@@ -58,6 +58,14 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setPhone(phon);//手机号解密 
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setCompanyId(coll.getCompanyId());
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 			if(a==0){
 				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
@@ -202,6 +210,15 @@ public class Collectionserviceimp implements Collectionservice{
 				}else{
 					orders.get(i).setDeferAfterReturntime("/");
 				}
+				
+				if(orders.get(i).getRealityBorrowMoney()==null){
+					orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+				}
+				
+				if(orders.get(i).getRealityAccount()==null){
+					orders.get(i).setRealityAccount(new BigDecimal(0));
+				}
+				
 				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 				if(a==0){
 					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
@@ -366,6 +383,14 @@ public class Collectionserviceimp implements Collectionservice{
 				}else{
 					orders.get(i).setDeferAfterReturntime("/");
 				}
+				
+				if(orders.get(i).getRealityBorrowMoney()==null){
+					orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+				}
+				
+				if(orders.get(i).getRealityAccount()==null){
+					orders.get(i).setRealityAccount(new BigDecimal(0));
+				}
 				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 				if(a==0){
 					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
@@ -407,6 +432,14 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
 			if(orders.get(i).getSurplus_money()==null){
 				orders.get(i).setSurplus_money(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
 			}
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 			if(a==0){
@@ -634,6 +667,12 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setPhone(phon);//手机号解密 
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 			orders.get(i).setCompanyId(col.getCompanyId());
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 			if(a==0){
 				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
@@ -665,6 +704,144 @@ public class Collectionserviceimp implements Collectionservice{
 	@Override
 	public Integer SelectTotalCount(Collection col) {
 		return collmapp.SelectTotalCount(col);
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> BeoverdueYiCollection(Orderdetails order) {
+		
+		PhoneDeal p = new PhoneDeal();
+		if(order.getPhone() != null){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
+		}
+		
+		try {
+			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		List<Orderdetails> orders = collmapp.SelectOrdersdetails(order);
+		
+		
+		for(int i=0;i<orders.size();i++){
+			if(orders.get(i).getCollectionStatus() == null){
+				orders.get(i).setCollectionStatus("未催收");
+			}
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+			System.out.println("逾期天数:"+orders.get(i).getOverdueNumberOfDays());
+			if(orders.get(i).getMakeLoans() != null && orders.get(i).getInterestPenaltySum() != null){
+				orders.get(i).setOrder_money(orders.get(i).getMakeLoans().add(orders.get(i).getInterestPenaltySum()));
+			}else if(orders.get(i).getInterestPenaltySum() != null){
+				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
+			}else{
+				orders.get(i).setOrder_money(orders.get(i).getMakeLoans());
+			}
+			
+			if(orders.get(i).getSurplus_money()==null){
+				
+				orders.get(i).setSurplus_money(new BigDecimal(0));
+			}
+			
+			Deferred des = collmapp.DefeSet(orders.get(i));
+			if(des != null ){
+				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
+				orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
+				orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+				System.out.println(des.getDeferAfterReturntime());
+			}else{
+				orders.get(i).setDeferAfterReturntime("/");
+			}
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(a==0){
+				orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
+			}
+			
+			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+		}
+		return orders;
+	}
+
+
+
+
+	@Override
+	public List<Collection> ColldetailsYiCollection(Collection coll) {
+		
+		PhoneDeal p = new PhoneDeal();
+		if(coll.getPhone() != null){
+			coll.setPhone(p.encryption(coll.getPhone()));
+		}
+		
+		if(coll.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(coll.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			coll.setStart_time(c+" 00:00:00");
+			coll.setEnd_time(b+" 23:59:59");
+		}
+		
+		List<Collection> colles = new ArrayList<Collection>();
+		
+		List<String> stimes = DateListUtil.getDays(coll.getStart_time(), coll.getEnd_time());
+		Collections.reverse(stimes); // 倒序排列 
+		for(int i=0;i<stimes.size();i++){
+			coll.setStart_time(stimes.get(i)+" 00:00:00");
+			coll.setEnd_time(stimes.get(i)+" 23:59:59");
+			
+			try {
+				coll.setStart_time(Timestamps.dateToStamp1(coll.getStart_time()));
+				coll.setEnd_time(Timestamps.dateToStamp1(coll.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			Collection co = collmapp.OneCollecti(coll);
+			co.setCollection_count(collmapp.FenCol(coll));//分配订单数
+			coll.setCollectionStatus("承诺还款");
+			co.setSameday(collmapp.SelectcollectionStatuCC(coll));//承诺还款
+			coll.setOrderStatus("2");
+			co.setPaymentmade(collmapp.SelectcollectionStatusAs(coll));//未还清
+			coll.setOrderStatus("4");
+			co.setConnected(collmapp.SelectcollectionStatusAs(coll));//累计坏账数
+			BigDecimal a=null;
+			if(co.getSameday()!=0){
+				a = new BigDecimal(((co.getSameday()*100)/(co.getOrderNum()*100)));
+				co.setDataCol(a);
+			}else{
+				a = new BigDecimal(0);
+				co.setDataCol(a);
+			}
+			co.setRealtime(stimes.get(i));
+			if(co != null){
+				colles.add(co);
+			}
+		}
+		return colles;
 	}
 	
 	

@@ -382,7 +382,7 @@
 		
 		<select id="OrderHuan" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select count(repay.id) as GesamtbetragderNum,sum(repay.repaymentMoney) as GesamtbetragderRvckzahlung from repayment repay,orders o
-			where o.id = repay.orderId and o.companyId = #{companyId} and o.orderStatus = "3" and repay.repaymentDate between #{start_time} and #{end_time}
+			where o.id = repay.orderId and o.companyId = #{companyId} and repay.statu = "成功" and repay.repaymentDate between #{start_time} and #{end_time}
 		</select>
 		
 		
