@@ -320,10 +320,12 @@ public class CertificationCenterController {
 					   map1.put("code","200");
 					   map1.put("msg", "满足条件");
 					   map1.put("Ncode","2000");
+					   return map1;
 				   }else {
 					   map1.put("Ncode","400");
 					   map1.put("code","400");
 					   map1.put("msg", "不满足条件");
+					   return map1;
 				}
 					 }
 		   }
@@ -333,10 +335,12 @@ public class CertificationCenterController {
 			   map1.put("code","200");
 			   map1.put("msg", "满足条件");
 			   map1.put("Ncode","2000");
+			   return map1;
 		   }else {
 			   map1.put("Ncode","400");
 			   map1.put("code","400");
 			   map1.put("msg", "不满足条件");
+			   return map1;
 		}
 		   }
 			   
