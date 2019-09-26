@@ -239,6 +239,16 @@ public class Orderdetails {
     
     private String statu_time;
     
+    private BigDecimal repaymentMoney;
+    
+	public BigDecimal getRepaymentMoney() {
+		return repaymentMoney;
+	}
+
+	public void setRepaymentMoney(BigDecimal repaymentMoney) {
+		this.repaymentMoney = repaymentMoney;
+	}
+
 	public String getStatu_time() {
 		return statu_time;
 	}
