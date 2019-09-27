@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 	
 	@Autowired
 	private CollectionMapper coldao;
+	
+	
+	@Autowired
+	private PostloanorderMapper pdap;
+	
 	
 
 	@Override
@@ -1464,8 +1471,138 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public List<Orderdetails> CollectionOrderdetAc(Orderdetails order) {
-		// TODO Auto-generated method stub
-		return null;
+		PhoneDeal p = new PhoneDeal();
+		if(order.getPhone() != null){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+		}
+		TuoMinUtil tm = new TuoMinUtil();
+		System.out.println(order.getCompanyId());
+		System.out.println(order.getPage()+"CCCC");
+		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
+		System.out.println(totalCount);
+		PageUtil pages = new PageUtil(order.getPage(), totalCount);
+		order.setPage(pages.getPage());
+		List<Orderdetails> ordeids = postloanorder.AOrderDetailsAc(order);//获取未逾期已分配订单
+		for(int i=0;i<ordeids.size();i++){
+			Orderdetails ord = new Orderdetails();
+			ord.setOrderId(ordeids.get(i).getId());
+			ord.setCompanyId(order.getCompanyId());
+			Deferred defe = postloanorder.OneDeferred(ord);//获取延期后应还时间 
+			if(defe.getDeferAfterReturntime()!=null){
+				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));//延期后应还时间
+			}else{
+				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
+			}
+			ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
+			ordeids.get(i).setInterestSum(ordeids.get(i).getRealityAccount().add(ordeids.get(i).getInterestSum()));
+			
+			
+			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));
+			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
+			ordeids.get(i).setDefeNum(defe.getDefeNum());//延期次数
+			if(defe.getInterestOnArrears() == null){
+				defe.setInterestOnArrears(new BigDecimal(0));
+			}
+			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());
+			String jiephone = p.decryption(ordeids.get(i).getPhone());//解密手机号
+			ordeids.get(i).setPhone(tm.mobileEncrypt(jiephone));//脱敏
+			
+			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));//时间转译  订单时间
+			ordeids.get(i).setShouldReturnTime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));//延期前应还时间
+		
+			ordeids.get(i).setCollectiondate(Timestamps.stampToDate(ordeids.get(i).getCollectiondate()));//分配时间
+		}
+		return ordeids;
+	}
+
+
+
+
+	@Override
+	public List<Collection> CollectionRecoveryAc(Orderdetails order) {
+		List<Collection> cols = new ArrayList<Collection>();
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+		String stimes = sim.format(new Date());
+		order.setStart_time(stimes+" 00:00:00");
+		order.setEnd_time(stimes+" 23:59:59");
+		try {
+			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Collection co = postloanorder.CollTimeData(order);//未分配总数    collection_count
+		co.setCollectiondate(stimes);//日期
+		order.setOverdue_phonestaus("未接通");
+		co.setNotconnected(postloanorder.connectedNum(order));//未接通
+		order.setOverdue_phonestaus("已接通");
+		co.setConnected(postloanorder.connectedNum(order));//已接通
+		order.setOrderStatus("3");
+		co.setSameday(postloanorder.StatusOrders(order));//当天还款数
+		order.setOrderStatus("0");
+		co.setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+		if(co.getPaymentmade() != 0 && co.getCollection_count() != 0){
+			NumberFormat numberFormat = NumberFormat.getInstance();
+			numberFormat.setMaximumFractionDigits(2);
+			co.setPaymentmadeData(numberFormat.format((float) co.getPaymentmade() / (float) (co.getPaymentmade()+co.getSameday()) * 100));
+		}else{
+			co.setPaymentmadeData("0");
+		}
+		System.out.println("数据:"+co.getCollection_count()+"日期:"+co.getCollectiondate()+"已接通:"+co.getConnected());
+		cols.add(co);
+		return cols;
+	}
+
+
+
+
+	@Override
+	public List<Collection> OverdueUserAc(Orderdetails order) {
+		if(order.getStart_time() == null){
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
+			String stimea = sima.format(new Date());
+			Calendar calendar = Calendar.getInstance();
+			Date date = null;
+			Integer day = pdap.SelectHuan(order.getCompanyId());//获取天数
+			calendar.add(calendar.DATE, -day);//把日期往后增加n天.正数往后推,负数往前移动 
+			date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+			String c = sima.format(date);//结束时间
+			String b = sima.format(new Date());
+			order.setStart_time(c+" 00:00:00");
+			order.setEnd_time(b+" 23:59:59");
+		}
+		
+		List<Collection> co = postloanorder.CollectionYIData(order);//获取逾前催收员名称  和  ID
+		List<String> stimes = DateListUtil.getDays(order.getStart_time(), order.getEnd_time());
+		Collections.reverse(stimes); // 倒序排列 
+		for(int i=0;i<stimes.size();i++){
+			order.setStart_time(stimes.get(i)+" 00:00:00");
+			order.setEnd_time(stimes.get(i)+" 23:59:59");
+		order.setCollectionMemberId(co.get(i).getCollectionMemberId());//把催收员ID set 进order的催收员ID
+		
+		co.get(i).setCollection_count(postloanorder.CoMentLLection(order));//获取催收员已分配订单数
+		
+		order.setOverdue_phonestaus("未接通");
+		co.get(i).setNotconnected(postloanorder.connectedNum(order));
+		order.setOverdue_phonestaus("已接通");
+		co.get(i).setConnected(postloanorder.connectedNum(order));
+		order.setOrderStatus("3");
+		co.get(i).setSameday(postloanorder.StatusOrders(order));//当天还款数
+		order.setOrderStatus("0");
+		co.get(i).setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+		
+		if(co.get(i).getPaymentmade() != 0 && co.get(i).getSameday() != 0){
+			NumberFormat numberFormat = NumberFormat.getInstance();
+			numberFormat.setMaximumFractionDigits(2);
+			co.get(i).setPaymentmadeData(numberFormat.format((float) co.get(i).getPaymentmade() / (float) (co.get(i).getPaymentmade()+co.get(i).getSameday()) * 100));
+		}else{
+			co.get(i).setPaymentmadeData("0");
+		}
+		
+		}
+		return co;
 	}
 	
 	

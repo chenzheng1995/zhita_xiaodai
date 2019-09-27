@@ -819,6 +819,15 @@ public class CollectionController {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 添加详情
 	 * @param coldets

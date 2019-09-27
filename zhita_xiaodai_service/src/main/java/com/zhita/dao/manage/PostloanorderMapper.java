@@ -169,4 +169,7 @@ public interface PostloanorderMapper {
 	
 	List<Orderdetails> SelectOrderDetailsAc(Orderdetails order);
 	
+	
+	List<Orderdetails> AOrderDetailsAc(Orderdetails order);
+	
 }
