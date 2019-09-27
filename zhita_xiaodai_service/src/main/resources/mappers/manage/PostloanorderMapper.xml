@@ -173,6 +173,25 @@
 		</select>
 		
 		
+		
+		
+		<select id="SelectOrderDetailsAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select o.id,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.interestPenaltySum,
+			ord.makeLoans,ord.interestSum,ord.InterestInAll,ord.realityAccount,ord.interestInAll,ord.technicalServiceMoney
+			from orders o,user u,orderdetails ord
+			<where>
+				o.userId = u.id 
+				AND ord.orderId = o.id
+ 				AND o.orderStatus = "0"
+				AND o.companyId = #{companyId}
+				AND o.shouldReturnTime between #{start_time} and #{end_time}
+				AND o.id not in 
+				(select c.orderId from overdue c,orders o where o.id = c.orderId and o.companyId = #{companyId})
+			</where>
+			group by o.id
+		</select>
+		
+		
 		<select id="CollMemberId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 			select userId from sys_user where companyId = #{companyId}
 		</select>
@@ -527,13 +546,15 @@
 		<select id="YiHuanOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
 			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
-			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,ord.shouldReapyMoney,ord.technicalServiceMoney,ord.interestInAll
-			from orders o,user u,orderdetails ord,source sor
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,ord.shouldReapyMoney,ord.technicalServiceMoney,ord.interestInAll,repay.repaymentMoney
+			from orders o,user u,orderdetails ord,source sor,repayment repay
 			<where>
 				o.id = ord.orderid
 				and o.userId = u.id
 				and sor.id = u.sourceId
+				and repay.orderId = o.id
 				and o.companyId = #{companyId}
+				and repay.statu = "成功"
 			 <if test="name != null and name != ''">
 			 	AND name LIKE concat('%',#{name},'%')  
 			 </if>
@@ -565,6 +586,51 @@
 			 GROUP BY ord.orderId 
 			 order by ord.orderId desc
 			 limit #{page},#{pagesize}
+		</select>
+		
+		
+		<select id="YiHuanOrdersAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
+			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,ord.shouldReapyMoney,ord.technicalServiceMoney,ord.interestInAll,repay.repaymentMoney
+			from orders o,user u,orderdetails ord,source sor,repayment repay
+			<where>
+				o.id = ord.orderid
+				and o.userId = u.id
+				and sor.id = u.sourceId
+				and repay.orderId = o.id
+				and o.companyId = #{companyId}
+				and repay.statu = "成功"
+			 <if test="name != null and name != ''">
+			 	AND name LIKE concat('%',#{name},'%')  
+			 </if>
+			 <if test="phone != null and phone != ''">
+			 	AND u.phone LIKE concat('%',#{phone},'%') 
+			 </if>
+			 <if test="orderNumber != null and orderNumber != ''">
+			 	AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
+			 </if>
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
+			 </if>
+			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+				AND o.orderCreateTime between #{start_time} and#{end_time}
+			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND o.shouldReturnTime  between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
+			</if>
+			<if test="status1 != null and status1 != '' and status2 != null and status2 != ''">
+				AND o.orderStatus BETWEEN #{status1} and #{status2}
+			</if>
+			 </where>
+			 GROUP BY ord.orderId 
+			 order by ord.orderId desc
 		</select>
 		
 		
@@ -611,6 +677,54 @@
 			 order by ord.orderId desc
 			 limit #{page},#{pagesize}
 		</select>
+		
+		
+		
+		
+		<select id="HuaiZhangOrdersAAAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select ord.orderId,o.orderNumber,u.name,u.phone,u.registeClient,sor.sourceName,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
+			ord.makeLoans,o.realtime,ord.interestSum,ord.overdueNumberOfDays,ord.interestPenaltySum,o.orderStatus,o.realtime,ord.surplus_money,ord.interestDay,o.shouldReturnTime,
+			ord.realityAccount,ord.interestPenaltySum,o.overdueGrade,o.shouldReturnTime,ord.interestInAll,ord.technicalServiceMoney
+			from orders o,user u,orderdetails ord,source sor
+			<where>
+				o.id = ord.orderid
+				and o.userId = u.id
+				and sor.id = u.sourceId
+				and o.orderStatus = #{orderStatus}
+				and o.companyId = #{companyId}
+			 <if test="name != null and name != ''">
+			 	AND name LIKE concat('%',#{name},'%')  
+			 </if>
+			 <if test="phone != null and phone != ''">
+			 	AND u.phone LIKE concat('%',#{phone},'%') 
+			 </if>
+			 <if test="orderNumber != null and orderNumber != ''">
+			 	AND o.orderNumber LIKE concat('%',#{orderNumber},'%')
+			 </if>
+			 <if test="overdueGrade != null and overdueGrade != ''">
+			 	AND o.overdueGrade = #{overdueGrade}
+			 </if>
+			 <if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+				AND o.orderCreateTime between #{start_time} and#{end_time}
+			</if>
+			<if test="realtimeStatu_time != null and realtimeStatu_time != '' and realtimeEnd_time != null and realtimeEnd_time != ''">
+				AND o.realtime between  #{realtimeStatu_time} and #{realtimeEnd_time}
+			</if>
+			<if test="deferBeforeReturntimeStatu_time != null and deferBeforeReturntimeStatu_time != '' and deferBeforeReturntimeEnd_time != null and deferBeforeReturntimeEnd_time != ''">
+				AND defe.deferBeforeReturntime between #{deferBeforeReturntimeStatu_time} and #{deferBeforeReturntimeEnd_time}
+			</if>
+			<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+				AND defe.deferAfterReturntime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+			</if>
+			<if test="registeClient != null and registeClient != ''">
+				AND u.registeClient = #{registeClient}
+			</if>
+			</where>
+			 GROUP BY ord.orderId
+			 order by ord.orderId desc
+		</select>
+		
+		
 		
 		
 		<select id="CollecOrdersTotalCount" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">

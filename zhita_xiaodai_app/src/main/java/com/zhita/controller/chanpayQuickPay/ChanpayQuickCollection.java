@@ -15,9 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,7 @@ import com.alibaba.fastjson.JSON;
 import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.OrderdetailsMapper;
+import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
@@ -63,6 +62,8 @@ public class ChanpayQuickCollection {
 	private Statisticsservice servie;
 	
 	
+	@Autowired
+	private PaymentRecordMapper padao;
 	
 	
 	
@@ -1002,7 +1003,7 @@ public class ChanpayQuickCollection {
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
 		Repayment repay = new Repayment();//还账记录表
 		repay.setUserId(Integer.valueOf(MerUserId));
-		repay.setThirdparty_id(1);
+		repay.setThirdparty_id(padao.selectPatyId(paymentname.getRepaymentSource()));
 		repay.setOrderNumber(TrxId);
 		repay.setPipelinenumber(TrxId);
 		BigDecimal bd=new BigDecimal(TrxAmt);   
@@ -1010,7 +1011,7 @@ public class ChanpayQuickCollection {
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
-				if(paymentname.getRepaymentSource().equals("钊力")){
+				if(paymentname.getRepaymentSource().equals("必付")){
 					System.out.println("还钱!!!!!!");
 					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
 					String pipelinenu = "Rsn_"+maps.get("billId");
@@ -1544,7 +1545,7 @@ public class ChanpayQuickCollection {
 		defe.setDeferAfterReturntime(deferAfterReturntime);
 		
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
-				if(paymentname.getRepaymentSource().equals("钊力")){
+				if(paymentname.getRepaymentSource().equals("必付")){
 					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
 					Integer a = servie.AddDeferred(defe);
 					if(a!=null){

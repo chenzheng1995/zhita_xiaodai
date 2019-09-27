@@ -239,6 +239,26 @@ public class Orderdetails {
     
     private String statu_time;
     
+    private BigDecimal repaymentMoney;
+    
+    private String usertype;
+    
+	public String getUsertype() {
+		return usertype;
+	}
+
+	public void setUsertype(String usertype) {
+		this.usertype = usertype;
+	}
+
+	public BigDecimal getRepaymentMoney() {
+		return repaymentMoney;
+	}
+
+	public void setRepaymentMoney(BigDecimal repaymentMoney) {
+		this.repaymentMoney = repaymentMoney;
+	}
+
 	public String getStatu_time() {
 		return statu_time;
 	}

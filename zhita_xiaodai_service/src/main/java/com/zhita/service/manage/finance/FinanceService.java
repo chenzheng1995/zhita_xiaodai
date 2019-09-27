@@ -13,6 +13,7 @@ import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.PriceTongji;
+import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Thirdpricefind;
 
 public interface FinanceService {
@@ -97,4 +98,28 @@ public interface FinanceService {
     
     
     Map<String, Object> DeleteAccorders(Integer id);
+    
+    
+    List<Payment_record> AllPaymentrecordexport(Payment_record pay);
+    
+    
+    List<Payment_record> AllHuankuanexport(Payment_record repay);
+    
+    
+    List<Accountadjustment> SelectOrderAccountSc(Orderdetails ordetail);
+    
+    
+    List<Accountadjustment> SelectNoMoneyAc(Orderdetails orderdet);
+    
+    
+    List<Accountadjustment> SelectOkMoneyAc(Orderdetails orderdet);
+    
+    
+    List<Bankdeductions> AllDelayStatisAc(Bankdeductions bank);
+    
+    
+    List<Offlinedelay> DelaylaborAc(Offlinedelay of);
+    
+    
+    List<Offlinjianmian> SelectXiaOrderAc(Orderdetails ord);
 }

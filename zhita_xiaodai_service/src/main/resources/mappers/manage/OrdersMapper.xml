@@ -1023,4 +1023,15 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 		select borrowTimeLimit from orders where userId = #{userId} order by orderCreateTime desc  LIMIT 1
 	</select>
 	
+	
+	<select id="getUserOrderId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select max(id) from orders where userId = (select id from user where id = #{userId} and companyId = #{companyId})
+	</select>
+	
+	
+	
+	<select id="getPaymentStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select id from payment_record where orderId = #{orderId} and status = "支付成功"
+	</select>
+	
 </mapper>

@@ -86,14 +86,14 @@ public class OperatorServiceimp implements OperatorService{
 	}
 
 	@Override
-	public int setoperator(int userId, String authentime) {
-		int number = operatorMapper.setoperator(userId,authentime);
+	public int setoperator(int userId, String authentime,String phone) {
+		int number = operatorMapper.setoperator(userId,authentime,phone);
 		return number;
 	}
 
 	@Override
-	public void updateoperator(int userId, String authentime) {
-		operatorMapper.updateoperator(userId,authentime);
+	public void updateoperator(int userId, String authentime,String phone) {
+		operatorMapper.updateoperator(userId,authentime,phone);
 		
 	}
 

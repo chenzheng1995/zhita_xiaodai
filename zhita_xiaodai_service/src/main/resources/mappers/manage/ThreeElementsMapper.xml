@@ -108,6 +108,16 @@
 		#{phone}
          )
 	</insert>
+	
+	
+	  	<insert id="setThreeElements1" parameterType="java.util.Map">
+		insert into three_elements (userId,code,certification_number,phone)
+		values (#{userId},
+		#{verificationResult},
+		#{certification_number},
+		#{phone}
+         )
+	</insert>
   
   		<update id="updateThreeElements" parameterType="java.util.Map">
 		update three_elements
@@ -116,6 +126,14 @@
 		    merchant_code = #{trans_id}
 		where userId = #{userId} and phone = #{phone}
 	</update>
+	
+	  		<update id="updateThreeElements1" parameterType="java.util.Map">
+		update three_elements
+		set code = #{verificationResult},
+		    certification_number = #{certification_number}
+		where userId = #{userId} and phone = #{phone}
+	</update>
+	
   
     		<select id="getCertificationnumber" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select certification_number from three_elements where userId=#{userId} and  phone = #{phone}

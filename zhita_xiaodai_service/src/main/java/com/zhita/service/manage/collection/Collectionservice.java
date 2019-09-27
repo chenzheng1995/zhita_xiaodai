@@ -1,6 +1,7 @@
 package com.zhita.service.manage.collection;
 
 
+import java.util.List;
 import java.util.Map;
 
 import com.zhita.model.manage.Collection;
@@ -44,4 +45,25 @@ public interface Collectionservice {
 	
 	
 	Map<String, Object> allBeoverdueConnection(Collection col);
+	
+	 
+	List<Orderdetails> allBeoverdueConnectionCollection(Collection col);
+	
+	
+	Integer SelectTotalCount(Collection col);
+	
+	
+	List<Orderdetails> BeoverdueYiCollection(Orderdetails col);
+	
+	
+	List<Collection> ColldetailsYiCollection(Collection coll);
+	
+	
+	List<Collection> CollectionmemberUserlv(Collection coll);
+	
+	
+	List<Orderdetails> FenpeiWeiCollectionAc(Collection coll);
+	
+	
+	List<Orderdetails> YiCollectionAc(Collection col);
 }

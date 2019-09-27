@@ -58,7 +58,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		
 		Loan_setting loan = new Loan_setting();
 		loan.setCompanyId(companyId);
-		loan.setName("钊力");
+		loan.setName("必付");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
 		
 		RedisClientUtil redis = new RedisClientUtil();
@@ -133,7 +133,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		MapUtil maputil = new MapUtil();
 		Loan_setting loan = new Loan_setting();
 		loan.setCompanyId(companyId);
-		loan.setName("钊力");
+		loan.setName("必付");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		String billId = sim.format(new Date());
@@ -182,7 +182,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        			map.put("billId", orderNumber);
 	        			map.put("msg", msg);
 	        			map.put("status", 2);
-	        			map.put("loaName", "钊力");
+	        			map.put("loaName", "必付");
 	        			return map;
 	        		}
 	        	}
@@ -219,7 +219,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		MapUtil maputil = new MapUtil();
 		Loan_setting loan = new Loan_setting();
 		loan.setCompanyId(companyId);
-		loan.setName("钊力");
+		loan.setName("必付");
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		String billId = sim.format(new Date());//stdao.SelectOrderNumber(userId);//订单编号
@@ -268,7 +268,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        			map.put("DefebillId", orderNumber);
 	        			map.put("msg", msg);
 	        			map.put("status", 2);
-	        			map.put("loaName", "钊力");
+	        			map.put("loaName", "必付");
 	        			return map;
 	        		}
 	        	}

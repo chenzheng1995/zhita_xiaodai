@@ -66,6 +66,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		TuoMinUtil tm = new TuoMinUtil();
 		for(int i=0;i<orderdetils.size();i++){
 			
+			if(orderdetils.get(i).getRealityBorrowMoney()==null){
+				orderdetils.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orderdetils.get(i).getRealityAccount()==null){
+				orderdetils.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
 			int a = orderdetils.get(i).getRealityBorrowMoney().compareTo(orderdetils.get(i).getRealityAccount());
 			if(a==0){
 				orderdetils.get(i).getShouldReapyMoney().add(orderdetils.get(i).getInterestPenaltySum().add(orderdetils.get(i).getTechnicalServiceMoney()));
@@ -666,6 +674,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		System.out.println("查询条数:"+orders.size());
 		for(int i=0;i<orders.size();i++){
 			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
 			
 			if(orders.get(i).getInterestPenaltySum()==null){
@@ -674,8 +690,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			if(a==0){
 				System.out.println("后置");
 				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(aa));
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
@@ -703,7 +719,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
 		
-		orders.get(i).setRealityBorrowMoney(orders.get(i).getShouldReapyMoney());
+		
 		
 		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
 		BigDecimal jianmian = postloanorder.JianMianmoney(orders.get(i).getOrderId());
@@ -717,7 +733,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		
 		sumMoney.add(jianmian);
-		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getInterestSum()));//应还金额
+		orders.get(i).setRealityBorrowMoney(orders.get(i).getRepaymentMoney());
 		
 		
 		System.out.println("应还总金额:"+orders.get(i).getOrder_money()+"实借金额:"+orders.get(i).getRealityAccount()+"放贷金额:"+orders.get(i).getMakeLoans()+"应还金额:"+orders.get(i).getRealityBorrowMoney());
@@ -805,13 +821,21 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrdersAA(order);
 		for(int i=0;i<orders.size();i++){
 			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
 			
 			if(a==0){
 				System.out.println("后置");
 				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(aa));
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
@@ -907,12 +931,20 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrdersAA(order);
 		for(int i=0;i<orders.size();i++){
 			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
 			
 			if(a==0){
 				System.out.println("后置");
 				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(aa));
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
 				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
@@ -980,6 +1012,460 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			map.put("desc", "数据异常");
 		}
 		return map;
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> YiHuanOrdersAc(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		if(order.getPhone() != null){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
+		}
+		
+		if(order.getStart_time() != null && order.getEnd_time()!=null && !"".equals(order.getStart_time()) && !"".equals(order.getEnd_time())){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		if(!"".equals(order.getDeferBeforeReturntimeStatu_time()) && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && !"".equals(order.getDeferBeforeReturntimeEnd_time())){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		if(order.getDeferAfterReturntimeStatu_time()!=null && !"".equals(order.getDeferAfterReturntimeStatu_time()) && order.getDeferAfterReturntimeEnd_time()!=null && !"".equals(order.getDeferAfterReturntimeEnd_time())){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		if(order.getRealtimeStatu_time()!=null && !"".equals(order.getRealtimeStatu_time())  && order.getRealtimeEnd_time()!=null && !"".equals(order.getRealtimeEnd_time())){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		if(order.getStatus1()==null){
+				order.setStatus1("2");
+				order.setStatus2("3");
+			
+		}else if(order.getStatus1().equals("2")){
+			order.setStatus2("2");
+		}else if(order.getStatus1().equals("3")){
+			order.setStatus2("3");
+		}
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCountOO(order);
+		PageUtil pages = new PageUtil(order.getPage(), totalCount);
+		order.setPage(pages.getPage());
+		List<Orderdetails> orders = postloanorder.YiHuanOrdersAc(order);
+		System.out.println("查询条数:"+orders.size());
+		for(int i=0;i<orders.size();i++){
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
+			
+			if(orders.get(i).getInterestPenaltySum()==null){
+				orders.get(i).setInterestPenaltySum(new BigDecimal(0));
+			}
+			if(a==0){
+				System.out.println("后置");
+				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				System.out.println(orders.get(i).getOrder_money());
+			}else{
+				System.out.println("前置");
+				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+			}
+			
+			
+			
+		orders.get(i).setCompanyId(order.getCompanyId());
+		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+		Deferred defe = postloanorder.OneDeferred(orders.get(i));
+		TuoMinUtil tm = new TuoMinUtil();
+		/*Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+		
+		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
+			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
+		}else{
+			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
+		}*/
+		
+		
+		
+		if(orders.get(i).getSurplus_money()==null){
+			orders.get(i).setSurplus_money(new BigDecimal(0));
+		}
+		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
+		
+		
+		
+		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
+		BigDecimal jianmian = postloanorder.JianMianmoney(orders.get(i).getOrderId());
+		if(jianmian==null){
+			jianmian=new BigDecimal(0);
+		}
+		
+		BigDecimal sumMoney = postloanorder.BankMoney(orders.get(i).getOrderId());
+		if(sumMoney == null){
+			sumMoney = new BigDecimal(0);
+		}
+		
+		sumMoney.add(jianmian);
+		orders.get(i).setRealityBorrowMoney(orders.get(i).getRepaymentMoney());
+		
+		
+		System.out.println("应还总金额:"+orders.get(i).getOrder_money()+"实借金额:"+orders.get(i).getRealityAccount()+"放贷金额:"+orders.get(i).getMakeLoans()+"应还金额:"+orders.get(i).getRealityBorrowMoney());
+		
+		
+		orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
+
+		if(orders.get(i).getDeferAfterReturntime()==null){
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		}else{
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+		}
+		
+		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+		orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+		System.out.println("实还时间:"+orders.get(i).getRealtime());
+		if(orders.get(i).getRealtime() != null && !("").equals(orders.get(i).getRealtime())){
+			if(orders.get(i).getRealtime().length()!=0){
+				orders.get(i).setRealtime(orders.get(i).getRealtime());
+			}
+		}else{
+			orders.get(i).setRealtime("/");
+		}
+		orders.get(i).setPhone(tm.mobileEncrypt(orders.get(i).getPhone()));
+		System.out.println("渠道名:"+orders.get(i).getSourceName()+"手机号:"+orders.get(i).getPhone()+"订单时间:"+orders.get(i).getOrderCreateTime()+"实还时间:"+orders.get(i).getRealtime());
+		}
+		return orders;
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> HuaiZhangOrdersAc(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
+		if(order.getPhone() != null){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
+		}
+		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		order.setOrderStatus("4");
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
+		PageUtil pages = new PageUtil(order.getPage(), totalCount);
+		order.setPage(pages.getPage());
+		List<Orderdetails> orders = postloanorder.HuaiZhangOrdersAAAc(order);
+		for(int i=0;i<orders.size();i++){
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
+			
+			if(a==0){
+				System.out.println("后置");
+				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestInAll()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				System.out.println(orders.get(i).getOrder_money());
+			}else{
+				System.out.println("前置");
+				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+			}
+			
+			
+		orders.get(i).setCompanyId(order.getCompanyId());
+		orders.get(i).setPhone(tm.mobileEncrypt(p.decryption(orders.get(i).getPhone())));
+		Deferred defe = postloanorder.OneDeferred(orders.get(i));
+		
+		if(defe.getDeferAfterReturntime()!=null){
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(defe.getDeferAfterReturntime()));
+		}else{
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		}
+		
+		System.out.println(orders.get(i).getInterestSum());
+		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//本期应还金额
+		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+		orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		System.out.println("逾期罚金:"+orders.get(i).getInterestPenaltySum());
+		if(orders.get(i).getRealtime() != null){
+			if(orders.get(i).getRealtime().length()!=0){
+				orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+			}
+		}else{
+			orders.get(i).setRealtime("/");
+		}
+		
+		//orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+//		Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+//		
+//		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
+//			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
+//		}else{
+//			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
+//		}
+		
+		
+		if(orders.get(i).getSurplus_money()!=null){
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
+		}else{
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
+		}
+		}
+		return orders;
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> CollecOrdersAc(Orderdetails order) {
+		
+		PhoneDeal p = new PhoneDeal();
+		TuoMinUtil tm = new TuoMinUtil();
+		if(order.getPhone() != null ){
+			if(order.getPhone().length()!=0){
+				order.setPhone(p.encryption(order.getPhone()));
+			}
+			
+		}
+		
+		if(order.getStart_time()!="" && order.getStart_time()!=null && order.getEnd_time()!=null && order.getEnd_time()!=""){
+			try {
+				order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
+				order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferBeforeReturntimeStatu_time()!="" && order.getDeferBeforeReturntimeStatu_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=null && order.getDeferBeforeReturntimeEnd_time()!=""){
+			try {
+				order.setDeferBeforeReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeStatu_time()));
+				order.setDeferBeforeReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferBeforeReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getDeferAfterReturntimeStatu_time()!=null && order.getDeferAfterReturntimeStatu_time()!="" && order.getDeferAfterReturntimeEnd_time()!=null && order.getDeferAfterReturntimeEnd_time()!=""){
+			try {
+				order.setDeferAfterReturntimeStatu_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeStatu_time()));
+				order.setDeferAfterReturntimeEnd_time(Timestamps.dateToStamp1(order.getDeferAfterReturntimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else if(order.getRealtimeStatu_time()!=null && order.getRealtimeStatu_time()!="" && order.getRealtimeEnd_time()!=null && order.getRealtimeEnd_time()!=""){
+			try {
+				order.setRealtimeStatu_time(Timestamps.dateToStamp1(order.getRealtimeStatu_time()));
+				order.setRealtimeEnd_time(Timestamps.dateToStamp1(order.getRealtimeEnd_time()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		
+		
+		
+		order.setOrderStatus("1");
+		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
+		PageUtil pages = new PageUtil(order.getPage(), totalCount);
+		order.setPage(pages.getPage());
+		List<Orderdetails> orders = postloanorder.HuaiZhangOrdersAAAc(order);
+		for(int i=0;i<orders.size();i++){
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
+			
+			if(a==0){
+				System.out.println("后置");
+				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+				System.out.println(orders.get(i).getOrder_money());
+			}else{
+				System.out.println("前置");
+				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()).add(orders.get(i).getInterestInAll()));//应还总金额
+			}
+			
+		orders.get(i).setCompanyId(order.getCompanyId());
+		Deferred defe = postloanorder.OneDeferred(orders.get(i));
+		orders.get(i).setDeferBeforeReturntime(orders.get(i).getShouldReturnTime());
+		String jiephone = p.decryption(orders.get(i).getPhone());
+		orders.get(i).setPhone(tm.mobileEncrypt(jiephone));
+		System.out.println(orders.get(i).getInterestSum());
+		orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//本期应还金额
+		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+		orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+		System.out.println("逾期罚金:"+orders.get(i).getInterestPenaltySum());
+		if(orders.get(i).getRealtime() != null){
+			if(orders.get(i).getRealtime().length()!=0){
+				orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
+			}
+		}else{
+			orders.get(i).setRealtime("/");
+		}
+		
+		
+		
+		
+		/*Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
+		
+		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
+			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
+		}else{
+			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
+		}*/
+		
+		if(orders.get(i).getSurplus_money()==null){
+			orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney());
+		}
+		
+		}
+		
+		return orders;
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> SelectCollectionAc(Orderdetails order) {
+		PhoneDeal p = new PhoneDeal();
+		if(order.getPhone() != null){
+			order.setPhone(p.encryption(order.getPhone()));
+		}
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+		String stime = sim.format(new Date());
+		try {
+			order.setStart_time(Timestamps.dateToStamp1(stime+" 00:00:00"));
+			order.setEnd_time(Timestamps.dateToStamp1(stime+" 23:59:59"));
+			order.setShouldReturnTime(System.currentTimeMillis()+"");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		TuoMinUtil tm = new TuoMinUtil();
+		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
+			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
+			if(nodeid.size() != 0){
+				order.setIds(nodeid);
+			}else{
+				nodeid.add(0);
+				order.setIds(nodeid);
+			}
+			PageUtil pages = null;
+			if(totalCount != null){
+				pages = new PageUtil(order.getPage(), totalCount);
+				order.setPage(pages.getPage());
+			}else{
+				pages = new PageUtil(order.getPage(), 0);
+				order.setPage(pages.getPage());
+			}
+			order.setIds(nodeid);
+			List<Orderdetails> ordeids = postloanorder.SelectOrderDetailsAc(order);//获取未逾期未分配订单
+			for (int i = 0; i < ordeids.size(); i++) {
+				int a = ordeids.get(i).getRealityBorrowMoney().compareTo(ordeids.get(i).getMakeLoans());
+				
+				if(a==0){
+					ordeids.get(i).setRealityBorrowMoney(ordeids.get(i).getRealityBorrowMoney().add(ordeids.get(i).getInterestPenaltySum().
+							add(ordeids.get(i).getTechnicalServiceMoney())));
+				}else{
+					ordeids.get(i).setRealityBorrowMoney(ordeids.get(i).getRealityBorrowMoney().add(ordeids.get(i).getInterestSum()));
+				}
+				ordeids.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferBeforeReturntime()));
+				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));
+				ordeids.get(i).setRealtime(Timestamps.stampToDate(ordeids.get(i).getRealtime()));
+				ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));
+				String op = p.decryption(ordeids.get(i).getPhone());
+				ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
+				
+				
+				
+				
+				
+				System.out.println("金额:"+ordeids.get(i).getRealityAccount());
+				ordeids.get(i).setPhone(tm.mobileEncrypt(op));
+				System.out.println("天数："+ordeids.get(i).getOnceDeferredDay());
+			}
+		return ordeids;
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> CollectionOrderdetAc(Orderdetails order) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

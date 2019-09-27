@@ -205,14 +205,15 @@
 	</select>
 	
 		<insert id="setoperator" parameterType="java.util.Map">
-		insert into operator (userId,authentime)
-		values (#{userId},#{authentime})
+		insert into operator (userId,authentime,phone)
+		values (#{userId},#{authentime},#{phone})
 	</insert>
 	
 	
 	  		  <update id="updateoperator" parameterType="java.util.Map">
     update operator set
-    authentime = #{authentime}
+    authentime = #{authentime},
+    phone = #{phone}
     where userId = #{userId}
   </update>
   

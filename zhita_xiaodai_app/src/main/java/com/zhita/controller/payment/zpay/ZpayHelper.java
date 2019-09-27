@@ -260,7 +260,7 @@ public class ZpayHelper {
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
         payParams.put("amount",amount.setScale(2).toString());
-        payParams.put("appType","autobank");
+        payParams.put("appType","xunpay");
         payParams.put("type", "3");
         payParams.put("payType", "1");
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
@@ -268,11 +268,11 @@ public class ZpayHelper {
         payParams.put("orderId", "DD_"+billId);//订单ID
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
-        payParams.put("khName", "东新雨");//收款人姓名
+        payParams.put("khName", "郑凯");//收款人姓名
         payParams.put("khBankCode", "CMB");//收款人银行编码
-        payParams.put("khCardCode", "6214835901884138");//收款银行卡号
-        payParams.put("khMobile", "13487139655");//银行预留手机号
-        payParams.put("khIdCode", "420621199905157170");//收款人身份证号
+        payParams.put("khCardCode", "6217582000013555867");//收款银行卡号
+        payParams.put("khMobile", "13145972433");//银行预留手机号
+        payParams.put("khIdCode", "440229199710242917");//收款人身份证号
         String resultSign= SignUtils.getSign(payParams,ZpayConfig.NEW_MD5_KEY).toUpperCase();
         payParams.put("sign",resultSign);
         try {
@@ -388,12 +388,13 @@ public class ZpayHelper {
 //		billId = "test_201909017175056";
 		//Receivables(new BigDecimal("1.0"), "test_201909201745652145233652"); 
 		//Receivables(new , "test_201909201745652145233652");
+		Receivables(new BigDecimal("50"));
 //		SelectFF();
 		//	SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		//    String biaoshi = sim.format(new Date());
 		//	System.out.println(biaoshi);
 		//20190923124515394
-		YuXia();
+		//YuXia();
 		//query("20190923151144230");
 	}
 }

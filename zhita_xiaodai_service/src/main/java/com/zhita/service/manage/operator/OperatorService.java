@@ -29,8 +29,8 @@ public interface OperatorService {
 
 	String getauthentime(int userId);
 
-	int setoperator(int userId, String authentime);
+	int setoperator(int userId, String authentime, String phone);
 
-	void updateoperator(int userId, String authentime);
+	void updateoperator(int userId, String authentime, String phone);
 
 }
