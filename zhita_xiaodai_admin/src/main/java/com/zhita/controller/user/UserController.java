@@ -154,11 +154,17 @@ public class UserController {
     		}else{
     			userlList.get(i).setOperaattestationstatus("认证中");
     		}
+    		
+    		if(userlList.get(i).getIfblacklist().equals("0")){
+    			userlList.get(i).setIfblacklist("正常");
+    		}else{
+    			userlList.get(i).setIfblacklist("黑名单");
+    		}
 		}
 		// 查询用户表有多少行记录
 		Integer count = intUserService.queryUserListcount(userLikeParameter);
 		// 创建excel表的表头
-		String[] headers = { "注册时间", "渠道","客户端", "姓名", "手机号", "个人信息", "运营商","银行卡"};
+		String[] headers = { "注册时间", "渠道","客户端", "姓名", "手机号", "个人信息", "运营商","银行卡","状态"};
 		// 创建Excel工作簿
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 创建一个工作表sheet
@@ -191,6 +197,8 @@ public class UserController {
 			cell2.setCellValue(userlList.get(i - 1).getOperaattestationstatus());
 			cell2 = nextrow.createCell(7);
 			cell2.setCellValue(userlList.get(i - 1).getBankattestationstatus());
+			cell2 = nextrow.createCell(8);
+			cell2.setCellValue(userlList.get(i - 1).getIfblacklist());
 		}
 		// 将excel的数据写入文件
 		ByteArrayOutputStream fos = null;
