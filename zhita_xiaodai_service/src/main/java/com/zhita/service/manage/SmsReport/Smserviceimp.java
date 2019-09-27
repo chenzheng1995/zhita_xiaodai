@@ -114,6 +114,100 @@ public class Smserviceimp implements Smservice{
 			
 			return map;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public Map<String, Object> SendSmOne(SmsSendRequest sm) {
+		sm.setPhonenum(1);
+		
+//		List<String> arraylist = new ArrayList<String>();
+//		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			sm.setMsg("【米多宝】"+sm.getMsg());
+			System.out.println(sm.getPhone());
+			if(sm.getPhone() == null){
+				map.put("code", "0");
+				map.put("desc", "手机号不能为空");
+			}else if(sm.getMsg() == null){
+				map.put("code", "0");
+				map.put("desc", "内容不能为空");
+			}else{
+				SmsSendRequest smsSingleRequest = new SmsSendRequest(account, password, sm.getMsg(), sm.getPhone(),report);
+
+		        String requestJson = JSON.toJSONString(smsSingleRequest);
+
+		        System.out.println("before request string is: " + requestJson);
+
+		        String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
+
+		        System.out.println("response after request result is :" + response);
+
+		        SmsSendResponse smsSingleResponse = JSON.parseObject(response, SmsSendResponse.class);
+
+		        System.out.println("response  toString is :" + smsSingleResponse);
+		        
+		        Shortmessage shor = new Shortmessage();
+		        System.out.println(sm.getCollection_time());
+		        shor.setCollection_time(sm.getCollection_time());
+		        
+		        shor.setCompanyid(sm.getCompanyid());
+		        
+		        shor.setSmg(sm.getMsg());
+		        
+		        shor.setPhonenumber(sm.getPhone());
+		        
+		        shor.setPhonenum(sm.getPhonenum());
+		        
+		        if(smsSingleResponse.getErrorMsg().equals("")){
+		        	SimpleDateFormat def = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		        	shor.setSend_time(def.format(new Date()));
+		        	System.out.println(shor.getSend_time());
+		        	Integer a = sdao.AddSms(shor);
+		        	if(a != null){
+		        		Thirdcalltongji th = new Thirdcalltongji();
+		        		th.setCompanyid(shor.getCompanyid());
+		        		th.setThirdtypeid(9);
+		        		try {
+		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+		        		th.setDeleted("0");
+		        		sdao.AddThirdcallTongj(th);
+		        	}
+		        	map.put("code", "200");
+		        	map.put("desc", "已发送,数据存储");
+		        }else{
+		        	map.put("code", "0");
+		        	map.put("desc", "数据异常");
+		        	
+		        }
+			}
+			
+			return map;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public Map<String, Object> DayShortMessage(Shortmessage shor) {

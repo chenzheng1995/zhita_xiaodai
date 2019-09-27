@@ -12,6 +12,9 @@ public interface Smservice {
 	Map<String, Object> SendSm(SmsSendRequest sm);
 	
 	
+	Map<String, Object> SendSmOne(SmsSendRequest sm);
+	
+	
 	Map<String, Object> DayShortMessage(Shortmessage shor);
 	
 	
