@@ -413,9 +413,37 @@
 				</if>
 			</where>
 			group by o.id
+			order by o.id
 			limit #{page},#{pagesize}
 		</select>
 		
+		
+		
+		<select id="AOrderDetailsAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
+			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,
+			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate,ord.realityAccount
+			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom	
+			<where>
+				o.id = ord.orderId 
+				and clom.userId = ov.collectionMemberId
+				and o.id = ov.orderId
+				and o.userId = u.id
+				and o.companyId = deset.companyId
+				and o.companyId = #{companyId}
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+				</if>
+				<if test="name != null and name != ''">
+					AND u.name LIKE concat('%',#{name},'%')
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone LIKE concat('%',#{phone},'%')
+				</if>
+			</where>
+			group by o.id
+			order by o.id
+		</select>
 		
 		
 		

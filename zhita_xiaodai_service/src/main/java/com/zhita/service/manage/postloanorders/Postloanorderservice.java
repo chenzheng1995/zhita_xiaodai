@@ -4,6 +4,7 @@ package com.zhita.service.manage.postloanorders;
 import java.util.List;
 import java.util.Map;
 
+import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
 
@@ -61,6 +62,12 @@ public interface Postloanorderservice {
 	
 	
 	List<Orderdetails> CollectionOrderdetAc(Orderdetails order);
+	
+	
+	List<Collection> CollectionRecoveryAc(Orderdetails order);
+	
+	
+	List<Collection>  OverdueUserAc(Orderdetails order);
 }
 
 
