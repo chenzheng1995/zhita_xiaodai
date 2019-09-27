@@ -145,4 +145,10 @@ public interface CollectionMapper {
 	
 	
 	BigDecimal PrmoiseMoney(Integer orderId);
+	
+	
+	List<Orderdetails> FenpeiCollectionAc(Collection col);
+	
+	
+	List<Orderdetails> WeiControllerOrdetialisAc(Collection coll);
 }

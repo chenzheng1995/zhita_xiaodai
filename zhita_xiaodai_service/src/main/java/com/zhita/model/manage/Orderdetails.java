@@ -241,6 +241,16 @@ public class Orderdetails {
     
     private BigDecimal repaymentMoney;
     
+    private String usertype;
+    
+	public String getUsertype() {
+		return usertype;
+	}
+
+	public void setUsertype(String usertype) {
+		this.usertype = usertype;
+	}
+
 	public BigDecimal getRepaymentMoney() {
 		return repaymentMoney;
 	}

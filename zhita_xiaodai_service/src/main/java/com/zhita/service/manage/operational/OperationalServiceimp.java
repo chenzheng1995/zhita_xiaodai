@@ -475,6 +475,8 @@ public class OperationalServiceimp implements OperationalService{
 				ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
 				ord.setGesamtbetragderRvckzahlung(orders.getGesamtbetragderRvckzahlung());
 				ord.setRemittanceTime(stime.get(i));
+				System.out.println("放款金额:"+orders.getGesamtbetragderRvckzahlung());
+				ord.setGesamtbetragderDarlehen(orders.getGesamtbetragderRvckzahlung());
 				System.out.println("时间:"+ord.getRemittanceTime());
 				if(ord.getGesamtbetraguberfallNum()==null){
 					ord.setGesamtbetraguberfallNum(0);
@@ -484,7 +486,7 @@ public class OperationalServiceimp implements OperationalService{
 					ord.setGesamtbetragderNum(0);
 				}
 				if(ord.getGesamtbetraguberfallNum() !=null && orders.getGesamtbetragderNum()!=null){
-					if(ord.getGesamtbetraguberfallNum() != 0){
+					if(ord.getGesamtbetraguberfallNum() != 0 && ord.getGesamtbetragderNum() != 0){
 						ord.setCollectionData((double) ((ord.getGesamtbetraguberfallNum()*100)   / (ord.getGesamtbetragderNum()*100)));
 					}else{
 						ord.setCollectionData((double) 0);

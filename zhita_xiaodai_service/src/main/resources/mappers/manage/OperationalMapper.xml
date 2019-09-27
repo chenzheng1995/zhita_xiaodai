@@ -404,7 +404,7 @@
 		
 		<select id="OrderOKCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select count(o.id) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and o.orderStatus= #{orderStatus}
-			and c.collectionTime  between #{start_time} and #{end_time} 
+			and o.orderCreateTime  between #{start_time} and #{end_time} 
 		</select>
 		
 		

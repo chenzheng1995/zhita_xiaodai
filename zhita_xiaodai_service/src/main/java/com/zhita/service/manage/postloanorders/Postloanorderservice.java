@@ -1,6 +1,7 @@
 package com.zhita.service.manage.postloanorders;
 
 
+import java.util.List;
 import java.util.Map;
 
 import com.zhita.model.manage.Orderdetails;
@@ -45,4 +46,21 @@ public interface Postloanorderservice {
 	
 	
 	Map<String, Object> WanchengUser(Overdue ov);
+	
+	
+	List<Orderdetails> YiHuanOrdersAc(Orderdetails order);
+	
+	
+	List<Orderdetails> HuaiZhangOrdersAc(Orderdetails order);
+	
+	
+	List<Orderdetails> CollecOrdersAc(Orderdetails order);
+	
+	
+	List<Orderdetails> SelectCollectionAc(Orderdetails order);
+	
+	
+	List<Orderdetails> CollectionOrderdetAc(Orderdetails order);
 }
+
+

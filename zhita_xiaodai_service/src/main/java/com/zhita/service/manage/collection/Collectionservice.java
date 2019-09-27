@@ -60,4 +60,10 @@ public interface Collectionservice {
 	
 	
 	List<Collection> CollectionmemberUserlv(Collection coll);
+	
+	
+	List<Orderdetails> FenpeiWeiCollectionAc(Collection coll);
+	
+	
+	List<Orderdetails> YiCollectionAc(Collection col);
 }

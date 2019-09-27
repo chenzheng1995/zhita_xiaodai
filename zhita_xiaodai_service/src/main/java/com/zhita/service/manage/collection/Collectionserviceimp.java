@@ -906,7 +906,127 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		return colles;
 	}
-	
+
+
+
+
+	@Override
+	public List<Orderdetails> FenpeiWeiCollectionAc(Collection col) {
+		PhoneDeal p = new PhoneDeal();
+		if(col.getPhone() != null){
+			if(col.getPhone().length()!=0){
+				col.setPhone(p.encryption(col.getPhone()));
+			}
+		}
+		
+			Integer totalCount = collmapp.AllCountNum(col);
+			PageUtil pages = new PageUtil(col.getPage(),totalCount);
+			col.setPage(pages.getPage());
+			List<Orderdetails> orders = collmapp.FenpeiCollectionAc(col);
+			for(int i=0;i<orders.size();i++){
+				orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+				orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+				orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+				orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectionTime()));
+				if(orders.get(i).getRealityBorrowMoney() != null && orders.get(i).getInterestPenaltySum() != null){
+					orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum()));
+				}else if(orders.get(i).getRealityBorrowMoney() != null && orders.get(i).getInterestPenaltySum() == null){
+					orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney());
+				}else{
+					orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum());
+				}
+				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+				Deferred des = collmapp.DefeSet(orders.get(i));
+				if(des!=null){
+					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+				}else{
+					orders.get(i).setDeferAfterReturntime("/");
+				}
+				
+				if(orders.get(i).getRealityBorrowMoney()==null){
+					orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+				}
+				
+				if(orders.get(i).getRealityAccount()==null){
+					orders.get(i).setRealityAccount(new BigDecimal(0));
+				}
+				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+				if(a==0){
+					orders.get(i).setRealityBorrowMoney(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
+				}else{
+					orders.get(i).setRealityBorrowMoney(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
+				}
+				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+			}
+		return orders;
+	}
+
+
+
+
+	@Override
+	public List<Orderdetails> YiCollectionAc(Collection col) {
+		PhoneDeal p = new PhoneDeal();
+		if(col.getPhone() != null){
+			if(col.getPhone().length()!=0){
+				col.setPhone(p.encryption(col.getPhone()));
+			}
+		}
+		try {
+			col.setStart_time(Timestamps.dateToStamp1(col.getStart_time()));
+			col.setEnd_time(Timestamps.dateToStamp1(col.getEnd_time()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Integer totalCount = collmapp.CollectionWeiTotalcount(col);
+		PageUtil pages = new PageUtil(col.getPage(), totalCount);
+		col.setPage(pages.getPage());
+		List<Orderdetails> orders = collmapp.WeiControllerOrdetialisAc(col);
+		for(int i=0;i<orders.size();i++){
+			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
+			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
+			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getDeferBeforeReturntime()));
+			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));
+			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
+			if(orders.get(i).getSurplus_money()==null){
+				orders.get(i).setSurplus_money(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityBorrowMoney()==null){
+				orders.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(orders.get(i).getRealityAccount()==null){
+				orders.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(a==0){
+				orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			}
+			System.out.println(orders.get(i).getOrder_money());
+			//orders.get(i).setSurplus_money(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getRealityAccount()));
+			orders.get(i).setCollNum(collmapp.CollNum(orders.get(i).getOrderId()));
+			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
+			BigDecimal des = collmapp.PrmoiseMoney(orders.get(i).getOrderId());
+			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
+			int ac = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
+			if(ac==0){
+				orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
+			}
+
+			if(des != null){
+				orders.get(i).setPromise_money(des);
+			}else{
+				
+				orders.get(i).setPromise_money(new BigDecimal(0));
+			}
+			
+			
+		}
+		return orders;
+		
+	}
 	
 	
 	
