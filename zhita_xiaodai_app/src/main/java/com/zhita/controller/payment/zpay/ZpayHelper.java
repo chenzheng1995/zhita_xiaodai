@@ -206,7 +206,7 @@ public class ZpayHelper {
 	    payParams.put("method","zpay.order.trade");
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
-        payParams.put("amount","25");
+        payParams.put("amount","10");
         payParams.put("appType","autobank");
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
         payParams.put("orderId", "DD_"+orderId);//订单ID
@@ -388,13 +388,13 @@ public class ZpayHelper {
 //		billId = "test_201909017175056";
 		//Receivables(new BigDecimal("1.0"), "test_201909201745652145233652"); 
 		//Receivables(new , "test_201909201745652145233652");
-		Receivables(new BigDecimal("50"));
+		//Receivables(new BigDecimal("50"));
 //		SelectFF();
 		//	SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		//    String biaoshi = sim.format(new Date());
 		//	System.out.println(biaoshi);
 		//20190923124515394
-		//YuXia();
+		YuXia();
 		//query("20190923151144230");
 	}
 }

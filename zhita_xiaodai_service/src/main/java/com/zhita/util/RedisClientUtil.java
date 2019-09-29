@@ -16,7 +16,7 @@ public class RedisClientUtil {
     private static JedisPool pool;
 
     static {
-    	pool = new JedisPool("127.0.0.1", 6379);
+    	pool = new JedisPool("172.31.233.207", 6379);
     }
 
     /**
@@ -42,7 +42,7 @@ public class RedisClientUtil {
      * @param value
      * @return
      */
-    public String setOrderId(String key, String value) {
+    public static String setOrderId(String key, String value) {
         Jedis jedis = pool.getResource();
         String set = jedis.set(key, value);
         jedis.close();
@@ -152,5 +152,11 @@ public class RedisClientUtil {
         jedis.close();
         return result;
     }
+    
+    
+    public static void main(String[] args) {
+		
+    	setOrderId("orderId"+"20190928164026076", "DD_2019092816381924330114");
+	}
 
 }

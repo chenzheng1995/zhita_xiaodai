@@ -573,7 +573,7 @@ public class CollectionController {
 	
 	
 	/**
-	 * 查询催收员催收率报表
+	 * 已分配未催收
 	 * 用于导出excel的查询结果
 	 * 
 	 * @param queryJson
@@ -696,7 +696,7 @@ public class CollectionController {
 	
 	
 	/**
-	 * 查询催收员催收率报表
+	 * 已分配已催收
 	 * 用于导出excel的查询结果
 	 * 
 	 * @param queryJson

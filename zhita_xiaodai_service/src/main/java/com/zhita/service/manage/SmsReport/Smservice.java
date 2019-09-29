@@ -34,4 +34,7 @@ public interface Smservice {
 	
 	
 	Map<String, Object> AddUserShortMessage(Usershortmessage shor);
+	
+	
+	void sendDateSned(SmsSendRequest sms);
 }

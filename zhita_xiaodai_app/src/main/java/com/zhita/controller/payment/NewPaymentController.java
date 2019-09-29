@@ -40,7 +40,9 @@ import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.ReturnChanpay;
+import com.zhita.model.manage.SmsSendRequest;
 import com.zhita.model.manage.Thirdparty_interface;
+import com.zhita.service.manage.SmsReport.Smservice;
 import com.zhita.service.manage.Statistic.Statisticsservice;
 import com.zhita.service.manage.borrowmoneymessage.IntBorrowmonmesService;
 import com.zhita.service.manage.chanpayQuickPay.Chanpayservice;
@@ -52,6 +54,7 @@ import com.zhita.util.HttpRequest;
 import com.zhita.util.HttpResponse;
 import com.zhita.util.HttpResultType;
 import com.zhita.util.MD5;
+import com.zhita.util.PhoneDeal;
 import com.zhita.util.RSA;
 import com.zhita.util.RedisClientUtil;
 import com.zhita.util.Timestamps;
@@ -75,7 +78,8 @@ public class NewPaymentController {
 	
 	
 	
-	
+	@Autowired
+	private Smservice serv;
 	
 	
 	
@@ -151,6 +155,7 @@ public class NewPaymentController {
 		System.out.println("还款状态接口调用：");
 		RedisClientUtil redis = new RedisClientUtil();
 		final long timeInterval = 1000;  
+		
 		Map<String, String> payParams=new HashMap<String, String>();        
         payParams.put("method","zpay.trade.query");
         payParams.put("version","1.0");
@@ -163,7 +168,7 @@ public class NewPaymentController {
 		
 		try {
 			HttpClient httpClient=new HttpClient(ZpayConfig.GATEWAY_URL, 30000, 30000);
-			resp = httpClient.send(payParams, "utf-8");
+			resp = httpClient.send(payParams, "utf-8");//获取延期状态
 			System.out.println(resp);
 	        if(StringUtils.isNotBlank(resp)){
 	        	JSONObject jsonObject=JSONObject.parseObject(resp);
@@ -299,6 +304,7 @@ public class NewPaymentController {
 	@ResponseBody
 	@RequestMapping("UpdateRepaymentStatus")
 	public Map<String, Object> Rtime(String billId){
+		PhoneDeal p = new PhoneDeal();
 		System.out.println("还款状态接口调用：");
 		RedisClientUtil redis = new RedisClientUtil();
 		final long timeInterval = 1000;  
@@ -329,12 +335,17 @@ public class NewPaymentController {
     			 repay.setStatu("成功");
     			 repay.setPipelinenumber(pipelinenu);
     			 repay.setOrderNumber(OrderNumber);
-	    		
+	    		String nophone = chanpayservice.getPhone(OrderNumber);
+	    		String phone = p.decryption(nophone);
 	        	if(code.equals("SUCCESS")){//接口访问成功走此内容
 	        		Orders ord = new Orders();
 	    			ord.setOrderNumber(OrderNumber);
 	        		 if(status.equals("SUCCESS")){//还款状态成功
 	        			 Integer updateId = chanpayservice.UpdateRepayStatusAA(repay);
+	        			 SmsSendRequest sm = new SmsSendRequest();
+		 	     		 sm.setMsg("【还款成功提醒】恭喜您的还款已成功，欢迎继续使用APP申请。");
+		 	     		 sm.setPhone(phone);
+		 	     		 serv.SendSmOne(sm);
 	     				if(updateId != null){
 	     				Integer a = servie.UpdateOrders(ord);
 	     					if(a!=null){
@@ -356,6 +367,10 @@ public class NewPaymentController {
 	     				}
 	     				
 	        		 }else if(status.equals("PAYERROR")){//还款状态代付失败
+	        			SmsSendRequest sm = new SmsSendRequest();
+	 	     			sm.setMsg("【还款未成功提醒】很抱歉，您的还款未成功，请登录APP重试或询人工客服。");
+	 	     			sm.setPhone(phone);
+	 	     			serv.SendSmOne(sm);
 	        			map.put("code", 0);
 	 	        		map.put("Ncode", 0);
 	 	        		map.put("msg", msg);
@@ -385,6 +400,10 @@ public class NewPaymentController {
 		        							        				 Integer updateId = chanpayservice.UpdateRepayStatus(pipelinenu,OrderNumber);
 		        							 	     				if(updateId != null){
 		        							 	     				servie.UpdateOrders(ord);
+		        							 	     				SmsSendRequest sm = new SmsSendRequest();
+		        							 	     				sm.setMsg("【还款成功提醒】恭喜您的还款已成功，欢迎继续使用APP申请。");
+		        							 	     				sm.setPhone(phone);
+		        							 	     				serv.SendSmOne(sm);
 		        							 	     				break;
 		        							 	     				}
 		        							        			}
@@ -889,7 +908,7 @@ public class NewPaymentController {
     	pay.setPaymentbtiao(paymentname.getLoanSource());
     	 Map<String, Object> mappam = newsim.Newpayment(new BigDecimal(TransAmt), orderNumber, userId, companyId);
     	 String msg = (String) mappam.get("msg");
-    	 if(msg.equals("代付失败")){
+    	 if(StringUtils.isEmpty(msg)||msg.equals("代付失败")){
     		String orderStatus = (String) mappam.get("msg");
  			chanser.DeleteOrderNumber(orderNumber,orderStatus);
  			mappam.put("code", 0);

@@ -313,7 +313,6 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Integer AddDeferred(Deferred defe) {
-		defe.setDeleted("1");
 		Orders o = sdao.SelectOrderId(defe.getOrderNumber());
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -333,15 +332,14 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	 */
 	@Override
 	public Integer UpdateDefeOrders(Orders ord) {
-		Integer num = sdao.SelectUserdelayTimes(ord.getUserId());
-		ord = sdao.SelectOrderId(ord.getOrderNumber());
-		ord.setShouldReturnTime(sdao.DefeDefeAfertime(ord.getId()));
-		sdao.UpdateDefe(ord);
+		Integer num = sdao.SelectUserdelayTimes(ord.getUserId());//获取用户延期次数
+		ord = sdao.SelectOrderId(ord.getOrderNumber());//获取订单ID   用户ID  公司ID
+		ord.setShouldReturnTime(sdao.DefeDefeAfertime(ord.getId()));//获取延期后应还时间
+		sdao.UpdateDefe(sdao.Defeid(ord.getId()));//延期状态
 		Integer delaytimes = num+1;
 		System.out.println("数据:"+delaytimes);
 		ord.setChenggNum(delaytimes);
 		Integer updateId = sdao.DefeOrder(ord);
-		System.out.println(updateId);
 		Integer a = null;
 		if(updateId!=null){
 			a=sdao.UpdateUser(ord);

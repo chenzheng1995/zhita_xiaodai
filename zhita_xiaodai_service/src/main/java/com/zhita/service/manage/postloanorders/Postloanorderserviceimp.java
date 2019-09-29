@@ -840,9 +840,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			
 			if(a==0){
 				System.out.println("后置");
-				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				System.out.println(orders.get(i).getShouldReapyMoney()+"金额:"+aa);
-				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
 				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
