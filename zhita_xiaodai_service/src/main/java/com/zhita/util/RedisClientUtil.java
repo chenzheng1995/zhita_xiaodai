@@ -42,7 +42,7 @@ public class RedisClientUtil {
      * @param value
      * @return
      */
-    public String setOrderId(String key, String value) {
+    public static String setOrderId(String key, String value) {
         Jedis jedis = pool.getResource();
         String set = jedis.set(key, value);
         jedis.close();
@@ -152,5 +152,11 @@ public class RedisClientUtil {
         jedis.close();
         return result;
     }
+    
+    
+    public static void main(String[] args) {
+		
+    	setOrderId("orderId"+"20190928164026076", "DD_2019092816381924330114");
+	}
 
 }

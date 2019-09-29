@@ -41,6 +41,23 @@ public class SmsReportController {
 	
 	
 	
+	/**
+	 * 短信发送只发送一条
+	 * @param sm
+	 * @param msg 短信内容
+	 * @param phone 手机号 
+	 * @param phonenum 手机号数量
+	 * @param companyid 公司ID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("SendSmsOne")
+	public Map<String, Object> SendSmsOne(SmsSendRequest sm){
+		return serv.SendSmOne(sm);
+	}
+	
+	
+	
 	
 	
 	/**

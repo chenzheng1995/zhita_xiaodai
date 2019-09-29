@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.User;

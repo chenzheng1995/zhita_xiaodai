@@ -299,4 +299,19 @@ public interface PaymentRecordMapper {
     
     List<Offlinjianmian> XiaOrderAc(Orderdetails order);
     
+    
+    Orderdetails SelectCollectionMoney(Integer orderId);
+    
+    
+    String getPhone(String orderNumber);
+    
+    
+    Deferred getDelete(String orderNumber);
+    
+    
+    String getOrderNumberDefe(Integer id);
+    
+    
+    Integer getUserid(Integer id);
+    
 }

@@ -95,11 +95,11 @@
 			
 			<insert id="AddThirdcallTongj" parameterType="com.zhita.model.manage.Thirdcalltongji">
 				INSERT INTO `thirdcalltongji`(
-					companyId,
+					companyid,
 					thirdtypeid,
 					date,
 					deleted
-				)VALUES(#{companyId},#{thirdtypeid},#{date},#{deleted})
+				)VALUES(#{companyid},#{thirdtypeid},#{date},#{deleted})
 			</insert>
 			
 			

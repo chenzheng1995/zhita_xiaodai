@@ -397,7 +397,7 @@
   			 <select id="SelectPaymentOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
   			 		select ord.orderId,o.orderNumber,o.borrowTimeLimit,u.name,u.phone,u.registeTime,o.orderCreateTime,so.sourceName as drainageOfPlatformName,o.riskmanagementFraction,
 					 o.borrowMoneyWay,o.shouldReturnTime,ord.realityAccount as realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,ma.rmModleName as riskcontrolname,u.riskControlPoints,u.delayTimes,
-					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferAfterReturntime,ord.InterestSum,o.shouldReturnTime,
+					ord.overdueNumberOfDays,defeset.onceDeferredDay,defe.interestOnArrears,defe.deferAfterReturntime,ord.InterestSum,o.shouldReturnTime,ord.shouldReapyMoney,
 					ord.interestPenaltySum,o.realtime,ord.technicalServiceMoney
   			 		from orders o left join user u on o.userId = u.id
 					left join orderdetails ord on o.id = ord.orderId
@@ -1491,5 +1491,31 @@
  			
  			<select id="selectPatyId" parameterType="java.lang.String" resultType="java.lang.Integer">
  				select id from loan_setting where name = #{name}
+ 			</select>
+ 			
+ 			
+ 			<select id="SelectCollectionMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orderdetails">
+				select * from orderdetails where orderId = #{orderId}			
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="getPhone" parameterType="java.lang.String" resultType="java.lang.String">
+ 				select u.phone from user u,orders o where o.orderNumber = #{orderNumber} and o.userId = u.id
+ 			</select>
+ 			
+ 			
+ 			<select id="getDelete" parameterType="java.lang.String" resultType="com.zhita.model.manage.Deferred">
+ 				select * from deferred where deleted = #{orderNumber}
+ 			</select>
+ 			
+ 			
+ 			<select id="getOrderNumberDefe" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 				select orderNumber from orders where id = #{id}
+ 			</select>
+ 			
+ 			
+ 			<select id="getUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+ 				select userId from orders where id =#{id}
  			</select>
 </mapper>

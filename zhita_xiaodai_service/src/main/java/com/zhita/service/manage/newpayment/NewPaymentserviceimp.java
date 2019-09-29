@@ -101,6 +101,11 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 				        		System.out.println("数据:"+jsonObject);
 			        			return map;
 			        		}
+			        	}else{
+				        		map.put("msg", "代付失败");
+				        		map.put("tradeNo", tradeNo);
+				        		map.put("orderId", billId);
+			        			return map;
 			        	}
 			        }
 				} catch (Exception e) {
@@ -156,7 +161,6 @@ public class NewPaymentserviceimp implements NewPaymentservice{
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEWPAY);//异步通知地址
         payParams.put("returnUrl", returnUrl);
         payParams.put("orderId", billId);//订单ID
-        redis.setOrderId("userId"+billId, billId);
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("khName", ban.getCstmrnm());//收款人姓名
@@ -224,8 +228,6 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		String billId = sim.format(new Date());//stdao.SelectOrderNumber(userId);//订单编号
 		String orderId = stdao.SelectOrderNumber(userId);//订单编号
-		RedisClientUtil redis = new RedisClientUtil();
-		redis.setOrderId("DefeorderId"+billId, orderId);
 		if(a.equals("1")){
 			
 			if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
@@ -241,7 +243,6 @@ public class NewPaymentserviceimp implements NewPaymentservice{
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEWDEFE);//异步通知地址
         payParams.put("returnUrl", returnUrl);
         payParams.put("orderId", billId);//订单ID
-        redis.setOrderId("DefeuserId"+billId, billId);
         payParams.put("orderUid", "MDBS");//客户ID
         payParams.put("orderName", "米多宝");//客户名称
         payParams.put("khName", ban.getCstmrnm());//收款人姓名
@@ -266,6 +267,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 	        		if(SignUtils.checkParam(JSONObject.toJavaObject(jsonObject, Map.class) , ZpayConfig.NEW_MD5_KEY)){
 	        			map.put("url", url);
 	        			map.put("DefebillId", orderNumber);
+	        			map.put("billId", billId);
 	        			map.put("msg", msg);
 	        			map.put("status", 2);
 	        			map.put("loaName", "必付");

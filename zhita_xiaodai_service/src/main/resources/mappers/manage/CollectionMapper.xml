@@ -269,6 +269,35 @@
 		</select>
 		
 		
+		
+		<select id="FenpeiCollectionAc" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
+			select col.collectionId,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
+			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
+			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus
+			from collection col,orders o,orderdetails ord,sys_user colme,user u 
+			<where>
+				o.id = col.orderId 
+				and o.id = ord.orderId 
+				and col.collectionMemberId = colme.userId 
+				and u.id = o.userId 
+				and col.usertype is null
+				and o.orderStatus between "0" and "3"
+				and o.companyId = #{companyId}
+				and col.collectionMemberId = #{collectionMemberId}
+				<if test="name != null and name != ''">
+					AND u.name LIKE concat('%',#{name},'%')  
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone LIKE concat('%',#{phone},'%')   
+				</if>
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')    
+				</if>
+			</where>
+				group by col.orderId
+		</select>
+		
+		
 		<select id="CollectionTotalcount" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(c.orderId) from 
 			collection c left join sys_user cmem on c.collectionMemberId = cmem.userId
@@ -398,8 +427,56 @@
 				</if>
 			</where>
 			group by o.id
+			order by o.id
 			limit #{page},#{pagesize}
 		</select>
+		
+		
+		
+		
+		<select id="WeiControllerOrdetialisAc" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
+			select o.id,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
+			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
+			col.promise_money,col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,o.overdueGrade,o.shouldReturnTime,ord.shouldReapyMoney,ord.technicalServiceMoney
+			 from orders o ,orderdetails ord,sys_user colme,user u ,deferred_settings deset,overdue_class ov,collection col,collectiondetails collection
+			<where>
+				o.companyId = ov.companyId 
+				and  o.id = ord.orderId  
+				and deset.companyId = o.companyId 
+				and u.id = o.userId 
+				and o.id = col.orderId 
+				and o.companyId = #{companyId}
+				and col.collectionMemberId = colme.userId
+				and collection.user_type is not null
+				<if test="name != null and name != ''">
+					AND u.name LIKE concat('%',#{name},'%')  
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone LIKE concat('%',#{phone},'%') 
+				</if>
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
+				</if>
+				<if test="overdueGrade != null and overdueGrade != ''">
+					AND o.overdueGrade = #{overdueGrade}
+				</if>
+				<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+					AND o.orderCreateTime between #{start_time} and #{end_time}
+				</if>
+				<if test="realtime != null and realtime != ''">
+					AND ord.realtime = #{realtime}
+				</if>
+				<if test="describe != null and describe != ''">
+					AND ord.overdueNumberOfDays = #{describe}
+				</if>
+				<if test="deferAfterReturntimeStatu_time != null and deferAfterReturntimeStatu_time != '' and deferAfterReturntimeEnd_time != null and deferAfterReturntimeEnd_time != ''">
+					AND o.shouldReturnTime between #{deferAfterReturntimeStatu_time} and #{deferAfterReturntimeEnd_time}
+				</if>
+			</where>
+			group by o.id
+			order by o.id
+		</select>
+		
 		
 		
 		<select id="CollNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">

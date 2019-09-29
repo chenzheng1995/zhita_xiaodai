@@ -160,4 +160,16 @@ public interface PostloanorderMapper {
 	
 	Orderdetails SelectQianshouldReapyMoney(Integer orderId);
 	
+	
+	List<Orderdetails> YiHuanOrdersAc(Orderdetails order);
+	
+	
+	List<Orderdetails> HuaiZhangOrdersAAAc(Orderdetails order);
+	
+	
+	List<Orderdetails> SelectOrderDetailsAc(Orderdetails order);
+	
+	
+	List<Orderdetails> AOrderDetailsAc(Orderdetails order);
+	
 }

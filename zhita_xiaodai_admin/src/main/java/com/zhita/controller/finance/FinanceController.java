@@ -358,7 +358,7 @@ public class FinanceController {
 	
 	
 	/**
-	 * 还款实时流水
+	 * 查询线上调账订单
 	 * 用于导出excel的查询结果
 	 * 
 	 * @param queryJson

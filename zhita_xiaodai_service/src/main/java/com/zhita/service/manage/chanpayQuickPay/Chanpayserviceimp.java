@@ -316,6 +316,27 @@ public class Chanpayserviceimp implements Chanpayservice{
 		Orders o = stdao.SelectOrderId(orderNumber);
 		return padao.PaymentStatus(o.getId());
 	}
+
+	@Override
+	public String getPhone(String orderNumber) {
+		return padao.getPhone(orderNumber);
+	}
+
+	@Override
+	public Deferred getDefeDele(String orderNumber) {
+		return padao.getDelete(orderNumber);
+	}
+
+	@Override
+	public String getOrderNumberDefe(Integer orderId) {
+		return padao.getOrderNumberDefe(orderId);
+	}
+
+	@Override
+	public Integer getUserId(Integer orderId) {
+		// TODO Auto-generated method stub
+		return padao.getUserid(orderId);
+	}
 	
 	
 	

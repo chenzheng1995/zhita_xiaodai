@@ -357,8 +357,12 @@
 			</update>
 			
 			
-			<update id="UpdateDefe" parameterType="com.zhita.model.manage.Orders">
-				update deferred set deleted = "0" where id = (select max(id) from deferred where orderIdid = #{id})
+			<select id="Defeid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select max(id) from deferred where orderId = #{id}
+			</select>
+			
+			<update id="UpdateDefe" parameterType="java.lang.Integer">
+				update deferred set deleted = "0" where id = #{id}
 			</update>
 			
 			
@@ -399,6 +403,5 @@
 			
 			<select id="SelectOrderNumber" parameterType="java.lang.Integer" resultType="java.lang.String">
 				select orderNumber from orders where orderStatus  not like "3" and userId = #{userId}
-
 			</select>
 </mapper>

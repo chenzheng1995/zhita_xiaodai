@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1012,7 +1014,6 @@ public class ChanpayQuickCollection {
 			Integer orderId = servie.SelectReaymentOrderId(TrxId);
 			if(orderId == null){
 				if(paymentname.getRepaymentSource().equals("必付")){
-					System.out.println("还钱!!!!!!");
 					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
 					String pipelinenu = "Rsn_"+maps.get("billId");
 					repay.setPipelinenumber(pipelinenu);
@@ -1535,7 +1536,7 @@ public class ChanpayQuickCollection {
 		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
 		RedisClientUtil redis = new RedisClientUtil();
 		Deferred defe = new Deferred();
-		
+		defe.setDeleted("1");
 		//DefePayment
 		defe.setOrderNumber(TrxId);
 		BigDecimal onarrears = new BigDecimal(TrxAmt);
@@ -1547,6 +1548,8 @@ public class ChanpayQuickCollection {
 		if(TrxId != null && ordrName != null && MerUserId != null && CardBegin != null && CardEnd != null && TrxAmt != null){
 				if(paymentname.getRepaymentSource().equals("必付")){
 					Map<String, Object> maps = newsim.DefePayment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
+					String billId = (String) maps.get("billId");
+					defe.setDeleted(billId);
 					Integer a = servie.AddDeferred(defe);
 					if(a!=null){
 						maps.put("code", "200");

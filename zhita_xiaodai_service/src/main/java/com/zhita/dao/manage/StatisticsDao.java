@@ -148,7 +148,7 @@ public interface StatisticsDao {
 	Integer UpdateOrdersShouldMoney(Orders ord);
 	
 	
-	Integer UpdateDefe(Orders ord);
+	Integer UpdateDefe(Integer ord);
 	
 	
 	Integer UpdateBankcard(Bankcard bank);
@@ -167,6 +167,9 @@ public interface StatisticsDao {
 	
 	
 	String SelectOrderNumber(Integer userId);
+	
+	
+	Integer Defeid(Integer id);
 	
 	
 }
