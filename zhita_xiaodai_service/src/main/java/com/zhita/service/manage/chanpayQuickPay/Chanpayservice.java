@@ -113,4 +113,16 @@ public interface Chanpayservice {
 	
 	
 	Integer UpdatePayStatus(String orderNumber);
+	
+	
+	String getPhone(String orderNumber);
+	
+	
+	Deferred getDefeDele(String orderNumber);
+	
+	
+	String getOrderNumberDefe(Integer orderId);
+	
+	
+	Integer getUserId(Integer orderId);
 }

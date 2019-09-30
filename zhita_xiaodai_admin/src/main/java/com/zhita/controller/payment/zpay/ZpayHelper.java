@@ -197,7 +197,7 @@ public class ZpayHelper {
         payParams.put("version","1.0");
         payParams.put("mchId",ZpayConfig.NEW_MERCHANT_NO);
         payParams.put("amount",amount.setScale(2).toString());
-        payParams.put("appType","xunpay");
+        payParams.put("appType","autobank");
         payParams.put("notifyUrl",ZpayConfig.RECHARGE_NOTIFY_NEW);//异步通知地址
         payParams.put("orderId", billId);//订单ID
         payParams.put("orderUid", "MDBS");//客户ID

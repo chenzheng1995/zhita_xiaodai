@@ -114,6 +114,100 @@ public class Smserviceimp implements Smservice{
 			
 			return map;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public Map<String, Object> SendSmOne(SmsSendRequest sm) {
+		sm.setPhonenum(1);
+		
+//		List<String> arraylist = new ArrayList<String>();
+//		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			sm.setMsg("【米多宝】"+sm.getMsg());
+			System.out.println(sm.getPhone());
+			if(sm.getPhone() == null){
+				map.put("code", "0");
+				map.put("desc", "手机号不能为空");
+			}else if(sm.getMsg() == null){
+				map.put("code", "0");
+				map.put("desc", "内容不能为空");
+			}else{
+				SmsSendRequest smsSingleRequest = new SmsSendRequest(account, password, sm.getMsg(), sm.getPhone(),report);
+
+		        String requestJson = JSON.toJSONString(smsSingleRequest);
+
+		        System.out.println("before request string is: " + requestJson);
+
+		        String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
+
+		        System.out.println("response after request result is :" + response);
+
+		        SmsSendResponse smsSingleResponse = JSON.parseObject(response, SmsSendResponse.class);
+
+		        System.out.println("response  toString is :" + smsSingleResponse);
+		        
+		        Shortmessage shor = new Shortmessage();
+		        System.out.println(sm.getCollection_time());
+		        shor.setCollection_time(sm.getCollection_time());
+		        
+		        shor.setCompanyid(sm.getCompanyid());
+		        
+		        shor.setSmg(sm.getMsg());
+		        
+		        shor.setPhonenumber(sm.getPhone());
+		        
+		        shor.setPhonenum(sm.getPhonenum());
+		        
+		        if(smsSingleResponse.getErrorMsg().equals("")){
+		        	SimpleDateFormat def = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		        	shor.setSend_time(def.format(new Date()));
+		        	System.out.println("时间:"+shor.getSend_time());
+		        	Integer a = sdao.AddSms(shor);
+		        	if(a != null){
+		        		Thirdcalltongji th = new Thirdcalltongji();
+		        		th.setCompanyid(shor.getCompanyid());
+		        		th.setThirdtypeid(9);
+		        		try {
+		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+		        		th.setDeleted("0");
+		        		sdao.AddThirdcallTongj(th);
+		        	}
+		        	map.put("code", "200");
+		        	map.put("desc", "已发送,数据存储");
+		        }else{
+		        	map.put("code", "0");
+		        	map.put("desc", "数据异常");
+		        	
+		        }
+			}
+			
+			return map;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public Map<String, Object> DayShortMessage(Shortmessage shor) {
@@ -335,6 +429,52 @@ public class Smserviceimp implements Smservice{
 	}
 	
 		return map;
+	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public void sendDateSned(SmsSendRequest sms) {
+		Calendar calendar = Calendar.getInstance();
+		Date date = null;
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+		String a = sim.format(new Date());
+		List<String> phones = null;
+		calendar.add(Calendar.DATE, 1);//把日期往后增加n天.正数往后推,负数往前移动 
+	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+	    a = sim.format(date);//延期后应还时间
+	    System.out.println("a:"+a);
+	    String statu_time = a+" 00:00:01";
+	    String end_time = a+" 23:59:59";
+	    System.out.println(statu_time+"1"+end_time);
+	try {
+		sms.setStatu_time(Timestamps.dateToStamp1(statu_time));
+		sms.setEnd_time(Timestamps.dateToStamp1(end_time));
+	} catch (Exception e) {
+		// TODO: handle exception
+	}
+	
+	List<String> phon = new ArrayList<String>();
+	phones = sdao.AllPhone(sms);
+	PhoneDeal p = new PhoneDeal();
+	for(int i=0;i<phones.size();i++){
+		phon.add(p.decryption(phones.get(i)));
+	}
+	Shortmessage shor = new Shortmessage();
+	shor.setPhonesa(phon);
+	shor.setCompanyid(sms.getCompanyid());
+	shor.setSend_time(Timestamps.stampToDate1(sms.getStatu_time()));
+	shor.setPhonenum(phones.size());
+	List<Shortmessage> sho = new ArrayList<Shortmessage>();
+	shor.setShortmessagesize(sdao.SelectTimeSize(shor));
+	shor.setCollection_time(shor.getSend_time());
+	sho.add(shor);
 	}
 	
 }

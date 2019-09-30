@@ -472,7 +472,7 @@ public class Test {
 		JSONArray communication_city_info = (JSONArray) data.get("communication_city_info");// 通话区域分布(省级)
 		if (communication_city_info.size() > 0) {
 			for (int i = 0; i < communication_city_info.size(); i++) {
-				jsonObject2 = (JSONObject) bill_info.get(i);
+				jsonObject2 = (JSONObject) communication_city_info.get(i);
 				String call_count = jsonObject2.getString("call_count");// 通话次数
 				String called_count = jsonObject2.getString("called_count");// 被叫次数
 				String called_count_per = jsonObject2.getString("called_count_per");// 被叫次数百分比
@@ -507,7 +507,7 @@ public class Test {
 		JSONArray communication_month_info = (JSONArray) data.get("communication_month_info");// 通话月份分布
 		if (communication_month_info.size() > 0) {
 			for (int i = 0; i < communication_month_info.size(); i++) {
-				jsonObject2 = (JSONObject) bill_info.get(i);
+				jsonObject2 = (JSONObject) communication_month_info.get(i);
 				String call_count = jsonObject2.getString("call_count");// 呼叫次数:计算当月总通话次数
 				String call_phone_number_count = jsonObject2.getString("call_phone_number_count");// 通话号码
 				String called_count = jsonObject2.getString("called_count"); // 发送次数
@@ -524,7 +524,7 @@ public class Test {
 		JSONArray communication_time_bucket_info = (JSONArray) data.get("communication_time_bucket_info");// 通话月份分布
 		if (communication_time_bucket_info.size() > 0) {
 			for (int i = 0; i < communication_time_bucket_info.size(); i++) {
-				jsonObject2 = (JSONObject) bill_info.get(i);
+				jsonObject2 = (JSONObject) communication_time_bucket_info.get(i);
 				String call_count = jsonObject2.getString("call_count");// 通话次数
 				String called_count = jsonObject2.getString("called_count");// 被叫次数
 				String called_duration_time = jsonObject2.getString("called_duration_time");// 被叫时长
@@ -540,8 +540,8 @@ public class Test {
 		// communication_time_duration_info
 		JSONArray communication_time_duration_info = (JSONArray) data.get("communication_time_duration_info");// 通话月份分布
 		if (communication_time_duration_info.size() > 0) {
-			for (int i = 0; i < communication_time_bucket_info.size(); i++) {
-				jsonObject2 = (JSONObject) communication_time_bucket_info.get(i);
+			for (int i = 0; i < communication_time_duration_info.size(); i++) {
+				jsonObject2 = (JSONObject) communication_time_duration_info.get(i);
 				String called_count = jsonObject2.getString("called_count");// 通话时间长分布
 				String called_duration_time = jsonObject2.getString("called_duration_time");// 被叫时长
 				String calling_count = jsonObject2.getString("calling_count");// 主叫次数
@@ -575,7 +575,7 @@ public class Test {
 		// emergency_contact_info
 		JSONArray emergency_contact_info = (JSONArray) data.get("emergency_contact_info");// 通话区域分布(城市)
 		if (emergency_contact_info.size() > 0) {
-			for (int i = 0; i < contacts_city_infos.size(); i++) {
+			for (int i = 0; i < emergency_contact_info.size(); i++) {
 				jsonObject2 = (JSONObject) emergency_contact_info.get(i);
 				String relation = jsonObject2.getString("relation");// 关系
 				String name1 = jsonObject2.getString("name");// 姓名
@@ -598,19 +598,19 @@ public class Test {
 				String three_total_call_duration_time = three_month_call_statistics
 						.getString("total_call_duration_time");// 总共通话时长
 				JSONObject six_month_call_statistics = (JSONObject) jsonObject2.get("three_month_call_statistics");// 近六个月通话统计
-				String six_calling_count = three_month_call_statistics.getString("calling_count");// 主叫次数
-				String six_called_count = three_month_call_statistics.getString("calling_count");// 被叫次数
-				String six_total_call_count = three_month_call_statistics.getString("total_call_count");// 总共通话次数
-				String six_calling_duration_time = three_month_call_statistics.getString("calling_duration_time");// 主叫通话时长
-				String six_called_duration_time = three_month_call_statistics.getString("called_duration_time");// 被叫通话次数
-				String six_total_call_duration_time = three_month_call_statistics.getString("total_call_duration_time");// 总共通话时长
+				String six_calling_count = six_month_call_statistics.getString("calling_count");// 主叫次数
+				String six_called_count = six_month_call_statistics.getString("calling_count");// 被叫次数
+				String six_total_call_count = six_month_call_statistics.getString("total_call_count");// 总共通话次数
+				String six_calling_duration_time = six_month_call_statistics.getString("calling_duration_time");// 主叫通话时长
+				String six_called_duration_time = six_month_call_statistics.getString("called_duration_time");// 被叫通话次数
+				String six_total_call_duration_time = six_month_call_statistics.getString("total_call_duration_time");// 总共通话时长
 				JSONObject all_call_statistics = (JSONObject) jsonObject2.get("all_call_statistics");// 总共通话次数
-				String all_calling_count = three_month_call_statistics.getString("calling_count");// 主叫次数
-				String all_called_count = three_month_call_statistics.getString("calling_count");// 被叫次数
-				String all_total_call_count = three_month_call_statistics.getString("total_call_count");// 总共通话次数
-				String all_calling_duration_time = three_month_call_statistics.getString("calling_duration_time");// 主叫通话时长
-				String all_called_duration_time = three_month_call_statistics.getString("called_duration_time");// 被叫通话次数
-				String all_total_call_duration_time = three_month_call_statistics.getString("total_call_duration_time");// 总共通话时长
+				String all_calling_count = all_call_statistics.getString("calling_count");// 主叫次数
+				String all_called_count = all_call_statistics.getString("calling_count");// 被叫次数
+				String all_total_call_count = all_call_statistics.getString("total_call_count");// 总共通话次数
+				String all_calling_duration_time = all_call_statistics.getString("calling_duration_time");// 主叫通话时长
+				String all_called_duration_time = all_call_statistics.getString("called_duration_time");// 被叫通话次数
+				String all_total_call_duration_time = all_call_statistics.getString("total_call_duration_time");// 总共通话时长
 				String workday_duration_time = jsonObject2.getString("workday_duration_time");// 工作日通话时长
 				String offday_duration_time = jsonObject2.getString("offday_duration_time");// 非工作日通话时长
 
@@ -638,7 +638,7 @@ public class Test {
 		}
 		
 		//operator_info
-		JSONObject operator_info = (JSONObject) data.get("applier_info");//运营商基本信息
+		JSONObject operator_info = (JSONObject) data.get("operator_info");//运营商基本信息
 		String phone_number1 = operator_info.getString("phone_number");//本机号码
 		String operator_type = operator_info.getString("operator_type");//运营商类型
 		String name1 = operator_info.getString("name");//姓名
@@ -669,7 +669,9 @@ public class Test {
 	}
 		}
 		
-		JSONArray recharge_info = (JSONArray) operator_info.get("recharge_info");//充值记录
+		
+		//recharge_info
+		JSONArray recharge_info = (JSONArray) data.get("recharge_info");//充值记录
 		if (recharge_info.size() > 0) {
 			for (int i = 0; i < recharge_info.size(); i++) {
 				jsonObject2 = (JSONObject) recharge_info.get(i);
@@ -683,10 +685,10 @@ public class Test {
 		
 		//report_info
 		JSONObject report_info = (JSONObject) data.get("report_info");//报告基本信息
-		String time = operator_info.getString("time");//生成时间
-		String report_no = operator_info.getString("report_no");//报告编号
-		String risk_level = operator_info.getString("risk_level");//欺诈评估风险(旧)
-		String score = operator_info.getString("score");//运营商量化评分
+		String time = report_info.getString("time");//生成时间
+		String report_no = report_info.getString("report_no");//报告编号
+		String risk_level = report_info.getString("risk_level");//欺诈评估风险(旧)
+		String score = report_info.getString("score");//运营商量化评分
 		
 		//sensitive_info
 		JSONObject sensitive_info = (JSONObject) data.get("sensitive_info");//风险信息检查
@@ -706,11 +708,11 @@ public class Test {
 		
 		//social_connectionsInfo
 		JSONObject social_connectionsInfo = (JSONObject) data.get("social_connectionsInfo");//社交关系
-		String phone_count = sensitive_info.getString("phone_count");//联系号码总数
-		String interflow_call_phone_count = sensitive_info.getString("interflow_call_phone_count");//互通号码数
-		String compactness_call_count = sensitive_info.getString("compactness_call_count");//朋友圈紧密联系人数
-		String ephemeral_call_count = sensitive_info.getString("ephemeral_call_count");//疑似骚扰电话个数
-		JSONArray circle_of_friends_locations1 = (JSONArray) sensitive_info.get("circle_of_friends_locations");//朋友圈区域分布
+		String phone_count = social_connectionsInfo.getString("phone_count");//联系号码总数
+		String interflow_call_phone_count = social_connectionsInfo.getString("interflow_call_phone_count");//互通号码数
+		String compactness_call_count = social_connectionsInfo.getString("compactness_call_count");//朋友圈紧密联系人数
+		String ephemeral_call_count = social_connectionsInfo.getString("ephemeral_call_count");//疑似骚扰电话个数
+		JSONArray circle_of_friends_locations1 = (JSONArray) social_connectionsInfo.get("circle_of_friends_locations");//朋友圈区域分布
 		if (circle_of_friends_locations.size() > 0) {
 			for (int i = 0; i < circle_of_friends_locations.size(); i++) {
 				jsonObject2 = (JSONObject) circle_of_friends_locations.get(i);

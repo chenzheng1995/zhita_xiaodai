@@ -277,6 +277,8 @@ public class FinanceServiceimp implements FinanceService{
 		acc.setRename_id(padao.selectPatyId(acc.getTypename()));
 		Integer addId = padao.AddCAccount(acc);
 		System.out.println("减免后的应还金额:"+acc.getTotalamount());
+		Orderdetails orderde = padao.SelectCollectionMoney(acc.getOrderId());
+		acc.setTotalamount(acc.getTotalamount().subtract(orderde.getInterestPenaltySum()));
 		if(addId != null){
 			Integer updateId = padao.UpdateOrdermoney(acc);
 			if(updateId != null){
@@ -1215,6 +1217,8 @@ public class FinanceServiceimp implements FinanceService{
 	public Map<String, Object> DeleteAccorders(Integer id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Accountadjustment orderId = padao.SelectOrderId(id);//查询订单号      调账金额       调账后应还金额
+		Orderdetails orderde = padao.SelectCollectionMoney(orderId.getOrderId());
+		orderId.setTotalamount(orderId.getTotalamount().subtract(orderde.getInterestPenaltySum()));
 		Orderdetails orderdetails = new Orderdetails();
 		orderdetails.setShouldReapyMoney(orderId.getTotalamount().add(orderId.getAmountmoney()));//获取应还金额
 		orderdetails.setOrderId(orderId.getOrderId());

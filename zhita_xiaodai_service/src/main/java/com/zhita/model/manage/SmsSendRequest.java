@@ -37,9 +37,41 @@ public class SmsSendRequest {
     private String end_time;//结束时间
     
     private String collection_time;
+    
+    private Integer years;
+    
+    private Integer months;
+    
+    private Integer days;
+    
+    private Integer da;
 
 
-    public String getCollection_time() {
+    public Integer getYears() {
+		return years;
+	}
+	public void setYears(Integer years) {
+		this.years = years;
+	}
+	public Integer getMonths() {
+		return months;
+	}
+	public void setMonths(Integer months) {
+		this.months = months;
+	}
+	public Integer getDays() {
+		return days;
+	}
+	public void setDays(Integer days) {
+		this.days = days;
+	}
+	public Integer getDa() {
+		return da;
+	}
+	public void setDa(Integer da) {
+		this.da = da;
+	}
+	public String getCollection_time() {
 		return collection_time;
 	}
 	public void setCollection_time(String collection_time) {
