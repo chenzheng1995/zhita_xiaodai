@@ -158,12 +158,12 @@ public class OrderController {
 	 * @param userid
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/queryUserAttesta")
 	public Map<String, Object> queryUserAttesta(Integer userid) {
 		Map<String, Object> map = intUserService.queryUserAttesta(userid);
 		return map;
-	}
+	}*/
 
 	/**
 	 * 机审状态用户 

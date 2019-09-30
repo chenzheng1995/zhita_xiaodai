@@ -42,6 +42,15 @@ public interface IntUserService {
   	
 	//后台管理---用户认证信息
 	public Map<String,Object> queryUserAttesta(Integer userid);
+	
+	//后台管理---用户认证信息
+	public Map<String,Object> queryauthenconcity(Integer userid,Integer page);
+		
+	//后台管理---用户认证信息
+	public Map<String,Object> queryauthenave(Integer userid,Integer page);
+	
+	//后台管理---用户认证信息
+	public Map<String,Object> queryauthenlabel(Integer userid,Integer page);
 
 	public void updateScore(int score, int userId, String shareOfState);
 
