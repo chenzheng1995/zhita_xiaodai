@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhita.dao.manage.BlacklistUserMapper;
 import com.zhita.dao.manage.MaillistMapper;
 import com.zhita.dao.manage.OrdersMapper;
@@ -19,7 +20,6 @@ import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.BlacklistUser;
 import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.Maillist;
-import com.zhita.model.manage.Operator;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Source;
@@ -28,6 +28,7 @@ import com.zhita.model.manage.UserAttestation;
 import com.zhita.model.manage.UserLikeParameter;
 import com.zhita.util.PageUtil2;
 import com.zhita.util.PhoneDeal;
+import com.zhita.util.PostAndGet;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
 
@@ -312,7 +313,7 @@ public class UserServiceImp implements IntUserService{
   	
 	//后台管理---用户认证信息
 	public Map<String,Object> queryUserAttesta(Integer userid){
-		List<Maillist> lsitmaill=maillistMapper.queryByUserid(userid);//通讯录信息
+		List<Maillist> listmaill=maillistMapper.queryByUserid(userid);//通讯录信息
 		PhoneDeal pd = new PhoneDeal();//手机号加密解密工具类
 		UserAttestation userAttestation=userMapper.queryUserAttesta(userid);//用户认证信息对象
 		if(userAttestation!=null){
@@ -326,16 +327,71 @@ public class UserServiceImp implements IntUserService{
 		}
 		
 		Bankcard bankcard=userMapper.queryBankcard(userid);//用户银行卡信息
-		Operator operator=userMapper.queryOperator(userid);//运营商信息
 		
+		//Operator operator=userMapper.queryOperator(userid);//运营商信息
+		PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
+		JSONObject object = JSONObject.parseObject(rString);
 		
 		HashMap<String,Object> map=new HashMap<>();
-		map.put("lsitmaill", lsitmaill);
+		map.put("listmaill", listmaill);
 		map.put("userAttestation", userAttestation);
 		map.put("bankcard",bankcard );
-		map.put("operator", operator);
+		map.put("listapplier", object.getString("listapplier"));//申请人基本信息
+		map.put("listbill", object.getString("listbill"));//消费记录
+		map.put("listcommonth", object.getString("listcommonth"));//通话月份分布
+		map.put("listcombuck", object.getString("listcombuck"));//通话时间段分布
+		map.put("listcomdur", object.getString("listcomdur"));//通话时长分布
+		map.put("listrech", object.getString("listrech"));//充值记录
+		map.put("listrepo", object.getString("listrepo"));//报告基本信息
+		map.put("listsoc", object.getString("listsoc"));//社交关系
+		map.put("top10call", object.getString("top10call"));//通话次数前10 表
+		map.put("top10time", object.getString("top10time"));//通话总时长前10表
+		map.put("top10sing", object.getString("top10sing"));//单次通话时长前10 表
+		map.put("listopera", object.getString("listopera"));//运营商基本信息
+		map.put("listcomdet", object.getString("listcomdet"));//通信检测
+		map.put("listemecon", object.getString("listemecon"));//紧急联系人
+		map.put("listcomcity", object.getString("listcomcity"));//通话区域分布(省级)
+		//map.put("operator", operator);
 		return map;
 	}
+	
+	//后台管理---用户认证信息
+	public Map<String,Object> queryauthenconcity(Integer userid,Integer page){
+		PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthenconcity?userid="+userid+"&page="+page);
+		JSONObject object = JSONObject.parseObject(rString);
+		
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("listconcity", object.getString("listconcity"));//通话区域分布（城市）表
+		map.put("pageUtil", object.getString("pageUtil"));
+		return map;
+	}
+	
+	//后台管理---用户认证信息
+	public Map<String,Object> queryauthenave(Integer userid,Integer page){
+		PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthenave?userid="+userid+"&page="+page);
+		JSONObject object = JSONObject.parseObject(rString);
+			
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("listave", object.getString("listave"));//出行分析表
+		map.put("pageUtil", object.getString("pageUtil"));
+		return map;
+	}
+	
+	//后台管理---用户认证信息
+	public Map<String,Object> queryauthenlabel(Integer userid,Integer page){
+		PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthenconlabel?userid="+userid+"&page="+page);
+		JSONObject object = JSONObject.parseObject(rString);
+				
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("listlabel", object.getString("listlabel"));//通话数据分析表
+		map.put("pageUtil", object.getString("pageUtil"));
+		return map;
+	}
+	
 
 	@Override
 	public void updateScore(int score,int userId,String shareOfState) {

@@ -28,6 +28,7 @@ import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.dao.manage.ThirdpartyInterfaceMapper;
 import com.zhita.dao.manage.ThreeElementsMapper;
 import com.zhita.dao.manage.ZhimiRiskMapper;
+import com.zhita.model.manage.UserJson;
 import com.zhita.service.manage.applycondition.IntApplyconditionService;
 import com.zhita.service.manage.autheninfor.IntAutheninforService;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
@@ -341,6 +342,11 @@ public class OperatorController {
 		if(sampleObject!=null) {
 		String code = sampleObject.getString("code");
 		if (code.equals("200")) {
+			UserJson paramObject = new UserJson();
+			paramObject.setJsonString(str);
+			paramObject.setUserId(userId);
+			String json  = JSONObject.toJSONString(paramObject);
+			pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
 			String attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
 			int number = operatorService.updateOperatorJson(str, userId);

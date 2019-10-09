@@ -85,6 +85,30 @@ public class UserController {
 		return map;
 	}
 	
+	//后台管理---用户认证信息
+	@ResponseBody
+	@RequestMapping("/queryauthenconcity")
+	public Map<String,Object> queryauthenconcity(Integer userid,Integer page){
+		Map<String,Object> map=intUserService.queryauthenconcity(userid,page);
+		return map;
+	}
+	
+	//后台管理---用户认证信息
+	@ResponseBody
+	@RequestMapping("/queryauthenave")
+	public Map<String,Object> queryauthenave(Integer userid,Integer page){
+		Map<String,Object> map=intUserService.queryauthenave(userid,page);
+		return map;
+	}
+	
+	//后台管理---用户认证信息
+	@ResponseBody
+	@RequestMapping("/queryauthenlabel")
+	public Map<String,Object> queryauthenlabel(Integer userid,Integer page){
+		Map<String,Object> map=intUserService.queryauthenlabel(userid,page);
+		return map;
+	}
+	
 	// 判断用户是否年龄或者地域不允许借钱
 	@RequestMapping("/getModel")
 	@ResponseBody
