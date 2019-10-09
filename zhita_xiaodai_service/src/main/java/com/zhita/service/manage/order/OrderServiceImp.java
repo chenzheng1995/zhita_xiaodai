@@ -37,7 +37,6 @@ public class OrderServiceImp implements IntOrderService {
 	private OrdersMapper ordersMapper;
 	@Autowired
 	private UserMapper userMapper;
-	@Autowired
 
 	// 后台管理----机审订单 (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
 	public Map<String, Object> queryatrOrders(OrderQueryParameter orderQueryParameter) {
