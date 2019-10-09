@@ -37,6 +37,7 @@ public class OrderServiceImp implements IntOrderService {
 	private OrdersMapper ordersMapper;
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
 
 	// 后台管理----机审订单 (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
 	public Map<String, Object> queryatrOrders(OrderQueryParameter orderQueryParameter) {
@@ -816,6 +817,14 @@ public class OrderServiceImp implements IntOrderService {
 		int num = userMapper.updateShareOfState(sysuserid, operationTime, userid);
 		return num;
 	}
+	
+	/**
+	 * 通过用户id查询该用户手机号
+	 */
+	public String queryPhone(Integer userid){
+		return userMapper.queryPhone(userid);
+	}
+	
 
 	/**
 	 * 人审不通过按钮

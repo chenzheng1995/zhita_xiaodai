@@ -125,6 +125,11 @@ public interface UserMapper {
 	int updateShareOfState(Integer sysuserid,String operationTime,Integer userid);
 	
 	/**
+	 * 通过用户id查询该用户手机号
+	 */
+	String queryPhone(Integer userid);
+	
+	/**
 	 * 人审不通过按钮
 	 */
 	int updateShareOfStateNo(Integer sysuserid,String operationTime,Integer userid);
