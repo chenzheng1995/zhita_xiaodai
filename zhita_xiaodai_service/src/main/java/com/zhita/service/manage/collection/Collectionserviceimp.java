@@ -221,6 +221,10 @@ public class Collectionserviceimp implements Collectionservice{
 				
 				int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getRealityAccount());
 				if(a==0){
+					System.out.println("开始:"+orders.get(i).getOrderId());
+					System.out.println(orders.get(i).getRealityBorrowMoney()+":1");
+					System.out.println(orders.get(i).getInterestPenaltySum()+":1");
+					System.out.println(orders.get(i).getTechnicalServiceMoney()+":1");
 					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
 				}
 				

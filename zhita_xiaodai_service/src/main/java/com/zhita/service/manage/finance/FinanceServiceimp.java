@@ -345,7 +345,26 @@ public class FinanceServiceimp implements FinanceService{
 					if(ordetails.getInterestPenaltySum() == null){
 						ordetails.setInterestPenaltySum(new BigDecimal(0));
 					}
-					ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
+					
+					int a = ordetails.getRealityBorrowMoney().compareTo(ordetails.getMakeLoans());
+					
+					if(ordetails.getInterestPenaltySum()==null){
+						ordetails.setInterestPenaltySum(new BigDecimal(0));
+					}
+					System.out.println("金额:"+ ordetails.getRealityBorrowMoney()+":A:"+ordetails.getMakeLoans());
+					if(a==0){
+						System.out.println("后置");
+//						BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
+//						orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+//						System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+//						System.out.println(orders.get(i).getOrder_money());
+						ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()).add(ordetails.getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+						System.out.println("应还金额444:"+ordetails.getOrder_money());
+					}else{
+						System.out.println("前置");
+						ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//放款金额 + 利息
+					}
+					
 					ordetails.setInterestPenaltySum(ordetails.getInterestSum().add(ordetails.getInterestPenaltySum()));//含逾期总利息
 					ordetails.setShouldReturnTime(Timestamps.stampToDate(ordetails.getShouldReturnTime()));
 					map.put("aaa", ordetails.getInterestPenaltySum());
