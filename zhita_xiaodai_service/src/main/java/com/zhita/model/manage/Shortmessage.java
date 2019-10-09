@@ -18,7 +18,7 @@ public class Shortmessage {
 	
 	private Integer companyid;
 	
-	private String smg;//内容
+	private String msg;//内容
 	
 	private String collection_time;//逾期前应还时间
 	
@@ -112,12 +112,12 @@ public class Shortmessage {
 		this.companyid = companyid;
 	}
 
-	public String getSmg() {
-		return smg;
+	public String getMsg() {
+		return msg;
 	}
 
-	public void setSmg(String smg) {
-		this.smg = smg;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 	public String getCollection_time() {

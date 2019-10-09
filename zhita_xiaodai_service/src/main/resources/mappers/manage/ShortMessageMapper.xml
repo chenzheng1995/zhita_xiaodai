@@ -13,7 +13,7 @@
 				smg,
 				collection_time,
 				successnum
-				)VALUES(#{send_time},#{phonenumber},#{phonenum},#{companyid},#{smg},#{collection_time},#{successnum})
+				)VALUES(#{send_time},#{phonenumber},#{phonenum},#{companyid},#{msg},#{collection_time},#{successnum})
 			</insert>
 			
 			

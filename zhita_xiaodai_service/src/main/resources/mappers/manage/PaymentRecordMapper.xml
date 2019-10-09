@@ -341,7 +341,7 @@
 					</if>
 			  	</where>
 			  	group by o.id 
-			  	order by o.id desc
+			  	order by ra.repaymentDate desc
 		  		limit #{page},#{pagesize}
 			  </select>
 			  
