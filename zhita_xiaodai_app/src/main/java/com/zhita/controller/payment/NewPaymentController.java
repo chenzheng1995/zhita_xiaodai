@@ -908,33 +908,44 @@ public class NewPaymentController {
     	pay.setPaymentbtiao(paymentname.getLoanSource());
     	 Map<String, Object> mappam = newsim.Newpayment(new BigDecimal(TransAmt), orderNumber, userId, companyId);
     	 String msg = (String) mappam.get("msg");
-    	 if(StringUtils.isEmpty(msg)||msg.equals("代付失败")){
-    		String orderStatus = (String) mappam.get("msg");
- 			chanser.DeleteOrderNumber(orderNumber,orderStatus);
- 			mappam.put("code", 0);
- 			mappam.put("msg", orderStatus);
- 			mappam.put("Ncode", 0);
- 			mappam.put("desc", "借款失败");
- 			mappam.put("code", 0);
- 			return map1;
- 			
-    		}else{
-    			redis.set("payorderId", String.valueOf(orderId));
-    			pay.setPaymentbtiao(paymentname.getLoanSource());
-    			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
-    			pay.setPipelinenumber(pipelnen);
-    			pay.setOrderId(orderId);
-    			pay.setStatus("支付失败");
-    			int i = chanser.AddPayment_record(pay);
-    			if(i == 1){
-    				mappam.put("code", 200);
-    				mappam.put("msg", "放款成功，可能需要几分钟到账");
-    				mappam.put("Ncode", 2000);
-    				mappam.put("desc", "借款成功");
-    			}
-    			return mappam;
-    			
-    		}
+    	 if(msg==null) {
+  			chanser.DeleteOrderNumber(orderNumber,"代付失败");
+  			map1.put("code", 0);
+  			map1.put("msg", "代付失败");
+  			map1.put("Ncode", 0);
+  			map1.put("desc", "借款失败");
+  			map1.put("code", 0);
+  			return map1; 
+    	 }else {
+        	 if(msg.equals("代付失败")){
+         		String orderStatus = (String) mappam.get("msg");
+      			chanser.DeleteOrderNumber(orderNumber,orderStatus);
+      			map1.put("code", 0);
+      			map1.put("msg", orderStatus);
+      			map1.put("Ncode", 0);
+      			map1.put("desc", "借款失败");
+      			map1.put("code", 0);
+      			return map1;
+      			
+         		}else{
+         			redis.set("payorderId", String.valueOf(orderId));
+         			pay.setPaymentbtiao(paymentname.getLoanSource());
+         			String pipelnen = "lsn_"+(String)mappam.get("tradeNo");
+         			pay.setPipelinenumber(pipelnen);
+         			pay.setOrderId(orderId);
+         			pay.setStatus("支付失败");
+         			int i = chanser.AddPayment_record(pay);
+         			if(i == 1){
+         				mappam.put("code", 200);
+         				mappam.put("msg", "放款成功，可能需要几分钟到账");
+         				mappam.put("Ncode", 2000);
+         				mappam.put("desc", "借款成功");
+         			}
+         			return mappam;
+         			
+         		}
+    	 }
+
     	}
 	    	}else {
 	    		redis.delkey("ChanpaySenduserId"+userId);//删除字段

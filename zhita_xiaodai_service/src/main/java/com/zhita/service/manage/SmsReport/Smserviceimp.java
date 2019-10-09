@@ -80,7 +80,7 @@ public class Smserviceimp implements Smservice{
 		        
 		        shor.setCompanyid(sm.getCompanyid());
 		        
-		        shor.setSmg(sm.getMsg());
+		        shor.setMsg(sm.getMsg());
 		        
 		        shor.setPhonenumber(sm.getPhone());
 		        
@@ -96,7 +96,7 @@ public class Smserviceimp implements Smservice{
 		        		th.setCompanyid(shor.getCompanyid());
 		        		th.setThirdtypeid(9);
 		        		try {
-		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+		        			th.setDate(Timestamps.dateToStamp1(def.format(new Date())));
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
@@ -160,7 +160,7 @@ public class Smserviceimp implements Smservice{
 		        
 		        shor.setCompanyid(sm.getCompanyid());
 		        
-		        shor.setSmg(sm.getMsg());
+		        shor.setMsg(sm.getMsg());
 		        
 		        shor.setPhonenumber(sm.getPhone());
 		        
@@ -176,7 +176,7 @@ public class Smserviceimp implements Smservice{
 		        		th.setCompanyid(shor.getCompanyid());
 		        		th.setThirdtypeid(9);
 		        		try {
-		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+		        			th.setDate(Timestamps.dateToStamp1(def.format(new Date())));
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
