@@ -97,9 +97,8 @@
 				INSERT INTO `thirdcalltongji`(
 					companyid,
 					thirdtypeid,
-					date,
-					deleted
-				)VALUES(#{companyid},#{thirdtypeid},#{date},#{deleted})
+					date
+				)VALUES(#{companyid},#{thirdtypeid},#{date})
 			</insert>
 			
 			

@@ -330,7 +330,7 @@ public class UserServiceImp implements IntUserService{
 		
 		//Operator operator=userMapper.queryOperator(userid);//运营商信息
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
+		String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
 		JSONObject object = JSONObject.parseObject(rString);
 		
 		HashMap<String,Object> map=new HashMap<>();
@@ -359,7 +359,7 @@ public class UserServiceImp implements IntUserService{
 	//后台管理---用户认证信息
 	public Map<String,Object> queryauthenconcity(Integer userid,Integer page){
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthenconcity?userid="+userid+"&page="+page);
+		String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/authen/queryauthenconcity?userid="+userid+"&page="+page);
 		JSONObject object = JSONObject.parseObject(rString);
 		
 		HashMap<String,Object> map=new HashMap<>();
@@ -371,7 +371,7 @@ public class UserServiceImp implements IntUserService{
 	//后台管理---用户认证信息
 	public Map<String,Object> queryauthenave(Integer userid,Integer page){
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthenave?userid="+userid+"&page="+page);
+		String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/authen/queryauthenave?userid="+userid+"&page="+page);
 		JSONObject object = JSONObject.parseObject(rString);
 			
 		HashMap<String,Object> map=new HashMap<>();
@@ -383,7 +383,7 @@ public class UserServiceImp implements IntUserService{
 	//后台管理---用户认证信息
 	public Map<String,Object> queryauthenlabel(Integer userid,Integer page){
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthenconlabel?userid="+userid+"&page="+page);
+		String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/authen/queryauthenconlabel?userid="+userid+"&page="+page);
 		JSONObject object = JSONObject.parseObject(rString);
 				
 		HashMap<String,Object> map=new HashMap<>();

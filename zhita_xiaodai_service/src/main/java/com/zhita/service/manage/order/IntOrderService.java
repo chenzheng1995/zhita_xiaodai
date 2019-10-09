@@ -8,6 +8,7 @@ import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.Thirdcalltongji;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserLikeParameter;
 
@@ -114,6 +115,11 @@ public interface IntOrderService {
 	 * 人审通过按钮
 	 */
 	public int updateShareOfState(Integer sysuserid,Integer userid);
+	
+	/**
+	 * 通过用户id查询该用户手机号
+	 */
+	public String queryPhone(Integer userid);
 	
 	/**
 	 * 人审不通过按钮

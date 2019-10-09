@@ -816,6 +816,14 @@ public class OrderServiceImp implements IntOrderService {
 		int num = userMapper.updateShareOfState(sysuserid, operationTime, userid);
 		return num;
 	}
+	
+	/**
+	 * 通过用户id查询该用户手机号
+	 */
+	public String queryPhone(Integer userid){
+		return userMapper.queryPhone(userid);
+	}
+	
 
 	/**
 	 * 人审不通过按钮
