@@ -84,6 +84,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> AllPaymentrecord(Payment_record payrecord) {
+		Integer a = payrecord.getPage();
 		PhoneDeal p = new PhoneDeal();
 		if(payrecord.getPhone() != null){
 			if(payrecord.getPhone().length()!=0){
@@ -99,10 +100,11 @@ public class FinanceServiceimp implements FinanceService{
 				// TODO: handle exception
 			}
 		}
+		
+		payrecord.setProfessionalWork("放款");
 		Integer totalCount = padao.TotalCountPayment(payrecord);
 		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
 		payrecord.setPage(pages.getPage());
-		payrecord.setProfessionalWork("放款");
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Payment_record> payments = padao.PaymentAll(payrecord);
 		for(int i=0;i<payments.size();i++){
@@ -117,8 +119,10 @@ public class FinanceServiceimp implements FinanceService{
 		
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		pages.setPage(a);
 		map.put("PaymentRecord", payments);
 		map.put("pageutil", pages);
+		
 		return map;
 	}
 
@@ -127,6 +131,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Huankuan(Payment_record payrecord) {
+		Integer a = payrecord.getPage();
 		PhoneDeal p = new PhoneDeal();
 		if(payrecord.getPhone() != null){
 			if(payrecord.getPhone().length()!=0){
@@ -157,6 +162,7 @@ public class FinanceServiceimp implements FinanceService{
 			rapay.get(i).setPhone(tm.mobileEncrypt(rapay.get(i).getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		pages.setPage(a);
 		map.put("Repayment", rapay);
 		map.put("pageutil", pages);
 		return map;
@@ -170,18 +176,16 @@ public class FinanceServiceimp implements FinanceService{
 		orderNumber.setCompanyId(orderNumber.getCompanyId());
 		PhoneDeal p = new PhoneDeal();
 		Orderdetails ordea = padao.SelectPaymentOrder(orderNumber);
-		
 		int a = ordea.getRealityBorrowMoney().compareTo(ordea.getMakeLoans());
 		System.out.println("状态:"+a+"金额111CC:"+ordea.getRealityBorrowMoney()+"金额2222BBB:"+ordea.getMakeLoans());
 		if(a==0){
 			System.out.println("后置");
-			BigDecimal aa =ordea.getInterestPenaltySum().add(ordea.getTechnicalServiceMoney());
-			ordea.setOrder_money(ordea.getShouldReapyMoney().add(aa));
+			ordea.setOrder_money(ordea.getRealityBorrowMoney().add(ordea.getInterestInAll()).add(ordea.getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
 			System.out.println(ordea.getRealityBorrowMoney()+"CCC"+ordea.getInterestSum()+"CCCC11"+ordea.getInterestPenaltySum()+"金额:"+ordea.getTechnicalServiceMoney());
 			System.out.println(ordea.getOrder_money());
 		}else{
 			System.out.println("前置");
-			ordea.setOrder_money(ordea.getInterestPenaltySum().add(ordea.getRealityBorrowMoney()));//应还总金额
+			ordea.setOrder_money(ordea.getInterestPenaltySum().add(ordea.getShouldReapyMoney()));//应还总金额
 		}
 		
 		
@@ -278,8 +282,9 @@ public class FinanceServiceimp implements FinanceService{
 		Integer addId = padao.AddCAccount(acc);
 		System.out.println("减免后的应还金额:"+acc.getTotalamount());
 		Orderdetails orderde = padao.SelectCollectionMoney(acc.getOrderId());
-		acc.setTotalamount(acc.getTotalamount().subtract(orderde.getInterestPenaltySum()));
+		acc.setTotalamount(acc.getTotalamount().subtract(orderde.getInterestPenaltySum()).subtract(padao.getOrdersTechnicalserviceMoney(acc.getOrderId())));
 		if(addId != null){
+			
 			Integer updateId = padao.UpdateOrdermoney(acc);
 			if(updateId != null){
 				map.put("code", 200);
@@ -381,6 +386,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectOrderAccount(Orderdetails ordetail) {
+		Integer a = ordetail.getPage();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		PhoneDeal p = new PhoneDeal();
 		if(ordetail.getPhone() != null){
@@ -414,7 +420,9 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setTotalamount(ac.getTotalamount());
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		pages.setPage(a);
 		map.put("Accountadjustment", accounts);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -426,6 +434,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectNoMoney(Orderdetails ordetail) {
+		Integer a = ordetail.getPage();
 		ordetail.setAccounttime(System.currentTimeMillis()+"");
 		PhoneDeal p = new PhoneDeal();
 		if(ordetail.getPhone() != null){
@@ -453,7 +462,9 @@ public class FinanceServiceimp implements FinanceService{
 			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		pages.setPage(a);
 		map.put("Accountadjustment", accounts);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -462,6 +473,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectOkMoney(Orderdetails ordetail) {
+		Integer a = ordetail.getPage();
 		PhoneDeal p = new PhoneDeal();
 		if(ordetail.getPhone() != null){
 			if(ordetail.getPhone().length()!=0){
@@ -497,7 +509,9 @@ public class FinanceServiceimp implements FinanceService{
 			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		pages.setPage(a);
 		map.put("Accountadjustment", accounts);
+		map.put("pageutil", pages);
 		return map;
 	}
 
@@ -506,6 +520,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Selectoffine(Orderdetails ordetail) {
+		Integer a = ordetail.getPage();
 		PhoneDeal p = new PhoneDeal();
 		if(ordetail.getPhone() != null){
 			if(ordetail.getPhone().length()!=0){
@@ -533,7 +548,10 @@ public class FinanceServiceimp implements FinanceService{
 				under.get(i).setThname(padao.RepaymentName(under.get(i).getChannel()));
 			}
 		}
+		pages.setPage(a);
+		map.put("pageutil", pages);
 		map.put("Undertheline", under);
+		
 		return map;
 	}
 
@@ -579,6 +597,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectBankDeductOrders(Bankdeductions bank) {
+		Integer a = bank.getPage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(bank.getPhone() != null){
@@ -607,6 +626,8 @@ public class FinanceServiceimp implements FinanceService{
 			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			orders.get(i).setPhone(tm.mobileEncrypt(orders.get(i).getPhone()));
 		}
+		pages.setPage(a);
+		map.put("pageutil", pages);
 		map.put("Orderdetails", orders);
 		return map;
 	}
@@ -954,6 +975,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> SelectXiaOrder(Orderdetails ord) {
+		Integer ac = ord.getPage();
 		PhoneDeal p = new PhoneDeal();
 		if(ord.getPhone() != null){
 			if(ord.getPhone().length()!=0){
@@ -984,6 +1006,8 @@ public class FinanceServiceimp implements FinanceService{
 			unders.get(i).setSedn_time(Timestamps.stampToDate(unders.get(i).getSedn_time()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		pages.setPage(ac);
+		map.put("pageutil", pages);
 		map.put("Undertheline", unders);
 		return map;
 	}
@@ -1065,6 +1089,7 @@ public class FinanceServiceimp implements FinanceService{
 
 	@Override
 	public Map<String, Object> Delaylabor(Offlinedelay of) {
+		Integer a = of.getPage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		TuoMinUtil tm = new TuoMinUtil();
@@ -1095,6 +1120,7 @@ public class FinanceServiceimp implements FinanceService{
 			ofa.get(i).setDelay_time(Timestamps.stampToDate(ofa.get(i).getShouldReturnTime()));
 			ofa.get(i).setOperating_time(Timestamps.stampToDate(ofa.get(i).getOperating_time()));
 		}
+		pages.setPage(a);
 		map.put("Offlinedelay", ofa);
 		map.put("pageutil", pages);
 		return map;

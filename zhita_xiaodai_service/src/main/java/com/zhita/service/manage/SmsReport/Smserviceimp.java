@@ -452,30 +452,42 @@ public class Smserviceimp implements Smservice{
 	    System.out.println("a:"+a);
 	    String statu_time = a+" 00:00:01";
 	    String end_time = a+" 23:59:59";
-	    System.out.println(statu_time+"1"+end_time);
-	try {
-		sms.setStatu_time(Timestamps.dateToStamp1(statu_time));
-		sms.setEnd_time(Timestamps.dateToStamp1(end_time));
-	} catch (Exception e) {
-		// TODO: handle exception
+	    SimpleDateFormat sims = new SimpleDateFormat("HH");
+	    sms.setStatu_time(sims.format(new Date())+":00");
+	    sms.setEnd_time(sims.format(new Date())+":59");
+	    String msg = sdao.getSelectMsg(sms);
+	    if(msg!=null){
+	    	if(msg.length()!=0){
+	    		
+	    		sms.setMsg(msg);
+			    System.out.println(statu_time+"1"+end_time);
+			try {
+				sms.setStatu_time(Timestamps.dateToStamp1(statu_time));
+				sms.setEnd_time(Timestamps.dateToStamp1(end_time));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			List<String> phon = new ArrayList<String>();
+			phones = sdao.AllPhone(sms);
+			PhoneDeal p = new PhoneDeal();
+			for(int i=0;i<phones.size();i++){
+				phon.add(p.decryption(phones.get(i)));
+			}
+			Shortmessage shor = new Shortmessage();
+			shor.setPhonesa(phon);
+			shor.setCompanyid(sms.getCompanyid());
+			shor.setSend_time(Timestamps.stampToDate1(sms.getStatu_time()));
+			shor.setPhonenum(phones.size());
+			List<Shortmessage> sho = new ArrayList<Shortmessage>();
+			shor.setShortmessagesize(sdao.SelectTimeSize(shor));
+			shor.setCollection_time(shor.getSend_time());
+			sho.add(shor);
+	    	}
+	    
 	}
 	
-	List<String> phon = new ArrayList<String>();
-	phones = sdao.AllPhone(sms);
-	PhoneDeal p = new PhoneDeal();
-	for(int i=0;i<phones.size();i++){
-		phon.add(p.decryption(phones.get(i)));
-	}
-	Shortmessage shor = new Shortmessage();
-	shor.setPhonesa(phon);
-	shor.setCompanyid(sms.getCompanyid());
-	shor.setSend_time(Timestamps.stampToDate1(sms.getStatu_time()));
-	shor.setPhonenum(phones.size());
-	List<Shortmessage> sho = new ArrayList<Shortmessage>();
-	shor.setShortmessagesize(sdao.SelectTimeSize(shor));
-	shor.setCollection_time(shor.getSend_time());
-	sho.add(shor);
-	}
+}
 	
 }
 	

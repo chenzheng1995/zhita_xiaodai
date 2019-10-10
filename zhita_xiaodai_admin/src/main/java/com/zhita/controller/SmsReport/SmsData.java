@@ -2,15 +2,12 @@ package com.zhita.controller.SmsReport;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.zhita.model.manage.SmsSendRequest;
 import com.zhita.service.manage.SmsReport.Smservice;
 
@@ -42,9 +39,10 @@ public class SmsData {
 	                ++count;
 	                serve.sendDateSned(sms);
 	                System.out.println("时间=" + new Date() + " 执行了" + count + "次"); // 1次
+	                
 	            }
 	        };
-
+	        
 	        //设置执行时间
 	        Calendar calendar = Calendar.getInstance();
 	        int year = calendar.get(Calendar.YEAR);
@@ -55,17 +53,14 @@ public class SmsData {
 	        Date date = calendar.getTime();
 	        Timer timer = new Timer();
 	        System.out.println(date);
-	        
+	        System.out.println("设置时间:");
 //	        int period = 3600 * 1000;
-	        int period = 1 * 1000;
+	        int period = 3600 * 2000;
 	        //每天的date时刻执行task，每隔一小时重复执行
-	        //timer.schedule(task, date, period);
+	        timer.schedule(task, date, period);
 	        //每天的date时刻执行task, 仅执行一次
-	        timer.schedule(task, date);
+	        //timer.schedule(task, date);
 	    }
 
-	    public static void main(String[] args) {
-	      //  showTimer(years, months, days, da);
-	    }
 
 }

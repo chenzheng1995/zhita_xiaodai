@@ -314,4 +314,7 @@ public interface PaymentRecordMapper {
     
     Integer getUserid(Integer id);
     
+    
+    BigDecimal getOrdersTechnicalserviceMoney(Integer orderId);
+    
 }
