@@ -1524,4 +1524,9 @@
  			<select id="getOrdersTechnicalserviceMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
  				select technicalServiceMoney from orderdetails where orderId = #{orderId}
  			</select>
+ 			
+ 			
+ 			<select id="getRepayment" parameterType="java.lang.String" resultType="com.zhita.model.manage.Repayment">
+ 				select * from repayment where reoaybtai = #{reoaybtai} 
+ 			</select>
 </mapper>

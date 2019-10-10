@@ -143,80 +143,34 @@ public class NewPaymentController {
 	//还款
 	@ResponseBody
 	@RequestMapping(value = "/callback")
-    public void callback(HttpServletRequest request,HttpServletResponse response) {
-	 RedisClientUtil redis = new RedisClientUtil();
-	 System.out.println("快还钱!!!!");
-	 CommonUtils com = new CommonUtils();
-	 Map<String, String> requestmap = com.getParameterMap(request);
-	 String resultSign= SignUtils.getSign(requestmap,ZpayConfig.NEW_MD5_KEY).toUpperCase();
-	 requestmap.put("sign",resultSign);
-	 try {
-		 String responseStr = "ERROR";
-			 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
-				 String tradeNo = requestmap.get("tradeNo");
-				 String status = requestmap.get("status");
-				 String orderId = requestmap.get("orderId");
-				 //商户订单号
-			     String orderIds = redis.get("orderId"+orderId);//获取订单编号
-				 Orders order = newsim.getOrders(orderIds);
-				 if(order!=null){
-					 if(order.getOrderStatus().equals("3")){
-						 responseStr = "SUCCESS"; 
-					 }else{
-						 Repayment repay = new Repayment();
-					     Integer oid = newsim.getOrderId(orderIds);
-					     repay.setOrderid(oid);
-					     repay.setPipelinenumber("Rsn_"+tradeNo);
-				    	 if(status.equals("SUCCESS")){
-				    		 Integer updateId = newsim.UpdateRepayment(repay);
-				    		 if(updateId != null){
-				    			 Orders ord = new Orders();
-				    	    	 ord.setOrderNumber(orderIds);
-				    	    	 servie.UpdateOrders(ord);
-				    	    	 responseStr = "SUCCESS";
-				    		 }
-				    	 }else if(status.equals("PAYERROR")){
-				    		 responseStr = "ERROR";
-				    	 }
+    public Object callback(HttpServletRequest request,HttpServletResponse response) {
+		CommonUtils com = new CommonUtils();
+		PhoneDeal p = new PhoneDeal();
+		System.out.println("还钱回调,111111111");
+		Map<String, String> requestmap = com.getParameterMap(request);
+		String resultSign= SignUtils.getSign(requestmap,ZpayConfig.NEW_MD5_KEY).toUpperCase();
+		requestmap.put("sign",resultSign);
+		 try {
+			 String responseStr = "ERROR";
+			 String code = request.getParameter("code");
+			 if(code.equals("SUCCESS")){
+				 
+				 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
+					 String orderId = requestmap.get("orderId");
+					 Repayment repayment = chanpayservice.getRepayment(orderId);
+					 if(repayment != null){
 						 
-				    	 responseStr = "SUCCESS"; 
 					 }
 				 }
 			 }
-		 
-		 PrintWriter writer = response.getWriter();
-		 writer.print(responseStr);
-		 writer.close();
-	} catch (Exception e) {
-		// TODO: handle exception
-	}
-	
-//	 String code = request.getParameter("code");
-//     String msg = request.getParameter("msg");
-//     String orderId = request.getParameter("orderId");
-//     String tradeNo = request.getParameter("tradeNo");
-//     String status = request.getParameter("status");
-//     String biaoshiid = redis.get("userId"+tradeNo);
-//     String orderIds = redis.get("orderId"+biaoshiid);//获取订单编号
-//     System.out.println("收款回调接收到的参数:"+code+",返回放款状态:"+status+",msg:"+msg+",orderId:"+orderId+",tradeNo:"+tradeNo+",状态:"+status);
-//     
-//     Map<String, Object> map = new HashMap<String, Object>();
-//     Repayment repay = new Repayment();
-//     Integer oid = newsim.getOrderId(orderIds);
-//     repay.setOrderid(oid);
-//     repay.setPipelinenumber("Rsn_"+tradeNo);
-//     Integer updateId = newsim.UpdateRepayment(repay);
-//     if(updateId != null){
-//    	 Orders ord = new Orders();
-//    	 ord.setOrderNumber(orderIds);
-//    	 servie.UpdateOrders(ord);
-//    	 map.put("msg", "数据插入成功");
-//         map.put("Code", "200");
-//     } else {
-//         map.put("msg", "数据插入失败");
-//         map.put("Code", "405");
-//     }
-//     return "SUCCESS";
+			 
+			 PrintWriter writer = response.getWriter();
+			 writer.print(responseStr);
+			 writer.close();
+		} catch (Exception e) {
+			System.out.println("aaaa");
+		}
+		 return "SUCCESS";
 }
 	
 	

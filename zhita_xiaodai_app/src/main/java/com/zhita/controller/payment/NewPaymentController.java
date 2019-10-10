@@ -41,6 +41,7 @@ import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.ReturnChanpay;
 import com.zhita.model.manage.SmsSendRequest;
+import com.zhita.model.manage.Thirdcalltongji;
 import com.zhita.model.manage.Thirdparty_interface;
 import com.zhita.service.manage.SmsReport.Smservice;
 import com.zhita.service.manage.Statistic.Statisticsservice;
@@ -1147,7 +1148,17 @@ public class NewPaymentController {
 				ReturnChanpay retu = JSON.parseObject(result,ReturnChanpay.class);
 				String code = retu.getAcceptStatus();
 				if(code.equals("S")){
-					
+					Thirdcalltongji th = new Thirdcalltongji();
+	        		th.setCompanyid(companyId);
+	        		th.setThirdtypeid(2);
+	        		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
+	        		try {
+	        			th.setDate(Timestamps.dateToStamp1(simpleDateFormat.format(new Date())));
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+	        		th.setDeleted("0");
+	        		sdao.AddThirdcallTongj(th);
 						map.put("OriAuthTrxId", TrxId);
 						map.put("code", "200");
 						map.put("Ncode", 2000);

@@ -494,6 +494,22 @@ public class Smserviceimp implements Smservice{
 	}
 	System.out.println("出接口");
 }
+
+
+
+
+
+
+
+
+
+	@Override
+	public void sendBank() {
+		
+		
+		
+		
+	}
 	
 }
 	

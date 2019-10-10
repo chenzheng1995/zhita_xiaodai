@@ -447,6 +447,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
 		    					}
 		    					map.put("Ncode","2000");
+		    					map.put("OriAuthTrxId", 1);
 		    					map.put("code","200");
 		    					map.put("msg", state);
 					    		map.put("desc", "认证成功");

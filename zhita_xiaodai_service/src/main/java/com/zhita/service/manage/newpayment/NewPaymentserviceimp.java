@@ -142,10 +142,7 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 		String a =  stdao.SelectLoanStatus(loan);//放款状态  1  开启    2 关闭
 		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		String billId = sim.format(new Date());
-		String orderId = stdao.SelectOrderNumber(userId);//订单编号
 		
-		RedisClientUtil redis = new RedisClientUtil();
-		redis.setOrderId("orderId"+billId, orderId);
 		if(a.equals("1")){
 		
 		if(ban.getTiedCardPhone() != null && ban.getBankcardName() != null && ban.getCstmrnm() != null && ban.getBankcardTypeName() != null
