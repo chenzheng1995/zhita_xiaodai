@@ -391,21 +391,21 @@
 		
 		<select id="CollectionOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select count(c.orderId) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and 
-			o.orderCreateTime between #{start_time} and #{end_time} group by c.orderId
+			c.collectionTime between #{start_time} and #{end_time} group by c.orderId
 		</select>
 		
 		
 		
 		<select id="CollectionNumSSA" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select count(c.collectionId) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and
-			o.orderCreateTime between #{start_time} and #{end_time} 
+			c.collectionTime between #{start_time} and #{end_time} 
 		</select>
 		
 		
 		
 		<select id="OrderOKCollection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orders">
 			select count(o.id) from orders o,collection c where o.id = c.orderId and o.companyId = #{companyId} and o.orderStatus= #{orderStatus}
-			and o.orderCreateTime  between #{start_time} and #{end_time} 
+			and c.collectionTime  between #{start_time} and #{end_time} 
 		</select>
 		
 		

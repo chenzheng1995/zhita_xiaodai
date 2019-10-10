@@ -33,6 +33,7 @@ import com.zhita.controller.payment.util.HttpClient;
 import com.zhita.controller.payment.util.SignUtils;
 import com.zhita.controller.payment.zpay.ZpayConfig;
 import com.zhita.dao.manage.OrderdetailsMapper;
+import com.zhita.dao.manage.SmsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
@@ -142,6 +143,8 @@ public class NewPaymentController {
 	
 	
 	
+	@Autowired
+	private SmsMapper sdao;
 	
 	
 	
