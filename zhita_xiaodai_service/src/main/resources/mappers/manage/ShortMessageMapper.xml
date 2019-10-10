@@ -102,10 +102,12 @@
 			</insert>
 			
 			
-			<select id="getSelectMsg" parameterType="com.zhita.model.manage.SmsSendRequest" resultType="java.lang.String">
-				select te.content from textmessaging_template te,over_textmessaging_setting ov where ov.templateid = te.id
+			<select id="getSelectMsg" parameterType="com.zhita.model.manage.SmsSendRequest" resultType="com.zhita.model.manage.SmsSendRequest">
+				select ov.overdueday,te.content from textmessaging_template te,over_textmessaging_setting ov where ov.templateid = te.id
 				and ov.timing between #{statu_time} and #{end_time}
 			</select>
+			
+			
 			
 			
 </mapper>

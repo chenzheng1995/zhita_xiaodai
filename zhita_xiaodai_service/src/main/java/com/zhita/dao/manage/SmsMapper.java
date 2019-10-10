@@ -46,5 +46,7 @@ public interface SmsMapper {
 	Integer AddThirdcallTongj(Thirdcalltongji th);
 	
 	
-	String getSelectMsg(SmsSendRequest sm);
+	SmsSendRequest getSelectMsg(SmsSendRequest sm);
+	
+	
 }
