@@ -282,7 +282,6 @@ public class NewPaymentController {
 			 if(code.equals("SUCCESS")){
 				 
 				 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
-					 String tradeNo = requestmap.get("tradeNo");
 					 String orderId = requestmap.get("orderId");
 					 String status = requestmap.get("status");
 					 String msg = requestmap.get("msg");

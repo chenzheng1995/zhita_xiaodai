@@ -434,7 +434,7 @@
 					LEFT JOIN user_attestation us on us.userId = u.id
 					LEFT JOIN payment_record pay on o.id = pay.orderId
   					<where>
-  					 o.orderStatus != "3"
+  					 o.orderStatus not in (3 , 5)
   					 and pay.orderId = o.id
   					 and us.userId = u.id
   					 AND o.userId = u.id  
@@ -525,7 +525,7 @@
   					a.orderId = o.id 
   					AND u.id = o.userId 
   					AND o.companyId = #{companyId}
-  					AND o.orderStatus between "2" and "0"
+  					AND o.orderStatus in (0,2)
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>

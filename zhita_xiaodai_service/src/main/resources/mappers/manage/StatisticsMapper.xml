@@ -414,4 +414,9 @@
 			<select id="getOrders" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
 				select * from orders where id = #{id}
 			</select>
+			
+			
+			<update id="UpdateUserBankType" parameterType="java.lang.Integer">
+				update user set bankAuthenStatus = "1" where id = #{userId}
+			</update>
 </mapper>

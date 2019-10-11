@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.zhita.dao.manage.CollectionMapper;
 import com.zhita.dao.manage.OperationalMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
@@ -22,7 +24,9 @@ import com.zhita.model.manage.OverdueClass;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Source;
 import com.zhita.util.DateListUtil;
+import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 
@@ -56,6 +60,7 @@ public class OperationalServiceimp implements OperationalService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		List<Orders> ordes = new ArrayList<Orders>();
+		List<Orders> ordesA = new ArrayList<Orders>();
 		
 		if(ordera.getStart_time() == null){
 			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
@@ -104,6 +109,7 @@ public class OperationalServiceimp implements OperationalService{
 //		}
 //		map.put("Orders", ordes);
 //		map.put("PageUtil", pages);
+		PageUtil2 pageUtil=null;
 		System.out.println(ordera.getStart_time()+"结束时间:"+ordera.getEnd_time());
 		if(ordera.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
@@ -207,6 +213,7 @@ public class OperationalServiceimp implements OperationalService{
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				
 				Integer totalCount = operdao.OrderNum(ordera);
 				PageUtil pages = new PageUtil(ordera.getPage(), totalCount);
 				ordera.setPage(pages.getPage());
@@ -276,12 +283,19 @@ public class OperationalServiceimp implements OperationalService{
 				ord.setBaddebt(os.getBaddebt());
 				ord.setRemittanceTime(stime.get(i));
 				ordes.add(ord);
-				map.put("PageUtil", pages);
-			}
+				
 		}
-		map.put("Orders", ordes);
-		
-	
+			
+		}
+		if(ordes!=null && !ordes.isEmpty()){
+    		ListPageUtil listPageUtil=new ListPageUtil(ordes,ordera.getPage(),10);
+    		ordesA.addAll(listPageUtil.getData());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
+    	}
+		map.put("PageUtil", pageUtil);
+		map.put("Orders", ordesA);
 		
 		return map;
 	}
@@ -292,6 +306,7 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> HuanKuan(Orderdetails order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> orde = new ArrayList<Orders>();
+		List<Orders> ordeA = new ArrayList<Orders>();
 		if(order.getStart_time()==null){
 			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
 			String stimea = sima.format(new Date());
@@ -306,7 +321,7 @@ public class OperationalServiceimp implements OperationalService{
 			order.setEnd_time(b+" 23:59:59");
 		}
 		
-		
+		PageUtil2 pageUtil=null;
 		if(order.getStart_time()==null){
 			SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 			String stime = sim.format(new Date());
@@ -497,8 +512,15 @@ public class OperationalServiceimp implements OperationalService{
 				}
 				
 				orde.add(ord);
-				map.put("PageUtil", pages);
-				map.put("Repayment", orde);
+				if(orde!=null && !orde.isEmpty()){
+		    		ListPageUtil listPageUtil=new ListPageUtil(orde,order.getPage(),10);
+		    		ordeA.addAll(listPageUtil.getData());
+		    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+		    	}else{
+		    		pageUtil=new PageUtil2(1, 10, 0);
+		    	}
+				map.put("PageUtil", pageUtil);
+				map.put("Repayment", ordeA);
 			}
 		}
 		return map;
@@ -512,7 +534,8 @@ public class OperationalServiceimp implements OperationalService{
 	public Map<String, Object> CollectionData(Orderdetails orde) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Orders> ordesa = new ArrayList<Orders>();
-		
+		List<Orders> ordesaA = new ArrayList<Orders>();
+		PageUtil2 pageUtil=null;
 		if(orde.getStart_time()==null){
 			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
 			String stimea = sima.format(new Date());
@@ -632,8 +655,18 @@ public class OperationalServiceimp implements OperationalService{
 				}
 				ord.setOrderCreateTime(stimes.get(i));
 				ordesa.add(ord);
-				map.put("Orderdetails", ordesa);
+				
 			}
+			if(ordesa!=null && !ordesa.isEmpty()){
+	    		ListPageUtil listPageUtil=new ListPageUtil(ordesa,orde.getPage(),10);
+	    		ordesaA.addAll(listPageUtil.getData());
+	    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	}else{
+	    		pageUtil=new PageUtil2(1, 10, 0);
+	    	}
+			pageUtil.setTotalCount(ordesa.size());
+			map.put("PageUtil", pageUtil);
+			map.put("Orderdetails", ordesaA);
 		}
 		
 		return map;

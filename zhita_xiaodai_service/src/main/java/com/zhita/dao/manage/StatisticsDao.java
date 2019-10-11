@@ -177,6 +177,9 @@ public interface StatisticsDao {
 	
 	Orders getOrders(Integer id);
 	
+	
+	Integer UpdateUserBankType(Integer userId);
+	
 }
 
 

@@ -30,4 +30,7 @@ public interface NewMapper {
 	
 	
 	Payment_record getPayment(Integer orderId);
+	
+	
+	Integer UpdateOrders(Integer id);
 }

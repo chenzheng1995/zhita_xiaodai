@@ -311,7 +311,13 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 
 	@Override
 	public Integer Updatepaymemt(Payment_record pay) {
-		return newdao.Updatepaymemt(pay);
+		Integer a = null;
+		Integer id = newdao.UpdateOrders(pay.getOrderId());
+		if(id != null){
+			newdao.Updatepaymemt(pay);
+			a=1;
+		}
+		return a;
 	}
 
 
