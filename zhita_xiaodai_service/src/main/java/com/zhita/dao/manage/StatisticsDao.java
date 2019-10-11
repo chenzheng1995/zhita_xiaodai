@@ -172,6 +172,14 @@ public interface StatisticsDao {
 	Integer Defeid(Integer id);
 	
 	
+	Integer UpdateRepay(Repayment pay);
+	
+	
+	Orders getOrders(Integer id);
+	
+	
+	Integer UpdateUserBankType(Integer userId);
+	
 }
 
 

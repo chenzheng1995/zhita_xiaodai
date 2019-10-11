@@ -3,6 +3,7 @@ package com.zhita.service.manage.chanpayQuickPay;
 
 import java.math.BigDecimal;
 
+import org.aspectj.apache.bcel.generic.ReturnaddressType;
 import org.springframework.stereotype.Component;
 
 import com.zhita.model.manage.Bankcard;
@@ -128,4 +129,10 @@ public interface Chanpayservice {
 	
 	
 	Repayment getRepayment(String reoaybtai);
+	
+	
+	Integer UpdateReturn(Repayment pay);
+	
+	
+	Orders getOrders(Integer orderId);
 }

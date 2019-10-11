@@ -696,7 +696,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   
   
     <select id="getorderStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2' or orderStatus='4') and companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
+  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2' or orderStatus='4' or orderStatus='5') and companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
   </select>
   
   		<select id="getorderStatus1" parameterType="java.lang.Integer" resultType="java.lang.String">

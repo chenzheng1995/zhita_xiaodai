@@ -18,7 +18,7 @@
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityAccount as realityBorrowMoney,ord.realityAccount as realityBorrowMoney,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca,o.shouldReturnTime,ord.technicalServiceMoney
+			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca,o.shouldReturnTime,ord.technicalServiceMoney,ord.shouldReapyMoney
 			from orders o,user u,orderdetails ord
 			<where>
 				ord.orderId not in (select c.orderId from collection c,orders o where o.id = c.orderId AND o.companyId = #{companyId})
@@ -73,7 +73,8 @@
 		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,
-			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade,ord.technicalServiceMoney
+			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade,ord.technicalServiceMoney,ord.realityBorrowMoney,ord.interestInAll,
+			ord.shouldReapyMoney
 			from orders o,orderdetails ord,collection col,user u,sys_user colme
 			<where>
 				    o.id = ord.orderId 
@@ -243,7 +244,7 @@
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select col.collectionId,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus
+			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,ord.shouldReapyMoney
 			from collection col,orders o,orderdetails ord,sys_user colme,user u 
 			<where>
 				o.id = col.orderId 

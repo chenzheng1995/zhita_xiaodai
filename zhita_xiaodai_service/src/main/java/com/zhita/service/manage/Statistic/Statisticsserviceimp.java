@@ -423,6 +423,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 					    	String reason = jsonObject.getString("reason");
 			    	if(reason.equals("成功")){//等于0是认证成功
 			    		Integer num = sdao.SelectUserRenNum(userId);
+			    		sdao.UpdateUserBankType(userId);
 			    		if(num==null){
 			    			num=0;
 			    		}
