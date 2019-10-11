@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.face.HmacSha1Sign;
 import com.zhita.service.manage.login.IntLoginService;
+import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 
 @Controller
@@ -21,6 +22,9 @@ public class IdCardController {
 	
     @Autowired
     UserAttestationService UserAttestationService;
+    
+    @Autowired
+    IntUserService intUserService;
 	
     @RequestMapping("/getidcard")
     @ResponseBody
@@ -61,7 +65,7 @@ public class IdCardController {
 	    	String sign_version = "hmac_sha1";
 	    	String capture_image = "0";
 	    	String return_url = "http://xcx.rong51dai.com/idcard/renzhengchenggong/index.html?userId="+userId;
-	    	String notify_url = "http://39.98.83.65:8080/zhita_xiaodai_app/idcardParam/notify";
+	    	String notify_url = "http://fk.rong51dai.com/zhita_xiaodai_app/idcardParam/notify";
 	    	String idcard_threshold = "0.8";
 	    	String limit_completeness = "2";
 	    	String limit_quality = "0.753";
@@ -135,6 +139,8 @@ public class IdCardController {
              String attestationStatus = "1";
              String authenticationSteps ="3";
              UserAttestationService.updateAttestationStatus(attestationStatus,userId,authenticationSteps);
+             String userAuthenStatus ="1";
+             intUserService.updateUserAuthenStatus(userId, userAuthenStatus);
         	 map.put("Ncode","2000");
              map.put("msg", "认证成功");
              map.put("Code", "200");

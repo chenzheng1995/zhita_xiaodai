@@ -203,8 +203,6 @@ public class ChanpaySend extends BaseParameter{
 		calendar.setTime(date);
 		calendar.add(Calendar.DATE, +1);
 		date = calendar.getTime();
-		SimpleDateFormat sim = new SimpleDateFormat("yyyyMMdd");
-		
 		int borrowNumberR = intOrderService.borrowNumber(userId,companyId); //用户还款次数
 	    int	howManyTimesBorMoney = borrowNumberR+1;//第几次借款
 	    String orderCreateTime = String.valueOf(System.currentTimeMillis());//订单生成时间戳
@@ -263,8 +261,6 @@ public class ChanpaySend extends BaseParameter{
     	Bankcard bas = new Bankcard();
     	bas.setCompanyId(companyId);
 		bas.setUserId(userId);
-		Bankcard banAA = chanser.SelectBank(bas);
-		
 		Payment_record pay = new Payment_record();
 		pay.setUserId(userId);
 		pay.setPipelinenumber(returnchanpay.getPartnerId());

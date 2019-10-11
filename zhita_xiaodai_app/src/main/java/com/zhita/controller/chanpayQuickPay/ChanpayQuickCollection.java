@@ -31,6 +31,7 @@ import com.zhita.chanpayutil.ChanPayUtil;
 import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
+import com.zhita.dao.manage.SmsMapper;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
@@ -66,6 +67,11 @@ public class ChanpayQuickCollection {
 	
 	@Autowired
 	private PaymentRecordMapper padao;
+	
+	
+	
+	@Autowired
+	private SmsMapper sdao;
 	
 	
 	
@@ -1015,8 +1021,10 @@ public class ChanpayQuickCollection {
 			if(orderId == null){
 				if(paymentname.getRepaymentSource().equals("必付")){
 					Map<String, Object> maps = newsim.Payment(new BigDecimal(TrxAmt), "https://www.baidu.com/", companyId, Integer.valueOf(MerUserId));
+					String orderIdbillId = (String) maps.get("billId");
 					String pipelinenu = "Rsn_"+maps.get("billId");
 					repay.setPipelinenumber(pipelinenu);
+					repay.setReoaybtai(orderIdbillId);
 					Integer i = servie.AddRepayment(repay);
 					if(i!=null){
 						maps.put("code", "200");

@@ -334,8 +334,12 @@ public class Chanpayserviceimp implements Chanpayservice{
 
 	@Override
 	public Integer getUserId(Integer orderId) {
-		// TODO Auto-generated method stub
 		return padao.getUserid(orderId);
+	}
+
+	@Override
+	public Repayment getRepayment(String reoaybtai) {
+		return padao.getRepayment(reoaybtai);
 	}
 	
 	

@@ -160,6 +160,7 @@ public class OperatorController {
 				}
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
+				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 				map.put("Ncode", "2000");
 				map.put("Code", "407"); 
 		   }
@@ -198,6 +199,7 @@ public class OperatorController {
 		if (error.equals("200")) {
 			attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
+			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 			int number = operatorService.updateOperatorJson(url, userId);
 			if (number == 1) {
 				int companyId = 3;
@@ -216,6 +218,7 @@ public class OperatorController {
 				if (url.indexOf("205") != -1) {
 					attestationStatus = "2";
 					operatorService.updateAttestationStatus(attestationStatus, userId);
+					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 					map.put("Ncode", "2000");
 					map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 					map.put("Code", "300");
@@ -232,6 +235,7 @@ public class OperatorController {
 		   }else {
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
+				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 				map.put("Ncode", "2000");
 				map.put("Code", "200"); 
 		   }
@@ -291,6 +295,7 @@ public class OperatorController {
 		}else {
 			String attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
+			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 			map.put("Ncode", "2000");
 			map.put("msg", "运营商没调通");
 			map.put("code", "407");
@@ -317,6 +322,7 @@ public class OperatorController {
 				}
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
+				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 				map.put("Ncode", "2000");
 				map.put("code", "407"); 
 		   }
@@ -346,9 +352,10 @@ public class OperatorController {
 			paramObject.setJsonString(str);
 			paramObject.setUserId(userId);
 			String json  = JSONObject.toJSONString(paramObject);
-			pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
+			pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
 			String attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
+			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 			int number = operatorService.updateOperatorJson(str, userId);
 			if (number == 1) {
 				int companyId = 3;
@@ -366,6 +373,7 @@ public class OperatorController {
 			if (code.equals("400")) {
 					String attestationStatus = "2";
 					operatorService.updateAttestationStatus(attestationStatus, userId);
+					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 					map.put("Ncode", "2000");
 					map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 					map.put("code", "300");
@@ -378,6 +386,7 @@ public class OperatorController {
 		}else {
 			String attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
+			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 			map.put("Ncode", "407");
 			map.put("msg", "运营商没调通");
 			map.put("code", "407");
@@ -385,6 +394,7 @@ public class OperatorController {
 		   }else {
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
+				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 				map.put("Ncode", "2000");
 				map.put("msg", "认证成功");
 				map.put("code", "200");
@@ -1536,17 +1546,19 @@ public class OperatorController {
 		}
 
 		
-		//自己的运营商
+
 		int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
 		Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
 		String rmModleName = (String) map1.get("rmModleName");
 		
+		//自己的运营商
+//		if ("风控甲".equals(rmModleName)) {
 		PhoneDeal phoneDeal = new PhoneDeal();
 		String phone = intUserService.getphone(userId);
 		String newphone1 = phoneDeal.decryption(phone);
 		PostAndGet pGet = new PostAndGet();
 
-		String rString = pGet.sendGet("http://39.98.83.65:8080/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone=" + newphone1);
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone=" + newphone1);
 		intUserService.setModel(userId, rString);
 		JSONObject object = JSONObject.parseObject(rString);
 		String phonetype = object.getString("phonetype");
@@ -1563,6 +1575,10 @@ public class OperatorController {
 		System.out.println(wifimactype);
 		System.out.println(maillistype);
 		System.out.println(apptype);
+		String thirdtypeid = "6";
+		String date = System.currentTimeMillis() + "";
+		thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date); //风控统计
+		
 		if ("1".equals(phonetype) || "1".equals(uuidtype) || "1".equals(wifitype) || "1".equals(daytype)
 				|| "1".equals(wifimactype) || "1".equals(maillistype) || "1".equals(apptype)) {
 			intUserService.updateshareOfState(userId, shareOfState);
@@ -1578,7 +1594,7 @@ public class OperatorController {
 			map.put("code", 200);
 			return map;
 		}
-		
+
 		
 //		if ("风控甲".equals(rmModleName)) {
 //

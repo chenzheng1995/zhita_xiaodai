@@ -896,10 +896,10 @@ public class Test {
 		paramObject.setJsonString(jsonString);
 		paramObject.setUserId(userId);
 		String json  = JSONObject.toJSONString(paramObject);
-		pGet.doJsonPost("http://192.168.0.118:8080/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
+		pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
+//		pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
 		
-//		HttpClient hClient = new HttpClient();
-//		hClient.sendJson(jsonString,"http://192.168.0.118:8080/zhita_heitong_Fengkong/jiaZhouOperator/setOperator","GBK");
+
 		
 		}
 	}

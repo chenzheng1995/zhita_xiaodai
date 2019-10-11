@@ -125,4 +125,7 @@ public interface Chanpayservice {
 	
 	
 	Integer getUserId(Integer orderId);
+	
+	
+	Repayment getRepayment(String reoaybtai);
 }

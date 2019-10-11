@@ -25,6 +25,9 @@
       <arg column="applyState" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="model" javaType="java.lang.String" jdbcType="VARCHAR" />
        <arg column="userAgentInfo" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="userAuthenStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="bankAuthenStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="operatorAuthenStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
       
     </constructor>
   </resultMap>
@@ -888,7 +891,16 @@
      select model from user where id = #{userId}
 	</select> 
 	
+	      	  		<update id="updateUserAuthenStatus" parameterType="java.util.Map" >
+		update user
+		set userAuthenStatus = #{updateUserAuthenStatus}
+		where id = #{userId}
+	</update>
 	
-
+	      	  		<update id="updateOperatorAuthenStatus" parameterType="java.util.Map" >
+		update user
+		set operatorAuthenStatus = #{attestationStatus}
+		where id = #{userId}
+	</update>
 	
 </mapper>
