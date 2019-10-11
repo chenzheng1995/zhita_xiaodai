@@ -416,4 +416,11 @@
 			o.id = a.orderId and a.amou_time between #{start_time} and #{end_time} 
 		</select>
 		
+		
+		
+		
+		<update id="UpdateUserBanktype" parameterType="java.lang.String">
+		
+		</update>
+		
 </mapper>

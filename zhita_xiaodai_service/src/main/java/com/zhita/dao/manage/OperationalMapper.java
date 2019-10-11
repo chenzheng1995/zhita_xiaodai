@@ -139,4 +139,7 @@ public interface OperationalMapper {
 	
 	Orders XianOrder(Orderdetails ord);
 	
+	
+	Integer UpdateUserBanktype(String idcard_number);
+	
 }

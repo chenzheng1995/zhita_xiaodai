@@ -835,10 +835,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
 			
 			if(a==0){
-				System.out.println("后置");
-				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()).add(orders.get(i).getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
-				System.out.println(orders.get(i).getOrder_money());
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(orders.get(i).getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+				System.out.println("应还金额444:"+orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
 				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
