@@ -180,7 +180,8 @@ public class FinanceServiceimp implements FinanceService{
 		System.out.println("状态:"+a+"金额111CC:"+ordea.getRealityBorrowMoney()+"金额2222BBB:"+ordea.getMakeLoans());
 		if(a==0){
 			System.out.println("后置");
-			ordea.setOrder_money(ordea.getRealityBorrowMoney().add(ordea.getInterestInAll()).add(ordea.getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+//			ordea.setOrder_money(ordea.getRealityBorrowMoney().add(ordea.getInterestInAll()).add(ordea.getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+			ordea.setRealityBorrowMoney(ordea.getShouldReapyMoney().add(ordea.getInterestPenaltySum()));//应还金额 + 逾期总罚息
 			System.out.println(ordea.getRealityBorrowMoney()+"CCC"+ordea.getInterestSum()+"CCCC11"+ordea.getInterestPenaltySum()+"金额:"+ordea.getTechnicalServiceMoney());
 			System.out.println(ordea.getOrder_money());
 		}else{
@@ -363,7 +364,7 @@ public class FinanceServiceimp implements FinanceService{
 //						orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
 //						System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
 //						System.out.println(orders.get(i).getOrder_money());
-						ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()).add(ordetails.getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+						ordetails.setRealityBorrowMoney(ordetails.getShouldReapyMoney().add(ordetails.getInterestPenaltySum()));//应还金额 + 逾期总罚息
 						System.out.println("应还金额444:"+ordetails.getOrder_money());
 					}else{
 						System.out.println("前置");
@@ -1053,7 +1054,7 @@ public class FinanceServiceimp implements FinanceService{
 			String stime = Timestamps.stampToDate1(shoureturntime);
 			String a = stime.substring(8, 10);//就去时间格式天数
 			String b = stime.substring(0, 8);//获取年月   2019-03-
-			Integer ac = off.getOnceDeferredDay()+Integer.valueOf(a);//天数加上
+			Integer ac = (off.getOnceDeferredDay()-1)+Integer.valueOf(a);//天数加上
 			if(ac < 10){
 				String aa = "0"+ac;
 				off.setDelay_time(b+aa+" 23:59:59");

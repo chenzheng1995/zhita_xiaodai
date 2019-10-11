@@ -404,4 +404,19 @@
 			<select id="SelectOrderNumber" parameterType="java.lang.Integer" resultType="java.lang.String">
 				select orderNumber from orders where orderStatus  not like "3" and userId = #{userId}
 			</select>
+			
+			
+			<update id="UpdateRepay" parameterType="com.zhita.model.manage.Repayment">
+				update repayment set reoaybtai = "0" where id = #{id}
+			</update>
+			
+			
+			<select id="getOrders" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Orders">
+				select * from orders where id = #{id}
+			</select>
+			
+			
+			<update id="UpdateUserBankType" parameterType="java.lang.Integer">
+				update user set bankAuthenStatus = "1" where id = #{userId}
+			</update>
 </mapper>

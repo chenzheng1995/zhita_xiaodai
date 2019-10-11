@@ -49,6 +49,8 @@ public class Orders {
 	
 	private String repaymentMoney;//还款金额
 	
+	private BigDecimal accmoney;//减免金额
+	
 	private Integer howManyTimesBorMoney;//第几次借款
 	
 	private Integer deferrTime;//延期次数
@@ -61,7 +63,9 @@ public class Orders {
 	
 	private Integer postponeDate;//每次延期天数
 	
-	private BigDecimal shourldmoney;//应还金额（期限内应还金额+逾期的逾期费）
+	private BigDecimal shourldmoney;//原始应还金额
+	
+	private BigDecimal realshourldmoney;//实际应还金额
 	
 	private Orderdetails orderdetails;//对应订单明细表
 	
@@ -734,5 +738,22 @@ public class Orders {
 	public void setBank(String bank) {
 		this.bank = bank;
 	}
+
+	public BigDecimal getRealshourldmoney() {
+		return realshourldmoney;
+	}
+	
+	public BigDecimal getAccmoney() {
+		return accmoney;
+	}
+
+	public void setAccmoney(BigDecimal accmoney) {
+		this.accmoney = accmoney;
+	}
+
+	public void setRealshourldmoney(BigDecimal realshourldmoney) {
+		this.realshourldmoney = realshourldmoney;
+	}
+	
 	
 }

@@ -34,6 +34,7 @@ import com.zhita.controller.payment.util.SignUtils;
 import com.zhita.controller.payment.zpay.ZpayConfig;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.dao.manage.SmsMapper;
+import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Orderdetails;
@@ -70,6 +71,8 @@ public class NewPaymentController {
 	
 	
 	
+	@Autowired
+	private StatisticsDao Smsdao;
 	
 	
 	
@@ -1162,6 +1165,7 @@ public class NewPaymentController {
 					}
 	        		th.setDeleted("0");
 	        		sdao.AddThirdcallTongj(th);
+	        		Smsdao.UpdateUserBankType(MerUserId);
 						map.put("OriAuthTrxId", TrxId);
 						map.put("code", "200");
 						map.put("Ncode", 2000);

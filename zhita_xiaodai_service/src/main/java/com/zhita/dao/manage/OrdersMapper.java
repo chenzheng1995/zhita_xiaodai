@@ -110,6 +110,11 @@ public interface OrdersMapper {
 
 	Map<String, Object> getRepayment(@Param("userId")int userId,@Param("companyId") int companyId);
 	
+	/***
+	 * 根据订单id，查询该订单的减免金额
+	 */
+	BigDecimal queryAccMoney(Integer orderid);
+	
 	/**
 	 * 订单查询（公司id，page,pagesize,订单号，姓名，手机号，订单开始时间，订单结束时间，渠道id）
 	 */

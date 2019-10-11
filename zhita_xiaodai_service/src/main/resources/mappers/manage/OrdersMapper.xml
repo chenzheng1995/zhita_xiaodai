@@ -696,7 +696,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   
   
     <select id="getorderStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2' or orderStatus='4') and companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
+  	select count(id) from orders where (orderStatus='0' or orderStatus='1' or orderStatus='2' or orderStatus='4' or orderStatus='5') and companyId=#{companyId} and userId = #{userId} order by orderCreateTime desc limit 1
   </select>
   
   		<select id="getorderStatus1" parameterType="java.lang.Integer" resultType="java.lang.String">
@@ -1033,5 +1033,8 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
 	<select id="getPaymentStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 		select id from payment_record where orderId = #{orderId} and status = "支付成功"
 	</select>
-	
+	<!--根据订单id，查询该订单的减免金额  -->
+	<select id="queryAccMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select sum(amountmoney) amountmoney from accountadjustment where orderid=#{arg0}
+	</select>
 </mapper>
