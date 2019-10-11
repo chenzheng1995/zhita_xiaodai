@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.face.HmacSha1Sign;
 import com.zhita.service.manage.login.IntLoginService;
+import com.zhita.service.manage.user.IntUserService;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 
 @Controller
@@ -21,6 +22,9 @@ public class IdCardController {
 	
     @Autowired
     UserAttestationService UserAttestationService;
+    
+    @Autowired
+    IntUserService intUserService;
 	
     @RequestMapping("/getidcard")
     @ResponseBody
@@ -135,6 +139,8 @@ public class IdCardController {
              String attestationStatus = "1";
              String authenticationSteps ="3";
              UserAttestationService.updateAttestationStatus(attestationStatus,userId,authenticationSteps);
+             String userAuthenStatus ="1";
+             intUserService.updateUserAuthenStatus(userId, userAuthenStatus);
         	 map.put("Ncode","2000");
              map.put("msg", "认证成功");
              map.put("Code", "200");

@@ -214,12 +214,14 @@ public class CertificationCenterController {
 				int num = intWhitelistuserService.getWhitelistuser1(newPhone, idcard_number, name);
 				if (num > 0) {
 					operatorService.updateAttestationStatus(attestationStatus, userId);
+					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 					String shareOfState = "2";
 					intUserService.updateshareOfState(userId, shareOfState);
 					int num1 = operatorService.getuserId(userId);
 					if (num1 == 0) {
 						String authentime = System.currentTimeMillis() + "";// 认证时间
 						int number = operatorService.setwhitelistuser(attestationStatus, userId, authentime);
+                        intUserService.updateOperatorAuthenStatus(attestationStatus, userId);        
 						if (number == 1) {
 							map3.put("Ncode", "2000");
 							map3.put("msg", "数据插入成功");
@@ -384,6 +386,7 @@ public class CertificationCenterController {
 				    	intUserService.updateshareOfState(userId, shareOfState);
 				    	String attestationStatus = "3";
                      operatorService.updateAttestationStatus(attestationStatus, userId);
+                     intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
                      String applyState = "2";
                      intUserService.updateapplyState(applyState,userId);
                      if("1".equals(ifrestore)) {

@@ -96,6 +96,10 @@ public interface IntUserService {
 
 	public String getModel(int userId);
 
+	public void updateUserAuthenStatus(int userId, String userAuthenStatus);
+
+	public void updateOperatorAuthenStatus(String attestationStatus, int userId);
+
 
 
 

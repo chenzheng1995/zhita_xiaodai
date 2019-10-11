@@ -79,6 +79,13 @@ public class User {
     private Integer authentication;//认证次数
     
     private Integer userId;
+    
+    private String userAuthenStatus;//用户认证状态（0：未认证；1：已认证；2：认证中）
+    
+    private String bankAuthenStatus;//银行卡认证状态（0：未认证；1：已认证；2：认证中）
+    
+    private String operatorAuthenStatus;//运营商认证状态（0：未认证；1：已认证；2：认证中）
+    
 
 	public Integer getUserId() {
 		return userId;
@@ -383,4 +390,32 @@ public class User {
 	public void setUserAgentInfo(String userAgentInfo) {
 		this.userAgentInfo = userAgentInfo;
 	}
+	
+	
+	public String getUserAuthenStatus() {
+		return userAuthenStatus;
+	}
+
+	public void setUserAuthenStatus(String userAuthenStatus) {
+		this.userAuthenStatus = userAuthenStatus;
+	}
+	
+	public String getBankAuthenStatus() {
+		return bankAuthenStatus;
+	}
+
+	public void setBankAuthenStatus(String bankAuthenStatus) {
+		this.bankAuthenStatus = bankAuthenStatus;
+	}
+	
+	public String getOperatorAuthenStatus() {
+		return operatorAuthenStatus;
+	}
+
+	public void setOperatorAuthenStatus(String operatorAuthenStatus) {
+		this.operatorAuthenStatus = operatorAuthenStatus;
+	}
+	
+	
+	
 }
