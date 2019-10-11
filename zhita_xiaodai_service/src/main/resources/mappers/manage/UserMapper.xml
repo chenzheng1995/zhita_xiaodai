@@ -687,6 +687,11 @@
   	update user set shareOfState=4,operator=#{arg0},operationTime=#{arg1} where id=#{arg2}
   </update>
   
+  <!-- 通过用户id查询该用户手机号 -->
+  <select id="queryPhone" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	select phone from user where id=#{arg0}
+  </select>
+  
    <!-- 人审不通过按钮 -->
   <update id="updateShareOfStateNo"> 
   	update user set shareOfState=3,operator=#{arg0},operationTime=#{arg1} where id=#{arg2}

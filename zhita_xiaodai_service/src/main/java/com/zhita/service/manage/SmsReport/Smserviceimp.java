@@ -80,7 +80,7 @@ public class Smserviceimp implements Smservice{
 		        
 		        shor.setCompanyid(sm.getCompanyid());
 		        
-		        shor.setSmg(sm.getMsg());
+		        shor.setMsg(sm.getMsg());
 		        
 		        shor.setPhonenumber(sm.getPhone());
 		        
@@ -96,7 +96,7 @@ public class Smserviceimp implements Smservice{
 		        		th.setCompanyid(shor.getCompanyid());
 		        		th.setThirdtypeid(9);
 		        		try {
-		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+		        			th.setDate(Timestamps.dateToStamp1(def.format(new Date())));
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
@@ -160,7 +160,7 @@ public class Smserviceimp implements Smservice{
 		        
 		        shor.setCompanyid(sm.getCompanyid());
 		        
-		        shor.setSmg(sm.getMsg());
+		        shor.setMsg(sm.getMsg());
 		        
 		        shor.setPhonenumber(sm.getPhone());
 		        
@@ -176,7 +176,7 @@ public class Smserviceimp implements Smservice{
 		        		th.setCompanyid(shor.getCompanyid());
 		        		th.setThirdtypeid(9);
 		        		try {
-		        			th.setDate(Timestamps.dateToStamp(def.format(new Date())));
+		        			th.setDate(Timestamps.dateToStamp1(def.format(new Date())));
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
@@ -441,40 +441,74 @@ public class Smserviceimp implements Smservice{
 
 	@Override
 	public void sendDateSned(SmsSendRequest sms) {
+		System.out.println("进接口");
 		Calendar calendar = Calendar.getInstance();
 		Date date = null;
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 		String a = sim.format(new Date());
 		List<String> phones = null;
-		calendar.add(Calendar.DATE, 1);//把日期往后增加n天.正数往后推,负数往前移动 
-	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
-	    a = sim.format(date);//延期后应还时间
-	    System.out.println("a:"+a);
-	    String statu_time = a+" 00:00:01";
-	    String end_time = a+" 23:59:59";
-	    System.out.println(statu_time+"1"+end_time);
-	try {
-		sms.setStatu_time(Timestamps.dateToStamp1(statu_time));
-		sms.setEnd_time(Timestamps.dateToStamp1(end_time));
-	} catch (Exception e) {
-		// TODO: handle exception
+		SimpleDateFormat sims = new SimpleDateFormat("HH");
+	    sms.setStatu_time(sims.format(new Date())+":00");
+	    sms.setEnd_time(sims.format(new Date())+":59");
+	    SmsSendRequest ss = sdao.getSelectMsg(sms);
+	    if(ss!=null){
+			calendar.add(Calendar.DATE, ss.getOverdueday());//把日期往后增加n天.正数往后推,负数往前移动 
+		    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
+		    a = sim.format(date);//延期后应还时间
+		    System.out.println("a:"+a);
+		    String statu_time = a+" 00:00:01";
+		    String end_time = a+" 23:59:59";
+		    System.out.println("短信内容:"+ss.getContent());
+		    String msg = ss.getContent();
+		    if(msg!=null){
+		    	if(msg.length()!=0){
+		    		System.out.println("进");
+		    		sms.setMsg(msg);
+				    System.out.println(statu_time+"1"+end_time);
+				try {
+					sms.setStatu_time(Timestamps.dateToStamp1(statu_time));
+					sms.setEnd_time(Timestamps.dateToStamp1(end_time));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				
+				List<String> phon = new ArrayList<String>();
+				phones = sdao.AllPhone(sms);
+				PhoneDeal p = new PhoneDeal();
+				for(int i=0;i<phones.size();i++){
+					phon.add(p.decryption(phones.get(i)));
+				}
+				Shortmessage shor = new Shortmessage();
+				shor.setPhonesa(phon);
+				shor.setCompanyid(sms.getCompanyid());
+				shor.setSend_time(Timestamps.stampToDate1(sms.getStatu_time()));
+				shor.setPhonenum(phones.size());
+				List<Shortmessage> sho = new ArrayList<Shortmessage>();
+				shor.setShortmessagesize(sdao.SelectTimeSize(shor));
+				shor.setCollection_time(shor.getSend_time());
+				sho.add(shor);
+		    	}
+	    }
+	    
+	    
 	}
-	
-	List<String> phon = new ArrayList<String>();
-	phones = sdao.AllPhone(sms);
-	PhoneDeal p = new PhoneDeal();
-	for(int i=0;i<phones.size();i++){
-		phon.add(p.decryption(phones.get(i)));
-	}
-	Shortmessage shor = new Shortmessage();
-	shor.setPhonesa(phon);
-	shor.setCompanyid(sms.getCompanyid());
-	shor.setSend_time(Timestamps.stampToDate1(sms.getStatu_time()));
-	shor.setPhonenum(phones.size());
-	List<Shortmessage> sho = new ArrayList<Shortmessage>();
-	shor.setShortmessagesize(sdao.SelectTimeSize(shor));
-	shor.setCollection_time(shor.getSend_time());
-	sho.add(shor);
+	System.out.println("出接口");
+}
+
+
+
+
+
+
+
+
+
+	@Override
+	public void sendBank() {
+		
+		
+		
+		
 	}
 	
 }

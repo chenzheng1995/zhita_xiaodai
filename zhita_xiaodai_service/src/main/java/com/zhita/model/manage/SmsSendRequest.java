@@ -45,9 +45,32 @@ public class SmsSendRequest {
     private Integer days;
     
     private Integer da;
+    
+    private Integer overdueday;
+    
+    private Integer ovid;
+    
+    private String content;
 
-
-    public Integer getYears() {
+    public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public Integer getOvid() {
+		return ovid;
+	}
+	public void setOvid(Integer ovid) {
+		this.ovid = ovid;
+	}
+	public Integer getOverdueday() {
+		return overdueday;
+	}
+	public void setOverdueday(Integer overdueday) {
+		this.overdueday = overdueday;
+	}
+	public Integer getYears() {
 		return years;
 	}
 	public void setYears(Integer years) {

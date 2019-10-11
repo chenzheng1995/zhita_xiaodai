@@ -13,7 +13,7 @@
 				smg,
 				collection_time,
 				successnum
-				)VALUES(#{send_time},#{phonenumber},#{phonenum},#{companyid},#{smg},#{collection_time},#{successnum})
+				)VALUES(#{send_time},#{phonenumber},#{phonenum},#{companyid},#{msg},#{collection_time},#{successnum})
 			</insert>
 			
 			
@@ -97,10 +97,17 @@
 				INSERT INTO `thirdcalltongji`(
 					companyid,
 					thirdtypeid,
-					date,
-					deleted
-				)VALUES(#{companyid},#{thirdtypeid},#{date},#{deleted})
+					date
+				)VALUES(#{companyid},#{thirdtypeid},#{date})
 			</insert>
+			
+			
+			<select id="getSelectMsg" parameterType="com.zhita.model.manage.SmsSendRequest" resultType="com.zhita.model.manage.SmsSendRequest">
+				select ov.overdueday,te.content from textmessaging_template te,over_textmessaging_setting ov where ov.templateid = te.id
+				and ov.timing between #{statu_time} and #{end_time}
+			</select>
+			
+			
 			
 			
 </mapper>

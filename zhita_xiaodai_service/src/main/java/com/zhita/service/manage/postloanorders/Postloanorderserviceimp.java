@@ -694,15 +694,18 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			if(orders.get(i).getInterestPenaltySum()==null){
 				orders.get(i).setInterestPenaltySum(new BigDecimal(0));
 			}
+			System.out.println("金额:"+ orders.get(i).getRealityBorrowMoney()+":A:"+orders.get(i).getMakeLoans());
 			if(a==0){
 				System.out.println("后置");
-				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
-				System.out.println(orders.get(i).getOrder_money());
+//				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
+//				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
+//				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
+//				System.out.println(orders.get(i).getOrder_money());
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(orders.get(i).getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+				System.out.println("应还金额444:"+orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
 			}
 			
 			
@@ -726,9 +729,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		}
 		BigDecimal ca = orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney());
 		
-		
-		
-		System.out.println("111:"+orders.get(i).getRealityBorrowMoney()+"AA"+orders.get(i).getInterestSum());
 		BigDecimal jianmian = postloanorder.JianMianmoney(orders.get(i).getOrderId());
 		if(jianmian==null){
 			jianmian=new BigDecimal(0);
@@ -742,10 +742,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		sumMoney.add(jianmian);
 		orders.get(i).setRealityBorrowMoney(orders.get(i).getRepaymentMoney());
 		
-		
-		System.out.println("应还总金额:"+orders.get(i).getOrder_money()+"实借金额:"+orders.get(i).getRealityAccount()+"放贷金额:"+orders.get(i).getMakeLoans()+"应还金额:"+orders.get(i).getRealityBorrowMoney());
-		
-		
 		orders.get(i).setShijiMoney(orders.get(i).getRealityBorrowMoney().subtract(orders.get(i).getSurplus_money()));
 
 		if(orders.get(i).getDeferAfterReturntime()==null){
@@ -756,7 +752,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));
 		orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
-		System.out.println("实还时间:"+orders.get(i).getRealtime());
 		if(orders.get(i).getRealtime() != null && !("").equals(orders.get(i).getRealtime())){
 			if(orders.get(i).getRealtime().length()!=0){
 				orders.get(i).setRealtime(orders.get(i).getRealtime());
@@ -765,8 +760,9 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setRealtime("/");
 		}
 		orders.get(i).setPhone(tm.mobileEncrypt(orders.get(i).getPhone()));
-		System.out.println("渠道名:"+orders.get(i).getSourceName()+"手机号:"+orders.get(i).getPhone()+"订单时间:"+orders.get(i).getOrderCreateTime()+"实还时间:"+orders.get(i).getRealtime());
+		System.out.println("应还金额:"+orders.get(i).getOrder_money());
 		}
+		
 		map.put("Orderdetails", orders);
 		map.put("pageutil", pages);
 		return map;
@@ -839,13 +835,11 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			int a = orders.get(i).getRealityBorrowMoney().compareTo(orders.get(i).getMakeLoans());
 			
 			if(a==0){
-				System.out.println("后置");
-				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
-				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
-				System.out.println(orders.get(i).getOrder_money());
+				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(orders.get(i).getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+				System.out.println("应还金额444:"+orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()).add(orders.get(i).getInterestInAll()));//应还总金额
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
 			}
 			
 		orders.get(i).setCompanyId(order.getCompanyId());
@@ -955,7 +949,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
 			}
 			
 			
@@ -1106,7 +1100,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
 			}
 			
 			
@@ -1241,7 +1235,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()));//应还总金额
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
 			}
 			
 			
@@ -1360,7 +1354,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				System.out.println(orders.get(i).getOrder_money());
 			}else{
 				System.out.println("前置");
-				orders.get(i).setOrder_money(orders.get(i).getInterestPenaltySum().add(orders.get(i).getRealityBorrowMoney()).add(orders.get(i).getInterestInAll()));//应还总金额
+				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//应还总金额
 			}
 			
 		orders.get(i).setCompanyId(order.getCompanyId());

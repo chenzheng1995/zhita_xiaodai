@@ -16,6 +16,7 @@ import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
+import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Repayment_setting;
 import com.zhita.model.manage.Undertheline;
 import com.zhita.model.manage.User;
@@ -313,5 +314,11 @@ public interface PaymentRecordMapper {
     
     
     Integer getUserid(Integer id);
+    
+    
+    BigDecimal getOrdersTechnicalserviceMoney(Integer orderId);
+    
+    
+    Repayment getRepayment(String reoaybtai);
     
 }

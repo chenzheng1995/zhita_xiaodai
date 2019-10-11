@@ -27,8 +27,10 @@ import com.zhita.model.manage.DeferredAndOrder;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.OrderQueryParameter;
 import com.zhita.model.manage.Orders;
+import com.zhita.model.manage.SmsSendRequest;
 import com.zhita.model.manage.User;
 import com.zhita.model.manage.UserLikeParameter;
+import com.zhita.service.manage.SmsReport.Smservice;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
 import com.zhita.util.PhoneDeal;
@@ -42,6 +44,9 @@ public class OrderController {
 	private IntOrderService intOrderService;
 	@Autowired
 	private IntUserService intUserService;
+	@Autowired
+	private Smservice serv;
+	
 
 	/*
 	 * //后台管理----机审订单 (公司id，page，订单号，姓名，手机号，订单开始时间，订单结束时间，风控反馈)
@@ -126,20 +131,36 @@ public class OrderController {
 	 */
 	@ResponseBody
 	@RequestMapping("/updateShareOfState")
-	public int updateShareOfState(Integer sysuserid, Integer userid) {
+	public Map<String,Object> updateShareOfState(Integer companyId,Integer sysuserid, Integer userid) {
 		int num = intOrderService.updateShareOfState(sysuserid, userid);
-		return num;
+		
+		PhoneDeal pd = new PhoneDeal();// 手机号加密解密工具类
+		SmsSendRequest sm=new SmsSendRequest();
+		sm.setPhone(pd.decryption(intOrderService.queryPhone(userid)));
+		sm.setMsg("恭喜您的申请已通过审核，请登录APP查询。");
+		sm.setCompanyid(companyId);
+		
+		return serv.SendSmOne(sm);
 	}
+	
+	
 
 	/**
 	 * 人审不通过按钮
 	 */
 	@ResponseBody
 	@RequestMapping("/updateShareOfStateNo")
-	public int updateShareOfStateNo(Integer companyId, Integer sysuserid, Integer userid) {
+	public Map<String,Object> updateShareOfStateNo(Integer companyId, Integer sysuserid, Integer userid) {
 		int num = intOrderService.updateShareOfStateNo(sysuserid, userid);
 		intUserService.insertBlacklistno(companyId, userid, sysuserid);// 添加黑名单
-		return num;
+		
+		PhoneDeal pd = new PhoneDeal();// 手机号加密解密工具类
+		SmsSendRequest sm=new SmsSendRequest();
+		sm.setPhone(pd.decryption(intOrderService.queryPhone(userid)));
+		sm.setMsg("很抱歉，您的申请暂未通过审核，请保持良好的信用记录，一个月后再来尝试申请。");
+		sm.setCompanyid(companyId);
+		
+		return serv.SendSmOne(sm);
 	}
 
 	/**

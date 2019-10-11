@@ -37,4 +37,7 @@ public interface Smservice {
 	
 	
 	void sendDateSned(SmsSendRequest sms);
+	
+	
+	void sendBank();
 }

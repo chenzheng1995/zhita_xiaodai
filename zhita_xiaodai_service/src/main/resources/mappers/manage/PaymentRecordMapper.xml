@@ -175,11 +175,12 @@
   </update>
   
   <select id="TotalCountPayment" parameterType="com.zhita.model.manage.Payment_record" resultType="java.lang.Integer">
-		  	select count(ra.id) from payment_record ra,user u,orders o,orderdetails ord
+		  	select count(ra.orderId) from payment_record ra LEFT JOIN orders o ON ra.orderId = o.id
+		  	 LEFT JOIN user u ON o.userId = u.id
+		  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
+		  	 LEFT JOIN loan_setting thir ON ra.thirdparty_id = thir.id
 		  	<where>
-		  		ra.orderId = o.id
-		  		AND o.userId = u.id
-		  		AND o.id = ord.orderId
+		  		ra.professionalWork = #{professionalWork}
 		  		AND o.companyId = #{companyId}
 		  		<if test="orderId != null and orderId != ''">
 		  			AND ra.orderId = #{orderId}
@@ -341,7 +342,7 @@
 					</if>
 			  	</where>
 			  	group by o.id 
-			  	order by o.id desc
+			  	order by ra.repaymentDate desc
 		  		limit #{page},#{pagesize}
 			  </select>
 			  
@@ -524,7 +525,7 @@
   					a.orderId = o.id 
   					AND u.id = o.userId 
   					AND o.companyId = #{companyId}
-  					AND o.orderStatus = "0"
+  					AND o.orderStatus between "2" and "0"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
@@ -1517,5 +1518,15 @@
  			
  			<select id="getUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
  				select userId from orders where id =#{id}
+ 			</select>
+ 			
+ 			
+ 			<select id="getOrdersTechnicalserviceMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+ 				select technicalServiceMoney from orderdetails where orderId = #{orderId}
+ 			</select>
+ 			
+ 			
+ 			<select id="getRepayment" parameterType="java.lang.String" resultType="com.zhita.model.manage.Repayment">
+ 				select * from repayment where reoaybtai = #{reoaybtai} 
  			</select>
 </mapper>
