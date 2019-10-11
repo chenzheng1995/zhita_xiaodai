@@ -341,6 +341,16 @@ public class Chanpayserviceimp implements Chanpayservice{
 	public Repayment getRepayment(String reoaybtai) {
 		return padao.getRepayment(reoaybtai);
 	}
+
+	@Override
+	public Integer UpdateReturn(Repayment pay) {
+		return stdao.UpdateRepay(pay);
+	}
+
+	@Override
+	public Orders getOrders(Integer orderId) {
+		return stdao.getOrders(orderId);
+	}
 	
 	
 	

@@ -157,9 +157,20 @@ public class NewPaymentController {
 				 
 				 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
 					 String orderId = requestmap.get("orderId");
-					 Repayment repayment = chanpayservice.getRepayment(orderId);
+					 Repayment repayment = chanpayservice.getRepayment(orderId);//获取还款数据
 					 if(repayment != null){
-						 
+						if(repayment.getReoaybtai().equals("0")){
+							responseStr = "SUCCESS"; 
+						}else {
+							Integer updateId = chanpayservice.UpdateReturn(repayment);//修改还款状态
+							Orders ord = chanpayservice.getOrders(repayment.getOrderid());
+							if(updateId != null){
+								servie.UpdateOrders(ord);
+								responseStr = "SUCCESS";
+							}else{
+								responseStr = "ERROR";
+							}
+						}
 					 }
 				 }
 			 }

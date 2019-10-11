@@ -73,7 +73,7 @@
 		<select id="SelectOrdersdetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,
-			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade,ord.technicalServiceMoney
+			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade,ord.technicalServiceMoney,ord.realityBorrowMoney,ord.interestInAll
 			from orders o,orderdetails ord,collection col,user u,sys_user colme
 			<where>
 				    o.id = ord.orderId 
