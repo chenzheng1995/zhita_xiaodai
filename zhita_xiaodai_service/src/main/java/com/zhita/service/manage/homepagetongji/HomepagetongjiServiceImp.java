@@ -422,11 +422,11 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			}
 		
 			BigDecimal deferredmoney=new BigDecimal("0.00");//（延期费）
-			BigDecimal defmoney=homepageTongjiMapper.deferredmoney(companyId,startTimestampsfor, startTimestampsfor);//（线上延期费）
+			BigDecimal defmoney=homepageTongjiMapper.deferredmoney(companyId,startTimestampsfor, endTimestampsfor);//（线上延期费）
 			if(defmoney==null){
 				defmoney=new BigDecimal("0.00");
 			}
-			BigDecimal defmoneylay=homepageTongjiMapper.deferredmoneylay(companyId, startTimestampsfor, startTimestampsfor);//（人工延期费）
+			BigDecimal defmoneylay=homepageTongjiMapper.deferredmoneylay(companyId, startTimestampsfor, endTimestampsfor);//（人工延期费）
 			if(defmoneylay==null){
 				defmoneylay=new BigDecimal("0.00");
 			}
