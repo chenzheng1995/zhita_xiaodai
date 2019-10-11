@@ -89,7 +89,7 @@ public class CertificationCenterController {
 		paramObject.setUserId(userId);
 		String json  = JSONObject.toJSONString(paramObject);
 		System.out.println(json);
-		pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
+		pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
 
     	Map<String, Object> map = new HashMap<>();
 		JSONObject jsonObject = JSONObject.parseObject(jsonString);

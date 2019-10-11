@@ -37,7 +37,7 @@ public class FaceController {
 	        	String sign = (String) userAttestation.get("sign");
 	        	String sign_version = "hmac_sha1";
 	        	String return_url = "http://xcx.rong51dai.com/idcard/renzhengchenggong/index1.html?userId="+userId;
-	        	String notify_url = "http://39.98.83.65:8080/zhita_xiaodai_app/faceParam/notify";
+	        	String notify_url = "http://fk.rong51dai.com/zhita_xiaodai_app/faceParam/notify";
 	        	int comparison_type =1;
 	        	String idcard_name = (String) userAttestation.get("trueName");
 	        	String idcard_number = (String) userAttestation.get("idcard_number");

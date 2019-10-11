@@ -61,7 +61,7 @@ public class IdCardController {
 	    	String sign_version = "hmac_sha1";
 	    	String capture_image = "0";
 	    	String return_url = "http://xcx.rong51dai.com/idcard/renzhengchenggong/index.html?userId="+userId;
-	    	String notify_url = "http://39.98.83.65:8080/zhita_xiaodai_app/idcardParam/notify";
+	    	String notify_url = "http://fk.rong51dai.com/zhita_xiaodai_app/idcardParam/notify";
 	    	String idcard_threshold = "0.8";
 	    	String limit_completeness = "2";
 	    	String limit_quality = "0.753";
