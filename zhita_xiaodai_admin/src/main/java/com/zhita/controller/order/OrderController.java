@@ -615,7 +615,7 @@ public class OrderController {
 			BigDecimal money = realmoney.add(offmoney).add(bankmoney);
 			orderList.get(i).setRepaymentMoney(String.valueOf(money));
 
-			BigDecimal shourldmoney =new BigDecimal("0.00");//应还金额（借款金额+期限内总利息+逾期的逾期费）
+			BigDecimal shourldmoney =new BigDecimal("0.00");//原始应还金额（借款金额+期限内总利息+逾期的逾期费）
 			if(orderList.get(i).getInterestPenaltySum()==null){
 				orderList.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
 			}
@@ -626,7 +626,11 @@ public class OrderController {
 				shourldmoney=orderList.get(i).getOrderdetails().getRealityBorrowMoney().add(orderList.get(i).getOrderdetails().getInterestSum()).
 						add(orderList.get(i).getOrderdetails().getInterestPenaltySum());
 			}
-			orderList.get(i).setShourldmoney(shourldmoney);// 应还金额（借款金额+期限内总利息+逾期的逾期费）
+			orderList.get(i).setShourldmoney(shourldmoney);// 原始应还金额（借款金额+期限内总利息+逾期的逾期费）
+			orderList.get(i).setRealshourldmoney(orderList.get(i).getOrderdetails().getShouldReapyMoney().add(orderList.get(i).getOrderdetails().getInterestPenaltySum()));//实际应还金额
+			BigDecimal accmoney=intOrderService.queryAccMoney(orderList.get(i).getId());
+			orderList.get(i).setAccmoney(accmoney);//该订单的减免金额
+			
 			orderList.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(orderList.get(i).getUser().getPhone())));// 将手机号进行脱敏
 			orderList.get(i).setShouldReturnTime(Timestamps.stampToDate(orderList.get(i).getShouldReturnTime()));
 			orderList.get(i).setOrderCreateTime(Timestamps.stampToDate(orderList.get(i).getOrderCreateTime()));
@@ -668,6 +672,8 @@ public class OrderController {
 				orderList.get(i).setOrderStatus("已还款");
 			}else if(orderList.get(i).getOrderStatus().equals("4")){
 				orderList.get(i).setOrderStatus("已坏账");
+			}else if(orderList.get(i).getOrderStatus().equals("5")){
+				orderList.get(i).setOrderStatus("借款中");
 			}
 			if(orderList.get(i).getUser().getAccount()==null||orderList.get(i).getUser().getAccount().isEmpty()){
 				orderList.get(i).getUser().setAccount("机审");
@@ -676,7 +682,7 @@ public class OrderController {
 		}
 	
 		//创建excel表的表头
-		String[] headers = {"订单编号", "姓名" ,"手机号","客户端", "注册时间","订单时间","订单状态","渠道","风控","风控分","审核员","贷款方式","还款期限","借款次数","放款金额","延期次数","延期金额","总利息","应还金额","实际还款"};
+		String[] headers = {"订单编号", "姓名" ,"手机号","客户端", "注册时间","订单时间","订单状态","渠道","风控","风控分","审核员","贷款方式","还款期限","借款次数","放款金额","延期次数","延期金额","总利息","原始应还金额","实际应还金额","减免金额","实际还款"};
 		//创建Excel工作簿
 		HSSFWorkbook workbook=new HSSFWorkbook();
 		//创建一个工作表sheet
@@ -723,21 +729,19 @@ public class OrderController {
 							cell2.setCellValue(orderList.get(i-1).getHowManyTimesBorMoney());
 							cell2=nextrow.createCell(14);
 							cell2.setCellValue(orderList.get(i-1).getOrderdetails().getMakeLoans().toString());
-							
-							
 							cell2=nextrow.createCell(15);
 							cell2.setCellValue(orderList.get(i-1).getDeferrTime());
-							
-							
 							cell2=nextrow.createCell(16);
 							cell2.setCellValue(orderList.get(i-1).getDeferrMoney().toString());
-							
 							cell2=nextrow.createCell(17);
 							cell2.setCellValue(orderList.get(i-1).getOrderdetails().getInterestInAll().toString());
-							
 							cell2=nextrow.createCell(18);
 							cell2.setCellValue(orderList.get(i-1).getShourldmoney().toString());
 							cell2=nextrow.createCell(19);
+							cell2.setCellValue(orderList.get(i-1).getRealshourldmoney().toString());
+							cell2=nextrow.createCell(20);
+							cell2.setCellValue(orderList.get(i-1).getAccmoney().toString());
+							cell2=nextrow.createCell(21);
 							cell2.setCellValue(orderList.get(i-1).getRepaymentMoney());
 							
 						}

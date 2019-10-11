@@ -25,6 +25,9 @@
       <arg column="applyState" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="model" javaType="java.lang.String" jdbcType="VARCHAR" />
        <arg column="userAgentInfo" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="userAuthenStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="bankAuthenStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+       <arg column="operatorAuthenStatus" javaType="java.lang.String" jdbcType="VARCHAR" />
       
     </constructor>
   </resultMap>
@@ -331,8 +334,7 @@
 	</select>
 	<!-- 后台管理           用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)  查询数量-->
 	<select id="queryUserListcount" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="java.lang.Integer">
-		select count(DISTINCT u.id) from  
-		user u LEFT JOIN source s on u.sourceid=s.id left join user_attestation uat on uat.userId=u.id LEFT JOIN bankcard b on b.userId=u.id LEFT JOIN operator o on o.userId=u.id
+		select count(DISTINCT u.id) from user u 
 		where u.companyId=#{companyId,jdbcType=INTEGER}
 	        <if test="name != null and name!='' ">
 	        	and u.name like "%"#{name,jdbcType=VARCHAR}"%"
@@ -889,7 +891,16 @@
      select model from user where id = #{userId}
 	</select> 
 	
+	      	  		<update id="updateUserAuthenStatus" parameterType="java.util.Map" >
+		update user
+		set userAuthenStatus = #{updateUserAuthenStatus}
+		where id = #{userId}
+	</update>
 	
-
+	      	  		<update id="updateOperatorAuthenStatus" parameterType="java.util.Map" >
+		update user
+		set operatorAuthenStatus = #{attestationStatus}
+		where id = #{userId}
+	</update>
 	
 </mapper>

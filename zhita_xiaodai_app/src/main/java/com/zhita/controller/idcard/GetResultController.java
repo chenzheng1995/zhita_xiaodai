@@ -250,6 +250,8 @@ public class GetResultController {
     	String string = UserAttestationService.getauthenticationSteps(userId);
     	if(string==null) {
           	 int number = UserAttestationService.insertUserAttestation(name, gender, nationality, birth_year, birth_month, birth_day, address,issued_by,valid_date_start,valid_date_end,frontsidePath,backsidePath,userId,idcard_number,homeAddressLongitude,homeAddressLatitude,detailAddress,authenticationSteps,authentime);
+          	 String userAuthenStatus ="0";
+          	intUserService.updateUserAuthenStatus(userId,userAuthenStatus);
            	 if(number==1) {    		 
            	    	map.put("Ncode","2000");
        	    		map.put("code", 200);

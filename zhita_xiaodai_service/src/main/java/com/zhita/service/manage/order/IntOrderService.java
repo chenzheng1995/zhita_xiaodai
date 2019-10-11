@@ -160,6 +160,11 @@ public interface IntOrderService {
 	
 	//后台管理---查询最后延期时间---人工延期
 	public Orders qeuryFinalDefertimelay(Integer orderid);
+	
+	/***
+	 * 根据订单id，查询该订单的减免金额
+	 */
+	public BigDecimal queryAccMoney(Integer orderid);
 
 
 	public String getshouldReturnTime(int userId, int companyId);

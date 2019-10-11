@@ -527,6 +527,16 @@ public class UserServiceImp implements IntUserService{
 		 String model = userMapper.getModel(userId);
 		return model;
 	}
+	@Override
+	public void updateUserAuthenStatus(int userId,String userAuthenStatus) {
+		userMapper.updateUserAuthenStatus(userId,userAuthenStatus);
+		
+	}
+	@Override
+	public void updateOperatorAuthenStatus(String attestationStatus, int userId) {
+		userMapper.updateOperatorAuthenStatus(attestationStatus, userId);
+		
+	}
 
 
 }
