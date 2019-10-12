@@ -43,5 +43,8 @@ public interface NewPaymentservice {
 	
 	
 	Payment_record getPayment(Integer orderId);
+	
+	
+	Integer SelectBank(Integer userId);
 
 }

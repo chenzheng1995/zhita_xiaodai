@@ -118,6 +118,7 @@ public class NewPaymentController {
 							 ord.setOrderNumber(chanpayservice.getOrderNumberDefe(defe.getOrderid()));
 							 ord.setUserId(chanpayservice.getUserId(defe.getOrderid()));
 					    	 Integer i = servie.UpdateDefeOrders(ord);
+					    	 SmsSendRequest sm = new SmsSendRequest();
 					    	 if(i != null){
 					    		 responseStr = "SUCCESS"; 
 					    	 }else{

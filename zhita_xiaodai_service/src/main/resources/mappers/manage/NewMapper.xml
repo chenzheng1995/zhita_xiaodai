@@ -40,4 +40,9 @@
 	<update id="UpdateOrders" parameterType="java.lang.Integer">
 		update orders set orderStatus = "0" where id = #{id}
 	</update>
+	
+	
+	<select id="SelectBankId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select id from bankcard where userId = #{userId}
+	</select>
 </mapper>

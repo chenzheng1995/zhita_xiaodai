@@ -1123,7 +1123,6 @@ public class NewPaymentController {
 		if(SeleId == null ){
 			if(paymentname.getLoanSource().equals("必付")){
 				Map<String, Object> maps = servie.RenzhenId(BkAcctNo, MobNo, IDNo, CstmrNm, bankcardTypeName, MerUserId, companyId,appNumber,codes);
-				
 				return maps;
 			}else{
 				

@@ -33,4 +33,7 @@ public interface NewMapper {
 	
 	
 	Integer UpdateOrders(Integer id);
+	
+	
+	Integer SelectBankId(Integer userId);
 }

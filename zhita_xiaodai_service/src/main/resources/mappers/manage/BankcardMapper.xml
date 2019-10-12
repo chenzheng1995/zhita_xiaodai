@@ -158,5 +158,10 @@
 		select id from Bankcard_type where bankcardTypeName = #{bankcardTypeName}
 	</select>
 	
+	
+	<select id="SelectSiAuthentication" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select status from authen_secondattributes where secondattributes = "四要素"
+	</select>
+	
 
 </mapper>

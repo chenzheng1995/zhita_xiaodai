@@ -22,6 +22,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +33,7 @@ import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.OrderdetailsMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.SmsMapper;
+import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
@@ -63,6 +65,11 @@ public class ChanpayQuickCollection {
 	
 	@Autowired
 	private Statisticsservice servie;
+	
+	
+	
+	@Autowired
+	private StatisticsDao Statisdao;
 	
 	
 	@Autowired
@@ -773,11 +780,12 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Bangnmg_api_auth_unbind")
-	public Map<String, Object> Bangnmg_api_auth_unbind(String userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
+	public Map<String, Object> Bangnmg_api_auth_unbind(String userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId,Integer companyId,String appNumber,String codes,String bankcardTypeName) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		bankcardTypeId = 1;
 		User us = chanpayservice.OneUser(Integer.valueOf(userId));
+		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
 		IDNo = us.getIdcard();
 		CstmrNm = us.getName();
 		// 2.1 基本参数
@@ -790,8 +798,10 @@ public class ChanpayQuickCollection {
 			map.put("msg", "换绑卡号和旧卡相同");
 			map.put("ReturnChanpay", "换绑卡号和旧卡相同");
 		}else{
-			
-
+			if(paymentname.getLoanSource().equals("必付")){
+				Map<String, Object> maps1 = servie.UpdateBanks(BkAcctNo,MobNo,IDNo,CstmrNm,bankcardTypeName,Integer.valueOf(userId),companyId,appNumber,codes);
+				return maps1;
+			}else{
 						Bankcard bank = new Bankcard();
 						bank.setAttestationStatus("0");
 						bank.setUserId(Integer.valueOf(userId));//登陆人ID
@@ -849,7 +859,7 @@ public class ChanpayQuickCollection {
 				
 				
 		}
-		
+		}
 		}else{
 			map.put("Ncode", 0);
 			map.put("code", "0");
@@ -867,10 +877,65 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Bangnmg_api_auth_sms")
-	public Map<String, Object> Bangnmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId,String BkAcctNoSc,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
+	public Map<String, Object> Bangnmg_api_auth_sms(String oriAuthTrxId,String SmsCode,Integer userId,String BkAcctNoSc,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId,Integer companyId,String code) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> origMap = new HashMap<String, String>();
-		Map<String, String> origMapuN = new HashMap<String, String>();
+		
+		
+		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
+		
+		if(paymentname.getLoanSource().equals("必付")){
+			Bankcard bank = new Bankcard();
+			
+			bank.setUserId(userId);//登陆人ID
+			bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
+			bank.setBankcardName(BkAcctNo);//卡号
+			bank.setTiedCardPhone(MobNo);//手机号
+			bank.setDeleted("0");
+			bank.setAttestationStatus("1");
+			bank.setIDcardnumber(IDNo);//身份证号
+			bank.setCstmrnm(CstmrNm);//持卡人姓名
+			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				bank.setAuthentime(Timestamps.dateToStamp1(sima.format(new Date())));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			Integer deleteId = Statisdao.DeleteChan(userId);//解绑成功删除数据库对应银行卡号
+			
+			if(deleteId != null){
+				System.out.println("删除完成,走添加");
+				Integer id = Statisdao.AddBankcard(bank);
+			Map<String, Object> maps = new HashMap<String, Object>();
+			if(id != null){
+				RedisClientUtil redisClientUtil = new RedisClientUtil();
+			    String key = MobNo + "xiaodaiKey";
+			    String redisCode = redisClientUtil.get(key);
+			    if (redisCode == null) {
+			     map.put("Ncode","402");
+			     map.put("msg", "验证码已过期，请重新发送");
+			     map.put("code", "402");
+			     return map;
+			    }
+			    if (redisCode.equals(code)) {
+			     redisClientUtil.delkey(key);// 验证码正确就从redis里删除这个key
+					 map.put("Ncode","2000");
+				     map.put("msg", "验证成功");
+				     map.put("code", "200");
+				     return map;
+			    }else{
+			    	 map.put("Ncode","0");
+				     map.put("msg", "验证错误");
+				     map.put("code", "0");
+				     return map;
+			    }
+			}else{
+				maps.put("code", "0");
+				maps.put("Ncode", 0);
+				maps.put("msg", "换绑失败");
+			}
+			return maps;
+		}else{
 		
 		String CardBegin = BkAcctNoSc.substring(0, 6);//获取银行卡前六位
 		String CardEnd = BkAcctNoSc.substring(BkAcctNoSc.length() - 4);//获取银行卡后四位
@@ -892,8 +957,8 @@ public class ChanpayQuickCollection {
 			String urlStr = "https://pay.chanpay.com/mag-unify/gateway/receiveOrder.do?";// 测试环境地址，上生产后需要替换该地址
 			result = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 						urlStr);
-			ReturnUserBank retu = JSON.parseObject(result,ReturnUserBank.class);
-				Integer as = chanpayservice.DeleteChan(userId);//解绑成功删除数据库对应银行卡号
+				JSON.parseObject(result,ReturnUserBank.class);
+				chanpayservice.DeleteChan(userId);//解绑成功删除数据库对应银行卡号
 				
 		
 		if(oriAuthTrxId != null && SmsCode != null && oriAuthTrxId != ""){
@@ -913,33 +978,16 @@ public class ChanpayQuickCollection {
 				resultJJ = buildRequest(origMap, "RSA", ChanpayQuickCollection.MERCHANT_PRIVATE_KEY, charset,
 							urlStrC);
 				ReturnChanpay retuJJ = JSON.parseObject(resultJJ,ReturnChanpay.class);
-				String ssa = retuJJ.getAcceptStatus();
-				Bankcard bank = new Bankcard();
+				retuJJ.getAcceptStatus();
+				Bankcard ban = new Bankcard();
 				
-				bank.setUserId(userId);//登陆人ID
-				bank.setBankcardTypeId(bankcardTypeId);//银行卡类型
-				bank.setBankcardName(BkAcctNo);//卡号
-				bank.setTiedCardPhone(MobNo);//手机号
-				bank.setDeleted("0");
-				bank.setIDcardnumber(IDNo);//身份证号
-				bank.setCstmrnm(CstmrNm);//持卡人姓名
-				if(ssa.equals("S")){
-					bank.setAttestationStatus("1");
-					map.put("Ncode", 2000);
-					map.put("code", "200");
-					map.put("ReturnChanpay", retuJJ);
-					map.put("desc", "认证成功");
-					map.put("msg", retuJJ.getRetMsg());
-					
-				
-				}else{
-					bank.setAttestationStatus("0");
-					map.put("Ncode", 0);
-					map.put("code", "0");
-					map.put("ReturnChanpay", retuJJ);
-					map.put("desc", "认证成功");
-					map.put("msg", retuJJ.getRetMsg());
-				}
+				ban.setUserId(userId);//登陆人ID
+				ban.setBankcardTypeId(bankcardTypeId);//银行卡类型
+				ban.setBankcardName(BkAcctNo);//卡号
+				ban.setTiedCardPhone(MobNo);//手机号
+				ban.setDeleted("0");
+				ban.setIDcardnumber(IDNo);//身份证号
+				ban.setCstmrnm(CstmrNm);//持卡人姓名
 				servie.AddBankcard(bank);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -953,6 +1001,8 @@ public class ChanpayQuickCollection {
 		} catch (Exception e) {
 			e.printStackTrace();
 	}
+		}
+		}
 		
 		return map;
 	}
@@ -1232,7 +1282,7 @@ public class ChanpayQuickCollection {
 		origMap.put("Service", "nmg_quick_onekeypay");// 直接支付
 		// 2.2 业务参数
 		//origMap.put("TrxId", "2017031310052312");// 商户网站唯一订单号
-		String trxId = Long.toString(System.currentTimeMillis());		
+		Long.toString(System.currentTimeMillis());		
 		origMap.put("TrxId", "DD_2019031310052312024651");// 订单号
 
 		origMap.put("OrdrName", "测试商品"); // 商品名称

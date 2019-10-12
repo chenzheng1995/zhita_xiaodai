@@ -555,7 +555,7 @@ public class OrdersController {
     
   	BigDecimal ll = new BigDecimal(0);
 //  	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//延期天数
-  	ll=BigDecimal.valueOf((int)lifeOfLoan);//借款期限转成decimal类型
+  	ll=BigDecimal.valueOf((int)(lifeOfLoan));//借款期限转成decimal类型
   	int platformfeeRatio =  ((int) map.get("platformfeeRatio"));//平台服务费比率
       BigDecimal pr = new BigDecimal(0);
       pr=BigDecimal.valueOf((int)platformfeeRatio);//平台服务费比率
@@ -569,7 +569,7 @@ public class OrdersController {
       Date date = new SimpleDateFormat("yyyy/MM/dd").parse(beforeTime);//取时间 
       Calendar calendar  =   Calendar.getInstance();		 
 	    calendar.setTime(date); //需要将date数据转移到Calender对象中操作
-	    calendar.add(calendar.DATE, lifeOfLoan);//把日期往后增加n天.正数往后推,负数往前移动 
+	    calendar.add(calendar.DATE, lifeOfLoan-1);//把日期往后增加n天.正数往后推,负数往前移动 
 	    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");  
 	    date=calendar.getTime();  //这个时间就是日期往后推一天的结果 
 	    String afterTime = sdf1.format(date);//延期后应还时间
