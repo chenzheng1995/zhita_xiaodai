@@ -773,11 +773,12 @@ public class ChanpayQuickCollection {
 	 */
 	@ResponseBody
 	@RequestMapping("Bangnmg_api_auth_unbind")
-	public Map<String, Object> Bangnmg_api_auth_unbind(String userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId) {
+	public Map<String, Object> Bangnmg_api_auth_unbind(String userId,String BkAcctNo,String IDNo,String CstmrNm,String MobNo,Integer bankcardTypeId,Integer companyId,String appNumber,String codes,String bankcardTypeName) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		bankcardTypeId = 1;
 		User us = chanpayservice.OneUser(Integer.valueOf(userId));
+		Thirdparty_interface paymentname = newsim.SelectPaymentName(companyId);//获取系统设置的 放款名称   和  还款名称
 		IDNo = us.getIdcard();
 		CstmrNm = us.getName();
 		// 2.1 基本参数
@@ -790,8 +791,10 @@ public class ChanpayQuickCollection {
 			map.put("msg", "换绑卡号和旧卡相同");
 			map.put("ReturnChanpay", "换绑卡号和旧卡相同");
 		}else{
-			
-
+			if(paymentname.getLoanSource().equals("必付")){
+			Map<String, Object> maps = servie.RenzhenId(BkAcctNo, MobNo, IDNo, CstmrNm, bankcardTypeName, Integer.valueOf(userId), companyId,appNumber,codes,companyId);
+			return maps;
+			}else{
 						Bankcard bank = new Bankcard();
 						bank.setAttestationStatus("0");
 						bank.setUserId(Integer.valueOf(userId));//登陆人ID
@@ -849,7 +852,7 @@ public class ChanpayQuickCollection {
 				
 				
 		}
-		
+		}
 		}else{
 			map.put("Ncode", 0);
 			map.put("code", "0");

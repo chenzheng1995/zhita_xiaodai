@@ -78,6 +78,6 @@ public interface Statisticsservice {
 	
 	
 	Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,Integer conpanyId
-			, String appNumber, String code);
+			, String appNumber, String code,Integer companyId);
 	
 }

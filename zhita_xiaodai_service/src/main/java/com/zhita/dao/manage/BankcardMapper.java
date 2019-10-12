@@ -26,5 +26,8 @@ public interface BankcardMapper {
 	List<BankcardType> getBankcardtype(Integer companyId);
 	
 	Integer SelectBankName(String bankcardTypeName);
+	
+	String SelectSiAuthentication(Integer companyId);
+	
 
 }
