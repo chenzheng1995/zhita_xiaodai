@@ -330,7 +330,7 @@ public class UserServiceImp implements IntUserService{
 		
 		//Operator operator=userMapper.queryOperator(userid);//运营商信息
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
+		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
 		JSONObject object = JSONObject.parseObject(rString);
 		System.out.println("*************************************************"+rString);
 		if(null==object){
@@ -340,17 +340,17 @@ public class UserServiceImp implements IntUserService{
 		map.put("listmaill", listmaill);
 		map.put("userAttestation", userAttestation);
 		map.put("bankcard",bankcard );
-		map.put("listapplier", object.getString("listapplier"));//申请人基本信息
-		map.put("listbill", object.getString("listbill"));//消费记录
-		map.put("listcommonth", object.getString("listcommonth"));//通话月份分布
-		map.put("listcombuck", object.getString("listcombuck"));//通话时间段分布
-		map.put("listcomdur", object.getString("listcomdur"));//通话时长分布
-		map.put("listrech", object.getString("listrech"));//充值记录
-		map.put("listrepo", object.getString("listrepo"));//报告基本信息
-		map.put("listsoc", object.getString("listsoc"));//社交关系
-		map.put("top10call", object.getString("top10call"));//通话次数前10 表
-		map.put("top10time", object.getString("top10time"));//通话总时长前10表
-		map.put("top10sing", object.getString("top10sing"));//单次通话时长前10 表
+		//map.put("listapplier", object.getString("listapplier"));//申请人基本信息
+		//map.put("listbill", object.getString("listbill"));//消费记录
+		//map.put("listcommonth", object.getString("listcommonth"));//通话月份分布
+		//map.put("listcombuck", object.getString("listcombuck"));//通话时间段分布
+		//map.put("listcomdur", object.getString("listcomdur"));//通话时长分布
+		//map.put("listrech", object.getString("listrech"));//充值记录
+		//map.put("listrepo", object.getString("listrepo"));//报告基本信息
+		//map.put("listsoc", object.getString("listsoc"));//社交关系
+		//map.put("top10call", object.getString("top10call"));//通话次数前10 表
+		//map.put("top10time", object.getString("top10time"));//通话总时长前10表
+		//map.put("top10sing", object.getString("top10sing"));//单次通话时长前10 表
 		map.put("listopera", object.getString("listopera"));//运营商基本信息
 		map.put("listcomdet", object.getString("listcomdet"));//通信检测
 		map.put("listemecon", object.getString("listemecon"));//紧急联系人
