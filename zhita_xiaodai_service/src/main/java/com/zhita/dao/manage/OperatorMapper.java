@@ -49,5 +49,9 @@ public interface OperatorMapper {
 
 	void updateoperator(@Param("userId")int userId,@Param("authentime") String authentime,@Param("phone") String phone);
 
+	void updatejiazhouoperator(@Param("userId")int userId,@Param("crawlerId") String crawlerId,@Param("crawlerToken") String crawlerToken,@Param("sms_verify_code") String sms_verify_code);
+
+	Map<String, Object> getjiazhouoperator(int userId);
+
 
 }

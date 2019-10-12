@@ -16,6 +16,12 @@ public class Operator {
     private String operatorjson;
     
     private String authentime;//认证时间
+    
+    private String crawlerId;
+    
+    private String crawlerToken;
+    
+    private String sms_verify_code;
 
     public Operator() {
         super();
@@ -83,6 +89,30 @@ public class Operator {
 
 	public void setAuthentime(String authentime) {
 		this.authentime = authentime;
+	}
+	
+	public String getCrawlerId() {
+		return crawlerId;
+	}
+
+	public void setCrawlerId(String crawlerId) {
+		this.crawlerId = crawlerId;
+	}
+	
+	public String getCrawlerToken() {
+		return crawlerToken;
+	}
+
+	public void setCrawlerToken(String crawlerToken) {
+		this.crawlerToken = crawlerToken;
+	}
+	
+	public String getSms_verify_code() {
+		return sms_verify_code;
+	}
+
+	public void setSms_verify_code(String sms_verify_code) {
+		this.sms_verify_code = sms_verify_code;
 	}
 
 	@Override

@@ -42,6 +42,7 @@ import com.zhita.service.manage.whitelistuser.IntWhitelistuserService;
 import com.zhita.util.MD5Utils;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.PostAndGet;
+import com.zhita.util.RedisClientUtil;
 import com.zhita.util.TuoMinUtil;
 
 @Controller
@@ -172,73 +173,158 @@ public class OperatorController {
 	@RequestMapping("/updateOperatorJson")
 	@ResponseBody
 	@Transactional
-	public Map<String, String> updateOperatorJson(int userId) {
-		Map<String, String> map = new HashMap<>();
-		  String secondattributes = "运营商";
-		   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
-		   if("1".equals(status)) {
-		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
-		String attestationStatus = null;
-		String name = (String) userAttestation.get("trueName");
-		String idNumber = (String) userAttestation.get("idcard_number");
+	public Map<String, Object> updateOperatorJson(int userId) {
+		Map<String, Object> map = new HashMap<>();
+		int companyId =3;
+		String operatorsAuthentication = thirdpartyInterfaceMapper.getOperatorsAuthentication(companyId);
+		if("360".equals(operatorsAuthentication)) {
+			 String secondattributes = "运营商";
+			   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+			   if("1".equals(status)) {
+			Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
+			String attestationStatus = null;
+			String name = (String) userAttestation.get("trueName");
+			String idNumber = (String) userAttestation.get("idcard_number");
 
-		Map<String, Object> operator = operatorService.getOperator(userId);
-		String search_id = (String) operator.get("search_id");
-		String phone = (String) operator.get("phone");
-		String reqId = (String) operator.get("reqId");
+			Map<String, Object> operator = operatorService.getOperator(userId);
+			String search_id = (String) operator.get("search_id");
+			String phone = (String) operator.get("phone");
+			String reqId = (String) operator.get("reqId");
 
-		// Map<String, Object> map2 = operatorService.getOperator(userId);
-		// String url = (String) map2.get("operatorJson");
-		// JSONObject sampleObject = JSON.parseObject(url);
-		// String error = sampleObject.getString("error");
+			// Map<String, Object> map2 = operatorService.getOperator(userId);
+			// String url = (String) map2.get("operatorJson");
+			// JSONObject sampleObject = JSON.parseObject(url);
+			// String error = sampleObject.getString("error");
 
-		H5ReportQueryDemo h5ReportQueryDemo = new H5ReportQueryDemo();
-		String url = h5ReportQueryDemo.getH5ReportQuery(userId, phone, name, idNumber, reqId, search_id);
-		JSONObject sampleObject = JSON.parseObject(url);
-		String error = sampleObject.getString("error");
-		if (error.equals("200")) {
-			attestationStatus = "1";
-			operatorService.updateAttestationStatus(attestationStatus, userId);
-			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-			int number = operatorService.updateOperatorJson(url, userId);
-			if (number == 1) {
-				int companyId = 3;
-				String thirdtypeid = "5";
-				String date = System.currentTimeMillis() + "";
-				thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-				map.put("msg", "数据更新成功");
+			H5ReportQueryDemo h5ReportQueryDemo = new H5ReportQueryDemo();
+			String url = h5ReportQueryDemo.getH5ReportQuery(userId, phone, name, idNumber, reqId, search_id);
+			JSONObject sampleObject = JSON.parseObject(url);
+			String error = sampleObject.getString("error");
+			if (error.equals("200")) {
+				attestationStatus = "1";
+				operatorService.updateAttestationStatus(attestationStatus, userId);
+				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+				int number = operatorService.updateOperatorJson(url, userId);
+				if (number == 1) {
+					String thirdtypeid = "5";
+					String date = System.currentTimeMillis() + "";
+					thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+					map.put("msg", "数据更新成功");
+				} else {
+					map.put("msg", "数据更新失败");
+				}
+				map.put("Ncode", "2000");
+				map.put("msg", "认证成功");
+				map.put("Code", "200");
 			} else {
-				map.put("msg", "数据更新失败");
+				if (error.equals("30000")) {
+					if (url.indexOf("205") != -1) {
+						attestationStatus = "2";
+						operatorService.updateAttestationStatus(attestationStatus, userId);
+						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+						map.put("Ncode", "2000");
+						map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+						map.put("Code", "300");
+					}
+				} else {
+					map.put("Ncode", "2000");
+					map.put("msg", "认证失败");
+					map.put("Code", "401");
+				}
+
 			}
-			map.put("Ncode", "2000");
-			map.put("msg", "认证成功");
-			map.put("Code", "200");
-		} else {
-			if (error.equals("30000")) {
-				if (url.indexOf("205") != -1) {
-					attestationStatus = "2";
+			// map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+			// map.put("Code", "300");
+			   }else {
+					String attestationStatus = "1";
 					operatorService.updateAttestationStatus(attestationStatus, userId);
 					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 					map.put("Ncode", "2000");
-					map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-					map.put("Code", "300");
-				}
-			} else {
-				map.put("Ncode", "2000");
-				map.put("msg", "认证失败");
-				map.put("Code", "401");
-			}
-
+					map.put("Code", "200"); 
+			   }
 		}
-		// map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-		// map.put("Code", "300");
-		   }else {
-				String attestationStatus = "1";
-				operatorService.updateAttestationStatus(attestationStatus, userId);
-				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-				map.put("Ncode", "2000");
-				map.put("Code", "200"); 
-		   }
+		if("嘉州".equals(operatorsAuthentication)) {
+			Map<String, Object> map1 = operatorService.getjiazhouoperator(userId);
+			String crawlerId = (String) map1.get("crawlerId");
+			String crawlerToken = (String) map1.get("crawlerToken");
+			String sms_verify_code = (String) map1.get("sms_verify_code");
+			operatorService.updatejiazhouoperator(userId, crawlerId, crawlerToken,sms_verify_code);
+			RedisClientUtil redis = new RedisClientUtil();
+			String aca = redis.getjiazhou("jzjkupdateOperatorJson"+userId);
+			if(aca != null){
+				map.put("Ncode", 0);
+				map.put("code", "0");
+				map.put("msg", "请勿重复点击!!");
+				return map;
+			}else {
+				redis.setjiazhou("jzjkupdateOperatorJson"+userId,"1");
+				String secondattributes = "运营商";
+				   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+				   if("1".equals(status)) {
+				String appId = "8625";
+				String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";
+				String crawlerType = "OperatorReport";
+				PostAndGet pGet = new PostAndGet();	    
+			    String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
+				JSONObject sampleObject = JSON.parseObject(str);
+				if(sampleObject!=null) {
+				String code = sampleObject.getString("code");
+				if (code.equals("200")) {			
+					UserJson paramObject = new UserJson();
+					paramObject.setJsonString(str);
+					paramObject.setUserId(userId);
+					String json  = JSONObject.toJSONString(paramObject);
+					pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
+					String attestationStatus = "1";
+					operatorService.updateAttestationStatus(attestationStatus, userId);
+					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+					int number = operatorService.updateOperatorJson(str, userId);
+					if (number == 1) {
+						String thirdtypeid = "5";
+						String date = System.currentTimeMillis() + "";
+						thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+						map.put("msg", "数据更新成功");
+					} else {
+						map.put("msg", "数据更新失败");
+					}
+					map.put("Ncode", "2000");
+					map.put("msg", "认证成功");
+					map.put("code", "200");
+				} else {
+					if (code.equals("400")) {
+							String attestationStatus = "2";
+							operatorService.updateAttestationStatus(attestationStatus, userId);
+							intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+							map.put("Ncode", "2000");
+							map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+							map.put("code", "300");
+					} else {
+						map.put("Ncode", "2000");
+						map.put("msg", "认证失败");
+						map.put("code", "401");
+					}
+				}
+				}else {
+					String attestationStatus = "1";
+					operatorService.updateAttestationStatus(attestationStatus, userId);
+					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+					map.put("Ncode", "407");
+					map.put("msg", "运营商没调通");
+					map.put("code", "407");
+				}
+				   }else {
+						String attestationStatus = "1";
+						operatorService.updateAttestationStatus(attestationStatus, userId);
+						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+						map.put("Ncode", "2000");
+						map.put("msg", "认证成功");
+						map.put("code", "200");
+				   }
+			}
+		}
+		
+		
+		 
 		return map;
 
 	}
@@ -336,69 +422,81 @@ public class OperatorController {
 	@Transactional
 	public Map<String, Object> jzjkupdateOperatorJson(int userId,String crawlerId,String crawlerToken,String sms_verify_code) {
 		Map<String, Object> map = new HashMap<>();
-		  String secondattributes = "运营商";
-		   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
-		   if("1".equals(status)) {
-		String appId = "8625";
-		String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";
-		String crawlerType = "OperatorReport";
-		PostAndGet pGet = new PostAndGet();	    
-	    String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
-		JSONObject sampleObject = JSON.parseObject(str);
-		if(sampleObject!=null) {
-		String code = sampleObject.getString("code");
-		if (code.equals("200")) {
-			UserJson paramObject = new UserJson();
-			paramObject.setJsonString(str);
-			paramObject.setUserId(userId);
-			String json  = JSONObject.toJSONString(paramObject);
-			pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
-			String attestationStatus = "1";
-			operatorService.updateAttestationStatus(attestationStatus, userId);
-			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-			int number = operatorService.updateOperatorJson(str, userId);
-			if (number == 1) {
-				int companyId = 3;
-				String thirdtypeid = "5";
-				String date = System.currentTimeMillis() + "";
-				thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
-				map.put("msg", "数据更新成功");
-			} else {
-				map.put("msg", "数据更新失败");
-			}
-			map.put("Ncode", "2000");
-			map.put("msg", "认证成功");
-			map.put("code", "200");
-		} else {
-			if (code.equals("400")) {
-					String attestationStatus = "2";
-					operatorService.updateAttestationStatus(attestationStatus, userId);
-					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-					map.put("Ncode", "2000");
-					map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-					map.put("code", "300");
-			} else {
-				map.put("Ncode", "2000");
-				map.put("msg", "认证失败");
-				map.put("code", "401");
-			}
-		}
+		operatorService.updatejiazhouoperator(userId, crawlerId, crawlerToken,sms_verify_code);
+		RedisClientUtil redis = new RedisClientUtil();
+		String aca = redis.getjiazhou("jzjkupdateOperatorJson"+userId);
+		if(aca != null){
+			map.put("Ncode", 0);
+			map.put("code", "0");
+			map.put("msg", "请勿重复点击!!");
+			return map;
 		}else {
-			String attestationStatus = "1";
-			operatorService.updateAttestationStatus(attestationStatus, userId);
-			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-			map.put("Ncode", "407");
-			map.put("msg", "运营商没调通");
-			map.put("code", "407");
-		}
-		   }else {
+			redis.setjiazhou("jzjkupdateOperatorJson"+userId,"1");
+			String secondattributes = "运营商";
+			   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+			   if("1".equals(status)) {
+			String appId = "8625";
+			String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";
+			String crawlerType = "OperatorReport";
+			PostAndGet pGet = new PostAndGet();	    
+		    String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
+			JSONObject sampleObject = JSON.parseObject(str);
+			if(sampleObject!=null) {
+			String code = sampleObject.getString("code");
+			if (code.equals("200")) {			
+				UserJson paramObject = new UserJson();
+				paramObject.setJsonString(str);
+				paramObject.setUserId(userId);
+				String json  = JSONObject.toJSONString(paramObject);
+				pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
 				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+				int number = operatorService.updateOperatorJson(str, userId);
+				if (number == 1) {
+					int companyId = 3;
+					String thirdtypeid = "5";
+					String date = System.currentTimeMillis() + "";
+					thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+					map.put("msg", "数据更新成功");
+				} else {
+					map.put("msg", "数据更新失败");
+				}
 				map.put("Ncode", "2000");
 				map.put("msg", "认证成功");
 				map.put("code", "200");
-		   }
+			} else {
+				if (code.equals("400")) {
+						String attestationStatus = "2";
+						operatorService.updateAttestationStatus(attestationStatus, userId);
+						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+						map.put("Ncode", "2000");
+						map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
+						map.put("code", "300");
+				} else {
+					map.put("Ncode", "2000");
+					map.put("msg", "认证失败");
+					map.put("code", "401");
+				}
+			}
+			}else {
+				String attestationStatus = "1";
+				operatorService.updateAttestationStatus(attestationStatus, userId);
+				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+				map.put("Ncode", "407");
+				map.put("msg", "运营商没调通");
+				map.put("code", "407");
+			}
+			   }else {
+					String attestationStatus = "1";
+					operatorService.updateAttestationStatus(attestationStatus, userId);
+					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
+					map.put("Ncode", "2000");
+					map.put("msg", "认证成功");
+					map.put("code", "200");
+			   }
+		}
+		  
 		return map; 
 	
 	}
