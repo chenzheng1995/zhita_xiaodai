@@ -97,5 +97,17 @@ public class OperatorServiceimp implements OperatorService{
 		
 	}
 
+	@Override
+	public void updatejiazhouoperator(int userId, String crawlerId, String crawlerToken, String sms_verify_code) {
+		operatorMapper.updatejiazhouoperator(userId, crawlerId, crawlerToken,sms_verify_code);
+		
+	}
+
+	@Override
+	public Map<String, Object> getjiazhouoperator(int userId) {
+		Map<String, Object> map1 = operatorMapper.getjiazhouoperator(userId);
+		return map1;
+	}
+
 
 }

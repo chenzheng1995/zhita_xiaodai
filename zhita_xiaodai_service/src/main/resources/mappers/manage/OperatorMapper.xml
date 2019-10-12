@@ -10,6 +10,9 @@
       <arg column="reqId" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="search_id" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="operatorJson" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="crawlerId" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="crawlerToken" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="sms_verify_code" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
     </constructor>
   </resultMap>
 <!--   <resultMap id="ResultMapWithBLOBs" type="com.zhita.model.manage.Operator">
@@ -216,5 +219,18 @@
     phone = #{phone}
     where userId = #{userId}
   </update>
+  
+  	  		  <update id="updatejiazhouoperator" parameterType="java.util.Map">
+    update operator set
+    crawlerId = #{crawlerId},
+    crawlerToken = #{crawlerToken},
+    sms_verify_code = #{sms_verify_code}
+    where userId = #{userId}
+  </update>
+  
+  
+  	      		<select id="getjiazhouoperator" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select crawlerId,crawlerToken,sms_verify_code from operator where userId = #{userId}
+	</select>
   
 </mapper>

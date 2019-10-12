@@ -36,6 +36,15 @@ public class RedisClientUtil {
     }
     
     
+    public String setjiazhou(String key, String value) {
+        Jedis jedis = pool.getResource();
+        String set = jedis.set(key, value);
+        jedis.expire(key,300);        //过期时间设置单位为秒
+        jedis.close();
+        return set;
+    }
+    
+    
     
     /**
      * Redis存储简单类型
@@ -71,6 +80,20 @@ public class RedisClientUtil {
         Jedis jedis = pool.getResource();
         String value = jedis.get(key);
         jedis.expire(key, 180);        //过期时间设置单位为秒
+        jedis.close();
+        return value;
+    }
+    
+    
+    /**
+     * 根据key，获取值
+     *
+     * @param key
+     * @return
+     */
+    public String getjiazhou(String key) {
+        Jedis jedis = pool.getResource();
+        String value = jedis.get(key);
         jedis.close();
         return value;
     }
