@@ -1122,7 +1122,7 @@ public class NewPaymentController {
 		Integer SeleId = servie.SelectTrxId(bank);//查询银行卡号
 		if(SeleId == null ){
 			if(paymentname.getLoanSource().equals("必付")){
-				Map<String, Object> maps = servie.RenzhenId(BkAcctNo, MobNo, IDNo, CstmrNm, bankcardTypeName, MerUserId, companyId,appNumber,codes,companyId);
+				Map<String, Object> maps = servie.RenzhenId(BkAcctNo, MobNo, IDNo, CstmrNm, bankcardTypeName, MerUserId, companyId,appNumber,codes);
 				return maps;
 			}else{
 				

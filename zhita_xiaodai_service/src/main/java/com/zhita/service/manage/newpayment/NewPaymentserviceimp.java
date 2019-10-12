@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.controller.payment.util.HttpClient;
 import com.zhita.controller.payment.util.SignUtils;
@@ -331,8 +333,14 @@ public class NewPaymentserviceimp implements NewPaymentservice{
 
 	@Override
 	public Payment_record getPayment(Integer orderId) {
-		// TODO Auto-generated method stub
 		return newdao.getPayment(orderId);
+	}
+
+
+
+	@Override
+	public Integer SelectBank(Integer userId) {
+		return newdao.SelectBankId(userId);
 	}
 	
 	

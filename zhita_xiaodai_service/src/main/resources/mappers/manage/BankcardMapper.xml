@@ -160,7 +160,7 @@
 	
 	
 	<select id="SelectSiAuthentication" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select status from authen_secondattributes where companyId = #{companyId} and  secondattributes = "四要素"
+		select status from authen_secondattributes where secondattributes = "四要素"
 	</select>
 	
 
