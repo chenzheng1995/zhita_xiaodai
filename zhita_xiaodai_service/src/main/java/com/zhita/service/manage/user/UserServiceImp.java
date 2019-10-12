@@ -330,7 +330,7 @@ public class UserServiceImp implements IntUserService{
 		
 		//Operator operator=userMapper.queryOperator(userid);//运营商信息
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
 		JSONObject object = JSONObject.parseObject(rString);
 		System.out.println("*************************************************"+rString);
 		if(null==object){
