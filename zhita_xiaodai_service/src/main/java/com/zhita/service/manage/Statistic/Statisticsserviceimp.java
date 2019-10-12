@@ -7,10 +7,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.chanpayutil.BaseConstant;
@@ -367,14 +369,14 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,
-			Integer conpanyId,String appNumber,String code,Integer companyId) {
+			Integer conpanyId,String appNumber,String code) {
 		
 		RedisClientUtil redis = new RedisClientUtil();
 		
 		 Map<String, Object> map = new HashMap<String, Object>();
 		  Integer banktypeid = bankcardMapper.SelectBankName(bankcardTypeName);
 		if(banktypeid!=null){
-			String ifAuthentication = bankcardMapper.SelectSiAuthentication(companyId);
+			String ifAuthentication = bankcardMapper.SelectSiAuthentication(conpanyId);
 			if(ifAuthentication.equals("1")){
 			 String host = "https://bankver.market.alicloudapi.com";
 			    String path = "/creditop/BankCardQuery/BankCardVerification";
@@ -453,7 +455,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 		    					map.put("OriAuthTrxId", 1);
 		    					map.put("code","200");
 		    					map.put("msg", state);
-					    		map.put("desc", "认证成功");
+					    		map.put("desc", "验证码已发送");
 					    		return map;
 		    				} else {
 		    					redis.delkey("userId"+userId);
@@ -614,6 +616,46 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 	   
 		
 	    return map;
+	}
+
+	@Override
+	public Map<String, Object> UpdateBanks(String accountNo,
+			String bankPreMobile, String idCardCode, String name,
+			String bankcardTypeName, Integer userId, Integer conpanyId,
+			String appNumber, String code) {
+		
+		RedisClientUtil redis = new RedisClientUtil();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+				DateFormat format = new SimpleDateFormat("yyyy/M/d");
+				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+				if (result.length() == 31) {
+					result = 0 + MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+				}
+				System.out.println("验证码:"+code+":C:"+result);
+				if (result.equals(code)) {
+					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+					String state = yunTongXunUtil.sendSMS(bankPreMobile);
+					if("提交成功".equals(state)) {
+					String thirdtypeid = "1";
+					String date = System.currentTimeMillis()+"";
+					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
+					}
+					map.put("Ncode","2000");
+					map.put("OriAuthTrxId", 1);
+					map.put("code","200");
+					map.put("msg", state);
+		    		map.put("desc", "验证码已发送");
+		    		return map;
+				} else {
+					redis.delkey("userId"+userId);
+					map.put("Ncode","405");
+					map.put("msg", "发送失败");
+					map.put("Code","405");
+					return map;
+				}
+		
+		
 	}
 		
 		
