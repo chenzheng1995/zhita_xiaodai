@@ -906,7 +906,7 @@
 	
 	      	  		<update id="updateUserAuthenStatus" parameterType="java.util.Map" >
 		update user
-		set userAuthenStatus = #{updateUserAuthenStatus}
+		set userAuthenStatus = #{userAuthenStatus}
 		where id = #{userId}
 	</update>
 	
