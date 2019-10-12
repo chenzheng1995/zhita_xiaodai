@@ -283,7 +283,6 @@ public class FinanceServiceimp implements FinanceService{
 		Integer addId = padao.AddCAccount(acc);
 		System.out.println("减免后的应还金额:"+acc.getTotalamount());
 		Orderdetails orderde = padao.SelectCollectionMoney(acc.getOrderId());
-		acc.setTotalamount(acc.getTotalamount().subtract(orderde.getInterestPenaltySum()).subtract(padao.getOrdersTechnicalserviceMoney(acc.getOrderId())));
 		if(addId != null){
 			
 			Integer updateId = padao.UpdateOrdermoney(acc);

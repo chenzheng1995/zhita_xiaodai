@@ -365,8 +365,8 @@ public class LoginController {
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //139.129.102.60服务
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //115.29.64.145服务
 	        
-	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
-	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.173.1服务
+	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
+	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.173.1服务
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.172.8服务
 	        FolderUtil folderUtil = new FolderUtil();
 	        try {
@@ -378,8 +378,8 @@ public class LoginController {
 	       //return "http://139.129.102.60:8081/H5Code/" + fileName;   //139.129.102.60服务
 	       //return "http://115.29.64.145:8081/H5Code/" + fileName;   //115.29.64.145服务
 	        
-	       return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
-	       //return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
+	       //return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
+	       return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
 	       //return "http://47.56.172.8:8081/H5Code/" + fileName;   //47.56.172.8服务
 	    }
 	    
