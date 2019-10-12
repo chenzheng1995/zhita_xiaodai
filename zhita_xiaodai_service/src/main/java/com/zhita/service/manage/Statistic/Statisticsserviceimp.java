@@ -367,13 +367,15 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 
 	@Override
 	public Map<String, Object> RenzhenId(String accountNo,String bankPreMobile,String idCardCode,String name,String bankcardTypeName,Integer userId,
-			Integer conpanyId,String appNumber,String code) {
+			Integer conpanyId,String appNumber,String code,Integer companyId) {
+		
+		RedisClientUtil redis = new RedisClientUtil();
 		
 		 Map<String, Object> map = new HashMap<String, Object>();
 		  Integer banktypeid = bankcardMapper.SelectBankName(bankcardTypeName);
 		if(banktypeid!=null){
-			
-			
+			String ifAuthentication = bankcardMapper.SelectSiAuthentication(companyId);
+			if(ifAuthentication.equals("1")){
 			 String host = "https://bankver.market.alicloudapi.com";
 			    String path = "/creditop/BankCardQuery/BankCardVerification";
 			    String method = "GET";
@@ -388,7 +390,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    querys.put("name", name);
 			    
 		    
-		    RedisClientUtil redis = new RedisClientUtil();
+		    
 
 			    
 		    
@@ -549,7 +551,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 				    			}
 			    			
 			    		}
-			    			redis.delkey("userId"+userId);
+			    		redis.delkey("userId"+userId);
 			    		map.put("code", 0);
 			    		map.put("Ncode", 0);
 			    		map.put("msg", msg);
@@ -575,7 +577,35 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    }
 			    
 		    } 
-			
+				}else{//end 银行卡四要素关闭
+					
+					DateFormat format = new SimpleDateFormat("yyyy/M/d");
+    				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+    				if (result.length() == 31) {
+    					result = 0 + MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
+    				}
+    				System.out.println("验证码:"+code+":C:"+result);
+    				if (result.equals(code)) {
+    					YunTongXunUtil yunTongXunUtil = new YunTongXunUtil();
+    					String state = yunTongXunUtil.sendSMS(bankPreMobile);
+    					if("提交成功".equals(state)) {
+    					String thirdtypeid = "1";
+    					String date = System.currentTimeMillis()+"";
+    					thirdcalltongjiMapper.setthirdcalltongji(conpanyId,thirdtypeid,date);
+    					}
+    					map.put("Ncode","2000");
+    					map.put("code","200");
+    					map.put("msg", state);
+			    		map.put("desc", "认证成功");
+			    		return map;
+    				} else {
+    					map.put("Ncode","405");
+    					redis.delkey("userId"+userId);
+    					map.put("msg", "发送失败");
+    					map.put("Code","405");
+    					return map;
+    				}
+			}
 		}else{
 			map.put("code", "0");
 			map.put("Ncode", "0");
