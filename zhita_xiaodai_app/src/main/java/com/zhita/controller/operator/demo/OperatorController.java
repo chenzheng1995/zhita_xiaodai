@@ -249,15 +249,6 @@ public class OperatorController {
 			String crawlerToken = (String) map1.get("crawlerToken");
 			String sms_verify_code = (String) map1.get("sms_verify_code");
 			operatorService.updatejiazhouoperator(userId, crawlerId, crawlerToken,sms_verify_code);
-			RedisClientUtil redis = new RedisClientUtil();
-			String aca = redis.getjiazhou("jzjkupdateOperatorJson"+userId);
-			if(aca != null){
-				map.put("Ncode", 0);
-				map.put("code", "0");
-				map.put("msg", "请勿重复点击!!");
-				return map;
-			}else {
-				redis.setjiazhou("jzjkupdateOperatorJson"+userId,"1");
 				String secondattributes = "运营商";
 				   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
 				   if("1".equals(status)) {
@@ -320,7 +311,6 @@ public class OperatorController {
 						map.put("msg", "认证成功");
 						map.put("code", "200");
 				   }
-			}
 		}
 		
 		
@@ -353,6 +343,13 @@ public class OperatorController {
 		String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
 		JSONObject jsonObject = JSONObject.parseObject(str);
 		if(jsonObject!=null) {
+			int code = (int) jsonObject.get("code");			
+			if(code==400) {
+				map.put("Ncode", "2000");
+				map.put("msg", "手机号使用太频繁，请两分钟之后再尝试");
+				map.put("code", "408");
+				return map;
+			}
 		JSONObject data = (JSONObject) jsonObject.get("data");
 			String crawlerId = data.getString("crawlerId");//爬虫ID
 			String crawlerToken = data.getString("crawlerToken");//爬虫Token
@@ -440,6 +437,11 @@ public class OperatorController {
 			String crawlerType = "OperatorReport";
 			PostAndGet pGet = new PostAndGet();	    
 		    String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
+		    boolean a = str.endsWith("<br /><b>Fatal error</b>:  Uncaught think\\exception\\ErrorException: Unknown: Skipping numeric key 10 in Unknown:0Stack trace:#0 [internal function]: think\\Error::appError(8, 'Unknown: Skippi...', 'Unknown', 0, NULL)#1 {main}  thrown in <b>Unknown</b> on line <b>0</b><br />");
+			if(a==true) {
+				str = str.replace("<br /><b>Fatal error</b>:  Uncaught think\\exception\\ErrorException: Unknown: Skipping numeric key 10 in Unknown:0Stack trace:#0 [internal function]: think\\Error::appError(8, 'Unknown: Skippi...', 'Unknown', 0, NULL)#1 {main}  thrown in <b>Unknown</b> on line <b>0</b><br />","");
+			}
+		    System.out.println(str);
 			JSONObject sampleObject = JSON.parseObject(str);
 			if(sampleObject!=null) {
 			String code = sampleObject.getString("code");
@@ -472,7 +474,7 @@ public class OperatorController {
 						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 						map.put("Ncode", "2000");
 						map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-						map.put("code", "300");
+						map.put("code", "200");
 				} else {
 					map.put("Ncode", "2000");
 					map.put("msg", "认证失败");
