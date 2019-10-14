@@ -428,6 +428,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    	if(reason.equals("成功")){//等于0是认证成功
 			    		Integer num = sdao.SelectUserRenNum(userId);
 			    		sdao.UpdateUserBankType(userId);
+			    		
 			    		if(num==null){
 			    			num=0;
 			    		}
@@ -483,7 +484,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    			user.setId(userId);
 			    			user.setAuthentication(num+1);
 			    			Integer i = sdao.UserAuthenNum(user);//修改用户认证次数
-			    			
+			    			sdao.UpdateUserBankType(userId);
 			    			if(i!=null){
 			    				DateFormat format = new SimpleDateFormat("yyyy/M/d");
 			    				String result = MD5Utils.getMD5(bankPreMobile + appNumber + format.format(new Date()) + "@xiaodai");
@@ -502,7 +503,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
 			    					map.put("Ncode","2000");
 			    					map.put("code","200");
 			    					map.put("msg", state);
-						    		map.put("desc", "认证成功");
+						    		map.put("desc", "验证码已发送");
 						    		return map;
 			    				} else {
 			    					map.put("Ncode","405");
@@ -598,7 +599,7 @@ public class Statisticsserviceimp extends BaseParameter implements Statisticsser
     					map.put("Ncode","2000");
     					map.put("code","200");
     					map.put("msg", state);
-			    		map.put("desc", "认证成功");
+			    		map.put("desc", "验证码已发送");
 			    		return map;
     				} else {
     					map.put("Ncode","405");

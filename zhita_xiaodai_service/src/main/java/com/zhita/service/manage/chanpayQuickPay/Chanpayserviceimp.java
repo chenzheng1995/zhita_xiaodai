@@ -234,6 +234,17 @@ public class Chanpayserviceimp implements Chanpayservice{
 		Orders orderId = stdao.SelectOrderId(orderNumber);
 		return padao.UserDefeNum(orderId.getId());
 	}
+	
+	
+	
+	@Override
+	public Integer UpdateRepayStatusAA(String pipelinenu,Integer orderId) {
+		Integer a = stdao.UpdateRepaystatus(pipelinenu);
+		return padao.UserDefeNum(orderId);
+	}
+	
+	
+	
 
 	@Override
 	public User OneUser(Integer userId) {

@@ -154,6 +154,7 @@ public class NewPaymentController {
 		 try {
 			 String responseStr = "ERROR";
 			 String code = request.getParameter("code");
+			 System.out.println("code="+code);
 			 if(code.equals("SUCCESS")){
 				 
 				 if(SignUtils.checkParam(requestmap, ZpayConfig.MD5_KEY)){
@@ -163,7 +164,7 @@ public class NewPaymentController {
 						if(repayment.getReoaybtai().equals("0")){
 							responseStr = "SUCCESS"; 
 						}else {
-							Integer updateId = chanpayservice.UpdateReturn(repayment);//修改还款状态
+							Integer updateId = chanpayservice.UpdateRepayStatusAA(repayment.getPipelinenumber(),repayment.getOrderid());//修改还款状态
 							Orders ord = chanpayservice.getOrders(repayment.getOrderid());
 							if(updateId != null){
 								servie.UpdateOrders(ord);
