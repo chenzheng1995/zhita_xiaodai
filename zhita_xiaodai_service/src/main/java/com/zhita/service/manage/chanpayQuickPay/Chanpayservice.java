@@ -89,6 +89,9 @@ public interface Chanpayservice {
 	User OneUser(Integer userId);
 	
 	
+	Integer UpdateRepayStatusAA(String pipelinenu,Integer orderId);
+	
+	
 	Integer DeleteOrderNumber(String orderNumber,String orderStatus);
 	
 	
