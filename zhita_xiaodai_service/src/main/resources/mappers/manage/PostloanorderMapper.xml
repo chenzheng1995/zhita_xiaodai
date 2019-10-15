@@ -498,7 +498,7 @@
 		
 		
 		<select id="YiHuanOrdersTotalCountOO" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			from orders o,user u,orderdetails ord,source sor,repayment repay
+			select count(o.id) from orders o,user u,orderdetails ord,source sor,repayment repay
 			<where>
 			 	o.id = ord.orderid
 				and o.userId = u.id

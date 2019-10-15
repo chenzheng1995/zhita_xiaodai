@@ -261,6 +261,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 		if(addOrderId ==1){
 			Integer a = padao.DeleteOrderDetailsNumber(orderNumber);//删除订单
 			if(a != null){
+				orderdetails.setOrderId(padao.SelectDisorderId(orderNumber));
 				Integer addOrderdetails = padao.Adddiscardordertails(orderdetails);
 				if(addOrderdetails==1){
 					ca = padao.DeleteOrderNumber(orderNumber);//删除订单详情
