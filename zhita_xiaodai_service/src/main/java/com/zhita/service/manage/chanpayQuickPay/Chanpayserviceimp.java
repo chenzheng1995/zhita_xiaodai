@@ -234,6 +234,17 @@ public class Chanpayserviceimp implements Chanpayservice{
 		Orders orderId = stdao.SelectOrderId(orderNumber);
 		return padao.UserDefeNum(orderId.getId());
 	}
+	
+	
+	
+	@Override
+	public Integer UpdateRepayStatusAA(String pipelinenu,Integer orderId) {
+		Integer a = stdao.UpdateRepaystatus(pipelinenu);
+		return padao.UserDefeNum(orderId);
+	}
+	
+	
+	
 
 	@Override
 	public User OneUser(Integer userId) {
@@ -250,6 +261,7 @@ public class Chanpayserviceimp implements Chanpayservice{
 		if(addOrderId ==1){
 			Integer a = padao.DeleteOrderDetailsNumber(orderNumber);//删除订单
 			if(a != null){
+				orderdetails.setOrderId(padao.SelectDisorderId(orderNumber));
 				Integer addOrderdetails = padao.Adddiscardordertails(orderdetails);
 				if(addOrderdetails==1){
 					ca = padao.DeleteOrderNumber(orderNumber);//删除订单详情

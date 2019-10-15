@@ -1358,6 +1358,11 @@
 	 			select * from orderdetails where orderId = #{id}
 	 		</select>
 	 		
+	 		
+	 		<select id="SelectDisorderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+	 			select id from discardorders where orderNumber = #{orderNumber}
+	 		</select>
+	 		
 	 		<insert id="Adddiscardorders" parameterType="com.zhita.model.manage.Orders">
 	 			INSERT INTO discardorders (
 	 				companyId,

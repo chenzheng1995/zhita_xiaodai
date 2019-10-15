@@ -109,6 +109,10 @@ public class ChanpayQuickCollection {
 	private NewPaymentservice newsim;
 	
 	
+	@Autowired
+	private StatisticsDao Smsdao;
+	
+	
 	
 	@Autowired
 	IntOrderService intOrderService;
@@ -708,6 +712,7 @@ public class ChanpayQuickCollection {
 					map.put("code", "200");
 					map.put("ReturnChanpay", retuJJ);
 					map.put("desc", "认证成功");
+					Smsdao.UpdateUserBankType(userId);
 					map.put("msg", retuJJ.getRetMsg());
 					
 				
@@ -745,7 +750,10 @@ public class ChanpayQuickCollection {
 			    bank.setDeleted("0");
 			    bank.setCstmrnm(CstmrNm);
 				bank.setAttestationStatus("1");
-				servie.AddBankcard(bank);
+				Integer id = servie.AddBankcard(bank);
+				if(id!=null){
+					Smsdao.UpdateUserBankType(userId);
+				}
 				 map.put("Ncode","2000");
 			     map.put("msg", "验证成功");
 			     map.put("code", "200");
@@ -901,13 +909,7 @@ public class ChanpayQuickCollection {
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			Integer deleteId = Statisdao.DeleteChan(userId);//解绑成功删除数据库对应银行卡号
 			
-			if(deleteId != null){
-				System.out.println("删除完成,走添加");
-				Integer id = Statisdao.AddBankcard(bank);
-			Map<String, Object> maps = new HashMap<String, Object>();
-			if(id != null){
 				RedisClientUtil redisClientUtil = new RedisClientUtil();
 			    String key = MobNo + "xiaodaiKey";
 			    String redisCode = redisClientUtil.get(key);
@@ -922,6 +924,10 @@ public class ChanpayQuickCollection {
 					 map.put("Ncode","2000");
 				     map.put("msg", "验证成功");
 				     map.put("code", "200");
+				     Integer id = Statisdao.DeleteChan(userId);//解绑成功删除数据库对应银行卡号
+				     if(id != null){
+				    	 Statisdao.AddBankcard(bank);
+				     }
 				     return map;
 			    }else{
 			    	 map.put("Ncode","0");
@@ -929,12 +935,7 @@ public class ChanpayQuickCollection {
 				     map.put("code", "0");
 				     return map;
 			    }
-			}else{
-				maps.put("code", "0");
-				maps.put("Ncode", 0);
-				maps.put("msg", "换绑失败");
-			}
-			return maps;
+		
 		}else{
 		
 		String CardBegin = BkAcctNoSc.substring(0, 6);//获取银行卡前六位
@@ -988,7 +989,7 @@ public class ChanpayQuickCollection {
 				ban.setDeleted("0");
 				ban.setIDcardnumber(IDNo);//身份证号
 				ban.setCstmrnm(CstmrNm);//持卡人姓名
-				servie.AddBankcard(bank);
+				servie.AddBankcard(ban);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -1001,12 +1002,9 @@ public class ChanpayQuickCollection {
 		} catch (Exception e) {
 			e.printStackTrace();
 	}
-		}
-		}
-		
+}		
 		return map;
-	}
-	
+}
 	
 	
 	

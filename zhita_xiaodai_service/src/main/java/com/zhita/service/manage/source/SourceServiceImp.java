@@ -1,6 +1,5 @@
  package com.zhita.service.manage.source;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,15 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.zhita.dao.manage.ManageControlSettingsMapper;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.SourceDiscountHistoryMapper;
@@ -99,7 +92,6 @@ public class SourceServiceImp implements IntSourceService{
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
     	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
-    	
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
 		int num1=0;
@@ -133,7 +125,6 @@ public class SourceServiceImp implements IntSourceService{
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
     	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
-    	
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		

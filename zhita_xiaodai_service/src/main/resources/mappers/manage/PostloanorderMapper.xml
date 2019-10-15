@@ -498,10 +498,14 @@
 		
 		
 		<select id="YiHuanOrdersTotalCountOO" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
-			select count(o.id) from orders o,user u
+			select count(o.id) from orders o,user u,orderdetails ord,source sor,repayment repay
 			<where>
-			 AND u.id = o.userId
-			 AND o.companyId = #{companyId}
+			 	o.id = ord.orderid
+				and o.userId = u.id
+				and sor.id = u.sourceId
+				and repay.orderId = o.id
+				and o.companyId = #{companyId}
+				and repay.statu = "成功"
 			 <if test="name != null and name != ''">
 			 	AND u.name LIKE concat('%',#{name},'%') 
 			 </if>

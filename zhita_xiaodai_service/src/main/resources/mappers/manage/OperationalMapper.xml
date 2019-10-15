@@ -225,7 +225,7 @@
 				AND u.id = o.userId
 				AND ora.overdueNumberOfDays != "0"
 				AND o.companyId = #{companyId} 
-				AND o.orderCreateTime between #{start_time} and #{end_time}
+				AND o.shouldReturnTime between #{start_time} and #{end_time}
 				<if test="drainageOfPlatformId != null and drainageOfPlatformId != ''">
 				    AND u.drainageOfPlatformId = #{drainageOfPlatformId}
 				</if>

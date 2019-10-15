@@ -33,4 +33,8 @@ public interface OperatorService {
 
 	void updateoperator(int userId, String authentime, String phone);
 
+	void updatejiazhouoperator(int userId, String crawlerId, String crawlerToken, String sms_verify_code);
+
+	Map<String, Object> getjiazhouoperator(int userId);
+
 }
