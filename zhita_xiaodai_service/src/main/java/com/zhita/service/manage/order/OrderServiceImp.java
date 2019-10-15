@@ -568,9 +568,10 @@ public class OrderServiceImp implements IntOrderService {
 				list.get(i).setAccmoney(accmoney);//该订单的减免金额
 				
 				list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));// 将手机号进行脱敏
-				list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
-				list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
-				list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));
+				list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));//订单应还时间
+				list.get(i).setRealtime(Timestamps.stampToDate(list.get(i).getRealtime()));//订单实际还款时间
+				list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));//订单创建时间
+				list.get(i).getUser().setRegistetime(Timestamps.stampToDate(list.get(i).getUser().getRegistetime()));//用户注册时间
 				if (list.get(i).getUser().getOperationTime() == null
 						|| "".equals(list.get(i).getUser().getOperationTime())) {
 					list.get(i).getUser().setOperationTime(null);
