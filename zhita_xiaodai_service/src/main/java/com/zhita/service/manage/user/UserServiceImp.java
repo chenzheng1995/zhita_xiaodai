@@ -330,9 +330,9 @@ public class UserServiceImp implements IntUserService{
 		
 		//Operator operator=userMapper.queryOperator(userid);//运营商信息
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryauthen", String.valueOf(userid));
+		//String rString = pGet.sendPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryauthen", String.valueOf(userid));
 		
-		//String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
 		//String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryauthen?userid="+userid);
 		JSONObject object = JSONObject.parseObject(rString);
 		System.out.println("*************************************************"+rString);
@@ -401,7 +401,7 @@ public class UserServiceImp implements IntUserService{
 	//后台管理---用户认证信息
 	public Map<String,Object> queryAllsen(Integer userid){
 		PostAndGet pGet = new PostAndGet();
-		String rString = pGet.sendGet("http://localhost:8081/zhita_heitong_Fengkong/authen/queryAllsen?userid="+userid);
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryAllsen?userid="+userid);
 		JSONObject object = JSONObject.parseObject(rString);
 					
 		HashMap<String,Object> map=new HashMap<>();
