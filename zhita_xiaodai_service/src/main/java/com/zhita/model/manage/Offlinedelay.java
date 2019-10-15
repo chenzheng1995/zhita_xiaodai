@@ -52,6 +52,8 @@ public class Offlinedelay {
 	
 	private String shouldReturnTime;
 	
+	
+	
 	public String getPreextensiontime() {
 		return preextensiontime;
 	}

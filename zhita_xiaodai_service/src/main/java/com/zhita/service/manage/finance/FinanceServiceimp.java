@@ -661,13 +661,15 @@ public class FinanceServiceimp implements FinanceService{
 	//
 	@Override
 	public Map<String, Object> AllDelayStatis(Bankdeductions banl) {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		PhoneDeal p = new PhoneDeal();
 		if(banl.getPhone() != null){
 			banl.setPhone(p.encryption(banl.getPhone()));
 		}
+		PageUtil2 pageUtil=null;
 		List<Bankdeductions> banks = new ArrayList<Bankdeductions>();
-		
+		List<Bankdeductions> bankA = new ArrayList<Bankdeductions>();
 		if(banl.getStartu_time() == null){
 			SimpleDateFormat sima = new SimpleDateFormat("yyyy-MM-dd");
 			String stimea = sima.format(new Date());
@@ -737,14 +739,6 @@ public class FinanceServiceimp implements FinanceService{
 				
 				Integer totalCount = padao.DelayTatolCount(banl);
 				
-				if(totalCount !=null){
-					PageUtil pages = new PageUtil(banl.getPage(), totalCount);
-					banl.setPage(pages.getPage());
-				}else{
-					PageUtil pages = new PageUtil(banl.getPage(), 0);
-					banl.setPage(pages.getPage());
-				}
-				
 				Bankdeductions bank = padao.BankdeduCtionsData(banl);
 				bank.setDeferredTime(times.get(i));
 				Bankdeductions b = padao.BankMoney(banl);
@@ -756,13 +750,36 @@ public class FinanceServiceimp implements FinanceService{
 					b.setDeduction_money(new BigDecimal(0));
 				}
 				
+				if(b.getOrderNum() == null){
+					b.setOrderNum(0);
+				}
 				
-				bank.setDeduction_money(b.getDeduction_money());
+				Offlinedelay of = padao.SelectOf(banl);
+				
+				if(of.getDefeMoney() == null){
+					of.setDefeMoney(new BigDecimal(0));
+				}
+				
+				if(of.getDefeNum() == null){
+					of.setDefeNum(0);
+				}
+				System.out.println();
+				bank.setDeduction_money(b.getDeduction_money().add(of.getDefeMoney()));
+				bank.setOrderNum(b.getOrderNum()+of.getDefeNum());
 				bank.setUserNum(b.getUserNum());
 				banks.add(bank);
 			}
 		}
-		map.put("Bankdeduction", banks);
+		if(banks!=null && !banks.isEmpty()){
+    		ListPageUtil<Bankdeductions> listPageUtil=new ListPageUtil<Bankdeductions>(banks,banl.getPage(),10);
+    		bankA.addAll(listPageUtil.getData());
+    		System.out.println("页数:"+banl.getPage());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
+    	}
+		map.put("Bankdeduction", bankA);
+		map.put("PageUtil", pageUtil);
 		return map;
 	}
 
