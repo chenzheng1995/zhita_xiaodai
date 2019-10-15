@@ -632,9 +632,10 @@ public class OrderController {
 			orderList.get(i).setAccmoney(accmoney);//该订单的减免金额
 			
 			orderList.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(orderList.get(i).getUser().getPhone())));// 将手机号进行脱敏
-			orderList.get(i).setShouldReturnTime(Timestamps.stampToDate(orderList.get(i).getShouldReturnTime()));
-			orderList.get(i).setOrderCreateTime(Timestamps.stampToDate(orderList.get(i).getOrderCreateTime()));
-			orderList.get(i).getUser().setRegistetime(Timestamps.stampToDate(orderList.get(i).getUser().getRegistetime()));
+			orderList.get(i).setShouldReturnTime(Timestamps.stampToDate(orderList.get(i).getShouldReturnTime()));//订单应还时间
+			orderList.get(i).setRealtime(Timestamps.stampToDate(orderList.get(i).getRealtime()));//订单实际还款时间
+			orderList.get(i).setOrderCreateTime(Timestamps.stampToDate(orderList.get(i).getOrderCreateTime()));//订单创建时间
+			orderList.get(i).getUser().setRegistetime(Timestamps.stampToDate(orderList.get(i).getUser().getRegistetime()));//用户注册时间
 
 			List<DeferredAndOrder> listdefer = intOrderService.queryDefer(orderList.get(i).getId());
 			List<Offlinedelay> listdeferlay = intOrderService.queryDeferlay(orderList.get(i).getId());
@@ -679,10 +680,19 @@ public class OrderController {
 				orderList.get(i).getUser().setAccount("机审");
 			}
 			
+			if(orderList.get(i).getRealtime()=="0"||orderList.get(i).getRealtime().equals("0")){
+				orderList.get(i).setRealtime("暂无");
+			}
+			
+			if(orderList.get(i).getAccmoney()==null){
+				orderList.get(i).setAccmoney(new BigDecimal("0.00"));
+			}
+			
 		}
 	
 		//创建excel表的表头
-		String[] headers = {"订单编号", "姓名" ,"手机号","客户端", "注册时间","订单时间","订单状态","渠道","风控","风控分","审核员","贷款方式","还款期限","借款次数","放款金额","延期次数","延期金额","总利息","初始应还","实际应还","减免金额","实际还款"};
+		String[] headers = {"订单编号", "姓名" ,"手机号","客户端", "注册时间","订单时间","订单状态","渠道","风控","风控分","审核员","贷款方式","还款期限","借款次数",
+				"放款金额","延期次数","延期金额","总利息","初始应还","实际应还","应还时间","实还时间","减免金额","实际还款"};
 		//创建Excel工作簿
 		HSSFWorkbook workbook=new HSSFWorkbook();
 		//创建一个工作表sheet
@@ -740,8 +750,12 @@ public class OrderController {
 							cell2=nextrow.createCell(19);
 							cell2.setCellValue(orderList.get(i-1).getRealshourldmoney().toString());
 							cell2=nextrow.createCell(20);
-							cell2.setCellValue(orderList.get(i-1).getAccmoney().toString());
+							cell2.setCellValue(orderList.get(i-1).getShouldReturnTime());
 							cell2=nextrow.createCell(21);
+							cell2.setCellValue(orderList.get(i-1).getRealtime());
+							cell2=nextrow.createCell(22);
+							cell2.setCellValue(orderList.get(i-1).getAccmoney().toString());
+							cell2=nextrow.createCell(23);
 							cell2.setCellValue(orderList.get(i-1).getRepaymentMoney());
 							
 						}
