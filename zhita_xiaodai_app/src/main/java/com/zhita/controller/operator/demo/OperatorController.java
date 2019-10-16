@@ -1685,6 +1685,9 @@ public class OperatorController {
 			map.put("msg", "分数够了");
 		}
 
+		String thirdtypeid = "6";
+		String date = System.currentTimeMillis() + "";
+		thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
 		intUserService.updateScore(score, userId, shareOfState);
 		map.put("score", score);
 		return map;
