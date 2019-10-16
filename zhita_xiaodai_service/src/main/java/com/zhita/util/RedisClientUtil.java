@@ -18,7 +18,7 @@ public class RedisClientUtil {
     static {
 
 
-    	pool = new JedisPool("127.0.0.1", 6379);
+    	pool = new JedisPool("172.31.233.207", 6379);
 
     }
 
@@ -40,7 +40,7 @@ public class RedisClientUtil {
     public String setjiazhou(String key, String value) {
         Jedis jedis = pool.getResource();
         String set = jedis.set(key, value);
-        jedis.expire(key,300);        //过期时间设置单位为秒
+        jedis.expire(key,10);        //过期时间设置单位为秒
         jedis.close();
         return set;
     }
