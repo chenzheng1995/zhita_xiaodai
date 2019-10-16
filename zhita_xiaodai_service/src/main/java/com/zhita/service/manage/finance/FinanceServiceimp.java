@@ -20,6 +20,7 @@ import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.dao.manage.NewMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
+import com.zhita.dao.manage.StatisticsDao;
 import com.zhita.dao.manage.ThirdpricefindMapper;
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
@@ -71,6 +72,11 @@ public class FinanceServiceimp implements FinanceService{
 	
 	@Autowired
 	private NewMapper newdao;
+	
+	
+	
+	@Autowired
+	private StatisticsDao sdao;
 	
 	
 	
@@ -146,9 +152,9 @@ public class FinanceServiceimp implements FinanceService{
 			// TODO: handle exception
 		}
 		Integer totalCount = padao.RepaymentTotalCount(payrecord);
-		PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
-		payrecord.setPage(pages.getPage());
-		payrecord.setProfessionalWork("还款");
+		//PageUtil pages = new PageUtil(payrecord.getPage(), totalCount);
+//		payrecord.setPage(pages.getPage());
+//		payrecord.setProfessionalWork("还款");
 		TuoMinUtil tm = new TuoMinUtil();
 		List<Payment_record> rapay = padao.RepaymentAll(payrecord);
 		for(int i = 0 ;i<rapay.size();i++){
@@ -162,9 +168,35 @@ public class FinanceServiceimp implements FinanceService{
 			rapay.get(i).setPhone(tm.mobileEncrypt(rapay.get(i).getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		pages.setPage(a);
-		map.put("Repayment", rapay);
-		map.put("pageutil", pages);
+		List<Payment_record> repays = padao.SelectOff(payrecord);
+		for(int i = 0 ;i<repays.size();i++){
+			repays.get(i).setRepaymentDate(Timestamps.stampToDate(repays.get(i).getRepaymentDate()));
+			if(repays.get(i).getPhone()!=null){
+				if(repays.get(i).getPhone().length()!=0){
+					repays.get(i).setPhone(p.decryption(repays.get(i).getPhone()));
+				}
+			}
+			
+			repays.get(i).setPhone(tm.mobileEncrypt(repays.get(i).getPhone()));
+		}
+		System.out.println(rapay.size()+"AAA"+repays.size());
+		rapay.addAll(repays);
+		List<Payment_record> pa = new ArrayList<Payment_record>();
+//		pages.setPage(a);
+		PageUtil2 pageUtil=null;
+		if(repays!=null && !repays.isEmpty()){
+    		ListPageUtil listPageUtil=new ListPageUtil(rapay,payrecord.getPage(),10);
+    		pa.addAll(listPageUtil.getData());
+    		System.out.println(pa.size());
+    			
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
+    	}
+		pageUtil.setTotalCount(rapay.size());
+		System.out.println(rapay.size());
+		map.put("Repayment", pa);
+		map.put("pageutil", pageUtil);
 		return map;
 	}
 
@@ -764,8 +796,13 @@ public class FinanceServiceimp implements FinanceService{
 				if(of.getDefeNum() == null){
 					of.setDefeNum(0);
 				}
-				System.out.println();
-				bank.setDeduction_money(b.getDeduction_money().add(of.getDefeMoney()));
+				if(b.getDeferredamount()==null){
+					b.setDeferredamount(new BigDecimal(0));
+				}
+				
+				
+				System.out.println(of.getDefeMoney()+"A"+b.getDeferredamount());
+				bank.setDeferredamount(b.getDeferredamount().add(of.getDefeMoney()));
 				bank.setOrderNum(b.getOrderNum()+of.getDefeNum());
 				bank.setUserNum(b.getUserNum());
 				banks.add(bank);
@@ -968,12 +1005,25 @@ public class FinanceServiceimp implements FinanceService{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		SimpleDateFormat sa = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		off.setThirdparty_id(3);
+		off.setSerialnumber("Rsn_"+sa.format(new Date()));
 		off.setOffmoney(off.getOrderMoney().subtract(off.getOffusermoney()));
 		Integer addId = padao.AddOffJianMian(off);
 		if(addId != null){
 			Integer updateId = padao.OrdersStatus(off);
 			if(updateId != null){
-				padao.UserDefeNum(off.getOrderId());
+//				padao.UserDefeNum(off.getOrderId());
+//				Repayment repay = new Repayment();
+//				repay.setOrderid(off.getOrderId());
+//				repay.setRepaymentMoney(off.getOffusermoney());
+//				repay.setRepaymentDate(off.getSedn_time());
+//				repay.setThirdparty_id(3);
+//				repay.setCardnumber(sdao.Cardnumber(sdao.getUserId(off.getOrderId())));
+//				repay.setPipelinenumber("Rsn_"+sa.format(new Date()));
+//				repay.setStatu("成功");
+//				repay.setReoaybtai(sa.format(new Date()));
+//				sdao.AddRepay(repay);
 				map.put("code", 200);
 				map.put("desc", "操作成功");
 			}else{
@@ -1283,7 +1333,7 @@ public class FinanceServiceimp implements FinanceService{
 		Orderdetails orderde = padao.SelectCollectionMoney(orderId.getOrderId());
 		orderId.setTotalamount(orderId.getTotalamount().subtract(orderde.getInterestPenaltySum()));
 		Orderdetails orderdetails = new Orderdetails();
-		orderdetails.setShouldReapyMoney(orderId.getTotalamount().add(orderId.getAmountmoney()));//获取应还金额
+		orderdetails.setShouldReapyMoney(orderId.getTotalamount().add(orderId.getAmountmoney()).add(padao.getInterestPenaltySum(orderId.getOrderId())));//获取应还金额
 		orderdetails.setOrderId(orderId.getOrderId());
 		Integer updateId = padao.UpdateOrdertails(orderdetails);
 		if(updateId!=null){

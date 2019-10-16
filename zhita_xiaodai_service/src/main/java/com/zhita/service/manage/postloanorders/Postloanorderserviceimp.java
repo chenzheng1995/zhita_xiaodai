@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.OrderAdapter;
 import org.springframework.stereotype.Service;
 
 import com.mysql.fabric.xmlrpc.base.Array;
@@ -22,7 +23,9 @@ import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
 import com.zhita.model.manage.Overdue;
 import com.zhita.util.DateListUtil;
+import com.zhita.util.ListPageUtil;
 import com.zhita.util.PageUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.PhoneDeal;
 import com.zhita.util.Timestamps;
 import com.zhita.util.TuoMinUtil;
@@ -693,10 +696,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			System.out.println("金额:"+ orders.get(i).getRealityBorrowMoney()+":A:"+orders.get(i).getMakeLoans());
 			if(a==0){
 				System.out.println("后置");
-//				BigDecimal aa =orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney());
-//				orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(aa));
-//				System.out.println(orders.get(i).getRealityBorrowMoney()+"CCC"+orders.get(i).getInterestSum()+"CCCC11"+orders.get(i).getInterestPenaltySum()+"金额:"+orders.get(i).getTechnicalServiceMoney());
-//				System.out.println(orders.get(i).getOrder_money());
 				orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestInAll()).add(orders.get(i).getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
 				System.out.println("应还金额444:"+orders.get(i).getOrder_money());
 			}else{
@@ -710,15 +709,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setRealtime(Timestamps.stampToDate(orders.get(i).getRealtime()));
 		Deferred defe = postloanorder.OneDeferred(orders.get(i));
 		TuoMinUtil tm = new TuoMinUtil();
-		/*Orderdetails qianzhi = postloanorder.SelectQianshouldReapyMoney(orders.get(i).getOrderId());//前置应还金额
-		
-		if(qianzhi.getRealityBorrowMoney().compareTo(qianzhi.getMakeLoans()) == 0){
-			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney());//应还总金额
-		}else{
-			orders.get(i).setOrder_money(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestSum()));//应还总金额
-		}*/
-		
-		
 		
 		if(orders.get(i).getSurplus_money()==null){
 			orders.get(i).setSurplus_money(new BigDecimal(0));
@@ -758,9 +748,94 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		orders.get(i).setPhone(tm.mobileEncrypt(orders.get(i).getPhone()));
 		System.out.println("应还金额:"+orders.get(i).getOrder_money());
 		}
+		List<Orderdetails> ordersoFF = postloanorder.YiHuanOrdersOff(order);
 		
-		map.put("Orderdetails", orders);
-		map.put("pageutil", pages);
+		for(int i=0;i<ordersoFF.size();i++){
+			
+			if(ordersoFF.get(i).getRealityBorrowMoney()==null){
+				ordersoFF.get(i).setRealityBorrowMoney(new BigDecimal(0));
+			}
+			
+			if(ordersoFF.get(i).getRealityAccount()==null){
+				ordersoFF.get(i).setRealityAccount(new BigDecimal(0));
+			}
+			
+			int a = ordersoFF.get(i).getRealityBorrowMoney().compareTo(ordersoFF.get(i).getMakeLoans());
+			
+			if(ordersoFF.get(i).getInterestPenaltySum()==null){
+				ordersoFF.get(i).setInterestPenaltySum(new BigDecimal(0));
+			}
+			System.out.println("金额:"+ ordersoFF.get(i).getRealityBorrowMoney()+":A:"+ordersoFF.get(i).getMakeLoans());
+			if(a==0){
+				System.out.println("后置");
+				ordersoFF.get(i).setOrder_money(ordersoFF.get(i).getRealityBorrowMoney().add(ordersoFF.get(i).getInterestInAll()).add(ordersoFF.get(i).getTechnicalServiceMoney()));//应还金额 + 逾期总罚息
+				System.out.println("应还金额444:"+ordersoFF.get(i).getOrder_money());
+			}else{
+				System.out.println("前置");
+				ordersoFF.get(i).setOrder_money(ordersoFF.get(i).getShouldReapyMoney().add(ordersoFF.get(i).getInterestPenaltySum()));//应还总金额
+			}
+			
+			
+			
+		ordersoFF.get(i).setCompanyId(order.getCompanyId());
+		ordersoFF.get(i).setRealtime(Timestamps.stampToDate(ordersoFF.get(i).getRealtime()));
+		Deferred defe = postloanorder.OneDeferred(ordersoFF.get(i));
+		TuoMinUtil tm = new TuoMinUtil();
+		
+		if(ordersoFF.get(i).getSurplus_money()==null){
+			ordersoFF.get(i).setSurplus_money(new BigDecimal(0));
+		}
+		BigDecimal ca = ordersoFF.get(i).getInterestPenaltySum().add(ordersoFF.get(i).getRealityBorrowMoney());
+		
+		BigDecimal jianmian = postloanorder.JianMianmoney(ordersoFF.get(i).getOrderId());
+		if(jianmian==null){
+			jianmian=new BigDecimal(0);
+		}
+		
+		BigDecimal sumMoney = postloanorder.BankMoney(ordersoFF.get(i).getOrderId());
+		if(sumMoney == null){
+			sumMoney = new BigDecimal(0);
+		}
+		
+		sumMoney.add(jianmian);
+		ordersoFF.get(i).setRealityBorrowMoney(ordersoFF.get(i).getRepaymentMoney());
+		
+		ordersoFF.get(i).setShijiMoney(ordersoFF.get(i).getRealityBorrowMoney().subtract(ordersoFF.get(i).getSurplus_money()));
+
+		if(ordersoFF.get(i).getDeferAfterReturntime()==null){
+			ordersoFF.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersoFF.get(i).getShouldReturnTime()));
+		}else{
+			ordersoFF.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordersoFF.get(i).getDeferAfterReturntime()));
+		}
+		
+		ordersoFF.get(i).setOrderCreateTime(Timestamps.stampToDate(ordersoFF.get(i).getOrderCreateTime()));
+		ordersoFF.get(i).setPhone(p.decryption(ordersoFF.get(i).getPhone()));
+		if(ordersoFF.get(i).getRealtime() != null && !("").equals(ordersoFF.get(i).getRealtime())){
+			if(ordersoFF.get(i).getRealtime().length()!=0){
+				ordersoFF.get(i).setRealtime(ordersoFF.get(i).getRealtime());
+			}
+		}else{
+			ordersoFF.get(i).setRealtime("/");
+		}
+		ordersoFF.get(i).setPhone(tm.mobileEncrypt(ordersoFF.get(i).getPhone()));
+		System.out.println("应还金额:"+ordersoFF.get(i).getOrder_money());
+		}
+		orders.addAll(ordersoFF);
+		List<Orderdetails> ordera = new ArrayList<Orderdetails>();
+		PageUtil2 pageUtil=null;
+		if(orders!=null && !orders.isEmpty()){
+    		ListPageUtil listPageUtil=new ListPageUtil(orders,order.getPage(),10);
+    		ordera.addAll(listPageUtil.getData());
+    		System.out.println(ordera.size());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
+    	}
+		pageUtil.setTotalCount(orders.size());
+		System.out.println(orders.size());
+		
+		map.put("Orderdetails", ordera);
+		map.put("pageutil", pageUtil);
 		return map;
 	}
 

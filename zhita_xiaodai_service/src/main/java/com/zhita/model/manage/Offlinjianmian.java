@@ -31,6 +31,26 @@ public class Offlinjianmian {
 	private BigDecimal offmoney;
 	
 	private BigDecimal orderMoney;
+	
+	private Integer thirdparty_id;
+	
+	private String serialnumber;
+
+	public Integer getThirdparty_id() {
+		return thirdparty_id;
+	}
+
+	public void setThirdparty_id(Integer thirdparty_id) {
+		this.thirdparty_id = thirdparty_id;
+	}
+
+	public String getSerialnumber() {
+		return serialnumber;
+	}
+
+	public void setSerialnumber(String serialnumber) {
+		this.serialnumber = serialnumber;
+	}
 
 	public BigDecimal getOrderMoney() {
 		return orderMoney;

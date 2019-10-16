@@ -419,4 +419,9 @@
 			<update id="UpdateUserBankType" parameterType="java.lang.Integer">
 				update user set bankAuthenStatus = "1" where id = #{userId}
 			</update>
+			
+			
+			<select id="getUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+				select userId from orders where id = #{id}
+			</select>
 </mapper>

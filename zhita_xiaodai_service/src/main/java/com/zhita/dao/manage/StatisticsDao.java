@@ -180,6 +180,9 @@ public interface StatisticsDao {
 	
 	Integer UpdateUserBankType(Integer userId);
 	
+	
+	Integer getUserId(Integer id);
+	
 }
 
 

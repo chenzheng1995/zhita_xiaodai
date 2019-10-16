@@ -385,9 +385,10 @@ public class OperationalServiceimp implements OperationalService{
 			ord.setRemittanceTime(stime);
 			ord.setGesamtbetraguberfalligerBetrag(or.getGesamtbetraguberfalligerBetrag());
 			ord.setGesamtbetraguberfallNum(or.getGesamtbetraguberfallNum());
-			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum());
+			ord = padao.SelectOffA(order);
+			ord.setGesamtbetragderNum(orders.getGesamtbetragderNum()+ord.getOfcount());//还款次数
 			ord.setGesamtbetragderRvckzahlung(orders.getGesamtbetragderRvckzahlung());
-			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung());
+			ord.setGesamtbetragderDarlehen(ord.getGesamtbetragderRvckzahlung().add(ord.getOffmoney()));//还款金额
 			ord.setXianscount(ode.getXianscount());
 			ord.setXiansmoney(ode.getXiansmoney());
 			System.out.println("111"+ord.getXianscount());
