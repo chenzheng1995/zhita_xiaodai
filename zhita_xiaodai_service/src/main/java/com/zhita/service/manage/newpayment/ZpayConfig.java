@@ -29,11 +29,11 @@ public class ZpayConfig {
     public final static String GATEWAY_URL="https://z.ibwin.cn:4433/api/gateway";
    // https://z.ibwin.cn:4433/api/gateway
     //企业支付——异步通知url
+
     public static final String RECHARGE_NOTIFY_NEW="http://47.56.173.1:8081/zhita_xiaodai_admin/newpay/callbackpay";//香港服放款
     //public static final String RECHARGE_NOTIFY_NEW="http://47.56.172.8:8081/zhita_xiaodai_admin/newpay/callbackpay";//香港服放款
     //public static final String RECHARGE_NOTIFY_NEW="http://47.102.40.133:8081/zhita_xiaodai_admin/newpay/callbackpay";//正式服放款
     //public static final String RECHARGE_NOTIFY_NEW="http://115.29.64.145:8081/zhita_xiaodai_admin/newpay/callbackpay";//
-    
     
     public static final String RECHARGE_NOTIFY_NEWPAY="http://47.56.173.1:8081/zhita_xiaodai_admin/newpay/callback";//香港服还款
     //public static final String RECHARGE_NOTIFY_NEWPAY="http://47.56.172.8:8081/zhita_xiaodai_admin/newpay/callback";//香港服放款

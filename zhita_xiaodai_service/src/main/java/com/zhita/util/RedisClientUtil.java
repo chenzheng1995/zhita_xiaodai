@@ -17,7 +17,6 @@ public class RedisClientUtil {
 
     static {
 
-
     	pool = new JedisPool("172.31.233.207", 6379);
 
     }

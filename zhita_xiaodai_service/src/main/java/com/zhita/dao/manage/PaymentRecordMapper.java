@@ -321,4 +321,10 @@ public interface PaymentRecordMapper {
     
     Repayment getRepayment(String reoaybtai);
     
+    
+    Integer SelectDisorderId(String orderNumber);
+    
+    
+    Offlinedelay SelectOf(Bankdeductions banl);
+    
 }

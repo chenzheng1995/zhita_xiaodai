@@ -109,6 +109,13 @@ public class UserController {
 		return map;
 	}
 	
+	//后台管理---用户认证信息
+	@ResponseBody
+	@RequestMapping("/queryAllsen")
+    public Map<String,Object> queryAllsen(Integer userid){
+    	return intUserService.queryAllsen(userid);
+    }
+	
 	// 判断用户是否年龄或者地域不允许借钱
 	@RequestMapping("/getModel")
 	@ResponseBody

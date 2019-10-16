@@ -261,6 +261,7 @@ public class PromoteController {
       //return "http://47.102.40.133:8081/H5Code/" + fileName;
       return "http://47.56.173.1:8081/H5Code/"+ fileName;
 
+
     }
     
     private int getRandomCode() {

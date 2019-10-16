@@ -55,6 +55,13 @@ public class SourcesideTongjiController {
 		
 		List<TongjiSorce> listHistory=intSourceService.queryAllBySourceName(sourceid);
 		for (int i = 0; i < listHistory.size(); i++) {
+			String startTimestamps = listHistory.get(i).getDate();
+			String endTimestamps = (Long.parseLong(listHistory.get(i).getDate())+86400000)+"";
+			Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
+			listHistory.get(i).setApplynum(applynum);
+			int orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);//已借款人数
+			listHistory.get(i).setOrderpass(orderpass);
+			
 			listHistory.get(i).setDate(Timestamps.stampToDate1(listHistory.get(i).getDate()));//将历史表数据的日期都变为年月日格式
 			listHistory.get(i).setSourcename(sourceName);
 		}
@@ -80,6 +87,8 @@ public class SourcesideTongjiController {
 		int uv = 0;
 		String cvr = null;
 		float disAppnum=0;//折扣申请数
+		Integer applynum=0;//申请数
+		int orderpass=0;//借款人数
 		if(tongjiSorcelist==null){
 			float appnum = intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
 			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
@@ -132,12 +141,17 @@ public class SourcesideTongjiController {
 			}
 		}
 		
+		applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
+		orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);//已借款人数
+		
 		TongjiSorce tongjiSorce = new TongjiSorce();
 		tongjiSorce.setDate(date);// 日期
 		tongjiSorce.setSourcename(sourceName);// 渠道名称
 		tongjiSorce.setUv(uv);// uv
 		tongjiSorce.setCvr(cvr);// 转化率
 		tongjiSorce.setRegisternumdis(disAppnum);
+		tongjiSorce.setApplynum(applynum);
+		tongjiSorce.setOrderpass(orderpass);
 		listsource.add(tongjiSorce);
 		
 		DateListUtil.ListSort1(listsource);//将集合按照日期进行倒排序
@@ -173,9 +187,18 @@ public class SourcesideTongjiController {
 		int uv = 0;
 		String cvr = null;
 		float disAppnum=0;//折扣申请数
+		Integer applynum=0;//申请数
+		int orderpass=0;//借款人数
 		if(!date.equals(datetoday)){//证明传进来的日期不是今天
 			if(tongjiSorcelist!=null){
 				tongjiSorce=tongjiSorcelist;
+				String startTimestamps1 = tongjiSorce.getDate();
+				String endTimestamps1 = (Long.parseLong(tongjiSorce.getDate())+86400000)+"";
+				applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps1, endTimestamps1);//申请人数
+				tongjiSorce.setApplynum(applynum);
+				orderpass=intSourceService.queryorderpass(sourceid, startTimestamps1, endTimestamps1);//已借款人数
+				tongjiSorce.setOrderpass(orderpass);
+				
 				tongjiSorce.setDate(Timestamps.stampToDate1(tongjiSorce.getDate()));
 				tongjiSorce.setSourcename(sourceName);
 			}
@@ -229,12 +252,17 @@ public class SourcesideTongjiController {
 					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
 				}
 			}
+			
+			applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
+			orderpass=intSourceService.queryorderpass(sourceid, startTimestamps, endTimestamps);//已借款人数
 		
 			tongjiSorce.setDate(date);// 日期
 			tongjiSorce.setSourcename(sourceName);// 渠道名称
 			tongjiSorce.setUv(uv);// uv
 			tongjiSorce.setRegisternumdis(disAppnum);
 			tongjiSorce.setCvr(cvr);// 转化率
+			tongjiSorce.setApplynum(applynum);
+			tongjiSorce.setOrderpass(orderpass);
 		}
 		return tongjiSorce;
 	}
