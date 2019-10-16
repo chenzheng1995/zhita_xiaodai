@@ -1540,4 +1540,9 @@
  				select count(of.id) as DefeNum,sum(of.extensionfee) as DefeMoney from  offlinedelay of,orders o 
  				where of.operating_time between #{startu_time} and #{end_time} and o.id = of.orderId and o.companyId = #{companyId}
  			</select>
+ 			
+ 			
+ 			<select id="getInterestPenaltySum" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+ 				select interestPenaltySum from orderdetails where orderId =#{orderId}
+ 			</select>
 </mapper>
