@@ -280,6 +280,7 @@ public class FinanceServiceimp implements FinanceService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		acc.setRename_id(padao.selectPatyId(acc.getTypename()));
+		acc.setTotalamount(acc.getTotalamount().subtract(padao.getInterestPenaltySum(acc.getOrderId())));
 		Integer addId = padao.AddCAccount(acc);
 		System.out.println("减免后的应还金额:"+acc.getTotalamount());
 		Orderdetails orderde = padao.SelectCollectionMoney(acc.getOrderId());
