@@ -327,4 +327,13 @@ public interface PaymentRecordMapper {
     
     Offlinedelay SelectOf(Bankdeductions banl);
     
+    
+    BigDecimal getInterestPenaltySum(Integer orderId);
+    
+    
+    List<Payment_record> SelectOff(Payment_record repay);
+    
+    
+    Orders SelectOffA(Orderdetails ords);
+    
 }

@@ -1,6 +1,7 @@
 package com.zhita.controller.operator.demo;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -256,7 +257,7 @@ public class OperatorController {
 				String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";
 				String crawlerType = "OperatorReport";
 				PostAndGet pGet = new PostAndGet();	    
-			    String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
+			    String str = pGet.sendPost("http://bbk.jmy919.cn/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
 				JSONObject sampleObject = JSON.parseObject(str);
 				if(sampleObject!=null) {
 				String code = sampleObject.getString("code");
@@ -280,7 +281,7 @@ public class OperatorController {
 					}
 					map.put("Ncode", "2000");
 					map.put("msg", "认证成功");
-					map.put("code", "200");
+					map.put("Code", "200");
 				} else {
 					if (code.equals("400")) {
 							String attestationStatus = "2";
@@ -288,11 +289,11 @@ public class OperatorController {
 							intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 							map.put("Ncode", "2000");
 							map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-							map.put("code", "300");
+							map.put("Code", "300");
 					} else {
 						map.put("Ncode", "2000");
 						map.put("msg", "认证失败");
-						map.put("code", "401");
+						map.put("Code", "401");
 					}
 				}
 				}else {
@@ -301,7 +302,7 @@ public class OperatorController {
 					intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 					map.put("Ncode", "407");
 					map.put("msg", "运营商没调通");
-					map.put("code", "407");
+					map.put("Code", "407");
 				}
 				   }else {
 						String attestationStatus = "1";
@@ -309,7 +310,7 @@ public class OperatorController {
 						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 						map.put("Ncode", "2000");
 						map.put("msg", "认证成功");
-						map.put("code", "200");
+						map.put("Code", "200");
 				   }
 		}
 		
@@ -340,7 +341,7 @@ public class OperatorController {
 		MD5Utils mUtils = new MD5Utils();		
 		String sign = mUtils.getMD5(string);//签名
 		PostAndGet pGet = new PostAndGet();
-		String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
+		String str = pGet.sendPost("http://bbk.jmy919.cn/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
 		JSONObject jsonObject = JSONObject.parseObject(str);
 		if(jsonObject!=null) {
 			int code = (int) jsonObject.get("code");			
@@ -425,7 +426,7 @@ public class OperatorController {
 		if(aca != null){
 			map.put("Ncode", 0);
 			map.put("code", "0");
-			map.put("msg", "请勿重复点击!!");
+			map.put("msg", "请勿重复点击,请两分钟之后再尝试");
 			return map;
 		}else {
 			redis.setjiazhou("jzjkupdateOperatorJson"+userId,"1");
@@ -436,7 +437,7 @@ public class OperatorController {
 			String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";
 			String crawlerType = "OperatorReport";
 			PostAndGet pGet = new PostAndGet();	    
-		    String str = pGet.sendPost("http://bbk.chao234.top/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
+		    String str = pGet.sendPost("http://bbk.jmy919.cn/api/Gateway/operate?crawlerId="+crawlerId+"&crawlerToken="+crawlerToken+"&sms_verify_code="+sms_verify_code+"&appId="+appId+"&crawlerType="+crawlerType+"&secret_key="+secret_key,"");
 		    boolean a = str.endsWith("<br /><b>Fatal error</b>:  Uncaught think\\exception\\ErrorException: Unknown: Skipping numeric key 10 in Unknown:0Stack trace:#0 [internal function]: think\\Error::appError(8, 'Unknown: Skippi...', 'Unknown', 0, NULL)#1 {main}  thrown in <b>Unknown</b> on line <b>0</b><br />");
 			if(a==true) {
 				str = str.replace("<br /><b>Fatal error</b>:  Uncaught think\\exception\\ErrorException: Unknown: Skipping numeric key 10 in Unknown:0Stack trace:#0 [internal function]: think\\Error::appError(8, 'Unknown: Skippi...', 'Unknown', 0, NULL)#1 {main}  thrown in <b>Unknown</b> on line <b>0</b><br />","");
@@ -469,12 +470,12 @@ public class OperatorController {
 				map.put("code", "200");
 			} else {
 				if (code.equals("400")) {
-						String attestationStatus = "2";
+						String attestationStatus = "0";
 						operatorService.updateAttestationStatus(attestationStatus, userId);
 						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
 						map.put("Ncode", "2000");
-						map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
-						map.put("code", "200");
+						map.put("msg", "手机号使用太频繁，请两分钟之后再尝试");
+						map.put("code", "408");
 				} else {
 					map.put("Ncode", "2000");
 					map.put("msg", "认证失败");
@@ -1568,7 +1569,7 @@ public class OperatorController {
 	@RequestMapping("/getScore")
 	@ResponseBody
 	@Transactional
-	public Map<String, Object> getScore(int userId) {
+	public Map<String, Object> getScore(int userId) throws UnsupportedEncodingException {
 
 		String shareOfState = null;
 		int score = 0;
@@ -1624,6 +1625,7 @@ public class OperatorController {
 
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
+		name = URLEncoder.encode(name,"utf-8");
 		String idNumber = (String) userAttestation.get("idcard_number");
 		int sourceId = intUserService.getsourceId(userId);
 		String sourceName = intSourceService.getsourceName(sourceId);
@@ -1653,47 +1655,81 @@ public class OperatorController {
 		
 		//自己的运营商
 //		if ("风控甲".equals(rmModleName)) {
+		PostAndGet pGet = new PostAndGet();
 		PhoneDeal phoneDeal = new PhoneDeal();
 		String phone = intUserService.getphone(userId);
 		String newphone1 = phoneDeal.decryption(phone);
-		PostAndGet pGet = new PostAndGet();
+		Map<String,Object> map2  = pGet.sendGet3("http://fk.rong51dai.com/zhita_heitong_Fengkong/fraction/Exhibitionfraction?userId="+userId+"&phone="+newphone1+"&name="+name+"&idNumber="+idNumber);
+		score =(int) map2.get("count");
+		String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+		String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+		String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+		int roatnptFractionalSegmentSmall = Integer
+				.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
+		int roatnptFractionalSegmentBig = Integer.parseInt(roatnptFractionalSegment
+				.substring(roatnptFractionalSegment.indexOf("-") + 1, roatnptFractionalSegment.length()));
 
-		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone=" + newphone1);
-		intUserService.setModel(userId, rString);
-		JSONObject object = JSONObject.parseObject(rString);
-		String phonetype = object.getString("phonetype");
-		String uuidtype = object.getString("uuidtype");
-		String wifitype = object.getString("wifitype");
-		String daytype = object.getString("daytype");
-		String wifimactype = object.getString("wifimactype");
-		String maillistype = object.getString("maillistype");
-		String apptype = object.getString("apptype");
-		System.out.println(phonetype);
-		System.out.println(uuidtype);
-		System.out.println(wifitype);
-		System.out.println(daytype);
-		System.out.println(wifimactype);
-		System.out.println(maillistype);
-		System.out.println(apptype);
+		if (score < roatnptFractionalSegmentSmall) {
+			shareOfState = "0";
+			map.put("code", 200);
+			map.put("msg", "分数不够");
+		}
+		if (score > roatnptFractionalSegmentSmall && score < roatnptFractionalSegmentBig) {
+			shareOfState = "1";
+			map.put("code", 200);
+			map.put("msg", "需要人工审核");
+		}
+		if (score > roatnptFractionalSegmentBig) {
+			shareOfState = "2";
+			map.put("code", 200);
+			map.put("msg", "分数够了");
+		}
+
 		String thirdtypeid = "6";
 		String date = System.currentTimeMillis() + "";
-		thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date); //风控统计
+		thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+		intUserService.updateScore(score, userId, shareOfState);
+		map.put("score", score);
+		return map;
 		
-		if ("1".equals(phonetype) || "1".equals(uuidtype) || "1".equals(wifitype) || "1".equals(daytype)
-				|| "1".equals(wifimactype) || "1".equals(maillistype) || "1".equals(apptype)) {
-			intUserService.updateshareOfState(userId, shareOfState);
-			map.put("Ncode", "2000");
-			map.put("code", "407");
-			map.put("msg", "其他条件不符合");
-			shareOfState = "0";
-			intUserService.updateScore1(userId, shareOfState);
-			return map;
-		}else {
-			shareOfState = "1";
-			intUserService.updateScore1(userId, shareOfState);
-			map.put("code", 200);
-			return map;
-		}
+
+
+//		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/Riskmanage/Risk_ReturnCode?phone=" + newphone1);
+//		intUserService.setModel(userId, rString);
+//		JSONObject object = JSONObject.parseObject(rString);
+//		String phonetype = object.getString("phonetype");
+//		String uuidtype = object.getString("uuidtype");
+//		String wifitype = object.getString("wifitype");
+//		String daytype = object.getString("daytype");
+//		String wifimactype = object.getString("wifimactype");
+//		String maillistype = object.getString("maillistype");
+//		String apptype = object.getString("apptype");
+//		System.out.println(phonetype);
+//		System.out.println(uuidtype);
+//		System.out.println(wifitype);
+//		System.out.println(daytype);
+//		System.out.println(wifimactype);
+//		System.out.println(maillistype);
+//		System.out.println(apptype);
+//		String thirdtypeid = "6";
+//		String date = System.currentTimeMillis() + "";
+//		thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date); //风控统计
+//		
+//		if ("1".equals(phonetype) || "1".equals(uuidtype) || "1".equals(wifitype) || "1".equals(daytype)
+//				|| "1".equals(wifimactype) || "1".equals(maillistype) || "1".equals(apptype)) {
+//			intUserService.updateshareOfState(userId, shareOfState);
+//			map.put("Ncode", "2000");
+//			map.put("code", "407");
+//			map.put("msg", "其他条件不符合");
+//			shareOfState = "0";
+//			intUserService.updateScore1(userId, shareOfState);
+//			return map;
+//		}else {
+//			shareOfState = "1";
+//			intUserService.updateScore1(userId, shareOfState);
+//			map.put("code", 200);
+//			return map;
+//		}
 
 		
 //		if ("风控甲".equals(rmModleName)) {
