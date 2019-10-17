@@ -125,6 +125,13 @@ public class UserController {
        return model;
 	}
 	
+	//后台管理——各个规则分类的命中分数
+	@ResponseBody
+	@RequestMapping("/typeifhit")
+	public Map<String,Object> typeifhit(Integer userid){
+		return intUserService.typeifhit(userid);
+	}
+	
 	/**
 	 * 注册用户信息
 	 * 用于导出excel的查询结果

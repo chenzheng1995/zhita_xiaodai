@@ -541,6 +541,17 @@ public class UserServiceImp implements IntUserService{
 		 String model = userMapper.getModel(userId);
 		return model;
 	}
+	
+	//后台管理——各个规则分类的命中分数
+    public Map<String,Object> typeifhit(Integer userid){
+    	PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/rulelist/typeifhit?userid="+userid);
+		JSONObject object = JSONObject.parseObject(rString);
+					
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("list", object.getString("list"));
+		return map;
+    }
 	@Override
 	public void updateUserAuthenStatus(int userId,String userAuthenStatus) {
 		userMapper.updateUserAuthenStatus(userId,userAuthenStatus);

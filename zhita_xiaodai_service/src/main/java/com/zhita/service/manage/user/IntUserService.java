@@ -98,6 +98,9 @@ public interface IntUserService {
 	public void setModel(int userId, String rString);
 
 	public String getModel(int userId);
+	
+	//后台管理——各个规则分类的命中分数
+    public Map<String,Object> typeifhit(Integer userid);
 
 	public void updateUserAuthenStatus(int userId, String userAuthenStatus);
 
