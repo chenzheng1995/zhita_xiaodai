@@ -116,7 +116,7 @@ public class UserController {
     	return intUserService.queryAllsen(userid);
     }
 	
-	// 判断用户是否年龄或者地域不允许借钱
+	//用户反欺诈报告命中不命中的显示
 	@RequestMapping("/getModel")
 	@ResponseBody
 	@Transactional

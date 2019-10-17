@@ -243,6 +243,26 @@ public class Orderdetails {
     
     private String usertype;
     
+    private Integer ofcount;
+    
+    private BigDecimal offmoney;
+    
+	public Integer getOfcount() {
+		return ofcount;
+	}
+
+	public void setOfcount(Integer ofcount) {
+		this.ofcount = ofcount;
+	}
+
+	public BigDecimal getOffmoney() {
+		return offmoney;
+	}
+
+	public void setOffmoney(BigDecimal offmoney) {
+		this.offmoney = offmoney;
+	}
+
 	public String getUsertype() {
 		return usertype;
 	}

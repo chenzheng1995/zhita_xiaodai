@@ -155,6 +155,26 @@ public class Orders {
 	
 	private String bank;
 	
+	private Integer ofcount;
+	
+	private BigDecimal offmoney;
+	
+	public Integer getOfcount() {
+		return ofcount;
+	}
+
+	public void setOfcount(Integer ofcount) {
+		this.ofcount = ofcount;
+	}
+
+	public BigDecimal getOffmoney() {
+		return offmoney;
+	}
+
+	public void setOffmoney(BigDecimal offmoney) {
+		this.offmoney = offmoney;
+	}
+
 	public BigDecimal getShouldReapyMoney() {
 		return shouldReapyMoney;
 	}

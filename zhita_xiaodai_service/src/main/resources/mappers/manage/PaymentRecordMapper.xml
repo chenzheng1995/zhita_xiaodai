@@ -343,7 +343,6 @@
 			  	</where>
 			  	group by o.id 
 			  	order by ra.repaymentDate desc
-		  		limit #{page},#{pagesize}
 			  </select>
 			  
 			  
@@ -455,7 +454,6 @@
   			
   			<select id="DeleteNumMoney" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
   				select count(de.id) as DefeNum,sum(interestOnArrears) as DefeMoney from deferred de where orderId = #{orderId}
-  				and de.deleted = "0"
   			</select>
   			
   			
@@ -595,6 +593,8 @@
   					and o.orderStatus = "3"
   					and re.orderId = a.orderId
   					and o.companyId = #{companyId}
+  					and th.id = re.thirdparty_id
+  					and re.statu = "成功"
   					<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
 						AND o.orderCreateTime between #{start_time} and #{end_time}
 					</if>
@@ -890,7 +890,6 @@
   					AND defe.orderId = o.id
   					AND o.id = b.orderId
   					AND defe.orderId = o.id
-  					and defe.deleted = "0"
   					AND o.companyId = #{companyId}
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
@@ -931,7 +930,6 @@
 				 LEFT JOIN deferred defe on defe.orderId = o.id
   				<where>
   					AND o.companyId = #{companyId}
-  					and defe.deleted = "0"
   					<if test="orderNumber != null and orderNumber != ''">
   						AND o.orderNumber LIKE concat('%',#{orderNumber},'%')  
   					</if>
@@ -985,7 +983,6 @@
   				sum(d.interestOnArrears) as interestOnArrearsSum from deferred d left join orders o on o.id = d.orderid
   				<where>
   					AND o.companyId = #{companyId}
-  					and d.deleted = "0"
   					<if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
   						AND d.deferAfterReturntime between #{startu_time} and #{end_time}
   					</if>
@@ -999,7 +996,6 @@
   				select b.deferredTime,count(b.id) as orderNum,sum(b.interestOnArrears) as deferredamount from deferred b,orders o 
   				<where> 
   				o.id = b.orderid
-  				and b.deleted = "0"
   				and o.companyId = #{companyId}
   				AND b.deferredTime between #{startu_time} and #{end_time}
   				</where>
@@ -1009,14 +1005,14 @@
   			
   			<select id="BankDefeData" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select de.deferredTime,count(de.id) as orderNum,sum(de.interestOnArrears) as interestOnArrearsSum from deferred de,orders o
-  				where  o.companyId = #{companyId} and de.deleted = "0" and de.orderId = o.id and de.deferredTime between #{startu_time} and #{end_time}
+  				where  o.companyId = #{companyId} and de.orderId = o.id and de.deferredTime between #{startu_time} and #{end_time}
   			</select>
   			
   			
   			
   			<select id="DefeRRe" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   				select count(de.id) as orderNum,sum(de.interestOnArrears) as interestOnArrearsSum from deferred de,orders o
-  				where o.id = de.orderId and de.deleted = "0" and o.companyId = #{companyId} and de.deferredTime between #{statu_time} and #{end_time}
+  				where o.id = de.orderId and o.companyId = #{companyId} and de.deferredTime between #{statu_time} and #{end_time}
   			</select>
   			
   			
@@ -1061,7 +1057,7 @@
   			
   			<select id="OneMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="com.zhita.model.manage.Bankdeductions">
   			select count(de.id) as defeNum,sum(de.interestOnArrears) as deferredamount from deferred de inner join orders o on de.orderid=o.id where o.companyId= #{companyId}
-  			and de.deleted = "0" and de.deferredTime BETWEEN #{start_time} and #{end_time}
+  			and de.deferredTime BETWEEN #{start_time} and #{end_time}
   			</select>
   			
   			
@@ -1094,7 +1090,6 @@
   			<select id="YanMoney" parameterType="com.zhita.model.manage.Bankdeductions" resultType="java.math.BigDecimal">
   				select sum(d.interestOnArrears) as deferredamount from deferred d,orders o 
   				<where>
-  					and d.deleted = "0"
   					AND o.id = d.orderid
   					AND o.companyId = #{companyId}
   					 <if test="startu_time != null and startu_time != '' and end_time != null and end_time != ''">
@@ -1215,7 +1210,6 @@
   				select count(of.id) from offlinedelay of,sys_user sy,user u,orders o,deferred defe,orderdetails ord,user_attestation ur
   				<where>
   					of.orderId = o.id
-  					and defe.deleted = "0"
   					and o.userId = u.id
   					and ur.userId = u.id
   					and sy.userId =  of.sys_userId
@@ -1250,7 +1244,7 @@
   			
   			
   			<select id="DeferrAdefe" parameterType="java.lang.Integer" resultType="java.lang.String">
-  				select deferAfterReturntime from deferred where orderid = #{orderid} and deleted = "0"
+  				select deferAfterReturntime from deferred where orderid = #{orderid} 
   			</select>
   			
   			
@@ -1545,4 +1539,44 @@
  			<select id="getInterestPenaltySum" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
  				select interestPenaltySum from orderdetails where orderId =#{orderId}
  			</select>
+ 			
+ 			<select id="SelectOff" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
+ 				select o.id,ra.sedn_time as repaymentDate,thir.name as thname,ra.offusermoney as repaymentMoney,o.orderNumber,u.name,u.phone,
+ 				ra.serialnumber as pipelinenumber
+			  	 from offlinjianmian ra LEFT JOIN orders o on ra.orderId = o.id
+			  	 LEFT JOIN user u ON o.userId = u.id
+			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
+			  	 LEFT JOIN repayment_setting thir ON ra.thirdparty_id = thir.id
+			  	<where>
+			  		 o.companyId = #{companyId}
+			  		<if test="orderNumber != null and orderNumber != ''">
+			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+			  		</if>
+			  		<if test="pipelinenumber != null and pipelinenumber != ''">
+			  			AND ra.serialnumber LIKE concat('%',#{pipelinenumber},'%') 
+			  		</if>
+			  		<if test="name != null and name != ''">
+			  			AND u.name LIKE concat('%',#{name},'%') 
+			  		</if>
+			  		<if test="phone != null and phone != ''">
+			  			AND u.phone LIKE concat('%',#{phone},'%')
+			  		</if>
+			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND ra.sedn_time between #{start_time} and #{end_time}
+					</if>
+					<if test="thirdparty_id != null and thirdparty_id != ''">
+						AND ra.thirdparty_id = #{thirdparty_id}
+					</if>
+			  	</where>
+			  	group by o.id 
+			  	order by ra.sedn_time desc
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="SelectOffA" resultType="com.zhita.model.manage.Orders" parameterType="com.zhita.model.manage.Orderdetails">
+ 				select count(repay.id) as ofcount,sum(repay.offusermoney) as offmoney from offlinjianmian repay,orders o
+			where o.id = repay.orderId and o.companyId = #{companyId} and repay.sedn_time between #{start_time} and #{end_time}
+ 			</select>
+ 			
 </mapper>
