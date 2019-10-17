@@ -258,8 +258,8 @@ public class PromoteController {
         //return "http://115.29.64.145:8081/H5Code/" + fileName;
         //return "http://139.129.102.60:8081/H5Code/" + fileName;
       //return "http://47.56.172.8:8081/H5Code/"+ fileName;
-      //return "http://47.102.40.133:8081/H5Code/" + fileName;
-      return "http://47.56.173.1:8081/H5Code/"+ fileName;
+      return "http://47.102.40.133:8081/H5Code/" + fileName;
+      //return "http://47.56.173.1:8081/H5Code/"+ fileName;
 
 
     }
@@ -357,7 +357,7 @@ public class PromoteController {
  			 			long tomorrowZeroTimestamps = todayZeroTimestamps+86400000; //明天0点的时间戳
  			 			long number1 = loginService.getnumber(todayZeroTimestamps,tomorrowZeroTimestamps,companyId);//当天的注册数
  			 			int maxthresholdvalue = intUsthresholdvalueService.getmaxthresholdvalue(companyId);//最大可以注册的数量
- 			 			if(number1>maxthresholdvalue) {
+ 			 			if(maxthresholdvalue!=0&&number1>maxthresholdvalue) {
  								map.put("msg", "注册数达到上限 ");
  								map.put("SCode", "409");
  								return map;
