@@ -164,6 +164,7 @@ public class UserController {
 		for (int i = 0; i <userlList.size(); i++) {
 			userlList.get(i).setPhone(tm.mobileEncrypt(pd.decryption(userlList.get(i).getPhone())));//将手机号进行脱敏
 			userlList.get(i).setRegistetime(Timestamps.stampToDate(userlList.get(i).getRegistetime()));
+			userlList.get(i).setLogintime(Timestamps.stampToDate(userlList.get(i).getLogintime()));
     		if(userlList.get(i).getUserattestationstatus()==null||"".equals(userlList.get(i).getUserattestationstatus())){
     			userlList.get(i).setUserattestationstatus("0");
     		}
@@ -197,6 +198,27 @@ public class UserController {
     			userlList.get(i).setIfblacklist("正常");
     		}else{
     			userlList.get(i).setIfblacklist("黑名单");
+    		}
+    		
+    		if(userlList.get(i).getApplyState().equals("1")){
+    			userlList.get(i).setApplyState("已申请");
+    		}else{
+    			userlList.get(i).setApplyState("未申请");
+    		}
+    		if(userlList.get(i).getShareOfState().equals("0")){
+    			userlList.get(i).setShareOfState("机审未通过");
+    		}else if(userlList.get(i).getShareOfState().equals("1")){
+    			userlList.get(i).setShareOfState("需要人工审核");
+    		}else if(userlList.get(i).getShareOfState().equals("2")){
+    			userlList.get(i).setShareOfState("机审通过");
+    		}else if(userlList.get(i).getShareOfState().equals("3")){
+    			userlList.get(i).setShareOfState("人审未通过");
+    		}else if(userlList.get(i).getShareOfState().equals("4")){
+    			userlList.get(i).setShareOfState("人审通过");
+    		}else if(userlList.get(i).getShareOfState().equals("5")){
+    			userlList.get(i).setShareOfState("未进风控");
+    		}else{
+    			userlList.get(i).setShareOfState("分控中");
     		}
 		}
 		// 查询用户表有多少行记录
