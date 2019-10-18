@@ -185,6 +185,10 @@ select count(id) from blacklist_user where idcard = #{idCard} and companyId = #{
 
     </insert>
     
-    
+         <insert id="setBlacklistuser1" parameterType="java.util.Map">
+      insert into blacklist_user (companyId, phone,blackType)
+      values(#{companyId},#{phone},#{blackType})
+
+    </insert>
     
 </mapper>

@@ -296,7 +296,7 @@ public class PromoteController {
  	@ResponseBody
  	@Transactional
  	public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient,
- 			String sourceName, String useMarket,String userAgentInfo) {
+ 			String sourceName, String useMarket,String userAgentInfo,String isblack) {
  		Map<String, Object> map = new HashMap<String, Object>();
  		String loginStatus = "1";
  		PhoneDeal phoneDeal = new PhoneDeal();
@@ -307,6 +307,8 @@ public class PromoteController {
  			map.put("msg", "phone,code,companyId,registrationType,sourceName和useMarket不能为空");
  			return map;
  		} else {
+ 			
+
 			
 //         	String ifBlacklist =loginService.getifBlacklist(newPhone,companyId);
  			Integer id = loginService.findphone(newPhone, companyId); // 判断该用户是否存在
@@ -362,12 +364,93 @@ public class PromoteController {
  								map.put("SCode", "409");
  								return map;
  			 			}
+ 			 			
+
+ 			 			
  						String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
  						int merchantId = intSourceService.getsourceId(sourceName);
  						BigDecimal canBorrowlines = borrowMoneyMessageMapper.getCanBorrowlines(companyId);
+// 						String ifBlacklist = "1";
+//	 			 			List<String> list = intSourceService.getstateAndDeleted(companyId,sourceName);
+// 	 			 		    for (String string : list) {
+// 	 			 		     String	state = string;
+// 	 			 			 if("2".equals(state)) {
+// 	 			 				 
+// 	 	 						int number = loginService.insertUser3(newPhone, loginStatus, companyId, registeClient,
+// 	 	 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines,ifBlacklist);
+// 	 	 						if (number == 1) {
+// 	 	 							String blackType = "9";
+// 	 	 							intBlacklistuserService.setBlacklistuser1(companyId, phone,blackType);
+// 	 	 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+// 	 	 							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
+// 	 	 							map.put("SCode", "201");
+// 	 	 							map.put("loginStatus", loginStatus);
+// 	 	 							map.put("userId", id);
+// 	 	 							map.put("phone", phone);
+// 	 	 						} else {
+// 	 	 							map.put("msg", "用户登录失败，用户数据插入失败");
+// 	 	 							map.put("SCode", "405");
+// 	 	 						}
+// 	 			 				 
+// 	 			 				 return map;
+// 	 			 			 }
+// 	 			 			}
+// 	 			 		    
+// 	 			 		    
+// 	 			 		    
+// 	 			 		    String str  = "1";
+// 	 			 		    List<String> list1 = intSourceService.getDeleted(companyId,sourceName);
+// 	 			 		    for (String string1 : list1) {
+// 	 			 			     String	deleted = string1;
+// 	 	 			 			 if("0".equals(deleted)) {
+// 	 	 			 				 str  = "0";
+// 	 	 			 			 }
+// 	 			 				}
+// 	 			 		    
+// 	 			 		    if(str.equals("1")) {
+// 	 			 		    	int number = loginService.insertUser3(newPhone, loginStatus, companyId, registeClient,
+// 	 	 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines,ifBlacklist);
+// 	 	 						if (number == 1) {
+//
+// 	 	 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+// 	 	 							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
+// 	 	 							map.put("SCode", "201");
+// 	 	 							map.put("loginStatus", loginStatus);
+// 	 	 							map.put("userId", id);
+// 	 	 							map.put("phone", phone);
+// 	 	 						} else {
+// 	 	 							map.put("msg", "用户登录失败，用户数据插入失败");
+// 	 	 							map.put("SCode", "405");
+// 	 	 						}
+// 	 			 				 
+// 	 			 				 return map;
+// 	 			 			 }
+
+ 						if(isblack.equals("true")) {
+ 							String ifBlacklist = "1";
+ 							int number = loginService.insertUser3(newPhone, loginStatus, companyId, registeClient,
+	 	 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines,ifBlacklist);
+	 	 						if (number == 1) {
+	 	 							String blackType = "9";
+	 	 							intBlacklistuserService.setBlacklistuser1(companyId, phone,blackType);
+	 	 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
+	 	 							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
+	 	 							map.put("SCode", "201");
+	 	 							map.put("loginStatus", loginStatus);
+	 	 							map.put("userId", id);
+	 	 							map.put("phone", phone);
+	 	 						} else {
+	 	 							map.put("msg", "用户登录失败，用户数据插入失败");
+	 	 							map.put("SCode", "405");
+	 	 						}
+	 			 				 
+	 			 				 return map;
+	 			 			 }
+ 						
  						int number = loginService.insertUser2(newPhone, loginStatus, companyId, registeClient,
  								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines);
  						if (number == 1) {
+
  							id = loginService.getId(newPhone, companyId); // 获取该用户的id
  							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
  							map.put("SCode", "201");

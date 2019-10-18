@@ -254,6 +254,23 @@
 	</insert>
 	
 	
+		<insert id="insertUser3" parameterType="java.util.Map">
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,userAgentInfo,canBorrowlines,ifBlacklist)
+		values (#{newPhone},
+		#{registrationTime},
+		#{loginStatus},
+		#{companyId},
+		#{registeClient},
+		#{registrationTime},
+		#{merchantId},
+		#{useMarket},
+		#{operatorsAuthentication},
+		#{userAgentInfo},
+		#{canBorrowlines},
+		#{ifBlacklist})
+	</insert>
+	
+	
 		<!-- 后台管理 通过手机号获取用户的id  -->
 	<select id="getId" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select id from user where phone = #{newPhone} and companyId = #{companyId}

@@ -198,5 +198,9 @@ public interface UserMapper {
 
 	void updateOperatorAuthenStatus(@Param("attestationStatus") String attestationStatus,@Param("userId") int userId);
 
+	int insertUser3(@Param("newPhone")String newPhone,@Param("loginStatus")String loginStatus,@Param("companyId")int companyId,@Param("registeClient")String registeClient,
+			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication,@Param("userAgentInfo")String userAgentInfo,@Param("canBorrowlines") BigDecimal canBorrowlines,@Param("ifBlacklist") String ifBlacklist);
+
+
 
 }

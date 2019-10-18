@@ -291,4 +291,10 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 		}
 	}
 
+	@Override
+	public void setBlacklistuser1(int companyId, String phone, String blackType) {
+		blacklistUserMapper.setBlacklistuser1(companyId,phone,blackType);
+		
+	}
+
 }
