@@ -998,6 +998,7 @@
   				o.id = b.orderid
   				and o.companyId = #{companyId}
   				AND b.deferredTime between #{startu_time} and #{end_time}
+  				and deleted = "0"
   				</where>
   			</select>
   			
@@ -1543,7 +1544,7 @@
  			<select id="SelectOff" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
  				select o.id,ra.sedn_time as repaymentDate,thir.name as thname,ra.offusermoney as repaymentMoney,o.orderNumber,u.name,u.phone,
  				ra.serialnumber as pipelinenumber
-			  	 from offlinedelay ra LEFT JOIN orders o on ra.orderId = o.id
+			  	 from offlinjianmian ra LEFT JOIN orders o on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
 			  	 LEFT JOIN repayment_setting thir ON ra.thirdparty_id = thir.id

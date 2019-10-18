@@ -952,7 +952,7 @@ public class FinanceController {
 	
 	
 	/**
-	 * 延期   扣款统计
+	 * 延期扣款统计
 	 * @param bank
 	 * @return
 	 */

@@ -181,11 +181,18 @@ public class FinanceServiceimp implements FinanceService{
 			repays.get(i).setPhone(tm.mobileEncrypt(repays.get(i).getPhone()));
 		}
 		System.out.println(rapay.size()+"AAA"+repays.size());
-		rapay.addAll(repays);
+		if(repays.size() == 0){
+			System.out.println("aa");
+		}else if(rapay.size() == 0){
+			System.out.println("BB");
+			rapay.addAll(repays);
+		}else{
+			rapay.addAll(repays);
+		}
 		List<Payment_record> pa = new ArrayList<Payment_record>();
 //		pages.setPage(a);
 		PageUtil2 pageUtil=null;
-		if(repays!=null && !repays.isEmpty()){
+		if(rapay!=null && !rapay.isEmpty()){
     		ListPageUtil listPageUtil=new ListPageUtil(rapay,payrecord.getPage(),10);
     		pa.addAll(listPageUtil.getData());
     		System.out.println(pa.size());
@@ -194,9 +201,11 @@ public class FinanceServiceimp implements FinanceService{
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
     	}
+		
 		pageUtil.setTotalCount(rapay.size());
 		System.out.println(rapay.size());
 		map.put("Repayment", pa);
+		System.out.println("分页:"+pa.size());
 		map.put("pageutil", pageUtil);
 		return map;
 	}
