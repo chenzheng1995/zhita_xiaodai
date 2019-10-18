@@ -116,13 +116,20 @@ public class UserController {
     	return intUserService.queryAllsen(userid);
     }
 	
-	// 判断用户是否年龄或者地域不允许借钱
+	//用户反欺诈报告命中不命中的显示
 	@RequestMapping("/getModel")
 	@ResponseBody
 	@Transactional
 	public String getModel(int userId){
        String model = intUserService.getModel(userId);
        return model;
+	}
+	
+	//后台管理——各个规则分类的命中分数
+	@ResponseBody
+	@RequestMapping("/typeifhit")
+	public Map<String,Object> typeifhit(Integer userid){
+		return intUserService.typeifhit(userid);
 	}
 	
 	/**

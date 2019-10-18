@@ -551,7 +551,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
     <include refid="Base_Column_List1" />
     from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
     left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0) 
+    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select DISTINCT userId from blacklist_user where blackType=1 and deleted=0) 
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
@@ -570,13 +570,13 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="sourcename != null and sourcename!='' ">
            and u.sourceId=#{sourcename,jdbcType=INTEGER}
         </if>
-        order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
+        group by o.id order by o.orderCreateTime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER} 
   </select>
    <!-- 后台管理         订单 查询（公司id，姓名，手机号，身份证号，注册开始时间，注册结束时间     渠道id）   查询数量 -->
   <select id="queryAllOrdersByUserid1count" parameterType="com.zhita.model.manage.OrderQueryParameter" resultType="java.lang.Integer">
-  	 select count(*) from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
+  	 select count(DISTINCT o.id) from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
   	 left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0)
+     where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select DISTINCT userId from blacklist_user where blackType=1 and deleted=0)
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
@@ -602,7 +602,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
     <include refid="Base_Column_List1" />
     from orders o left join orderdetails od on o.id=od.orderId left join user u on o.userId=u.id 
     left join source s on u.sourceId=s.id left join repayment r on r.orderId=o.id left join user_attestation uat on uat.userId=u.id
-    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select userId from blacklist_user where blackType=1 and deleted=0)
+    where o.companyId=#{companyid,jdbcType=INTEGER} and u.id in(select DISTINCT userId from blacklist_user where blackType=1 and deleted=0)
          <if test="name != null and name!='' ">
            and u.name like "%"#{name,jdbcType=VARCHAR}"%"
         </if>
@@ -621,7 +621,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
         <if test="sourcename != null and sourcename!='' ">
            and u.sourceId=#{sourcename,jdbcType=INTEGER}
         </if>
-        order by o.orderCreateTime desc  
+        group by o.id order by o.orderCreateTime desc  
   </select>
   <!-- 后台管理         渠道统计模块——申请人数字段 -->
   <select id="queryNum" resultType="java.lang.Integer">
