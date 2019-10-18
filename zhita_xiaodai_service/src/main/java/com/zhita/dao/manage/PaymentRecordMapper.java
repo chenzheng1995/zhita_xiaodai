@@ -336,4 +336,7 @@ public interface PaymentRecordMapper {
     
     Orders SelectOffA(Orderdetails ords);
     
+    
+    Orders SelectOffCC(Bankdeductions ords);
+    
 }

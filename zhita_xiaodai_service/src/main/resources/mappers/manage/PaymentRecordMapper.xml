@@ -998,6 +998,7 @@
   				o.id = b.orderid
   				and o.companyId = #{companyId}
   				AND b.deferredTime between #{startu_time} and #{end_time}
+  				and deleted = "0"
   				</where>
   			</select>
   			
@@ -1577,6 +1578,13 @@
  			<select id="SelectOffA" resultType="com.zhita.model.manage.Orders" parameterType="com.zhita.model.manage.Orderdetails">
  				select count(repay.id) as ofcount,sum(repay.offusermoney) as offmoney from offlinjianmian repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and repay.sedn_time between #{start_time} and #{end_time}
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="SelectOffCC" resultType="com.zhita.model.manage.Orders" parameterType="com.zhita.model.manage.Bankdeductions">
+ 				select count(repay.id) as ofcount,sum(repay.extensionfee) as offmoney from offlinedelay repay,orders o
+			where o.id = repay.orderId and o.companyId = #{companyId} and repay.operating_time between #{startu_time} and #{end_time}
  			</select>
  			
 </mapper>

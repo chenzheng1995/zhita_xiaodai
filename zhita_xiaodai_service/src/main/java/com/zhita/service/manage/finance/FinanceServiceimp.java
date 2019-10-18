@@ -31,6 +31,7 @@ import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
 import com.zhita.model.manage.Offlinjianmian;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.PriceTongji;
 import com.zhita.model.manage.Repayment;
@@ -180,11 +181,18 @@ public class FinanceServiceimp implements FinanceService{
 			repays.get(i).setPhone(tm.mobileEncrypt(repays.get(i).getPhone()));
 		}
 		System.out.println(rapay.size()+"AAA"+repays.size());
-		rapay.addAll(repays);
+		if(repays.size() == 0){
+			System.out.println("aa");
+		}else if(rapay.size() == 0){
+			System.out.println("BB");
+			rapay.addAll(repays);
+		}else{
+			rapay.addAll(repays);
+		}
 		List<Payment_record> pa = new ArrayList<Payment_record>();
 //		pages.setPage(a);
 		PageUtil2 pageUtil=null;
-		if(repays!=null && !repays.isEmpty()){
+		if(rapay!=null && !rapay.isEmpty()){
     		ListPageUtil listPageUtil=new ListPageUtil(rapay,payrecord.getPage(),10);
     		pa.addAll(listPageUtil.getData());
     		System.out.println(pa.size());
@@ -193,9 +201,11 @@ public class FinanceServiceimp implements FinanceService{
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
     	}
+		
 		pageUtil.setTotalCount(rapay.size());
 		System.out.println(rapay.size());
 		map.put("Repayment", pa);
+		System.out.println("分页:"+pa.size());
 		map.put("pageutil", pageUtil);
 		return map;
 	}
@@ -774,6 +784,7 @@ public class FinanceServiceimp implements FinanceService{
 				
 				Bankdeductions bank = padao.BankdeduCtionsData(banl);
 				bank.setDeferredTime(times.get(i));
+				System.out.println("线上延期金额:"+bank.getDeferredamount()+""+bank.getOrderNum());
 				Bankdeductions b = padao.BankMoney(banl);
 				if(bank.getDeferredamount()==null){
 					bank.setDeferredamount(new BigDecimal(0));
@@ -786,25 +797,24 @@ public class FinanceServiceimp implements FinanceService{
 				if(b.getOrderNum() == null){
 					b.setOrderNum(0);
 				}
+				System.out.println("线上延期金额2:"+bank.getDeferredamount()+""+bank.getOrderNum());
 				
-				Offlinedelay of = padao.SelectOf(banl);
+				Orders of = padao.SelectOffCC(banl);
 				
-				if(of.getDefeMoney() == null){
-					of.setDefeMoney(new BigDecimal(0));
+				if(of.getOffmoney() == null){
+					of.setOffmoney(new BigDecimal(0));
 				}
 				
-				if(of.getDefeNum() == null){
-					of.setDefeNum(0);
-				}
-				if(b.getDeferredamount()==null){
-					b.setDeferredamount(new BigDecimal(0));
+				if(of.getOfcount() == null){
+					of.setOfcount(0);
 				}
 				
 				
-				System.out.println(of.getDefeMoney()+"A"+b.getDeferredamount());
-				bank.setDeferredamount(b.getDeferredamount().add(of.getDefeMoney()));
-				bank.setOrderNum(b.getOrderNum()+of.getDefeNum());
+				System.out.println(of.getOffmoney()+"A"+bank.getDeferredamount()+"银行金额:"+b.getDeduction_money());
+				bank.setDeferredamount(bank.getDeferredamount().add(of.getOffmoney()));
+				bank.setOrderNum(bank.getOrderNum()+of.getOfcount());
 				bank.setUserNum(b.getUserNum());
+				bank.setDeduction_money(b.getDeduction_money());
 				banks.add(bank);
 			}
 		}

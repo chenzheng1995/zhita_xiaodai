@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mysql.fabric.xmlrpc.base.Data;
+import com.zhita.model.manage.Shortmessage;
 import com.zhita.model.manage.SmsSendRequest;
 import com.zhita.service.manage.SmsReport.Smservice;
 
@@ -23,6 +24,8 @@ public class SmsData {
 	
 	@Autowired
 	private Smservice serve;
+	
+	
 
 		
 	    static int count = 0;
@@ -41,7 +44,17 @@ public class SmsData {
 	            @Override
 	            public void run() {
 	                ++count;
-	                serve.sendDateSned(sms);
+	                Shortmessage shortmessage = serve.sendDateSned(sms);
+	                SmsSendRequest sms = new SmsSendRequest();
+	                if(shortmessage != null){
+	                	sms.setMsg(shortmessage.getMsg());
+	                	String b = shortmessage.getPhonesa().toString();
+	            		String ca = b.substring(1,b.length()-1);
+	                	sms.setPhone(ca);
+	                	sms.setCompanyid(shortmessage.getCompanyid());
+	                	sms.setPhonenum(shortmessage.getPhonenum());
+	                	serve.SendSm(sms);
+	                }
 	                System.out.println("时间=" + new Date() + " 执行了" + count + "次"); // 1次
 	                
 	            }
