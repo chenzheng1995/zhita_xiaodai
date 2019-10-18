@@ -1543,7 +1543,7 @@
  			<select id="SelectOff" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
  				select o.id,ra.sedn_time as repaymentDate,thir.name as thname,ra.offusermoney as repaymentMoney,o.orderNumber,u.name,u.phone,
  				ra.serialnumber as pipelinenumber
-			  	 from offlinjianmian ra LEFT JOIN orders o on ra.orderId = o.id
+			  	 from offlinedelay ra LEFT JOIN orders o on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
 			  	 LEFT JOIN repayment_setting thir ON ra.thirdparty_id = thir.id
@@ -1577,6 +1577,13 @@
  			<select id="SelectOffA" resultType="com.zhita.model.manage.Orders" parameterType="com.zhita.model.manage.Orderdetails">
  				select count(repay.id) as ofcount,sum(repay.offusermoney) as offmoney from offlinjianmian repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and repay.sedn_time between #{start_time} and #{end_time}
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="SelectOffCC" resultType="com.zhita.model.manage.Orders" parameterType="com.zhita.model.manage.Bankdeductions">
+ 				select count(repay.id) as ofcount,sum(repay.extensionfee) as offmoney from offlinedelay repay,orders o
+			where o.id = repay.orderId and o.companyId = #{companyId} and repay.operating_time between #{startu_time} and #{end_time}
  			</select>
  			
 </mapper>
