@@ -440,7 +440,7 @@ public class Smserviceimp implements Smservice{
 
 
 	@Override
-	public void sendDateSned(SmsSendRequest sms) {
+	public Shortmessage sendDateSned(SmsSendRequest sms) {
 		System.out.println("进接口");
 		Calendar calendar = Calendar.getInstance();
 		Date date = null;
@@ -486,13 +486,17 @@ public class Smserviceimp implements Smservice{
 				List<Shortmessage> sho = new ArrayList<Shortmessage>();
 				shor.setShortmessagesize(sdao.SelectTimeSize(shor));
 				shor.setCollection_time(shor.getSend_time());
+				shor.setMsg(ss.getContent());
+				System.out.println();
 				sho.add(shor);
+				return shor;
 		    	}
 	    }
 	    
 	    
 	}
 	System.out.println("出接口");
+	return null;
 }
 
 
@@ -505,11 +509,18 @@ public class Smserviceimp implements Smservice{
 
 	@Override
 	public void sendBank() {
-		
-		
-		
+		// TODO Auto-generated method stub
 		
 	}
+
+
+
+
+
+
+
+
+
 	
 }
 	
