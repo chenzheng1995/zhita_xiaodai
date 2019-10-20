@@ -328,12 +328,13 @@ public class OperatorController {
 	public Map<String, Object> jzjkOperator(int userId,String password,String phone) {  //password是服务密码
 		Map<String, Object> map = new HashMap<>();
 		  String secondattributes = "运营商";
-		   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+		   //String status =  authenticationInformationMapper.secondattributes(secondattributes);
+		  String status = "1";
 		   if("1".equals(status)) {
 		String username =phone;//手机号
-		Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);		
-		String identityName =(String) map1.get("trueName");//姓名
-		String identityNo = (String) map1.get("idcard_number");//身份证号
+		//Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);		
+		String identityName ="东新雨";//(String) map1.get("trueName");//姓名//
+		String identityNo = "420621199905157170";//(String) map1.get("idcard_number");//身份证号//
 		String crawlerType = "OperatorReport";//类型
 		String appId = "8625";//应用ID
 		String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";//应用秘钥
@@ -342,6 +343,7 @@ public class OperatorController {
 		String sign = mUtils.getMD5(string);//签名
 		PostAndGet pGet = new PostAndGet();
 		String str = pGet.sendPost("http://bbk.jmy919.cn/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
+		System.out.println(str);
 		JSONObject jsonObject = JSONObject.parseObject(str);
 		if(jsonObject!=null) {
 			int code = (int) jsonObject.get("code");			
@@ -1862,6 +1864,11 @@ public class OperatorController {
 			}
 		}
 		return age;
+	}
+	
+	public static void main(String[] args) {
+		OperatorController oper = new OperatorController();
+		oper.jzjkOperator(1, "990318", "13487139655");
 	}
 
 }
