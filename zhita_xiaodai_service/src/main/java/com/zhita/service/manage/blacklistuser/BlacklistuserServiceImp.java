@@ -139,7 +139,6 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	                    continue;
 	                }*/
 	            System.out.println(listob.get(i)+"-------");
-	 
 	        }
 	        for (int i = 0; i < listob.size(); i++) {
 	            List<Object> lo = listob.get(i);
@@ -147,19 +146,39 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	            BlacklistUser j = null;
 	 
 	            try {
-	                j = blacklistUserMapper.queryByPhone(String.valueOf(lo.get(1)));//通过手机号查询表中是否有该黑名单用户
+	            	if(lo.size()==1||lo.size()==2){
+	            		j = blacklistUserMapper.queryByPhone(String.valueOf(lo.get(0)));//通过手机号查询表中是否有该黑名单用户
+	            	}else{
+	            		j = blacklistUserMapper.queryByPhone(String.valueOf(lo.get(1)));//通过手机号查询表中是否有该黑名单用户
+	            	}
 	            } catch (NumberFormatException e) {
 	                // TODO Auto-generated catch block
 	                System.out.println("数据库中无该条数据，新增");
 	 
 	            }
-	            vo.setCompanyid(companyId);
-	            vo.setName(String.valueOf(lo.get(0)));
-	            vo.setPhone(String.valueOf(lo.get(1)));
-	            vo.setIdcard(String.valueOf(lo.get(2)));
-	            vo.setOperator(operator);
-	            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
-	            vo.setBlackType("7");//黑名单类型（7：批量导入）
+	            if(lo.size()==1){
+	            	 vo.setCompanyid(companyId);
+	            	 vo.setPhone(String.valueOf(lo.get(0)));
+	            	 vo.setOperator(operator);
+	 	             vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
+	 	             vo.setBlackType("7");//黑名单类型（7：批量导入）
+	            }else if(lo.size()==2){
+	            	vo.setCompanyid(companyId);
+	            	vo.setPhone(String.valueOf(lo.get(1)));
+		            vo.setIdcard(String.valueOf(lo.get(2)));
+		            vo.setOperator(operator);
+		            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
+		            vo.setBlackType("7");//黑名单类型（7：批量导入）
+	            }else{
+	            	vo.setCompanyid(companyId);
+		            vo.setName(String.valueOf(lo.get(0)));
+		            vo.setPhone(String.valueOf(lo.get(1)));
+		            vo.setIdcard(String.valueOf(lo.get(2)));
+		            vo.setOperator(operator);
+		            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
+		            vo.setBlackType("7");//黑名单类型（7：批量导入）
+	            }
+	            
 	 
 	            if(j == null)
 	            {
