@@ -903,11 +903,11 @@ public class Test {
 //		pGet.doJsonPost("http://39.98.83.65:8080/zhita_heitong_Fengkong/jiaZhouOperator/setOperator",json);
 		
 		
-//		RedisClientUtil redis = new RedisClientUtil();
+		RedisClientUtil redis = new RedisClientUtil();
 ////		redis.setjiazhou("jzjkupdateOperatorJson"+2,"1");
 //		String aca = redis.getjiazhou("jzjkupdateOperatorJson"+3892);
 //		System.out.println(aca);
-//		redis.delkey("jzjkupdateOperatorJson"+3890);
+		redis.delkey("jzjkupdateOperatorJson"+3890);
 //		String str = "{\"code\":200,\"msg\":\"请求成功\",\"time\":\"1571047025\",\"data\":{\"report_info\":{\"time\":\"2019-10-14T17:56:54.632\",\"report_no\":\"2019101417565463989646\",\"risk_level\":\"中\",\"score\":410},\"applier_info\":{\"name\":\"刘晓云\",\"gender\":\"男\",\"age\":21,\"phone_number\":\"158****6762\",\"phone_mark\":null,\"idcard\":\"142727199807191015\",\"idcard_location\":\"山西省运城地区芮城县\",\"home_telephone_number\":\"\",\"home_address\":null,\"home_address_map_result\":{\"formatted_address\":null,\"level\":\"\",\"latitude\":\"\",\"longitude\":\"\"},\"company_telephone_number\":\"\",\"company_address\":\"\",\"company_address_map_result\":{\"formatted_address\":\"\",\"level\":\"\",\"latitude\":\"\",\"longitude\":\"\"}},\"operator_info\":{\"phone_number\":\"158****6762\",\"operator_type\":\"移动\",\"name\":\"刘**\",\"idcard\":null,\"email\":\"0\",\"address\":null,\"vip_level\":\"100\",\"accumulate_points\":null,\"registration_history\":\"8个月\",\"order_description\":null,\"available_amount\":14.98,\"phone_number_location\":\"山西.运城\",\"main_active_location\":\"杭州\",\"main_location_percent\":1,\"main_locations\":[{\"location\":\"杭州\",\"percent\":1}],\"circle_of_friends_locations\":[{\"location\":\"山西.运城\",\"percent\":0.56},{\"location\":\"浙江.杭州\",\"percent\":0.33},{\"location\":\"河南.南阳\",\"percent\":0.06}]},\"communication_detection\":{\"the_last_call_time\":\"2019-10-14T13:38:23.000\",\"silent_count\":1,\"silent_duration_time\":85,\"average_silent_duration_time\":\"平均每次静默3天13小时\",\"the_last_silent_duration_time\":\"2019-10-10 20:16:03 静默3天13小时\",\"night_activities\":0,\"long_silent_time\":\"2019-10-10T20:16:03.000\",\"long_silent_duration_time\":85,\"the_long_silent_duration_time\":\"3天13小时\"},\"travel_info\":[],\"emergency_contact_info\":[],\"communication_month_info\":[{\"month\":\"2019-05\",\"call_phone_number_count\":1,\"two_way_phone_number_per\":0,\"call_count\":1,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":1,\"called_duration_time\":11,\"sms_count\":0},{\"month\":\"2019-06\",\"call_phone_number_count\":4,\"two_way_phone_number_per\":0,\"call_count\":4,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":4,\"called_duration_time\":155,\"sms_count\":0},{\"month\":\"2019-07\",\"call_phone_number_count\":2,\"two_way_phone_number_per\":0,\"call_count\":4,\"calling_count\":4,\"calling_duration_time\":3925,\"called_count\":0,\"called_duration_time\":0,\"sms_count\":2},{\"month\":\"2019-08\",\"call_phone_number_count\":4,\"two_way_phone_number_per\":0,\"call_count\":4,\"calling_count\":2,\"calling_duration_time\":114,\"called_count\":2,\"called_duration_time\":41,\"sms_count\":0},{\"month\":\"2019-09\",\"call_phone_number_count\":2,\"two_way_phone_number_per\":0,\"call_count\":2,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":2,\"called_duration_time\":72,\"sms_count\":0},{\"month\":\"2019-10\",\"call_phone_number_count\":3,\"two_way_phone_number_per\":0,\"call_count\":3,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":3,\"called_duration_time\":77,\"sms_count\":0}],\"communication_time_bucket_info\":[{\"time_bucket\":\"0:00-3:00\",\"call_count\":0,\"phone_count\":0,\"phone_times\":null,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":0,\"called_duration_time\":0},{\"time_bucket\":\"3:00-6:00\",\"call_count\":0,\"phone_count\":0,\"phone_times\":null,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":0,\"called_duration_time\":0},{\"time_bucket\":\"6:00-9:00\",\"call_count\":3,\"phone_count\":3,\"phone_times\":\"15835996852：1\",\"calling_count\":1,\"calling_duration_time\":3438,\"called_count\":2,\"called_duration_time\":33},{\"time_bucket\":\"9:00-12:00\",\"call_count\":6,\"phone_count\":6,\"phone_times\":\"035910085：1\",\"calling_count\":1,\"calling_duration_time\":45,\"called_count\":5,\"called_duration_time\":176},{\"time_bucket\":\"12:00-15:00\",\"call_count\":2,\"phone_count\":2,\"phone_times\":\"15833907765：1\",\"calling_count\":1,\"calling_duration_time\":69,\"called_count\":1,\"called_duration_time\":43},{\"time_bucket\":\"15:00-18:00\",\"call_count\":3,\"phone_count\":2,\"phone_times\":\"15857179980：2\",\"calling_count\":2,\"calling_duration_time\":47,\"called_count\":1,\"called_duration_time\":20},{\"time_bucket\":\"18:00-21:00\",\"call_count\":4,\"phone_count\":4,\"phone_times\":\"13133391957：1\",\"calling_count\":1,\"calling_duration_time\":440,\"called_count\":3,\"called_duration_time\":84},{\"time_bucket\":\"21:00-24:00\",\"call_count\":0,\"phone_count\":0,\"phone_times\":null,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":0,\"called_duration_time\":0}],\"communication_time_duration_info\":[{\"time_duration\":\"0-5\",\"calling_count\":4,\"calling_duration_time\":161,\"called_count\":12,\"called_duration_time\":356},{\"time_duration\":\"5-10\",\"calling_count\":1,\"calling_duration_time\":440,\"called_count\":0,\"called_duration_time\":0},{\"time_duration\":\"10-20\",\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":0,\"called_duration_time\":0},{\"time_duration\":\"20-30\",\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":0,\"called_duration_time\":0},{\"time_duration\":\"30-60\",\"calling_count\":1,\"calling_duration_time\":3438,\"called_count\":0,\"called_duration_time\":0},{\"time_duration\":\">60\",\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":0,\"called_duration_time\":0}],\"social_connectionsInfo\":{\"phone_count\":15,\"interflow_call_phone_count\":0,\"compactness_call_count\":0,\"circle_of_friends_locations\":[{\"location\":\"山西.运城\",\"percent\":0.56},{\"location\":\"浙江.杭州\",\"percent\":0.33},{\"location\":\"河南.南阳\",\"percent\":0.06}],\"ephemeral_call_count\":0},\"communication_city_info\":[{\"city\":\"杭州\",\"call_count\":18,\"calling_count\":6,\"calling_duration_time\":4039,\"called_count\":12,\"called_duration_time\":356,\"calling_count_per\":1,\"calling_duration_time_per\":1,\"called_duration_time_per\":1,\"called_count_per\":1}],\"contacts_city_infos\":[{\"city\":\"山西.运城\",\"call_count\":10,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":10,\"called_duration_time\":291,\"calling_count_per\":0,\"calling_duration_time_per\":0,\"called_duration_time_per\":0.82,\"called_count_per\":0.83},{\"city\":\"浙江.杭州\",\"call_count\":6,\"calling_count\":6,\"calling_duration_time\":4039,\"called_count\":0,\"called_duration_time\":0,\"calling_count_per\":1,\"calling_duration_time_per\":1,\"called_duration_time_per\":0,\"called_count_per\":0},{\"city\":\"河南.南阳\",\"call_count\":1,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":1,\"called_duration_time\":22,\"calling_count_per\":0,\"calling_duration_time_per\":0,\"called_duration_time_per\":0.06,\"called_count_per\":0.08},{\"city\":\"河北.石家庄\",\"call_count\":1,\"calling_count\":0,\"calling_duration_time\":0,\"called_count\":1,\"called_duration_time\":43,\"calling_count_per\":0,\"calling_duration_time_per\":0,\"called_duration_time_per\":0.12,\"called_count_per\":0.08}],\"bill_info\":[{\"month\":\"2019-09\",\"consumption_amount\":25}],\"recharge_info\":[{\"recharge_time\":\"2019-08\",\"recharge_count\":4,\"recharge_amount\":50,\"recharge_max\":29.94},{\"recharge_time\":\"2019-06\",\"recharge_count\":2,\"recharge_amount\":20,\"recharge_max\":19.96},{\"recharge_time\":\"2019-05\",\"recharge_count\":6,\"recharge_amount\":70,\"recharge_max\":29.94}],\"top10_call_count\":[{\"phone_number\":\"13588080705\",\"call_count\":3,\"calling_count\":3,\"called_count\":0},{\"phone_number\":\"15857179980\",\"call_count\":2,\"calling_count\":2,\"called_count\":0},{\"phone_number\":\"035910086\",\"call_count\":1,\"calling_count\":0,\"called_count\":1},{\"phone_number\":\"13133391957\",\"call_count\":1,\"calling_count\":0,\"called_count\":1},{\"phone_number\":\"057188992226\",\"call_count\":1,\"calling_count\":1,\"called_count\":0},{\"phone_number\":\"15833907765\",\"call_count\":1,\"calling_count\":0,\"called_count\":1},{\"phone_number\":\"15835996852\",\"call_count\":1,\"calling_count\":0,\"called_count\":1},{\"phone_number\":\"035910085\",\"call_count\":1,\"calling_count\":0,\"called_count\":1},{\"phone_number\":\"15735979077\",\"call_count\":1,\"calling_count\":0,\"called_count\":1},{\"phone_number\":\"13096610658\",\"call_count\":1,\"calling_count\":0,\"called_count\":1}],\"top10_call_time\":[{\"phone_number\":\"13588080705\",\"call_duration_time\":3947,\"calling_duration_time\":3947,\"called_duration_time\":0},{\"phone_number\":\"13133391957\",\"call_duration_time\":53,\"calling_duration_time\":0,\"called_duration_time\":53},{\"phone_number\":\"15735979077\",\"call_duration_time\":52,\"calling_duration_time\":0,\"called_duration_time\":52},{\"phone_number\":\"035910085\",\"call_duration_time\":48,\"calling_duration_time\":0,\"called_duration_time\":48},{\"phone_number\":\"15857179980\",\"call_duration_time\":47,\"calling_duration_time\":47,\"called_duration_time\":0},{\"phone_number\":\"057188992226\",\"call_duration_time\":45,\"calling_duration_time\":45,\"called_duration_time\":0},{\"phone_number\":\"15833907765\",\"call_duration_time\":43,\"calling_duration_time\":0,\"called_duration_time\":43},{\"phone_number\":\"035910086\",\"call_duration_time\":32,\"calling_duration_time\":0,\"called_duration_time\":32},{\"phone_number\":\"18135952312\",\"call_duration_time\":22,\"calling_duration_time\":0,\"called_duration_time\":22},{\"phone_number\":\"03598718963\",\"call_duration_time\":22,\"calling_duration_time\":0,\"called_duration_time\":22}],\"top10_single_call_time\":[{\"phone_number\":\"13588080705\",\"call_duration_time\":3438},{\"phone_number\":\"13588080705\",\"call_duration_time\":440},{\"phone_number\":\"13588080705\",\"call_duration_time\":69},{\"phone_number\":\"13133391957\",\"call_duration_time\":53},{\"phone_number\":\"15735979077\",\"call_duration_time\":52},{\"phone_number\":\"035910085\",\"call_duration_time\":48},{\"phone_number\":\"057188992226\",\"call_duration_time\":45},{\"phone_number\":\"15833907765\",\"call_duration_time\":43},{\"phone_number\":\"035910086\",\"call_duration_time\":32},{\"phone_number\":\"15857179980\",\"call_duration_time\":25}],\"label_info\":[{\"sort_index\":1,\"contact_count\":3,\"phone_number\":\"13588080705\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"浙江.杭州\",\"contact_duration\":3947,\"calling_count\":3,\"called_count\":0,\"earliest_time\":\"2019-07-14T18:49:11.000\",\"latest_time\":\"2019-08-05T12:43:09.000\"},{\"sort_index\":2,\"contact_count\":2,\"phone_number\":\"15857179980\",\"label_name\":\"**智能\",\"label_type\":\"网络布线\",\"phone_location\":\"浙江.杭州\",\"contact_duration\":47,\"calling_count\":2,\"called_count\":0,\"earliest_time\":\"2019-07-03T15:32:33.000\",\"latest_time\":\"2019-07-03T15:37:06.000\"},{\"sort_index\":3,\"contact_count\":1,\"phone_number\":\"035910086\",\"label_name\":\"中国移动全国统一客服\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":32,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-06-18T10:23:01.000\",\"latest_time\":\"2019-06-18T10:23:01.000\"},{\"sort_index\":4,\"contact_count\":1,\"phone_number\":\"13133391957\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":53,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-06-14T18:38:10.000\",\"latest_time\":\"2019-06-14T18:38:10.000\"},{\"sort_index\":5,\"contact_count\":1,\"phone_number\":\"15833907765\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"河北.石家庄\",\"contact_duration\":43,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-10-14T13:38:23.000\",\"latest_time\":\"2019-10-14T13:38:23.000\"},{\"sort_index\":6,\"contact_count\":1,\"phone_number\":\"057188992226\",\"label_name\":\"金地自在城别墅\",\"label_type\":\"未知\",\"phone_location\":\"浙江.杭州\",\"contact_duration\":45,\"calling_count\":1,\"called_count\":0,\"earliest_time\":\"2019-08-20T10:20:18.000\",\"latest_time\":\"2019-08-20T10:20:18.000\"},{\"sort_index\":7,\"contact_count\":1,\"phone_number\":\"15835996852\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":11,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-05-04T08:09:41.000\",\"latest_time\":\"2019-05-04T08:09:41.000\"},{\"sort_index\":8,\"contact_count\":1,\"phone_number\":\"035910085\",\"label_name\":\"中国移动4G销售专线\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":48,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-06-04T10:14:31.000\",\"latest_time\":\"2019-06-04T10:14:31.000\"},{\"sort_index\":9,\"contact_count\":1,\"phone_number\":\"15735979077\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":52,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-09-03T11:34:39.000\",\"latest_time\":\"2019-09-03T11:34:39.000\"},{\"sort_index\":10,\"contact_count\":1,\"phone_number\":\"13096610658\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":19,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-08-23T19:47:16.000\",\"latest_time\":\"2019-08-23T19:47:16.000\"},{\"sort_index\":11,\"contact_count\":1,\"phone_number\":\"035912599800125\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":12,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-10-10T20:16:03.000\",\"latest_time\":\"2019-10-10T20:16:03.000\"},{\"sort_index\":12,\"contact_count\":1,\"phone_number\":\"18135952312\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":22,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-08-24T09:42:01.000\",\"latest_time\":\"2019-08-24T09:42:01.000\"},{\"sort_index\":13,\"contact_count\":1,\"phone_number\":\"18211892759\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"河南.南阳\",\"contact_duration\":22,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-10-14T10:07:54.000\",\"latest_time\":\"2019-10-14T10:07:54.000\"},{\"sort_index\":14,\"contact_count\":1,\"phone_number\":\"03598718963\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":22,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-06-20T08:55:48.000\",\"latest_time\":\"2019-06-20T08:55:48.000\"},{\"sort_index\":15,\"contact_count\":1,\"phone_number\":\"15135908037\",\"label_name\":\"未知\",\"label_type\":\"未知\",\"phone_location\":\"山西.运城\",\"contact_duration\":20,\"calling_count\":0,\"called_count\":1,\"earliest_time\":\"2019-09-03T16:25:08.000\",\"latest_time\":\"2019-09-03T16:25:08.000\"}],\"sensitive_info\":[{\"risk_level\":\"风险：低\",\"item_id\":\"10101\",\"item_name\":\"运营商关键信息匹配\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"idcard_matching\":\"未能获取运营商注册的身份证号码\",\"name_matching\":\"与运营商注册的姓名【刘**】部分匹配\"}},{\"risk_level\":\"风险：中\",\"item_id\":\"10102\",\"item_name\":\"入网时长检查\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"network_length_check\":\"入网时长为6至12个月\"}},{\"risk_level\":\"风险：低\",\"item_id\":\"10103\",\"item_name\":\"申请人黑名单检查\",\"check_result\":\"未发现\",\"result_detail_info\":{\"phone_number\":\"手机号未在黑名单中出现\",\"idcard\":\"身份证未在黑名单中出现\"}},{\"risk_level\":\"风险：低\",\"item_id\":\"10104\",\"item_name\":\"紧急联系人黑名单检查\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"10105\",\"item_name\":\"黑名单通信记录\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"10106\",\"item_name\":\"身份证关联信息检测\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"result\":\"未发现\"}},{\"risk_level\":\"风险：低\",\"item_id\":\"20111\",\"item_name\":\"紧急联系人\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20101\",\"item_name\":\"民间借贷\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20102\",\"item_name\":\"金融机构\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20103\",\"item_name\":\"信用卡机构\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20104\",\"item_name\":\"p2p借贷平台\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20105\",\"item_name\":\"互联网小贷\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20106\",\"item_name\":\"律师\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20107\",\"item_name\":\"法院\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20108\",\"item_name\":\"110\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20109\",\"item_name\":\"120\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"20110\",\"item_name\":\"澳门通信记录\",\"check_result\":\"未发现\",\"result_detail_info\":null}],\"sensitive_info_new\":[{\"risk_level\":\"风险：低\",\"item_id\":\"10101\",\"item_name\":\"运营商关键信息匹配\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"idcard_matching\":\"未能获取运营商注册的身份证号码\",\"name_matching\":\"与运营商注册的姓名【刘**】部分匹配\"}},{\"risk_level\":\"风险：中\",\"item_id\":\"10102\",\"item_name\":\"入网时长检查\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"network_length_check\":\"入网时长为6至12个月\"}},{\"risk_level\":\"风险：低\",\"item_id\":\"10103\",\"item_name\":\"申请人黑名单检查\",\"check_result\":\"未发现\",\"result_detail_info\":{\"phone_number\":\"手机号未在黑名单中出现\",\"idcard\":\"身份证未在黑名单中出现\"}},{\"risk_level\":\"风险：低\",\"item_id\":\"10104\",\"item_name\":\"紧急联系人黑名单检查\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"10105\",\"item_name\":\"黑名单通信记录\",\"check_result\":\"未发现\",\"result_detail_info\":null},{\"risk_level\":\"风险：低\",\"item_id\":\"10106\",\"item_name\":\"身份证关联信息检测\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"result\":\"未发现\"}},{\"risk_level\":\"低\",\"item_id\":\"20101\",\"item_name\":\"民间借贷\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20102\",\"item_name\":\"金融机构\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20103\",\"item_name\":\"信用卡机构\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20104\",\"item_name\":\"p2p借贷平台\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20105\",\"item_name\":\"互联网小贷\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20106\",\"item_name\":\"律师\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20107\",\"item_name\":\"法院\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20108\",\"item_name\":\"110\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20109\",\"item_name\":\"120\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}},{\"risk_level\":\"低\",\"item_id\":\"20110\",\"item_name\":\"澳门通信\",\"check_result\":\"result_detail_info\",\"result_detail_info\":{\"call_record_list_infos\":[]}}],\"sms_record_label\":[{\"name\":\"未知\",\"call_record_list_item_infos\":[{\"phone_number\":\"10690700367\",\"calling_count\":null,\"called_count\":2,\"call_statistics\":[{\"calling_count\":null,\"called_count\":null,\"total_call_count\":0,\"calling_duration_time\":null,\"called_duration_time\":null,\"total_call_duration_time\":null},{\"calling_count\":null,\"called_count\":null,\"total_call_count\":0,\"calling_duration_time\":null,\"called_duration_time\":null,\"total_call_duration_time\":null},{\"calling_count\":null,\"called_count\":null,\"total_call_count\":0,\"calling_duration_time\":null,\"called_duration_time\":null,\"total_call_duration_time\":null},{\"calling_count\":null,\"called_count\":null,\"total_call_count\":2,\"calling_duration_time\":null,\"called_duration_time\":null,\"total_call_duration_time\":null},{\"calling_count\":null,\"called_count\":null,\"total_call_count\":0,\"calling_duration_time\":null,\"called_duration_time\":null,\"total_call_duration_time\":null}]}]}],\"version\":\"1.2.1\"}}<br /><b>Fatal error</b>:  Uncaught think\\exception\\ErrorException: Unknown: Skipping numeric key 10 in Unknown:0Stack trace:#0 [internal function]: think\\Error::appError(8, 'Unknown: Skippi...', 'Unknown', 0, NULL)#1 {main}  thrown in <b>Unknown</b> on line <b>0</b><br />";
 //		boolean a = str.endsWith("<br /><b>Fatal error</b>:  Uncaught think\\exception\\ErrorException: Unknown: Skipping numeric key 10 in Unknown:0Stack trace:#0 [internal function]: think\\Error::appError(8, 'Unknown: Skippi...', 'Unknown', 0, NULL)#1 {main}  thrown in <b>Unknown</b> on line <b>0</b><br />");
 //		if(a==true) {
@@ -925,81 +925,81 @@ public class Test {
 //		System.out.println(count);
 		
 		//sensitive_info_new
-		JSONArray sensitive_info = (JSONArray) data.get("sensitive_info_new");//风险信息检查
-		if (sensitive_info.size() > 0) {
-			for (int i = 0; i < sensitive_info.size(); i++) {
-			JSONObject	jsonObject0 = (JSONObject) sensitive_info.get(i);
-		String risk_level1 = jsonObject0.getString("risk_level");//运营商关键信息匹配风险等级
-		int item_id = jsonObject0.getInteger("item_id");//运营商关键信息匹配风险项id
-		String item_name = jsonObject0.getString("item_name");//运营商关键信息匹配风险项名称
-		String check_result = jsonObject0.getString("check_result");//运营商关键信息匹配检查结果（结果有"未发现"、"result_detail_info"两种）		
-		JSONObject result_detail_info = (JSONObject) jsonObject0.get("result_detail_info");//结果详情
-		if(result_detail_info!=null) {
-			String idcard_matching = result_detail_info.getString("idcard_matching");//运营商关键信息匹配身份证匹配结果
-			if(idcard_matching==null) {
-				idcard_matching="";
-			}
-			String name_matching = result_detail_info.getString("name_matching");//运营商关键信息匹配姓名匹配结果
-			if(name_matching==null) {
-				name_matching="";
-			}
-			String network_length_check = result_detail_info.getString("network_length_check");
-			if(network_length_check==null) {
-				network_length_check="";
-			}
-			String idcard = result_detail_info.getString("idcard");
-			if(idcard==null) {
-				idcard="";
-			}
-			String phone_number = result_detail_info.getString("phone_number");
-			if(phone_number==null) {
-				phone_number="";
-			}
-			String result = result_detail_info.getString("result");
-			if(result==null) {
-				result="";
-			}
-			JSONArray call_record_list_infos = (JSONArray) result_detail_info.get("call_record_list_infos");//出行分析
-			if(call_record_list_infos!=null){
-				if (call_record_list_infos.size() > 0) {
-					for (int j = 0; j < call_record_list_infos.size(); j++) {				
-					JSONObject	jsonObject1 = (JSONObject) call_record_list_infos.get(j);
-					String	name = (String) jsonObject1.get("name");
-					JSONArray call_record_list_item_infos = (JSONArray) jsonObject1.get("call_record_list_item_infos");
-					if(call_record_list_item_infos!=null) {
-						if (call_record_list_item_infos.size() > 0) {
-							for (int k = 0; k < call_record_list_item_infos.size(); k++) {				
-							JSONObject	jsonObject2 = (JSONObject) call_record_list_item_infos.get(k);
-							Integer	called_count = (Integer) jsonObject2.get("called_count");							
-							Integer	calling_count = (Integer) jsonObject2.get("calling_count");
-							String	phone_number4 = (String) jsonObject2.get("phone_number");
-							System.out.println(called_count);
-							System.out.println(calling_count);
-							System.out.println(phone_number4);
-							JSONArray call_statistics = (JSONArray) jsonObject2.get("call_statistics");
-							if (call_statistics.size() > 0) {
-								for (int l = 0; l < call_statistics.size(); l++) {	
-									JSONObject	jsonObject3 = (JSONObject) call_statistics.get(l);
-									Integer	total_call_count = (Integer) jsonObject3.get("total_call_count");
-									Integer	total_call_duration_time = (Integer) jsonObject3.get("total_call_duration_time");
-									System.out.println(total_call_count);
-									System.out.println(total_call_duration_time);
-									
-								}
-				}
-
-				
-				}
-				}
-					}
-
-
-	}
-			}
-			}
-
-			}
-		}
-	}
+//		JSONArray sensitive_info = (JSONArray) data.get("sensitive_info_new");//风险信息检查
+//		if (sensitive_info.size() > 0) {
+//			for (int i = 0; i < sensitive_info.size(); i++) {
+//			JSONObject	jsonObject0 = (JSONObject) sensitive_info.get(i);
+//		String risk_level1 = jsonObject0.getString("risk_level");//运营商关键信息匹配风险等级
+//		int item_id = jsonObject0.getInteger("item_id");//运营商关键信息匹配风险项id
+//		String item_name = jsonObject0.getString("item_name");//运营商关键信息匹配风险项名称
+//		String check_result = jsonObject0.getString("check_result");//运营商关键信息匹配检查结果（结果有"未发现"、"result_detail_info"两种）		
+//		JSONObject result_detail_info = (JSONObject) jsonObject0.get("result_detail_info");//结果详情
+//		if(result_detail_info!=null) {
+//			String idcard_matching = result_detail_info.getString("idcard_matching");//运营商关键信息匹配身份证匹配结果
+//			if(idcard_matching==null) {
+//				idcard_matching="";
+//			}
+//			String name_matching = result_detail_info.getString("name_matching");//运营商关键信息匹配姓名匹配结果
+//			if(name_matching==null) {
+//				name_matching="";
+//			}
+//			String network_length_check = result_detail_info.getString("network_length_check");
+//			if(network_length_check==null) {
+//				network_length_check="";
+//			}
+//			String idcard = result_detail_info.getString("idcard");
+//			if(idcard==null) {
+//				idcard="";
+//			}
+//			String phone_number = result_detail_info.getString("phone_number");
+//			if(phone_number==null) {
+//				phone_number="";
+//			}
+//			String result = result_detail_info.getString("result");
+//			if(result==null) {
+//				result="";
+//			}
+//			JSONArray call_record_list_infos = (JSONArray) result_detail_info.get("call_record_list_infos");//出行分析
+//			if(call_record_list_infos!=null){
+//				if (call_record_list_infos.size() > 0) {
+//					for (int j = 0; j < call_record_list_infos.size(); j++) {				
+//					JSONObject	jsonObject1 = (JSONObject) call_record_list_infos.get(j);
+//					String	name = (String) jsonObject1.get("name");
+//					JSONArray call_record_list_item_infos = (JSONArray) jsonObject1.get("call_record_list_item_infos");
+//					if(call_record_list_item_infos!=null) {
+//						if (call_record_list_item_infos.size() > 0) {
+//							for (int k = 0; k < call_record_list_item_infos.size(); k++) {				
+//							JSONObject	jsonObject2 = (JSONObject) call_record_list_item_infos.get(k);
+//							Integer	called_count = (Integer) jsonObject2.get("called_count");							
+//							Integer	calling_count = (Integer) jsonObject2.get("calling_count");
+//							String	phone_number4 = (String) jsonObject2.get("phone_number");
+//							System.out.println(called_count);
+//							System.out.println(calling_count);
+//							System.out.println(phone_number4);
+//							JSONArray call_statistics = (JSONArray) jsonObject2.get("call_statistics");
+//							if (call_statistics.size() > 0) {
+//								for (int l = 0; l < call_statistics.size(); l++) {	
+//									JSONObject	jsonObject3 = (JSONObject) call_statistics.get(l);
+//									Integer	total_call_count = (Integer) jsonObject3.get("total_call_count");
+//									Integer	total_call_duration_time = (Integer) jsonObject3.get("total_call_duration_time");
+//									System.out.println(total_call_count);
+//									System.out.println(total_call_duration_time);
+//									
+//								}
+//				}
+//
+//				
+//				}
+//				}
+//					}
+//
+//
+//	}
+//			}
+//			}
+//
+//			}
+//		}
+//	}
 	}
 }

@@ -68,9 +68,11 @@ public class User {
     
     private String operatorsAuthentication;//运营商名字
     
-    private String applyState;
+    private String applyState;//申请状态（“1”表示已申请，“2”表示未申请）
 
     private String state;//状态（“0”表示有效，“1”表示无效）
+    
+    private Integer howManyTimesBorMoney;//第几次借款
     
     private String model;//模型数据是否命中
     
@@ -415,7 +417,13 @@ public class User {
 	public void setOperatorAuthenStatus(String operatorAuthenStatus) {
 		this.operatorAuthenStatus = operatorAuthenStatus;
 	}
-	
-	
+
+	public Integer getHowManyTimesBorMoney() {
+		return howManyTimesBorMoney;
+	}
+
+	public void setHowManyTimesBorMoney(Integer howManyTimesBorMoney) {
+		this.howManyTimesBorMoney = howManyTimesBorMoney;
+	}
 	
 }
