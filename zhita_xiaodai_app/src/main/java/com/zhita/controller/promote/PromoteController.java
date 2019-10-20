@@ -258,8 +258,8 @@ public class PromoteController {
         //return "http://115.29.64.145:8081/H5Code/" + fileName;
         //return "http://139.129.102.60:8081/H5Code/" + fileName;
       //return "http://47.56.172.8:8081/H5Code/"+ fileName;
-      return "http://47.102.40.133:8081/H5Code/" + fileName;
-      //return "http://47.56.173.1:8081/H5Code/"+ fileName;
+      //return "http://47.102.40.133:8081/H5Code/" + fileName;
+      return "http://47.56.173.1:8081/H5Code/"+ fileName;
 
 
     }
@@ -296,7 +296,7 @@ public class PromoteController {
  	@ResponseBody
  	@Transactional
  	public Map<String, Object> codeLogin(String phone, String code, int companyId, String registeClient,
- 			String sourceName, String useMarket,String userAgentInfo,String isblack) {
+ 			String sourceName, String useMarket,String userAgentInfo,String isBlack) {
  		Map<String, Object> map = new HashMap<String, Object>();
  		String loginStatus = "1";
  		PhoneDeal phoneDeal = new PhoneDeal();
@@ -426,7 +426,7 @@ public class PromoteController {
 // 	 			 				 return map;
 // 	 			 			 }
 
- 						if(isblack.equals("true")) {
+ 						if(isBlack.equals("true")) {
  							String ifBlacklist = "1";
  							int number = loginService.insertUser3(newPhone, loginStatus, companyId, registeClient,
 	 	 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines,ifBlacklist);
