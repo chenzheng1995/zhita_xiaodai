@@ -328,12 +328,13 @@ public class OperatorController {
 	public Map<String, Object> jzjkOperator(int userId,String password,String phone) {  //password是服务密码
 		Map<String, Object> map = new HashMap<>();
 		  String secondattributes = "运营商";
-		   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+		   //String status =  authenticationInformationMapper.secondattributes(secondattributes);
+		  String status = "1";
 		   if("1".equals(status)) {
 		String username =phone;//手机号
-		Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);		
-		String identityName =(String) map1.get("trueName");//姓名
-		String identityNo = (String) map1.get("idcard_number");//身份证号
+		//Map<String, Object> map1 = userAttestationService.getuserAttestation(userId);		
+		String identityName ="东新雨";//(String) map1.get("trueName");//姓名//
+		String identityNo = "420621199905157170";//(String) map1.get("idcard_number");//身份证号//
 		String crawlerType = "OperatorReport";//类型
 		String appId = "8625";//应用ID
 		String secret_key = "2260bc42b69e0bd65a73b2086fc4d412";//应用秘钥
@@ -342,6 +343,7 @@ public class OperatorController {
 		String sign = mUtils.getMD5(string);//签名
 		PostAndGet pGet = new PostAndGet();
 		String str = pGet.sendPost("http://bbk.jmy919.cn/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
+		System.out.println(str);
 		JSONObject jsonObject = JSONObject.parseObject(str);
 		if(jsonObject!=null) {
 			int code = (int) jsonObject.get("code");			
@@ -478,7 +480,7 @@ public class OperatorController {
 						map.put("code", "408");
 				} else {
 					map.put("Ncode", "2000");
-					map.put("msg", "认证失败");
+					map.put("msg", "认证失败，请重试");
 					map.put("code", "401");
 				}
 			}
@@ -1599,30 +1601,6 @@ public class OperatorController {
 			return map;
 		}
 		
-		String authenticationName = "手机运营商";
-		   String ifAuthentication =  authenticationInformationMapper.getoperifAuthentication(authenticationName,companyId);
-		   if("1".equals(ifAuthentication)) {
-			   String secondattributes = "运营商";
-			   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
-			   if("2".equals(status)) {
-					int sourceId = intUserService.getsourceId(userId);
-					String sourceName = intSourceService.getsourceName(sourceId);
-					int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
-					Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
-					String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
-					String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
-					String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
-					int roatnptFractionalSegmentSmall = Integer
-							.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
-					int riskControlPoints = roatnptFractionalSegmentSmall + 1;
-					intUserService.setRiskControlPoints(userId, riskControlPoints);
-					shareOfState = "1";
-					intUserService.updateScore1(userId, shareOfState);
-					map.put("code", 200);
-					return map;
-			   }
-			   }
-
 		Map<String, Object> userAttestation = userAttestationService.getuserAttestation(userId);
 		String name = (String) userAttestation.get("trueName");
 		name = URLEncoder.encode(name,"utf-8");
@@ -1652,6 +1630,70 @@ public class OperatorController {
 		int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
 		Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
 		String rmModleName = (String) map1.get("rmModleName");
+		
+		String authenticationName = "手机运营商";
+		   String ifAuthentication =  authenticationInformationMapper.getoperifAuthentication(authenticationName,companyId);
+		   if("1".equals(ifAuthentication)) {
+			   String secondattributes = "运营商";
+			   String status =  authenticationInformationMapper.secondattributes(secondattributes);  
+			   if("2".equals(status)) {
+//					int sourceId = intUserService.getsourceId(userId);
+//					String sourceName = intSourceService.getsourceName(sourceId);
+//					int manageControlId = intSourceService.getmanageControlId(sourceName);// 风控id
+//					Map<String, Object> map1 = intManconsettingsServcie.getManconsettings(manageControlId);
+//					String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+//					String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+//					String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+//					int roatnptFractionalSegmentSmall = Integer
+//							.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
+//					int riskControlPoints = roatnptFractionalSegmentSmall + 1;
+//					intUserService.setRiskControlPoints(userId, riskControlPoints);
+//					shareOfState = "1";
+//					intUserService.updateScore1(userId, shareOfState);
+//					map.put("code", 200);
+//					return map;
+				   
+				   
+					PostAndGet pGet = new PostAndGet();
+					PhoneDeal phoneDeal = new PhoneDeal();
+					String phone = intUserService.getphone(userId);
+					String newphone1 = phoneDeal.decryption(phone);
+					Map<String,Object> map2  = pGet.sendGet3("http://fk.rong51dai.com/zhita_heitong_Fengkong/fraction/Exhibitionfraction?userId="+userId+"&phone="+newphone1+"&name="+name+"&idNumber="+idNumber);
+					score =(int) map2.get("count");
+					String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
+					String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
+					String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
+					int roatnptFractionalSegmentSmall = Integer
+							.parseInt(roatnptFractionalSegment.substring(0, roatnptFractionalSegment.indexOf("-")));
+					int roatnptFractionalSegmentBig = Integer.parseInt(roatnptFractionalSegment
+							.substring(roatnptFractionalSegment.indexOf("-") + 1, roatnptFractionalSegment.length()));
+
+					if (score < roatnptFractionalSegmentSmall) {
+						shareOfState = "0";
+						map.put("code", 200);
+						map.put("msg", "分数不够");
+					}
+					if (score > roatnptFractionalSegmentSmall && score < roatnptFractionalSegmentBig) {
+						shareOfState = "1";
+						map.put("code", 200);
+						map.put("msg", "需要人工审核");
+					}
+					if (score > roatnptFractionalSegmentBig) {
+						shareOfState = "2";
+						map.put("code", 200);
+						map.put("msg", "分数够了");
+					}
+
+					String thirdtypeid = "6";
+					String date = System.currentTimeMillis() + "";
+					thirdcalltongjiMapper.setthirdcalltongji(companyId, thirdtypeid, date);
+					intUserService.updateScore(score, userId, shareOfState);
+					map.put("score", score);
+					return map;
+			   }
+			   }
+
+
 		
 		//自己的运营商
 //		if ("风控甲".equals(rmModleName)) {
@@ -1862,6 +1904,11 @@ public class OperatorController {
 			}
 		}
 		return age;
+	}
+	
+	public static void main(String[] args) {
+		OperatorController oper = new OperatorController();
+		oper.jzjkOperator(1, "990318", "13487139655");
 	}
 
 }

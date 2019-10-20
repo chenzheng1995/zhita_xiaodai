@@ -52,4 +52,6 @@ public interface IntBlacklistuserService {
 	 */
 	public void exportblack(Integer companyId,String name,String phone,
 			String idcard,String blackType, HttpServletRequest request, HttpServletResponse response)throws IOException;
+
+	public void setBlacklistuser1(int companyId, String phone, String blackType);
 }
