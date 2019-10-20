@@ -67,6 +67,8 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		int todayregiste = homepageTongjiMapper.queryToDayRegiste(companyId, startTimestamps, endTimestamps);//今日注册人数
 		int todayapply = homepageTongjiMapper.queryToDayApply(companyId, startTimestamps, endTimestamps);//今日申请人数
 		int todayloan = homepageTongjiMapper.queryToDayLoan(companyId, startTimestamps, endTimestamps);//今日放款人数
+		int todayloannew = homepageTongjiMapper.queryToDayLoannew(companyId, startTimestamps, endTimestamps);//今日放款新客
+		int todayloanold = homepageTongjiMapper.queryToDayLoanold(companyId, startTimestamps, endTimestamps);//今日放款复贷
 		int todaydeferred=0;//今日延期笔数
 		int defer= homepageTongjiMapper.queryToDayDeferred(companyId, startTimestamps, endTimestamps);//今日延期笔数---线上延期
 		int deferlay=homepageTongjiMapper.queryToDayDeferredlay(companyId, startTimestamps, endTimestamps);//今日延期笔数---人工延期
@@ -291,6 +293,8 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		map.put("todayregiste", todayregiste);//今日注册人数
 		map.put("todayapply", todayapply);//今日申请人数
 		map.put("todayloan", todayloan);//今日放款人数
+		map.put("todayloannew", todayloannew);//今日放款新客
+		map.put("todayloanold", todayloanold);//今日放款复贷
 		map.put("todaydeferred", todaydeferred);//今日延期笔数
 		map.put("todayrepayment", todayrepayment);//今日回款笔数
 		map.put("todayoverdue", todayoverdue);//今日逾后已还笔数

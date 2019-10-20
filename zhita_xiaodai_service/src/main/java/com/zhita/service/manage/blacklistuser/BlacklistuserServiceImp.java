@@ -218,8 +218,10 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 				userlList.get(i).setBlackType("人审拒绝");
 			}else if(userlList.get(i).getBlackType().equals("7")){
 				userlList.get(i).setBlackType("批量导入");
-			}else{
+			}else if(userlList.get(i).getBlackType().equals("8")){
 				userlList.get(i).setBlackType("人工添加");
+			}else{
+				userlList.get(i).setBlackType("非法渠道");
 			}
 		}
 
