@@ -25,6 +25,12 @@ public interface HomepageTongjiMapper {
 	//后台管理---今日放款人数
 	int queryToDayLoan(Integer companyId,String startTime,String endTime);
 	
+	//后台管理---今日放款新客
+	int queryToDayLoannew(Integer companyId,String startTime,String endTime);
+	
+	//后台管理---今日放款复贷
+	int queryToDayLoanold(Integer companyId,String startTime,String endTime);
+	
 	//后台管理---今日延期笔数--线上延期
 	int queryToDayDeferred(Integer companyId,String startTime,String endTime);
 	

@@ -164,7 +164,7 @@ public interface PaymentRecordMapper {
     String LoanName(Integer channel);
     
     
-    String DeferrAdefe(Integer orderid);
+    Deferred DeferrAdefe(Integer orderid);
     
     
     BigDecimal OrderMoneySum(Integer orderId);

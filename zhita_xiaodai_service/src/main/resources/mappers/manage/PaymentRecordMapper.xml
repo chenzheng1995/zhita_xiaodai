@@ -1244,8 +1244,8 @@
   			</select>
   			
   			
-  			<select id="DeferrAdefe" parameterType="java.lang.Integer" resultType="java.lang.String">
-  				select deferAfterReturntime from deferred where orderid = #{orderid} 
+  			<select id="DeferrAdefe" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Deferred">
+  				select max(id),deferAfterReturntime from deferred where orderid = #{orderid} 
   			</select>
   			
   			
