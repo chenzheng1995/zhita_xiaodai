@@ -24,7 +24,7 @@ public class TimerTask {
      */
 	  //                   秒分时日 月周
 	 //每日0点  将各个渠道的历史数据存入历史表
-      @Scheduled(cron = "0 56 10 * * ?")
+      @Scheduled(cron = "0 01 1 * * ?")
       @Lazy(false)
       public void test1() throws ParseException
       {
