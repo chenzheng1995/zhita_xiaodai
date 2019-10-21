@@ -154,8 +154,8 @@
     <select id="queryByPhone"  parameterType="java.lang.String" resultType="com.zhita.model.manage.BlacklistUser">
     select 
     <include refid="Base_Column_List" />
-    from blacklist_user
-    where phone=#{arg0}
+    from blacklist_user b left join sys_user su on b.operator=su.userId
+    where b.phone=#{arg0}
   </select>
     <!-- 批量插入，通过手机号更新信息 -->
   <update id="updateByPhone" parameterType="com.zhita.model.manage.BlacklistUser" >

@@ -15,6 +15,14 @@
 	<select id="queryToDayLoan" resultType="java.lang.Integer">
 		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
 	</select>
+	<!-- 后台管理       今日放款新客 -->
+	<select id="queryToDayLoannew" resultType="java.lang.Integer">
+		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney=1 and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
+	</select>
+	<!-- 后台管理       今日放款复贷 -->
+	<select id="queryToDayLoanold" resultType="java.lang.Integer">
+		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
+	</select>
 	<!-- 后台管理      今日延期笔数   线上延期 -->
 	<select id="queryToDayDeferred" resultType="java.lang.Integer">
 		select count(df.id) from deferred df inner join orders o on df.orderid=o.id where o.companyId=#{arg0} and df.deferredTime>=#{arg1} and df.deferredTime &lt;#{arg2} and df.deleted=0

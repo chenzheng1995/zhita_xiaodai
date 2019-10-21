@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zhita.model.manage.User;
 import com.zhita.service.manage.login.IntLoginService;
 import com.zhita.service.test.TestService;
 import com.zhita.util.PhoneDeal;
@@ -223,5 +224,11 @@ public class TestController {
 		
 		
 		System.out.println(new Date().getTime()+"+++++++++++++++++++");
+		
+		
+		User u=new User();
+		u.setId(1);
+		u.setAccount("test");
+		System.out.println("-------------"+u.getClass().getDeclaredFields().length);
 	}	
 }
