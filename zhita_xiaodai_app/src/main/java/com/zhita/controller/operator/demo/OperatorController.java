@@ -341,13 +341,13 @@ public class OperatorController {
 		MD5Utils mUtils = new MD5Utils();		
 		String sign = mUtils.getMD5(string);//签名
 		PostAndGet pGet = new PostAndGet();
-		String str = pGet.sendPost("http://bbk.jmy919.cn/api/Gateway/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
+		String str = pGet.sendPost("http://bbk.jmy919.cn/api/Craw/index?username="+username+"&password="+password+"&identityName="+identityName+"&identityNo="+identityNo+"&crawlerType="+crawlerType+"&appId="+appId+"&secret_key="+secret_key+"&sign="+sign,"");
 		JSONObject jsonObject = JSONObject.parseObject(str);
 		if(jsonObject!=null) {
-			int code = (int) jsonObject.get("code");			
-			if(code==400) {
+			Object code = (Object) jsonObject.get("code");			
+			if(code.equals("1000")) {
 				map.put("Ncode", "2000");
-				map.put("msg", "手机号使用太频繁，请两分钟之后再尝试");
+				map.put("msg", "手机号使用太频繁，请几分钟之后再尝试");
 				map.put("code", "408");
 				return map;
 			}
