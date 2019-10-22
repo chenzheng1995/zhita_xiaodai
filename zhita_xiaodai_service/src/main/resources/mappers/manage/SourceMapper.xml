@@ -243,7 +243,14 @@
    </select>
     <!--后台管理    查询统计申请数 -->
    <select id="queryApplicationNumber"  resultType="java.lang.Integer">
-		select count(u.id) from user u where u.companyId=#{arg0} and u.sourceid=#{arg1} and u.registeTime>=#{arg2} and u.registeTime &lt;#{arg3}
+		select count(u.id) from user u
+		where u.companyId=#{arg0} and u.sourceid=#{arg1} and u.registeTime>=#{arg2} and u.registeTime &lt;#{arg3} 
+   </select>
+    <!--后台管理    查询统计申请数  （ 去除非法渠道进来的黑名单）-->
+   <select id="queryApplicationNumberlike"  resultType="java.lang.Integer">
+		select count(u.id) from user u left join blacklist_user b on u.id=b.userid 
+		where u.companyId=#{arg0} and u.sourceid=#{arg1} and u.registeTime>=#{arg2} and u.registeTime &lt;#{arg3} 
+		and (u.ifBlacklist=0 ||(u.ifBlacklist=1 and b.blackType!=9)) 
    </select>
     <!-- 后台管理      根据渠道id查询渠道的折扣率 -->
    <select id="queryDiscountById" parameterType="java.lang.Integer" resultType="java.lang.String">

@@ -91,7 +91,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("http://mdb.tcc1688.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
 		int num1=0;
@@ -124,7 +124,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("https://mdb.tcc1688.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
@@ -144,7 +144,7 @@ public class SourceServiceImp implements IntSourceService{
 			TongjiSorce tongjisourceyes=sourceDiscountHistoryMapper.queryBySourcenameAndDate(record.getId(), startTimestamps1,endTimestamps1);//判断当前渠道今天在历史表是否存在数据
 			
 			if(tongjisourceyes==null){//证明当前渠道当天在历史表没有数据
-				float appnum=sourceMapper.queryApplicationNumber(companyId, record.getId(), startTimestamps1,endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
+				float appnum=sourceMapper.queryApplicationNumberlike(companyId, record.getId(), startTimestamps1,endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				int uv = 0;//uv
 				String cvr = null;//转化率
@@ -185,7 +185,7 @@ public class SourceServiceImp implements IntSourceService{
 				String endTime = date;
 				String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
 				
-				float appnum=sourceMapper.queryApplicationNumber(companyId, record.getId(), startTimestamps,endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+				float appnum=sourceMapper.queryApplicationNumberlike(companyId, record.getId(), startTimestamps,endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				int uv = 0;//uv
 				String cvr = null;//转化率
@@ -286,7 +286,7 @@ public class SourceServiceImp implements IntSourceService{
 				float appnumHistory=tongjisourceyes.getRegisternumdis();//历史表折扣后的注册人数
 				String startTimestamps2 = tongjisourceyes.getDate();//该时间为时间戳格式
 				
-				float appnum = sourceMapper.queryApplicationNumber(companyId, sourceid, startTimestamps2, endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
+				float appnum = sourceMapper.queryApplicationNumberlike(companyId, sourceid, startTimestamps2, endTimestamps1);// 得到申请数(该渠道当天在user表的注册数)
 				String discount = sourceMapper.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				int uv = 0;
@@ -357,7 +357,7 @@ public class SourceServiceImp implements IntSourceService{
     					String startTimestamps = Timestamps.dateToStamp(startTime);
     					String endTime = intersectionlist.get(m);
     					String endTimestamps = (Long.parseLong(Timestamps.dateToStamp(endTime))+86400000)+"";
-    					float appnum = sourceMapper.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+    					float appnum = sourceMapper.queryApplicationNumberlike(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
     					String discount = sourceMapper.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
     					int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
     					int uv = 0;//uv
@@ -411,6 +411,12 @@ public class SourceServiceImp implements IntSourceService{
     //后台管理 ------查询统计申请数 
     public int queryApplicationNumber(Integer companyId,Integer sourceName,String startTime,String endTime){
     	int appnum=sourceMapper.queryApplicationNumber(companyId, sourceName, startTime, endTime);
+    	return appnum;
+    }
+    
+    //后台管理 ------查询统计申请数 （去除非法渠道进来的黑名单）
+    public int queryApplicationNumberlike(Integer companyId,Integer sourceName,String startTime,String endTime){
+    	int appnum=sourceMapper.queryApplicationNumberlike(companyId, sourceName, startTime, endTime);
     	return appnum;
     }
     

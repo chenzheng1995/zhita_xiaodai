@@ -1,18 +1,11 @@
 package com.zhita.service.manage.source;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.zhita.model.manage.Source;
 import com.zhita.model.manage.TongjiSorce;
-import com.zhita.model.manage.User;
 
 public interface IntSourceService {
 	
@@ -58,6 +51,9 @@ public interface IntSourceService {
     
     //后台管理 ------查询统计申请数 
     public int queryApplicationNumber(Integer companyId,Integer sourceName,String startTime,String endTime);
+    
+    //后台管理 ------查询统计申请数 （去除非法渠道进来的黑名单）
+    public int queryApplicationNumberlike(Integer companyId,Integer sourceName,String startTime,String endTime);
     
     //后台管理---通过渠道名称查询出当前渠道的折扣率
     public String queryDiscount(Integer sourceName,Integer companyId);
