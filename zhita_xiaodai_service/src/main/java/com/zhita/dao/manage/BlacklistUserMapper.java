@@ -54,7 +54,7 @@ public interface BlacklistUserMapper {
 	void setBlacklistuser(@Param("idCard")String idCard,@Param("userId") int userId,@Param("companyId") int companyId,@Param("phone") String phone,@Param("name") String name,@Param("date") String date,
 			@Param("blackType") String blackType);
 
-	void setBlacklistuser1(@Param("companyId")int companyId,@Param("phone") String phone,@Param("blackType") String blackType);
+	void setBlacklistuser1(@Param("companyId")int companyId,@Param("phone") String phone,@Param("blackType") String blackType,@Param("registrationTime1") String registrationTime1,@Param("userId") int userId);
 
 
 }

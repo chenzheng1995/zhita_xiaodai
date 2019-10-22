@@ -320,7 +320,7 @@ public class GetResultController {
 	    		map.put("code", 201);
 	    		map.put("msg","更新成功");
 	    	}else {
-	    		map.put("Ncode","406");
+	    		map.put("Ncode","405");
 				map.put("code",405);
 				map.put("msg", "更新失败");
 			}

@@ -201,6 +201,12 @@ public interface UserMapper {
 	int insertUser3(@Param("newPhone")String newPhone,@Param("loginStatus")String loginStatus,@Param("companyId")int companyId,@Param("registeClient")String registeClient,
 			@Param("registrationTime")String registrationTime,@Param("merchantId")int merchantId,@Param("useMarket")String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication,@Param("userAgentInfo")String userAgentInfo,@Param("canBorrowlines") BigDecimal canBorrowlines,@Param("ifBlacklist") String ifBlacklist);
 
+	int getUserId(@Param("newPhone")String newPhone,@Param("companyId") int companyId);
+
+	int insertUser4(@Param("newPhone")String newPhone,@Param("loginStatus") String loginStatus,@Param("companyId") int companyId,@Param("registeClient") String registeClient,@Param("registrationTime") String registrationTime,
+			@Param("merchantId")int merchantId,@Param("useMarket") String useMarket,@Param("operatorsAuthentication") String operatorsAuthentication,@Param("canBorrowlines") BigDecimal canBorrowlines,
+			@Param("ifBlacklist")String ifBlacklist);
+
 
 
 }

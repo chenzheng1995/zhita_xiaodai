@@ -258,8 +258,8 @@ public class PromoteController {
         //return "http://115.29.64.145:8081/H5Code/" + fileName;
         //return "http://139.129.102.60:8081/H5Code/" + fileName;
       //return "http://47.56.172.8:8081/H5Code/"+ fileName;
-      //return "http://47.102.40.133:8081/H5Code/" + fileName;
-      return "http://47.56.173.1:8081/H5Code/"+ fileName;
+      return "http://47.102.40.133:8081/H5Code/" + fileName;
+      //return "http://47.56.173.1:8081/H5Code/"+ fileName;
 
 
     }
@@ -428,11 +428,13 @@ public class PromoteController {
 
  						if(isBlack.equals("true")) {
  							String ifBlacklist = "1";
+ 							String registrationTime1 = System.currentTimeMillis() + ""; // 获取当前时间戳
  							int number = loginService.insertUser3(newPhone, loginStatus, companyId, registeClient,
 	 	 								registrationTime, merchantId, useMarket, operatorsAuthentication,userAgentInfo,canBorrowlines,ifBlacklist);
+ 							int userId = loginService.getUserId(newPhone,companyId);
 	 	 						if (number == 1) {
 	 	 							String blackType = "9";
-	 	 							intBlacklistuserService.setBlacklistuser1(companyId, phone,blackType);
+	 	 							intBlacklistuserService.setBlacklistuser1(companyId, phone,blackType,registrationTime1,userId);
 	 	 							id = loginService.getId(newPhone, companyId); // 获取该用户的id
 	 	 							map.put("msg", "用户登录成功，数据插入成功，让用户添加密码");
 	 	 							map.put("SCode", "201");
