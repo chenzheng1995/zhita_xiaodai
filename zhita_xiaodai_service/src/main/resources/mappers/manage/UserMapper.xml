@@ -361,10 +361,10 @@
 	        	and u.ifBlacklist =#{ifblackliststatus,jdbcType=VARCHAR}
 	        </if>
 	        <if test="activatestatus != null and activatestatus !='' and activatestatus==1"><!-- 代表已激活 -->
-	        	and u.loginTime !=null and u.registeTime != u.loginTime
+	        	and u.loginTime is not null and u.registeTime != u.loginTime
 	        </if>
 	        <if test="activatestatus != null and activatestatus !='' and activatestatus==2"><!-- 代表未激活 -->
-	        	and (u.loginTime ==null || u.registeTime == u.loginTime)
+	        	and (u.loginTime is null || u.registeTime = u.loginTime)
 	        </if>
 	       order by u.registeTime desc  limit #{page},#{pagesize}
 	</select>
@@ -430,10 +430,10 @@
 	        	and u.ifBlacklist =#{ifblackliststatus,jdbcType=VARCHAR}
 	        </if>
 	        <if test="activatestatus != null and activatestatus !='' and activatestatus==1"><!-- 代表已激活 -->
-	        	and u.loginTime !=null and u.registeTime != u.loginTime
+	        	and u.loginTime is not null and u.registeTime != u.loginTime
 	        </if>
 	        <if test="activatestatus != null and activatestatus !='' and activatestatus==2"><!-- 代表未激活 -->
-	        	and (u.loginTime ==null || u.registeTime == u.loginTime)
+	        	and (u.loginTime is null || u.registeTime = u.loginTime)
 	        </if>
 	</select>
 	<!-- 后台管理           用户列表（导出Excel）-->
@@ -494,10 +494,10 @@
 	        	and u.ifBlacklist =#{ifblackliststatus,jdbcType=VARCHAR}
 	        </if>
 	        <if test="activatestatus != null and activatestatus !='' and activatestatus==1"><!-- 代表已激活 -->
-	        	and u.loginTime !=null and u.registeTime != u.loginTime
+	        	and u.loginTime is not null and u.registeTime != u.loginTime
 	        </if>
 	        <if test="activatestatus != null and activatestatus !='' and activatestatus==2"><!-- 代表未激活 -->
-	        	and (u.loginTime ==null || u.registeTime == u.loginTime)
+	        	and (u.loginTime is null || u.registeTime = u.loginTime)
 	        </if>
 	     order by u.registeTime desc  
 	</select>

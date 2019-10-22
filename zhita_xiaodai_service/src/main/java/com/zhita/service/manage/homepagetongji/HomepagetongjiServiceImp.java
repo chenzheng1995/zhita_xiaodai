@@ -193,11 +193,11 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		}else{
 			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
 		}*/
-		int overdueall = homepageTongjiMapper.overdue1(companyId);//逾后未还笔数（所有到期订单）
-		if(overdueall==0){
+		int cutofftodayshouldrepay=homepageTongjiMapper.cutofftodayshouldrepay(companyId, endTimestamps);//截止今天应还的订单数量
+		if(cutofftodayshouldrepay==0){
 			orderrepaycvr="0.00%";
 		}else{
-			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/overdueall*100))+"%";//订单回款率
+			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/cutofftodayshouldrepay*100))+"%";//订单回款率
 		}
 		BigDecimal payrecmoney = homepageTongjiMapper.querypayrecMoney(companyId);//累计放款总金额
 		if(payrecmoney==null){
