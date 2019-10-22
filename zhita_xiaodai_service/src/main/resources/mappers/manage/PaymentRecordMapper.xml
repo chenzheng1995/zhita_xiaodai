@@ -1270,7 +1270,7 @@
   			
 
 			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
-				update orders set orderStatus = "2",shouldReturnTime = #{delay_time} where id = #{orderId}
+				update orders set orderStatus = "0",shouldReturnTime = #{delay_time} where id = #{orderId}
 			</select>
 			
 			
