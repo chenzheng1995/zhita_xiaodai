@@ -244,7 +244,7 @@
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select col.collectionId,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,ord.shouldReapyMoney
+			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,ord.shouldReapyMoney,ord.technicalServiceMoney
 			from collection col,orders o,orderdetails ord,sys_user colme,user u 
 			<where>
 				o.id = col.orderId 
