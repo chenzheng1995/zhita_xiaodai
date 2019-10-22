@@ -221,19 +221,30 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			ord.setOrderId(ordeids.get(i).getId());
 			ord.setCompanyId(order.getCompanyId());
 			Deferred defe = postloanorder.OneDeferred(ord);//获取延期后应还时间 
-			if(defe.getDeferAfterReturntime()!=null){
-				ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));//延期后应还时间
+			if(defe != null){
+				if(defe.getDeferAfterReturntime()!=null){
+					ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getDeferAfterReturntime()));//延期后应还时间
+				}else{
+					ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
+				}
 			}else{
-				ordeids.get(i).setDeferAfterReturntime("/");//延期后应还时间
+				ordeids.get(i).setDeferAfterReturntime(ordeids.get(i).getShouldReturnTime());//延期后应还时间
 			}
+			
 			ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
 			ordeids.get(i).setInterestSum(ordeids.get(i).getRealityAccount().add(ordeids.get(i).getInterestSum()));
 			
 			
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));
 			defe = coldao.DefNuma(ord.getOrderId());//获取延期次数   id    延期金额    interestOnArrears
-			ordeids.get(i).setDefeNum(defe.getDefeNum());//延期次数
-			if(defe.getInterestOnArrears() == null){
+			
+			if(defe != null){
+				ordeids.get(i).setDefeNum(defe.getDefeNum());//延期次数
+				if(defe.getInterestOnArrears() == null){
+					defe.setInterestOnArrears(new BigDecimal(0));
+				}
+			}else{
+				ordeids.get(i).setDefeNum(0);//延期次数
 				defe.setInterestOnArrears(new BigDecimal(0));
 			}
 			ordeids.get(i).setDefeMoney(defe.getInterestOnArrears());

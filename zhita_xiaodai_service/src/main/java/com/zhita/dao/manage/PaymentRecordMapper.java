@@ -339,4 +339,10 @@ public interface PaymentRecordMapper {
     
     Orders SelectOffCC(Bankdeductions ords);
     
+    
+    int queryToDayMonther(Integer companyId,String startTime,String endTime);
+    
+    
+    int queryToDayMontherrepay(Integer companyId,String startTime,String endTime);
+    
 }

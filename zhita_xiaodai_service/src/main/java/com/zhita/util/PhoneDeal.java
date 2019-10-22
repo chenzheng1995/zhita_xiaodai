@@ -149,10 +149,10 @@ public class PhoneDeal {
 	
 	public static void main(String[] args) {
 		PhoneDeal phoneDeal = new PhoneDeal();
-		String phone = phoneDeal.encryption("18334962475");
+		String phone = phoneDeal.encryption("13487139655");
 		System.out.println(phone);
 
-		phone = phoneDeal.decryption("946902267x1");
+		phone = phoneDeal.decryption("40370x2xx95");
 
 		System.out.println(phone);
 
