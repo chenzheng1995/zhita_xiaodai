@@ -153,10 +153,22 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		todayoveruetotalmoney=todayoveruetotalmoneyreal.add(todayoveruetotalmoneyoff).add(todayoveruetotalmoneybank);
 		
 		String orderrepaytodaycvr=null;//当日订单回款率
-		if(todayloan==0){
+		/*if(todayloan==0){
 			orderrepaytodaycvr="0.00%";
 		}else{
 			orderrepaytodaycvr = (new DecimalFormat("#0.00").format(todayrepayment*1.0/todayloan*100))+"%";//当日订单回款率
+		}*/
+		int todayshouldorder=homepageTongjiMapper.shouldorder(companyId, startTimestamps, endTimestamps);//今日应还订单
+		List<Orders> listorders=homepageTongjiMapper.overduerepay(companyId, startTimestamps, endTimestamps);//已还款订单  还款表
+		List<Orders> listordersoff=homepageTongjiMapper.overduerepayoff(companyId, startTimestamps, endTimestamps);//已还款订单    线下还款表
+		List<Orders> listordersbank=homepageTongjiMapper.overduerepaybank(companyId, startTimestamps, endTimestamps);//已还款订单    银行卡扣款表
+		listorders.addAll(listordersoff);//合并两个集合
+		listorders.addAll(listordersbank);//合并后的集合再次合并第三个集合
+		int todayshouorderalready=listorders.size();//今日应还订单已还的数量
+		if(todayshouldorder==0){
+			orderrepaytodaycvr="0.00%";
+		}else{
+			orderrepaytodaycvr = (new DecimalFormat("#0.00").format(todayshouorderalready*1.0/todayshouldorder*100))+"%";//当日订单回款率
 		}
 		
 		/**
@@ -175,13 +187,18 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		
 		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
-		String orderrepaycvr=null;
-		if(sumloan==0){
+		String orderrepaycvr=null;//订单回款率
+		/*if(sumloan==0){
 			orderrepaycvr="0.00%";
 		}else{
 			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
+		}*/
+		int overdueall = homepageTongjiMapper.overdue1(companyId);//逾后未还笔数（所有到期订单）
+		if(overdueall==0){
+			orderrepaycvr="0.00%";
+		}else{
+			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/overdueall*100))+"%";//订单回款率
 		}
-		
 		BigDecimal payrecmoney = homepageTongjiMapper.querypayrecMoney(companyId);//累计放款总金额
 		if(payrecmoney==null){
 			payrecmoney=new BigDecimal("0.00");

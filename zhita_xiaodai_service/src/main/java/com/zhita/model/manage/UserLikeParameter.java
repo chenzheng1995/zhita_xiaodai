@@ -21,6 +21,9 @@ public class UserLikeParameter {
 	private String shareOfState;//风控状态（即用户状态）（0，机审未通过。1需要人工审核。2，机审通过。3，人审未通过。4，人审通过。5，未进风控。6，分控中）
 	private String clientstatus;//客户状态（0：未借款；1：新客户；2：老客户）
 	private String state="0";//状态（“0”表示有效，“1”表示无效）
+	private String applystatus;//申请状态（“1”表示已申请，“2”表示未申请）
+	private String ifblackliststatus;//是否是黑名单（1：黑名单；0：正常）
+	private String activatestatus;//激活状态（1:已激活；2：未激活）
 	
 	public Integer getCompanyId() {
 		return companyId;
@@ -136,5 +139,22 @@ public class UserLikeParameter {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
+	public String getApplystatus() {
+		return applystatus;
+	}
+	public void setApplystatus(String applystatus) {
+		this.applystatus = applystatus;
+	}
+	public String getIfblackliststatus() {
+		return ifblackliststatus;
+	}
+	public void setIfblackliststatus(String ifblackliststatus) {
+		this.ifblackliststatus = ifblackliststatus;
+	}
+	public String getActivatestatus() {
+		return activatestatus;
+	}
+	public void setActivatestatus(String activatestatus) {
+		this.activatestatus = activatestatus;
+	}
 }

@@ -354,6 +354,18 @@
 	         <if test="clientstatus != null and clientstatus !='' and clientstatus==2 "><!-- 代表老客户 -->
 	        	and u.howManyTimesBorMoney>1
 	        </if>
+	        <if test="applystatus != null and applystatus !='' ">
+	        	and u.applyState =#{applystatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="ifblackliststatus != null and ifblackliststatus !='' ">
+	        	and u.ifBlacklist =#{ifblackliststatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="activatestatus != null and activatestatus !='' and activatestatus==1"><!-- 代表已激活 -->
+	        	and u.loginTime !=null and u.registeTime != u.loginTime
+	        </if>
+	        <if test="activatestatus != null and activatestatus !='' and activatestatus==2"><!-- 代表未激活 -->
+	        	and (u.loginTime ==null || u.registeTime == u.loginTime)
+	        </if>
 	       order by u.registeTime desc  limit #{page},#{pagesize}
 	</select>
 	<!-- 后台管理           用户列表(公司id，page,pagesize,姓名，手机号，注册开始时间，注册结束时间，用户认证状态，银行卡认证状态，运营商认证状态)  查询数量-->
@@ -411,6 +423,18 @@
 	         <if test="clientstatus != null and clientstatus !='' and clientstatus==2 "><!-- 代表老客户 -->
 	        	and u.howManyTimesBorMoney>1
 	        </if>
+	        <if test="applystatus != null and applystatus !='' ">
+	        	and u.applyState =#{applystatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="ifblackliststatus != null and ifblackliststatus !='' ">
+	        	and u.ifBlacklist =#{ifblackliststatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="activatestatus != null and activatestatus !='' and activatestatus==1"><!-- 代表已激活 -->
+	        	and u.loginTime !=null and u.registeTime != u.loginTime
+	        </if>
+	        <if test="activatestatus != null and activatestatus !='' and activatestatus==2"><!-- 代表未激活 -->
+	        	and (u.loginTime ==null || u.registeTime == u.loginTime)
+	        </if>
 	</select>
 	<!-- 后台管理           用户列表（导出Excel）-->
 	<select id="queryUserListExcel" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
@@ -462,6 +486,18 @@
 	        </if>
 	         <if test="clientstatus != null and clientstatus !='' and clientstatus==2 "><!-- 代表老客户 -->
 	        	and u.howManyTimesBorMoney>1
+	        </if>
+	        <if test="applystatus != null and applystatus !='' ">
+	        	and u.applyState =#{applystatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="ifblackliststatus != null and ifblackliststatus !='' ">
+	        	and u.ifBlacklist =#{ifblackliststatus,jdbcType=VARCHAR}
+	        </if>
+	        <if test="activatestatus != null and activatestatus !='' and activatestatus==1"><!-- 代表已激活 -->
+	        	and u.loginTime !=null and u.registeTime != u.loginTime
+	        </if>
+	        <if test="activatestatus != null and activatestatus !='' and activatestatus==2"><!-- 代表未激活 -->
+	        	and (u.loginTime ==null || u.registeTime == u.loginTime)
 	        </if>
 	     order by u.registeTime desc  
 	</select>

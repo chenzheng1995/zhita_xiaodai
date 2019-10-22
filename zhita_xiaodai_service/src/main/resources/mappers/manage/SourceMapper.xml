@@ -345,4 +345,17 @@
 		where u.sourceid=#{arg0} and uat.authentime>=#{arg1} and uat.authentime &lt;#{arg2}
 	</select>
 	
+	<!-- 后台管理     查询当前渠道当前时间的认证数量（在银行卡表的） -->
+	<select id="querybankcount" resultType="java.lang.Integer">
+		select count(DISTINCT u.id) from user u inner join bankcard b on u.id = b.userid 
+		where u.sourceid=#{arg0} and b.authentime>=#{arg1} and b.authentime &lt;#{arg2}
+	</select>
+	
+	
+	<!-- 后台管理     查询当前渠道当前时间的认证数量 （在运营商表的） -->
+	<select id="queryoperacount" resultType="java.lang.Integer">
+		select count(DISTINCT u.id) from user u inner join operator o on u.id = o.userid 
+		where u.sourceid=#{arg0} and o.authentime>=#{arg1} and o.authentime &lt;#{arg2}
+	</select>
+	
 </mapper>
