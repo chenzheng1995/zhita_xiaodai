@@ -229,8 +229,14 @@ public class SourceTongjiController {
 					authencount=authencount+1;
 				}
 			}*/
-			int authencount=intSourceService.queryattcount(sourceids, startTimestamps, endTimestamps);//认证人数
-			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数
+			
+			int authencount=intSourceService.queryattcount(sourceid, startTimestamps, endTimestamps);//认证人数
+			listsource.get(i).setAuthencount(authencount);//当前渠道的认证人数（用户个人信息认证表）
+			int authenbankcount=intSourceService.querybankcount(sourceid, startTimestamps, endTimestamps);//认证人数
+			listsource.get(i).setAuthenbankcount(authenbankcount);//当前渠道的认证人数（银行卡认证表）
+			int authenoperacount=intSourceService.queryoperacount(sourceid, startTimestamps, endTimestamps);//认证人数
+			listsource.get(i).setAuthenoperacount(authenoperacount);//当前渠道的认证人数（运营商认证表）
+			
 			Integer applynum=intSourceService.queryNum(companyId, sourceids,startTimestamps, endTimestamps);//申请人数
 			listsource.get(i).setApplynum(applynum);//申请数
 			String cvr1=null;
@@ -362,8 +368,14 @@ public class SourceTongjiController {
 					authencount=authencount+1;
 				}
 			}*/
+			
 			int authencount=intSourceService.queryattcount(sourceid, startTimestamps, endTimestamps);//认证人数
-			tongjiSorce.setAuthencount(authencount);//当前渠道的认证人数
+			tongjiSorce.setAuthencount(authencount);//当前渠道的认证人数（用户个人信息认证表）
+			int authenbankcount=intSourceService.querybankcount(sourceid, startTimestamps, endTimestamps);//认证人数
+			tongjiSorce.setAuthenbankcount(authenbankcount);//当前渠道的认证人数（银行卡认证表）
+			int authenoperacount=intSourceService.queryoperacount(sourceid, startTimestamps, endTimestamps);//认证人数
+			tongjiSorce.setAuthenoperacount(authenoperacount);//当前渠道的认证人数（运营商认证表）
+			
 			Integer applynum=intSourceService.queryNum(companyId, sourceid,startTimestamps, endTimestamps);//申请人数
 			tongjiSorce.setApplynum(applynum);//申请数
 			String cvr1=null;
