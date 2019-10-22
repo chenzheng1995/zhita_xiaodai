@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Date;
 
 import com.zhita.dao.manage.BorrowMoneyMessageMapper;
+import com.zhita.dao.manage.IfblacklistMapper;
 import com.zhita.dao.manage.ThirdcalltongjiMapper;
 import com.zhita.model.manage.User;
 import com.zhita.service.manage.blacklistuser.IntBlacklistuserService;
@@ -49,6 +50,9 @@ public class LoginController {
 	
 	@Autowired
 	BorrowMoneyMessageMapper borrowMoneyMessageMapper;
+	
+	@Autowired
+	IfblacklistMapper ifblacklistMapper;
 	
 
 
@@ -215,14 +219,41 @@ public class LoginController {
 					if (id == null) {
 				        String status = intSourceService.getstatus(companyId,sourceName);
 				        if("2".equals(status)) {
-								map.put("Ncode","2000");
+								map.put("Ncode","411");
 								map.put("msg", "渠道已关闭");
 								map.put("code", "411");
 								return map;
 				        }else {
+				        	
+				        	
 		                   	 BigDecimal canBorrowlines = borrowMoneyMessageMapper.getCanBorrowlines(companyId);
 							String operatorsAuthentication = intThirdpartyintService.getOperatorsAuthentication(companyId);
 							int merchantId = intSourceService.getsourceId(sourceName);
+				        	
+				        	String ifblacklist1 = ifblacklistMapper.getifblacklist(companyId);
+				        	if(ifblacklist1.equals("1")) {
+	 							String ifBlacklist = "1";
+	 							String registrationTime1 = System.currentTimeMillis() + ""; // 获取当前时间戳
+	 							int number = loginService.insertUser4(newPhone, loginStatus, companyId, registeClient,
+		 	 								registrationTime, merchantId, useMarket, operatorsAuthentication,canBorrowlines,ifBlacklist);
+	 							int userId = loginService.getUserId(newPhone,companyId);
+		 	 						if (number == 1) {
+		 	 							String blackType = "9";
+		 	 							intBlacklistuserService.setBlacklistuser1(companyId, phone,blackType,registrationTime1,userId);
+		 	 		 					map.put("Ncode","407");
+		 	 							map.put("msg", "手机号黑名单 ");
+		 	 							map.put("code", "407");
+		 	 							map.put("prompt", "您暂时不符合借款要求，请三个月之后再来尝试");
+		 	 							return map;
+		 	 						} else {
+		 	 							map.put("msg", "用户登录失败，用户数据插入失败");
+		 	 							map.put("SCode", "405");
+		 	 						}
+		 			 				 
+		 			 				 return map;
+		 			 			 }
+				        	
+
 							int number = loginService.insertUser1(newPhone, loginStatus, companyId, registeClient,
 									registrationTime, merchantId, useMarket, operatorsAuthentication,canBorrowlines);
 							if (number == 1) {

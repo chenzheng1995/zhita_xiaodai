@@ -1270,7 +1270,7 @@
   			
 
 			<select id="UpdateOrderTime" parameterType="com.zhita.model.manage.Offlinedelay">
-				update orders set orderStatus = "2",shouldReturnTime = #{delay_time} where id = #{orderId}
+				update orders set orderStatus = "0",shouldReturnTime = #{delay_time} where id = #{orderId}
 			</select>
 			
 			
@@ -1587,4 +1587,14 @@
 			where o.id = repay.orderId and o.companyId = #{companyId} and repay.operating_time between #{startu_time} and #{end_time}
  			</select>
  			
+ 			
+ 			
+ 			<select id="queryToDayMonther" resultType="java.lang.Integer">
+ 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney=1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 			</select>
+ 			
+ 			
+ 			<select id="queryToDayMontherrepay" resultType="java.lang.Integer">
+ 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 			</select>
 </mapper>

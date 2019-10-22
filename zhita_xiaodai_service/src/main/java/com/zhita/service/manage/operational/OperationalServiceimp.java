@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhita.dao.manage.CollectionMapper;
+import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.dao.manage.OperationalMapper;
 import com.zhita.dao.manage.PaymentRecordMapper;
 import com.zhita.dao.manage.PostloanorderMapper;
@@ -51,6 +52,10 @@ public class OperationalServiceimp implements OperationalService{
 	
 	@Autowired
 	private PaymentRecordMapper padao;
+	
+	
+	@Autowired
+	private HomepageTongjiMapper homepageTongjiMapper;
 	
 	
 
@@ -229,6 +234,15 @@ public class OperationalServiceimp implements OperationalService{
 				Bankdeductions e = padao.XianJianmian(banl);//查询线下记录	条数 和 金额	defeNum 次数  deferredamount 金额
 				Bankdeductions f = padao.BankMoneys(banl);//查询银行扣款记录   defeNum 次数    deferredamount  金额
 				Orders ode = operdao.XianOrder(ordera);//线下减免金额  和  次数
+				int todayloannew = homepageTongjiMapper.queryToDayLoannew(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time());//今日放款新客
+				int todayloanold = homepageTongjiMapper.queryToDayLoanold(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time());//今日放款复贷
+				
+				ord.setPaymentNum(todayloannew);
+				ord.setPaymentNumId(todayloanold);
+				
+				
+				ord.setRepaymentNum(padao.queryToDayMonther(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款新客数
+				ord.setRepaymentNumId(padao.queryToDayMontherrepay(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日放款复贷
 				if(e.getDeferredamount()==null){
 					e.setDeferredamount(new BigDecimal(0));
 				}

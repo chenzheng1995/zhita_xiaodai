@@ -40,8 +40,8 @@ public class H5ReportDemo {
 
 
 
-        riskClient.setNotifyUrl("http://47.56.173.1:8081/zhita_xiaodai_app/notifyUrl/callback"); //(TODO)替换值，写入抓取成功后商户服务器异步通知页面路径 （长度最大为128位）
-        riskClient.setReturnUrl("https://mdbko.tcc1688.com/renzhengchenggong/index3.html"); //(TODO)替换值，页面跳转同步通知页面路径 （长度最大为512位）returnUrl不传，会出现认证链接失效问题
+        riskClient.setNotifyUrl("http://47.102.40.133:8081/zhita_xiaodai_app/notifyUrl/callback"); //(TODO)替换值，写入抓取成功后商户服务器异步通知页面路径 （长度最大为128位）
+        riskClient.setReturnUrl("https://47.102.40.133:8081/renzhengchenggong/index3.html"); //(TODO)替换值，页面跳转同步通知页面路径 （长度最大为512位）returnUrl不传，会出现认证链接失效问题
 
 
 //        riskClient.setReturnUrl("http://xcx.rong51dai.com/idcard/renzhengchenggong/index3.html"); //(TODO)替换值，页面跳转同步通知页面路径 （长度最大为512位）returnUrl不传，会出现认证链接失效问题

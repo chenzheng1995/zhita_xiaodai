@@ -9,6 +9,7 @@
     <result column="idcard" property="idcard" jdbcType="VARCHAR" />
     <result column="userId" property="userid" jdbcType="INTEGER" />
     <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+    <result column="operationTime" property="operationTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     b.id, b.companyId, b.name,b.phone, b.idcard, b.userId,su.account,b.operationtime,b.deleted,b.blackType
@@ -186,9 +187,12 @@ select count(id) from blacklist_user where idcard = #{idCard} and companyId = #{
     </insert>
     
          <insert id="setBlacklistuser1" parameterType="java.util.Map">
-      insert into blacklist_user (companyId, phone,blackType)
-      values(#{companyId},#{phone},#{blackType})
+      insert into blacklist_user (companyId, phone,blackType,operationTime,userId)
+      values(#{companyId},#{phone},#{blackType},#{registrationTime1},#{userId})
 
     </insert>
+    
+
+    
     
 </mapper>

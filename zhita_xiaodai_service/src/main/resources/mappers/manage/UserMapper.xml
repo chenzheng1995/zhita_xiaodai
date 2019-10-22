@@ -970,4 +970,27 @@
 		where id = #{userId}
 	</update>
 	
+			<select id="getUserId" parameterType="java.util.Map" resultType="java.lang.Integer">
+     select id from user where phone = #{newPhone} and companyId = #{companyId}
+	</select> 
+	
+	
+	
+			<insert id="insertUser4" parameterType="java.util.Map">
+		insert into user (phone,registeTime,loginStatus,companyId,registeClient,loginTime,sourceId,useMarket,operatorsAuthentication,canBorrowlines,ifBlacklist)
+		values (#{newPhone},
+		#{registrationTime},
+		#{loginStatus},
+		#{companyId},
+		#{registeClient},
+		#{registrationTime},
+		#{merchantId},
+		#{useMarket},
+		#{operatorsAuthentication},
+		#{canBorrowlines},
+		#{ifBlacklist})
+	</insert>
+	
+	
+	
 </mapper>

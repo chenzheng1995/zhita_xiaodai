@@ -178,6 +178,21 @@ public class LoginServiceImp implements IntLoginService{
 		return number;
 	}
 
+	@Override
+	public int getUserId(String newPhone, int companyId) {
+		int userId = userMapper.getUserId(newPhone,companyId);
+		return userId;
+	}
+
+	@Override
+	public int insertUser4(String newPhone, String loginStatus, int companyId, String registeClient,
+			String registrationTime, int merchantId, String useMarket, String operatorsAuthentication,
+			BigDecimal canBorrowlines, String ifBlacklist) {
+			int number = userMapper.insertUser4(newPhone, loginStatus, companyId, registeClient,
+						registrationTime, merchantId, useMarket, operatorsAuthentication,canBorrowlines,ifBlacklist);
+		return number;
+	}
+
 
 	
 

@@ -83,7 +83,7 @@
 			
 			
 			<update id="DefeOrder" parameterType="com.zhita.model.manage.Orders">
-				update orders set shouldReturnTime = #{shouldReturnTime},orderStatus = "2" where id = #{id}
+				update orders set shouldReturnTime = #{shouldReturnTime},orderStatus = "0" where id = #{id}
 			</update>
 			
 			
