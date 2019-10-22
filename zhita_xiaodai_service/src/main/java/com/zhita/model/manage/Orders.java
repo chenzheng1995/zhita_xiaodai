@@ -159,6 +159,46 @@ public class Orders {
 	
 	private BigDecimal offmoney;
 	
+	private Integer paymentNum;//今日放款新科
+	
+	private Integer paymentNumId;//今日放款复贷
+	
+	private Integer repaymentNum;//今日还款新客
+	
+	private Integer repaymentNumId;//今日还款复客
+	
+	public Integer getPaymentNum() {
+		return paymentNum;
+	}
+
+	public void setPaymentNum(Integer paymentNum) {
+		this.paymentNum = paymentNum;
+	}
+
+	public Integer getPaymentNumId() {
+		return paymentNumId;
+	}
+
+	public void setPaymentNumId(Integer paymentNumId) {
+		this.paymentNumId = paymentNumId;
+	}
+
+	public Integer getRepaymentNum() {
+		return repaymentNum;
+	}
+
+	public void setRepaymentNum(Integer repaymentNum) {
+		this.repaymentNum = repaymentNum;
+	}
+
+	public Integer getRepaymentNumId() {
+		return repaymentNumId;
+	}
+
+	public void setRepaymentNumId(Integer repaymentNumId) {
+		this.repaymentNumId = repaymentNumId;
+	}
+
 	public Integer getOfcount() {
 		return ofcount;
 	}

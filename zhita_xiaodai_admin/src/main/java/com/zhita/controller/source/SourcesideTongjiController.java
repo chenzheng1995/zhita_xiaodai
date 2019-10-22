@@ -90,7 +90,7 @@ public class SourcesideTongjiController {
 		Integer applynum=0;//申请数
 		int orderpass=0;//借款人数
 		if(tongjiSorcelist==null){
-			float appnum = intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+			float appnum = intSourceService.queryApplicationNumberlike(companyId, sourceid, startTimestamps, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
 			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				
@@ -116,7 +116,7 @@ public class SourcesideTongjiController {
 		}else{
 			float appnumHistory=tongjiSorcelist.getRegisternumdis();//历史表折扣后的注册人数
 			String startTimestamps1=tongjiSorcelist.getDate();
-			float appnum = intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps1, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
+			float appnum = intSourceService.queryApplicationNumberlike(companyId, sourceid, startTimestamps1, endTimestamps);// 得到申请数(该渠道当天在user表的注册数)
 			String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率  （比如取到字符串  "80%"）
 			int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));//这里取到的折扣率就是80
 				
@@ -206,7 +206,7 @@ public class SourcesideTongjiController {
 			if(tongjiSorcelist!=null){//证明当天历史表有数据
 				float appnumHistory=tongjiSorcelist.getRegisternumdis();//历史表折扣后的注册人数
 				String startTimestamps1=tongjiSorcelist.getDate();
-				float appnum = intSourceService.queryApplicationNumber(companyId, sourceid,startTimestamps1,endTimestamps);// 得到申请数
+				float appnum = intSourceService.queryApplicationNumberlike(companyId, sourceid,startTimestamps1,endTimestamps);// 得到申请数
 				String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
 					
@@ -229,7 +229,7 @@ public class SourcesideTongjiController {
 					cvr = (new DecimalFormat("#.00").format(disAppnum / uv * 100)) + "%";// 得到转化率
 				}
 			}else{//证明当天历史表没数据
-				float appnum = intSourceService.queryApplicationNumber(companyId, sourceid,startTimestamps,endTimestamps);// 得到申请数
+				float appnum = intSourceService.queryApplicationNumberlike(companyId, sourceid,startTimestamps,endTimestamps);// 得到申请数
 				String discount = intSourceService.queryDiscount(sourceid, companyId);// 得到折扣率
 				int discount1 = Integer.parseInt(discount.substring(0, discount.length() - 1));
 					

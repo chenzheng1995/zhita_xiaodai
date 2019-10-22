@@ -62,6 +62,9 @@ public interface SourceMapper {
     //后台管理 ------查询统计申请数 
     int queryApplicationNumber(Integer companyId,Integer sourceName,String startTime,String endTime);
     
+    //后台管理 ------查询统计申请数 （去除非法渠道进来的黑名单）
+    int queryApplicationNumberlike(Integer companyId,Integer sourceName,String startTime,String endTime);
+    
     //后台管理---根据渠道id查询渠道的折扣率
     String queryDiscountById(Integer sourceId);
     

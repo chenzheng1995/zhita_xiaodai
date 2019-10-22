@@ -55,6 +55,7 @@ public class SmsData {
 	                	sms.setPhonenum(shortmessage.getPhonenum());
 	                	serve.SendSm(sms);
 	                }
+	                System.out.println("定时器运行:"+count + "次");
 	                System.out.println("时间=" + new Date() + " 执行了" + count + "次"); // 1次
 	                
 	            }
