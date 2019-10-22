@@ -163,7 +163,7 @@ public class OperatorController {
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
 				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-				map.put("Ncode", "2000");
+				map.put("Ncode", "407");
 				map.put("Code", "407"); 
 		   }
 		return map;
@@ -223,12 +223,12 @@ public class OperatorController {
 						attestationStatus = "2";
 						operatorService.updateAttestationStatus(attestationStatus, userId);
 						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-						map.put("Ncode", "2000");
+						map.put("Ncode", "300");
 						map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 						map.put("Code", "300");
 					}
 				} else {
-					map.put("Ncode", "2000");
+					map.put("Ncode", "401");
 					map.put("msg", "认证失败");
 					map.put("Code", "401");
 				}
@@ -287,11 +287,11 @@ public class OperatorController {
 							String attestationStatus = "2";
 							operatorService.updateAttestationStatus(attestationStatus, userId);
 							intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-							map.put("Ncode", "2000");
+							map.put("Ncode", "300");
 							map.put("msg", "数据抓取中，请5分钟后再调一下该接口");
 							map.put("Code", "300");
 					} else {
-						map.put("Ncode", "2000");
+						map.put("Ncode", "401");
 						map.put("msg", "认证失败");
 						map.put("Code", "401");
 					}
@@ -348,7 +348,7 @@ public class OperatorController {
 		if(jsonObject!=null) {
 			Object code = (Object) jsonObject.get("code");			
 			if(code.equals("1000")) {
-				map.put("Ncode", "2000");
+				map.put("Ncode", "408");
 				map.put("msg", "手机号使用太频繁，请几分钟之后再尝试");
 				map.put("code", "408");
 				return map;
@@ -382,7 +382,7 @@ public class OperatorController {
 			String attestationStatus = "1";
 			operatorService.updateAttestationStatus(attestationStatus, userId);
 			intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-			map.put("Ncode", "2000");
+			map.put("Ncode", "407");
 			map.put("msg", "运营商没调通");
 			map.put("code", "407");
 		}
@@ -409,7 +409,7 @@ public class OperatorController {
 				String attestationStatus = "1";
 				operatorService.updateAttestationStatus(attestationStatus, userId);
 				intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-				map.put("Ncode", "2000");
+				map.put("Ncode", "407");
 				map.put("code", "407"); 
 		   }
 		return map;
@@ -475,11 +475,11 @@ public class OperatorController {
 						String attestationStatus = "0";
 						operatorService.updateAttestationStatus(attestationStatus, userId);
 						intUserService.updateOperatorAuthenStatus(attestationStatus, userId);
-						map.put("Ncode", "2000");
+						map.put("Ncode", "408");
 						map.put("msg", "手机号使用太频繁，请两分钟之后再尝试");
 						map.put("code", "408");
 				} else {
-					map.put("Ncode", "2000");
+					map.put("Ncode", "401");
 					map.put("msg", "认证失败，请重试");
 					map.put("code", "401");
 				}
@@ -673,7 +673,7 @@ public class OperatorController {
 		String refuseApplyProvince = (String) map2.get("refuseApplyProvince");
 		if (age < minimumage || age > maximumage) {
 			intUserService.updateshareOfState(userId, shareOfState);
-			map.put("Ncode", "2000");
+			map.put("Ncode", "405");
 			map.put("code", "405");
 			map.put("msg", "年龄不符合条件");
 			return map;
@@ -682,7 +682,7 @@ public class OperatorController {
 		for (int i = 0; i < aString.length; i++) {
 			if (address.indexOf(aString[i]) != -1) {
 				intUserService.updateshareOfState(userId, shareOfState);
-				map.put("Ncode", "2000");
+				map.put("Ncode", "406");
 				map.put("code", "406");
 				map.put("msg", "地域不符合条件");
 				return map;

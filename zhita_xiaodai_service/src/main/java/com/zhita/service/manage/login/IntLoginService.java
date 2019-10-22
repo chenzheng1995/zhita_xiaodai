@@ -71,5 +71,11 @@ public int insertUser3(String newPhone, String loginStatus, int companyId, Strin
 		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication, String userAgentInfo,
 		BigDecimal canBorrowlines, String ifBlacklist);
 
+public int getUserId(String newPhone, int companyId);
+
+public int insertUser4(String newPhone, String loginStatus, int companyId, String registeClient,
+		String registrationTime, int merchantId, String useMarket, String operatorsAuthentication,
+		BigDecimal canBorrowlines, String ifBlacklist);
+
    
 }
