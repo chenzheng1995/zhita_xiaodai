@@ -16,7 +16,9 @@ public class TongjiSorce {
 	private Integer applynum;//申请人数
 	private String cvr1;//注册到申请转化率（申请率）
 	private Integer activatecount;//激活人数
-	private Integer authencount;//认证人数
+	private Integer authencount;//认证人数（用户个人信息认证表）
+	private Integer authenbankcount;//认证人数（银行卡认证表）
+	private Integer authenoperacount;//认证人数（运营商认证表）
 	private Integer machineauditpass;//通过人数
 	private Integer orderpass;//已借款人数
 	private String cvr2;//已借款率
@@ -146,5 +148,16 @@ public class TongjiSorce {
 	public void setFlowcharge(BigDecimal flowcharge) {
 		this.flowcharge = flowcharge;
 	}
-	
+	public Integer getAuthenbankcount() {
+		return authenbankcount;
+	}
+	public void setAuthenbankcount(Integer authenbankcount) {
+		this.authenbankcount = authenbankcount;
+	}
+	public Integer getAuthenoperacount() {
+		return authenoperacount;
+	}
+	public void setAuthenoperacount(Integer authenoperacount) {
+		this.authenoperacount = authenoperacount;
+	}
 }

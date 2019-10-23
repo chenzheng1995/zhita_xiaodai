@@ -362,8 +362,8 @@ public class LoginController {
 	        String fileName = format.format(new Date()) + UUID.randomUUID().toString() + ".JPG";// 文件原名称
 	        // 判断文件类型
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
-	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.173.1服务
-	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.172.8服务
+	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.173.1服务
+	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.172.8服务
 	        FolderUtil folderUtil = new FolderUtil();
 	        try {
 	            folderUtil.uploadImage(inputStream, path);
@@ -371,8 +371,8 @@ public class LoginController {
 	            e.printStackTrace();
 	        }
 	       //return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
-	       return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
-	       //return "http://47.56.172.8:8081/H5Code/" + fileName;   //47.56.172.8服务
+	       //return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
+	       return "http://47.56.172.8:8081/H5Code/" + fileName;   //47.56.172.8服务
 	    }
 	    
 	    private int getRandomCode() {

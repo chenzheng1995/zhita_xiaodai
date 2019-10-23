@@ -321,4 +321,9 @@
 	<select id="querylifeOfLoan" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 		 select lifeOfLoan from borrow_money_message where companyId=#{arg0}
 	</select>
+	
+	<!-- 截止今天为止所有应该还的订单 -->
+	<select id="cutofftodayshouldrepay" resultType="java.lang.Integer">
+		select count(id) from orders where companyId=#{arg0} and shouldReturnTime &lt;#{arg1}
+	</select>
 </mapper>

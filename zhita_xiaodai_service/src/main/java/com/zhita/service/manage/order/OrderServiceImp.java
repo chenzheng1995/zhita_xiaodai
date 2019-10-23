@@ -884,9 +884,11 @@ public class OrderServiceImp implements IntOrderService {
 			list.get(i).setApplytime(Timestamps.stampToDate(list.get(i).getApplytime()));
 		}
 		List<SysUser> listacount = ordersMapper.queryname(companyId);
+		List<Source> listsource = ordersMapper.querysource(companyId);
 		Map<String, Object> map = new HashMap<>();
 		map.put("listuser", list);
 		map.put("listacount", listacount);
+		map.put("listsource", listsource);
 		map.put("pageutil", pageUtil);
 		return map;
 	}

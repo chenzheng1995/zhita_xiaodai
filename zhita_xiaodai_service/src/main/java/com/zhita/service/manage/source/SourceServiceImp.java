@@ -572,4 +572,14 @@ public class SourceServiceImp implements IntSourceService{
 	public int queryattcount(Integer sourceid,String starttime,String endtime){
 		return sourceMapper.queryattcount(sourceid, starttime, endtime);
 	}
+	
+	//后台管理----查询当前渠道当前时间的认证数量（在银行卡表的）
+	public int querybankcount(Integer sourceid,String starttime,String endtime){
+		return sourceMapper.querybankcount(sourceid, starttime, endtime);
+	}
+	
+	//后台管理----查询当前渠道当前时间的认证数量（在运营商表的）
+	public int queryoperacount(Integer sourceid,String starttime,String endtime){
+		return sourceMapper.queryoperacount(sourceid, starttime, endtime);
+	}
 }
