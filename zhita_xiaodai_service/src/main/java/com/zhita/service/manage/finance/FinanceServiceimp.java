@@ -6,12 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.omg.CORBA.INTERNAL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -180,6 +182,52 @@ public class FinanceServiceimp implements FinanceService{
 			
 			repays.get(i).setPhone(tm.mobileEncrypt(repays.get(i).getPhone()));
 		}
+		List<Payment_record> payment_records = padao.SelectDefe(payrecord);//延期
+		for(int i = 0 ;i<payment_records.size();i++){
+			payment_records.get(i).setRepaymentDate(Timestamps.stampToDate(payment_records.get(i).getRepaymentDate()));
+			if(payment_records.get(i).getPhone()!=null){
+				if(payment_records.get(i).getPhone().length()!=0){
+					payment_records.get(i).setPhone(p.decryption(payment_records.get(i).getPhone()));
+				}
+			}
+			
+			payment_records.get(i).setPhone(tm.mobileEncrypt(payment_records.get(i).getPhone()));
+		}
+		
+		List<Payment_record> ofpayment = padao.SelectOffDefe(payrecord);//线下延期
+		
+		
+		for(int i = 0 ;i<ofpayment.size();i++){
+			ofpayment.get(i).setRepaymentDate(Timestamps.stampToDate(ofpayment.get(i).getRepaymentDate()));
+			if(ofpayment.get(i).getPhone()!=null){
+				if(ofpayment.get(i).getPhone().length()!=0){
+					ofpayment.get(i).setPhone(p.decryption(ofpayment.get(i).getPhone()));
+				}
+			}
+			
+			ofpayment.get(i).setPhone(tm.mobileEncrypt(ofpayment.get(i).getPhone()));
+		}
+		
+		
+		if(payment_records.size() == 0){
+			System.out.println("aa");
+		}else if(ofpayment.size() == 0){
+			System.out.println("BB");
+			ofpayment.addAll(payment_records);
+		}else{
+			ofpayment.addAll(payment_records);
+		}
+		
+		
+		if(payment_records.size() == 0){
+			System.out.println("aa");
+		}else if(ofpayment.size() == 0){
+			System.out.println("BB");
+			ofpayment.addAll(payment_records);
+		}else{
+			ofpayment.addAll(payment_records);
+		}
+		
 		System.out.println(rapay.size()+"AAA"+repays.size());
 		if(repays.size() == 0){
 			System.out.println("aa");
@@ -189,11 +237,23 @@ public class FinanceServiceimp implements FinanceService{
 		}else{
 			rapay.addAll(repays);
 		}
+		
+		
+		if(repays.size() == 0){
+			System.out.println("aa");
+		}else if(rapay.size() == 0){
+			System.out.println("BB");
+			rapay.addAll(repays);
+		}else{
+			rapay.addAll(repays);
+		}
+		
+		rapay.addAll(ofpayment);
 		List<Payment_record> pa = new ArrayList<Payment_record>();
 //		pages.setPage(a);
 		PageUtil2 pageUtil=null;
 		if(rapay!=null && !rapay.isEmpty()){
-    		ListPageUtil listPageUtil=new ListPageUtil(rapay,payrecord.getPage(),10);
+    		ListPageUtil<Payment_record> listPageUtil=new ListPageUtil<Payment_record>(rapay,payrecord.getPage(),10);
     		pa.addAll(listPageUtil.getData());
     		System.out.println(pa.size());
     			
@@ -201,7 +261,22 @@ public class FinanceServiceimp implements FinanceService{
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
     	}
-		
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Collections.sort(pa, new Comparator<Payment_record>() {
+			 
+			@Override
+			public int compare(Payment_record o1, Payment_record o2) {
+				int i = 0;
+				try {
+					i = (int) (dateFormat.parse(o1.getRepaymentDate()).getTime() - dateFormat.parse(o2.getRepaymentDate()).getTime());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return i;
+			}
+
+		});
 		pageUtil.setTotalCount(rapay.size());
 		System.out.println(rapay.size());
 		map.put("Repayment", pa);

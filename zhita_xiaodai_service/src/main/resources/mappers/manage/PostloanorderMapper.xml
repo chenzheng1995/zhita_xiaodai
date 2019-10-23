@@ -302,8 +302,8 @@
 		
 		
 		<select id="MyOrderdue" resultType="com.zhita.model.manage.Orderdetails" parameterType="com.zhita.model.manage.Orderdetails">
-			SELECT ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,o.userId,
-			ord.makeLoans,o.shouldReturnTime,ord.interestSum,defeset.onceDeferredDay,ov.overdue_phonestaus,ov.collectiondate,o.orderStatus
+			SELECT ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,o.userId,ord.shouldReapyMoney,
+			ord.makeLoans,o.shouldReturnTime,ord.interestSum,defeset.onceDeferredDay,ov.overdue_phonestaus,ov.collectiondate,o.orderStatus,ord.interestPenaltySum,ord.interestInAll
 			from orders o,orderdetails ord,deferred_settings defeset,overdue ov,user u
 			<where>
 				o.id = ord.orderId
@@ -391,9 +391,9 @@
 		
 		
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
+			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,
 			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,
-			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate,ord.realityAccount,o.orderStatus,o.userId
+			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate,ord.realityAccount,o.orderStatus,o.userId,ord.interestPenaltySum,ord.shouldReapyMoney
 			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom	
 			<where>
 				o.id = ord.orderId 

@@ -347,4 +347,10 @@ public interface PaymentRecordMapper {
     
     int queryToXianxiaId(Integer companyId,String startTime,String endTime);
     
+    
+    List<Payment_record> SelectDefe(Payment_record pay);
+    
+    
+    List<Payment_record> SelectOffDefe(Payment_record pay);
+    
 }
