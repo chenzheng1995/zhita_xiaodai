@@ -1,11 +1,12 @@
 package com.zhita.model.manage;
 
+//配置App进来的用户是否拉入黑名单
 public class Ifblacklist {
     private Integer id;
 
-    private Integer companyid;
+    private Integer companyid;//公司id
 
-    private String ifblacklist;
+    private String ifblacklist;//pp进来的用户是否拉入黑名单配置（1：是；2；否）
 
     public Ifblacklist(Integer id, Integer companyid, String ifblacklist) {
         this.id = id;

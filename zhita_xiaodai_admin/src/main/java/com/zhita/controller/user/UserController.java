@@ -77,7 +77,7 @@ public class UserController {
   		return map;
   	}
 	
-	//后台管理---用户认证信息
+	//后台管理---用户认证信息（个人信息）
 	@ResponseBody
 	@RequestMapping("/queryUserAttesta")
 	public Map<String,Object> queryUserAttesta(Integer userid){
@@ -85,7 +85,7 @@ public class UserController {
 		return map;
 	}
 	
-	//后台管理---用户认证信息
+	//后台管理---用户认证信息（通话区域分布（城市））
 	@ResponseBody
 	@RequestMapping("/queryauthenconcity")
 	public Map<String,Object> queryauthenconcity(Integer userid,Integer page){
@@ -93,7 +93,7 @@ public class UserController {
 		return map;
 	}
 	
-	//后台管理---用户认证信息
+	//后台管理---用户认证信息（出行分析）
 	@ResponseBody
 	@RequestMapping("/queryauthenave")
 	public Map<String,Object> queryauthenave(Integer userid,Integer page){
@@ -101,7 +101,7 @@ public class UserController {
 		return map;
 	}
 	
-	//后台管理---用户认证信息
+	//后台管理---用户认证信息（通话数据分析）
 	@ResponseBody
 	@RequestMapping("/queryauthenlabel")
 	public Map<String,Object> queryauthenlabel(Integer userid,Integer page){
@@ -109,14 +109,28 @@ public class UserController {
 		return map;
 	}
 	
-	//后台管理---用户认证信息
+	//后台管理---用户认证信息(风险信息检查)
 	@ResponseBody
 	@RequestMapping("/queryAllsen")
     public Map<String,Object> queryAllsen(Integer userid){
     	return intUserService.queryAllsen(userid);
     }
 	
-	//用户反欺诈报告命中不命中的显示
+	//后台管理---用户认证信息（通话详情（通话月份，通话时间段，通话时长分布））
+	@ResponseBody
+	@RequestMapping("/queryTelephone")
+    public Map<String,Object> queryTelephone(Integer userid){
+    	return intUserService.queryTelephone(userid);
+    }
+	
+	//后台管理---用户认证信息（通话亲密度（通话次数前10，通话总时长前10，单次通话时长前10））
+	@ResponseBody
+	@RequestMapping("/queryTopten")
+	public Map<String,Object> queryTopten(Integer userid){
+		 return intUserService.queryTopten(userid);
+	}
+	
+	//用户反欺诈报告命中被命中的显示
 	@RequestMapping("/getModel")
 	@ResponseBody
 	@Transactional

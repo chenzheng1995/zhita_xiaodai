@@ -408,7 +408,31 @@ public class UserServiceImp implements IntUserService{
 		map.put("listsen", object.getString("listsen"));//风险信息检查
 		return map;
 	}
-	
+	//后台管理---用户认证信息（通话详情（通话月份，通话时间段，通话时长分布））
+    public Map<String,Object> queryTelephone(Integer userid){
+    	PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryTelephone?userid="+userid);
+		JSONObject object = JSONObject.parseObject(rString);
+					
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("listcommonth", object.getString("listcommonth"));//通话月份分布
+    	map.put("listcombuck", object.getString("listcombuck"));//通话时间段分布
+    	map.put("listcomdur", object.getString("listcomdur"));//通话时长分布
+		return map;
+    }
+    
+  //后台管理---用户认证信息（通话亲密度（通话次数前10，通话总时长前10，单次通话时长前10））
+    public Map<String,Object> queryTopten(Integer userid){
+    	PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryTopten?userid="+userid);
+		JSONObject object = JSONObject.parseObject(rString);
+					
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("top10call", object.getString("top10call"));//通话次数前10 表
+		map.put("top10time", object.getString("top10time"));//通话总时长前10表
+		map.put("top10sing", object.getString("top10sing"));//单次通话时长前10 表
+		return map;
+    }
 
 	@Override
 	public void updateScore(int score,int userId,String shareOfState) {
