@@ -155,6 +155,10 @@ public interface HomepageTongjiMapper {
 	
 	//后台管理---实际收益=放款总金额-回款总金额
 	
+	
+	//后台管理——截止今天为止应该还的订单
+	int cutofftodayshouldrepay(Integer companyId,String todaycutofftime);
+	
 	/**
 	 * 期限内数据
 	 * @param companyId 公司id

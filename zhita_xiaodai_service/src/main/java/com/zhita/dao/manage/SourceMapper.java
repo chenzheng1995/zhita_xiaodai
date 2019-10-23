@@ -121,5 +121,12 @@ public interface SourceMapper {
 	
 	//后台管理----查询当前渠道当前时间的认证数量
 	int queryattcount(Integer sourceid,String starttime,String endtime);
+	
+	//后台管理----查询当前渠道当前时间的认证数量（在银行卡表的）
+	int querybankcount(Integer sourceid,String starttime,String endtime);
+	
+	
+	//后台管理----查询当前渠道当前时间的认证数量（在运营商表的）
+	int queryoperacount(Integer sourceid,String starttime,String endtime);
     
 }
