@@ -420,6 +420,12 @@ public class SourceServiceImp implements IntSourceService{
     	return appnum;
     }
     
+    //后台管理-----查询统计申请数（非法渠道进来的注册数）
+    public int queryillegalityregisternum(Integer companyId,Integer sourceName,String startTime,String endTime){
+    	int appnum=sourceMapper.queryillegalityregisternum(companyId, sourceName, startTime, endTime);
+    	return appnum;
+    }
+    
     //后台管理---通过渠道名称查询出当前渠道的折扣率
     public String queryDiscount(Integer sourceName,Integer companyId){
     	String discount=sourceMapper.queryDiscount(sourceName, companyId);

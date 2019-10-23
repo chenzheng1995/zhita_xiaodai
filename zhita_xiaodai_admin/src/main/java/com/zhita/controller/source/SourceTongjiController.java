@@ -74,8 +74,10 @@ public class SourceTongjiController {
 			//float registernum=listsource.get(i).getRegisternum();//得到真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
-			float registernum=intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);
+			float registernum=intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);//所有的注册数（包括正常的和黑名单的）
 			listsource.get(i).setRegisternum(registernum);//真实的注册数
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceid, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			listsource.get(i).setIllegalityregisternum(illegalityregisternum);
 			int uv=0;
 			String cvr=null;
 			if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "xiaodaiKey") == null) {
@@ -196,8 +198,10 @@ public class SourceTongjiController {
 			//float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
-			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);
+			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);//所有注册数（包括正常的和黑名单的）
 			listsource.get(i).setRegisternum(registernum);//真实的注册数
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceids, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			listsource.get(i).setIllegalityregisternum(illegalityregisternum);
 			int uv=0;
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {
@@ -348,6 +352,9 @@ public class SourceTongjiController {
 			}
 			
 			tongjiSorce.setDate(date);//日期
+			
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceid, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			tongjiSorce.setIllegalityregisternum(illegalityregisternum);
 			
 			if ((registernum < 0.000001) || (uv == 0)) {
 				cvr = 0 + "%";// 得到转化率
