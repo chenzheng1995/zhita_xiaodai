@@ -794,6 +794,9 @@
 	        <if test="state != null and state !='' ">
  				and appnum.state=#{state,jdbcType=VARCHAR}
 			</if>
+			<if test="sourceid != null and sourceid !='' ">
+	        	and u.sourceid =#{sourceid,jdbcType=INTEGER}
+	        </if>
      order by appnum.applytime desc limit #{page,jdbcType=INTEGER},#{pagesize,jdbcType=INTEGER}
   </select>
    <!-- 人审过后状态用户【包括人审不通过和人审通过】（公司id，page,申请编号，姓名，手机号，申请时间开始，申请时间结束，审核员id）        查询数量-->
@@ -822,6 +825,9 @@
 	        <if test="state != null and state !='' ">
  				and appnum.state=#{state,jdbcType=VARCHAR}
 			</if>
+			<if test="sourceid != null and sourceid !='' ">
+	        	and u.sourceid =#{sourceid,jdbcType=INTEGER}
+	        </if>
   </select>
   <!-- 人审过后状态用户      导出Excel-->
   <select id="queryAllUserPeopleYetExcel" parameterType="com.zhita.model.manage.UserLikeParameter" resultType="com.zhita.model.manage.User">
@@ -851,6 +857,9 @@
 	        <if test="state != null and state !='' ">
  				and appnum.state=#{state,jdbcType=VARCHAR}
 			</if>
+			<if test="sourceid != null and sourceid !='' ">
+	        	and u.sourceid =#{sourceid,jdbcType=INTEGER}
+	        </if>
      order by appnum.applytime desc 
   </select>
   
