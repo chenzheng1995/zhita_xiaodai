@@ -547,21 +547,32 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			orders.get(i).setOrderCreateTime(Timestamps.stampToDate(orders.get(i).getOrderCreateTime()));//实借订单
 			orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));//逾前还款时间
 			Deferred de = postloanorder.OneDeferred(orders.get(i));
-			orders.get(i).setDeferAfterReturntime(de.getDeferAfterReturntime());
-			if(orders.get(i).getDeferAfterReturntime() != null){
-				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));//逾后还款时间
+			if(de != null){
+				if(orders.get(i).getDeferAfterReturntime() != null){
+					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getDeferAfterReturntime()));//逾后还款时间
+				}else{
+					orders.get(i).setDeferAfterReturntime("/");//逾后还款时间
+				}
 			}else{
-				orders.get(i).setDeferAfterReturntime("/");//逾后还款时间
+				orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));//逾后还款时间
 			}
+			
 			orders.get(i).setCollectionTime(Timestamps.stampToDate(orders.get(i).getCollectiondate()));//分配时间
 			Deferred defe =  coldao.DefNuma(orders.get(i).getOrderId());
 			orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
-			if(defe.getInterestOnArrears() != null){
-				orders.get(i).setDefeMoney(defe.getInterestOnArrears());//延期金额
+			if(defe != null){
+				if(defe.getInterestOnArrears() != null){
+					orders.get(i).setDefeMoney(defe.getInterestOnArrears());//延期金额
+				}else{
+					BigDecimal a = new BigDecimal(0);
+					orders.get(i).setDefeMoney(a);//延期金额
+				}
 			}else{
+				orders.get(i).setDefeNum(0);
 				BigDecimal a = new BigDecimal(0);
 				orders.get(i).setDefeMoney(a);//延期金额
 			}
+			
 			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
