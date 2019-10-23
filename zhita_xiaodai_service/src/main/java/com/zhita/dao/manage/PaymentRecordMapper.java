@@ -2,13 +2,10 @@ package com.zhita.dao.manage;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import com.zhita.model.manage.Accountadjustment;
 import com.zhita.model.manage.Bankdeductions;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Deferred_settings;
-import com.zhita.model.manage.Discardorderdetails;
-import com.zhita.model.manage.Discardorders;
 import com.zhita.model.manage.Loan_setting;
 import com.zhita.model.manage.Offlinedelay;
 import com.zhita.model.manage.Offlinetransfer;
@@ -18,7 +15,6 @@ import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Payment_record;
 import com.zhita.model.manage.Repayment;
 import com.zhita.model.manage.Repayment_setting;
-import com.zhita.model.manage.Undertheline;
 import com.zhita.model.manage.User;
 
 
@@ -344,5 +340,11 @@ public interface PaymentRecordMapper {
     
     
     int queryToDayMontherrepay(Integer companyId,String startTime,String endTime);
+    
+    
+    int queryToXianxia(Integer companyId,String startTime,String endTime);
+    
+    
+    int queryToXianxiaId(Integer companyId,String startTime,String endTime);
     
 }

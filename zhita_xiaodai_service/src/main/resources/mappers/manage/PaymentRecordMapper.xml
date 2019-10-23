@@ -1594,7 +1594,21 @@
  			</select>
  			
  			
+ 			
+ 			<select id="queryToXianxia" resultType="java.lang.Integer">
+ 				select count(pr.id) from offlinjianmian pr inner join orders o on pr.orderid=o.id 
+				where o.companyId=#{arg0} and o.howManyTimesBorMoney=1 and pr.sedn_time>=#{arg1} and pr.sedn_time &lt;#{arg2}
+ 			</select>
+ 			
+ 			
  			<select id="queryToDayMontherrepay" resultType="java.lang.Integer">
- 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id 
+ 				where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 			</select>
+ 			
+ 			
+ 			<select id="queryToXianxiaId" resultType="java.lang.Integer">
+				select count(pr.id) from offlinjianmian pr inner join orders o on pr.orderid=o.id
+				 where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.sedn_time>=#{arg1} and pr.sedn_time &lt;#{arg2}
  			</select>
 </mapper>

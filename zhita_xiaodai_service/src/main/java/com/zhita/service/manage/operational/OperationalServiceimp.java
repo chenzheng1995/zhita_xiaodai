@@ -241,8 +241,10 @@ public class OperationalServiceimp implements OperationalService{
 				ord.setPaymentNumId(todayloanold);
 				
 				
-				ord.setRepaymentNum(padao.queryToDayMonther(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款新客数
+				ord.setRepaymentNum(padao.queryToDayMonther(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款新客数    还款表
+				ord.setRepaymentNum(ord.getRepaymentNum()+padao.queryToXianxia(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款新客数    线下还款表
 				ord.setRepaymentNumId(padao.queryToDayMontherrepay(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日放款复贷
+				ord.setRepaymentNumId(ord.getRepaymentNumId()+padao.queryToXianxiaId(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日放款复贷  线下还款表
 				if(e.getDeferredamount()==null){
 					e.setDeferredamount(new BigDecimal(0));
 				}
@@ -462,8 +464,6 @@ public class OperationalServiceimp implements OperationalService{
 					totalCount = 0;
 				}
 				System.out.println("数量"+totalCount);
-				PageUtil pages = new PageUtil(order.getPage(), totalCount);	//参数page pagesize
-				order.setPage(pages.getPage());
 				Orders orders = operdao.OrderHuan(order);//还款数   
 				Orders or = operdao.CollMoney(order);//逾期金额   逾期数
 				Orders ord = operdao.ReayMoney(order);//获取日期 总放款金额   放款数
@@ -527,16 +527,19 @@ public class OperationalServiceimp implements OperationalService{
 				}
 				
 				orde.add(ord);
-				if(orde!=null && !orde.isEmpty()){
-		    		ListPageUtil listPageUtil=new ListPageUtil(orde,order.getPage(),10);
-		    		ordeA.addAll(listPageUtil.getData());
-		    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
-		    	}else{
-		    		pageUtil=new PageUtil2(1, 10, 0);
-		    	}
-				map.put("PageUtil", pageUtil);
-				map.put("Repayment", ordeA);
+				
 			}
+			System.out.println("原集合长度:"+orde.size()+"page:"+order.getPage());
+			if(orde!=null && !orde.isEmpty()){
+	    		ListPageUtil<Orders> listPageUtil=new ListPageUtil<Orders>(orde,order.getPage(),10);
+	    		ordeA.addAll(listPageUtil.getData());
+	    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+	    	}else{
+	    		pageUtil=new PageUtil2(1, 10, 0);
+	    	}
+			System.out.println("集合长度:"+ordeA.size());
+			map.put("PageUtil", pageUtil);
+			map.put("Repayment", ordeA);
 		}
 		return map;
 		
