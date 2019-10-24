@@ -10,7 +10,7 @@ public class TongjiSorce {
 	private Integer sourceid;//渠道id
 	private String sourcename;//渠道名称
 	private Integer uv;//uv
-	private float registernum;//真实的注册人数
+	private float registernum;//真实的注册人数（正常进来的注册数）
 	private float registernumdis;//折扣后的注册人数
 	private float illegalityregisternum;//非法进来的注册数
 	private String cvr;//uv到注册人数转化率(注册率%)
