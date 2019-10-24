@@ -91,7 +91,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("https://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
 		int num1=0;
