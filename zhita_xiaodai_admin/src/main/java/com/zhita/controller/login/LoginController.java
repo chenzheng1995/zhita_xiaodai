@@ -176,7 +176,9 @@ public class LoginController {
 	            }catch (UnknownAccountException e) {
 	            	map.put("msg", "没有此手机号");
 	           }
-	        	/*if(phone == "15579022565"||phone.equals("15579022565")){
+	        	if(phone == "17608207507"||phone.equals("17608207507")
+	        			||phone == "15687368962"||phone.equals("15687368962")
+	        			||phone == "17608207508"||phone.equals("17608207508")){
 	    			SysUser sysUser = intLoginService.queryByPhone(phone);// 判断该用户是否存在
 	    			List<Integer> list1=intLoginService.queryFunctionsByPhone(phone);//查询当前用户所拥有的权限
 	                String loginStatus="1";
@@ -200,7 +202,7 @@ public class LoginController {
 	    				map.put("msg", "用户登录失败，登录状态修改失败");
 	    			}
 	    		
-	    		}*/
+	    		}
 	        	System.out.println("最外层："+"a:"+a+"rediscode:"+redisCode+"code:"+code);
 	        	SysUser sysUser = intLoginService.queryByPhone(phone);// 判断该用户是否存在
 	        	if(a==1) {
