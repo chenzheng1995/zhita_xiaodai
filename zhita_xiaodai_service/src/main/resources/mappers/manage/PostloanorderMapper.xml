@@ -157,7 +157,7 @@
 		
 		<select id="SelectOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.interestPenaltySum,
-			ord.makeLoans,ord.interestSum,ord.InterestInAll,ord.realityAccount,ord.interestInAll,ord.technicalServiceMoney,o.orderStatus
+			ord.makeLoans,ord.interestSum,ord.InterestInAll,ord.realityAccount,ord.interestInAll,ord.technicalServiceMoney,o.orderStatus,o.userId
 			from orders o,user u,orderdetails ord
 			<where>
 				o.userId = u.id 
@@ -208,9 +208,11 @@
 			select count(o.id) from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov
 			WHERE 
 			o.id = ord.orderId 
+			AND o.orderStatus in (0,2)
 			and o.id = ov.orderId
 			and o.userId = u.id
 			and o.companyId = deset.companyId
+			AND o.shouldReturnTime between #{start_time} and #{end_time}
 			and o.companyId = #{companyId}
 		</select>
 		
@@ -387,6 +389,33 @@
 			</if>
 			and ov.collectiondate BETWEEN #{start_time} and #{end_time}
 		</select>
+		
+		
+		
+		
+		
+		<select id="WeiNumOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(o.id) from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom
+			<where>
+				o.id = ord.orderId 
+				and clom.userId = ov.collectionMemberId
+				and o.id = ov.orderId
+				and o.userId = u.id
+				and o.companyId = deset.companyId
+				and o.companyId = #{companyId}
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+				</if>
+				<if test="name != null and name != ''">
+					AND u.name LIKE concat('%',#{name},'%')
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone LIKE concat('%',#{phone},'%')
+				</if>
+			</where>
+		</select>
+		
+		
 		
 		
 		
@@ -1092,6 +1121,17 @@
 			 </where>
 			 GROUP BY ord.orderId 
 			 order by ord.orderId desc
+		</select>
+		
+		
+		
+		<select id="UserNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select count(id) from orders where userId = #{userId}
+		</select>
+		
+		
+		<select id="DefeUserNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select count(de.id) from deferred de,orders o where o.id = de.orderid and o.userId = #{userId} and de.deleted = "0"
 		</select>
 		 
 		 

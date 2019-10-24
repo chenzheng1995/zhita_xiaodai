@@ -175,4 +175,13 @@ public interface PostloanorderMapper {
 	
 	List<Orderdetails> YiHuanOrdersOff(Orderdetails order);
 	
+	
+	Integer WeiNumOrder(Orderdetails order);
+	
+	
+	Integer UserNum(Integer userId);
+	
+	
+	Integer DefeUserNum(Integer userId);
+	
 }

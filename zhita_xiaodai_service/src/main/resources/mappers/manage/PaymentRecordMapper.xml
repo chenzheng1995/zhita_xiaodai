@@ -1651,7 +1651,8 @@
  			
  			
  			<select id="queryToDayMonther" resultType="java.lang.Integer">
- 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney=1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.statu = "成功" and
+ 				o.howManyTimesBorMoney=1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
  			</select>
  			
  			
@@ -1664,7 +1665,7 @@
  			
  			<select id="queryToDayMontherrepay" resultType="java.lang.Integer">
  				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id 
- 				where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 				where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2} and pr.statu = "成功"
  			</select>
  			
  			

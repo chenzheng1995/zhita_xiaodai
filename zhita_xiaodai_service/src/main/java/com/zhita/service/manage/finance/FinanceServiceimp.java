@@ -458,7 +458,11 @@ public class FinanceServiceimp implements FinanceService{
 				if(ordetails!=null){
 					ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
 					Deferred deferred = padao.DeferrAdefe(ordetails.getOrderId());
-					ordetails.setDeferAfterReturntime(deferred.getDeferAfterReturntime());
+					if(deferred != null){
+						ordetails.setDeferAfterReturntime(deferred.getDeferAfterReturntime());
+					}else{
+						ordetails.setDeferAfterReturntime(ordetails.getShouldReturnTime());
+					}
 					ordetails.setDeferAfterReturntime(Timestamps.stampToDate(ordetails.getDeferAfterReturntime()));//延期后应还时间
 					ordetails.setPhone(p.decryption(ordetails.getPhone()));
 					if(defe.getInterestOnArrears()== null){
