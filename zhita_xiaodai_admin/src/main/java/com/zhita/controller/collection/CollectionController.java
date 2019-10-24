@@ -854,6 +854,12 @@ public class CollectionController {
 	
 	
 	
-	
-	
+	/**
+	 * 取消分配
+	 */
+	@ResponseBody
+	@RequestMapping("deleCollection")
+	public Map<String, Object> DeleteCollection(Integer colid){
+		return collservice.DeleteCollection(colid);
+	}
 }

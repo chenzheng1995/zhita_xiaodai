@@ -150,14 +150,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			// TODO: handle exception
 		}
 		TuoMinUtil tm = new TuoMinUtil();
-		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
-			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
-			if(nodeid.size() != 0){
-				order.setIds(nodeid);
-			}else{
-				nodeid.add(0);
-				order.setIds(nodeid);
-			}
+		Integer totalCount = postloanorder.SelectOrderDetailsNum(order);
 			PageUtil pages = null;
 			if(totalCount != null){
 				pages = new PageUtil(order.getPage(), totalCount);
@@ -166,7 +159,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				pages = new PageUtil(order.getPage(), 0);
 				order.setPage(pages.getPage());
 			}
-			order.setIds(nodeid);
 			List<Orderdetails> ordeids = postloanorder.SelectOrderDetails(order);//获取未逾期未分配订单
 			for (int i = 0; i < ordeids.size(); i++) {
 				int a = ordeids.get(i).getRealityBorrowMoney().compareTo(ordeids.get(i).getMakeLoans());
@@ -274,60 +266,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 
 	@Override
 	public Map<String, Object> CollectionRecovery(Orderdetails order) {
-//		order.setShouldReturnTime(System.currentTimeMillis()+"");
-//		PhoneDeal p = new PhoneDeal();
-//		if(order.getPhone() != null){
-//			order.setPhone(p.encryption(order.getPhone()));
-//		}
-//		try {
-//			order.setStart_time(Timestamps.dateToStamp1(order.getStart_time()));
-//			order.setEnd_time(Timestamps.dateToStamp1(order.getEnd_time()));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		List<Collection> totalCount = postloanorder.DateNum(order);
-//		Integer asa = null;
-//		if(totalCount.size() != 0){
-//			asa = totalCount.size();
-//		}else{
-//			asa = 0;
-//		}
-//		PageUtil pages = new PageUtil(order.getPage(), asa);
-//		order.setPage(pages.getPage());
-//		List<Collection> cols = postloanorder.CollDateNum(order);
-//		for(int i=0;i<cols.size();i++){
-//			order.setCollectiondate(cols.get(i).getCollectiondate());
-//			Integer OrderIdNum = postloanorder.OrderIdNum(order);//订单总数
-//			order.setIds(coldao.SelectCollectionId(order.getCompanyId()));
-//			List<Integer> OverIdNum = postloanorder.OverIdNum(order);//逾前催收数
-//			if(OrderIdNum != null && OverIdNum.size() != 0){
-//				cols.get(i).setDialNum(OrderIdNum-OverIdNum.size());
-//			}else{
-//				cols.get(i).setDialNum(OverIdNum.size());
-//			}
-//			
-//			try {
-//				order.setCollectionTime(Timestamps.dateToStamp(cols.get(i).getCollectiondate()));
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//			}
-//			order.setOverdue_phonestaus("未接通");
-//			cols.get(i).setNotconnected(postloanorder.connectedNum(order));
-//			order.setOverdue_phonestaus("已接通");
-//			cols.get(i).setConnected(postloanorder.connectedNum(order));
-//			order.setOrderStatus("3");
-//			cols.get(i).setSameday(postloanorder.StatusOrders(order));
-//			order.setOrderStatus("0");
-//			cols.get(i).setPaymentmade(postloanorder.StatusOrders(order));
-//			if(cols.get(i).getPaymentmade() != 0 && cols.get(i).getCollection_count() != 0){
-//				NumberFormat numberFormat = NumberFormat.getInstance();
-//				numberFormat.setMaximumFractionDigits(2);
-//				cols.get(i).setPaymentmadeData(numberFormat.format((float) cols.get(i).getPaymentmade() / (float) (cols.get(i).getPaymentmade()+cols.get(i).getSameday()) * 100));
-//			}else{
-//				cols.get(i).setPaymentmadeData("0");
-//			}
-//			cols.get(i).setCollectiondate(Timestamps.stampToDate1(cols.get(i).getCollectiondate()));
-//		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Collection> cols = new ArrayList<Collection>();
 		if(order.getStart_time()!=null){
@@ -372,6 +310,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+			
 			Collection co = postloanorder.CollTimeData(order);//未分配总数    collection_count
 			co.setCollectiondate(stimes);//日期
 			order.setOverdue_phonestaus("未接通");
@@ -381,7 +320,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			order.setOrderStatus("3");
 			co.setSameday(postloanorder.StatusOrders(order));//当天还款数
 			order.setOrderStatus("0");
-			co.setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+			co.setPaymentmade(postloanorder.StatusnOOrders(order));//当天未还款数
 			if(co.getPaymentmade() != 0 && co.getCollection_count() != 0){
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
@@ -392,7 +331,19 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			System.out.println("数据:"+co.getCollection_count()+"日期:"+co.getCollectiondate()+"已接通:"+co.getConnected());
 			cols.add(co);
 			
+			
 		}
+		PageUtil2 pageUtil = null;
+		List<Collection> collections = new ArrayList<Collection>();
+		System.out.println("数据长度:"+collections.size());
+		if(cols!=null && !cols.isEmpty()){
+    		ListPageUtil<Collection> listPageUtil=new ListPageUtil<Collection>(cols,order.getPage(),10);
+    		collections.addAll(listPageUtil.getData());
+    		pageUtil=new PageUtil2(listPageUtil.getCurrentPage(), listPageUtil.getPageSize(),listPageUtil.getTotalCount());
+    	}else{
+    		pageUtil=new PageUtil2(1, 10, 0);
+    	}
+		System.out.println("数据条数:"+cols.size());
 		map.put("Collection", cols);
  		return map;
 	}
@@ -518,7 +469,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			order.setOrderStatus("3");
 			co.get(j).setSameday(postloanorder.StatusOrders(order));//当天还款数
 			order.setOrderStatus("0");
-			co.get(j).setPaymentmade(postloanorder.StatusOrders(order));//当天未还款数
+			co.get(j).setPaymentmade(postloanorder.StatusnOOrders(order));//当天未还款数
 			
 			if(co.get(j).getPaymentmade() != 0 && co.get(j).getSameday() != 0){
 				NumberFormat numberFormat = NumberFormat.getInstance();
@@ -527,11 +478,10 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			}else{
 				co.get(j).setPaymentmadeData("0");
 			}
-			
+			map.put("Collection", co);
 			}
-			cols.add(co);
 		}
-		map.put("Collection", cols);
+		
 		return map;
 	}
 
@@ -1513,7 +1463,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			// TODO: handle exception
 		}
 		TuoMinUtil tm = new TuoMinUtil();
-		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
+		Integer totalCount = postloanorder.WeiNum(order);
 			List<Integer> nodeid = postloanorder.OvOrderId(order.getCompanyId());//获取已分配订单ID
 			if(nodeid.size() != 0){
 				order.setIds(nodeid);
@@ -1572,7 +1522,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		TuoMinUtil tm = new TuoMinUtil();
 		System.out.println(order.getCompanyId());
 		System.out.println(order.getPage()+"CCCC");
-		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
+		Integer totalCount = postloanorder.WeiNum(order);
 		System.out.println(totalCount);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
@@ -1695,6 +1645,23 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		}
 		return co;
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> DeOverdue(Integer id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer deleteid = pdap.DeleteOverdue(id);
+		if(deleteid != null){
+			map.put("code", 200);
+			map.put("msg", "删除成功");
+		}else{
+			map.put("code", 0);
+			map.put("msg", "删除失败");
+		}
+		return map;
 	}
 	
 	

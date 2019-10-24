@@ -68,4 +68,6 @@ public interface Collectionservice {
 	List<Orderdetails> YiCollectionAc(Collection col);
 	
 	
+	Map<String, Object> DeleteCollection(Integer colid);
+	
 }

@@ -249,6 +249,16 @@ public class Orderdetails {
     
     private Integer usernum;
     
+    private Integer colid;
+    
+	public Integer getColid() {
+		return colid;
+	}
+
+	public void setColid(Integer colid) {
+		this.colid = colid;
+	}
+
 	public Integer getUsernum() {
 		return usernum;
 	}

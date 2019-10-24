@@ -37,8 +37,8 @@
 				</if>
 			</where>
 			group by ord.orderId 
-			order by o.orderCreateTime
-			limit #{page},#{pagesize}
+			order by o.orderCreateTime desc
+			limit #{page},#{pagesize} 
 		</select>
 		
 		
@@ -75,7 +75,7 @@
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,o.orderStatus,
 			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade,ord.technicalServiceMoney,ord.realityBorrowMoney,ord.interestInAll,
-			ord.shouldReapyMoney,ord.interestPenaltySum,ord.interestInAll,o.orderCreateTime
+			ord.shouldReapyMoney,ord.interestPenaltySum,ord.interestInAll,o.orderCreateTime,col.collectionId as colid,o.userId
 			from orders o,orderdetails ord,collection col,user u,sys_user colme
 			<where>
 				    o.id = ord.orderId 
@@ -246,7 +246,7 @@
 		<select id="FenpeiCollection" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select col.collectionId,ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,col.collectionTime,
-			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,ord.shouldReapyMoney,ord.technicalServiceMoney
+			col.promise_money,col.collectionTime,col.collectionStatus,o.orderStatus,ord.shouldReapyMoney,ord.technicalServiceMoney,col.collectionId as colid
 			from collection col,orders o,orderdetails ord,sys_user colme,user u 
 			<where>
 				o.id = col.orderId 
@@ -663,4 +663,10 @@
 		<select id="SelectDefeNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
 			select count(de.id) from deferred de,orders o where o.id = de.orderid and o.userId = #{userId}
 		</select>
+		
+		
+		<delete id="DeleteColl" parameterType="java.lang.Integer">
+			delete from collection where collectionId = #{id}
+		</delete>
+		
 </mapper>

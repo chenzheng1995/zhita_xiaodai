@@ -157,4 +157,7 @@ public interface CollectionMapper {
 	
 	
 	Integer SelectDefeNum(Collection coll);
+	
+	
+	Integer DeleteColl(Integer id);
 }
