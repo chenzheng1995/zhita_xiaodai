@@ -21,6 +21,7 @@ import com.zhita.dao.manage.PostloanorderMapper;
 import com.zhita.model.manage.Collection;
 import com.zhita.model.manage.Deferred;
 import com.zhita.model.manage.Orderdetails;
+import com.zhita.model.manage.Orders;
 import com.zhita.model.manage.Overdue;
 import com.zhita.util.DateListUtil;
 import com.zhita.util.ListPageUtil;
@@ -185,6 +186,8 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				
 				
 				
+				ordeids.get(i).setUsernum(pdap.UserNum(ordeids.get(i).getUserId()));
+				ordeids.get(i).setDefeNum(pdap.DefeUserNum(ordeids.get(i).getUserId()));
 				
 				
 				System.out.println("金额:"+ordeids.get(i).getRealityAccount());
@@ -211,7 +214,7 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		TuoMinUtil tm = new TuoMinUtil();
 		System.out.println(order.getCompanyId());
 		System.out.println(order.getPage()+"CCCC");
-		Integer totalCount = postloanorder.WeiNum(order.getCompanyId());
+		Integer totalCount = postloanorder.WeiNumOrder(order);
 		System.out.println(totalCount);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
@@ -231,8 +234,6 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 				ordeids.get(i).setDeferAfterReturntime(ordeids.get(i).getShouldReturnTime());//延期后应还时间
 			}
 			
-			ordeids.get(i).setInterestInAll(ordeids.get(i).getInterestSum());
-			ordeids.get(i).setInterestSum(ordeids.get(i).getRealityAccount().add(ordeids.get(i).getInterestSum()));
 			
 			
 			ordeids.get(i).setDeferAfterReturntime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));
@@ -254,7 +255,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 			ordeids.get(i).setOrderCreateTime(Timestamps.stampToDate(ordeids.get(i).getOrderCreateTime()));//时间转译  订单时间
 			ordeids.get(i).setShouldReturnTime(Timestamps.stampToDate(ordeids.get(i).getShouldReturnTime()));//延期前应还时间
 		
+			
+			ordeids.get(i).setUsernum(pdap.UserNum(ordeids.get(i).getUserId()));
+			ordeids.get(i).setDefeNum(pdap.DefeUserNum(ordeids.get(i).getUserId()));
+			
+			
 			ordeids.get(i).setCollectiondate(Timestamps.stampToDate(ordeids.get(i).getCollectiondate()));//分配时间
+			ordeids.get(i).setInterestSum(ordeids.get(i).getShouldReapyMoney().add(ordeids.get(i).getInterestPenaltySum()));//放款金额 + 利息
+				
 		}
 		map.put("Orderdetails", ordeids);
 		map.put("pageutil", pages);
@@ -567,12 +575,14 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 					BigDecimal a = new BigDecimal(0);
 					orders.get(i).setDefeMoney(a);//延期金额
 				}
+				orders.get(i).setDefeNum(defe.getDefeNum());
 			}else{
 				orders.get(i).setDefeNum(0);
 				BigDecimal a = new BigDecimal(0);
 				orders.get(i).setDefeMoney(a);//延期金额
 			}
 			
+			orders.get(i).setShouldReapyMoney(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));//放款金额 + 利息
 			
 		}
 		Map<String, Object> map = new HashMap<String, Object>();

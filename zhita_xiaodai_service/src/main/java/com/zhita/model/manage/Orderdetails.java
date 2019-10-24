@@ -247,6 +247,16 @@ public class Orderdetails {
     
     private BigDecimal offmoney;
     
+    private Integer usernum;
+    
+	public Integer getUsernum() {
+		return usernum;
+	}
+
+	public void setUsernum(Integer usernum) {
+		this.usernum = usernum;
+	}
+
 	public Integer getOfcount() {
 		return ofcount;
 	}

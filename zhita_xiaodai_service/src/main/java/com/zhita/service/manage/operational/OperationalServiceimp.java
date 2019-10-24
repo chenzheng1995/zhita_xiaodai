@@ -243,7 +243,7 @@ public class OperationalServiceimp implements OperationalService{
 				
 				ord.setRepaymentNum(padao.queryToDayMonther(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款新客数    还款表
 				ord.setRepaymentNum(ord.getRepaymentNum()+padao.queryToXianxia(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款新客数    线下还款表
-				ord.setRepaymentNumId(padao.queryToDayMontherrepay(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日放款复贷
+				ord.setRepaymentNumId(padao.queryToDayMontherrepay(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日还款复贷
 				ord.setRepaymentNumId(ord.getRepaymentNumId()+padao.queryToXianxiaId(ordera.getCompanyId(), ordera.getStart_time(), ordera.getEnd_time()));//今日放款复贷  线下还款表
 				if(e.getDeferredamount()==null){
 					e.setDeferredamount(new BigDecimal(0));

@@ -18,7 +18,7 @@
 		
 		<select id="Allorderdetails" parameterType="com.zhita.model.manage.Collection" resultType="com.zhita.model.manage.Orderdetails">
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityAccount as realityBorrowMoney,ord.realityAccount as realityBorrowMoney,
-			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca,o.shouldReturnTime,ord.technicalServiceMoney,ord.shouldReapyMoney
+			ord.overdueNumberOfDays,ord.interestPenaltySum,o.realtime,ord.interestSum,ord.realityBorrowMoney as cca,o.shouldReturnTime,ord.technicalServiceMoney,ord.shouldReapyMoney,o.userId
 			from orders o,user u,orderdetails ord
 			<where>
 				ord.orderId not in (select c.orderId from collection c,orders o where o.id = c.orderId AND o.companyId = #{companyId})
@@ -37,6 +37,7 @@
 				</if>
 			</where>
 			group by ord.orderId 
+			order by o.orderCreateTime
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -74,7 +75,7 @@
 			select ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.shouldReturnTime,ord.overdueNumberOfDays,ord.interestPenaltySum,
 			o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.realityAccount,colme.account as reallyName,o.overdueGrade,ord.surplus_money,o.orderStatus,
 			col.collectionTime,col.usertype as collectionStatus,o.orderStatus,o.overdueGrade,ord.technicalServiceMoney,ord.realityBorrowMoney,ord.interestInAll,
-			ord.shouldReapyMoney
+			ord.shouldReapyMoney,ord.interestPenaltySum,ord.interestInAll,o.orderCreateTime
 			from orders o,orderdetails ord,collection col,user u,sys_user colme
 			<where>
 				    o.id = ord.orderId 
@@ -123,6 +124,7 @@
 				</if>
 			</where>
 			group by o.id
+			order by o.orderCreateTime desc
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -428,7 +430,7 @@
 				</if>
 			</where>
 			group by o.id
-			order by o.id
+			order by o.id desc
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -475,7 +477,7 @@
 				</if>
 			</where>
 			group by o.id
-			order by o.id
+			order by o.id desc
 		</select>
 		
 		
@@ -650,4 +652,15 @@
 		<select id="PrmoiseMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 			select sum(collectionmoney) from collectiondetails where orderId = #{orderId}
 		</select> 
+		
+		
+		
+		<select id="UserNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(id) from orders where userId = #{userId}
+		</select>
+		
+		
+		<select id="SelectDefeNum" parameterType="com.zhita.model.manage.Collection" resultType="java.lang.Integer">
+			select count(de.id) from deferred de,orders o where o.id = de.orderid and o.userId = #{userId}
+		</select>
 </mapper>

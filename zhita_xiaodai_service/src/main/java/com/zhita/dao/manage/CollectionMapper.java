@@ -151,4 +151,10 @@ public interface CollectionMapper {
 	
 	
 	List<Orderdetails> WeiControllerOrdetialisAc(Collection coll);
+	
+	
+	Integer UserNum(Collection coll);
+	
+	
+	Integer SelectDefeNum(Collection coll);
 }

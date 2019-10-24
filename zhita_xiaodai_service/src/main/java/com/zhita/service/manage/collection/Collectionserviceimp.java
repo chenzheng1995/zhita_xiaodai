@@ -74,10 +74,10 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
 			
 			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
-			
-			
+			coll.setUserId(orders.get(i).getUserId());
+			orders.get(i).setUsernum(collmapp.UserNum(coll));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
-			
+			orders.get(i).setDefeNum(collmapp.SelectDefeNum(coll));
 			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 			
 			System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime()+"金额:"+orders.get(i).getOrder_money()
@@ -196,7 +196,7 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
 					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
 					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
-					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
 					System.out.println(des.getDeferAfterReturntime());
 				}else{
 					orders.get(i).setDeferAfterReturntime("/");
@@ -219,6 +219,15 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
 				}
 				
+				
+				
+				orders.get(i).setUsernum(pdap.UserNum(orders.get(i).getUserId()));
+				orders.get(i).setDefeNum(pdap.DefeUserNum(orders.get(i).getUserId()));
+				
+				
+				
+				orders.get(i).setRealityAccount(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestInAll()));
+				orders.get(i).setInterestPenaltySum(orders.get(i).getInterestPenaltySum());
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);

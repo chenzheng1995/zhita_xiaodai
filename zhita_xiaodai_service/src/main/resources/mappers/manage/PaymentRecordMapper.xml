@@ -1575,6 +1575,67 @@
  			
  			
  			
+ 			
+ 			
+ 			<select id="SelectDefe" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
+ 				select o.id,ra.deferredTime as repaymentDate,thir.name as thname,ra.interestOnArrears as repaymentMoney,o.orderNumber,u.name,u.phone
+			  	 from deferred ra LEFT JOIN orders o on ra.orderId = o.id
+			  	 LEFT JOIN user u ON o.userId = u.id
+			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
+			  	 LEFT JOIN repayment_setting thir ON ra.thir_id = thir.id
+			  	<where>
+			  		 o.companyId = #{companyId}
+			  		<if test="orderNumber != null and orderNumber != ''">
+			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+			  		</if>
+			  		<if test="name != null and name != ''">
+			  			AND u.name LIKE concat('%',#{name},'%') 
+			  		</if>
+			  		<if test="phone != null and phone != ''">
+			  			AND u.phone LIKE concat('%',#{phone},'%')
+			  		</if>
+			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND ra.deferredTime between #{start_time} and #{end_time}
+					</if>
+					<if test="thirdparty_id != null and thirdparty_id != ''">
+						AND ra.thir_id = #{thirdparty_id}
+					</if>
+			  	</where>
+			  	group by o.id 
+			  	order by ra.deferredTime desc
+ 			</select>
+ 			
+ 			
+ 			
+ 			<select id="SelectOffDefe" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
+ 				select o.id,ra.operating_time as repaymentDate,thir.name as thname,ra.extensionfee as repaymentMoney,o.orderNumber,u.name,u.phone
+			  	 from offlinedelay ra LEFT JOIN orders o on ra.orderId = o.id
+			  	 LEFT JOIN user u ON o.userId = u.id
+			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
+			  	 LEFT JOIN repayment_setting thir ON ra.thir_id = thir.id
+			  	<where>
+			  		 o.companyId = #{companyId}
+			  		<if test="orderNumber != null and orderNumber != ''">
+			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+			  		</if>
+			  		<if test="name != null and name != ''">
+			  			AND u.name LIKE concat('%',#{name},'%') 
+			  		</if>
+			  		<if test="phone != null and phone != ''">
+			  			AND u.phone LIKE concat('%',#{phone},'%')
+			  		</if>
+			  		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''">
+						AND ra.operating_time between #{start_time} and #{end_time}
+					</if>
+					<if test="thirdparty_id != null and thirdparty_id != ''">
+						AND ra.thir_id = #{thirdparty_id}
+					</if>
+			  	</where>
+			  	group by o.id 
+			  	order by ra.operating_time desc
+ 			</select>
+ 			
+ 			
  			<select id="SelectOffA" resultType="com.zhita.model.manage.Orders" parameterType="com.zhita.model.manage.Orderdetails">
  				select count(repay.id) as ofcount,sum(repay.offusermoney) as offmoney from offlinjianmian repay,orders o
 			where o.id = repay.orderId and o.companyId = #{companyId} and repay.sedn_time between #{start_time} and #{end_time}
@@ -1590,7 +1651,8 @@
  			
  			
  			<select id="queryToDayMonther" resultType="java.lang.Integer">
- 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney=1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.statu = "成功" and
+ 				o.howManyTimesBorMoney=1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
  			</select>
  			
  			
@@ -1603,7 +1665,7 @@
  			
  			<select id="queryToDayMontherrepay" resultType="java.lang.Integer">
  				select count(pr.id) from repayment pr inner join orders o on pr.orderid=o.id 
- 				where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2}
+ 				where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.repaymentDate>=#{arg1} and pr.repaymentDate &lt;#{arg2} and pr.statu = "成功"
  			</select>
  			
  			
