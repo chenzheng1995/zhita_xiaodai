@@ -871,10 +871,13 @@ public class Postloanorderserviceimp implements Postloanorderservice{
 		
 		
 		order.setOrderStatus("1");
+		Integer page=order.getPage();//返回前端的当前页
 		Integer totalCount = postloanorder.YiHuanOrdersTotalCount(order);
 		PageUtil pages = new PageUtil(order.getPage(), totalCount);
 		order.setPage(pages.getPage());
 		List<Orderdetails> orders = postloanorder.HuaiZhangOrdersAA(order);
+		pages.setPage(page);
+		
 		for(int i=0;i<orders.size();i++){
 			
 			if(orders.get(i).getRealityBorrowMoney()==null){
