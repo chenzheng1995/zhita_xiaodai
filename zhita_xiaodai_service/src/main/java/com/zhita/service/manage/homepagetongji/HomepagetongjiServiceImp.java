@@ -176,14 +176,29 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		 */
 		int sumregiste = homepageTongjiMapper.querySumRegiste(companyId);//累计注册用户
 		int sumapply = homepageTongjiMapper.querySumApply(companyId);//累计申请用户总数
-		int sumloan = homepageTongjiMapper.querySumLoan(companyId);//累计放款总笔数
+		
+		int sumloan=0;//累计放款总笔数（放款的订单数量+放款的订单在延期表的延期次数+放款的订单在人工延期表的延期次数）
+		int sumloanpay = homepageTongjiMapper.querySumLoan(companyId);//累计放款总笔数（放款的订单数量）
+		int sumloandefer = homepageTongjiMapper.querySumLoandefer(companyId);//放款总笔数（放款的订单在延期表的延期次数）
+		int sumloanofflay = homepageTongjiMapper.querySumLoanofflay(companyId);//放款总笔数（放款的订单在人工延期表的延期次数）
+		sumloan=sumloanpay+sumloandefer+sumloanofflay;
 		
 		int sumrepayment = 0;//累计回款总笔数
 		int sumrepaymentreal = homepageTongjiMapper.querySumRepayment(companyId);//累计回款总笔数（实还笔数）
+		int sumrepaymentrealdefer = homepageTongjiMapper.querySumRepaymentdefer(companyId);//累计回款总笔数（实还笔数）--（实还订单在延期表的延期次数）
+		int sumrepaymentrealofflay = homepageTongjiMapper.querySumRepaymentofflay(companyId);//累计回款总笔数（实还笔数）--（实还订单在人工延期表的延期次数）
+		
 		//int sumrepaymentacc = homepageTongjiMapper.querySumRepaymentacc(companyId);//累计回款总笔数（线上减免已还清笔数）
 		int sumrepaymentoff = homepageTongjiMapper.querySumRepaymentoff(companyId);//累计回款总笔数（线下减免已还清笔数）
+		int sumrepaymentoffdefer = homepageTongjiMapper.querySumRepaymentoffdeffer(companyId);//累计回款总笔数（线下减免已还清笔数）--（线下已还清订单在延期表的延期次数）
+		int sumrepaymentofflayun = homepageTongjiMapper.querySumRepaymentofflayun(companyId);//累计回款总笔数（线下减免已还清笔数）--（线下已还清订单在人工延期表的延期次数）
+		
 		int sumrepaymentbank = homepageTongjiMapper.querySumRepaymentbank(companyId);//累计回款总笔数（银行卡扣款已结清笔数）
-		sumrepayment=sumrepaymentreal+sumrepaymentoff+sumrepaymentbank;
+		int sumrepaymentbankdefer = homepageTongjiMapper.querySumRepaymentbankdefer(companyId);//累计回款总笔数（银行卡扣款已结清笔数）--（银行卡结清订单在延期表的延期次数）
+		int sumrepaymentbanklay = homepageTongjiMapper.querySumRepaymentbanklay(companyId);//累计回款总笔数（银行卡扣款已结清笔数）--（银行卡结清订单在人工延期表的延期次数）
+		sumrepayment=sumrepaymentreal+sumrepaymentrealdefer+sumrepaymentrealofflay
+				+sumrepaymentoff+sumrepaymentoffdefer+sumrepaymentofflayun
+				+sumrepaymentbank+sumrepaymentbankdefer+sumrepaymentbanklay;
 		
 		String paymentpasscvr = (new DecimalFormat("#0.00").format(sumloan*1.0/sumregiste*100))+"%";//放款通过率
 		
@@ -193,7 +208,11 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 		}else{
 			orderrepaycvr = (new DecimalFormat("#0.00").format(sumrepayment*1.0/sumloan*100))+"%";//订单回款率
 		}*/
-		int cutofftodayshouldrepay=homepageTongjiMapper.cutofftodayshouldrepay(companyId, endTimestamps);//截止今天应还的订单数量
+		int cutofftodayshouldrepay=0;
+		int cutofftodayshouldrepay1=homepageTongjiMapper.cutofftodayshouldrepay(companyId, endTimestamps);//截止今天应还的订单数量
+		int cutofftodayshouldrepaydefer=homepageTongjiMapper.cutofftodayshouldrepaydefer(companyId, endTimestamps);//截止今天应还的订单数量（延期表的延期次数）
+		int cutofftodayshouldrepaylay=homepageTongjiMapper.cutofftodayshouldrepaylay(companyId, endTimestamps);//截止今天应还的订单数量（人工延期表的延期次数）
+		cutofftodayshouldrepay=cutofftodayshouldrepay1+cutofftodayshouldrepaydefer+cutofftodayshouldrepaylay;
 		if(cutofftodayshouldrepay==0){
 			orderrepaycvr="0.00%";
 		}else{
@@ -394,7 +413,12 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			}	
 			
 			HomepageTongji homepageTongji=new HomepageTongji();//循环一次new出一个HomepageTongji实体类
-			int shouldorder=homepageTongjiMapper.shouldorder(companyId, startTimestampsfor, endTimestampsfor);//（应还订单 ）
+			int shouldorder=0;
+			int shouldorderor=homepageTongjiMapper.shouldorder(companyId, startTimestampsfor, endTimestampsfor);//（应还订单 ）
+			int shouldorderdefer=homepageTongjiMapper.shouldorderdefer(companyId, startTimestampsfor, endTimestampsfor);//（应还订单）--延期表的延期次数
+			int shouldorderlay=homepageTongjiMapper.shouldorderlay(companyId, startTimestampsfor, endTimestampsfor);//（应还订单）--人工延期表的延期次数
+			shouldorder=shouldorderor+shouldorderdefer+shouldorderlay;
+			
 			int overduenotrepay=homepageTongjiMapper.overduenotrepay(companyId, startTimestampsfor, endTimestampsfor);//（逾前未还）
 			int overduerepay=0;//（逾前已还）
 			int overdueafterrepay=0;//（逾后已还）
@@ -507,7 +531,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			//int deratebank = homepageTongjiMapper.deratebank(companyId,startTimestampsfor, endTimestampsfor);//银行扣款已还清
 			String recovery=null;
 			if(overduerepay!=0||overdueafterrepay!=0||shouldorder!=0){
-				recovery=(new DecimalFormat("#0.00").format((overduerepay+overdueafterrepay)*1.0/(shouldorder)*100))+"%";//回收率
+				recovery=(new DecimalFormat("#0.00").format((overduerepay+overdueafterrepay+shouldorderdefer+shouldorderlay)*1.0/(shouldorder)*100))+"%";//回收率
 			}else{
 				recovery="0.00%";
 			}

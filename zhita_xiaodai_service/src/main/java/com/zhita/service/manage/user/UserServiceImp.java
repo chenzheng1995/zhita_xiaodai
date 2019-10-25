@@ -203,6 +203,37 @@ public class UserServiceImp implements IntUserService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		BigDecimal realmoney = ordersMapper.queryrepaymoney(list.get(i).getId());// 该订单还款成功的还款金额--还款表
+			if (realmoney == null) {
+				realmoney = new BigDecimal("0.00");
+			}
+			BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());// 该订单还款成功的还款金额--线下还款表
+			if (offmoney == null) {
+				offmoney = new BigDecimal("0.00");
+			}
+			BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());// 该订单扣款成功的还款金额--银行卡自动扣款表
+			if (bankmoney == null) {
+				bankmoney = new BigDecimal("0.00");
+			}
+			BigDecimal money = realmoney.add(offmoney).add(bankmoney);
+			list.get(i).setRepaymentMoney(String.valueOf(money));
+    		
+			BigDecimal shourldmoney =new BigDecimal("0.00");//原始应还金额（借款金额+期限内总利息+逾期的逾期费）
+			if(list.get(i).getInterestPenaltySum()==null){
+				list.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
+			}
+			if(list.get(i).getOrderdetails().getRealityBorrowMoney().compareTo(list.get(i).getOrderdetails().getMakeLoans())==0){
+				shourldmoney=list.get(i).getOrderdetails().getRealityBorrowMoney().add(list.get(i).getOrderdetails().getInterestSum()).
+						add(list.get(i).getOrderdetails().getInterestPenaltySum().add(list.get(i).getOrderdetails().getTechnicalServiceMoney()));
+			}else{
+				shourldmoney=list.get(i).getOrderdetails().getRealityBorrowMoney().add(list.get(i).getOrderdetails().getInterestSum()).
+						add(list.get(i).getOrderdetails().getInterestPenaltySum());
+			}
+			list.get(i).setShourldmoney(shourldmoney);// 原始应还金额（借款金额+期限内总利息+逾期的逾期费）
+			list.get(i).setRealshourldmoney(list.get(i).getOrderdetails().getShouldReapyMoney().add(list.get(i).getOrderdetails().getInterestPenaltySum()));//实际应还金额
+			BigDecimal accmoney=ordersMapper.queryAccMoney(list.get(i).getId());
+			list.get(i).setAccmoney(accmoney);//该订单的减免金额
+    		
     		list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));//将手机号进行脱敏
     		list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
