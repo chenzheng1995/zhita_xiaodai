@@ -331,8 +331,8 @@ public class UserServiceImp implements IntUserService{
 				}
 				list.get(i).setDeferrMoney(deferrMoney);
 				Orders os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
-				list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
+				//list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
+				//list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
 			}
     		
 		}
