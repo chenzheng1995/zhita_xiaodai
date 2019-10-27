@@ -80,7 +80,15 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
     public int insert(BlacklistUser record){
     	record.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
     	record.setBlackType("3");//黑名单类型（3：手工录入）
-    	int num=blacklistUserMapper.insert(record);
+    	
+    	int count=blacklistUserMapper.getid(record.getPhone(), record.getCompanyid());
+    	int num=0;
+    	if(count==0){
+    		num=blacklistUserMapper.insert(record);
+    	}else{
+    		num=blacklistUserMapper.updateByPrimaryKeyPhone(record);
+    	}
+    	
     	return num;
     }
     
@@ -164,8 +172,8 @@ public class BlacklistuserServiceImp implements IntBlacklistuserService{
 	 	             vo.setBlackType("7");//黑名单类型（7：批量导入）
 	            }else if(lo.size()==2){
 	            	vo.setCompanyid(companyId);
-	            	vo.setPhone(String.valueOf(lo.get(1)));
-		            vo.setIdcard(String.valueOf(lo.get(2)));
+	            	vo.setPhone(String.valueOf(lo.get(0)));
+		            vo.setIdcard(String.valueOf(lo.get(1)));
 		            vo.setOperator(operator);
 		            vo.setOperationtime(System.currentTimeMillis()+"");//获取当前时间戳
 		            vo.setBlackType("7");//黑名单类型（7：批量导入）

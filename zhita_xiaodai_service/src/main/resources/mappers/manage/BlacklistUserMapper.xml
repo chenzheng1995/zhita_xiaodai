@@ -31,7 +31,7 @@
       phone, idcard, userId,operator,operationtime,blackType)
     values (#{companyid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{userid,jdbcType=INTEGER}, 
-      #{operator,jdbcType=VARCHAR},#{operationtime,jdbcType=VARCHAR},#{blackType,jdbcType=VARCHAR})
+      #{operator,jdbcType=INTEGER},#{operationtime,jdbcType=VARCHAR},#{blackType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zhita.model.manage.BlacklistUser" >
     insert into blacklist_user
@@ -113,9 +113,22 @@
       name = #{name,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       idcard = #{idcard,jdbcType=VARCHAR},
-      operator = #{operator,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=INTEGER},
       operationtime = #{operationtime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台管理       更新保存功能 （通过手机号）-->
+  <update id="updateByPrimaryKeyPhone" parameterType="com.zhita.model.manage.BlacklistUser" >
+    update blacklist_user
+    set companyId = #{companyid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=INTEGER},
+      operationtime = #{operationtime,jdbcType=VARCHAR},
+      blackType = #{blackType,jdbcType=VARCHAR}
+    where phone = #{phone,jdbcType=VARCHAR}
   </update>
     <!-- 后台管理        查询列表 -->
   <select id="queryAll" resultType="com.zhita.model.manage.BlacklistUser">
@@ -148,7 +161,7 @@
       values
       <foreach collection="list" item="item" index="index" separator=",">
           (#{companyid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
-          #{idcard,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{operationtime,jdbcType=VARCHAR}
+          #{idcard,jdbcType=VARCHAR}, #{operator,jdbcType=INTEGER}, #{operationtime,jdbcType=VARCHAR}
       </foreach>
     </insert>
     <!--批量插入，通过手机号查询数据库表中是否有该黑名单用户  -->
@@ -165,8 +178,9 @@
       name = #{name,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       idcard = #{idcard,jdbcType=VARCHAR},
-      operator = #{operator,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=INTEGER},
       operationtime = #{operationtime,jdbcType=VARCHAR},
+      blackType = #{blackType,jdbcType=VARCHAR},
       deleted=0
     where phone = #{phone,jdbcType=INTEGER}
   </update>

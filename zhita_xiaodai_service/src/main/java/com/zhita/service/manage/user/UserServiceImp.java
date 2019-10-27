@@ -119,16 +119,22 @@ public class UserServiceImp implements IntUserService{
 		Orders orders=userMapper.qeuryorder(userId);
 		if(orders==null){
 			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+			
+			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+			int count=blacklistUserMapper.getid(pd.decryption(blacklistUser.getPhone()), companyId);
 			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 			String blackType="8";//黑名单类型（8：人工添加）
-			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
 			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
 			blacklistUser.setCompanyid(companyId);
 			blacklistUser.setOperator(operator);
 			blacklistUser.setOperationtime(operationTime);
 			blacklistUser.setBlackType(blackType);
 			blacklistUser.setUserid(userId);
-			blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			if(count==0){
+				blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			}else{
+				blacklistUserMapper.updateByPrimaryKeyPhone(blacklistUser);
+			}
 			return 1;
 		}else{
 			return 0;
@@ -142,16 +148,22 @@ public class UserServiceImp implements IntUserService{
 		Orders orders=userMapper.qeuryorder(userId);
 		if(orders==null){
 			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+			
+			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+			int count=blacklistUserMapper.getid(pd.decryption(blacklistUser.getPhone()), companyId);
 			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 			String blackType="6";//黑名单类型（6：人审拒绝）
-			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
 			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
 			blacklistUser.setCompanyid(companyId);
 			blacklistUser.setOperator(operator);
 			blacklistUser.setOperationtime(operationTime);
 			blacklistUser.setBlackType(blackType);
 			blacklistUser.setUserid(userId);
-			blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			if(count==0){
+				blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			}else{
+				blacklistUserMapper.updateByPrimaryKeyPhone(blacklistUser);
+			}
 			return 1;
 		}else{
 			return 0;
