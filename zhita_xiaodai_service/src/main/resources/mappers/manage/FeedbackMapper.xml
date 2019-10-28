@@ -11,6 +11,8 @@
       <arg column="url2" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="url3" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="time" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="solvestatus" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="replycontent" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -129,4 +131,16 @@
   <update id="upastatus" parameterType="java.lang.String">
   	update feedback set solvestatus=1,replycontent=#{arg0} where id=#{arg1}
   </update>
+  
+  
+
+  <select id="getfeedbackRecord" resultType="com.zhita.model.manage.Feedback" parameterType="java.lang.Integer">
+  	select id,time,advice,solvestatus from feedback where userId = #{userId}
+  </select>
+  
+  
+    <select id="getFeedbackDetails" resultType="java.util.Map" parameterType="java.lang.Integer">
+  	select advice,url1,url2,url3,replycontent from feedback where id = #{id}
+  </select>
+  
 </mapper>

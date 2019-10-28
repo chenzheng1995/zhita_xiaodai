@@ -51,6 +51,20 @@ public class Timestamps {
 		 return res;
 	 }
 	 
+		//把时间戳转换成时间格式(年 月 日 时 分 秒)
+	 public static String stampToDate7(String s){
+		 String res=null;
+		 if(s==null) {
+			 res="0";
+		 }else {
+		     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM/dd HH:mm:ss");
+		     long lt = new Long(s);
+		     Date date = new Date(lt);
+		     res = simpleDateFormat.format(date);
+		 }
+		 return res;
+	 }
+	 
 	//把时间戳转换成时间格式(年 月 日)
 	 public static String stampToDate1(String s){
 		 String res=null;

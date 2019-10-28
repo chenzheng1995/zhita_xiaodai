@@ -1,6 +1,7 @@
 package com.zhita.controller.about_us;
 
 import java.io.InputStream;
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.zhita.model.manage.Feedback;
 import com.zhita.service.manage.aboutus.IntAboutusService;
 import com.zhita.util.Base64ToInputStream;
 import com.zhita.util.OssUtil;
+import com.zhita.util.Timestamps;
 
 @Controller
 @RequestMapping("/aboutus")
@@ -148,9 +150,36 @@ public class AboutUsController {
 	    	Map<String, Object> map = new HashMap<String, Object>();
 	    	List<Feedback> list = new ArrayList<>();
 	    	list = feedbackMapper.getfeedbackRecord(userId);
-            
+	    	for (Feedback feedback : list) {
+				String time =feedback.getTime();
+		    	Timestamps timestamps = new Timestamps();
+		    	String res = timestamps.stampToDate7(time);
+		    	String dmy=res.substring(0,10);//截取年月日
+		    	dmy = dmy.replace("-", "年").replace("/","月")+"日";
+		    	String hms=res.substring(11,res.length());//截取时分秒
+		    	feedback.setDmy(dmy);
+		    	feedback.setHms(hms);
+			}
+            map.put("Ncode",2000);
+            map.put("code",200);
+            map.put("list", list);
 			return map;
 
 	    }    
+	    
+	    
+	    
+	    //反馈详情
+	    @RequestMapping("/FeedbackDetails")
+	    @ResponseBody
+	    @Transactional
+	    public Map<String, Object> FeedbackDetails(Integer id){
+	    	Map<String, Object> map = new HashMap<String, Object>();
+	    	map = feedbackMapper.getFeedbackDetails(id);
+            map.put("Ncode",2000);
+            map.put("code",200);
+			return map;
+
+	    }   
 	    
 }
