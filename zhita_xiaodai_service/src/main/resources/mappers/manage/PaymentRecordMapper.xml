@@ -426,7 +426,7 @@
   					select ord.orderId,o.orderNumber,u.name,u.phone,u.registeTime,o.orderCreateTime,d.sourceName as drainageOfPlatformName,ord.shouldReapyMoney,
 					 o.riskmanagementFraction, o.borrowMoneyWay,o.shouldReturnTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,ord.realityAccount,
 					 o.riskcontrolname,us.idcard_number,o.borrowTimeLimit,ord.overdueNumberOfDays,ord.interestPenaltySum,pay.pipelinenumber,ord.interestSum,
-					 o.borrowTimeLimit,ord.technicalServiceMoney,o.borrowTimeLimit
+					 o.borrowTimeLimit,ord.technicalServiceMoney,o.borrowTimeLimit,o.orderStatus
 					from orders o left JOIN user u on o.userId = u.id 
 					LEFT JOIN source d on d.id = u.sourceId
 					LEFT JOIN orderdetails ord on o.id = ord.orderid

@@ -63,6 +63,8 @@ public class Orderdetails {
 	
 	private String phone;//手机号
 	
+	private BigDecimal yuqimoney;//逾期总罚息
+	
 	private String realtime;//实还时间
 	
 	private String borrowingtime;//实借时间
@@ -251,6 +253,14 @@ public class Orderdetails {
     
     private Integer colid;
     
+	public BigDecimal getYuqimoney() {
+		return yuqimoney;
+	}
+
+	public void setYuqimoney(BigDecimal yuqimoney) {
+		this.yuqimoney = yuqimoney;
+	}
+
 	public Integer getColid() {
 		return colid;
 	}

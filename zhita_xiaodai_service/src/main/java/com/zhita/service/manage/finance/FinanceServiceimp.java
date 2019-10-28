@@ -455,6 +455,7 @@ public class FinanceServiceimp implements FinanceService{
 				}
 				System.out.println("实际到账金额"+ordetails.getRealityAccount());
 				Deferred defe = coldao.DefNuma(ordetails.getOrderId());
+				ordetails.setYuqimoney(ordetails.getInterestPenaltySum());
 				if(ordetails!=null){
 					ordetails.setOrderCreateTime(Timestamps.stampToDate(ordetails.getOrderCreateTime()));//实借时间
 					Deferred deferred = padao.DeferrAdefe(ordetails.getOrderId());

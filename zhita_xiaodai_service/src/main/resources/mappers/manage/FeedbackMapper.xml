@@ -128,7 +128,7 @@
   	select u.name,u.phone,f.id,f.time,f.advice,f.url1,f.url2,f.url3,f.solvestatus,f.replycontent from user u inner join feedback f on u.id=f.userid order by f.time desc limit #{arg0},#{arg1}
   </select>
   <!--后台管理      修改解决状态，添加回复内容  -->
-  <update id="upastatus" parameterType="java.lang.String">
+  <update id="upastatus">
   	update feedback set solvestatus=1,replycontent=#{arg0} where id=#{arg1}
   </update>
   
