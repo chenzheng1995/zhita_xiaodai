@@ -1,7 +1,9 @@
 package com.zhita.controller.about_us;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhita.dao.manage.FeedbackMapper;
+import com.zhita.model.manage.Feedback;
 import com.zhita.service.manage.aboutus.IntAboutusService;
 import com.zhita.util.Base64ToInputStream;
 import com.zhita.util.OssUtil;
@@ -135,4 +138,19 @@ public class AboutUsController {
 //			return map;
 //
 //	    }
+	    
+	    
+	    //反馈记录
+	    @RequestMapping("/feedbackRecord")
+	    @ResponseBody
+	    @Transactional
+	    public Map<String, Object> feedbackRecord(Integer userId){
+	    	Map<String, Object> map = new HashMap<String, Object>();
+	    	List<Feedback> list = new ArrayList<>();
+	    	list = feedbackMapper.getfeedbackRecord(userId);
+            
+			return map;
+
+	    }    
+	    
 }

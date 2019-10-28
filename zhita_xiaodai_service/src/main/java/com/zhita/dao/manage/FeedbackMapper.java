@@ -26,4 +26,6 @@ public interface FeedbackMapper {
 	
 	//后台管理----查询功能
 	List<Feedback> queryAll(Integer page,Integer pagesize);
+
+	List<Feedback> getfeedbackRecord(Integer userId);
 }
