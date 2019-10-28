@@ -23,4 +23,12 @@ public class FeedbackController {
 	public Map<String,Object> queryAll(Integer page){
 		return intFeedbackService.queryAll(page);
 	}
+	
+	//后台管理----修改解决状态，添加回复内容
+	@ResponseBody
+	@RequestMapping("/upastatus")
+	public int upastatus(String replycontent,Integer id){
+		return intFeedbackService.upastatus(replycontent, id);
+	}
+	
 }

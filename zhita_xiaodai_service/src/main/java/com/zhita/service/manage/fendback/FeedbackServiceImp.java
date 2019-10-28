@@ -50,4 +50,9 @@ public class FeedbackServiceImp implements IntFeedbackService{
 		map.put("pageutil", pageUtil);
 		return map;
 	}
+	
+	//后台管理----修改解决状态，添加回复内容
+	public int upastatus(String replycontent,Integer id){
+		return feedbackMapper.upastatus(replycontent, id);
+	}
 }

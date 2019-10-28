@@ -26,4 +26,7 @@ public interface FeedbackMapper {
 	
 	//后台管理----查询功能
 	List<Feedback> queryAll(Integer page,Integer pagesize);
+	
+	//后台管理----修改解决状态，添加回复内容
+	int upastatus(String replycontent,Integer id);
 }
