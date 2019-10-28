@@ -666,7 +666,7 @@ select id from orders where companyId = #{companyId} and userId = #{userId} orde
   </select>
   <!-- 后台管理        通过订单查询该订单在延期表信息 -->
   <select id="queryDefer" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.DeferredAndOrder">
-  	select o.id,o.orderNumber,d.interestOnArrears from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0}
+  	select o.id,o.orderNumber,d.interestOnArrears from orders o inner join deferred d on d.orderid=o.id  where o.id=#{arg0} and d.deleted=0
   </select>
    <!-- 后台管理        通过订单查询改订单在人工延期表信息 -->
   <select id="queryDeferlay" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Offlinedelay">

@@ -128,7 +128,7 @@
       operator = #{operator,jdbcType=INTEGER},
       operationtime = #{operationtime,jdbcType=VARCHAR},
       blackType = #{blackType,jdbcType=VARCHAR}
-    where phone = #{phone,jdbcType=VARCHAR}
+    where phone = #{phone,jdbcType=VARCHAR} and deleted=0
   </update>
     <!-- 后台管理        查询列表 -->
   <select id="queryAll" resultType="com.zhita.model.manage.BlacklistUser">
@@ -169,7 +169,7 @@
     select 
     <include refid="Base_Column_List" />
     from blacklist_user b left join sys_user su on b.operator=su.userId
-    where b.phone=#{arg0}
+    where b.phone=#{arg0} and b.deleted=0
   </select>
     <!-- 批量插入，通过手机号更新信息 -->
   <update id="updateByPhone" parameterType="com.zhita.model.manage.BlacklistUser" >
@@ -182,7 +182,7 @@
       operationtime = #{operationtime,jdbcType=VARCHAR},
       blackType = #{blackType,jdbcType=VARCHAR},
       deleted=0
-    where phone = #{phone,jdbcType=INTEGER}
+    where phone = #{phone,jdbcType=INTEGER} and deleted=0
   </update>
   
     <select id="getid" parameterType="java.util.Map" resultType="java.lang.Integer">
