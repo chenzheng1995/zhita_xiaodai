@@ -18,6 +18,10 @@ public class Feedback {
     private String name;//用户姓名
     
     private String phone;//用户手机号
+    
+    private String solvestatus;//解决状态（1：已解决；2：未解决）
+    
+    private String replycontent;//回复内容
 
     public Feedback(Integer id, Integer userid, String advice, String url1, String url2, String url3,String time) {
         this.id = id;
@@ -105,6 +109,21 @@ public class Feedback {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-    
+
+	public String getSolvestatus() {
+		return solvestatus;
+	}
+
+	public void setSolvestatus(String solvestatus) {
+		this.solvestatus = solvestatus;
+	}
+
+	public String getReplycontent() {
+		return replycontent;
+	}
+
+	public void setReplycontent(String replycontent) {
+		this.replycontent = replycontent;
+	}
     
 }

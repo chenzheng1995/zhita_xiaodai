@@ -123,6 +123,10 @@
   </select>
   <!-- 后台管理   查询功能 -->
   <select id="queryAll" resultType="com.zhita.model.manage.Feedback">
-  	select u.name,u.phone,f.time,f.advice,f.url1,f.url2,f.url3 from user u inner join feedback f on u.id=f.userid order by f.time desc limit #{arg0},#{arg1}
+  	select u.name,u.phone,f.id,f.time,f.advice,f.url1,f.url2,f.url3,f.solvestatus,f.replycontent from user u inner join feedback f on u.id=f.userid order by f.time desc limit #{arg0},#{arg1}
   </select>
+  <!--后台管理      修改解决状态，添加回复内容  -->
+  <update id="upastatus" parameterType="java.lang.String">
+  	update feedback set solvestatus=1,replycontent=#{arg0} where id=#{arg1}
+  </update>
 </mapper>
