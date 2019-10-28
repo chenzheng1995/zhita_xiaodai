@@ -922,4 +922,12 @@ public class PostloanordersController {
 	public Map<String, Object> UpdateOverdue(Orderdetails order){
 		return postloanor.UpdateOverdue(order);
 	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping("deleteoverdue")
+	public Map<String, Object> DeleteOverdue(Integer overdue_id){
+		return postloanor.DeOverdue(overdue_id);
+	}
 }

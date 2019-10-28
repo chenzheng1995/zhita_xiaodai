@@ -120,13 +120,13 @@
   <select id="queryAllBySourceName" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.TongjiSorce">
   	select 
   	<include refid="Base_Column_List" />
-    from source_discount_history sdh where sdh.sourceName=#{arg0}
+    from source_discount_history sdh where sdh.sourceName=#{arg0} group by sdh.date
   </select>
   <!-- 后台管理       通过渠道和时间查询是否有数据 -->
   <select id="queryBySourcenameAndDate" resultType="com.zhita.model.manage.TongjiSorce">
   	select 
     <include refid="Base_Column_List" />
     from source_discount_history sdh
-    where sdh.sourcename = #{arg0} and sdh.date>=#{arg1} and sdh.date &lt;#{arg2}
+    where sdh.sourcename = #{arg0} and sdh.date>=#{arg1} and sdh.date &lt;#{arg2} limit 1
   </select>
 </mapper>

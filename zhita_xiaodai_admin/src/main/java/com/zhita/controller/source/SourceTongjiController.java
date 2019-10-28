@@ -74,8 +74,10 @@ public class SourceTongjiController {
 			//float registernum=listsource.get(i).getRegisternum();//得到真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
-			float registernum=intSourceService.queryApplicationNumber(companyId, sourceid, startTimestamps, endTimestamps);
+			float registernum=intSourceService.queryApplicationNumberlike(companyId, sourceid, startTimestamps, endTimestamps);//正常的注册数
 			listsource.get(i).setRegisternum(registernum);//真实的注册数
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceid, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			listsource.get(i).setIllegalityregisternum(illegalityregisternum);
 			int uv=0;
 			String cvr=null;
 			if (redisClientUtil.getSourceClick(company + sourcename + sf1.format(date) + "xiaodaiKey") == null) {
@@ -196,8 +198,10 @@ public class SourceTongjiController {
 			//float registernum=listsource.get(i).getRegisternum();//真实的注册数
 			//Integer companyid=listsource.get(i).getCompanyid();//公司id
 			
-			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);
+			float registernum=intSourceService.queryApplicationNumberlike(companyId, sourceids, startTimestamps, endTimestamps);//正常的注册数
 			listsource.get(i).setRegisternum(registernum);//真实的注册数
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceids, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			listsource.get(i).setIllegalityregisternum(illegalityregisternum);
 			int uv=0;
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {
@@ -319,6 +323,7 @@ public class SourceTongjiController {
 			
 			Source sourceByPrimaryKey=intSourceService.selectByid(sourceid);
 			TongjiSorce tongjiSorce=intSourceService.queryAllSourceByUserDetail(companyId, startTimestamps, endTimestamps, sourceid);
+			float registernum1=intSourceService.queryApplicationNumberlike(companyId, sourceid, startTimestamps, endTimestamps);//（正常的注册数）
 			
 			int uv=0;//uv
 			float registernum=0;//真实的注册数
@@ -337,6 +342,7 @@ public class SourceTongjiController {
 				}
 				tongjiSorce.setUv(uv);
 			}else{
+				tongjiSorce.setRegisternum(registernum1);//正常的注册数
 				registernum=tongjiSorce.getRegisternum();//真实的注册数
 				String sourcename=tongjiSorce.getSourcename();//渠道名称
 				if(redisClientUtil.getSourceClick(company+sourcename+listdate.get(i).replace("-", "/")+"xiaodaiKey")==null){
@@ -348,6 +354,9 @@ public class SourceTongjiController {
 			}
 			
 			tongjiSorce.setDate(date);//日期
+			
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceid, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			tongjiSorce.setIllegalityregisternum(illegalityregisternum);
 			
 			if ((registernum < 0.000001) || (uv == 0)) {
 				cvr = 0 + "%";// 得到转化率
@@ -461,8 +470,11 @@ public class SourceTongjiController {
 			BigDecimal price=listsource.get(i).getPrice();////渠道的流量单价  
 			String clearingform=listsource.get(i).getClearingform();//结算方式（1：uv；2：注册数；3；已借款人数）
 			
-			float registernum=intSourceService.queryApplicationNumber(companyId, sourceids, startTimestamps, endTimestamps);
+			float registernum=intSourceService.queryApplicationNumberlike(companyId, sourceids, startTimestamps, endTimestamps);//（正常的注册人数）
 			listsource.get(i).setRegisternum(registernum);//真实的注册数
+			
+			float illegalityregisternum=intSourceService.queryillegalityregisternum(companyId, sourceids, startTimestamps, endTimestamps);//非法渠道进来的注册数
+			listsource.get(i).setIllegalityregisternum(illegalityregisternum);
 			int uv=0;
 			String cvr=null;
 			for (int j = 0; j < listdate.size(); j++) {
@@ -531,7 +543,7 @@ public class SourceTongjiController {
 		// 查询有多少行记录
 				Integer count =listsource.size();
 				// 创建excel表的表头
-				String[] headers = { "渠道", "UV人数", "注册人数", "UV到注册转化率（%）", "激活人数", "认证人数", "申请人数", "注册到申请转化率（%）", "通过人数", "已借款人数","注册到借款转化率（%）","流量单价","流量统计"};
+				String[] headers = { "渠道", "UV人数", "正常注册人数","非法注册人数", "UV到注册转化率（%）", "激活人数", "认证人数", "申请人数", "注册到申请转化率（%）", "通过人数", "已借款人数","注册到借款转化率（%）","流量单价","流量统计"};
 				// 创建Excel工作簿
 				HSSFWorkbook workbook = new HSSFWorkbook();
 				// 创建一个工作表sheet
@@ -555,24 +567,26 @@ public class SourceTongjiController {
 					cell2 = nextrow.createCell(2);
 					cell2.setCellValue(listsource.get(i - 1).getRegisternum());
 					cell2 = nextrow.createCell(3);
-					cell2.setCellValue(listsource.get(i - 1).getCvr());
+					cell2.setCellValue(listsource.get(i - 1).getIllegalityregisternum());
 					cell2 = nextrow.createCell(4);
-					cell2.setCellValue(listsource.get(i - 1).getActivatecount());
+					cell2.setCellValue(listsource.get(i - 1).getCvr());
 					cell2 = nextrow.createCell(5);
-					cell2.setCellValue(listsource.get(i - 1).getAuthencount());
+					cell2.setCellValue(listsource.get(i - 1).getActivatecount());
 					cell2 = nextrow.createCell(6);
-					cell2.setCellValue(listsource.get(i - 1).getApplynum());
+					cell2.setCellValue(listsource.get(i - 1).getAuthencount());
 					cell2 = nextrow.createCell(7);
-					cell2.setCellValue(listsource.get(i - 1).getCvr1());
+					cell2.setCellValue(listsource.get(i - 1).getApplynum());
 					cell2 = nextrow.createCell(8);
-					cell2.setCellValue(listsource.get(i - 1).getMachineauditpass());
+					cell2.setCellValue(listsource.get(i - 1).getCvr1());
 					cell2 = nextrow.createCell(9);
-					cell2.setCellValue(listsource.get(i - 1).getOrderpass());
+					cell2.setCellValue(listsource.get(i - 1).getMachineauditpass());
 					cell2 = nextrow.createCell(10);
-					cell2.setCellValue(listsource.get(i - 1).getCvr2());
+					cell2.setCellValue(listsource.get(i - 1).getOrderpass());
 					cell2 = nextrow.createCell(11);
-					cell2.setCellValue(listsource.get(i - 1).getPrice().toString());
+					cell2.setCellValue(listsource.get(i - 1).getCvr2());
 					cell2 = nextrow.createCell(12);
+					cell2.setCellValue(listsource.get(i - 1).getPrice().toString());
+					cell2 = nextrow.createCell(13);
 					cell2.setCellValue(listsource.get(i - 1).getFlowcharge().toString());
 				}
 				// 将excel的数据写入文件

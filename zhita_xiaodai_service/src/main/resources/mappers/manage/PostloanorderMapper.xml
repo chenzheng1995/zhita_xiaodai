@@ -157,7 +157,7 @@
 		
 		<select id="SelectOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
 			select o.id,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.interestPenaltySum,
-			ord.makeLoans,ord.interestSum,ord.InterestInAll,ord.realityAccount,ord.interestInAll,ord.technicalServiceMoney
+			ord.makeLoans,ord.interestSum,ord.InterestInAll,ord.realityAccount,ord.interestInAll,ord.technicalServiceMoney,o.orderStatus,o.userId
 			from orders o,user u,orderdetails ord
 			<where>
 				o.userId = u.id 
@@ -170,6 +170,22 @@
 			</where>
 			group by o.id
 			limit #{page},#{pagesize}
+		</select>
+		
+		
+		
+		
+		
+		<select id="SelectOrderDetailsNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(o.id)
+			from orders o,user u,orderdetails ord
+			where
+			o.userId = u.id 
+				AND ord.orderId = o.id
+ 				AND o.orderStatus in (0,2)
+				AND o.shouldReturnTime between #{start_time} and #{end_time}
+				AND o.id not in 
+				(select c.orderId from overdue c,orders o where o.id = c.orderId and o.companyId = #{companyId})
 		</select>
 		
 		
@@ -204,13 +220,15 @@
 		
 		
 		
-		<select id="WeiNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		<select id="WeiNum" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select count(o.id) from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov
 			WHERE 
 			o.id = ord.orderId 
+			AND o.orderStatus in (0,2)
 			and o.id = ov.orderId
 			and o.userId = u.id
 			and o.companyId = deset.companyId
+			AND o.shouldReturnTime  between #{start_time} and #{end_time}
 			and o.companyId = #{companyId}
 		</select>
 		
@@ -302,8 +320,8 @@
 		
 		
 		<select id="MyOrderdue" resultType="com.zhita.model.manage.Orderdetails" parameterType="com.zhita.model.manage.Orderdetails">
-			SELECT ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,
-			ord.makeLoans,o.shouldReturnTime,ord.interestSum,defeset.onceDeferredDay,ov.overdue_phonestaus,ov.collectiondate
+			SELECT ord.orderId,o.orderNumber,u.name,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,o.userId,ord.shouldReapyMoney,
+			ord.makeLoans,o.shouldReturnTime,ord.interestSum,defeset.onceDeferredDay,ov.overdue_phonestaus,ov.collectiondate,o.orderStatus,ord.interestPenaltySum,ord.interestInAll
 			from orders o,orderdetails ord,deferred_settings defeset,overdue ov,user u
 			<where>
 				o.id = ord.orderId
@@ -376,24 +394,58 @@
 			GROUP BY orderId
 		</select>
 		
-		
 		<select id="StatusOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
 			select count(o.id) from overdue ov,orders o where 
 			o.id = ov.orderId
 			and o.companyId = #{companyId}
 			and o.orderStatus = #{orderStatus}
-			<if test="collectionMemberId != null and collectionMemberId != ''">
-				AND ov.collectionMemberId = #{collectionMemberId}
-			</if>
 			and ov.collectiondate BETWEEN #{start_time} and #{end_time}
 		</select>
 		
 		
 		
+		
+		<select id="StatusnOOrders" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(o.id) from overdue ov,orders o where 
+			o.id = ov.orderId
+			and o.companyId = #{companyId}
+			and o.orderStatus in (1,2,4)
+			and ov.collectiondate BETWEEN #{start_time} and #{end_time}
+		</select>
+		
+		
+		
+		
+		
+		<select id="WeiNumOrder" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(o.id) from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom
+			<where>
+				o.id = ord.orderId 
+				and clom.userId = ov.collectionMemberId
+				and o.id = ov.orderId
+				and o.userId = u.id
+				and o.companyId = deset.companyId
+				and o.companyId = #{companyId}
+				<if test="orderNumber != null and orderNumber != ''">
+					AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
+				</if>
+				<if test="name != null and name != ''">
+					AND u.name LIKE concat('%',#{name},'%')
+				</if>
+				<if test="phone != null and phone != ''">
+					AND u.phone LIKE concat('%',#{phone},'%')
+				</if>
+			</where>
+		</select>
+		
+		
+		
+		
+		
 		<select id="AOrderDetails" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Orderdetails">
-			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,
-			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,
-			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate,ord.realityAccount
+			select o.id,o.orderNumber,u.phone,o.borrowMoneyWay,o.borrowTimeLimit,o.orderCreateTime,ord.realityBorrowMoney,ord.makeLoans,ord.interestInAll,
+			o.shouldReturnTime,ord.interestSum,deset.onceDeferredDay,o.orderStatus,clom.account as reallyName,ov.collectiondate,ov.overdue_phonestaus,ov.overdue_id,
+			ov.statu,u.name,ord.realityAccount,ord.interestSum,ov.collectiondate,ord.realityAccount,o.orderStatus,o.userId,ord.interestPenaltySum,ord.shouldReapyMoney
 			from orders o,user u,orderdetails ord,deferred_settings deset,overdue ov,sys_user clom	
 			<where>
 				o.id = ord.orderId 
@@ -413,7 +465,7 @@
 				</if>
 			</where>
 			group by o.id
-			order by o.id
+			order by o.id desc
 			limit #{page},#{pagesize}
 		</select>
 		
@@ -442,7 +494,7 @@
 				</if>
 			</where>
 			group by o.id
-			order by o.id
+			order by o.id desc
 		</select>
 		
 		
@@ -998,10 +1050,9 @@
 		</select>
 		
 		
-		<select id="CoMentLLection" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Collection">
-			select count(ov.orderId) from overdue ov,sys_user com where com.companyId = 3 and ov.collectionMemberId = 1 
+		<select id="CoMentLLection" parameterType="com.zhita.model.manage.Orderdetails" resultType="java.lang.Integer">
+			select count(ov.orderId) from overdue ov,sys_user com where com.companyId = #{companyId} and ov.collectionMemberId = #{collectionMemberId} 
 			and ov.collectionMemberId = com.userId
-			group by ov.orderId
 		</select>
 		
 		
@@ -1093,6 +1144,21 @@
 			 GROUP BY ord.orderId 
 			 order by ord.orderId desc
 		</select>
+		
+		
+		
+		<select id="UserNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select count(id) from orders where userId = #{userId}
+		</select>
+		
+		
+		<select id="DefeUserNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+			select count(de.id) from deferred de,orders o where o.id = de.orderid and o.userId = #{userId} and de.deleted = "0"
+		</select>
 		 
+		 
+		 <delete id="DeleteOverdue" parameterType="java.lang.Integer">
+		 	delete from overdue where overdue_id= #{id}
+		 </delete>
 		 
 </mapper>

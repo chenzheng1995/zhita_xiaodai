@@ -68,6 +68,9 @@ public interface Postloanorderservice {
 	
 	
 	List<Collection>  OverdueUserAc(Orderdetails order);
+	
+	
+	Map<String, Object> DeOverdue(Integer id);
 }
 
 

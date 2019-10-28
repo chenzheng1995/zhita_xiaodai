@@ -74,12 +74,15 @@ public class Collectionserviceimp implements Collectionservice{
 			orders.get(i).setOrder_money(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestPenaltySum()));
 			
 			orders.get(i).getRealityAccount().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney()));
-			
-			
+			coll.setUserId(orders.get(i).getUserId());
+			orders.get(i).setUsernum(collmapp.UserNum(coll));
 			orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
-			
+			orders.get(i).setDefeNum(collmapp.SelectDefeNum(coll));
+			if(orders.get(i).getDefeNum() == null){
+				orders.get(i).setDefeNum(0);
+			}
 			orders.get(i).setShouldReturnTime(Timestamps.stampToDate(orders.get(i).getShouldReturnTime()));
-			
+			System.out.println("延期次数:"+orders.get(i).getDefeNum());
 			System.out.println("时间:"+orders.get(i).getOrderCreateTime()+"AAA"+orders.get(i).getDeferAfterReturntime()+"金额:"+orders.get(i).getOrder_money()
 					+"利息:"+orders.get(i).getRealityBorrowMoney()+"CC:"+orders.get(i).getInterestPenaltySum()+"BB:"+orders.get(i).getInterestSum());
 			//Deferred defe = collmapp.DefeSet(orders.get(i));
@@ -196,7 +199,7 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setDeferBeforeReturntime(Timestamps.stampToDate(des.getDeferBeforeReturntime()));
 					orders.get(i).setInterestOnArrears(des.getInterestOnArrears());
 					orders.get(i).setOnceDeferredDay(des.getOnceDeferredDay());
-					orders.get(i).setDeferAfterReturntime(Timestamps.stampToDate(des.getDeferAfterReturntime()));
+					orders.get(i).setDeferAfterReturntime(orders.get(i).getShouldReturnTime());
 					System.out.println(des.getDeferAfterReturntime());
 				}else{
 					orders.get(i).setDeferAfterReturntime("/");
@@ -219,6 +222,14 @@ public class Collectionserviceimp implements Collectionservice{
 					orders.get(i).setRealityBorrowMoney(orders.get(i).getRealityBorrowMoney().add(orders.get(i).getInterestPenaltySum().add(orders.get(i).getTechnicalServiceMoney())));
 				}
 				
+				
+				orders.get(i).setUsernum(pdap.UserNum(orders.get(i).getUserId()));
+				orders.get(i).setDefeNum(pdap.DefeUserNum(orders.get(i).getUserId()));
+				
+				
+				
+				orders.get(i).setRealityAccount(orders.get(i).getShouldReapyMoney().add(orders.get(i).getInterestInAll()));
+				orders.get(i).setInterestPenaltySum(orders.get(i).getInterestPenaltySum());
 				orders.get(i).setPhone(p.decryption(orders.get(i).getPhone()));
 			}
 			map.put("Orderdetails", orders);
@@ -1017,6 +1028,23 @@ public class Collectionserviceimp implements Collectionservice{
 		}
 		return orders;
 		
+	}
+
+
+
+
+	@Override
+	public Map<String, Object> DeleteCollection(Integer colid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer ida = collmapp.DeleteColl(colid);
+		if(ida != null){
+			map.put("code", 200);
+			map.put("msg", "取消成功");
+		}else{
+			map.put("code", 0);
+			map.put("msg", "取消失败");
+		}
+		return map;
 	}
 	
 	

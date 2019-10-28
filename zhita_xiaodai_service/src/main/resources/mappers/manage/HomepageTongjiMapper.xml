@@ -118,6 +118,14 @@
 	<select id="querySumLoan" resultType="java.lang.Integer">
 		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0}
 	</select>
+	<!-- 后台管理      放款总笔数   （放款的订单在延期表的延期次数） -->
+	<select id="querySumLoandefer" resultType="java.lang.Integer">
+		select count(pr.id) from orders o inner join payment_record pr on o.id=pr.orderId inner join deferred d on o.id=d.orderid where o.companyId=#{arg0} and d.deleted=0
+	</select>
+	<!-- 后台管理      放款总笔数   （放款的订单在人工延期表的延期次数） -->
+	<select id="querySumLoanofflay" resultType="java.lang.Integer">
+		select count(pr.id) from orders o inner join payment_record pr on o.id=pr.orderId inner join offlinedelay lay on o.id=lay.orderid where o.companyId=#{arg0}
+	</select>
 	<!-- 后台管理     回款总笔数（线上减免已还清笔数） -->
 	<select id="querySumRepaymentacc" resultType="java.lang.Integer">
 		select count(acc.id) from  accountadjustment acc inner join orders o on acc.orderid=o.id where o.companyId=#{arg0} 
@@ -128,14 +136,46 @@
 		select count(off.id) from  offlinjianmian off inner join orders o on off.orderid=o.id where o.companyId=#{arg0} 
 	</select>
 	
+	<!-- 后台管理      回款总笔数（线下减免已还清 笔数） （线下已还清订单在延期表的延期次数）-->
+	<select id="querySumRepaymentoffdeffer" resultType="java.lang.Integer">
+		select count(off.id) from orders o inner join offlinjianmian off on o.id=off.orderId inner join deferred d on o.id=d.orderid where o.companyId=#{arg0} and d.deleted=0
+	</select>
+	
+	<!-- 后台管理      回款总笔数（线下减免已还清 笔数） （线下已还清订单在人工延期表的延期次数）-->
+	<select id="querySumRepaymentofflayun" resultType="java.lang.Integer">
+		select count(off.id) from orders o inner join offlinjianmian off on o.id=off.orderId inner join offlinedelay lay on o.id=lay.orderid where o.companyId=#{arg0}
+	</select>
+	
 	<!-- 后台管理     回款总笔数（ 银行卡已还清笔数） -->
 	<select id="querySumRepaymentbank" resultType="java.lang.Integer">
 		select count(DISTINCT b.orderid) from  bankdeductions b inner join orders o on b.orderid=o.id where o.companyId=#{arg0} and o.orderStatus=3
 	</select>
 	
+	<!-- 后台管理     回款总笔数（ 银行卡已还清笔数） （银行卡结清订单在延期表的延期次数）-->
+	<select id="querySumRepaymentbankdefer" resultType="java.lang.Integer">
+		select count(t.orderId) from orders o inner join 
+		(select DISTINCT b.orderId from bankdeductions b) t on o.id=t.orderid
+		inner join deferred d on o.id=d.orderid where o.companyId=#{arg0} and o.orderStatus=3 and d.deleted=0
+	</select>
+	
+	<!-- 后台管理     回款总笔数（ 银行卡已还清笔数） （银行卡结清订单在人工延期表的延期次数）-->
+	<select id="querySumRepaymentbanklay" resultType="java.lang.Integer">
+		select count(t.orderId) from orders o inner join 
+		(select DISTINCT b.orderId from bankdeductions b) t on o.id=t.orderid
+		inner join offlinedelay lay on o.id=lay.orderid where o.companyId=#{arg0} and o.orderStatus=3
+	</select>
+	
 	<!-- 后台管理     回款总笔数  （实还笔数）-->
 	<select id="querySumRepayment" resultType="java.lang.Integer">
 		select count(rp.id) from  repayment rp inner join orders o on rp.orderid=o.id where o.companyId=#{arg0} and rp.statu="成功"
+	</select>
+	<!-- 后台管理     回款总笔数  （实还笔数）  （实还的订单在延期表的延期次数）-->
+	<select id="querySumRepaymentdefer" resultType="java.lang.Integer">
+		select count(rp.id) from orders o inner join repayment rp on o.id=rp.orderId inner join deferred d on o.id=d.orderid where o.companyId=#{arg0} and rp.statu="成功" and d.deleted=0
+	</select>
+	<!-- 后台管理     回款总笔数  （实还笔数）  （实还的订单在人工延期表的延期次数）-->
+	<select id="querySumRepaymentofflay" resultType="java.lang.Integer">
+		select count(rp.id) from orders o inner join repayment rp on o.id=rp.orderId inner join offlinedelay lay on o.id=lay.orderid where o.companyId=#{arg0} and rp.statu="成功" 
 	</select>
 	<!--后台管理        累计放款总金额  -->
 	<select id="querypayrecMoney" resultType="java.math.BigDecimal">
@@ -240,6 +280,14 @@
 	<select id="shouldorder" resultType="java.lang.Integer">
 		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2}
 	</select>
+	<!-- 后台管理           应还订单  （应还订单在延期表的延期次数） -->
+	<select id="shouldorderdefer" resultType="java.lang.Integer">
+		select count(d.id) from deferred d inner join orders o on d.orderid=o.id where o.companyId=#{arg0} and d.deferBeforeReturntime>=#{arg1} and d.deferBeforeReturntime &lt;#{arg2} and d.deleted=0
+	</select>
+	<!-- 后台管理           应还订单 （应还订单在人工延期表的延期次数）-->
+	<select id="shouldorderlay" resultType="java.lang.Integer">
+		select count(lay.id) from offlinedelay lay inner join orders o on lay.orderid=o.id where o.companyId=#{arg0} and lay.preextensiontime>=#{arg1} and lay.preextensiontime &lt;#{arg2}
+	</select>
 	<!-- 后台管理          逾前未还 -->
 	<select id="overduenotrepay" resultType="java.lang.Integer">
 		select count(id) from orders where companyid=#{arg0} and shouldReturnTime>=#{arg1} and shouldReturnTime &lt;#{arg2} and orderStatus=0
@@ -325,5 +373,13 @@
 	<!-- 截止今天为止所有应该还的订单 -->
 	<select id="cutofftodayshouldrepay" resultType="java.lang.Integer">
 		select count(id) from orders where companyId=#{arg0} and shouldReturnTime &lt;#{arg1}
+	</select>
+	<!-- 截止今天为止所有应该还的订单 （延期表的延期次数）-->
+	<select id="cutofftodayshouldrepaydefer" resultType="java.lang.Integer">
+		select count(*) from orders o inner join deferred d on o.id=d.orderid where o.companyId=#{arg0} and o.shouldReturnTime &lt;#{arg1} and d.deleted=0
+	</select>
+	<!-- 截止今天为止所有应该还的订单  （人工延期表的延期次数）-->
+	<select id="cutofftodayshouldrepaylay" resultType="java.lang.Integer">
+		select count(*) from orders o inner join offlinedelay lay on o.id=lay.orderid where o.companyId=#{arg0} and o.shouldReturnTime &lt;#{arg1}
 	</select>
 </mapper>

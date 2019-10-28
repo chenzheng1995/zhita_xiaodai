@@ -176,7 +176,10 @@ public class LoginController {
 	            }catch (UnknownAccountException e) {
 	            	map.put("msg", "没有此手机号");
 	           }
-	        	/*if(phone == "15579022565"||phone.equals("15579022565")){
+	        	if(phone == "17608207507"||phone.equals("17608207507")
+	        			||phone == "15687368962"||phone.equals("15687368962")
+	        			||phone == "17608207508"||phone.equals("17608207508")
+	        			||phone == "15579022565"||phone.equals("15579022565")){
 	    			SysUser sysUser = intLoginService.queryByPhone(phone);// 判断该用户是否存在
 	    			List<Integer> list1=intLoginService.queryFunctionsByPhone(phone);//查询当前用户所拥有的权限
 	                String loginStatus="1";
@@ -200,7 +203,7 @@ public class LoginController {
 	    				map.put("msg", "用户登录失败，登录状态修改失败");
 	    			}
 	    		
-	    		}*/
+	    		}
 	        	System.out.println("最外层："+"a:"+a+"rediscode:"+redisCode+"code:"+code);
 	        	SysUser sysUser = intLoginService.queryByPhone(phone);// 判断该用户是否存在
 	        	if(a==1) {
@@ -361,18 +364,18 @@ public class LoginController {
 	        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	        String fileName = format.format(new Date()) + UUID.randomUUID().toString() + ".JPG";// 文件原名称
 	        // 判断文件类型
-	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
+	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.102.40.133服务
 	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.173.1服务
-	        String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.172.8服务
+	        //String path = "/webdir/tomcat/webapps/H5Code/" + fileName;   //47.56.172.8服务
 	        FolderUtil folderUtil = new FolderUtil();
 	        try {
 	            folderUtil.uploadImage(inputStream, path);
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
-	       //return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
+	       return "http://47.102.40.133:8081/H5Code/" + fileName;   //47.102.40.133服务
 	       //return "http://47.56.173.1:8081/H5Code/" + fileName;   //47.56.173.1服务
-	       return "http://47.56.172.8:8081/H5Code/" + fileName;   //47.56.172.8服务
+	       //return "http://47.56.172.8:8081/H5Code/" + fileName;   //47.56.172.8服务
 	    }
 	    
 	    private int getRandomCode() {

@@ -101,8 +101,20 @@ public interface HomepageTongjiMapper {
 	//后台管理---放款总笔数
 	int querySumLoan(Integer companyId);
 	
+	//后台管理---放款总笔数（放款的订单在延期表的延期次数）
+	int querySumLoandefer(Integer companyId);
+	
+	//后台管理---放款总笔数（放款的订单在人工延期表的延期次数）
+	int querySumLoanofflay(Integer companyId);
+	
 	//后台管理---回款总笔数(实还笔数)
 	int querySumRepayment(Integer companyId);
+	
+	//后台管理---回款总笔数(实还笔数)--（实还的订单在延期表的延期次数）
+	int querySumRepaymentdefer(Integer companyId);
+	
+	//后台管理---回款总笔数(实还笔数)--（实还的订单在人工延期表的延期次数）
+	int querySumRepaymentofflay(Integer companyId);
 	
 	//后台管理---回款总笔数（线上减免已还清笔数）
 	int querySumRepaymentacc(Integer companyId);
@@ -110,8 +122,20 @@ public interface HomepageTongjiMapper {
 	//后台管理---回款总笔数（线下减免已还清笔数）
 	int querySumRepaymentoff(Integer companyId);
 	
+	//后台管理---回款总笔数（线下减免已还清笔数）--（线下已还清订单在延期表的延期次数）
+	int querySumRepaymentoffdeffer(Integer companyId);
+	
+	//后台管理---回款总笔数（线下减免已还清笔数）--（线下已还清订单在人工延期表的延期次数）
+	int querySumRepaymentofflayun(Integer companyId);
+	
 	//后台管理---回款总笔数（银行卡扣款已结清笔数）
 	int querySumRepaymentbank(Integer companyId);
+	
+	//后台管理---回款总笔数（银行卡扣款已结清笔数）--（银行卡结清订单在延期表的延期次数）
+	int querySumRepaymentbankdefer(Integer companyId);
+		
+	//后台管理---回款总笔数（银行卡扣款已结清笔数）--（银行卡结清订单在人工延期表的延期次数）
+	int querySumRepaymentbanklay(Integer companyId);
 	
 	//后台管理---放款通过率---放款总笔数/注册用户总数*100%
 	
@@ -159,6 +183,12 @@ public interface HomepageTongjiMapper {
 	//后台管理——截止今天为止应该还的订单
 	int cutofftodayshouldrepay(Integer companyId,String todaycutofftime);
 	
+	//后台管理——截止今天为止应该还的订单（延期表的延期次数）
+	int cutofftodayshouldrepaydefer(Integer companyId,String todaycutofftime);
+		
+	//后台管理——截止今天为止应该还的订单（人工延期表的延期次数）
+	int cutofftodayshouldrepaylay(Integer companyId,String todaycutofftime);
+	
 	/**
 	 * 期限内数据
 	 * @param companyId 公司id
@@ -203,6 +233,12 @@ public interface HomepageTongjiMapper {
 	
 	//后台管理----应还订单
 	int shouldorder(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
+	
+	//后台管理----应还订单（应还订单在延期表的延期次数）
+	int shouldorderdefer(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
+	
+	//后台管理----应还订单（应还订单在人工延期表的延期次数）
+	int shouldorderlay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);
 	
 	//后台管理----逾前未还
 	int overduenotrepay(Integer companyId,String shouldrepayStartTime,String shouldrepayEndTime);

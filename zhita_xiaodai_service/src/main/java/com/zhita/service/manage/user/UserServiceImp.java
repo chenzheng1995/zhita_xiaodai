@@ -119,16 +119,22 @@ public class UserServiceImp implements IntUserService{
 		Orders orders=userMapper.qeuryorder(userId);
 		if(orders==null){
 			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+			
+			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+			int count=blacklistUserMapper.getid(pd.decryption(blacklistUser.getPhone()), companyId);
 			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 			String blackType="8";//黑名单类型（8：人工添加）
-			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
 			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
 			blacklistUser.setCompanyid(companyId);
 			blacklistUser.setOperator(operator);
 			blacklistUser.setOperationtime(operationTime);
 			blacklistUser.setBlackType(blackType);
 			blacklistUser.setUserid(userId);
-			blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			if(count==0){
+				blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			}else{
+				blacklistUserMapper.updateByPrimaryKeyPhone(blacklistUser);
+			}
 			return 1;
 		}else{
 			return 0;
@@ -142,16 +148,22 @@ public class UserServiceImp implements IntUserService{
 		Orders orders=userMapper.qeuryorder(userId);
 		if(orders==null){
 			userMapper.upaBlacklistStatus(userId);//修改该用户在用户表的黑名单状态
+			
+			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
+			int count=blacklistUserMapper.getid(pd.decryption(blacklistUser.getPhone()), companyId);
 			String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 			String blackType="6";//黑名单类型（6：人审拒绝）
-			BlacklistUser blacklistUser=userMapper.queryByUserid(userId);
 			blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
 			blacklistUser.setCompanyid(companyId);
 			blacklistUser.setOperator(operator);
 			blacklistUser.setOperationtime(operationTime);
 			blacklistUser.setBlackType(blackType);
 			blacklistUser.setUserid(userId);
-			blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			if(count==0){
+				blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+			}else{
+				blacklistUserMapper.updateByPrimaryKeyPhone(blacklistUser);
+			}
 			return 1;
 		}else{
 			return 0;
@@ -203,6 +215,37 @@ public class UserServiceImp implements IntUserService{
     	orderQueryParameter.setPagesize(pageUtil.getPageSize());
     	List<Orders> list=ordersMapper.queryAllOrdersByUserid(orderQueryParameter);//查询list集合
     	for (int i = 0; i <list.size(); i++) {
+    		BigDecimal realmoney = ordersMapper.queryrepaymoney(list.get(i).getId());// 该订单还款成功的还款金额--还款表
+			if (realmoney == null) {
+				realmoney = new BigDecimal("0.00");
+			}
+			BigDecimal offmoney = ordersMapper.queryrepaymoneyoff(list.get(i).getId());// 该订单还款成功的还款金额--线下还款表
+			if (offmoney == null) {
+				offmoney = new BigDecimal("0.00");
+			}
+			BigDecimal bankmoney = ordersMapper.queryrepaymoneybank(list.get(i).getId());// 该订单扣款成功的还款金额--银行卡自动扣款表
+			if (bankmoney == null) {
+				bankmoney = new BigDecimal("0.00");
+			}
+			BigDecimal money = realmoney.add(offmoney).add(bankmoney);
+			list.get(i).setRepaymentMoney(String.valueOf(money));
+    		
+			BigDecimal shourldmoney =new BigDecimal("0.00");//原始应还金额（借款金额+期限内总利息+逾期的逾期费）
+			if(list.get(i).getInterestPenaltySum()==null){
+				list.get(i).setInterestPenaltySum(new BigDecimal("0.00"));
+			}
+			if(list.get(i).getOrderdetails().getRealityBorrowMoney().compareTo(list.get(i).getOrderdetails().getMakeLoans())==0){
+				shourldmoney=list.get(i).getOrderdetails().getRealityBorrowMoney().add(list.get(i).getOrderdetails().getInterestSum()).
+						add(list.get(i).getOrderdetails().getInterestPenaltySum().add(list.get(i).getOrderdetails().getTechnicalServiceMoney()));
+			}else{
+				shourldmoney=list.get(i).getOrderdetails().getRealityBorrowMoney().add(list.get(i).getOrderdetails().getInterestSum()).
+						add(list.get(i).getOrderdetails().getInterestPenaltySum());
+			}
+			list.get(i).setShourldmoney(shourldmoney);// 原始应还金额（借款金额+期限内总利息+逾期的逾期费）
+			list.get(i).setRealshourldmoney(list.get(i).getOrderdetails().getShouldReapyMoney().add(list.get(i).getOrderdetails().getInterestPenaltySum()));//实际应还金额
+			BigDecimal accmoney=ordersMapper.queryAccMoney(list.get(i).getId());
+			list.get(i).setAccmoney(accmoney);//该订单的减免金额
+    		
     		list.get(i).getUser().setPhone(tm.mobileEncrypt(pd.decryption(list.get(i).getUser().getPhone())));//将手机号进行脱敏
     		list.get(i).setShouldReturnTime(Timestamps.stampToDate(list.get(i).getShouldReturnTime()));
     		list.get(i).setOrderCreateTime(Timestamps.stampToDate(list.get(i).getOrderCreateTime()));
@@ -288,8 +331,8 @@ public class UserServiceImp implements IntUserService{
 				}
 				list.get(i).setDeferrMoney(deferrMoney);
 				Orders os=ordersMapper.qeuryFinalDefertime(list.get(i).getId());
-				list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
-				list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
+				//list.get(i).setDeferAfterReturntime(Timestamps.stampToDate(os.getDeferAfterReturntime()));//延期后还款时间
+				//list.get(i).setPostponeDate(os.getPostponeDate());//每次延期的天数
 			}
     		
 		}
@@ -408,7 +451,31 @@ public class UserServiceImp implements IntUserService{
 		map.put("listsen", object.getString("listsen"));//风险信息检查
 		return map;
 	}
-	
+	//后台管理---用户认证信息（通话详情（通话月份，通话时间段，通话时长分布））
+    public Map<String,Object> queryTelephone(Integer userid){
+    	PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryTelephone?userid="+userid);
+		JSONObject object = JSONObject.parseObject(rString);
+					
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("listcommonth", object.getString("listcommonth"));//通话月份分布
+    	map.put("listcombuck", object.getString("listcombuck"));//通话时间段分布
+    	map.put("listcomdur", object.getString("listcomdur"));//通话时长分布
+		return map;
+    }
+    
+  //后台管理---用户认证信息（通话亲密度（通话次数前10，通话总时长前10，单次通话时长前10））
+    public Map<String,Object> queryTopten(Integer userid){
+    	PostAndGet pGet = new PostAndGet();
+		String rString = pGet.sendGet("http://fk.rong51dai.com/zhita_heitong_Fengkong/authen/queryTopten?userid="+userid);
+		JSONObject object = JSONObject.parseObject(rString);
+					
+		HashMap<String,Object> map=new HashMap<>();
+		map.put("top10call", object.getString("top10call"));//通话次数前10 表
+		map.put("top10time", object.getString("top10time"));//通话总时长前10表
+		map.put("top10sing", object.getString("top10sing"));//单次通话时长前10 表
+		return map;
+    }
 
 	@Override
 	public void updateScore(int score,int userId,String shareOfState) {

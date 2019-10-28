@@ -64,15 +64,19 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!--后台管理    编辑功能  -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Ifblacklist">
-    update ifblacklist
-    set companyId = #{companyid,jdbcType=INTEGER},
-      ifblacklist = #{ifblacklist,jdbcType=VARCHAR}
+    update ifblacklist set ifblacklist = #{ifblacklist,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 后台管理       列表查询 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Ifblacklist">
+  	 select 
+    <include refid="Base_Column_List" />
+    from ifblacklist where companyId=#{arg0}
+  </select>
   
-  
-            <select id="getifblacklist" parameterType="java.lang.Integer" resultType="java.lang.String">
-select ifblacklist from ifblacklist where  companyId = #{companyId}
+  <select id="getifblacklist" parameterType="java.lang.Integer" resultType="java.lang.String">
+	select ifblacklist from ifblacklist where  companyId = #{companyId}
   </select>
 </mapper>

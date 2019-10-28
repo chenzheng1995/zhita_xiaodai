@@ -22,6 +22,9 @@ public interface BlacklistUserMapper {
     //后台管理---更新保存功能
     int updateByPrimaryKey(BlacklistUser record);
     
+    //后台管理---更新保存功能（通过手机号）
+    int updateByPrimaryKeyPhone(BlacklistUser record);
+    
     //后台管理---查询列表
     List<BlacklistUser> queryAll(@Param("companyId") Integer companyId,@Param("name") String name,@Param("phone") String phone,@Param("idcard") String idcard,@Param("blackType") String blackType);
     

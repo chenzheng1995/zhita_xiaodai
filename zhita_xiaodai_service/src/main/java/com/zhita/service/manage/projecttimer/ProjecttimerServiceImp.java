@@ -131,15 +131,22 @@ public class ProjecttimerServiceImp implements IntProjecttimerService{
 			Integer overdueNumberOfDays = Integer.parseInt(list.get(i).getOverdueNumberOfDays());//逾期天数
 			if(overdueNumberOfDays>=blackline){
 				projecttimerMapper.upaBlacklistStatus(list.get(i).getUserId());//添加黑名单(修改当前用户的黑名单状态)
+				
+				BlacklistUser blacklistUser=userMapper.queryByUserid(list.get(i).getUserId());//去用户表里查该用户的信息   封装进黑名单实体类
+				int count=blacklistUserMapper.getid(pd.decryption(blacklistUser.getPhone()), companyId);
+				
 				String operationTime=System.currentTimeMillis()+"";//获取当前时间戳
 				String blackType="1";//黑名单类型（1：逾期自动判定）
-				BlacklistUser blacklistUser=userMapper.queryByUserid(list.get(i).getUserId());
 				blacklistUser.setPhone(pd.decryption(blacklistUser.getPhone()));
 				blacklistUser.setCompanyid(companyId);
 				blacklistUser.setOperationtime(operationTime);
 				blacklistUser.setBlackType(blackType);
 				blacklistUser.setUserid(list.get(i).getUserId());
-				blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+				if(count==0){
+					blacklistUserMapper.insert(blacklistUser);//将该用户添加进黑名单表
+				}else{
+					blacklistUserMapper.updateByPrimaryKeyPhone(blacklistUser);
+				}
 				//projecttimerMapper.addBlacklist(companyId, list.get(i).getUserId(), blackType);
 			}
 		}

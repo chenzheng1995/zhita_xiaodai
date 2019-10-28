@@ -247,6 +247,26 @@ public class Orderdetails {
     
     private BigDecimal offmoney;
     
+    private Integer usernum;
+    
+    private Integer colid;
+    
+	public Integer getColid() {
+		return colid;
+	}
+
+	public void setColid(Integer colid) {
+		this.colid = colid;
+	}
+
+	public Integer getUsernum() {
+		return usernum;
+	}
+
+	public void setUsernum(Integer usernum) {
+		this.usernum = usernum;
+	}
+
 	public Integer getOfcount() {
 		return ofcount;
 	}

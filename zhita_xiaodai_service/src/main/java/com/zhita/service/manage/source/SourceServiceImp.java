@@ -91,7 +91,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("https://mdb.tcc1688.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	int count=sourceMapper.ifSourceNameIfExist(record.getSourcename());
 		int num=0;
 		int num1=0;
@@ -124,7 +124,7 @@ public class SourceServiceImp implements IntSourceService{
     	String templateName = record.getName();
     	Integer templateId = sourceTemplateMapper.getid(templateName);
     	record.setTemplateid(templateId);
-    	record.setLink("https://mdb.tcc1688.com/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
+    	record.setLink("http://47.102.40.133:8081/template/"+templateName+"/index.html?code="+record.getSourcename()+"&token="+record.getToken());
     	String discount=sourceMapper.queryDiscountById(record.getId());//得到修改之前的那个折扣率  （比如取到字符串  "80%"）
 		RedisClientUtil redisClientUtil = new RedisClientUtil();
 		
@@ -417,6 +417,12 @@ public class SourceServiceImp implements IntSourceService{
     //后台管理 ------查询统计申请数 （去除非法渠道进来的黑名单）
     public int queryApplicationNumberlike(Integer companyId,Integer sourceName,String startTime,String endTime){
     	int appnum=sourceMapper.queryApplicationNumberlike(companyId, sourceName, startTime, endTime);
+    	return appnum;
+    }
+    
+    //后台管理-----查询统计申请数（非法渠道进来的注册数）
+    public int queryillegalityregisternum(Integer companyId,Integer sourceName,String startTime,String endTime){
+    	int appnum=sourceMapper.queryillegalityregisternum(companyId, sourceName, startTime, endTime);
     	return appnum;
     }
     

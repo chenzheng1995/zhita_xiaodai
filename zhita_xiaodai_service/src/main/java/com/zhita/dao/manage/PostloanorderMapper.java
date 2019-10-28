@@ -26,7 +26,7 @@ public interface PostloanorderMapper {
 	List<Orderdetails> SelectOrderDetails(Orderdetails order);
 	
 	
-	Integer WeiNum(Integer companyId);
+	Integer WeiNum(Orderdetails companyId);
 	
 	
 	List<Integer> CollMemberId(Integer companyId);
@@ -174,5 +174,23 @@ public interface PostloanorderMapper {
 	
 	
 	List<Orderdetails> YiHuanOrdersOff(Orderdetails order);
+	
+	
+	Integer WeiNumOrder(Orderdetails order);
+	
+	
+	Integer UserNum(Integer userId);
+	
+	
+	Integer DefeUserNum(Integer userId);
+	
+	
+	Integer DeleteOverdue(Integer id);
+	
+	
+	Integer SelectOrderDetailsNum(Orderdetails order);
+	
+	
+	Integer StatusnOOrders(Orderdetails orders);
 	
 }

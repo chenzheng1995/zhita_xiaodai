@@ -10,8 +10,9 @@ public class TongjiSorce {
 	private Integer sourceid;//渠道id
 	private String sourcename;//渠道名称
 	private Integer uv;//uv
-	private float registernum;//真实的注册人数
+	private float registernum;//真实的注册人数（正常进来的注册数）
 	private float registernumdis;//折扣后的注册人数
+	private float illegalityregisternum;//非法进来的注册数
 	private String cvr;//uv到注册人数转化率(注册率%)
 	private Integer applynum;//申请人数
 	private String cvr1;//注册到申请转化率（申请率）
@@ -160,4 +161,11 @@ public class TongjiSorce {
 	public void setAuthenoperacount(Integer authenoperacount) {
 		this.authenoperacount = authenoperacount;
 	}
+	public float getIllegalityregisternum() {
+		return illegalityregisternum;
+	}
+	public void setIllegalityregisternum(float illegalityregisternum) {
+		this.illegalityregisternum = illegalityregisternum;
+	}
+	
 }
