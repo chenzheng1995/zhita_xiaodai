@@ -117,143 +117,18 @@ public class TestController {
 	
 	
 	public static void main(String[] args) throws ParseException {
-		/*DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date d = new Date();
-		String date = sdf.format(d);
-		System.out.println("当天时间："+date);
+		//获取前一天的日期
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		String dateyes = df.format(calendar.getTime());
+		System.out.println("今天日期的前一天："+dateyes);
 		
-		String shoulddatestr = "2019-07-21 00:00:00";
-		
-		if(sdf.parse(date).getTime()>sdf.parse(shoulddatestr).getTime()){//转成long类型比较
-			System.out.println("当前时间大于应还时间");
-			Date shoulddate = sdf.parse(shoulddatestr);
-			System.out.println(DateListUtil.differentDaysByMillisecond(shoulddate,d)+"*****");
-		}*/
-		/*Integer in=9;
-		
-		List<OverdueSettings> list=new ArrayList<>();
-		List<BigDecimal> list1=new ArrayList<>();
-		OverdueSettings ov=new OverdueSettings();
-		ov.setOverduehowmanydaysage(2);
-		ov.setPenaltyinterestrates(new BigDecimal(0.1));
-		
-		OverdueSettings ov1=new OverdueSettings();
-		ov1.setOverduehowmanydaysage(4);
-		ov1.setPenaltyinterestrates(new BigDecimal(0.2));
-		
-		OverdueSettings ov2=new OverdueSettings();
-		ov2.setOverduehowmanydaysage(6);
-		ov2.setPenaltyinterestrates(new BigDecimal(0.3));
-		
-		OverdueSettings ov3=new OverdueSettings();
-		ov3.setOverduehowmanydaysage(8);
-		ov3.setPenaltyinterestrates(new BigDecimal(0.4));
-		
-		OverdueSettings ov4=new OverdueSettings();
-		ov4.setOverduehowmanydaysage(10);
-		ov4.setPenaltyinterestrates(new BigDecimal(0.5));
-		
-		
-		list.add(ov);
-		list.add(ov1);
-		list.add(ov2);
-		list.add(ov3);
-		list.add(ov4);
-		for (int i = 0; i < list.size(); i++) {
-			if(in<=list.get(i).getOverduehowmanydaysage()){
-				System.out.println(list.get(i).getPenaltyinterestrates()+"-----------");
-				list1.add(list.get(i).getPenaltyinterestrates());
-			}
-		}
-		
-		System.out.println(list1.get(0)+"*********");*/
-		
-		/*BigDecimal a = new BigDecimal(3000);
-		BigDecimal b = new BigDecimal(0.1);
-		System.out.println(a.multiply(b).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)+"**********");*/
-		/*String over="5";
-		String s="1-3";
-		String[] str=s.split("-");
-		String start = str[0];
-		String end = str[0];
-		for (int i = 0; i < str.length; i++) {
-			if(Integer.parseInt(over)>=Integer.parseInt(start)&& Integer.parseInt(over)<=Integer.parseInt(end)){
-				
-			}
-		}*/
-		PhoneDeal p = new PhoneDeal();
-		TuoMinUtil tm = new TuoMinUtil();
-		//System.out.println(tm.mobileEncrypt(p.decryption("6376462xx82")));
-		//System.out.println(p.decryption("90667926x29"));
-		System.out.println(p.encryption("15652456230"));
-		/*String province="山西省稷山县蔡村乡杨村第九居民组";
-		System.out.println(province.substring(0,3));*/
-		//System.out.println(Timestamps.stampToDate(null));
-		//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		RedisClientUtil redisClientUtil=new RedisClientUtil();
-		redisClientUtil.set("贷回家qudao12019/08/26xiaodaiKey", "1");
-		System.out.println(redisClientUtil.get("贷回家qudao12019/08/26xiaodaiKey"));
-		
-		redisClientUtil.set("贷回家qudao12019/08/27xiaodaiKey", "12");
-		System.out.println(redisClientUtil.get("贷回家qudao12019/08/27xiaodaiKey"));
-		
-		redisClientUtil.set("贷回家qudao12019/08/28xiaodaiKey", "2");
-		System.out.println(redisClientUtil.get("贷回家qudao12019/08/28xiaodaiKey"));
-		
-		System.out.println("0".compareTo("0")+"++++++++++++++++++");
-		
-		int uv=100;
-		BigDecimal price=new BigDecimal("1.01");
-		System.out.println(new BigDecimal(uv).multiply(price)+"-----------");
-		
-		String str="http://dhj.rong51dai.com/template/muban1/index.html?code=App&token=HGJKJH";
-		String result = str.substring(str.length()-6,str.length());
-		System.out.println(result+"---------------");
-		
-		
-		BigDecimal b1=new BigDecimal("700");
-		BigDecimal b2=new BigDecimal("7.00");
-		System.out.println(b1.compareTo(b2)+"比较");
-		
-		
-		System.out.println((b1.add(new BigDecimal("100"))).multiply(b2));
-		
-		
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date d = new Date();
-		String date = sdf.format(d);//当天时间（年月日时分秒格式）
-		System.out.println(d+"*************"+date+"-----------"+sdf.parse(date)+"++++++++++"+d.getTime());
-		
-		BigDecimal b=null;
-		if(b==null){
-			b=new BigDecimal("0.00");
-		}
-		System.out.println(b1.multiply(b)+"testteststwwt");
-		
-		
-		System.out.println(new Date().getTime()+"+++++++++++++++++++");
-		
-		
-		List<String> list1=new ArrayList<>();
-		list1.add("2019-10-18");
-		list1.add("2019-10-19");
-		list1.add("2019-10-20");
-		list1.add("2019-10-21");
-		list1.add("2019-10-22");
-		list1.add("2019-10-23");
-		List<String> list2=new ArrayList<>();
-		list2.add("2019-10-18");
-		list2.add("2019-10-19");
-		list2.add("2019-10-20");
-		list2.add("2019-10-21");
-		list2.add("2019-10-22");
-		List<String> intersectionlist=list1.stream().filter(t-> !list2.contains(t)).collect(Collectors.toList());//差集
-		intersectionlist.stream().forEach(System.out::println);
-		for (int i = 0; i < intersectionlist.size(); i++) {
-			System.out.println("intersectionlist:"+intersectionlist.get(i)+"main方法测试");
-		}
-		
+		String startTime1 = dateyes;
+		String startTimestamps1 = Timestamps.dateToStamp(startTime1);//该时间为时间戳格式
+		String endTime1 = dateyes;
+		String endTimestamps1 = (Long.parseLong(Timestamps.dateToStamp(endTime1))+86400000)+"";
+		System.out.println(startTimestamps1+"----------"+endTimestamps1);
 	}	
 	
 	@ResponseBody
