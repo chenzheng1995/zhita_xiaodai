@@ -23,6 +23,7 @@ import com.zhita.dao.manage.AuthenticationInformationMapper;
 import com.zhita.dao.manage.BankcardMapper;
 import com.zhita.dao.manage.BorrowMoneyMessageMapper;
 import com.zhita.dao.manage.RetrialWindControlMapper;
+import com.zhita.dao.manage.IffengkongMapper;
 import com.zhita.model.manage.AuthenticationInformation;
 import com.zhita.model.manage.Bankcard;
 import com.zhita.model.manage.UserJson;
@@ -75,6 +76,10 @@ public class CertificationCenterController {
 	
 	@Autowired
 	AuthenticationInformationMapper  authenticationInformationMapper;
+	
+	
+	@Autowired
+    IffengkongMapper iffengkongMapper;
 	
 	//插入分控模型数据
 	@RequestMapping("/setconfiguration")
@@ -255,7 +260,7 @@ public class CertificationCenterController {
 //	   }
 //}
 
-             
+            String iffengkong = iffengkongMapper.getiffengkong(companyId);
 
 		   
 			return map3;

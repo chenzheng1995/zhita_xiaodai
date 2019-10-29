@@ -1571,16 +1571,53 @@ public class OperatorController {
 	@RequestMapping("/getScore")
 	@ResponseBody
 	@Transactional
-	public Map<String, Object> getScore(int userId) throws UnsupportedEncodingException {
-
-		String shareOfState = null;
-		int score = 0;
+	public Map<String, Object> getScore(int userId) throws ParseException, Exception {
+		
 		Map<String, Object> map = new HashMap<>();
+		String shareOfState = "0";
+		map.put("Ncode", "2000");
+		map.put("code", "200");
+		map.put("msg", "符合条件");
+		Map<String, Object> map5 = userAttestationService.getuserAttestation(userId);
+		String address = (String) map5.get("address");// 身份证上的住址
+		// String aS = address.substring(0, 3);// 身份证地址截取前三位
+		String birth_year = (String) map5.get("birth_year");// 出生年份
+		String birth_month = (String) map5.get("birth_month");// 出生月份
+		String birth_day = (String) map5.get("birth_day");// 出生日
+		String birthday = birth_year + "-" + birth_month + "-" + birth_day;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		int age = getAge(sdf.parse(birthday));
+		int companyId = 3;
+		Map<String, Object> map6 = intApplyconditionService.getApplycondition(companyId);
+		int minimumage = (int) map6.get("minimumage");
+		int maximumage = (int) map6.get("maximumage");
+		String refuseApplyProvince = (String) map6.get("refuseApplyProvince");
+		if (age < minimumage || age > maximumage) {
+			intUserService.updateshareOfState(userId, shareOfState);
+			map.put("Ncode", "405");
+			map.put("code", "405");
+			map.put("msg", "年龄不符合条件");
+			return map;
+		}
+		String[] aString = refuseApplyProvince.split("/");
+		for (int i = 0; i < aString.length; i++) {
+			if (address.indexOf(aString[i]) != -1) {
+				intUserService.updateshareOfState(userId, shareOfState);
+				map.put("Ncode", "406");
+				map.put("code", "406");
+				map.put("msg", "地域不符合条件");
+				return map;
+			}
+
+		}
+
+
+
+		int score = 0;
 		map.put("Ncode", "2000");
 		// shareOfState ="6";
 		// intUserService.updateshareOfState(userId, shareOfState);
 
-		int companyId = 3;
 		ArrayList<String> list = intAutheninforService.getifAuthentication(companyId);
 		String operatorAutheninfor = list.get(2);
 		if ("2".equals(operatorAutheninfor)) {
@@ -1615,7 +1652,6 @@ public class OperatorController {
 		String newphone2 = pDeal.decryption(phone2);
 		Map<String, Object> map3 = userAttestationService.getuserAttestation(userId);
 		String idcard_number = (String) map3.get("idcard_number");
-		String address = (String) map3.get("address");
 		int number = intWhitelistuserService.getWhitelistuser(newphone2, idcard_number);
 		if (number != 0) {
 			shareOfState = "2";
