@@ -1738,7 +1738,9 @@ public class OperatorController {
 		String phone = intUserService.getphone(userId);
 		String newphone1 = phoneDeal.decryption(phone);
 		Map<String,Object> map2  = pGet.sendGet3("http://fk.rong51dai.com/zhita_heitong_Fengkong/fraction/Exhibitionfraction?userId="+userId+"&phone="+newphone1+"&name="+name+"&idNumber="+idNumber);
-		score =(int) map2.get("count");
+		
+//		score =(int) map2.get("count");
+		score =0;
 		String atrntlFractionalSegment = (String) map1.get("atrntlFractionalSegment");
 		String roatnptFractionalSegment = (String) map1.get("roatnptFractionalSegment");
 		String airappFractionalSegment = (String) map1.get("airappFractionalSegment");
@@ -1748,6 +1750,7 @@ public class OperatorController {
 				.substring(roatnptFractionalSegment.indexOf("-") + 1, roatnptFractionalSegment.length()));
 
 		if (score < roatnptFractionalSegmentSmall) {
+			System.out.println("1111111111");
 			shareOfState = "0";
 			map.put("code", 200);
 			map.put("msg", "分数不够");

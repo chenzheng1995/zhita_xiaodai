@@ -32,6 +32,7 @@ import com.zhita.service.manage.configuration.ConfigurationService;
 import com.zhita.service.manage.operator.OperatorService;
 import com.zhita.service.manage.order.IntOrderService;
 import com.zhita.service.manage.user.IntUserService;
+import com.zhita.service.manage.user.UserServiceImp;
 import com.zhita.service.manage.userattestation.UserAttestationService;
 import com.zhita.service.manage.whitelistuser.IntWhitelistuserService;
 import com.zhita.util.PhoneDeal;
@@ -162,6 +163,7 @@ public class CertificationCenterController {
 	    @ResponseBody
 	    @Transactional
 		public Map<String, Object> getCertificationCenter(int userId,int companyId){
+		   String jojo = "0";
 //			Map<String, Object> map1 = new HashMap<String, Object>();
 //		   ArrayList<Object> list = new ArrayList<Object>();
 //		   ArrayList<AuthenticationInformation> CertificationCenter = IntAutheninforService.getCertificationCenter(companyId);
@@ -261,6 +263,32 @@ public class CertificationCenterController {
 //}
 
             String iffengkong = iffengkongMapper.getiffengkong(companyId);
+            if(iffengkong.equals("1")) {
+               if(userAttestationAutheninfor.equals("1")) {          	   
+            	   if(userAttestation.equals("0")) {
+            		   return map3;
+            	   }
+               }
+               
+               if(bankcardAutheninfor.equals("1")) {          	   
+            	   if(bankcard.equals("0")) {
+            		   return map3;
+            	   }
+               }
+               
+               if(operatorAutheninfor.equals("1")) {          	   
+            	   if(Operator.equals("0")) {
+            		   return map3;
+            	   }
+               }
+               String shareOfState ="6";
+               intUserService.updateshareOfState(userId, shareOfState);
+               
+                jojo = "1";
+                map3.put("jojo", jojo);
+//               	PostAndGet pGet = new PostAndGet();
+//               	pGet.sendGet("http://192.168.0.111:8080/zhita_xiaodai_app/Operator/getScore?userId="+userId);
+            }
 
 		   
 			return map3;
