@@ -64,16 +64,20 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 后台管理     编辑功能 -->
   <update id="updateByPrimaryKey" parameterType="com.zhita.model.manage.Iffengkong">
-    update iffengkong
-    set companyId = #{companyid,jdbcType=INTEGER},
-      iffengkong = #{iffengkong,jdbcType=VARCHAR}
+    update iffengkong set iffengkong = #{iffengkong,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
   
     <select id="getiffengkong" parameterType="java.lang.Integer" resultType="java.lang.String">
 	select iffengkong from iffengkong where  companyId = #{companyId}
   </select>
-  
+  <!-- 后台管理      列表查询 -->
+  <select id="queryAll" parameterType="java.lang.Integer" resultType="com.zhita.model.manage.Iffengkong">
+  	select 
+    <include refid="Base_Column_List" />
+    from iffengkong
+    where companyId=#{arg0}
+  </select>
 </mapper>
