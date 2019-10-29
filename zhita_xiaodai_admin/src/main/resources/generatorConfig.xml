@@ -73,6 +73,7 @@
         <!-- <table tableName="magic_wand3_info" domainObjectName="MagicWand3Info" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
         <!-- <table tableName="applynumber" domainObjectName="Applynumber" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
         <!-- <table tableName="configuration" domainObjectName="Configuration" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
-        <table tableName="ifblacklist" domainObjectName="Ifblacklist" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
+        <!-- <table tableName="ifblacklist" domainObjectName="Ifblacklist" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/> -->
+        <table tableName="iffengkong" domainObjectName="ifFengkong" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
     </context>
 </generatorConfiguration>

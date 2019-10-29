@@ -22,8 +22,12 @@ public class Feedback {
     private String solvestatus;//解决状态（1：已解决；2：未解决）
     
     private String replycontent;//回复内容
+    
+    private String dmy;//年月日
+    
+    private String hms;//时分秒
 
-    public Feedback(Integer id, Integer userid, String advice, String url1, String url2, String url3,String time) {
+    public Feedback(Integer id, Integer userid, String advice, String url1, String url2, String url3,String time,String dmy,String hms) {
         this.id = id;
         this.userid = userid;
         this.advice = advice;
@@ -31,6 +35,8 @@ public class Feedback {
         this.url2 = url2;
         this.url3 = url3;
         this.time = time;
+        this.dmy = dmy;
+        this.hms = hms;
     }
 
     public Feedback() {
@@ -124,6 +130,22 @@ public class Feedback {
 
 	public void setReplycontent(String replycontent) {
 		this.replycontent = replycontent;
+	}
+	
+	public String getDmy() {
+		return dmy;
+	}
+
+	public void setDmy(String dmy) {
+		this.dmy = dmy;
+	}
+	
+	public String getHms() {
+		return hms;
+	}
+
+	public void setHms(String hms) {
+		this.hms = hms;
 	}
     
 }

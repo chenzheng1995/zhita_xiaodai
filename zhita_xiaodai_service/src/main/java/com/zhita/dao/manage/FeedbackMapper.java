@@ -1,6 +1,7 @@
 package com.zhita.dao.manage;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -26,7 +27,14 @@ public interface FeedbackMapper {
 	
 	//后台管理----查询功能
 	List<Feedback> queryAll(Integer page,Integer pagesize);
+
+
+	List<Feedback> getfeedbackRecord(Integer userId);
+
 	
 	//后台管理----修改解决状态，添加回复内容
 	int upastatus(String replycontent,Integer id);
+
+	Map<String, Object> getFeedbackDetails(Integer id);
+
 }

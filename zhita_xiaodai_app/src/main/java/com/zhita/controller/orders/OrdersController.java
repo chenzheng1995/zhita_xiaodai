@@ -551,7 +551,8 @@ public class OrdersController {
     Map<String, Object> map4 = intOrderService.lifeOfLoan(userId);
     int lifeOfLoan = (int) map4.get("borrowTimeLimit");
     int orderId = intOrderService.getOrdersId(userId, companyId);
-
+    Map<String, Object> map3 = orderdetailsMapper.getOrderdetails1(orderId);
+    BigDecimal interestPenaltySum = (BigDecimal) map3.get("interestPenaltySum");//逾期费
     
   	BigDecimal ll = new BigDecimal(0);
 //  	int lifeOfLoan = ((int) map.get("lifeOfLoan"));//延期天数
@@ -583,6 +584,7 @@ public class OrdersController {
       map1.put("lifeOfLoan", lifeOfLoan);
       map1.put("afterTime", afterTime);
       map1.put("payment", payment);
+      map1.put("interestPenaltySum", interestPenaltySum);
 	  
 	return map1;
 	   
