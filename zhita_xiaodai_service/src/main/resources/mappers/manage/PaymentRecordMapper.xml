@@ -314,7 +314,7 @@
   			
   			
   			<select id="RepaymentAll" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
-			  	select o.id,ra.repaymentDate,ra.statu,thir.name as thname,ra.repaymentMoney,o.orderNumber,u.name,u.phone,ra.pipelinenumber
+			  	select o.id,ra.repaymentDate,ra.statu,thir.name as thname,ra.repaymentMoney,o.orderNumber,u.name,u.phone,ra.pipelinenumber,o.shouldReturnTime
 			  	 from repayment ra LEFT JOIN orders o on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -1543,7 +1543,7 @@
  			
  			<select id="SelectOff" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
  				select o.id,ra.sedn_time as repaymentDate,thir.name as thname,ra.offusermoney as repaymentMoney,o.orderNumber,u.name,u.phone,
- 				ra.serialnumber as pipelinenumber
+ 				ra.serialnumber as pipelinenumber,o.shouldReturnTime
 			  	 from offlinjianmian ra LEFT JOIN orders o on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -1578,13 +1578,15 @@
  			
  			
  			<select id="SelectDefe" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
- 				select o.id,ra.deferredTime as repaymentDate,thir.name as thname,ra.interestOnArrears as repaymentMoney,o.orderNumber,u.name,u.phone
+ 				select o.id,ra.deferredTime as repaymentDate,thir.name as thname,ra.interestOnArrears as repaymentMoney,o.orderNumber,u.name,u.phone,
+ 				o.shouldReturnTime
 			  	 from deferred ra LEFT JOIN orders o on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
 			  	 LEFT JOIN repayment_setting thir ON ra.thir_id = thir.id
 			  	<where>
 			  		 o.companyId = #{companyId}
+			  		 and ra.deleted = "0"
 			  		<if test="orderNumber != null and orderNumber != ''">
 			  			AND o.orderNumber LIKE concat('%',#{orderNumber},'%') 
 			  		</if>
@@ -1608,7 +1610,8 @@
  			
  			
  			<select id="SelectOffDefe" parameterType="com.zhita.model.manage.Payment_record" resultType="com.zhita.model.manage.Payment_record">
- 				select o.id,ra.operating_time as repaymentDate,thir.name as thname,ra.extensionfee as repaymentMoney,o.orderNumber,u.name,u.phone
+ 				select o.id,ra.operating_time as repaymentDate,thir.name as thname,ra.extensionfee as repaymentMoney,o.orderNumber,u.name,u.phone,
+ 				o.shouldReturnTime
 			  	 from offlinedelay ra LEFT JOIN orders o on ra.orderId = o.id
 			  	 LEFT JOIN user u ON o.userId = u.id
 			  	 LEFT JOIN orderdetails ord ON o.id = ord.orderId
@@ -1672,5 +1675,10 @@
  			<select id="queryToXianxiaId" resultType="java.lang.Integer">
 				select count(pr.id) from offlinjianmian pr inner join orders o on pr.orderid=o.id
 				 where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.sedn_time>=#{arg1} and pr.sedn_time &lt;#{arg2}
+ 			</select>
+ 			
+ 			
+ 			<select id="SelecttechnicalServiceMoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+ 				select technicalServiceMoney from orderdetails where orderId = #{orderId}
  			</select>
 </mapper>

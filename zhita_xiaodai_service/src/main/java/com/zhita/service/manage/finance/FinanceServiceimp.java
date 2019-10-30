@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -167,12 +168,13 @@ public class FinanceServiceimp implements FinanceService{
 					rapay.get(i).setPhone(p.decryption(rapay.get(i).getPhone()));
 				}
 			}
-			
+			rapay.get(i).setShouldReturnTime(Timestamps.stampToDate(rapay.get(i).getShouldReturnTime()));
 			rapay.get(i).setPhone(tm.mobileEncrypt(rapay.get(i).getPhone()));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Payment_record> repays = padao.SelectOff(payrecord);
 		for(int i = 0 ;i<repays.size();i++){
+			repays.get(i).setShouldReturnTime(Timestamps.stampToDate(repays.get(i).getShouldReturnTime()));
 			repays.get(i).setRepaymentDate(Timestamps.stampToDate(repays.get(i).getRepaymentDate()));
 			if(repays.get(i).getPhone()!=null){
 				if(repays.get(i).getPhone().length()!=0){
@@ -183,6 +185,11 @@ public class FinanceServiceimp implements FinanceService{
 			repays.get(i).setPhone(tm.mobileEncrypt(repays.get(i).getPhone()));
 		}
 		List<Payment_record> payment_records = padao.SelectDefe(payrecord);//延期
+		for(int i=0;i<payment_records.size();i++){
+			System.out.println(payment_records.get(i).getShouldReturnTime());
+			payment_records.get(i).setShouldReturnTime(Timestamps.stampToDate(payment_records.get(i).getShouldReturnTime()));
+		}
+		
 		for(int i = 0 ;i<payment_records.size();i++){
 			payment_records.get(i).setRepaymentDate(Timestamps.stampToDate(payment_records.get(i).getRepaymentDate()));
 			if(payment_records.get(i).getPhone()!=null){
@@ -195,6 +202,10 @@ public class FinanceServiceimp implements FinanceService{
 		}
 		
 		List<Payment_record> ofpayment = padao.SelectOffDefe(payrecord);//线下延期
+		for(int i=0;i<ofpayment.size();i++){
+			System.out.println(ofpayment.get(i).getShouldReturnTime());
+			ofpayment.get(i).setShouldReturnTime(Timestamps.stampToDate(ofpayment.get(i).getShouldReturnTime()));
+		}
 		
 		
 		for(int i = 0 ;i<ofpayment.size();i++){
@@ -247,13 +258,36 @@ public class FinanceServiceimp implements FinanceService{
 		}else{
 			rapay.addAll(repays);
 		}
-		
 		rapay.addAll(ofpayment);
+		
+		
+		Payment_record[] strings = new Payment_record[rapay.size()];
+		rapay.toArray(strings);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		System.out.println("长度:"+strings.length);
+		for(int i=0;i<strings.length;i++){
+			for(int j=0;j<strings.length-1;j++){
+				//System.out.println(strings[i].getRepaymentDate()+"时间:"+strings[j].getRepaymentDate());
+				
+				try {
+					
+					if(Long.valueOf(dateFormat.parse(strings[i].getRepaymentDate()).getTime())>Long.valueOf(dateFormat.parse(strings[j].getRepaymentDate()).getTime())){
+						//System.out.println(dateFormat.parse(strings[i].getRepaymentDate()).getTime()+"A:A"+dateFormat.parse(strings[j].getRepaymentDate()).getTime());
+						Payment_record tem = strings[j];
+						strings[j] = strings[i];
+						strings[i] = tem;
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		 
+		List<Payment_record> pasa = Arrays.asList(strings);
 		List<Payment_record> pa = new ArrayList<Payment_record>();
-//		pages.setPage(a);
 		PageUtil2 pageUtil=null;
-		if(rapay!=null && !rapay.isEmpty()){
-    		ListPageUtil<Payment_record> listPageUtil=new ListPageUtil<Payment_record>(rapay,payrecord.getPage(),10);
+		if(pasa!=null && !pasa.isEmpty()){
+    		ListPageUtil<Payment_record> listPageUtil=new ListPageUtil<Payment_record>(pasa,payrecord.getPage(),10);
     		pa.addAll(listPageUtil.getData());
     		System.out.println(pa.size());
     			
@@ -261,24 +295,12 @@ public class FinanceServiceimp implements FinanceService{
     	}else{
     		pageUtil=new PageUtil2(1, 10, 0);
     	}
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Collections.sort(pa, new Comparator<Payment_record>() {
-			 
-			@Override
-			public int compare(Payment_record o1, Payment_record o2) {
-				int i = 0;
-				try {
-					i = (int) (dateFormat.parse(o1.getRepaymentDate()).getTime() - dateFormat.parse(o2.getRepaymentDate()).getTime());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return i;
-			}
-
-		});
-		pageUtil.setTotalCount(rapay.size());
-		System.out.println(rapay.size());
+		
+		
+		
+		
+		pageUtil.setTotalCount(pasa.size());
+		System.out.println(pasa.size());
 		map.put("Repayment", pa);
 		System.out.println("分页:"+pa.size());
 		map.put("pageutil", pageUtil);
@@ -542,6 +564,7 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAccounttime(Timestamps.stampToDate(ac.getAccounttime()));
 			accounts.get(i).setAmountmoney(ac.getAmountmoney());
 			accounts.get(i).setTotalamount(ac.getTotalamount());
+			accounts.get(i).setTotalamount(accounts.get(i).getTotalamount().add(padao.SelecttechnicalServiceMoney(accounts.get(i).getOrderId())));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		pages.setPage(a);
@@ -583,7 +606,7 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
-			
+			accounts.get(i).setTotalamount(accounts.get(i).getTotalamount().add(padao.SelecttechnicalServiceMoney(accounts.get(i).getOrderId())));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		pages.setPage(a);
@@ -630,7 +653,7 @@ public class FinanceServiceimp implements FinanceService{
 			accounts.get(i).setAmou_time(Timestamps.stampToDate(accounts.get(i).getAmou_time()));
 			String ps = p.decryption(accounts.get(i).getPhone());
 			accounts.get(i).setPhone(tm.mobileEncrypt(ps));
-			
+			accounts.get(i).setTotalamount(accounts.get(i).getTotalamount().add(padao.SelecttechnicalServiceMoney(accounts.get(i).getOrderId())));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		pages.setPage(a);
