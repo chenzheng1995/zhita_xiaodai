@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +17,11 @@ import org.springframework.stereotype.Service;
 import com.zhita.dao.manage.HomepageTongjiMapper;
 import com.zhita.dao.manage.OrdersMapper;
 import com.zhita.dao.manage.StatmentMapper;
+import com.zhita.model.manage.HomepageTongji;
+import com.zhita.model.manage.RepayStatment;
 import com.zhita.model.manage.Source;
 import com.zhita.util.DateListUtil;
+import com.zhita.util.PageUtil2;
 import com.zhita.util.Timestamps;
 
 @Service
@@ -38,6 +42,10 @@ public class StatementServiceImp implements IntstatementService{
 	
 	//后台管理——还款表
 	public Map<String,Object> paymentrecord(Integer companyId,Integer page,String repaystartTime,String rapayendTime){
+		List<RepayStatment> listtongji=new ArrayList<RepayStatment>();
+		List<RepayStatment> listtongjito=new ArrayList<RepayStatment>();
+		PageUtil2 pageUtil=null;
+		
 		int lifeofloan = homepageTongjiMapper.querylifeOfLoan(companyId);//查询借款期限
 		Date date=new Date();
 		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
@@ -89,8 +97,7 @@ public class StatementServiceImp implements IntstatementService{
 			int loanyetrepay = statmentMapper.queryloanyetrepay(companyId, startTimestampsfor, endTimestampsfor);//当前日期放款的订单已还人数-
 			String oldborrowcvr = (new DecimalFormat("#0.00").format((oldpaycount)*1.0/loanyetrepay*100))+"%";//复借率-
 			int querypass = statmentMapper.querypass(companyId, startTimestampsfor, endTimestampsfor);//当天通过人数-
-			//int borrowcvr = (new DecimalFormat("#0.00").format((oldpaycount)*1.0/loanyetrepay*100))+"%";//当天借款率
-			
+			String borrowcvr = (new DecimalFormat("#0.00").format((newpaycount+oldpaycount)*1.0/querypass*100))+"%";//当天借款率
 			String oldguestborrowcvr = (new DecimalFormat("#0.00").format((oldpaycount)*1.0/paysumcount*100))+"%";//老客复借占比
 			
 		}
