@@ -419,6 +419,8 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			int shouldorderlay=homepageTongjiMapper.shouldorderlay(companyId, startTimestampsfor, endTimestampsfor);//（应还订单）--人工延期表的延期次数
 			shouldorder=shouldorderor+shouldorderdefer+shouldorderlay;
 			
+			int deferredtime=shouldorderdefer+shouldorderlay;//当天应还订单的延期次数
+			
 			int overduenotrepay=homepageTongjiMapper.overduenotrepay(companyId, startTimestampsfor, endTimestampsfor);//（逾前未还）
 			int overduerepay=0;//（逾前已还）
 			int overdueafterrepay=0;//（逾后已还）
@@ -555,6 +557,7 @@ public class HomepagetongjiServiceImp implements IntHomepagetongjiService{
 			homepageTongji.setTobepaid(tobepaidmoney);//待还金额
 			homepageTongji.setOverduecvr(overduecvr);//逾期率
 			homepageTongji.setRecovery(recovery);//回收率
+			homepageTongji.setDeferredtime(deferredtime);//当天应还订单的延期次数
 			
 			listtongji.add(homepageTongji);
 		}

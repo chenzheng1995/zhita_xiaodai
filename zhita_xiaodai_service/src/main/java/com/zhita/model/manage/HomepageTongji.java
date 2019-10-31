@@ -23,6 +23,7 @@ public class HomepageTongji {
 	private BigDecimal tobepaid;//待还金额
 	private String overduecvr;//逾期率
 	private String recovery;//回收率
+	private int deferredtime;//当天应还订单的延期次数
 	public String getShouldtime() {
 		return shouldtime;
 	}
@@ -137,5 +138,10 @@ public class HomepageTongji {
 	public void setRecovery(String recovery) {
 		this.recovery = recovery;
 	}
-	
+	public int getDeferredtime() {
+		return deferredtime;
+	}
+	public void setDeferredtime(int deferredtime) {
+		this.deferredtime = deferredtime;
+	}
 }

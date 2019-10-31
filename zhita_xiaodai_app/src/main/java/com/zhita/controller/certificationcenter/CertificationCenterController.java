@@ -82,6 +82,8 @@ public class CertificationCenterController {
 	@Autowired
     IffengkongMapper iffengkongMapper;
 	
+
+	
 	//插入分控模型数据
 	@RequestMapping("/setconfiguration")
 	@ResponseBody
@@ -95,7 +97,8 @@ public class CertificationCenterController {
 		paramObject.setUserId(userId);
 		String json  = JSONObject.toJSONString(paramObject);
 		System.out.println(json);
-		pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
+//		pGet.doJsonPost("http://fk.rong51dai.com/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
+		pGet.doJsonPost("http://192.168.0.104:8888/zhita_heitong_Fengkong/Anti/AddUserPhone", json);
 
     	Map<String, Object> map = new HashMap<>();
 		JSONObject jsonObject = JSONObject.parseObject(jsonString);
@@ -262,6 +265,7 @@ public class CertificationCenterController {
 //	   }
 //}
 
+		 
             String iffengkong = iffengkongMapper.getiffengkong(companyId);
             if(iffengkong.equals("1")) {
                if(userAttestationAutheninfor.equals("1")) {          	   
@@ -281,11 +285,18 @@ public class CertificationCenterController {
             		   return map3;
             	   }
                }
-               String shareOfState ="6";
-               intUserService.updateshareOfState(userId, shareOfState);
                
-                jojo = "1";
-                map3.put("jojo", jojo);
+               
+               
+
+               String shareOfState = intUserService.getshareOfState(userId);
+               if(shareOfState.equals("5")) {
+                   jojo = "1";     
+                   shareOfState ="6";
+                   intUserService.updateshareOfState(userId, shareOfState);
+               }
+
+               map3.put("jojo", jojo); 
 //               	PostAndGet pGet = new PostAndGet();
 //               	pGet.sendGet("http://192.168.0.111:8080/zhita_xiaodai_app/Operator/getScore?userId="+userId);
             }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhita.dao.manage.StatmentMapper" >
+
+	<!-- 后台管理       当前日期借款次数为1的订单id -->
+	<select id="queryLoannew" resultType="java.lang.Integer">
+		select pr.orderid from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney=1 and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
+	</select>
+	
+	<!-- 后台管理        该订单在延期表的延期次数 -->
+	<select id="querydefercount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(id) from deferred where orderid=#{arg0} and deleted=0
+	</select>
+	
+	<!-- 后台管理       该订单的放款金额 -->
+	<select id="queryrepaymoney" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+	 select paymentmoney from payment_record where orderid=#{arg0}
+	</select>
+	<!-- 后台管理     当前日期老客放款金额 -->
+	<select id="queryoldmoney" resultType="java.math.BigDecimal">
+		select sum(pr.paymentmoney) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and o.howManyTimesBorMoney>1 and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
+	</select>
+	
+	<!-- 后台管理      当前日期放款的订单已还人数 -->
+	<select id="queryloanyetrepay" resultType="java.lang.Integer">
+		select count(pr.id) from payment_record pr inner join orders o on pr.orderid=o.id where o.companyId=#{arg0} and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2} and o.orderStatus=3
+	</select>
+	
+	<!-- 后台管理    当天通过人数 -->
+	<select id="querypass" resultType="java.lang.Integer">
+		select count(pr.id) from payment_record pr 
+		inner join orders o on pr.orderid=o.id 
+		inner join user u on o.userid=u.id
+		where o.companyId=#{arg0} and pr.remittanceTime>=#{arg1} and pr.remittanceTime &lt;#{arg2}
+		and (u.shareOfState=2 or u.shareOfState=4)
+	</select>
+</mapper>
