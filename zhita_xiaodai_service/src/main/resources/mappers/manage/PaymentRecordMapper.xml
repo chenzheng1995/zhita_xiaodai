@@ -585,7 +585,7 @@
   
   
   			<select id="AllStatu" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue,
+  				select a.orderId,o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amountmoney,a.remarks,a.accounttime,a.beoverdue,
   				 a.amou_time,re.pipelinenumber from orders o,user u,accountadjustment a,repayment_setting th,repayment re  
   				<where>
   					a.orderId = o.id 
@@ -659,7 +659,7 @@
   			
   			
   			<select id="AllNotMoneyStatu" parameterType="com.zhita.model.manage.Orderdetails" resultType="com.zhita.model.manage.Accountadjustment">
-  				select o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amou_time,
+  				select a.orderId,o.id,o.orderNumber,u.name,u.phone,th.name as thname,a.accounttime,a.totalamount,a.amou_time,
   				a.amountmoney,a.remarks,a.accounttime,a.beoverdue
   				,ord.overdueNumberOfDays from 
   				 orderdetails ord,orders o,user u,accountadjustment a,repayment_setting th
