@@ -353,4 +353,7 @@ public interface PaymentRecordMapper {
     
     List<Payment_record> SelectOffDefe(Payment_record pay);
     
+    
+    BigDecimal SelecttechnicalServiceMoney(Integer orderId);
+    
 }

@@ -59,6 +59,16 @@ public class Payment_record {
 	
 	private String bank;
 	
+	private String shouldReturnTime;
+	
+	public String getShouldReturnTime() {
+		return shouldReturnTime;
+	}
+
+	public void setShouldReturnTime(String shouldReturnTime) {
+		this.shouldReturnTime = shouldReturnTime;
+	}
+
 	public String getBorrowRepayBankcard() {
 		return borrowRepayBankcard;
 	}
